@@ -174,6 +174,75 @@ riesgos en la matriz del ADR-0008.
 
 ---
 
+## I-005 · ¿Un centro de acopio atiende varias emergencias a la vez?
+
+**Fecha:** 2026-09-14
+**Pregunta:** ¿hay una fuente que respalde que un mismo centro de acopio —o una red
+como la de la Cruz Roja— atiende varias emergencias al mismo tiempo, y que quien
+entrega no decide a cuál va su donación?
+**Por qué importa:** es el argumento de
+[ADR-0010](../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md) para que el
+acopio no pertenezca a una emergencia ([P-024](../01-requerimientos/pendientes.md)).
+
+**Origen:** dos fuentes que propuso el equipo, junto con un resumen: «clasificación de
+los centros de acopio en redes unificadas para una misma emergencia y la gestión de
+crisis simultáneas para diferentes eventos adversos». Se leyeron completas para
+verificar ese resumen.
+
+**Hallazgo — el resumen no se sostiene en el texto.** Ninguna de las dos fuentes habla
+de centros de acopio que atiendan varias emergencias a la vez, ni de redes unificadas
+ni de crisis simultáneas. En ninguna aparecen «simultáneo», «varias emergencias»,
+«múltiples desastres» ni «eventos adversos».
+
+**Hallazgo — el protocolo de la ANDI sí sirve para otras piezas.** *Protocolo de
+coordinación del sector privado como parte del Sistema Nacional de Gestión del Riesgo
+de Desastres (SNGRD) en la respuesta a emergencias y desastres*, elaborado para la
+ANDI por Trust Consultores, 2019. Páginas según la numeración impresa:
+- Define el centro de acopio como el lugar donde «se recibe, selecciona, clasifica,
+  cuenta, embalaje, etiqueta y se almacena todos los donativos captados [...] para ser
+  destinados a los sitios donde se necesita» (p. 20, citando el manual operativo de
+  centros de acopio de CEMEFI-Cáritas, México). La donación no llega marcada con un
+  destino: el acopio la dirige según la necesidad.
+- El destino lo fija quien coordina, a partir de la Evaluación de Daños y Análisis de
+  Necesidades (EDAN): la UNGRD emite la solicitud de apoyo con «dónde y en qué tiempo
+  deben ser entregados» (p. 20), y la entrega se coordina «en el lugar indicado por la
+  UNGRD» (p. 16).
+- Los puntos de acopio los administra la UNGRD, o los delega en «la Cruz Roja, la
+  Defensa Civil, la Policía, ABACO con sus Bancos de Alimentos» u otra entidad con
+  capacidad (p. 24).
+- En el punto de acopio se verifica «que la carga corresponde al inventario
+  relacionado en el manifiesto» (p. 25), y lo que no se acepta no se guarda: «no
+  almacenará provisionalmente cargas no aceptadas» (p. 26).
+- La solicitud de apoyo prioriza cada elemento por plazo: «Alta: menos de 48 horas -
+  Media: 3 a 7 días - Baja: 5 a 15 días» (Formato 001, p. 48).
+- ANDI — <https://www.andi.com.co/Uploads/PROTOCOLO%20DE%20LECTURA.pdf> — consultado 2026-09-14
+
+**Hallazgo — el artículo de SciELO es poco pertinente.** López-Vargas, J. C. y
+Cárdenas-Aguirre, D. M. (2017). *Gestión de la logística humanitaria en las etapas
+previas al desastre: revisión sistemática de la literatura*. Revista de Investigación,
+Desarrollo e Innovación, 7(2), 203-216. doi:10.19053/20278306.v7.n2.2017.6094. Revisa
+la literatura sobre la preparación antes del desastre; menciona los centros de acopio
+una sola vez, como una decisión de ubicación en esa etapa. No trata la operación de
+los acopios durante la respuesta ni las emergencias simultáneas.
+- SciELO Colombia — <http://www.scielo.org.co/scielo.php?script=sci_arttext&pid=S2027-83062017000100203> — consultado 2026-09-14. El servidor rechaza HTTPS; se abre por HTTP.
+
+**Conclusión aplicada:**
+- La afirmación de ADR-0010 —un mismo acopio atiende varias emergencias a la vez—
+  **sigue sin fuente**. Queda como afirmación del equipo, marcada así en ADR-0010 y en
+  P-024.
+- El protocolo de la ANDI sí respalda la otra mitad del argumento: el acopio no recibe
+  donaciones marcadas por quien las entrega, las destina a donde se necesitan, y el
+  destino lo fija quien coordina a partir de la evaluación de necesidades. Eso sostiene
+  que el acopio no dependa de una emergencia y que el motor ordene por necesidad, con
+  aprobación humana (RN-04 y RN-07 del
+  [Avance 2](../entregas/avance-02-requisitos.md#3-restricciones-y-reglas-de-negocio)).
+- De paso respalda piezas ya diseñadas, sin cambiarlas: verificar la carga contra el
+  manifiesto se parece a conciliar lo declarado contra lo confirmado (RF-08); rechazar
+  sin almacenar se parece a «no recibir» (RF-06); y la prioridad por plazo es candidata
+  para la urgencia del reporte de necesidad (RF-13), por evaluar.
+
+---
+
 ## Relacionado
 
 - [Evidencia inicial del Avance 1](../entregas/avance-01-sprint0.md#evidencia-inicial) — evidencia del problema en general

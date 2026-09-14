@@ -433,8 +433,10 @@ sigue atendiendo igual. Cerrarla es manual.
 caso de la Cruz Roja que planteó el equipo—, y quien entrega no decide a cuál va su
 donación. Además, el diseño de la portada ya asumía varias. Bajar la prioridad solo en
 la vitrina evita que el reparto siga a la visibilidad en vez de a la necesidad.
-**Pendiente:** citar una fuente de la operación multiemergencia de la Cruz Roja en
-[investigaciones.md](../00-contexto/investigaciones.md).
+**Pendiente:** una fuente sobre la operación multiemergencia de la Cruz Roja. Las dos
+revisadas el 2026-09-14 no la sostienen, pero el protocolo de la ANDI sí respalda que
+el acopio destina las donaciones a donde se necesitan
+([I-005](../00-contexto/investigaciones.md#i-005--un-centro-de-acopio-atiende-varias-emergencias-a-la-vez)).
 **Estado:** RESUELTO → [ADR-0010](../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md),
 `RF-CAT-005` (reescrito), `RF-CAT-006`, `RF-MOT-001/002/005`, `RF-HOM-001`,
 [modelo-datos.md](../02-arquitectura/modelo-datos.md), nota en `ADR-0008`, `B-08`

@@ -33,9 +33,12 @@ Dos hechos cambiaron el cuadro el 2026-09-14:
 2. **Un mismo centro de acopio atiende varias emergencias al mismo tiempo.** Es el
    caso que el equipo planteó con la Cruz Roja: quien entrega en un acopio no decide
    a qué emergencia va su donación; el acopio la lleva a donde hace falta. Atar un
-   acopio a una sola emergencia modela algo que no pasa. *Afirmación del equipo, sin
-   fuente citada todavía: queda por registrar en
-   [investigaciones.md](../../00-contexto/investigaciones.md).*
+   acopio a una sola emergencia modela algo que no pasa. *La parte
+   multiemergencia es una afirmación del equipo, sin fuente todavía. La otra mitad
+   —el acopio destina las donaciones a donde se necesitan, y el destino lo fija quien
+   coordina a partir de la evaluación de necesidades— sí la respalda el protocolo de
+   la ANDI de 2019
+   ([I-005](../../00-contexto/investigaciones.md#i-005--un-centro-de-acopio-atiende-varias-emergencias-a-la-vez)).*
 
 Además, una emergencia vieja puede seguir teniendo zonas con déficit real mientras la
 atención pública se va a la nueva. El sistema no debe amplificar ese sesgo: es el
