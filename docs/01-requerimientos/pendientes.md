@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-09-12
+actualizado: 2026-09-14
 ---
 
 # Pendientes — bandeja de entrada
@@ -76,7 +76,10 @@ entre 25 y 40.
 acceso. Candidatos: Resend, Brevo, o el SMTP de la universidad.
 **Por qué:** sin correo no hay invitaciones ni confirmación de turnos. Afecta a
 dos módulos.
-**Estado:** EN DISCUSIÓN — decidido por Joseph el 2026-09-14: **SMTP estándar**,
+**Estado:** RESUELTO → [ADR-0008](../02-arquitectura/adr/ADR-0008-arquitectura-stack-inicial.md),
+confirmado el 2026-09-14 al redactar el Avance 3. Sigue abierto solo el remitente de
+producción, que se fija antes del primer despliegue (RTA-04).
+Decidido por Joseph el 2026-09-14: **SMTP estándar**,
 sin SDK de proveedor, para que cambiar de servidor sea cambiar variables. En
 desarrollo se prueba con una cuenta personal de Microsoft 365. Falta decidir el
 remitente de producción: una cuenta personal no debería firmar las invitaciones de
@@ -91,7 +94,8 @@ de diciembre de 2026 ([I-004](../00-contexto/investigaciones.md)).
 **Qué:** dónde vive el `docker compose` en producción y bajo qué dominio.
 **Por qué:** Supabase Auth necesita URLs de redirección configuradas, y el enlace
 de invitación tiene que apuntar a algo estable.
-**Estado:** EN DISCUSIÓN — mecanismo decidido el 2026-09-12: **VPS con
+**Estado:** ABIERTO solo en proveedor y dominio — el mecanismo quedó confirmado en
+ADR-0008 el 2026-09-14. Mecanismo decidido el 2026-09-12: **VPS con
 [Dokploy](https://dokploy.com)**, PaaS autoalojado sobre Docker y Traefik, que
 gestiona el mismo `infra/docker-compose.yml` sin reescribirlo y resuelve dominio y
 HTTPS automático. Desarrollo local sigue siendo Docker Compose para cada quien, sin
@@ -154,8 +158,10 @@ módulos, y el producto tiene 7 (M1–M7). Propuesta de partida:
 6. Administración y acceso: identidad, catálogo maestro, bitácora
 
 **Por qué:** sin esto el diagrama no cumple la guía.
-**Estado:** EN DISCUSIÓN — propuesta confirmada por Joseph el 2026-09-12. Falta
-confirmar con Brayan, que la ejecuta, en la reunión del 2026-09-14.
+**Estado:** RESUELTO → descomposición funcional del Avance 3, entregada el
+2026-09-14 con estos seis módulos. Son también las épicas del Avance 2
+([avance-02-requisitos.md](../entregas/avance-02-requisitos.md)). La revisión de
+Brayan sigue en [#5](https://github.com/Proyecto-IngSoftware/acopio/issues/5).
 
 ### P-011 · Numeración del ADR del curso
 **Fecha:** 2026-09-11 · **Propuesto por:** equipo
@@ -178,8 +184,9 @@ del Avance 2 y derivar la descomposición funcional de sus épicas. No hay épic
 Product Backlog, casos de uso ni mapa de stakeholders escritos. Mientras tanto, la
 descomposición se deriva de los RF y las historias semilla de la bóveda.
 **Por qué:** el docente puede notar el hueco.
-**Estado:** ABIERTO — aplazado por decisión del equipo el 2026-09-11: por ahora solo
-el Avance 3
+**Estado:** EN CURSO desde el 2026-09-14 →
+[avance-02-requisitos.md](../entregas/avance-02-requisitos.md). Estuvo aplazado desde
+el 2026-09-11 mientras se entregaba el Avance 3.
 
 ### P-013 · Roles reducidos a cuatro: solo Admin, Auditor, Operador, Receptor
 **Fecha:** 2026-09-12 · **Propuesto por:** Joseph, en conversación con el equipo
@@ -375,8 +382,9 @@ y Tailwind.
 directo a Tailwind. Lovable obligaba a sustituir su capa de datos de Supabase en
 cada regeneración.
 **Estado:** RESUELTO → [ADR-0009](../02-arquitectura/adr/ADR-0009-mockups-claude-design.md),
-que reemplaza a ADR-0004. Confirmar con Brayan, responsable de UI/UX, en la reunión
-del 2026-09-14. Quedan 15 archivos de la bóveda que aún mencionan Lovable; se
+que reemplaza a ADR-0004. Confirmado en la tabla de decisión de ADR-0008 el
+2026-09-14; la revisión de Brayan, responsable de UI/UX, sigue en
+[#7](https://github.com/Proyecto-IngSoftware/acopio/issues/7). Quedan 15 archivos de la bóveda que aún mencionan Lovable; se
 barren después de la entrega.
 
 ### P-022 · Importar automáticamente los acopios de RedAcopio Bogotá
@@ -398,7 +406,7 @@ bloquear:** escribir al operador para pedir autorización o un endpoint.
 [modelo-datos.md](../02-arquitectura/modelo-datos.md) (`acopio.tipo`, `fuente`,
 `fuente_id`), [vista-general.md](../02-arquitectura/vista-general.md) (módulo
 `importacion`), [ADR-0008](../02-arquitectura/adr/ADR-0008-arquitectura-stack-inicial.md).
-Confirmar en la reunión del 2026-09-14.
+Confirmado en ADR-0008 el 2026-09-14.
 
 ### P-023 · Validación de la modularidad del backend
 **Fecha:** 2026-09-14 · **Propuesto por:** Joseph

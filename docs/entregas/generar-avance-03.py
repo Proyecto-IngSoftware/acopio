@@ -320,7 +320,7 @@ metadato("Docente", "Juan Pablo Bustamante Moreno")
 metadato("Institución", "Escuela Tecnológica Instituto Técnico Central (ETITC)")
 metadato("Integrantes", "Joseph · Brayan · Alejandra · Michael")
 metadato("Fecha de entrega", "14 de septiembre de 2026")
-metadato("Sprint", "3")
+metadato("Sprint", "0")
 salto_pagina()
 
 titulo("Contenido", 1)

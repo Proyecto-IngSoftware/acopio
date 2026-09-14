@@ -21,7 +21,7 @@ crea un archivo nuevo.
 | Sección de la guía | Tarea | Estado |
 |---|---|---|
 | 1. Requisitos funcionales | [#9](https://github.com/Proyecto-IngSoftware/acopio/issues/9) | 🟡 Borrador |
-| 2. Requisitos no funcionales y escenarios de calidad | [#10](https://github.com/Proyecto-IngSoftware/acopio/issues/10) | ⬜ |
+| 2. Requisitos no funcionales y escenarios de calidad | [#10](https://github.com/Proyecto-IngSoftware/acopio/issues/10) | 🟡 Borrador |
 | 3. Restricciones y reglas de negocio | [#11](https://github.com/Proyecto-IngSoftware/acopio/issues/11) | ⬜ |
 | 4. Historias de usuario y Product Backlog | [#12](https://github.com/Proyecto-IngSoftware/acopio/issues/12), [#13](https://github.com/Proyecto-IngSoftware/acopio/issues/13), [#16](https://github.com/Proyecto-IngSoftware/acopio/issues/16) | ⬜ |
 | 5. Diagrama de casos de uso | [#14](https://github.com/Proyecto-IngSoftware/acopio/issues/14) | ⬜ |
@@ -140,6 +140,91 @@ de la sección 5 tiene que mostrarlo:
 Verificado con un script contra
 [datos.json](../03-diseno/descomposicion-funcional/datos.json): 75 asignados, 75
 únicos, ninguno sin asignar.
+
+---
+
+## 2. Requisitos no funcionales y escenarios de calidad
+
+Doce condiciones de calidad, cada una con una cifra o una prueba que dice si se
+cumple. Salen de los [13 RNF de la bóveda](../01-requerimientos/no-funcionales.md):
+del RNF-01 al RNF-11 conservan su número; el de idioma (RNF-12 de la bóveda) se funde
+con la legibilidad en RNF-03, porque ambos tratan de cómo se lee un dato; y el de
+mantenibilidad (RNF-13 de la bóveda) pasa a ser RNF-12.
+
+| Código | Requisito no funcional | Atributo de calidad | Cómo se verifica |
+|---|---|---|---|
+| RNF-01 | Toda pantalla de la consola se opera completa en un teléfono de 360 × 640 px, sin desplazamiento horizontal, con áreas táctiles de al menos 48 × 48 px. | Usabilidad — operabilidad en móvil | Recorrido de la entrada rápida en un teléfono real, con una sola mano |
+| RNF-02 | Registrar un movimiento de inventario, desde abrir la entrada rápida hasta ver la confirmación, toma menos de 10 segundos. | Usabilidad — eficiencia de uso | Cronómetro: 5 operadores, 3 intentos cada uno, mediana |
+| RNF-03 | Todo dato operativo tiene contraste de al menos 7:1 y texto de 16 px o más, y los números y fechas usan el formato de Colombia: `1.240,5 L`, `14 sep 2026, 3:14 p. m.` | Usabilidad — legibilidad | Lighthouse y revisión en exteriores, bajo sol |
+| RNF-04 | Todo dato operativo se muestra con su antigüedad («hace 8 min»); si tiene más de 6 horas, se atenúa y lleva advertencia. | Exactitud de la información presentada | Revisión pantalla por pantalla; es criterio de aceptación |
+| RNF-05 | La API responde el registro de un movimiento en menos de 500 ms y la consulta de saldos de un acopio en menos de 200 ms; el motor recalcula 50 zonas × 40 categorías en menos de 5 s; la portada muestra contenido útil en menos de 3 s en 3G. | Eficiencia de desempeño | Pruebas de carga con datos sintéticos al cierre de cada bloque |
+| RNF-06 | El saldo de una categoría nunca queda negativo, ni con registros simultáneos, y ningún movimiento de inventario se puede editar ni borrar. | Integridad de datos | Prueba automatizada de concurrencia contra PostgreSQL real |
+| RNF-07 | Sin conexión, la entrada rápida sigue registrando movimientos en una cola local que se sincroniza al volver la señal; si cae el proveedor de autenticación, las sesiones activas siguen operando. | Disponibilidad — tolerancia a fallos | Prueba en modo avión y con el dominio de Supabase bloqueado |
+| RNF-08 | Cada petición a la API verifica la autorización contra la base de datos, así que suspender a un usuario le corta el acceso en su siguiente petición; los archivos solo se entregan por URL firmada de expiración corta. | Seguridad — autenticidad y confidencialidad | Prueba de integración y lista de chequeo en revisión de código |
+| RNF-09 | Ninguna superficie pública muestra datos personales: el seguimiento por folio revela el recorrido del insumo, nunca datos del donante ni la factura. El registro de Donador y la reserva de turno piden consentimiento conforme a la Ley 1581 de 2012. | Privacidad — cumplimiento legal | Revisión de cada pantalla pública y de la política de datos |
+| RNF-10 | Toda operación de escritura queda en una bitácora que no se puede editar, con usuario, momento, acción y valores anteriores. | Seguridad — responsabilidad y trazabilidad | Prueba: cada endpoint de escritura deja su registro |
+| RNF-11 | La consola se opera completa con teclado, sin violaciones críticas de accesibilidad, y el semáforo de inventario lleva ícono y texto además del color. | Usabilidad — accesibilidad | axe-core y recorrido con lector de pantalla en inventario y entrada rápida |
+| RNF-12 | El backend tiene un módulo por dominio sin dependencias circulares, y las reglas de negocio puras se escriben una sola vez y las comparten cliente y servidor. | Mantenibilidad — modularidad | Revisión de dependencias entre módulos en cada pull request |
+
+### Escenarios de calidad
+
+Se eligen cuatro, uno por atributo, porque son los que más pesan en la propuesta de
+valor: sin integridad el motor propone traslados equivocados; sin rapidez el operador
+deja de registrar y el sistema queda ciego; sin tolerancia a fallos se pierde lo que
+llega a una bodega sin señal; y sin autorización en cada petición, revocar un acceso no
+sirve de nada.
+
+#### Escenario 1 · Integridad del inventario
+
+| Elemento | Descripción |
+|---|---|
+| Requisito no funcional asociado | RNF-06 |
+| Atributo de calidad | Integridad de datos |
+| Fuente del estímulo | Dos operadores del mismo acopio |
+| Estímulo | Registran al mismo tiempo salidas de la misma categoría, y juntas superan el saldo disponible |
+| Artefacto afectado | Registro de movimientos del módulo de inventario y base de datos (RF-04, RF-11) |
+| Entorno | Operación normal, con peticiones concurrentes |
+| Respuesta esperada | Una salida se confirma; la otra se rechaza con un mensaje claro que muestra el saldo real. Ningún movimiento queda a medias |
+| Medida de respuesta | Prueba automatizada con 50 transacciones simultáneas contra PostgreSQL real, repetida 20 veces: 0 saldos negativos, y el saldo final es igual a la suma de los movimientos confirmados en el 100 % de las ejecuciones |
+
+#### Escenario 2 · Registro en menos de diez segundos
+
+| Elemento | Descripción |
+|---|---|
+| Requisito no funcional asociado | RNF-02 |
+| Atributo de calidad | Usabilidad — eficiencia de uso |
+| Fuente del estímulo | Operador de acopio |
+| Estímulo | Llega un donante con una caja de agua embotellada |
+| Artefacto afectado | Pantalla de entrada rápida (RF-04) |
+| Entorno | De pie, con una mano ocupada, en un teléfono real con datos móviles, sobre un catálogo de 25 a 40 categorías |
+| Respuesta esperada | El operador encuentra la categoría escaneando o escribiendo, marca la cantidad con el teclado numérico y confirma en un solo toque; la pantalla muestra el saldo resultante |
+| Medida de respuesta | Cronómetro desde abrir la entrada rápida hasta ver la confirmación: 5 operadores, 3 intentos cada uno, mediana menor a 10 s |
+
+#### Escenario 3 · Registro sin señal
+
+| Elemento | Descripción |
+|---|---|
+| Requisito no funcional asociado | RNF-07 |
+| Atributo de calidad | Disponibilidad — tolerancia a fallos |
+| Fuente del estímulo | Pérdida de conexión en la red móvil |
+| Estímulo | El operador registra tres entradas mientras el teléfono no tiene datos |
+| Artefacto afectado | Entrada rápida y su cola local de movimientos (RF-04) |
+| Entorno | Bodega sin cobertura, en un dispositivo que ya había iniciado sesión |
+| Respuesta esperada | Las tres entradas quedan en la cola con su hora real de registro; un indicador muestra cuántas faltan por sincronizar y el saldo se marca como estimado. Al volver la señal se envían en orden, sin duplicarse |
+| Medida de respuesta | Prueba en modo avión: el 100 % de las entradas llega al servidor, 0 duplicadas, cada una conserva su hora real distinta de la hora de llegada, y la sincronización termina en menos de 60 s después de recuperar la señal *(valor propuesto; la bóveda no fijaba tiempo)* |
+
+#### Escenario 4 · Acceso revocado
+
+| Elemento | Descripción |
+|---|---|
+| Requisito no funcional asociado | RNF-08 |
+| Atributo de calidad | Seguridad — autenticidad |
+| Fuente del estímulo | Un usuario interno que el administrador acaba de suspender |
+| Estímulo | Intenta registrar un movimiento con su token de sesión, que todavía no vence |
+| Artefacto afectado | Autorización de la API (RF-14) |
+| Entorno | Producción, con el token firmado y vigente |
+| Respuesta esperada | La API rechaza la petición con 403, porque consulta el estado del usuario en la base de datos y no confía en el token; el intento queda en la bitácora |
+| Medida de respuesta | Prueba de integración: suspender y reintentar da 403 desde la primera petición siguiente, en el 100 % de los casos, sin esperar a que venza el token |
 
 ---
 

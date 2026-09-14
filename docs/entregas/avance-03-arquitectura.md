@@ -23,10 +23,12 @@ sustentación.
 > Esta nota es el tablero de trabajo del avance, no el entregable. El texto final va
 > al Word. Las decisiones abiertas viven en [pendientes.md](../01-requerimientos/pendientes.md).
 
-**2026-09-12 · Joseph decidió, solo, para seguir avanzando:** GitHub Projects,
-Mermaid, Jest, y despliegue local con Docker Compose. Están en EN DISCUSIÓN en
-[pendientes.md](../01-requerimientos/pendientes.md) hasta que el equipo las confirme
-en la reunión del 2026-09-14.
+**2026-09-14 · Entregado.** El Word del Avance 3 lleva el ADR-001 en estado
+**aceptado**: GitHub Projects, Mermaid, Jest, el despliegue y el resto de la tabla de
+decisión se confirmaron a medida que se redactaba el documento. Sincronizado con
+[ADR-0008](../02-arquitectura/adr/ADR-0008-arquitectura-stack-inicial.md) y
+[pendientes.md](../01-requerimientos/pendientes.md) el mismo día. Sigue abierto el
+proveedor del VPS y el dominio (P-005).
 
 **Cómo montar la organización y el Project, y el backlog listo para copiar:**
 [06-operacion/github-projects.md](../06-operacion/github-projects.md).
@@ -197,8 +199,8 @@ se valida en el Sprint 1. Falta la revisión de Michael y la confirmación del e
 
 ### Diagramas a imagen — hecho 2026-09-14
 
-16 PNG a 3× en [assets/diagramas/](../assets/diagramas/): 7 entidad-relación
-(`er-01` a `er-07`), 2 de arquitectura (`arquitectura-01-contexto`,
+17 PNG a 3× en [assets/diagramas/](../assets/diagramas/) —las 17 figuras del Word—:
+8 entidad-relación (`er-01` a `er-07`, con existencias partida en `er-03a` y `er-03b`), 2 de arquitectura (`arquitectura-01-contexto`,
 `arquitectura-02-contenedores`) y 7 de descomposición funcional
 (`descomposicion-00` a `06`). Los ER y la arquitectura también se leen en
 [esta página](https://claude.ai/code/artifact/f7782416-a907-4043-bef2-e463e365522e).
