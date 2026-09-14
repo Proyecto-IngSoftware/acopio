@@ -1,0 +1,23 @@
+{
+  "artboards": [
+    {
+      "file": "Main.dc.html",
+      "title": "Casos de uso",
+      "x": 0,
+      "y": 0,
+      "w": 1340,
+      "h": 1810
+    },
+    {
+      "file": "Stakeholders.dc.html",
+      "title": "Mapa de stakeholders",
+      "x": 1460,
+      "y": 0,
+      "w": 1100,
+      "h": 1100
+    }
+  ],
+  "launch": {
+    "view": "canvas"
+  }
+}
