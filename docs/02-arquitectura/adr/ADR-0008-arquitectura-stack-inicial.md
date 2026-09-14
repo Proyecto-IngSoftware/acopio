@@ -18,6 +18,10 @@ actualizado: 2026-09-14
 > ([P-011](../../01-requerimientos/pendientes.md)). Es la decisión global: los
 > ADR-0001 a 0007 son decisiones de detalle que esta enmarca y cita.
 
+> **2026-09-14 · Modificado por [ADR-0010](ADR-0010-varias-emergencias-activas.md).**
+> La restricción «una emergencia activa a la vez» ya no rige: pueden estar activas
+> varias, y el acopio no pertenece a ninguna. El resto de esta decisión sigue igual.
+
 ## Contexto
 
 Hay que decidir cómo se organiza técnicamente Acopio y con qué tecnologías se

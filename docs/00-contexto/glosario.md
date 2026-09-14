@@ -153,5 +153,9 @@ No requiere cuenta.
 junto a todo dato operativo. *"1.240 L · hace 8 min"*, nunca *"1.240 L"* a secas.
 Un número sin marca de tiempo es una afirmación que nadie puede verificar.
 
-**Emergencia** — Entidad raíz. Todo cuelga de un evento. Permite reutilizar el
-sistema en desastres futuros sin rehacer el modelo.
+**Emergencia** — Evento que origina zonas afectadas. Permite reutilizar el sistema
+en desastres futuros sin rehacer el modelo. Pueden estar activas varias a la vez, y
+pertenecen a ella las zonas —no los acopios: un mismo acopio atiende a todas—. Pasa
+de *activa* a *en seguimiento* al vencer la fecha que se programa al crearla, lo que
+la baja en el portal pero no en el motor; cerrarla es manual
+([ADR-0010](../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md)).

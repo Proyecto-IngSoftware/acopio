@@ -51,9 +51,11 @@ validación de documento. Hoy es un campo de texto (RF-TUR-007).
 Ver [fuera-de-alcance](../00-contexto/fuera-de-alcance.md#doble-factor-de-autenticación).
 Reabrir si el sistema pasa a operación real.
 
-### B-08 · Múltiples emergencias simultáneas
-El modelo ya lo soporta —`Emergencia` es la raíz—, pero la interfaz asume una
-activa. Falta el selector y el aislamiento de permisos por emergencia.
+### B-08 · Múltiples emergencias simultáneas — promovido el 2026-09-14
+Entra al semestre con [ADR-0010](../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md)
+y [RF-CAT-005](../01-requerimientos/funcionales/catalogo.md). El aislamiento de
+permisos por emergencia que se pensaba necesario no hace falta: las asignaciones son a
+ubicaciones, y el acopio no pertenece a ninguna emergencia.
 
 ### B-09 · API pública de solo lectura
 Para que medios y entidades consuman las métricas agregadas de transparencia sin

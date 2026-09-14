@@ -65,8 +65,16 @@ Usuario ────┬─ UsuarioAsignacion → (Acopio | Zona)
 
 ```
 emergencia
-  id · nombre · tipo · inicio · estado · horizonte_dias (7)
-  pesos_motor  jsonb   {criticidad, urgencia, proximidad, magnitud}
+  id · nombre · tipo · inicio · horizonte_dias (7)
+  estado  ACTIVA | EN_SEGUIMIENTO | CERRADA
+  destacada_hasta date        al pasarla, ACTIVA → EN_SEGUIMIENTO (tarea diaria)
+  cerrada_en timestamptz? · motivo_cierre text?
+  CHECK (estado <> 'CERRADA' OR cerrada_en IS NOT NULL)
+
+configuracion_motor           una sola fila, global (ADR-0010)
+  id smallint PK · CHECK (id = 1)
+  pesos jsonb   {criticidad, urgencia, proximidad, magnitud} · suman 1
+  cantidad_minima numeric · actualizado_por · actualizado_en
 
 categoria
   id · nombre · grupo · unidad_base (LITRO|KILOGRAMO|UNIDAD)
@@ -94,12 +102,12 @@ necesidad no se puede defender.
 
 ```
 entidad
-  id · emergencia_id · nombre · tipo · nit · sitio_web · contacto · logo_url
+  id · nombre · tipo · nit · sitio_web · contacto · logo_url
   verificacion  SIN_VERIFICAR | VERIFICADA | RECHAZADA
   verificada_por · verificada_en · vence_en · documento_soporte_key
 
 causa
-  id · entidad_id · titulo · categoria_causa · descripcion · imagen_url
+  id · entidad_id · emergencia_id? · titulo · categoria_causa · descripcion · imagen_url
   pasos jsonb   [{orden, texto}]
   url_oficial · publicada bool
   vigente_hasta date?          opcional · pasada, se archiva sola
@@ -107,7 +115,7 @@ causa
   CHECK (NOT archivada OR archivada_en IS NOT NULL)
 
 acopio
-  id · emergencia_id · entidad_id? · nombre · direccion · lat · lng
+  id · entidad_id? · nombre · direccion · lat · lng
   telefono · horario jsonb · indicaciones_acceso
   estado  ACTIVO | PAUSADO | CERRADO
   tipo    OPERADO | REFERENCIADO      REFERENCIADO = importado, sin inventario
@@ -123,6 +131,12 @@ zona
   poblacion_estimada int · poblacion_fuente · poblacion_fecha
   estado  SIN_ATENDER | EN_ATENCION | CUBIERTA
 ```
+
+**La emergencia es de la zona, no del acopio (2026-09-14,
+[ADR-0010](adr/ADR-0010-varias-emergencias-activas.md)).** Pueden estar activas
+varias emergencias, y un mismo acopio atiende a todas: por eso `acopio`, `entidad` y
+`movimiento` no tienen `emergencia_id`. `zona` sí lo tiene, y `causa` de forma
+opcional. La emergencia de una `RECEPCION` se conoce por su zona.
 
 **`causa.archivada` no es lo mismo que despublicar.** Una causa archivada sigue
 visible, con su sello y su fecha — solo sale del espacio principal para dejarle
@@ -143,7 +157,6 @@ que reimportar actualice en vez de duplicar. Ver
 ```
 movimiento
   id                uuid pk
-  emergencia_id     fk
   ubicacion_tipo    ACOPIO | ZONA
   ubicacion_id      uuid
   categoria_id      fk
@@ -162,7 +175,7 @@ movimiento
   CHECK (cantidad > 0)
   CHECK (tipo <> 'AJUSTE' OR length(motivo) >= 10)
   índices: (ubicacion_tipo, ubicacion_id, categoria_id)
-           (emergencia_id, registrado_en)
+           (registrado_en)
 ```
 
 **Sin `UPDATE` ni `DELETE`.** No basta con no escribirlos en el código: se revoca
@@ -395,6 +408,9 @@ Cada uno se hace cumplir donde no se pueda evadir.
 | Un acopio `REFERENCIADO` tiene fuente; uno `OPERADO` tiene entidad | `CHECK` |
 | Un punto importado existe una sola vez por fuente | `UNIQUE (fuente, fuente_id)` |
 | Un acopio `REFERENCIADO` no tiene movimientos, umbrales, jornadas ni asignaciones | Transacción |
+| Una emergencia `CERRADA` tiene fecha de cierre | `CHECK` |
+| Una emergencia `CERRADA` no recibe zonas nuevas ni genera sugerencias | Transacción |
+| `configuracion_motor` tiene una sola fila y sus pesos suman 1 | `CHECK` |
 
 **Lo que se puede expresar en el esquema, va en el esquema.** Una regla que solo
 vive en el código de la aplicación se rompe el día que alguien escribe un script.
@@ -420,7 +436,7 @@ Todas las entidades están en el alcance del semestre: cada una responde a un `R
 existente. `saldo` no aparece — es una vista materializada, no una tabla con llaves
 propias; se deriva de `movimiento` como explica el principio rector arriba.
 
-**Un diagrama por clúster, no uno solo.** Con 23 entidades y unas 40 relaciones, un
+**Un diagrama por clúster, no uno solo.** Con 24 entidades y unas 40 relaciones, un
 solo `erDiagram` de Mermaid es ilegible — la herramienta no tiene forma de acomodar
 manualmente un diagrama tan grande. Se divide en los mismos siete grupos que ya
 organizan la sección [Tablas](#tablas) de arriba. Cuando una entidad aparece en un
@@ -432,9 +448,13 @@ negocio. La lista completa de columnas está en [Tablas](#tablas).
 
 ### Raíz y catálogo
 
-`emergencia` es la raíz de todo el modelo. Se dibuja aquí completa pero suelta: no
-tiene relaciones dentro de este clúster — salen hacia Red, Existencias y Motor,
-donde aparece como referencia liviana que apunta de vuelta a esta caja. El catálogo (`categoria`, `canasta_estandar`,
+`emergencia` es la raíz de las zonas afectadas. Se dibuja aquí completa pero suelta:
+no tiene relaciones dentro de este clúster — salen hacia Red (`zona` y, opcional,
+`causa`) y Motor (`sugerencia`), donde aparece como referencia liviana que apunta de
+vuelta a esta caja. Desde el 2026-09-14 pueden estar activas varias, y acopios,
+entidades y movimientos no dependen de ella
+([ADR-0010](adr/ADR-0010-varias-emergencias-activas.md)). `configuracion_motor`
+guarda los pesos del motor, globales para todas las emergencias. El catálogo (`categoria`, `canasta_estandar`,
 `codigo_barras`) es independiente de la emergencia: una categoría sirve para
 cualquiera.
 
@@ -446,9 +466,15 @@ erDiagram
     EMERGENCIA {
         uuid id PK
         text nombre
-        text estado "una activa a la vez"
+        text estado "ACTIVA | EN_SEGUIMIENTO | CERRADA"
+        date destacada_hasta "al pasarla, EN_SEGUIMIENTO"
         int horizonte_dias
-        jsonb pesos_motor
+    }
+    CONFIGURACION_MOTOR {
+        smallint id PK "fila única"
+        jsonb pesos "globales · suman 1"
+        numeric cantidad_minima
+        uuid actualizado_por FK "usuario · clúster Identidad"
     }
     CATEGORIA {
         uuid id PK
@@ -476,9 +502,8 @@ erDiagram
 
 ```mermaid
 erDiagram
-    EMERGENCIA ||--o{ ACOPIO : contiene
     EMERGENCIA ||--o{ ZONA : contiene
-    EMERGENCIA ||--o{ ENTIDAD : contiene
+    EMERGENCIA |o--o{ CAUSA : "enfoca · opcional"
     ENTIDAD ||--o{ CAUSA : publica
     ENTIDAD ||--o{ ACOPIO : administra
     USUARIO |o--o{ ENTIDAD : verifica
@@ -491,7 +516,6 @@ erDiagram
     }
     ENTIDAD {
         uuid id PK
-        uuid emergencia_id FK
         uuid verificada_por FK
         text nombre
         text verificacion
@@ -500,6 +524,7 @@ erDiagram
     CAUSA {
         uuid id PK
         uuid entidad_id FK
+        uuid emergencia_id FK "opcional"
         text titulo
         bool publicada
         bool archivada
@@ -507,7 +532,6 @@ erDiagram
     }
     ACOPIO {
         uuid id PK
-        uuid emergencia_id FK
         uuid entidad_id FK "null solo si REFERENCIADO"
         text nombre
         text estado
@@ -533,7 +557,6 @@ ilegible (2026-09-14).
 ```mermaid
 erDiagram
     direction LR
-    EMERGENCIA ||--o{ MOVIMIENTO : agrupa
     ACOPIO ||--o{ MOVIMIENTO : "ubicacion_tipo=ACOPIO"
     ZONA   ||--o{ MOVIMIENTO : "ubicacion_tipo=ZONA"
     CATEGORIA ||--o{ MOVIMIENTO : clasifica
@@ -559,12 +582,8 @@ erDiagram
     REMISION {
         uuid id PK "clúster Custodia"
     }
-    EMERGENCIA {
-        uuid id PK "clúster Raíz y catálogo"
-    }
     MOVIMIENTO {
         uuid id PK
-        uuid emergencia_id FK
         text ubicacion_tipo
         uuid ubicacion_id "sin FK real"
         uuid categoria_id FK

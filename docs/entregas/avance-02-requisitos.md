@@ -22,7 +22,7 @@ crea un archivo nuevo.
 |---|---|---|
 | 1. Requisitos funcionales | [#9](https://github.com/Proyecto-IngSoftware/acopio/issues/9) | 🟡 Borrador |
 | 2. Requisitos no funcionales y escenarios de calidad | [#10](https://github.com/Proyecto-IngSoftware/acopio/issues/10) | 🟡 Borrador |
-| 3. Restricciones y reglas de negocio | [#11](https://github.com/Proyecto-IngSoftware/acopio/issues/11) | ⬜ |
+| 3. Restricciones y reglas de negocio | [#11](https://github.com/Proyecto-IngSoftware/acopio/issues/11) | 🟡 Borrador |
 | 4. Historias de usuario y Product Backlog | [#12](https://github.com/Proyecto-IngSoftware/acopio/issues/12), [#13](https://github.com/Proyecto-IngSoftware/acopio/issues/13), [#16](https://github.com/Proyecto-IngSoftware/acopio/issues/16) | ⬜ |
 | 5. Diagrama de casos de uso | [#14](https://github.com/Proyecto-IngSoftware/acopio/issues/14) | ⬜ |
 | 6. Mapa de stakeholders | [#15](https://github.com/Proyecto-IngSoftware/acopio/issues/15) | ⬜ |
@@ -225,6 +225,51 @@ sirve de nada.
 | Entorno | Producción, con el token firmado y vigente |
 | Respuesta esperada | La API rechaza la petición con 403, porque consulta el estado del usuario en la base de datos y no confía en el token; el intento queda en la bitácora |
 | Medida de respuesta | Prueba de integración: suspender y reintentar da 403 desde la primera petición siguiente, en el 100 % de los casos, sin esperar a que venza el token |
+
+---
+
+## 3. Restricciones y reglas de negocio
+
+### Restricciones
+
+Condiciones que limitan cómo se puede construir la solución. Ninguna es el calendario
+de la asignatura: todas vendrían con el proyecto aunque no fuera académico.
+
+| Código | Restricción | Tipo |
+|---|---|---|
+| RST-01 | La plataforma opera con presupuesto cero: solo servicios gratuitos o autoalojados. El mapa no puede exigir API key ni tarjeta de crédito, la autenticación usa el plan gratuito de Supabase y la producción corre en un VPS propio con Dokploy. | Infraestructura |
+| RST-02 | El tratamiento de datos personales se rige por la Ley 1581 de 2012. No se almacena ningún dato de personas desaparecidas; las facturas son privadas; registrarse y reservar exigen consentimiento; y como las credenciales residen en Supabase, fuera de Colombia, se declara la transferencia internacional. | Legal |
+| RST-03 | El mapa y la búsqueda por dirección dependen de OpenStreetMap y Nominatim, bajo sus políticas de uso: máximo una petición por segundo a Nominatim, siempre desde el servidor y con caché; sin descargar mosaicos para uso sin conexión; atribución visible. | Técnica |
+| RST-04 | Los acopios de RedAcopio Bogotá se importan sin API pública ni licencia de reutilización. Solo pueden entrar como puntos referenciados —sin inventario—, con la fuente nombrada y enlazada, y leyéndola como máximo una vez por hora. | Datos |
+| RST-05 | La autenticación está delegada en Supabase Auth, que solo emite el token. Sin internet no se puede iniciar sesión, y los roles, alcances y reglas de autorización tienen que vivir en la base de datos propia, no en el proveedor. | Técnica |
+| RST-06 | La canasta estándar (Manual Esfera) y la población de las zonas (DANE) se usan solo como referencia, sin convenio con esas entidades. Cada valor es configurable y lleva su fuente obligatoria; el motor no puede depender de un número sin cita. | Datos |
+| RST-07 | Cuatro personas desarrollan en paralelo, repartidas por módulo. Todo integrante levanta el sistema completo con un solo comando (Docker Compose), y ningún módulo puede depender de otro en ciclo. | Organizacional |
+
+### Reglas de negocio
+
+Normas del problema que el sistema respeta. Aquí van las condiciones de rol y permiso
+que la sección 1 dejó fuera de los requisitos.
+
+| Código | Regla de negocio | Relación con requisito funcional |
+|---|---|---|
+| RN-01 | La plataforma no recibe ni custodia dinero. Toda donación monetaria se hace en el sitio oficial de la entidad, y el paso hacia afuera se advierte. | RF-02 |
+| RN-02 | Una entidad solo aparece en el directorio y en la portada si está verificada con un documento soporte. La verificación caduca a los 6 meses; si no se renueva, sus causas se archivan, sin borrarse. | RF-15, RF-02 |
+| RN-03 | Un movimiento de inventario nunca se edita ni se borra: un error se corrige con un ajuste de signo contrario y un motivo de al menos 10 caracteres. El saldo de una categoría nunca puede quedar negativo. | RF-04, RF-11 |
+| RN-04 | Ninguna sugerencia del motor se ejecuta sola. Solo la aprobación de un administrador genera la remisión, y descartarla exige motivo. | RF-10 |
+| RN-05 | Solo quien tiene cuenta de Donador obtiene un folio con seguimiento. Quien no se registra entrega igual, como entrada normal y sin folio. Un Donador tiene a lo sumo 5 donaciones preparadas a la vez, y las que no entrega en 7 días se cancelan *(valores iniciales, P-018)*. | RF-07, RF-09 |
+| RN-06 | Operador, receptor y auditor solo actúan sobre las ubicaciones que el administrador les asignó. Solo el administrador crea accesos a la consola; el Donador es la única cuenta que se registra sola, y no tiene ubicaciones. | RF-14, RF-04, RF-08, RF-12 |
+| RN-07 | Pueden estar activas varias emergencias a la vez, y un acopio atiende a todas. Al pasar la fecha que se programa al crearla, una emergencia baja de prioridad en el portal, pero el motor la sigue atendiendo según la necesidad de sus zonas. Cerrarla es decisión manual del administrador. | RF-10, RF-01 |
+
+**RN-07 es nueva.** Reemplaza la restricción «una emergencia activa a la vez» que el
+Avance 3 incluyó en el ADR-001
+([ADR-0010](../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md)).
+
+**Las cuatro reglas del sistema que el Avance 3 dejó fuera de su diagrama** quedan
+cubiertas aquí o en la sección 2: RF-IDE-005 (autorizar cada petición) en RN-06 y
+RNF-08; RF-INV-011 (integridad transaccional) en RN-03 y RNF-06; RF-CMP-002
+(archivos seguros) en RNF-08 y RNF-09. RF-TUR-006 —los cupos se rotulan como
+«reservados», no como «personas presentes»— se vuelve criterio de aceptación de la
+historia de RF-03.
 
 ---
 

@@ -333,7 +333,7 @@ el equipo, a partir de las situaciones planteadas en P-018
 | Recibir en un acopio distinto al elegido, sin revalidar «no recibir» | Se adelanta la ayuda: al terminar de escanear, el sistema sugiere acopios y avisa qué línea no aceptaría cada uno (RF-CMP-001D), antes de elegir. Si aun así termina en otro, se revisa de nuevo al recibir (RF-CMP-001C) |
 | Entidad que caduca deja causas publicadas colgando, o las causas nunca rotan | `causa` gana `archivada`: no se despublica, sale del carrusel y del listado principal, queda visible en un filtro de «causas atendidas» (RF-RED-010). Se archiva sola por duración propia o por caducidad de la entidad, o el Administrador la archiva a mano |
 | Varios camiones, distintos destinos, sin trazabilidad exacta garantizada | Aceptado como riesgo: la donación **se cierra para el Donador al conciliarse** (RF-CMP-004), no al llegar a una zona. El despacho es de mejor esfuerzo: `remision.zona_destino_id` ahora admite **despacho general** sin zona fija; quien recibe la asigna al confirmar. Cuenta agregada de «en tránsito» y «recibidas» en transparencia (RF-HOM-004) |
-| Múltiples emergencias activas, acopio de otra emergencia | Validado que no aplica: [RF-CAT-005](../01-requerimientos/funcionales/catalogo.md) ya limita a **una emergencia activa a la vez**. El destino de un despacho lo declara quien lo formaliza (el Operador, al despachar), no el Donador |
+| Múltiples emergencias activas, acopio de otra emergencia | Validado que no aplica: [RF-CAT-005](../01-requerimientos/funcionales/catalogo.md) ya limita a **una emergencia activa a la vez**. El destino de un despacho lo declara quien lo formaliza (el Operador, al despachar), no el Donador. **Corregido el 2026-09-14 ([P-024](#p-024--varias-emergencias-activas-el-acopio-no-pertenece-a-ninguna)):** pueden estar activas varias, pero el acopio no pertenece a ninguna, así que el caso sigue sin existir |
 
 **Por qué:** los dos primeros evitan que la donación llegue a un lugar que no la
 va a aceptar. El tercero le da rotación a la portada sin borrar la rendición de
@@ -421,6 +421,24 @@ servicio aparte: el motor calcula 2.000 celdas en milisegundos.
 **Estado:** RESUELTO → [vista-general.md](../02-arquitectura/vista-general.md),
 [ADR-0008](../02-arquitectura/adr/ADR-0008-arquitectura-stack-inicial.md). Quedan
 11 módulos.
+
+### P-024 · Varias emergencias activas; el acopio no pertenece a ninguna
+**Fecha:** 2026-09-14 · **Propuesto por:** Joseph
+**Qué:** pueden estar activas varias emergencias a la vez. La emergencia pertenece a
+la zona afectada; acopios, entidades y movimientos no pertenecen a ninguna, y las
+causas se ligan a una de forma opcional. Al crearla se programa hasta cuándo se
+destaca; al pasar esa fecha baja a *en seguimiento* en el portal, pero el motor la
+sigue atendiendo igual. Cerrarla es manual.
+**Por qué:** un mismo centro de acopio atiende varias emergencias al mismo tiempo —el
+caso de la Cruz Roja que planteó el equipo—, y quien entrega no decide a cuál va su
+donación. Además, el diseño de la portada ya asumía varias. Bajar la prioridad solo en
+la vitrina evita que el reparto siga a la visibilidad en vez de a la necesidad.
+**Pendiente:** citar una fuente de la operación multiemergencia de la Cruz Roja en
+[investigaciones.md](../00-contexto/investigaciones.md).
+**Estado:** RESUELTO → [ADR-0010](../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md),
+`RF-CAT-005` (reescrito), `RF-CAT-006`, `RF-MOT-001/002/005`, `RF-HOM-001`,
+[modelo-datos.md](../02-arquitectura/modelo-datos.md), nota en `ADR-0008`, `B-08`
+promovido, corrección en P-019. Faltan los diagramas ER regenerados.
 
 ---
 

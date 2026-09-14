@@ -21,6 +21,8 @@ Principio: **el sistema recomienda, la persona decide y responde.**
 
 **Criterios de aceptación:**
 - [ ] Nombre, municipio, coordenadas, población estimada y fuente de esa estimación
+- [ ] Pertenece a una emergencia. Si esa emergencia se cierra, la zona queda en solo
+      lectura ([RF-CAT-005](catalogo.md#rf-cat-005--gestionar-emergencias))
 - [ ] Estado: `SIN_ATENDER`, `EN_ATENCION`, `CUBIERTA`
 - [ ] Fecha de la estimación de población, visible junto al número
 - [ ] Aparece en el mapa interno con su color de criticidad
@@ -35,7 +37,8 @@ necesidad(z,c) = canasta(c) × poblacion(z) × horizonte_dias
 
 **Criterios de aceptación:**
 - [ ] Se calcula automáticamente para toda categoría con canasta definida
-- [ ] El horizonte en días es configurable por emergencia; por defecto 7
+- [ ] El horizonte en días es configurable por emergencia; por defecto 7. Cada zona
+      usa el de su emergencia
 - [ ] El administrador puede sobrescribir manualmente la necesidad de una categoría,
       y la interfaz muestra que ese valor es manual y quién lo puso
 - [ ] La pantalla muestra los tres términos del cálculo, no solo el resultado
@@ -83,7 +86,12 @@ cantidad_sugerida = min(movible(a,c), deficit(z,c))
 **Criterios de aceptación:**
 - [ ] Heurística voraz por categoría: zonas por criticidad descendente, acopios por
       superávit descendente, emparejamiento sucesivo
-- [ ] Los cuatro pesos son configurables por emergencia y suman 1
+- [ ] Los cuatro pesos son globales, configurables ([RF-CAT-006](catalogo.md#rf-cat-006--configurar-pesos-del-motor)),
+      y suman 1
+- [ ] Un solo cálculo sobre las zonas de todas las emergencias `ACTIVA` y
+      `EN_SEGUIMIENTO`. **La prioridad de una emergencia en el portal no altera el
+      puntaje**: el reparto sigue a la necesidad, no a la visibilidad
+      ([ADR-0010](../../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md))
 - [ ] Recálculo bajo demanda y programado cada 15 minutos
 - [ ] No genera sugerencias por debajo de una cantidad mínima configurable, para no
       proponer traslados irrisorios

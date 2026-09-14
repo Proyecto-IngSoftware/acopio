@@ -226,7 +226,7 @@ las 6:02 pm conserva las dos marcas.
 
 | Grupo | Entidades |
 |---|---|
-| Raíz | `Emergencia` |
+| Raíz | `Emergencia` (raíz de las zonas) · `ConfiguracionMotor` (pesos globales) |
 | Catálogo | `Categoria` (unidad base, perecedero) · `CanastaEstandar` (cantidad/persona/día) · `CodigoBarras` (EAN → categoría) |
 | Red | `Entidad` (verificación) · `Causa` (pasos + URL externa, archivable) · `Acopio` · `Zona` |
 | Existencias | `Movimiento` · `Saldo` (vista) · `Umbral` (min, max, `no_recibir`) |
@@ -236,7 +236,10 @@ las 6:02 pm conserva las dos marcas.
 | Transversal | `Usuario` · `UsuarioAsignacion` · `Invitacion` · `Bitacora` |
 
 `Emergencia` como raíz cuesta una llave foránea hoy e imposibilita el retro-encaje
-mañana. Se incluye aunque el proyecto arranque con una sola.
+mañana. **2026-09-14 ([ADR-0010](../../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md)):**
+pueden estar activas varias a la vez, y la emergencia pertenece a la zona afectada,
+no al acopio: un mismo acopio atiende a todas. Al pasar su fecha de prioridad baja en
+el portal, pero el motor la sigue atendiendo según la necesidad.
 
 ### Reglas de integridad
 
@@ -433,7 +436,7 @@ urgencia   = 1 / (1 + dias_para_vencer)      1 si no es perecedero sin fecha
 proximidad = 1 − (distancia / distancia_max)
 magnitud   = min(1, movible / deficit)
 
-pesos por defecto: 0.45 · 0.25 · 0.15 · 0.15   configurables por emergencia
+pesos por defecto: 0.45 · 0.25 · 0.15 · 0.15   globales, configurables (ADR-0010)
 cantidad_sugerida = min(movible(a,c), deficit(z,c))
 ```
 

@@ -74,17 +74,38 @@ emparejamiento.
 ### RF-CAT-005 · Gestionar emergencias
 **Actor:** Administrador · **Prioridad:** DEBE
 
+**2026-09-14 · reescrito ([ADR-0010](../../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md)).**
+Antes limitaba la interfaz a una emergencia activa. Un mismo acopio atiende varias
+emergencias a la vez, así que ahora pueden estar activas varias, y la emergencia
+pertenece a la zona afectada, no al acopio.
+
 **Criterios de aceptación:**
-- [ ] Nombre, tipo, fecha de inicio, estado y horizonte de días por defecto
-- [ ] Solo una emergencia activa a la vez en la interfaz
-- [ ] Toda entidad operativa cuelga de una emergencia
-- [ ] Cerrar una emergencia deja sus datos en solo lectura, sin borrarlos
+- [ ] Nombre, tipo, fecha de inicio, horizonte de días por defecto y **fecha hasta la
+      que se destaca** (`destacada_hasta`), obligatoria al crearla
+- [ ] Pueden estar activas varias emergencias a la vez
+- [ ] Estados: `ACTIVA` → `EN_SEGUIMIENTO` → `CERRADA`
+- [ ] Al pasar `destacada_hasta`, pasa sola a `EN_SEGUIMIENTO`: baja en el portal,
+      sigue visible y el motor la sigue atendiendo igual
+- [ ] El Administrador puede extender la fecha o devolverla a `ACTIVA` en cualquier
+      momento
+- [ ] Cerrarla es manual y exige motivo; si alguna de sus zonas tiene déficit o
+      remisiones en tránsito, se advierte antes de confirmar
+- [ ] Una emergencia `CERRADA` deja sus zonas en solo lectura, sin borrar nada, y no
+      genera sugerencias nuevas
+- [ ] Las zonas pertenecen a una emergencia; las causas, de forma opcional. Acopios,
+      entidades y movimientos no pertenecen a ninguna: un acopio atiende a todas
+- [ ] En el portal, las activas van primero, de la más reciente a la más antigua, y
+      después las que están en seguimiento. **Ese orden no altera el puntaje del
+      motor** ([RF-MOT-005](motor.md#rf-mot-005--generar-sugerencias))
 
 ### RF-CAT-006 · Configurar pesos del motor
 **Actor:** Administrador · **Prioridad:** DEBERÍA
 
 **Criterios de aceptación:**
 - [ ] Los cuatro pesos —criticidad, urgencia, proximidad, magnitud— son editables
+- [ ] Son globales, no de cada emergencia: el motor hace un solo ranking para todas
+      las emergencias activas y en seguimiento
+      ([ADR-0010](../../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md))
 - [ ] Se valida que sumen 1
 - [ ] Cambiarlos no altera sugerencias ya aprobadas
 - [ ] Vista previa del efecto sobre el ranking actual antes de guardar

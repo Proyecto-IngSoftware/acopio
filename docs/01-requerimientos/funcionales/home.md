@@ -21,7 +21,10 @@ una vitrina de la causa y una puerta de entrada a tres acciones.
 **Actor:** Cualquiera · **Prioridad:** DEBE
 
 **Criterios de aceptación:**
-- [ ] Hero con la emergencia activa y una frase de estado, no un eslogan
+- [ ] Hero con las emergencias activas —la más reciente primero, con selector— y una
+      frase de estado, no un eslogan. Las que están en seguimiento siguen en el
+      selector, después de las activas
+      ([ADR-0010](../../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md))
 - [ ] Cifras vivas: kilogramos movilizados, acopios activos, zonas atendidas,
       cupos abiertos. **Cada una con su antigüedad**
 - [ ] Tres botones de igual peso: *Donar dinero* · *Donar en especie* · *Ser
