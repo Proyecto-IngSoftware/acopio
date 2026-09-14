@@ -14,7 +14,7 @@ Entregables de **Ingeniería de Software I** · Docente: Juan Pablo Bustamante M
 | Entrega | Contenido | Fecha | Estado |
 |---|---|---|---|
 | [Avance 1 — Sprint 0](avance-01-sprint0.md) | Matriz de selección, problema y usuarios, visión de producto, propuesta de valor, roles y acuerdos | 9 sep 2026 | ✅ Entregado. [Word](Avance%201%20-%20Sprint%200%20-%20Acopio.docx) |
-| Avance 2 | No está en el documento. Ver [P-012](../01-requerimientos/pendientes.md) | — | ⬜ Aplazado |
+| [Avance 2 — Requisitos y planeación](avance-02-requisitos.md) | RF, RNF y escenarios, restricciones y reglas, historias y backlog, casos de uso, stakeholders. [Guía](../talleres/Avance%20de%20Proyecto%202%20–%20IS1.pdf) · [Tablero](https://github.com/orgs/Proyecto-IngSoftware/projects/1) | Retomado 14 sep 2026 | 🟡 En curso — RF en borrador |
 | [Avance 3 — Arquitectura inicial](avance-03-arquitectura.md) | Descomposición funcional, modelo de datos, ADR-001, diagrama de arquitectura. [Guía](../talleres/Avance%20de%20Proyecto%203%20–%20IS1.pdf) | Sustentación 11 sep 2026 · correcciones hasta 14 sep | 🟡 Word de revisión listo: [Avance 3 - Arquitectura inicial - Acopio.docx](Avance%203%20-%20Arquitectura%20inicial%20-%20Acopio.docx), generado con [generar-avance-03.py](generar-avance-03.py). Falta revisión del equipo y unirlo al Word del Avance 1 |
 
 ## Equipo
