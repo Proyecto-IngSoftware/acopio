@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap">
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: #1C1917; background: #FAFAF9; -webkit-font-smoothing: antialiased; font-optical-sizing: auto; }
+a { color: #0F6E6E; text-decoration: none; }
+a:hover { color: #0A4F4F; text-decoration: underline; }
+.tab { font-variant-numeric: tabular-nums; }
+svg { flex-shrink: 0; }
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; overflow: hidden; background: #FAFAF9; display: flex; flex-direction: column;">
+
+  <header style="height: 64px; background: #FFFFFF; border-bottom: 1px solid #E7E5E4; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 16px;">
+    <div style="height: 48px; display: flex; align-items: center; gap: 6px; font-size: 18px; font-weight: 700; letter-spacing: -0.01em;">Acopio Norte <svg width="18" height="18" viewBox="0 0 256 256" fill="#1C1917" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,53.66,90.34L128,164.69l74.34-74.35a8,8,0,0,1,11.32,11.32Z"></path></svg></div>
+    <div style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: #0A4F4F; background: #E6F4F4; border-radius: 999px; padding: 6px 12px 6px 10px;"><svg width="16" height="16" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M160,40A88.09,88.09,0,0,0,81.29,88.67,64,64,0,1,0,72,216h88a88,88,0,0,0,0-176Zm0,160H72a48,48,0,0,1,0-96c1.1,0,2.2,0,3.29.11A88,88,0,0,0,72,128a8,8,0,0,0,16,0,72,72,0,1,1,72,72Zm37.66-93.66a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L144,148.69l42.34-42.35A8,8,0,0,1,197.66,106.34Z"></path></svg> En línea</div>
+  </header>
+
+  <div style="flex-grow: 1; overflow: hidden; padding: 16px 16px 0; display: flex; flex-direction: column; gap: 12px;">
+    <div style="display: flex; flex-direction: column; gap: 2px;">
+      <h1 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.015em;">Inventario</h1>
+      <span class="tab" style="font-size: 14px; color: #57534E;">12 categorías: 1 escasa, 1 poca, 1 de sobra</span>
+    </div>
+    <div style="display: flex; gap: 8px; overflow: hidden;">
+      <div style="height: 44px; flex-shrink: 0; display: flex; align-items: center; padding: 0 16px; background: #E6F4F4; border: 2px solid #0F6E6E; border-radius: 999px; font-size: 14px; font-weight: 700; color: #0A4F4F;">Todas</div>
+      <div style="height: 44px; flex-shrink: 0; display: flex; align-items: center; padding: 0 14px; background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 999px; font-size: 14px; font-weight: 500;">Escaso</div>
+      <div style="height: 44px; flex-shrink: 0; display: flex; align-items: center; padding: 0 14px; background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 999px; font-size: 14px; font-weight: 500;">Poco</div>
+      <div style="height: 44px; flex-shrink: 0; display: flex; align-items: center; padding: 0 14px; background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 999px; font-size: 14px; font-weight: 500;">De sobra</div>
+    </div>
+
+    <div style="background: #FFFFFF; border: 1px solid #E7E5E4; border-left: 4px solid #DC2626; border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700;"><svg width="18" height="18" viewBox="0 0 256 256" fill="#DC2626" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z"></path></svg> Pañal adulto</span>
+        <span style="font-size: 12px; color: #57534E;">hace 22 min</span>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 10px;">
+        <span class="tab" style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">36<span style="font-size: 16px; font-weight: 500; color: #57534E; margin-left: 4px; letter-spacing: 0;">un</span></span>
+        <span style="font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 8px; background: #FEF2F2; border: 1px solid #DC2626;">Escaso</span>
+      </div>
+      <div style="height: 6px; border-radius: 999px; background: #E7E5E4;"><div style="width: 6%; height: 6px; border-radius: 999px; background: #DC2626;"></div></div>
+      <span class="tab" style="font-size: 14px; color: #57534E;">mín 120, máx 600</span>
+    </div>
+
+    <div style="background: #FFFFFF; border: 1px solid #E7E5E4; border-left: 4px solid #D97706; border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700;"><svg width="18" height="18" viewBox="0 0 256 256" fill="#D97706" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-8,56a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm8,104a12,12,0,1,1,12-12A12,12,0,0,1,128,184Z"></path></svg> Arroz</span>
+        <span style="font-size: 12px; font-weight: 500; padding: 2px 8px 2px 6px; border-radius: 8px; background: #FFFBEB; border: 1px solid #D97706; display: flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 256 256" fill="#D97706" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path></svg> hace 7 h</span>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 10px;">
+        <span class="tab" style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">410<span style="font-size: 16px; font-weight: 500; color: #57534E; margin-left: 4px; letter-spacing: 0;">kg</span></span>
+        <span style="font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 8px; background: #FFFBEB; border: 1px solid #D97706;">Poco</span>
+      </div>
+      <div style="height: 6px; border-radius: 999px; background: #E7E5E4;"><div style="width: 27%; height: 6px; border-radius: 999px; background: #D97706;"></div></div>
+      <span class="tab" style="font-size: 14px; color: #57534E;">mín 350, máx 1.500</span>
+    </div>
+
+    <div style="background: #FFFFFF; border: 1px solid #E7E5E4; border-left: 4px solid #16A34A; border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700;"><svg width="18" height="18" viewBox="0 0 256 256" fill="#16A34A" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm45.66,85.66-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"></path></svg> Agua embotellada</span>
+        <span style="font-size: 12px; color: #57534E;">hace 8 min</span>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 10px;">
+        <span class="tab" style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">1.240,0<span style="font-size: 16px; font-weight: 500; color: #57534E; margin-left: 4px; letter-spacing: 0;">L</span></span>
+        <span style="font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 8px; background: #F0FDF4; border: 1px solid #16A34A;">Bien</span>
+      </div>
+      <div style="height: 6px; border-radius: 999px; background: #E7E5E4;"><div style="width: 62%; height: 6px; border-radius: 999px; background: #16A34A;"></div></div>
+      <span class="tab" style="font-size: 14px; color: #57534E;">mín 800, máx 2.000</span>
+    </div>
+
+    <div style="background: #FFFFFF; border: 1px solid #E7E5E4; border-left: 4px solid #7C3AED; border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700;"><svg width="18" height="18" viewBox="0 0 256 256" fill="#7C3AED" aria-hidden="true"><path d="M215.39,163.06A8,8,0,0,1,208,168H48a8,8,0,0,1-5.66-13.66l80-80a8,8,0,0,1,11.32,0l80,80A8,8,0,0,1,215.39,163.06Z"></path></svg> Ropa</span>
+        <span style="font-size: 12px; font-weight: 700; padding: 2px 8px 2px 6px; border-radius: 8px; background: #FEF2F2; border: 1px solid #DC2626; display: flex; align-items: center; gap: 4px;"><svg width="12" height="12" viewBox="0 0 256 256" fill="#DC2626" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path></svg> hace 2 días, dato viejo</span>
+      </div>
+      <div style="display: flex; align-items: baseline; gap: 10px;">
+        <span class="tab" style="font-size: 28px; font-weight: 700; letter-spacing: -0.02em;">2.350<span style="font-size: 16px; font-weight: 500; color: #57534E; margin-left: 4px; letter-spacing: 0;">kg</span></span>
+        <span style="font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 8px; background: #F5F3FF; border: 1px solid #7C3AED;">De sobra</span>
+        <span style="font-size: 12px; font-weight: 700; padding: 2px 8px; border-radius: 8px; background: #7C3AED; color: #FFFFFF;">No recibir</span>
+      </div>
+      <div style="height: 6px; border-radius: 999px; background: #E7E5E4;"><div style="width: 100%; height: 6px; border-radius: 999px; background: #7C3AED;"></div></div>
+      <span class="tab" style="font-size: 14px; color: #57534E;">mín 200, máx 1.800</span>
+    </div>
+  </div>
+
+  <nav style="height: 76px; background: #FFFFFF; border-top: 1px solid #E7E5E4; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); align-items: center;">
+    <div style="height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 12px; font-weight: 700; color: #0F6E6E;"><svg width="24" height="24" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M120,56v48a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V56A16,16,0,0,1,56,40h48A16,16,0,0,1,120,56Zm80-16H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V56A16,16,0,0,0,200,40Zm-96,96H56a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,104,136Zm96,0H152a16,16,0,0,0-16,16v48a16,16,0,0,0,16,16h48a16,16,0,0,0,16-16V152A16,16,0,0,0,200,136Z"></path></svg> Inventario</div>
+    <div style="height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 12px; font-weight: 500; color: #57534E;">
+      <div style="width: 48px; height: 40px; border-radius: 12px; background: #0F6E6E; display: flex; align-items: center; justify-content: center;"><svg width="26" height="26" viewBox="0 0 256 256" fill="#FFFFFF" aria-hidden="true"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"></path></svg></div>
+      Entrada
+    </div>
+    <div style="height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 12px; font-weight: 500; color: #57534E; position: relative;">
+      <svg width="24" height="24" viewBox="0 0 256 256" fill="#57534E" aria-hidden="true"><path d="M168,152a8,8,0,0,1-8,8H96a8,8,0,0,1,0-16h64A8,8,0,0,1,168,152Zm-8-40H96a8,8,0,0,0,0,16h64a8,8,0,0,0,0-16Zm56-64V216a16,16,0,0,1-16,16H56a16,16,0,0,1-16-16V48A16,16,0,0,1,56,32H92.26a47.92,47.92,0,0,1,71.48,0H200A16,16,0,0,1,216,48ZM96,64h64a32,32,0,0,0-64,0ZM200,48H173.25A47.93,47.93,0,0,1,176,64v8a8,8,0,0,1-8,8H88a8,8,0,0,1-8-8V64a47.93,47.93,0,0,1,2.75-16H56V216H200Z"></path></svg>
+      Pendientes
+      <span class="tab" style="position: absolute; top: 4px; left: 54%; min-width: 20px; height: 20px; border-radius: 999px; background: #1C1917; color: #FFFFFF; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 5px;">3</span>
+    </div>
+    <div style="height: 64px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 12px; font-weight: 500; color: #57534E;"><svg width="24" height="24" viewBox="0 0 256 256" fill="#57534E" aria-hidden="true"><path d="M140,128a12,12,0,1,1-12-12A12,12,0,0,1,140,128Zm56-12a12,12,0,1,0,12,12A12,12,0,0,0,196,116ZM60,116a12,12,0,1,0,12,12A12,12,0,0,0,60,116Z"></path></svg> Más</div>
+  </nav>
+
+</div>
+</x-dc>
+</body>
+</html>

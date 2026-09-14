@@ -1,0 +1,37 @@
+---
+title: "Especificaciones — índice"
+type: moc
+tags: [moc, spec]
+estado: vigente
+actualizado: 2026-08-20
+---
+
+# Especificaciones — índice
+
+Documentos de diseño formales. Uno general y, después, uno por bloque de
+construcción.
+
+| Especificación | Alcance | Estado |
+|---|---|---|
+| [2026-08-20 · Diseño de Acopio](2026-08-20-acopio-design.md) | Sistema completo: alcance, arquitectura, dominio, identidad, motor, pantallas, despliegue | Aprobada |
+| Bloque 0 · Cimientos | Monorepo, Docker, Prisma, identidad, catálogo | ⬜ pendiente |
+| Bloque 1 · Red | Acopios, zonas, entidades, mapa, home | ⬜ pendiente |
+| Bloque 2 · Inventario | Movimientos, saldos, umbrales, entrada rápida | ⬜ pendiente |
+| Bloque 3 · Custodia | Comprobantes, conciliación, folios | ⬜ pendiente |
+| Bloque 4 · Motor | Déficit, sugerencias, remisiones | ⬜ pendiente |
+| Bloque 5 · Turnos | Jornadas, reservas, aforo | ⬜ pendiente |
+| Bloque 6 · Extras | Offline, bitácora, transparencia | ⬜ pendiente |
+
+## Cadena de trabajo
+
+```
+especificación  →  plan de implementación  →  código
+```
+
+Cada bloque recorre la cadena completa. La especificación general ya cubre los
+siete; cada bloque necesita además la suya de detalle antes de su
+[plan](../../05-planes/README.md).
+
+## Convención de nombres
+
+`AAAA-MM-DD-tema-design.md`. La fecha es la de aprobación, no la de última edición.

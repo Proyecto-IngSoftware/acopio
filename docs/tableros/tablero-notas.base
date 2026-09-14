@@ -1,0 +1,23 @@
+views:
+  - type: table
+    name: Todas las notas
+    order:
+      - file.name
+      - type
+      - estado
+      - actualizado
+  - type: table
+    name: Sin actualizar hace tiempo
+    order:
+      - actualizado
+      - file.name
+      - type
+  - type: table
+    name: Borradores
+    filters:
+      and:
+        - estado == "borrador"
+    order:
+      - file.name
+      - type
+      - actualizado

@@ -1,0 +1,30 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Segoe UI, Arial, sans-serif","fontSize":"15px","primaryColor":"#E6F4F4","primaryTextColor":"#1C1917","primaryBorderColor":"#0F6E6E","secondaryColor":"#C7E8E8","tertiaryColor":"#FAFAF9","lineColor":"#57534E","textColor":"#1C1917","mainBkg":"#E6F4F4","nodeBorder":"#0F6E6E","clusterBkg":"#F5F5F4","clusterBorder":"#A8A29E","edgeLabelBackground":"#FFFFFF","attributeBackgroundColorOdd":"#FFFFFF","attributeBackgroundColorEven":"#F5F5F4"},"er":{"useMaxWidth":false},"flowchart":{"useMaxWidth":false,"htmlLabels":true,"curve":"basis"}}}%%
+flowchart TB
+    Cliente["Navegador<br/>SPA React · Vite · TypeScript"] -->|HTTPS| Traefik
+    Cliente -.->|"inicio de sesión"| SupabaseAuth["Supabase Auth<br/>nube · token, restablecer<br/>y verificar correo"]
+    Cliente -.->|"mosaicos del mapa"| OSM["OpenStreetMap<br/>mosaicos"]
+
+    subgraph VPS["VPS · gestionado con Dokploy"]
+        Traefik["Traefik<br/>reverse proxy · HTTPS automático<br/>Let's Encrypt"]
+        Web["web<br/>nginx + build de Vite"]
+
+        subgraph API["api · NestJS · monolito modular"]
+            Dominio["Módulos de dominio<br/>identidad · catalogo · acopios · inventario<br/>comprobantes · motor · turnos · importacion"]
+            Transversales["Módulos transversales<br/>auditoria · notificaciones · almacenamiento"]
+            Tareas["Tareas programadas<br/>@nestjs/schedule"]
+        end
+
+        DB[("db<br/>PostgreSQL 16")]
+        Storage[("storage<br/>MinIO, privado")]
+
+        Traefik -->|"/"| Web
+        Traefik -->|"/api · /files"| API
+        API --> DB
+        API --> Storage
+    end
+
+    API -.->|"valida JWT<br/>contra el JWKS"| SupabaseAuth
+    API -.->|SMTP| SMTP["Servidor SMTP"]
+    SupabaseAuth -.->|SMTP| SMTP
+    API -.->|"direcciones"| Nominatim["Nominatim<br/>búsqueda con caché"]
+    API -.->|"cada 60 min"| RedAcopio["RedAcopio Bogotá<br/>puntos referenciados"]

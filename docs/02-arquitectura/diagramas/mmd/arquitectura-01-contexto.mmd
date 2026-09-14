@@ -1,0 +1,24 @@
+%%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Segoe UI, Arial, sans-serif","fontSize":"15px","primaryColor":"#E6F4F4","primaryTextColor":"#1C1917","primaryBorderColor":"#0F6E6E","secondaryColor":"#C7E8E8","tertiaryColor":"#FAFAF9","lineColor":"#57534E","textColor":"#1C1917","mainBkg":"#E6F4F4","nodeBorder":"#0F6E6E","clusterBkg":"#F5F5F4","clusterBorder":"#A8A29E","edgeLabelBackground":"#FFFFFF","attributeBackgroundColorOdd":"#FFFFFF","attributeBackgroundColorEven":"#F5F5F4"},"er":{"useMaxWidth":false},"flowchart":{"useMaxWidth":false,"htmlLabels":true,"curve":"basis"}}}%%
+flowchart TB
+    Donante(["Donante"]) --> Home
+    Voluntario(["Voluntario"]) --> Home
+    Donador(["Donador<br/>cuenta propia"]) --> Home
+    Operador(["Operador"]) --> Consola
+    Receptor(["Receptor"]) --> Consola
+    Auditor(["Auditor"]) --> Consola
+    Administrador(["Administrador"]) --> Consola
+
+    Home["Portal público"]
+    Consola["Consola interna"]
+    Acopio(("Acopio"))
+
+    Home --> Acopio
+    Consola --> Acopio
+
+    Acopio --> SupabaseAuth["Supabase Auth<br/>nube · solo emite el token"]
+    Acopio --> OSM["OpenStreetMap<br/>mapa base"]
+    Acopio --> Correo["Servidor SMTP<br/>invitaciones y avisos"]
+    SupabaseAuth -->|"restablecer y<br/>verificar correo"| Correo
+    Acopio --> Nominatim["Nominatim<br/>búsqueda por dirección, con caché"]
+    Acopio -->|"importa cada 60 min"| RedAcopio["RedAcopio Bogotá<br/>puntos referenciados"]
+    Home -.->|"enlace externo,<br/>sale de la plataforma"| Entidades["Sitios oficiales<br/>de las entidades"]

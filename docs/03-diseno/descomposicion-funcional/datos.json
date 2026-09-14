@@ -1,0 +1,715 @@
+{
+ "MODULOS": [
+  {
+   "id": "portal",
+   "archivo": "PortalPublico",
+   "nombre": "Portal público",
+   "origen": "Agrupa M1 Directorio de causas, M2 Mapa de acopios y M7 Home",
+   "sub": [
+    [
+     "Portada y contenido",
+     [
+      [
+       "Ver portada",
+       "R",
+       [
+        "HOM-001"
+       ]
+      ],
+      [
+       "Consultar cómo ayudar",
+       "R",
+       [
+        "HOM-002"
+       ]
+      ],
+      [
+       "Consultar páginas legales",
+       "R",
+       [
+        "HOM-005"
+       ]
+      ],
+      [
+       "Compartir en redes",
+       "R",
+       [
+        "HOM-006"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Mapa de acopios",
+     [
+      [
+       "Ver mapa con filtros",
+       "R",
+       [
+        "RED-002"
+       ]
+      ],
+      [
+       "Ver ficha de acopio",
+       "R",
+       [
+        "RED-003"
+       ]
+      ],
+      [
+       "Ver necesidades por zona",
+       "R",
+       [
+        "RED-009"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Directorio de causas",
+     [
+      [
+       "Ver directorio y ficha de causa",
+       "R",
+       [
+        "RED-008"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Transparencia",
+     [
+      [
+       "Ver tablero de transparencia",
+       "R",
+       [
+        "HOM-004"
+       ]
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "turnos",
+   "archivo": "Turnos",
+   "nombre": "Turnos de voluntariado",
+   "origen": "Corresponde a M3 Turnos y cupos",
+   "sub": [
+    [
+     "Jornadas",
+     [
+      [
+       "Crear jornada",
+       "C",
+       [
+        "TUR-001"
+       ]
+      ],
+      [
+       "Ver jornadas disponibles",
+       "R",
+       [
+        "TUR-002"
+       ]
+      ],
+      [
+       "Exigir perfil especializado",
+       "CU",
+       [
+        "TUR-007"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Reservas",
+     [
+      [
+       "Reservar cupo",
+       "C",
+       [
+        "TUR-003"
+       ]
+      ],
+      [
+       "Consultar o cancelar reserva",
+       "RD",
+       [
+        "TUR-004"
+       ]
+      ],
+      [
+       "Administrar reservas y asistencia",
+       "RU",
+       [
+        "TUR-005"
+       ]
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "inventario",
+   "archivo": "Inventario",
+   "nombre": "Inventario",
+   "origen": "Corresponde a M4 Inventario de acopio",
+   "sub": [
+    [
+     "Movimientos",
+     [
+      [
+       "Registrar entrada con escaneo",
+       "C",
+       [
+        "INV-001",
+        "INV-002"
+       ]
+      ],
+      [
+       "Registrar salida",
+       "C",
+       [
+        "INV-003"
+       ]
+      ],
+      [
+       "Ajustar por conteo físico",
+       "C",
+       [
+        "INV-004"
+       ]
+      ],
+      [
+       "Capturar sin conexión",
+       "C",
+       [
+        "INV-009"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Saldos",
+     [
+      [
+       "Consultar saldos",
+       "R",
+       [
+        "INV-005"
+       ]
+      ],
+      [
+       "Ver historial de una categoría",
+       "R",
+       [
+        "INV-006"
+       ]
+      ],
+      [
+       "Recibir alertas de vencimiento",
+       "R",
+       [
+        "INV-010"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Control de recepción",
+     [
+      [
+       "Configurar umbrales",
+       "CU",
+       [
+        "INV-007"
+       ]
+      ],
+      [
+       "Marcar «no recibir»",
+       "U",
+       [
+        "INV-008"
+       ]
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "comprobantes",
+   "archivo": "Comprobantes",
+   "nombre": "Comprobantes y custodia",
+   "origen": "Corresponde a M5 Comprobantes y cadena de custodia",
+   "sub": [
+    [
+     "Donación preparada",
+     [
+      [
+       "Preparar donación con escaneo",
+       "C",
+       [
+        "CMP-001B"
+       ]
+      ],
+      [
+       "Sugerir punto de entrega",
+       "R",
+       [
+        "CMP-001D"
+       ]
+      ],
+      [
+       "Consultar mi historial de donaciones",
+       "R",
+       [
+        "CMP-008"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Recepción y conciliación",
+     [
+      [
+       "Confirmar recepción física",
+       "U",
+       [
+        "CMP-001C"
+       ]
+      ],
+      [
+       "Revisar bandeja de pendientes",
+       "R",
+       [
+        "CMP-003"
+       ]
+      ],
+      [
+       "Conciliar contra movimiento",
+       "U",
+       [
+        "CMP-004"
+       ]
+      ],
+      [
+       "Rechazar comprobante",
+       "U",
+       [
+        "CMP-005"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Seguimiento",
+     [
+      [
+       "Seguir donación por folio",
+       "R",
+       [
+        "CMP-006"
+       ]
+      ],
+      [
+       "Ver trazabilidad del despacho",
+       "R",
+       [
+        "CMP-007"
+       ]
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "motor",
+   "archivo": "ZonasMotor",
+   "nombre": "Zonas y motor",
+   "origen": "Corresponde a M6 Zonas afectadas y motor de emparejamiento",
+   "sub": [
+    [
+     "Zonas afectadas",
+     [
+      [
+       "Registrar zona afectada",
+       "CU",
+       [
+        "MOT-001",
+        "RED-004"
+       ]
+      ],
+      [
+       "Reportar necesidad de zona",
+       "C",
+       [
+        "MOT-011"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Cálculo",
+     [
+      [
+       "Calcular necesidad de una zona",
+       "R",
+       [
+        "MOT-002"
+       ]
+      ],
+      [
+       "Calcular déficit y cobertura",
+       "R",
+       [
+        "MOT-003"
+       ]
+      ],
+      [
+       "Calcular superávit de un acopio",
+       "R",
+       [
+        "MOT-004"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Sugerencias",
+     [
+      [
+       "Generar sugerencias",
+       "C",
+       [
+        "MOT-005"
+       ]
+      ],
+      [
+       "Ver ranking de traslados",
+       "R",
+       [
+        "MOT-006"
+       ]
+      ],
+      [
+       "Aprobar o descartar sugerencia",
+       "U",
+       [
+        "MOT-007"
+       ]
+      ],
+      [
+       "Evaluar el motor",
+       "R",
+       [
+        "MOT-010"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Remisiones",
+     [
+      [
+       "Gestionar remisiones",
+       "CRU",
+       [
+        "MOT-008"
+       ]
+      ],
+      [
+       "Confirmar recepción en zona",
+       "U",
+       [
+        "MOT-009"
+       ]
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "admin",
+   "archivo": "Administracion",
+   "nombre": "Administración y acceso",
+   "origen": "Identidad, catálogo maestro, gestión de la red y bitácora",
+   "sub": [
+    [
+     "Usuarios y acceso",
+     [
+      [
+       "Crear usuario e invitar",
+       "C",
+       [
+        "IDE-001",
+        "IDE-002"
+       ]
+      ],
+      [
+       "Canjear invitación",
+       "U",
+       [
+        "IDE-003"
+       ]
+      ],
+      [
+       "Iniciar sesión",
+       "R",
+       [
+        "IDE-004"
+       ]
+      ],
+      [
+       "Registrarse como Donador",
+       "C",
+       [
+        "IDE-013"
+       ]
+      ],
+      [
+       "Restablecer acceso",
+       "U",
+       [
+        "IDE-009"
+       ]
+      ],
+      [
+       "Suspender usuario",
+       "U",
+       [
+        "IDE-007",
+        "IDE-008"
+       ]
+      ],
+      [
+       "Gestionar asignaciones",
+       "CUD",
+       [
+        "IDE-006"
+       ]
+      ],
+      [
+       "Cambiar contexto activo",
+       "U",
+       [
+        "IDE-010"
+       ]
+      ],
+      [
+       "Consultar matriz de acceso",
+       "R",
+       [
+        "IDE-011"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Catálogo maestro",
+     [
+      [
+       "Gestionar categorías",
+       "CRUD",
+       [
+        "CAT-001"
+       ]
+      ],
+      [
+       "Buscar categoría",
+       "R",
+       [
+        "CAT-002"
+       ]
+      ],
+      [
+       "Definir canasta estándar",
+       "CU",
+       [
+        "CAT-003"
+       ]
+      ],
+      [
+       "Mapear códigos de barras",
+       "CU",
+       [
+        "CAT-004"
+       ]
+      ],
+      [
+       "Gestionar emergencias",
+       "CRU",
+       [
+        "CAT-005"
+       ]
+      ],
+      [
+       "Configurar pesos del motor",
+       "U",
+       [
+        "CAT-006"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Red de acopios",
+     [
+      [
+       "Gestionar acopios",
+       "CRU",
+       [
+        "RED-001"
+       ]
+      ],
+      [
+       "Importar acopios externos",
+       "CU",
+       [
+        "RED-011"
+       ]
+      ],
+      [
+       "Gestionar entidades",
+       "CRU",
+       [
+        "RED-005"
+       ]
+      ],
+      [
+       "Verificar entidad",
+       "U",
+       [
+        "RED-006"
+       ]
+      ],
+      [
+       "Gestionar causas",
+       "CRU",
+       [
+        "RED-007"
+       ]
+      ],
+      [
+       "Archivar causa",
+       "U",
+       [
+        "RED-010"
+       ]
+      ]
+     ]
+    ],
+    [
+     "Contenido y auditoría",
+     [
+      [
+       "Gestionar contenido de portada",
+       "CUD",
+       [
+        "HOM-003"
+       ]
+      ],
+      [
+       "Consultar bitácora",
+       "R",
+       [
+        "IDE-012"
+       ]
+      ]
+     ]
+    ]
+   ]
+  }
+ ],
+ "RF": {
+  "IDE-001": "Crear usuario",
+  "IDE-002": "Generar enlace de invitación",
+  "IDE-003": "Canjear invitación y definir contraseña",
+  "IDE-004": "Iniciar sesión con nombre de usuario",
+  "IDE-005": "Autorizar cada request",
+  "IDE-006": "Gestionar asignaciones",
+  "IDE-007": "Suspender usuario",
+  "IDE-008": "Proteger al último administrador",
+  "IDE-009": "Restablecer acceso",
+  "IDE-010": "Conmutador de contexto activo",
+  "IDE-011": "Matriz de acceso",
+  "IDE-012": "Bitácora de auditoría",
+  "IDE-013": "Auto-registro de Donador",
+  "CAT-001": "Gestionar categorías",
+  "CAT-002": "Buscar categoría por palabra clave",
+  "CAT-003": "Definir la canasta estándar",
+  "CAT-004": "Mapear códigos de barras",
+  "CAT-005": "Gestionar emergencias",
+  "CAT-006": "Configurar pesos del motor",
+  "RED-001": "Gestionar centros de acopio",
+  "RED-002": "Mapa público de acopios",
+  "RED-003": "Ficha pública de acopio",
+  "RED-004": "Gestionar zonas afectadas",
+  "RED-005": "Gestionar entidades",
+  "RED-006": "Verificar entidad",
+  "RED-007": "Gestionar causas",
+  "RED-008": "Directorio y ficha de causa",
+  "RED-009": "Mapa de necesidades por zona",
+  "RED-010": "Archivar una causa",
+  "RED-011": "Importar acopios de una fuente externa",
+  "HOM-001": "Portada",
+  "HOM-002": "Cómo ayudar",
+  "HOM-003": "Gestionar contenido",
+  "HOM-004": "Transparencia",
+  "HOM-005": "Páginas legales",
+  "HOM-006": "Compartir en redes",
+  "INV-001": "Registrar entrada",
+  "INV-002": "Escanear código de barras",
+  "INV-003": "Registrar salida",
+  "INV-004": "Ajustar por conteo físico",
+  "INV-005": "Consultar saldos",
+  "INV-006": "Ver historial de una categoría",
+  "INV-007": "Configurar umbrales",
+  "INV-008": "Marcar «no recibir»",
+  "INV-009": "Captura sin conexión",
+  "INV-010": "Alerta de vencimiento",
+  "INV-011": "Integridad transaccional",
+  "CMP-001B": "Preparar donación con escaneo",
+  "CMP-001C": "Confirmar recepción física de una donación preparada",
+  "CMP-001D": "Sugerir punto de entrega",
+  "CMP-002": "Almacenar archivos de forma segura",
+  "CMP-003": "Bandeja de pendientes",
+  "CMP-004": "Conciliar contra movimiento",
+  "CMP-005": "Rechazar comprobante",
+  "CMP-006": "Seguimiento por folio",
+  "CMP-007": "Trazabilidad estimada del despacho",
+  "CMP-008": "Historial de donaciones del Donador",
+  "TUR-001": "Crear jornada",
+  "TUR-002": "Listado público de jornadas",
+  "TUR-003": "Reservar cupo",
+  "TUR-004": "Confirmar y cancelar reserva",
+  "TUR-005": "Administrar reservas de una jornada",
+  "TUR-006": "Comunicar la naturaleza del dato",
+  "TUR-007": "Voluntariado especializado",
+  "MOT-001": "Registrar zona afectada",
+  "MOT-002": "Calcular necesidad de una zona",
+  "MOT-003": "Calcular déficit y cobertura",
+  "MOT-004": "Calcular superávit de un acopio",
+  "MOT-005": "Generar sugerencias",
+  "MOT-006": "Presentar el ranking",
+  "MOT-007": "Aprobar o descartar una sugerencia",
+  "MOT-008": "Gestionar remisiones",
+  "MOT-009": "Confirmar recepción en zona",
+  "MOT-010": "Evaluar el motor",
+  "MOT-011": "Reportar necesidad de zona"
+ },
+ "FUERA": {
+  "IDE-005": "Regla de seguridad: se cumple en cada funcionalidad, no es una acción",
+  "INV-011": "Propiedad del inventario: garantía transaccional, no una acción",
+  "CMP-002": "Propiedad del almacenamiento: la cumple el módulo transversal de archivos",
+  "TUR-006": "Regla de interfaz: cómo se rotulan los cupos en toda pantalla"
+ },
+ "totales": {
+  "modulos": 6,
+  "submodulos": 20,
+  "funcionalidades": 67,
+  "rf": 75,
+  "dentro": 71
+ }
+}

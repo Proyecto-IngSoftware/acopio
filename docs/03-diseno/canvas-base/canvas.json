@@ -1,0 +1,31 @@
+{
+  "pages": [
+    { "id": "page-1", "name": "Portada P01" },
+    { "id": "page-2", "name": "Mapa de pantallas" },
+    { "id": "page-3", "name": "Pantallas clave" },
+    { "id": "page-4", "name": "Versión anterior" }
+  ],
+  "artboards": [
+    { "file": "Main.dc.html", "title": "P01 Portada · escritorio", "x": 0, "y": 0, "w": 1440, "h": 4400, "page": "page-1" },
+    { "file": "PortadaMovil.dc.html", "title": "P01 Inicio · móvil", "x": 1540, "y": 0, "w": 390, "h": 1080, "page": "page-1" },
+    { "file": "EmergenciaSelector.dc.html", "title": "Selector de emergencia · móvil", "x": 2010, "y": 0, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "P03CausasMovil.dc.html", "title": "P03 Causas · móvil", "x": 2480, "y": 0, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "P11TransparenciaMovil.dc.html", "title": "P11 Transparencia · móvil", "x": 2950, "y": 0, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "MasMovil.dc.html", "title": "Más · móvil", "x": 3420, "y": 0, "w": 390, "h": 844, "page": "page-1" },
+    { "file": "MapaPantallas.dc.html", "title": "Mapa de pantallas", "x": 0, "y": 0, "w": 1680, "h": 1900, "page": "page-2" },
+    { "file": "P05Mapa.dc.html", "title": "P05 Mapa de acopios", "x": 0, "y": 0, "w": 390, "h": 844, "page": "page-3" },
+    { "file": "P06FichaAcopio.dc.html", "title": "P06 Ficha de acopio", "x": 490, "y": 0, "w": 390, "h": 844, "page": "page-3" },
+    { "file": "P09PrepararDonacion.dc.html", "title": "P09 Preparar mi donación", "x": 980, "y": 0, "w": 390, "h": 844, "page": "page-3" },
+    { "file": "C04EntradaRapida.dc.html", "title": "C04 Entrada rápida", "x": 1470, "y": 0, "w": 390, "h": 844, "page": "page-3" },
+    { "file": "C03Inventario.dc.html", "title": "C03 Inventario", "x": 1960, "y": 0, "w": 390, "h": 844, "page": "page-3" },
+    { "file": "C13RecepcionZona.dc.html", "title": "C13 Recepción en zona", "x": 2450, "y": 0, "w": 390, "h": 844, "page": "page-3" },
+    { "file": "PortadaV1.dc.html", "title": "P01 v1 · escritorio", "x": 0, "y": 0, "w": 1440, "h": 2500, "page": "page-4" },
+    { "file": "PortadaMovilV1.dc.html", "title": "P01 v1 · móvil", "x": 1540, "y": 0, "w": 390, "h": 3250, "page": "page-4" }
+  ],
+  "annotations": [
+    { "id": "nota-portada", "page": "page-1", "x": 1540, "y": -330, "w": 820, "text": "Móvil dividido en páginas. El inicio pasó de unos 3.900 px a unos 1.050 (poco más de una pantalla).\n\nBarra inferior fija, 5 destinos: Inicio · Causas · Mapa · Voluntariado · Más. Las tres primeras después de Inicio son las tres formas de ayudar.\n\nQué salió del inicio y a dónde fue: entidades verificadas a Causas; cifras y cobertura de todas las zonas a Transparencia; noticias, seguir donación, cuenta de Donador, cómo ayudar, emergencias anteriores y legal a Más.\n\nEscritorio sin cambios: barra superior con secciones y pestañas de emergencias.\n\nPor confirmar: emergencia por defecto (propuesta: la de más zonas sin cobertura) y si «Entrar» separa Donador de equipo interno. Emergencias, cifras y zonas son datos de ejemplo." },
+    { "id": "nota-clave", "page": "page-3", "x": 0, "y": -150, "w": 560, "text": "Pantallas clave de los flujos críticos (flujos.md): especie 1 y 6a (P05, P06, P09), recepción 2 (C04, C03), reparto 4 (C13). Mismos tokens: teal de marca, semáforo reservado, 48 px táctil, antigüedad en todo dato. Íconos de Phosphor." },
+    { "id": "nota-v1", "page": "page-4", "x": 2010, "y": 0, "w": 320, "text": "Primera versión de la portada (2026-09-13), conservada para comparar." }
+  ],
+  "launch": { "view": "canvas", "page": "page-1" }
+}

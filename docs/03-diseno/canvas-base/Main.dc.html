@@ -1,0 +1,447 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400..700&display=swap">
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: #1C1917; background: #FAFAF9; -webkit-font-smoothing: antialiased; font-optical-sizing: auto; }
+a { color: #0F6E6E; text-decoration: none; }
+a:hover { color: #0A4F4F; text-decoration: underline; text-underline-offset: 3px; }
+h1, h2, h3 { text-wrap: balance; }
+p { text-wrap: pretty; }
+.tab { font-variant-numeric: tabular-nums; }
+svg { flex-shrink: 0; }
+</style>
+</helmet>
+<div style="width: 1440px; min-height: 3000px; background: #FAFAF9; display: flex; flex-direction: column;">
+
+  <header style="background: #FFFFFF; border-bottom: 1px solid #E7E5E4;">
+    <div style="max-width: 1200px; height: 64px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 32px;">
+      <div style="display: flex; align-items: center; gap: 36px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; background: #0F6E6E; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 256 256" fill="#FFFFFF" aria-hidden="true"><path d="M223.68,66.15,135.68,18h0a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32h0l80.34,44L128,120,47.66,76ZM40,90l80,43.78v85.79L40,175.82Zm96,129.57V133.82L216,90v85.78Z"></path></svg></div>
+          <span style="font-size: 20px; font-weight: 700; letter-spacing: -0.015em;">Acopio</span>
+        </div>
+        <nav style="display: flex; gap: 2px; font-size: 15px; font-weight: 500;">
+          <a href="#" style="padding: 10px 12px; border-radius: 10px; color: #1C1917;">Cómo ayudar</a>
+          <a href="#" style="padding: 10px 12px; border-radius: 10px; color: #1C1917;">Causas</a>
+          <a href="#" style="padding: 10px 12px; border-radius: 10px; color: #1C1917;">Mapa de acopios</a>
+          <a href="#" style="padding: 10px 12px; border-radius: 10px; color: #1C1917;">Voluntariado</a>
+          <a href="#" style="padding: 10px 12px; border-radius: 10px; color: #1C1917;">Transparencia</a>
+        </nav>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <a href="#" style="height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 12px; font-size: 15px; font-weight: 500; color: #1C1917;"><svg width="18" height="18" viewBox="0 0 256 256" fill="#44403C" aria-hidden="true"><path d="M72,104a8,8,0,0,1,8-8h96a8,8,0,0,1,0,16H80A8,8,0,0,1,72,104Zm8,40h96a8,8,0,0,0,0-16H80a8,8,0,0,0,0,16ZM232,56V208a8,8,0,0,1-11.58,7.15L192,200.94l-28.42,14.21a8,8,0,0,1-7.16,0L128,200.94,99.58,215.15a8,8,0,0,1-7.16,0L64,200.94,35.58,215.15A8,8,0,0,1,24,208V56A16,16,0,0,1,40,40H216A16,16,0,0,1,232,56Zm-16,0H40V195.06l20.42-10.22a8,8,0,0,1,7.16,0L96,199.06l28.42-14.22a8,8,0,0,1,7.16,0L160,199.06l28.42-14.22a8,8,0,0,1,7.16,0L216,195.06Z"></path></svg> Seguir mi donación</a>
+        <a href="#" style="height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 16px; border: 1px solid #E7E5E4; border-radius: 10px; font-size: 15px; font-weight: 500; color: #1C1917;"><svg width="18" height="18" viewBox="0 0 256 256" fill="#44403C" aria-hidden="true"><path d="M141.66,133.66l-40,40a8,8,0,0,1-11.32-11.32L116.69,136H24a8,8,0,0,1,0-16h92.69L90.34,93.66a8,8,0,0,1,11.32-11.32l40,40A8,8,0,0,1,141.66,133.66ZM200,32H136a8,8,0,0,0,0,16h56V208H136a8,8,0,0,0,0,16h64a8,8,0,0,0,8-8V40A8,8,0,0,0,200,32Z"></path></svg> Entrar</a>
+      </div>
+    </div>
+  </header>
+
+  <div style="background: #FFFFFF; border-bottom: 1px solid #E7E5E4;">
+    <div style="max-width: 1200px; height: 52px; margin: 0 auto; display: flex; align-items: stretch; gap: 28px;">
+      <span style="display: flex; align-items: center; font-size: 13px; font-weight: 500; color: #57534E;">Emergencias activas</span>
+      <a href="#" style="display: flex; align-items: center; gap: 10px; padding-top: 3px; border-bottom: 3px solid #0F6E6E; font-size: 15px; font-weight: 700; color: #0A4F4F; text-decoration: none;">
+        Terremoto de 2026 · Caldas
+        <span class="tab" style="font-size: 12px; font-weight: 500; color: #44403C; background: #F5F5F4; border: 1px solid #E7E5E4; border-radius: 8px; padding: 1px 8px;">9 zonas sin cobertura</span>
+      </a>
+      <a href="#" style="display: flex; align-items: center; gap: 10px; padding-top: 3px; border-bottom: 3px solid transparent; font-size: 15px; font-weight: 500; color: #44403C; text-decoration: none;">
+        Inundaciones en La Mojana
+        <span class="tab" style="font-size: 12px; font-weight: 500; color: #44403C; background: #F5F5F4; border: 1px solid #E7E5E4; border-radius: 8px; padding: 1px 8px;">4 zonas sin cobertura</span>
+      </a>
+      <a href="#" style="margin-left: auto; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 500; color: #57534E;"><svg width="16" height="16" viewBox="0 0 256 256" fill="#57534E" aria-hidden="true"><path d="M224,48H32A16,16,0,0,0,16,64V88a16,16,0,0,0,16,16v88a16,16,0,0,0,16,16H208a16,16,0,0,0,16-16V104a16,16,0,0,0,16-16V64A16,16,0,0,0,224,48ZM208,192H48V104H208ZM224,88H32V64H224V88ZM96,136a8,8,0,0,1,8-8h48a8,8,0,0,1,0,16H104A8,8,0,0,1,96,136Z"></path></svg> Emergencias anteriores</a>
+    </div>
+  </div>
+
+  <section style="background: #0A4F4F; color: #FFFFFF; padding: 72px 0 136px;">
+    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 72px; align-items: start;">
+      <div style="display: flex; flex-direction: column; gap: 20px; padding-top: 24px;">
+        <span style="font-size: 14px; font-weight: 500; color: #C7E8E8; letter-spacing: 0.08em; text-transform: uppercase;">Terremoto de 2026 en Caldas</span>
+        <h1 style="margin: 0; font-size: 48px; line-height: 1.06; font-weight: 700; letter-spacing: -0.025em;">9 de 14 zonas siguen sin cobertura suficiente.</h1>
+        <p style="margin: 0; font-size: 18px; line-height: 1.55; color: #E6F4F4; max-width: 52ch;">Antes de comprar o viajar, mira qué hace falta y dónde. Cada dato muestra hace cuánto se actualizó.</p>
+      </div>
+
+      <div style="background: #FFFFFF; color: #1C1917; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 8px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 8px;">
+          <span style="font-size: 16px; font-weight: 700;">Zonas con más déficit</span>
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #57534E;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#57534E" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path></svg> hace 12 min</span>
+        </div>
+        <div style="display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 0; border-top: 1px solid #E7E5E4;">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-size: 16px; font-weight: 700;">Zona 7 · Chinchiná</span>
+              <span style="font-size: 14px; color: #57534E;">Falta agua y pañal adulto</span>
+            </div>
+            <span style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; padding: 4px 10px 4px 8px; border-radius: 8px; background: #FEF2F2; border: 1px solid #DC2626;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#DC2626" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z"></path></svg> Escaso</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 0; border-top: 1px solid #E7E5E4;">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-size: 16px; font-weight: 700;">Zona 3 · Villamaría</span>
+              <span style="font-size: 14px; color: #57534E;">Faltan alimentos no perecederos</span>
+            </div>
+            <span style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; padding: 4px 10px 4px 8px; border-radius: 8px; background: #FEF2F2; border: 1px solid #DC2626;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#DC2626" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z"></path></svg> Escaso</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 0; border-top: 1px solid #E7E5E4;">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-size: 16px; font-weight: 700;">Zona 11 · Neira</span>
+              <span style="font-size: 14px; color: #57534E;">Poco aseo personal y cobijas</span>
+            </div>
+            <span style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; padding: 4px 10px 4px 8px; border-radius: 8px; background: #FFFBEB; border: 1px solid #D97706;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#D97706" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-8,56a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm8,104a12,12,0,1,1,12-12A12,12,0,0,1,128,184Z"></path></svg> Poco</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 14px 0; border-top: 1px solid #E7E5E4;">
+            <div style="display: flex; flex-direction: column; gap: 2px;">
+              <span style="font-size: 16px; font-weight: 700;">Zona 2 · Palestina</span>
+              <span style="font-size: 14px; color: #57534E;">Poco botiquín básico</span>
+            </div>
+            <span style="display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; padding: 4px 10px 4px 8px; border-radius: 8px; background: #FFFBEB; border: 1px solid #D97706;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#D97706" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-8,56a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm8,104a12,12,0,1,1,12-12A12,12,0,0,1,128,184Z"></path></svg> Poco</span>
+          </div>
+        </div>
+        <a href="#" style="display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; padding-top: 12px; border-top: 1px solid #E7E5E4;">Ver cobertura de las 14 zonas <svg width="16" height="16" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path></svg></a>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-top: -72px; padding: 0 120px;">
+    <div style="max-width: 1200px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));">
+      <a href="#" style="padding: 32px; display: flex; flex-direction: column; gap: 14px; color: #1C1917; text-decoration: none;">
+        <svg width="32" height="32" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M230.33,141.06a24.43,24.43,0,0,0-21.24-4.23l-41.84,9.62A28,28,0,0,0,140,112H89.94a31.82,31.82,0,0,0-22.63,9.37L44.69,144H16A16,16,0,0,0,0,160v40a16,16,0,0,0,16,16H120a7.93,7.93,0,0,0,1.94-.24l64-16a6.94,6.94,0,0,0,1.19-.4L226,182.82l.44-.2a24.6,24.6,0,0,0,3.93-41.56ZM16,160H40v40H16Zm203.43,8.21-38,16.18L119,200H56V155.31l22.63-22.62A15.86,15.86,0,0,1,89.94,128H140a12,12,0,0,1,0,24H112a8,8,0,0,0,0,16h32a8.32,8.32,0,0,0,1.79-.2l67-15.41.31-.08a8.6,8.6,0,0,1,6.3,15.9ZM164,96a36,36,0,0,0,5.9-.48,36,36,0,1,0,28.22-47A36,36,0,1,0,164,96Zm60-12a20,20,0,1,1-20-20A20,20,0,0,1,224,84ZM164,40a20,20,0,0,1,19.25,14.61,36,36,0,0,0-15,24.93A20.42,20.42,0,0,1,164,80a20,20,0,0,1,0-40Z"></path></svg>
+        <h3 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em;">Donar dinero</h3>
+        <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #44403C;">Te llevamos al sitio oficial de la entidad que administra cada causa.</p>
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; color: #0F6E6E; margin-top: 6px;">Ver causas <svg width="18" height="18" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path></svg></span>
+      </a>
+      <a href="#" style="padding: 32px; display: flex; flex-direction: column; gap: 14px; color: #1C1917; text-decoration: none; border-left: 1px solid #E7E5E4;">
+        <svg width="32" height="32" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M223.68,66.15,135.68,18a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32l80.34,44-29.77,16.3-80.35-44ZM128,120,47.66,76l33.9-18.56,80.34,44ZM40,90l80,43.78v85.79L40,175.82Zm176,85.78h0l-80,43.79V133.82l32-17.51V152a8,8,0,0,0,16,0V107.55L216,90v85.77Z"></path></svg>
+        <h3 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em;">Donar en especie</h3>
+        <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #44403C;">Mira qué hace falta antes de comprar, y a qué acopio llevarlo.</p>
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; color: #0F6E6E; margin-top: 6px;">Ver el mapa <svg width="18" height="18" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path></svg></span>
+      </a>
+      <a href="#" style="padding: 32px; display: flex; flex-direction: column; gap: 14px; color: #1C1917; text-decoration: none; border-left: 1px solid #E7E5E4;">
+        <svg width="32" height="32" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M230.33,141.06a24.34,24.34,0,0,0-18.61-4.77C230.5,117.33,240,98.48,240,80c0-26.47-21.29-48-47.46-48A47.58,47.58,0,0,0,156,48.75,47.58,47.58,0,0,0,119.46,32C93.29,32,72,53.53,72,80c0,11,3.24,21.69,10.06,33a31.87,31.87,0,0,0-14.75,8.4L44.69,144H16A16,16,0,0,0,0,160v40a16,16,0,0,0,16,16H120a7.93,7.93,0,0,0,1.94-.24l64-16a6.94,6.94,0,0,0,1.19-.4L226,182.82l.44-.2a24.6,24.6,0,0,0,3.93-41.56ZM119.46,48A31.15,31.15,0,0,1,148.6,67a8,8,0,0,0,14.8,0,31.15,31.15,0,0,1,29.14-19C209.59,48,224,62.65,224,80c0,19.51-15.79,41.58-45.66,63.9l-11.09,2.55A28,28,0,0,0,140,112H100.68C92.05,100.36,88,90.12,88,80,88,62.65,102.41,48,119.46,48ZM16,160H40v40H16Zm203.43,8.21-38,16.18L119,200H56V155.31l22.63-22.62A15.86,15.86,0,0,1,89.94,128H140a12,12,0,0,1,0,24H112a8,8,0,0,0,0,16h32a8.32,8.32,0,0,0,1.79-.2l67-15.41.31-.08a8.6,8.6,0,0,1,6.3,15.9Z"></path></svg>
+        <h3 style="margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.01em;">Ser voluntario</h3>
+        <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #44403C;">Reserva un cupo en una jornada. Sin cuenta, solo tu correo.</p>
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 16px; font-weight: 700; color: #0F6E6E; margin-top: 6px;">Ver jornadas <svg width="18" height="18" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M221.66,133.66l-72,72a8,8,0,0,1-11.32-11.32L196.69,136H40a8,8,0,0,1,0-16H196.69L138.34,61.66a8,8,0,0,1,11.32-11.32l72,72A8,8,0,0,1,221.66,133.66Z"></path></svg></span>
+      </a>
+    </div>
+  </section>
+
+  <section style="padding: 96px 120px 0;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px;">
+      <div style="display: flex; flex-direction: column; gap: 8px; max-width: 65ch;">
+        <h2 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.015em;">Antes de comprar, mira qué falta</h2>
+        <p style="margin: 0; font-size: 16px; line-height: 1.55; color: #57534E;">Suma de los 38 acopios de esta emergencia. Llevar lo que sobra ocupa el espacio que hace falta para lo demás.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 24px; align-items: start;">
+        <div style="background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px;">
+            <span style="font-size: 18px; font-weight: 700; letter-spacing: -0.01em;">Hace falta</span>
+            <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #57534E;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#57534E" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path></svg> hace 12 min</span>
+          </div>
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) 160px 96px; gap: 16px; align-items: center; padding: 16px 24px; border-top: 1px solid #E7E5E4;">
+            <span style="font-size: 16px; font-weight: 700;">Agua embotellada</span>
+            <span class="tab" style="font-size: 14px; color: #44403C;">falta en 12 acopios</span>
+            <span style="justify-self: end; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; padding: 4px 10px 4px 8px; border-radius: 8px; background: #FEF2F2; border: 1px solid #DC2626;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#DC2626" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z"></path></svg> Escaso</span>
+          </div>
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) 160px 96px; gap: 16px; align-items: center; padding: 16px 24px; border-top: 1px solid #E7E5E4;">
+            <span style="font-size: 16px; font-weight: 700;">Pañal adulto</span>
+            <span class="tab" style="font-size: 14px; color: #44403C;">falta en 9 acopios</span>
+            <span style="justify-self: end; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; padding: 4px 10px 4px 8px; border-radius: 8px; background: #FEF2F2; border: 1px solid #DC2626;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#DC2626" aria-hidden="true"><path d="M213.66,101.66l-80,80a8,8,0,0,1-11.32,0l-80-80A8,8,0,0,1,48,88H208a8,8,0,0,1,5.66,13.66Z"></path></svg> Escaso</span>
+          </div>
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) 160px 96px; gap: 16px; align-items: center; padding: 16px 24px; border-top: 1px solid #E7E5E4;">
+            <span style="font-size: 16px; font-weight: 700;">Alimentos no perecederos</span>
+            <span class="tab" style="font-size: 14px; color: #44403C;">poco en 7 acopios</span>
+            <span style="justify-self: end; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; padding: 4px 10px 4px 8px; border-radius: 8px; background: #FFFBEB; border: 1px solid #D97706;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#D97706" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-8,56a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm8,104a12,12,0,1,1,12-12A12,12,0,0,1,128,184Z"></path></svg> Poco</span>
+          </div>
+          <div style="display: grid; grid-template-columns: minmax(0, 1fr) 160px 96px; gap: 16px; align-items: center; padding: 16px 24px; border-top: 1px solid #E7E5E4;">
+            <span style="font-size: 16px; font-weight: 700;">Aseo personal</span>
+            <span class="tab" style="font-size: 14px; color: #44403C;">poco en 5 acopios</span>
+            <span style="justify-self: end; display: flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; padding: 4px 10px 4px 8px; border-radius: 8px; background: #FFFBEB; border: 1px solid #D97706;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#D97706" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-8,56a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm8,104a12,12,0,1,1,12-12A12,12,0,0,1,128,184Z"></path></svg> Poco</span>
+          </div>
+        </div>
+
+        <div style="background: #F5F3FF; border: 2px solid #7C3AED; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <svg width="28" height="28" viewBox="0 0 256 256" fill="#7C3AED" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm37.66,130.34a8,8,0,0,1-11.32,11.32L128,139.31l-26.34,26.35a8,8,0,0,1-11.32-11.32L116.69,128,90.34,101.66a8,8,0,0,1,11.32-11.32L128,116.69l26.34-26.35a8,8,0,0,1,11.32,11.32L139.31,128Z"></path></svg>
+            <span style="font-size: 20px; font-weight: 700; letter-spacing: -0.01em;">No traigan</span>
+          </div>
+          <p style="margin: 0; font-size: 15px; line-height: 1.5; color: #44403C;">Estos acopios ya tienen de sobra y marcaron «no recibir».</p>
+          <div style="display: flex; flex-direction: column; margin-top: 4px;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E5E4;">
+              <span style="font-size: 17px; font-weight: 700;">Ropa</span>
+              <span class="tab" style="font-size: 14px; color: #44403C;">en 21 de 38 acopios</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E5E4;">
+              <span style="font-size: 17px; font-weight: 700;">Juguetes</span>
+              <span class="tab" style="font-size: 14px; color: #44403C;">en 8 de 38 acopios</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-top: 1px solid #E7E5E4;">
+              <span style="font-size: 17px; font-weight: 700;">Colchones</span>
+              <span class="tab" style="font-size: 14px; color: #44403C;">en 5 de 38 acopios</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 96px 120px 0;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 32px;">
+      <h2 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.015em;">La respuesta hasta ahora</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 2px solid #1C1917;">
+        <div style="padding: 24px 24px 0 0; display: flex; flex-direction: column; gap: 6px;">
+          <span class="tab" style="font-size: 44px; font-weight: 700; letter-spacing: -0.025em; line-height: 1;">1.240<span style="font-size: 18px; font-weight: 500; color: #57534E; margin-left: 6px; letter-spacing: 0;">t</span></span>
+          <span style="font-size: 16px; color: #44403C;">movilizadas hacia las zonas</span>
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #57534E; margin-top: 6px;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#57534E" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path></svg> hace 12 min</span>
+        </div>
+        <div style="padding: 24px 24px 0; border-left: 1px solid #E7E5E4; display: flex; flex-direction: column; gap: 6px;">
+          <span class="tab" style="font-size: 44px; font-weight: 700; letter-spacing: -0.025em; line-height: 1;">38</span>
+          <span style="font-size: 16px; color: #44403C;">acopios activos</span>
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #57534E; margin-top: 6px;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#57534E" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path></svg> hace 12 min</span>
+        </div>
+        <div style="padding: 24px 24px 0; border-left: 1px solid #E7E5E4; display: flex; flex-direction: column; gap: 6px;">
+          <span class="tab" style="font-size: 44px; font-weight: 700; letter-spacing: -0.025em; line-height: 1;">11<span style="font-size: 18px; font-weight: 500; color: #57534E; margin-left: 6px; letter-spacing: 0;">de 14</span></span>
+          <span style="font-size: 16px; color: #44403C;">zonas atendidas</span>
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #57534E; margin-top: 6px;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#57534E" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path></svg> hace 40 min</span>
+        </div>
+        <div style="padding: 24px 0 0 24px; border-left: 1px solid #E7E5E4; display: flex; flex-direction: column; gap: 6px;">
+          <span class="tab" style="font-size: 44px; font-weight: 700; letter-spacing: -0.025em; line-height: 1;">212</span>
+          <span style="font-size: 16px; color: #44403C;">cupos de voluntariado abiertos</span>
+          <span style="display: flex; align-items: center; gap: 6px; font-size: 12px; color: #57534E; margin-top: 6px;"><svg width="14" height="14" viewBox="0 0 256 256" fill="#57534E" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm64-88a8,8,0,0,1-8,8H128a8,8,0,0,1-8-8V72a8,8,0,0,1,16,0v48h48A8,8,0,0,1,192,128Z"></path></svg> hace 5 min</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 96px 120px 0;">
+    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 48px; align-items: start;">
+      <div style="display: flex; flex-direction: column; gap: 12px; padding-top: 8px;">
+        <h2 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.015em;">Jornadas de voluntariado</h2>
+        <p style="margin: 0; font-size: 16px; line-height: 1.55; color: #57534E;">Reserva antes de ir. Si una jornada está llena, no te desplaces: no podrán recibirte.</p>
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 14px; color: #44403C; margin-top: 4px;"><svg width="18" height="18" viewBox="0 0 256 256" fill="#57534E" aria-hidden="true"><path d="M224,48H32a8,8,0,0,0-8,8V192a16,16,0,0,0,16,16H216a16,16,0,0,0,16-16V56A8,8,0,0,0,224,48ZM203.43,64,128,133.15,52.57,64ZM216,192H40V74.19l82.59,75.71a8,8,0,0,0,10.82,0L216,74.19V192Z"></path></svg> Solo necesitas tu correo</span>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; display: flex; flex-direction: column;">
+        <div style="display: grid; grid-template-columns: 64px minmax(0, 1fr) 180px 112px; gap: 20px; align-items: center; padding: 18px 24px;">
+          <div style="width: 64px; height: 64px; border: 1px solid #E7E5E4; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+            <span style="font-size: 12px; font-weight: 700; color: #57534E;">MAR</span>
+            <span class="tab" style="font-size: 24px; font-weight: 700; line-height: 1;">15</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 3px;">
+            <span style="font-size: 16px; font-weight: 700;">Clasificación y empaque</span>
+            <span style="font-size: 14px; color: #57534E;">Acopio Norte, 8:00 a.m. a 1:00 p.m.</span>
+          </div>
+          <span class="tab" style="font-size: 14px; color: #44403C;">12 de 20 cupos libres</span>
+          <a href="#" style="height: 44px; display: flex; align-items: center; justify-content: center; border: 1px solid #0F6E6E; border-radius: 10px; font-size: 15px; font-weight: 700; color: #0F6E6E; text-decoration: none;">Reservar</a>
+        </div>
+        <div style="display: grid; grid-template-columns: 64px minmax(0, 1fr) 180px 112px; gap: 20px; align-items: center; padding: 18px 24px; border-top: 1px solid #E7E5E4;">
+          <div style="width: 64px; height: 64px; border: 1px solid #E7E5E4; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+            <span style="font-size: 12px; font-weight: 700; color: #57534E;">MIÉ</span>
+            <span class="tab" style="font-size: 24px; font-weight: 700; line-height: 1;">16</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 3px;">
+            <span style="font-size: 16px; font-weight: 700;">Carga de camiones</span>
+            <span style="font-size: 14px; color: #57534E;">Acopio Chapinero, 7:00 a.m. a 12:00 m.</span>
+          </div>
+          <span class="tab" style="display: flex; align-items: center; gap: 6px; font-size: 14px; color: #44403C;"><svg width="16" height="16" viewBox="0 0 256 256" fill="#D97706" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm-8,56a8,8,0,0,1,16,0v56a8,8,0,0,1-16,0Zm8,104a12,12,0,1,1,12-12A12,12,0,0,1,128,184Z"></path></svg> 3 de 15 cupos libres</span>
+          <a href="#" style="height: 44px; display: flex; align-items: center; justify-content: center; border: 1px solid #0F6E6E; border-radius: 10px; font-size: 15px; font-weight: 700; color: #0F6E6E; text-decoration: none;">Reservar</a>
+        </div>
+        <div style="display: grid; grid-template-columns: 64px minmax(0, 1fr) 180px 112px; gap: 20px; align-items: center; padding: 18px 24px; border-top: 1px solid #E7E5E4; background: #FAFAF9; border-radius: 0 0 12px 12px;">
+          <div style="width: 64px; height: 64px; border: 1px solid #E7E5E4; border-radius: 10px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;">
+            <span style="font-size: 12px; font-weight: 700; color: #57534E;">JUE</span>
+            <span class="tab" style="font-size: 24px; font-weight: 700; line-height: 1; color: #57534E;">17</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 3px;">
+            <span style="font-size: 16px; font-weight: 700; color: #44403C;">Cocina comunitaria</span>
+            <span style="font-size: 14px; color: #57534E;">Acopio Sur, 11:00 a.m. a 4:00 p.m.</span>
+          </div>
+          <span style="font-size: 14px; font-weight: 700; color: #44403C;">Llena, no te desplaces</span>
+          <span style="height: 44px; display: flex; align-items: center; justify-content: center; border: 1px solid #E7E5E4; border-radius: 10px; font-size: 15px; font-weight: 500; color: #57534E; background: #F5F5F4;">Sin cupos</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 96px 120px 0;">
+    <div style="max-width: 1200px; margin: 0 auto; background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: hidden;">
+      <div style="padding: 40px; display: flex; flex-direction: column; gap: 20px;">
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <h2 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.015em;">Sigue una donación con su folio</h2>
+          <p style="margin: 0; font-size: 16px; line-height: 1.55; color: #57534E; max-width: 48ch;">Quien dona con cuenta recibe un folio. Con él, cualquiera puede ver qué se entregó y a dónde fue, sin iniciar sesión.</p>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <label style="font-size: 14px; font-weight: 700;">Número de folio</label>
+          <div style="display: flex; gap: 8px;">
+            <div style="flex-grow: 1; height: 56px; border: 1px solid #A8A29E; border-radius: 10px; background: #FFFFFF; display: flex; align-items: center; padding: 0 16px; font-size: 16px; color: #57534E;">Ej. ACO-F-0142</div>
+            <div style="height: 56px; padding: 0 28px; border-radius: 10px; background: #0F6E6E; color: #FFFFFF; display: flex; align-items: center; font-size: 16px; font-weight: 700;">Consultar</div>
+          </div>
+        </div>
+        <a href="#" style="display: flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; padding: 8px 0;"><svg width="18" height="18" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M256,136a8,8,0,0,1-8,8H232v16a8,8,0,0,1-16,0V144H200a8,8,0,0,1,0-16h16V112a8,8,0,0,1,16,0v16h16A8,8,0,0,1,256,136Zm-57.87,58.85a8,8,0,0,1-12.26,10.3C165.75,181.19,138.09,168,108,168s-57.75,13.19-77.87,37.15a8,8,0,0,1-12.25-10.3c14.94-17.78,33.52-30.41,54.17-37.17a68,68,0,1,1,71.9,0C164.6,164.44,183.18,177.07,198.13,194.85ZM108,152a52,52,0,1,0-52-52A52.06,52.06,0,0,0,108,152Z"></path></svg> Crea tu cuenta de Donador para tener folio</a>
+      </div>
+      <div style="padding: 40px; background: #F5F5F4; border-left: 1px solid #E7E5E4; display: flex; flex-direction: column; gap: 20px;">
+        <span style="font-size: 16px; font-weight: 700;">El recorrido de una donación</span>
+        <div style="display: flex; flex-direction: column;">
+          <div style="display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 16px;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 40px; height: 40px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E5E4; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M223.68,66.15,135.68,18a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32l80.34,44-29.77,16.3-80.35-44ZM128,120,47.66,76l33.9-18.56,80.34,44ZM40,90l80,43.78v85.79L40,175.82Zm176,85.78h0l-80,43.79V133.82l32-17.51V152a8,8,0,0,0,16,0V107.55L216,90v85.77Z"></path></svg></div>
+              <div style="width: 2px; flex-grow: 1; min-height: 20px; background: #C7E8E8;"></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 2px; padding: 8px 0 20px;">
+              <span style="font-size: 16px; font-weight: 700;">Preparada</span>
+              <span style="font-size: 14px; color: #57534E;">El Donador escanea lo que lleva y elige el acopio.</span>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 16px;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 40px; height: 40px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E5E4; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M240,184h-8V57.9l9.67-2.08a8,8,0,1,0-3.35-15.64l-224,48A8,8,0,0,0,16,104a8.16,8.16,0,0,0,1.69-.18L24,102.47V184H16a8,8,0,0,0,0,16H240a8,8,0,0,0,0-16ZM40,99,216,61.33V184H192V128a8,8,0,0,0-8-8H72a8,8,0,0,0-8,8v56H40Zm136,53H80V136h96ZM80,168h96v16H80Z"></path></svg></div>
+              <div style="width: 2px; flex-grow: 1; min-height: 20px; background: #C7E8E8;"></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 2px; padding: 8px 0 20px;">
+              <span style="font-size: 16px; font-weight: 700;">Recibida en el acopio</span>
+              <span style="font-size: 14px; color: #57534E;">El operador confirma cada producto al recibirlo.</span>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 16px;">
+            <div style="display: flex; flex-direction: column; align-items: center;">
+              <div style="width: 40px; height: 40px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E5E4; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M225.86,102.82c-3.77-3.94-7.67-8-9.14-11.57-1.36-3.27-1.44-8.69-1.52-13.94-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52-3.56-1.47-7.63-5.37-11.57-9.14C146.28,23.51,138.44,16,128,16s-18.27,7.51-25.18,14.14c-3.94,3.77-8,7.67-11.57,9.14C88,40.64,82.56,40.72,77.31,40.8c-9.76.15-20.82.31-28.51,8S41,67.55,40.8,77.31c-.08,5.25-.16,10.67-1.52,13.94-1.47,3.56-5.37,7.63-9.14,11.57C23.51,109.72,16,117.56,16,128s7.51,18.27,14.14,25.18c3.77,3.94,7.67,8,9.14,11.57,1.36,3.27,1.44,8.69,1.52,13.94.15,9.76.31,20.82,8,28.51s18.75,7.85,28.51,8c5.25.08,10.67.16,13.94,1.52,3.56,1.47,7.63,5.37,11.57,9.14C109.72,232.49,117.56,240,128,240s18.27-7.51,25.18-14.14c3.94-3.77,8-7.67,11.57-9.14,3.27-1.36,8.69-1.44,13.94-1.52,9.76-.15,20.82-.31,28.51-8s7.85-18.75,8-28.51c.08-5.25.16-10.67,1.52-13.94,1.47-3.56,5.37-7.63,9.14-11.57C232.49,146.28,240,138.44,240,128S232.49,109.73,225.86,102.82Zm-11.55,39.29c-4.79,5-9.75,10.17-12.38,16.52-2.52,6.1-2.63,13.07-2.73,19.82-.1,7-.21,14.33-3.32,17.43s-10.39,3.22-17.43,3.32c-6.75.1-13.72.21-19.82,2.73-6.35,2.63-11.52,7.59-16.52,12.38S132,224,128,224s-9.15-4.92-14.11-9.69-10.17-9.75-16.52-12.38c-6.1-2.52-13.07-2.63-19.82-2.73-7-.1-14.33-.21-17.43-3.32s-3.22-10.39-3.32-17.43c-.1-6.75-.21-13.72-2.73-19.82-2.63-6.35-7.59-11.52-12.38-16.52S32,132,32,128s4.92-9.15,9.69-14.11,9.75-10.17,12.38-16.52c2.52-6.1,2.63-13.07,2.73-19.82.1-7,.21-14.33,3.32-17.43S70.51,56.9,77.55,56.8c6.75-.1,13.72-.21,19.82-2.73,6.35-2.63,11.52-7.59,16.52-12.38S124,32,128,32s9.15,4.92,14.11,9.69,10.17,9.75,16.52,12.38c6.1,2.52,13.07,2.63,19.82,2.73,7,.1,14.33.21,17.43,3.32s3.22,10.39,3.32,17.43c.1,6.75.21,13.72,2.73,19.82,2.63,6.35,7.59,11.52,12.38,16.52S224,124,224,128,219.08,137.15,214.31,142.11ZM173.66,98.34a8,8,0,0,1,0,11.32l-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35A8,8,0,0,1,173.66,98.34Z"></path></svg></div>
+              <div style="width: 2px; flex-grow: 1; min-height: 20px; background: #C7E8E8;"></div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 2px; padding: 8px 0 20px;">
+              <span style="font-size: 16px; font-weight: 700;">Conciliada</span>
+              <span style="font-size: 14px; color: #57534E;">Un auditor compara lo declarado con lo recibido.</span>
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 16px;">
+            <div style="width: 40px; height: 40px; border-radius: 999px; background: #FFFFFF; border: 1px solid #E7E5E4; display: flex; align-items: center; justify-content: center;"><svg width="20" height="20" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M255.42,117l-14-35A15.93,15.93,0,0,0,226.58,72H192V64a8,8,0,0,0-8-8H32A16,16,0,0,0,16,72V184a16,16,0,0,0,16,16H49a32,32,0,0,0,62,0h50a32,32,0,0,0,62,0h17a16,16,0,0,0,16-16V120A7.94,7.94,0,0,0,255.42,117ZM192,88h34.58l9.6,24H192ZM32,72H176v64H32ZM80,208a16,16,0,1,1,16-16A16,16,0,0,1,80,208Zm81-24H111a32,32,0,0,0-62,0H32V152H176v12.31A32.11,32.11,0,0,0,161,184Zm31,24a16,16,0,1,1,16-16A16,16,0,0,1,192,208Zm48-24H223a32.06,32.06,0,0,0-31-24V128h48Z"></path></svg></div>
+            <div style="display: flex; flex-direction: column; gap: 2px; padding: 8px 0 0;">
+              <span style="font-size: 16px; font-weight: 700;">Despachada a una zona</span>
+              <span style="font-size: 14px; color: #57534E;">Cuando se sabe en qué envío salió. Es un estimado.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="margin-top: 96px; background: #E6F4F4; border-top: 2px solid #0F6E6E; padding: 36px 120px;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; align-items: flex-start; gap: 20px;">
+      <svg width="32" height="32" viewBox="0 0 256 256" fill="#0A4F4F" aria-hidden="true"><path d="M128,24A104,104,0,1,0,232,128,104.11,104.11,0,0,0,128,24Zm0,192a88,88,0,1,1,88-88A88.1,88.1,0,0,1,128,216Zm16-40a8,8,0,0,1-8,8,16,16,0,0,1-16-16V128a8,8,0,0,1,0-16,16,16,0,0,1,16,16v40A8,8,0,0,1,144,176ZM112,84a12,12,0,1,1,12,12A12,12,0,0,1,112,84Z"></path></svg>
+      <div style="display: flex; flex-direction: column; gap: 6px; max-width: 760px;">
+        <span style="font-size: 20px; font-weight: 700; color: #0A4F4F;">Esta plataforma no recibe dinero.</span>
+        <p style="margin: 0; font-size: 16px; line-height: 1.55; color: #0A4F4F;">Te mostramos el paso a paso y te llevamos al sitio oficial de cada entidad. <a href="#" style="font-weight: 700; color: #0A4F4F; text-decoration: underline; text-underline-offset: 3px;">Cómo verificamos las entidades</a></p>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 96px 0 0 120px; display: flex; flex-direction: column; gap: 28px;">
+    <div style="max-width: 1200px; display: flex; justify-content: space-between; align-items: flex-end;">
+      <div style="display: flex; flex-direction: column; gap: 8px;">
+        <h2 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.015em;">Entidades verificadas</h2>
+        <p style="margin: 0; font-size: 16px; color: #57534E;">Solo aparecen las que tienen el sello vigente.</p>
+      </div>
+      <div style="display: flex; gap: 8px;">
+        <div style="width: 48px; height: 48px; border: 1px solid #E7E5E4; border-radius: 10px; background: #FFFFFF; display: flex; align-items: center; justify-content: center;" aria-label="Anterior"><svg width="20" height="20" viewBox="0 0 256 256" fill="#A8A29E" aria-hidden="true"><path d="M165.66,202.34a8,8,0,0,1-11.32,11.32l-80-80a8,8,0,0,1,0-11.32l80-80a8,8,0,0,1,11.32,11.32L91.31,128Z"></path></svg></div>
+        <div style="width: 48px; height: 48px; border: 1px solid #E7E5E4; border-radius: 10px; background: #FFFFFF; display: flex; align-items: center; justify-content: center;" aria-label="Siguiente"><svg width="20" height="20" viewBox="0 0 256 256" fill="#1C1917" aria-hidden="true"><path d="M181.66,133.66l-80,80a8,8,0,0,1-11.32-11.32L164.69,128,90.34,53.66a8,8,0,0,1,11.32-11.32l80,80A8,8,0,0,1,181.66,133.66Z"></path></svg></div>
+      </div>
+    </div>
+    <div style="display: flex; gap: 16px; overflow: hidden;">
+      <div style="width: 276px; flex-shrink: 0; background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="width: 48px; height: 48px; border-radius: 10px; background: #F5F5F4; border: 1px dashed #A8A29E; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #57534E;">Logo</div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 18px; font-weight: 700;">[Nombre de la entidad]</span>
+          <span style="font-size: 14px; color: #57534E;">Personas damnificadas</span>
+        </div>
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #0A4F4F; padding-top: 14px; border-top: 1px solid #E7E5E4;"><svg width="20" height="20" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M225.86,102.82c-3.77-3.94-7.67-8-9.14-11.57-1.36-3.27-1.44-8.69-1.52-13.94-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52-3.56-1.47-7.63-5.37-11.57-9.14C146.28,23.51,138.44,16,128,16s-18.27,7.51-25.18,14.14c-3.94,3.77-8,7.67-11.57,9.14C88,40.64,82.56,40.72,77.31,40.8c-9.76.15-20.82.31-28.51,8S41,67.55,40.8,77.31c-.08,5.25-.16,10.67-1.52,13.94-1.47,3.56-5.37,7.63-9.14,11.57C23.51,109.72,16,117.56,16,128s7.51,18.27,14.14,25.18c3.77,3.94,7.67,8,9.14,11.57,1.36,3.27,1.44,8.69,1.52,13.94.15,9.76.31,20.82,8,28.51s18.75,7.85,28.51,8c5.25.08,10.67.16,13.94,1.52,3.56,1.47,7.63,5.37,11.57,9.14C109.72,232.49,117.56,240,128,240s18.27-7.51,25.18-14.14c3.94-3.77,8-7.67,11.57-9.14,3.27-1.36,8.69-1.44,13.94-1.52,9.76-.15,20.82-.31,28.51-8s7.85-18.75,8-28.51c.08-5.25.16-10.67,1.52-13.94,1.47-3.56,5.37-7.63,9.14-11.57C232.49,146.28,240,138.44,240,128S232.49,109.73,225.86,102.82Zm-52.2,6.84-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"></path></svg> Verificada el [fecha]</span>
+      </div>
+      <div style="width: 276px; flex-shrink: 0; background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="width: 48px; height: 48px; border-radius: 10px; background: #F5F5F4; border: 1px dashed #A8A29E; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #57534E;">Logo</div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 18px; font-weight: 700;">[Nombre de la entidad]</span>
+          <span style="font-size: 14px; color: #57534E;">Animales</span>
+        </div>
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #0A4F4F; padding-top: 14px; border-top: 1px solid #E7E5E4;"><svg width="20" height="20" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M225.86,102.82c-3.77-3.94-7.67-8-9.14-11.57-1.36-3.27-1.44-8.69-1.52-13.94-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52-3.56-1.47-7.63-5.37-11.57-9.14C146.28,23.51,138.44,16,128,16s-18.27,7.51-25.18,14.14c-3.94,3.77-8,7.67-11.57,9.14C88,40.64,82.56,40.72,77.31,40.8c-9.76.15-20.82.31-28.51,8S41,67.55,40.8,77.31c-.08,5.25-.16,10.67-1.52,13.94-1.47,3.56-5.37,7.63-9.14,11.57C23.51,109.72,16,117.56,16,128s7.51,18.27,14.14,25.18c3.77,3.94,7.67,8,9.14,11.57,1.36,3.27,1.44,8.69,1.52,13.94.15,9.76.31,20.82,8,28.51s18.75,7.85,28.51,8c5.25.08,10.67.16,13.94,1.52,3.56,1.47,7.63,5.37,11.57,9.14C109.72,232.49,117.56,240,128,240s18.27-7.51,25.18-14.14c3.94-3.77,8-7.67,11.57-9.14,3.27-1.36,8.69-1.44,13.94-1.52,9.76-.15,20.82-.31,28.51-8s7.85-18.75,8-28.51c.08-5.25.16-10.67,1.52-13.94,1.47-3.56,5.37-7.63,9.14-11.57C232.49,146.28,240,138.44,240,128S232.49,109.73,225.86,102.82Zm-52.2,6.84-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"></path></svg> Verificada el [fecha]</span>
+      </div>
+      <div style="width: 276px; flex-shrink: 0; background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="width: 48px; height: 48px; border-radius: 10px; background: #F5F5F4; border: 1px dashed #A8A29E; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #57534E;">Logo</div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 18px; font-weight: 700;">[Nombre de la entidad]</span>
+          <span style="font-size: 14px; color: #57534E;">Adultos mayores</span>
+        </div>
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #0A4F4F; padding-top: 14px; border-top: 1px solid #E7E5E4;"><svg width="20" height="20" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M225.86,102.82c-3.77-3.94-7.67-8-9.14-11.57-1.36-3.27-1.44-8.69-1.52-13.94-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52-3.56-1.47-7.63-5.37-11.57-9.14C146.28,23.51,138.44,16,128,16s-18.27,7.51-25.18,14.14c-3.94,3.77-8,7.67-11.57,9.14C88,40.64,82.56,40.72,77.31,40.8c-9.76.15-20.82.31-28.51,8S41,67.55,40.8,77.31c-.08,5.25-.16,10.67-1.52,13.94-1.47,3.56-5.37,7.63-9.14,11.57C23.51,109.72,16,117.56,16,128s7.51,18.27,14.14,25.18c3.77,3.94,7.67,8,9.14,11.57,1.36,3.27,1.44,8.69,1.52,13.94.15,9.76.31,20.82,8,28.51s18.75,7.85,28.51,8c5.25.08,10.67.16,13.94,1.52,3.56,1.47,7.63,5.37,11.57,9.14C109.72,232.49,117.56,240,128,240s18.27-7.51,25.18-14.14c3.94-3.77,8-7.67,11.57-9.14,3.27-1.36,8.69-1.44,13.94-1.52,9.76-.15,20.82-.31,28.51-8s7.85-18.75,8-28.51c.08-5.25.16-10.67,1.52-13.94,1.47-3.56,5.37-7.63,9.14-11.57C232.49,146.28,240,138.44,240,128S232.49,109.73,225.86,102.82Zm-52.2,6.84-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"></path></svg> Verificada el [fecha]</span>
+      </div>
+      <div style="width: 276px; flex-shrink: 0; background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="width: 48px; height: 48px; border-radius: 10px; background: #F5F5F4; border: 1px dashed #A8A29E; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #57534E;">Logo</div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 18px; font-weight: 700;">[Nombre de la entidad]</span>
+          <span style="font-size: 14px; color: #57534E;">Rescatistas</span>
+        </div>
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #0A4F4F; padding-top: 14px; border-top: 1px solid #E7E5E4;"><svg width="20" height="20" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M225.86,102.82c-3.77-3.94-7.67-8-9.14-11.57-1.36-3.27-1.44-8.69-1.52-13.94-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52-3.56-1.47-7.63-5.37-11.57-9.14C146.28,23.51,138.44,16,128,16s-18.27,7.51-25.18,14.14c-3.94,3.77-8,7.67-11.57,9.14C88,40.64,82.56,40.72,77.31,40.8c-9.76.15-20.82.31-28.51,8S41,67.55,40.8,77.31c-.08,5.25-.16,10.67-1.52,13.94-1.47,3.56-5.37,7.63-9.14,11.57C23.51,109.72,16,117.56,16,128s7.51,18.27,14.14,25.18c3.77,3.94,7.67,8,9.14,11.57,1.36,3.27,1.44,8.69,1.52,13.94.15,9.76.31,20.82,8,28.51s18.75,7.85,28.51,8c5.25.08,10.67.16,13.94,1.52,3.56,1.47,7.63,5.37,11.57,9.14C109.72,232.49,117.56,240,128,240s18.27-7.51,25.18-14.14c3.94-3.77,8-7.67,11.57-9.14,3.27-1.36,8.69-1.44,13.94-1.52,9.76-.15,20.82-.31,28.51-8s7.85-18.75,8-28.51c.08-5.25.16-10.67,1.52-13.94,1.47-3.56,5.37-7.63,9.14-11.57C232.49,146.28,240,138.44,240,128S232.49,109.73,225.86,102.82Zm-52.2,6.84-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"></path></svg> Verificada el [fecha]</span>
+      </div>
+      <div style="width: 276px; flex-shrink: 0; background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px;">
+        <div style="width: 48px; height: 48px; border-radius: 10px; background: #F5F5F4; border: 1px dashed #A8A29E; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #57534E;">Logo</div>
+        <div style="display: flex; flex-direction: column; gap: 4px;">
+          <span style="font-size: 18px; font-weight: 700;">[Nombre de la entidad]</span>
+          <span style="font-size: 14px; color: #57534E;">Personas desaparecidas</span>
+        </div>
+        <span style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #0A4F4F; padding-top: 14px; border-top: 1px solid #E7E5E4;"><svg width="20" height="20" viewBox="0 0 256 256" fill="#0F6E6E" aria-hidden="true"><path d="M225.86,102.82c-3.77-3.94-7.67-8-9.14-11.57-1.36-3.27-1.44-8.69-1.52-13.94-.15-9.76-.31-20.82-8-28.51s-18.75-7.85-28.51-8c-5.25-.08-10.67-.16-13.94-1.52-3.56-1.47-7.63-5.37-11.57-9.14C146.28,23.51,138.44,16,128,16s-18.27,7.51-25.18,14.14c-3.94,3.77-8,7.67-11.57,9.14C88,40.64,82.56,40.72,77.31,40.8c-9.76.15-20.82.31-28.51,8S41,67.55,40.8,77.31c-.08,5.25-.16,10.67-1.52,13.94-1.47,3.56-5.37,7.63-9.14,11.57C23.51,109.72,16,117.56,16,128s7.51,18.27,14.14,25.18c3.77,3.94,7.67,8,9.14,11.57,1.36,3.27,1.44,8.69,1.52,13.94.15,9.76.31,20.82,8,28.51s18.75,7.85,28.51,8c5.25.08,10.67.16,13.94,1.52,3.56,1.47,7.63,5.37,11.57,9.14C109.72,232.49,117.56,240,128,240s18.27-7.51,25.18-14.14c3.94-3.77,8-7.67,11.57-9.14,3.27-1.36,8.69-1.44,13.94-1.52,9.76-.15,20.82-.31,28.51-8s7.85-18.75,8-28.51c.08-5.25.16-10.67,1.52-13.94,1.47-3.56,5.37-7.63,9.14-11.57C232.49,146.28,240,138.44,240,128S232.49,109.73,225.86,102.82Zm-52.2,6.84-56,56a8,8,0,0,1-11.32,0l-24-24a8,8,0,0,1,11.32-11.32L112,148.69l50.34-50.35a8,8,0,0,1,11.32,11.32Z"></path></svg> Verificada el [fecha]</span>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 96px 120px 0;">
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px;">
+      <h2 style="margin: 0; font-size: 28px; font-weight: 700; letter-spacing: -0.015em;">Noticias</h2>
+      <div style="display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px; align-items: start;">
+        <a href="#" style="display: flex; flex-direction: column; gap: 16px; color: #1C1917; text-decoration: none;">
+          <div style="aspect-ratio: 16 / 9; max-width: 100%; border-radius: 12px; background: #E7E5E4; border: 1px dashed #A8A29E; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-size: 14px; color: #57534E;">
+            <svg width="28" height="28" viewBox="0 0 256 256" fill="#57534E" aria-hidden="true"><path d="M208,56H180.28L166.65,35.56A8,8,0,0,0,160,32H96a8,8,0,0,0-6.65,3.56L75.71,56H48A24,24,0,0,0,24,80V192a24,24,0,0,0,24,24H208a24,24,0,0,0,24-24V80A24,24,0,0,0,208,56Zm8,136a8,8,0,0,1-8,8H48a8,8,0,0,1-8-8V80a8,8,0,0,1,8-8H80a8,8,0,0,0,6.66-3.56L100.28,48h55.43l13.63,20.44A8,8,0,0,0,176,72h32a8,8,0,0,1,8,8ZM128,88a44,44,0,1,0,44,44A44.05,44.05,0,0,0,128,88Zm0,72a28,28,0,1,1,28-28A28,28,0,0,1,128,160Z"></path></svg>
+            Foto real de la operación, 1600 × 900
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <span style="font-size: 14px; color: #57534E;">[fecha]</span>
+            <span style="font-size: 24px; line-height: 1.25; font-weight: 700; letter-spacing: -0.015em;">[Titular de la noticia principal]</span>
+            <p style="margin: 0; font-size: 16px; line-height: 1.55; color: #44403C; max-width: 60ch;">[Resumen de una o dos líneas, publicado desde la consola.]</p>
+          </div>
+        </a>
+        <div style="display: flex; flex-direction: column;">
+          <a href="#" style="display: flex; flex-direction: column; gap: 8px; padding: 0 0 28px; color: #1C1917; text-decoration: none;">
+            <span style="font-size: 14px; color: #57534E;">[fecha]</span>
+            <span style="font-size: 18px; line-height: 1.35; font-weight: 700;">[Titular de la noticia]</span>
+            <p style="margin: 0; font-size: 16px; line-height: 1.55; color: #44403C;">[Resumen de una o dos líneas.]</p>
+          </a>
+          <a href="#" style="display: flex; flex-direction: column; gap: 8px; padding: 28px 0 0; border-top: 1px solid #E7E5E4; color: #1C1917; text-decoration: none;">
+            <span style="font-size: 14px; color: #57534E;">[fecha]</span>
+            <span style="font-size: 18px; line-height: 1.35; font-weight: 700;">[Titular de la noticia]</span>
+            <p style="margin: 0; font-size: 16px; line-height: 1.55; color: #44403C;">[Resumen de una o dos líneas.]</p>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer style="margin-top: 120px; background: #F5F5F4; border-top: 1px solid #E7E5E4; padding: 48px 120px;">
+    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 48px;">
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="width: 28px; height: 28px; border-radius: 8px; background: #0F6E6E; display: flex; align-items: center; justify-content: center;"><svg width="18" height="18" viewBox="0 0 256 256" fill="#FFFFFF" aria-hidden="true"><path d="M223.68,66.15,135.68,18h0a15.88,15.88,0,0,0-15.36,0l-88,48.17a16,16,0,0,0-8.32,14v95.64a16,16,0,0,0,8.32,14l88,48.17a15.88,15.88,0,0,0,15.36,0l88-48.17a16,16,0,0,0,8.32-14V80.18A16,16,0,0,0,223.68,66.15ZM128,32h0l80.34,44L128,120,47.66,76ZM40,90l80,43.78v85.79L40,175.82Zm96,129.57V133.82L216,90v85.78Z"></path></svg></div>
+          <span style="font-size: 18px; font-weight: 700; letter-spacing: -0.015em;">Acopio</span>
+        </div>
+        <p style="margin: 0; font-size: 14px; line-height: 1.55; color: #44403C; max-width: 60ch;"><strong>Esta plataforma no recibe dinero.</strong> No responde por las entidades a las que dirige: cada donación en dinero se hace en el sitio oficial de la entidad.</p>
+        <p style="margin: 0; font-size: 12px; line-height: 1.5; color: #57534E;">Tratamiento de datos conforme a la Ley 1581 de 2012. Los datos de autenticación se alojan fuera de Colombia.</p>
+      </div>
+      <nav style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; font-size: 15px;">
+        <a href="#" style="padding: 12px 0; color: #1C1917;">Transparencia</a>
+        <a href="#" style="padding: 12px 0; color: #1C1917;">Cómo ayudar</a>
+        <a href="#" style="padding: 12px 0; color: #1C1917;">Política de datos</a>
+        <a href="#" style="padding: 12px 0; color: #1C1917;">Términos de uso</a>
+        <a href="#" style="padding: 12px 0; color: #1C1917;">Contacto</a>
+      </nav>
+    </div>
+  </footer>
+
+</div>
+</x-dc>
+</body>
+</html>

@@ -1,0 +1,1 @@
+Carpeta de adjuntos de la boveda. Configurar en Obsidian: Ajustes > Archivos y enlaces > Carpeta de archivos adjuntos = assets

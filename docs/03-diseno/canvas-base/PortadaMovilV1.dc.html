@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
+<style>
+* { box-sizing: border-box; }
+body { margin: 0; font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: #1C1917; background: #FAFAF9; -webkit-font-smoothing: antialiased; }
+a { color: #0F6E6E; text-decoration: none; }
+a:hover { color: #0A4F4F; text-decoration: underline; }
+.tab { font-variant-numeric: tabular-nums; }
+svg { flex-shrink: 0; }
+</style>
+</helmet>
+<div style="width: 390px; min-height: 3250px; background: #FAFAF9; display: flex; flex-direction: column;">
+
+  <header style="height: 64px; background: #FFFFFF; border-bottom: 1px solid #E7E5E4; display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 20px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="width: 32px; height: 32px; border-radius: 10px; background: #0F6E6E; display: flex; align-items: center; justify-content: center;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"></path><path d="M3 8l9 5 9-5"></path><path d="M12 13v8"></path></svg>
+      </div>
+      <span style="font-size: 20px; font-weight: 700;">Acopio</span>
+    </div>
+    <a href="#" style="height: 48px; display: flex; align-items: center; padding: 0 12px; border-radius: 10px; font-size: 16px; font-weight: 500; color: #44403C;">Entrar</a>
+  </header>
+
+  <section style="background: #0A4F4F; padding: 40px 20px 104px; color: #FFFFFF;">
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 500; color: #C7E8E8; letter-spacing: 0.06em; text-transform: uppercase;">
+        <span style="width: 8px; height: 8px; border-radius: 999px; background: #C7E8E8;"></span>
+        Emergencia activa
+      </div>
+      <h1 style="margin: 0; font-size: 36px; line-height: 1.15; font-weight: 700; letter-spacing: -0.01em;">Terremoto de 2026 en Colombia</h1>
+      <p style="margin: 0; font-size: 18px; line-height: 1.45; font-weight: 500; color: #E6F4F4; text-wrap: pretty;">14 zonas afectadas, 9 aún sin cobertura suficiente.</p>
+    </div>
+  </section>
+
+  <section style="padding: 0 20px; margin-top: -72px;">
+    <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px;">
+      <div style="background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 4px;">
+        <div class="tab" style="font-size: 32px; font-weight: 700; line-height: 1.1;">1.240<span style="font-size: 16px; font-weight: 500; color: #57534E; margin-left: 4px;">t</span></div>
+        <div style="font-size: 14px; line-height: 1.35; color: #44403C;">movilizadas hacia las zonas</div>
+        <div style="font-size: 12px; color: #57534E; margin-top: 8px;">hace 12 min</div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 4px;">
+        <div class="tab" style="font-size: 32px; font-weight: 700; line-height: 1.1;">38</div>
+        <div style="font-size: 14px; line-height: 1.35; color: #44403C;">acopios activos</div>
+        <div style="font-size: 12px; color: #57534E; margin-top: 8px;">hace 12 min</div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 4px;">
+        <div class="tab" style="font-size: 32px; font-weight: 700; line-height: 1.1;">11<span style="font-size: 16px; font-weight: 500; color: #57534E; margin-left: 4px;">de 14</span></div>
+        <div style="font-size: 14px; line-height: 1.35; color: #44403C;">zonas atendidas</div>
+        <div style="font-size: 12px; color: #57534E; margin-top: 8px;">hace 40 min</div>
+      </div>
+      <div style="background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 4px;">
+        <div class="tab" style="font-size: 32px; font-weight: 700; line-height: 1.1;">212</div>
+        <div style="font-size: 14px; line-height: 1.35; color: #44403C;">cupos de voluntariado</div>
+        <div style="font-size: 12px; color: #57534E; margin-top: 8px;">hace 5 min</div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 48px 20px 0; display: flex; flex-direction: column; gap: 20px;">
+    <div style="display: flex; flex-direction: column; gap: 6px;">
+      <h2 style="margin: 0; font-size: 28px; line-height: 1.2; font-weight: 700;">¿Cómo quieres ayudar?</h2>
+      <p style="margin: 0; font-size: 16px; color: #57534E;">Tres formas, igual de válidas.</p>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <a href="#" style="background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 20px; display: flex; align-items: flex-start; gap: 16px; min-height: 128px; color: #1C1917; text-decoration: none;">
+        <div style="width: 48px; height: 48px; border-radius: 12px; background: #E6F4F4; display: flex; align-items: center; justify-content: center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F6E6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"></rect><path d="M2 10h20"></path><path d="M6 15h4"></path></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1;">
+          <h3 style="margin: 0; font-size: 20px; font-weight: 700;">Donar dinero</h3>
+          <p style="margin: 0; font-size: 16px; line-height: 1.45; color: #44403C;">Te llevamos al sitio oficial de la entidad que administra cada causa.</p>
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 700; color: #0F6E6E; margin-top: 4px;">Ver causas
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+          </div>
+        </div>
+      </a>
+      <a href="#" style="background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 20px; display: flex; align-items: flex-start; gap: 16px; min-height: 128px; color: #1C1917; text-decoration: none;">
+        <div style="width: 48px; height: 48px; border-radius: 12px; background: #E6F4F4; display: flex; align-items: center; justify-content: center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F6E6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"></path><path d="M3 8l9 5 9-5"></path><path d="M12 13v8"></path></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1;">
+          <h3 style="margin: 0; font-size: 20px; font-weight: 700;">Donar en especie</h3>
+          <p style="margin: 0; font-size: 16px; line-height: 1.45; color: #44403C;">Mira qué hace falta antes de comprar, y a qué acopio llevarlo.</p>
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 700; color: #0F6E6E; margin-top: 4px;">Ver el mapa
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+          </div>
+        </div>
+      </a>
+      <a href="#" style="background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 20px; display: flex; align-items: flex-start; gap: 16px; min-height: 128px; color: #1C1917; text-decoration: none;">
+        <div style="width: 48px; height: 48px; border-radius: 12px; background: #E6F4F4; display: flex; align-items: center; justify-content: center;">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0F6E6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="4"></circle><path d="M2 21v-1a6 6 0 0 1 12 0v1"></path><path d="M16 4.1a4 4 0 0 1 0 7.8"></path><path d="M22 21v-1a6 6 0 0 0-4-5.6"></path></svg>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 6px; flex-grow: 1;">
+          <h3 style="margin: 0; font-size: 20px; font-weight: 700;">Ser voluntario</h3>
+          <p style="margin: 0; font-size: 16px; line-height: 1.45; color: #44403C;">Reserva un cupo en una jornada. Sin cuenta, solo tu correo.</p>
+          <div style="display: flex; align-items: center; gap: 6px; font-size: 16px; font-weight: 700; color: #0F6E6E; margin-top: 4px;">Ver jornadas
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="M13 6l6 6-6 6"></path></svg>
+          </div>
+        </div>
+      </a>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 2px; font-size: 16px; color: #44403C;">
+      <span>¿Ya entregaste una donación con folio?</span>
+      <a href="#" style="font-weight: 700; padding: 12px 0;">Síguela aquí</a>
+    </div>
+  </section>
+
+  <section style="margin-top: 32px; background: #E6F4F4; border-top: 2px solid #0F6E6E; padding: 24px 20px;">
+    <div style="display: flex; align-items: flex-start; gap: 12px;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0A4F4F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><path d="M12 16v-5"></path><path d="M12 8h.01"></path></svg>
+      <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #0A4F4F;"><strong>Esta plataforma no recibe dinero.</strong> Te mostramos el paso a paso y te llevamos al sitio oficial de cada entidad.</p>
+    </div>
+  </section>
+
+  <section style="padding: 48px 0 0 20px; display: flex; flex-direction: column; gap: 20px;">
+    <div style="display: flex; flex-direction: column; gap: 6px; padding-right: 20px;">
+      <h2 style="margin: 0; font-size: 28px; line-height: 1.2; font-weight: 700;">Entidades verificadas</h2>
+      <p style="margin: 0; font-size: 16px; color: #57534E;">Solo aparecen las que tienen el sello vigente.</p>
+    </div>
+    <div style="display: flex; gap: 12px; overflow: hidden;">
+      <div style="width: 272px; flex-shrink: 0; background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="width: 48px; height: 48px; border-radius: 10px; background: #F5F5F4; border: 1px dashed #A8A29E; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #57534E;">Logo</div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="font-size: 18px; font-weight: 700;">[Nombre de la entidad]</div>
+          <div style="display: flex;"><span style="font-size: 14px; color: #44403C; background: #F5F5F4; border: 1px solid #E7E5E4; border-radius: 8px; padding: 4px 10px;">Personas damnificadas</span></div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #0A4F4F; border-top: 1px solid #E7E5E4; padding-top: 12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F6E6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path><path d="M8.5 12l2.5 2.5 4.5-5"></path></svg>
+          Verificada el [fecha]
+        </div>
+      </div>
+      <div style="width: 272px; flex-shrink: 0; background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 14px;">
+        <div style="width: 48px; height: 48px; border-radius: 10px; background: #F5F5F4; border: 1px dashed #A8A29E; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #57534E;">Logo</div>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+          <div style="font-size: 18px; font-weight: 700;">[Nombre de la entidad]</div>
+          <div style="display: flex;"><span style="font-size: 14px; color: #44403C; background: #F5F5F4; border: 1px solid #E7E5E4; border-radius: 8px; padding: 4px 10px;">Animales</span></div>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 500; color: #0A4F4F; border-top: 1px solid #E7E5E4; padding-top: 12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0F6E6E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path><path d="M8.5 12l2.5 2.5 4.5-5"></path></svg>
+          Verificada el [fecha]
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="padding: 48px 20px 0; display: flex; flex-direction: column; gap: 20px;">
+    <h2 style="margin: 0; font-size: 28px; line-height: 1.2; font-weight: 700;">Noticias</h2>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <a href="#" style="background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; color: #1C1917; text-decoration: none;">
+        <div style="height: 168px; background: #E7E5E4; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #57534E;">Foto real de la operación</div>
+        <div style="padding: 20px; display: flex; flex-direction: column; gap: 6px;">
+          <div style="font-size: 12px; color: #57534E;">[fecha]</div>
+          <div style="font-size: 18px; line-height: 1.35; font-weight: 700;">[Titular de la noticia]</div>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #44403C;">[Resumen de una o dos líneas.]</p>
+        </div>
+      </a>
+      <a href="#" style="background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; color: #1C1917; text-decoration: none;">
+        <div style="height: 168px; background: #E7E5E4; display: flex; align-items: center; justify-content: center; font-size: 14px; color: #57534E;">Foto real de la operación</div>
+        <div style="padding: 20px; display: flex; flex-direction: column; gap: 6px;">
+          <div style="font-size: 12px; color: #57534E;">[fecha]</div>
+          <div style="font-size: 18px; line-height: 1.35; font-weight: 700;">[Titular de la noticia]</div>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #44403C;">[Resumen de una o dos líneas.]</p>
+        </div>
+      </a>
+      <a href="#" style="background: #FFFFFF; border: 1px solid #E7E5E4; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; color: #1C1917; text-decoration: none;">
+        <div style="padding: 20px; display: flex; flex-direction: column; gap: 6px;">
+          <div style="font-size: 12px; color: #57534E;">[fecha]</div>
+          <div style="font-size: 18px; line-height: 1.35; font-weight: 700;">[Titular de la noticia, sin imagen]</div>
+          <p style="margin: 0; font-size: 16px; line-height: 1.5; color: #44403C;">[Resumen de una o dos líneas.]</p>
+        </div>
+      </a>
+    </div>
+  </section>
+
+  <footer style="margin-top: 56px; background: #F5F5F4; border-top: 1px solid #E7E5E4; padding: 32px 20px 40px; display: flex; flex-direction: column; gap: 16px;">
+    <div style="display: flex; align-items: center; gap: 10px;">
+      <div style="width: 28px; height: 28px; border-radius: 8px; background: #0F6E6E; display: flex; align-items: center; justify-content: center;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8l-9-5-9 5v8l9 5 9-5z"></path><path d="M3 8l9 5 9-5"></path><path d="M12 13v8"></path></svg>
+      </div>
+      <span style="font-size: 18px; font-weight: 700;">Acopio</span>
+    </div>
+    <nav style="display: flex; flex-direction: column; font-size: 16px;">
+      <a href="#" style="padding: 12px 0; color: #44403C;">Transparencia</a>
+      <a href="#" style="padding: 12px 0; color: #44403C;">Política de tratamiento de datos</a>
+      <a href="#" style="padding: 12px 0; color: #44403C;">Términos de uso</a>
+      <a href="#" style="padding: 12px 0; color: #44403C;">Contacto</a>
+    </nav>
+    <p style="margin: 0; font-size: 14px; line-height: 1.5; color: #44403C;"><strong>Esta plataforma no recibe dinero.</strong> No responde por las entidades a las que dirige: cada donación en dinero se hace en el sitio oficial de la entidad.</p>
+    <p style="margin: 0; font-size: 12px; line-height: 1.5; color: #57534E;">Tratamiento de datos conforme a la Ley 1581 de 2012. Los datos de autenticación se alojan fuera de Colombia.</p>
+  </footer>
+
+</div>
+</x-dc>
+</body>
+</html>

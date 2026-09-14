@@ -1,0 +1,36 @@
+filters:
+  and:
+    - type == "requerimientos"
+properties:
+  modulo:
+    displayName: Módulo
+  bloque:
+    displayName: Bloque
+  actualizado:
+    displayName: Actualizado
+views:
+  - type: table
+    name: Por bloque
+    order:
+      - bloque
+      - modulo
+      - file.name
+      - actualizado
+  - type: table
+    name: Bloque 0 — Cimientos
+    filters:
+      and:
+        - bloque == 0
+    order:
+      - modulo
+      - file.name
+  - type: table
+    name: Núcleo — bloques 2 a 4
+    filters:
+      and:
+        - bloque >= 2
+        - bloque <= 4
+    order:
+      - bloque
+      - modulo
+      - file.name

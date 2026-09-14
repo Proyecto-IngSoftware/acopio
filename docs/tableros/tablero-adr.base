@@ -1,0 +1,27 @@
+filters:
+  and:
+    - type == "adr"
+properties:
+  adr:
+    displayName: "#"
+  decision:
+    displayName: Decisión
+  actualizado:
+    displayName: Actualizado
+views:
+  - type: table
+    name: Todas las decisiones
+    order:
+      - adr
+      - file.name
+      - decision
+      - actualizado
+  - type: table
+    name: Solo aceptadas
+    filters:
+      and:
+        - decision == "aceptada"
+    order:
+      - adr
+      - file.name
+      - actualizado

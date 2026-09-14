@@ -1,0 +1,394 @@
+<title>Descomposición funcional de Acopio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,700&display=swap">
+<style>
+:root{
+  --suelo:#FAFAF9; --superficie:#FFFFFF; --tinta:#1C1917; --tinta-2:#57534E; --tinta-3:#78716C;
+  --borde:#E7E5E4; --linea:#A8A29E;
+  --sis-f:#0A4F4F; --sis-t:#FFFFFF; --mod-f:#0F6E6E; --mod-t:#FFFFFF; --sub-f:#C7E8E8; --sub-t:#0A4F4F;
+  --acento:#0F6E6E; --acento-suave:#E6F4F4; --chip:#D6D3D1; --foco:#14A0A0;
+  --g:28px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --suelo:#141312; --superficie:#1E1C1A; --tinta:#F5F5F4; --tinta-2:#B8B2AD; --tinta-3:#8F8883;
+    --borde:#34302D; --linea:#5E5853;
+    --sis-f:#14A0A0; --sis-t:#081A1A; --mod-f:#0F6E6E; --mod-t:#FFFFFF; --sub-f:#123736; --sub-t:#C7E8E8;
+    --acento:#46C6C6; --acento-suave:#12302F; --chip:#48433F; --foco:#46C6C6;
+  }
+}
+:root[data-theme="dark"]{
+  --suelo:#141312; --superficie:#1E1C1A; --tinta:#F5F5F4; --tinta-2:#B8B2AD; --tinta-3:#8F8883;
+  --borde:#34302D; --linea:#5E5853;
+  --sis-f:#14A0A0; --sis-t:#081A1A; --mod-f:#0F6E6E; --mod-t:#FFFFFF; --sub-f:#123736; --sub-t:#C7E8E8;
+  --acento:#46C6C6; --acento-suave:#12302F; --chip:#48433F; --foco:#46C6C6;
+}
+*{box-sizing:border-box}
+body{background:var(--suelo); color:var(--tinta); font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif; font-size:16px; line-height:1.5; margin:0}
+.envoltura{max-width:1240px; margin:0 auto; padding-inline:24px; padding-block:48px 64px}
+a{color:var(--acento)} a:hover{color:var(--tinta)}
+:focus-visible{outline:2px solid var(--foco); outline-offset:2px; border-radius:6px}
+h1,h2,h3{text-wrap:balance; margin:0; font-weight:700; letter-spacing:-0.01em}
+h1{font-size:36px; line-height:1.15}
+h2{font-size:22px; line-height:1.25}
+h3{font-size:18px; line-height:1.3}
+.ceja{font-size:12px; font-weight:500; letter-spacing:.08em; text-transform:uppercase; color:var(--tinta-3)}
+.cabecera{display:grid; gap:16px; max-width:760px}
+.lede{font-size:18px; color:var(--tinta-2); max-width:65ch; margin:0}
+.cifras{display:flex; flex-wrap:wrap; gap:8px 24px; margin:8px 0 0; padding:0; list-style:none; font-variant-numeric:tabular-nums; color:var(--tinta-2)}
+.cifras b{color:var(--tinta); font-size:18px}
+.nota{font-size:14px; color:var(--tinta-2); max-width:70ch; margin:0}
+
+/* Barra fija: leyenda y resaltado */
+.barra{position:sticky; top:0; z-index:5; background:var(--suelo); border-bottom:1px solid var(--borde); margin-top:32px}
+.barra-in{display:flex; flex-wrap:wrap; align-items:center; gap:12px 32px; padding-block:12px}
+.leyenda{display:flex; flex-wrap:wrap; gap:8px 16px; align-items:center; font-size:14px; color:var(--tinta-2); margin:0; padding:0; list-style:none}
+.leyenda li{display:flex; align-items:center; gap:8px}
+.mu{width:18px; height:14px; border-radius:4px; display:inline-block; border:1px solid transparent}
+.mu-sis{background:var(--sis-f)} .mu-mod{background:var(--mod-f)} .mu-sub{background:var(--sub-f)} .mu-func{background:var(--superficie); border-color:var(--linea)}
+.resaltar{display:flex; align-items:center; gap:8px; font-size:14px; color:var(--tinta-2)}
+.resaltar button{font:inherit; font-weight:700; font-size:14px; min-width:44px; height:36px; padding:0 10px; border-radius:8px; border:1px solid var(--borde); background:var(--superficie); color:var(--tinta); cursor:pointer; display:inline-flex; align-items:center; gap:6px}
+.resaltar button span{font-weight:400; color:var(--tinta-2)}
+.resaltar button[aria-pressed="true"]{background:var(--acento); border-color:var(--acento); color:var(--suelo)}
+.resaltar button[aria-pressed="true"] span{color:var(--suelo)}
+
+section{margin-top:56px; display:grid; gap:16px}
+.sec-cab{display:grid; gap:6px; max-width:760px}
+.sec-cab p{margin:0; color:var(--tinta-2)}
+.lienzo{background:var(--superficie); border:1px solid var(--borde); border-radius:12px; padding:28px; overflow-x:auto}
+
+/* Árbol de izquierda a derecha, conectores con bordes */
+.t{display:flex; align-items:center}
+.k{list-style:none; margin:0; padding:0 0 0 var(--g); display:flex; flex-direction:column; position:relative}
+.k::before{content:""; position:absolute; left:0; top:50%; width:var(--g); border-top:1.5px solid var(--linea)}
+.k > li{position:relative; padding-left:var(--g); padding-block:4px; display:flex; align-items:center}
+.k > li::before{content:""; position:absolute; left:0; top:0; bottom:0; border-left:1.5px solid var(--linea)}
+.k > li:first-child::before{top:50%}
+.k > li:last-child::before{bottom:50%}
+.k > li:only-child::before{display:none}
+.k > li::after{content:""; position:absolute; left:0; top:50%; width:var(--g); border-top:1.5px solid var(--linea)}
+.n{white-space:nowrap; border-radius:10px; padding:8px 14px; font-size:15px; line-height:1.3; flex-shrink:0}
+.n-sis{background:var(--sis-f); color:var(--sis-t); font-size:20px; font-weight:700; padding:14px 22px; border-radius:12px}
+.n-mod{background:var(--mod-f); color:var(--mod-t); font-weight:700; font-size:16px; padding:10px 16px}
+.n-link{text-decoration:none} .n-link:hover{color:var(--mod-t); text-decoration:underline; text-underline-offset:3px}
+.n-sub{background:var(--sub-f); color:var(--sub-t); font-weight:500}
+.cuenta{font-variant-numeric:tabular-nums; font-size:12px; font-weight:700; margin-left:6px; opacity:.75}
+.n-func{background:var(--superficie); border:1px solid var(--linea); color:var(--tinta); display:flex; align-items:center; gap:10px; padding:7px 12px; transition:opacity .15s}
+.rf{font-size:12px; color:var(--tinta-3); font-variant-numeric:tabular-nums; letter-spacing:.01em}
+.crud{display:inline-flex; gap:2px}
+.crud b{display:inline-grid; place-items:center; width:20px; height:20px; border:1px solid var(--chip); border-radius:5px; font-size:11px; font-weight:700; color:var(--tinta-2); background:var(--suelo)}
+[data-resaltar] .n-func{opacity:.28}
+[data-resaltar="C"] .n-func[data-crud*="C"],[data-resaltar="R"] .n-func[data-crud*="R"],
+[data-resaltar="U"] .n-func[data-crud*="U"],[data-resaltar="D"] .n-func[data-crud*="D"]{opacity:1; border-color:var(--acento); box-shadow:inset 0 0 0 1px var(--acento)}
+
+.indice{display:flex; flex-wrap:wrap; gap:8px; margin:0; padding:0; list-style:none}
+.indice a{display:inline-flex; align-items:center; gap:8px; min-height:40px; padding:0 14px; border:1px solid var(--borde); border-radius:999px; background:var(--superficie); text-decoration:none; color:var(--tinta); font-size:14px; font-weight:500}
+.indice a:hover{border-color:var(--acento); color:var(--acento)}
+.indice span{font-variant-numeric:tabular-nums; color:var(--tinta-3); font-weight:400}
+.modulo{scroll-margin-top:80px}
+.mod-meta{font-size:14px; color:var(--tinta-2); font-variant-numeric:tabular-nums}
+
+/* Trazabilidad */
+.herr{display:flex; flex-wrap:wrap; gap:12px; align-items:center}
+.herr label{font-size:14px; color:var(--tinta-2)}
+.herr input{font:inherit; font-size:16px; height:44px; padding:0 14px; border:1px solid var(--linea); border-radius:10px; background:var(--superficie); color:var(--tinta); width:min(360px,100%)}
+.tabla-c{overflow-x:auto; border:1px solid var(--borde); border-radius:12px; background:var(--superficie)}
+table{border-collapse:collapse; width:100%; min-width:860px; font-size:14px}
+th,td{text-align:left; padding:10px 14px; border-bottom:1px solid var(--borde); vertical-align:top}
+th{font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--tinta-3); position:sticky; top:0; background:var(--superficie)}
+tr:last-child td{border-bottom:0}
+.c-rf{font-variant-numeric:tabular-nums; font-weight:500; white-space:nowrap}
+tr.fuera td{color:var(--tinta-2); background:var(--acento-suave)}
+.tag{display:inline-block; font-size:12px; font-weight:700; padding:2px 8px; border-radius:6px; border:1px solid var(--linea); color:var(--tinta-2)}
+.vacio{padding:16px; color:var(--tinta-2); margin:0}
+footer{margin-top:56px; padding-top:20px; border-top:1px solid var(--borde); font-size:14px; color:var(--tinta-2); display:grid; gap:4px}
+
+@media (max-width:640px){
+  .envoltura{padding-inline:16px; padding-block:32px 48px}
+  h1{font-size:28px}
+  .lienzo{padding:18px}
+  :root{--g:20px}
+}
+@media (prefers-reduced-motion:reduce){ .n-func{transition:none} }
+</style>
+
+<div class="envoltura" id="raiz">
+  <header class="cabecera">
+    <span class="ceja">Avance 3 · Arquitectura inicial</span>
+    <h1>Descomposición funcional de Acopio</h1>
+    <p class="lede">Las funcionalidades de la plataforma de coordinación logística para respuesta a desastres, agrupadas en seis módulos. Cada funcionalidad lleva su operación CRUD y los requerimientos que la originan.</p>
+    <ul class="cifras">
+      <li><b>6</b> módulos</li>
+      <li><b>20</b> submódulos</li>
+      <li><b>67</b> funcionalidades</li>
+      <li><b>75</b> requerimientos trazados</li>
+    </ul>
+    <p class="nota">Derivada de los requerimientos funcionales activos y de las historias de usuario semilla. La agrupación en seis módulos sigue la decisión P-010. Cuatro requerimientos quedan fuera del diagrama porque son reglas del sistema, no acciones; aparecen al final de la trazabilidad.</p>
+  </header>
+
+  <div class="barra">
+    <div class="barra-in">
+      <ul class="leyenda" aria-label="Convenciones">
+        <li><span class="mu mu-sis"></span>Sistema</li>
+        <li><span class="mu mu-mod"></span>Módulo</li>
+        <li><span class="mu mu-sub"></span>Submódulo</li>
+        <li><span class="mu mu-func"></span>Funcionalidad</li>
+      </ul>
+      <div class="resaltar" role="group" aria-label="Resaltar funcionalidades por operación">
+        <span>Resaltar</span>
+        <button type="button" id="res-C" data-l="C" aria-pressed="false">C <span>Crear</span></button><button type="button" id="res-R" data-l="R" aria-pressed="false">R <span>Consultar</span></button><button type="button" id="res-U" data-l="U" aria-pressed="false">U <span>Actualizar</span></button><button type="button" id="res-D" data-l="D" aria-pressed="false">D <span>Eliminar</span></button>
+      </div>
+    </div>
+  </div>
+
+  <section aria-labelledby="t-general">
+    <div class="sec-cab">
+      <h2 id="t-general">Vista general</h2>
+      <p>El sistema, sus seis módulos y los submódulos de cada uno, con el número de funcionalidades que agrupa cada submódulo. Toca un módulo para ir a su detalle.</p>
+    </div>
+    <div class="lienzo">
+<div class="t">
+  <div class="n n-sis">Acopio</div>
+  <ul class="k">
+    <li><div class="t">
+      <a class="n n-mod n-link" href="#portal">Portal público</a>
+      <ul class="k"><li><div class="t"><div class="n n-sub">Portada y contenido <span class="cuenta">4</span></div></div></li><li><div class="t"><div class="n n-sub">Mapa de acopios <span class="cuenta">3</span></div></div></li><li><div class="t"><div class="n n-sub">Directorio de causas <span class="cuenta">1</span></div></div></li><li><div class="t"><div class="n n-sub">Transparencia <span class="cuenta">1</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <a class="n n-mod n-link" href="#turnos">Turnos de voluntariado</a>
+      <ul class="k"><li><div class="t"><div class="n n-sub">Jornadas <span class="cuenta">3</span></div></div></li><li><div class="t"><div class="n n-sub">Reservas <span class="cuenta">3</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <a class="n n-mod n-link" href="#inventario">Inventario</a>
+      <ul class="k"><li><div class="t"><div class="n n-sub">Movimientos <span class="cuenta">4</span></div></div></li><li><div class="t"><div class="n n-sub">Saldos <span class="cuenta">3</span></div></div></li><li><div class="t"><div class="n n-sub">Control de recepción <span class="cuenta">2</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <a class="n n-mod n-link" href="#comprobantes">Comprobantes y custodia</a>
+      <ul class="k"><li><div class="t"><div class="n n-sub">Donación preparada <span class="cuenta">3</span></div></div></li><li><div class="t"><div class="n n-sub">Recepción y conciliación <span class="cuenta">4</span></div></div></li><li><div class="t"><div class="n n-sub">Seguimiento <span class="cuenta">2</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <a class="n n-mod n-link" href="#motor">Zonas y motor</a>
+      <ul class="k"><li><div class="t"><div class="n n-sub">Zonas afectadas <span class="cuenta">2</span></div></div></li><li><div class="t"><div class="n n-sub">Cálculo <span class="cuenta">3</span></div></div></li><li><div class="t"><div class="n n-sub">Sugerencias <span class="cuenta">4</span></div></div></li><li><div class="t"><div class="n n-sub">Remisiones <span class="cuenta">2</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <a class="n n-mod n-link" href="#admin">Administración y acceso</a>
+      <ul class="k"><li><div class="t"><div class="n n-sub">Usuarios y acceso <span class="cuenta">9</span></div></div></li><li><div class="t"><div class="n n-sub">Catálogo maestro <span class="cuenta">6</span></div></div></li><li><div class="t"><div class="n n-sub">Red de acopios <span class="cuenta">6</span></div></div></li><li><div class="t"><div class="n n-sub">Contenido y auditoría <span class="cuenta">2</span></div></div></li></ul>
+    </div></li>
+  </ul>
+</div></div>
+  </section>
+
+  <section aria-labelledby="t-modulos">
+    <div class="sec-cab">
+      <h2 id="t-modulos">Detalle por módulo</h2>
+      <p>Un diagrama por módulo: submódulos y funcionalidades con su operación y sus requerimientos.</p>
+    </div>
+    <ul class="indice"><li><a href="#portal">Portal público <span>9</span></a></li><li><a href="#turnos">Turnos de voluntariado <span>6</span></a></li><li><a href="#inventario">Inventario <span>9</span></a></li><li><a href="#comprobantes">Comprobantes y custodia <span>9</span></a></li><li><a href="#motor">Zonas y motor <span>11</span></a></li><li><a href="#admin">Administración y acceso <span>23</span></a></li></ul>
+  </section>
+
+  
+  <section class="modulo" id="portal" aria-labelledby="t-portal">
+    <div class="sec-cab">
+      <h3 id="t-portal">Portal público</h3>
+      <p class="mod-meta">Agrupa M1 Directorio de causas, M2 Mapa de acopios y M7 Home · 4 submódulos · 9 funcionalidades</p>
+    </div>
+    <div class="lienzo">
+<div class="t">
+  <div class="n n-mod">Portal público</div>
+  <ul class="k">
+    <li><div class="t">
+      <div class="n n-sub">Portada y contenido</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Ver portada</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-HOM-001</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Consultar cómo ayudar</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-HOM-002</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Consultar páginas legales</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-HOM-005</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Compartir en redes</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-HOM-006</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Mapa de acopios</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Ver mapa con filtros</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-RED-002</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Ver ficha de acopio</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-RED-003</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Ver necesidades por zona</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-RED-009</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Directorio de causas</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Ver directorio y ficha de causa</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-RED-008</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Transparencia</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Ver tablero de transparencia</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-HOM-004</span></div></div></li></ul>
+    </div></li>
+  </ul>
+</div></div>
+  </section>
+  <section class="modulo" id="turnos" aria-labelledby="t-turnos">
+    <div class="sec-cab">
+      <h3 id="t-turnos">Turnos de voluntariado</h3>
+      <p class="mod-meta">Corresponde a M3 Turnos y cupos · 2 submódulos · 6 funcionalidades</p>
+    </div>
+    <div class="lienzo">
+<div class="t">
+  <div class="n n-mod">Turnos de voluntariado</div>
+  <ul class="k">
+    <li><div class="t">
+      <div class="n n-sub">Jornadas</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="C"><span class="n-tx">Crear jornada</span><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span><span class="rf">RF-TUR-001</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Ver jornadas disponibles</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-TUR-002</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="CU"><span class="n-tx">Exigir perfil especializado</span><span class="crud" aria-label="Operaciones: Crear, Actualizar"><b>C</b><b>U</b></span><span class="rf">RF-TUR-007</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Reservas</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="C"><span class="n-tx">Reservar cupo</span><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span><span class="rf">RF-TUR-003</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="RD"><span class="n-tx">Consultar o cancelar reserva</span><span class="crud" aria-label="Operaciones: Consultar, Eliminar"><b>R</b><b>D</b></span><span class="rf">RF-TUR-004</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="RU"><span class="n-tx">Administrar reservas y asistencia</span><span class="crud" aria-label="Operaciones: Consultar, Actualizar"><b>R</b><b>U</b></span><span class="rf">RF-TUR-005</span></div></div></li></ul>
+    </div></li>
+  </ul>
+</div></div>
+  </section>
+  <section class="modulo" id="inventario" aria-labelledby="t-inventario">
+    <div class="sec-cab">
+      <h3 id="t-inventario">Inventario</h3>
+      <p class="mod-meta">Corresponde a M4 Inventario de acopio · 3 submódulos · 9 funcionalidades</p>
+    </div>
+    <div class="lienzo">
+<div class="t">
+  <div class="n n-mod">Inventario</div>
+  <ul class="k">
+    <li><div class="t">
+      <div class="n n-sub">Movimientos</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="C"><span class="n-tx">Registrar entrada con escaneo</span><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span><span class="rf">RF-INV-001 · RF-INV-002</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="C"><span class="n-tx">Registrar salida</span><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span><span class="rf">RF-INV-003</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="C"><span class="n-tx">Ajustar por conteo físico</span><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span><span class="rf">RF-INV-004</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="C"><span class="n-tx">Capturar sin conexión</span><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span><span class="rf">RF-INV-009</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Saldos</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Consultar saldos</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-INV-005</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Ver historial de una categoría</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-INV-006</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Recibir alertas de vencimiento</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-INV-010</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Control de recepción</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="CU"><span class="n-tx">Configurar umbrales</span><span class="crud" aria-label="Operaciones: Crear, Actualizar"><b>C</b><b>U</b></span><span class="rf">RF-INV-007</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="U"><span class="n-tx">Marcar «no recibir»</span><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span><span class="rf">RF-INV-008</span></div></div></li></ul>
+    </div></li>
+  </ul>
+</div></div>
+  </section>
+  <section class="modulo" id="comprobantes" aria-labelledby="t-comprobantes">
+    <div class="sec-cab">
+      <h3 id="t-comprobantes">Comprobantes y custodia</h3>
+      <p class="mod-meta">Corresponde a M5 Comprobantes y cadena de custodia · 3 submódulos · 9 funcionalidades</p>
+    </div>
+    <div class="lienzo">
+<div class="t">
+  <div class="n n-mod">Comprobantes y custodia</div>
+  <ul class="k">
+    <li><div class="t">
+      <div class="n n-sub">Donación preparada</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="C"><span class="n-tx">Preparar donación con escaneo</span><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span><span class="rf">RF-CMP-001B</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Sugerir punto de entrega</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-CMP-001D</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Consultar mi historial de donaciones</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-CMP-008</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Recepción y conciliación</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="U"><span class="n-tx">Confirmar recepción física</span><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span><span class="rf">RF-CMP-001C</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Revisar bandeja de pendientes</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-CMP-003</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="U"><span class="n-tx">Conciliar contra movimiento</span><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span><span class="rf">RF-CMP-004</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="U"><span class="n-tx">Rechazar comprobante</span><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span><span class="rf">RF-CMP-005</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Seguimiento</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Seguir donación por folio</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-CMP-006</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Ver trazabilidad del despacho</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-CMP-007</span></div></div></li></ul>
+    </div></li>
+  </ul>
+</div></div>
+  </section>
+  <section class="modulo" id="motor" aria-labelledby="t-motor">
+    <div class="sec-cab">
+      <h3 id="t-motor">Zonas y motor</h3>
+      <p class="mod-meta">Corresponde a M6 Zonas afectadas y motor de emparejamiento · 4 submódulos · 11 funcionalidades</p>
+    </div>
+    <div class="lienzo">
+<div class="t">
+  <div class="n n-mod">Zonas y motor</div>
+  <ul class="k">
+    <li><div class="t">
+      <div class="n n-sub">Zonas afectadas</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="CU"><span class="n-tx">Registrar zona afectada</span><span class="crud" aria-label="Operaciones: Crear, Actualizar"><b>C</b><b>U</b></span><span class="rf">RF-MOT-001 · RF-RED-004</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="C"><span class="n-tx">Reportar necesidad de zona</span><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span><span class="rf">RF-MOT-011</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Cálculo</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Calcular necesidad de una zona</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-MOT-002</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Calcular déficit y cobertura</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-MOT-003</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Calcular superávit de un acopio</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-MOT-004</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Sugerencias</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="C"><span class="n-tx">Generar sugerencias</span><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span><span class="rf">RF-MOT-005</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Ver ranking de traslados</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-MOT-006</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="U"><span class="n-tx">Aprobar o descartar sugerencia</span><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span><span class="rf">RF-MOT-007</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Evaluar el motor</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-MOT-010</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Remisiones</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="CRU"><span class="n-tx">Gestionar remisiones</span><span class="crud" aria-label="Operaciones: Crear, Consultar, Actualizar"><b>C</b><b>R</b><b>U</b></span><span class="rf">RF-MOT-008</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="U"><span class="n-tx">Confirmar recepción en zona</span><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span><span class="rf">RF-MOT-009</span></div></div></li></ul>
+    </div></li>
+  </ul>
+</div></div>
+  </section>
+  <section class="modulo" id="admin" aria-labelledby="t-admin">
+    <div class="sec-cab">
+      <h3 id="t-admin">Administración y acceso</h3>
+      <p class="mod-meta">Identidad, catálogo maestro, gestión de la red y bitácora · 4 submódulos · 23 funcionalidades</p>
+    </div>
+    <div class="lienzo">
+<div class="t">
+  <div class="n n-mod">Administración y acceso</div>
+  <ul class="k">
+    <li><div class="t">
+      <div class="n n-sub">Usuarios y acceso</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="C"><span class="n-tx">Crear usuario e invitar</span><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span><span class="rf">RF-IDE-001 · RF-IDE-002</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="U"><span class="n-tx">Canjear invitación</span><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span><span class="rf">RF-IDE-003</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Iniciar sesión</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-IDE-004</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="C"><span class="n-tx">Registrarse como Donador</span><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span><span class="rf">RF-IDE-013</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="U"><span class="n-tx">Restablecer acceso</span><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span><span class="rf">RF-IDE-009</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="U"><span class="n-tx">Suspender usuario</span><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span><span class="rf">RF-IDE-007 · RF-IDE-008</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="CUD"><span class="n-tx">Gestionar asignaciones</span><span class="crud" aria-label="Operaciones: Crear, Actualizar, Eliminar"><b>C</b><b>U</b><b>D</b></span><span class="rf">RF-IDE-006</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="U"><span class="n-tx">Cambiar contexto activo</span><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span><span class="rf">RF-IDE-010</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Consultar matriz de acceso</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-IDE-011</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Catálogo maestro</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="CRUD"><span class="n-tx">Gestionar categorías</span><span class="crud" aria-label="Operaciones: Crear, Consultar, Actualizar, Eliminar"><b>C</b><b>R</b><b>U</b><b>D</b></span><span class="rf">RF-CAT-001</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Buscar categoría</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-CAT-002</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="CU"><span class="n-tx">Definir canasta estándar</span><span class="crud" aria-label="Operaciones: Crear, Actualizar"><b>C</b><b>U</b></span><span class="rf">RF-CAT-003</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="CU"><span class="n-tx">Mapear códigos de barras</span><span class="crud" aria-label="Operaciones: Crear, Actualizar"><b>C</b><b>U</b></span><span class="rf">RF-CAT-004</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="CRU"><span class="n-tx">Gestionar emergencias</span><span class="crud" aria-label="Operaciones: Crear, Consultar, Actualizar"><b>C</b><b>R</b><b>U</b></span><span class="rf">RF-CAT-005</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="U"><span class="n-tx">Configurar pesos del motor</span><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span><span class="rf">RF-CAT-006</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Red de acopios</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="CRU"><span class="n-tx">Gestionar acopios</span><span class="crud" aria-label="Operaciones: Crear, Consultar, Actualizar"><b>C</b><b>R</b><b>U</b></span><span class="rf">RF-RED-001</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="CU"><span class="n-tx">Importar acopios externos</span><span class="crud" aria-label="Operaciones: Crear, Actualizar"><b>C</b><b>U</b></span><span class="rf">RF-RED-011</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="CRU"><span class="n-tx">Gestionar entidades</span><span class="crud" aria-label="Operaciones: Crear, Consultar, Actualizar"><b>C</b><b>R</b><b>U</b></span><span class="rf">RF-RED-005</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="U"><span class="n-tx">Verificar entidad</span><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span><span class="rf">RF-RED-006</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="CRU"><span class="n-tx">Gestionar causas</span><span class="crud" aria-label="Operaciones: Crear, Consultar, Actualizar"><b>C</b><b>R</b><b>U</b></span><span class="rf">RF-RED-007</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="U"><span class="n-tx">Archivar causa</span><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span><span class="rf">RF-RED-010</span></div></div></li></ul>
+    </div></li>
+    <li><div class="t">
+      <div class="n n-sub">Contenido y auditoría</div>
+      <ul class="k"><li><div class="t"><div class="n n-func" data-crud="CUD"><span class="n-tx">Gestionar contenido de portada</span><span class="crud" aria-label="Operaciones: Crear, Actualizar, Eliminar"><b>C</b><b>U</b><b>D</b></span><span class="rf">RF-HOM-003</span></div></div></li><li><div class="t"><div class="n n-func" data-crud="R"><span class="n-tx">Consultar bitácora</span><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span><span class="rf">RF-IDE-012</span></div></div></li></ul>
+    </div></li>
+  </ul>
+</div></div>
+  </section>
+
+  <section aria-labelledby="t-traza">
+    <div class="sec-cab">
+      <h2 id="t-traza">Trazabilidad</h2>
+      <p>Cada requerimiento funcional activo, con la funcionalidad, el submódulo y el módulo donde vive.</p>
+    </div>
+    <div class="herr">
+      <label for="filtro-rf">Buscar</label>
+      <input id="filtro-rf" type="search" placeholder="RF-INV-004, conciliar, Turnos…" autocomplete="off">
+    </div>
+    <div class="tabla-c">
+      <table>
+        <thead><tr><th scope="col">RF</th><th scope="col">Requerimiento</th><th scope="col">Funcionalidad</th><th scope="col">Submódulo</th><th scope="col">Módulo</th><th scope="col">CRUD</th></tr></thead>
+        <tbody id="cuerpo-traza"><tr><td class="c-rf">RF-HOM-001</td><td>Portada</td><td>Ver portada</td><td>Portada y contenido</td><td>Portal público</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-HOM-002</td><td>Cómo ayudar</td><td>Consultar cómo ayudar</td><td>Portada y contenido</td><td>Portal público</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-HOM-005</td><td>Páginas legales</td><td>Consultar páginas legales</td><td>Portada y contenido</td><td>Portal público</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-HOM-006</td><td>Compartir en redes</td><td>Compartir en redes</td><td>Portada y contenido</td><td>Portal público</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-RED-002</td><td>Mapa público de acopios</td><td>Ver mapa con filtros</td><td>Mapa de acopios</td><td>Portal público</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-RED-003</td><td>Ficha pública de acopio</td><td>Ver ficha de acopio</td><td>Mapa de acopios</td><td>Portal público</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-RED-009</td><td>Mapa de necesidades por zona</td><td>Ver necesidades por zona</td><td>Mapa de acopios</td><td>Portal público</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-RED-008</td><td>Directorio y ficha de causa</td><td>Ver directorio y ficha de causa</td><td>Directorio de causas</td><td>Portal público</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-HOM-004</td><td>Transparencia</td><td>Ver tablero de transparencia</td><td>Transparencia</td><td>Portal público</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-TUR-001</td><td>Crear jornada</td><td>Crear jornada</td><td>Jornadas</td><td>Turnos de voluntariado</td><td><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span></td></tr><tr><td class="c-rf">RF-TUR-002</td><td>Listado público de jornadas</td><td>Ver jornadas disponibles</td><td>Jornadas</td><td>Turnos de voluntariado</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-TUR-007</td><td>Voluntariado especializado</td><td>Exigir perfil especializado</td><td>Jornadas</td><td>Turnos de voluntariado</td><td><span class="crud" aria-label="Operaciones: Crear, Actualizar"><b>C</b><b>U</b></span></td></tr><tr><td class="c-rf">RF-TUR-003</td><td>Reservar cupo</td><td>Reservar cupo</td><td>Reservas</td><td>Turnos de voluntariado</td><td><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span></td></tr><tr><td class="c-rf">RF-TUR-004</td><td>Confirmar y cancelar reserva</td><td>Consultar o cancelar reserva</td><td>Reservas</td><td>Turnos de voluntariado</td><td><span class="crud" aria-label="Operaciones: Consultar, Eliminar"><b>R</b><b>D</b></span></td></tr><tr><td class="c-rf">RF-TUR-005</td><td>Administrar reservas de una jornada</td><td>Administrar reservas y asistencia</td><td>Reservas</td><td>Turnos de voluntariado</td><td><span class="crud" aria-label="Operaciones: Consultar, Actualizar"><b>R</b><b>U</b></span></td></tr><tr><td class="c-rf">RF-INV-001</td><td>Registrar entrada</td><td>Registrar entrada con escaneo</td><td>Movimientos</td><td>Inventario</td><td><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span></td></tr><tr><td class="c-rf">RF-INV-002</td><td>Escanear código de barras</td><td>Registrar entrada con escaneo</td><td>Movimientos</td><td>Inventario</td><td><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span></td></tr><tr><td class="c-rf">RF-INV-003</td><td>Registrar salida</td><td>Registrar salida</td><td>Movimientos</td><td>Inventario</td><td><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span></td></tr><tr><td class="c-rf">RF-INV-004</td><td>Ajustar por conteo físico</td><td>Ajustar por conteo físico</td><td>Movimientos</td><td>Inventario</td><td><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span></td></tr><tr><td class="c-rf">RF-INV-009</td><td>Captura sin conexión</td><td>Capturar sin conexión</td><td>Movimientos</td><td>Inventario</td><td><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span></td></tr><tr><td class="c-rf">RF-INV-005</td><td>Consultar saldos</td><td>Consultar saldos</td><td>Saldos</td><td>Inventario</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-INV-006</td><td>Ver historial de una categoría</td><td>Ver historial de una categoría</td><td>Saldos</td><td>Inventario</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-INV-010</td><td>Alerta de vencimiento</td><td>Recibir alertas de vencimiento</td><td>Saldos</td><td>Inventario</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-INV-007</td><td>Configurar umbrales</td><td>Configurar umbrales</td><td>Control de recepción</td><td>Inventario</td><td><span class="crud" aria-label="Operaciones: Crear, Actualizar"><b>C</b><b>U</b></span></td></tr><tr><td class="c-rf">RF-INV-008</td><td>Marcar «no recibir»</td><td>Marcar «no recibir»</td><td>Control de recepción</td><td>Inventario</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-CMP-001B</td><td>Preparar donación con escaneo</td><td>Preparar donación con escaneo</td><td>Donación preparada</td><td>Comprobantes y custodia</td><td><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span></td></tr><tr><td class="c-rf">RF-CMP-001D</td><td>Sugerir punto de entrega</td><td>Sugerir punto de entrega</td><td>Donación preparada</td><td>Comprobantes y custodia</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-CMP-008</td><td>Historial de donaciones del Donador</td><td>Consultar mi historial de donaciones</td><td>Donación preparada</td><td>Comprobantes y custodia</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-CMP-001C</td><td>Confirmar recepción física de una donación preparada</td><td>Confirmar recepción física</td><td>Recepción y conciliación</td><td>Comprobantes y custodia</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-CMP-003</td><td>Bandeja de pendientes</td><td>Revisar bandeja de pendientes</td><td>Recepción y conciliación</td><td>Comprobantes y custodia</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-CMP-004</td><td>Conciliar contra movimiento</td><td>Conciliar contra movimiento</td><td>Recepción y conciliación</td><td>Comprobantes y custodia</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-CMP-005</td><td>Rechazar comprobante</td><td>Rechazar comprobante</td><td>Recepción y conciliación</td><td>Comprobantes y custodia</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-CMP-006</td><td>Seguimiento por folio</td><td>Seguir donación por folio</td><td>Seguimiento</td><td>Comprobantes y custodia</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-CMP-007</td><td>Trazabilidad estimada del despacho</td><td>Ver trazabilidad del despacho</td><td>Seguimiento</td><td>Comprobantes y custodia</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-MOT-001</td><td>Registrar zona afectada</td><td>Registrar zona afectada</td><td>Zonas afectadas</td><td>Zonas y motor</td><td><span class="crud" aria-label="Operaciones: Crear, Actualizar"><b>C</b><b>U</b></span></td></tr><tr><td class="c-rf">RF-RED-004</td><td>Gestionar zonas afectadas</td><td>Registrar zona afectada</td><td>Zonas afectadas</td><td>Zonas y motor</td><td><span class="crud" aria-label="Operaciones: Crear, Actualizar"><b>C</b><b>U</b></span></td></tr><tr><td class="c-rf">RF-MOT-011</td><td>Reportar necesidad de zona</td><td>Reportar necesidad de zona</td><td>Zonas afectadas</td><td>Zonas y motor</td><td><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span></td></tr><tr><td class="c-rf">RF-MOT-002</td><td>Calcular necesidad de una zona</td><td>Calcular necesidad de una zona</td><td>Cálculo</td><td>Zonas y motor</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-MOT-003</td><td>Calcular déficit y cobertura</td><td>Calcular déficit y cobertura</td><td>Cálculo</td><td>Zonas y motor</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-MOT-004</td><td>Calcular superávit de un acopio</td><td>Calcular superávit de un acopio</td><td>Cálculo</td><td>Zonas y motor</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-MOT-005</td><td>Generar sugerencias</td><td>Generar sugerencias</td><td>Sugerencias</td><td>Zonas y motor</td><td><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span></td></tr><tr><td class="c-rf">RF-MOT-006</td><td>Presentar el ranking</td><td>Ver ranking de traslados</td><td>Sugerencias</td><td>Zonas y motor</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-MOT-007</td><td>Aprobar o descartar una sugerencia</td><td>Aprobar o descartar sugerencia</td><td>Sugerencias</td><td>Zonas y motor</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-MOT-010</td><td>Evaluar el motor</td><td>Evaluar el motor</td><td>Sugerencias</td><td>Zonas y motor</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-MOT-008</td><td>Gestionar remisiones</td><td>Gestionar remisiones</td><td>Remisiones</td><td>Zonas y motor</td><td><span class="crud" aria-label="Operaciones: Crear, Consultar, Actualizar"><b>C</b><b>R</b><b>U</b></span></td></tr><tr><td class="c-rf">RF-MOT-009</td><td>Confirmar recepción en zona</td><td>Confirmar recepción en zona</td><td>Remisiones</td><td>Zonas y motor</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-IDE-001</td><td>Crear usuario</td><td>Crear usuario e invitar</td><td>Usuarios y acceso</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span></td></tr><tr><td class="c-rf">RF-IDE-002</td><td>Generar enlace de invitación</td><td>Crear usuario e invitar</td><td>Usuarios y acceso</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span></td></tr><tr><td class="c-rf">RF-IDE-003</td><td>Canjear invitación y definir contraseña</td><td>Canjear invitación</td><td>Usuarios y acceso</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-IDE-004</td><td>Iniciar sesión con nombre de usuario</td><td>Iniciar sesión</td><td>Usuarios y acceso</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-IDE-013</td><td>Auto-registro de Donador</td><td>Registrarse como Donador</td><td>Usuarios y acceso</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Crear"><b>C</b></span></td></tr><tr><td class="c-rf">RF-IDE-009</td><td>Restablecer acceso</td><td>Restablecer acceso</td><td>Usuarios y acceso</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-IDE-007</td><td>Suspender usuario</td><td>Suspender usuario</td><td>Usuarios y acceso</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-IDE-008</td><td>Proteger al último administrador</td><td>Suspender usuario</td><td>Usuarios y acceso</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-IDE-006</td><td>Gestionar asignaciones</td><td>Gestionar asignaciones</td><td>Usuarios y acceso</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Crear, Actualizar, Eliminar"><b>C</b><b>U</b><b>D</b></span></td></tr><tr><td class="c-rf">RF-IDE-010</td><td>Conmutador de contexto activo</td><td>Cambiar contexto activo</td><td>Usuarios y acceso</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-IDE-011</td><td>Matriz de acceso</td><td>Consultar matriz de acceso</td><td>Usuarios y acceso</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-CAT-001</td><td>Gestionar categorías</td><td>Gestionar categorías</td><td>Catálogo maestro</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Crear, Consultar, Actualizar, Eliminar"><b>C</b><b>R</b><b>U</b><b>D</b></span></td></tr><tr><td class="c-rf">RF-CAT-002</td><td>Buscar categoría por palabra clave</td><td>Buscar categoría</td><td>Catálogo maestro</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr><td class="c-rf">RF-CAT-003</td><td>Definir la canasta estándar</td><td>Definir canasta estándar</td><td>Catálogo maestro</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Crear, Actualizar"><b>C</b><b>U</b></span></td></tr><tr><td class="c-rf">RF-CAT-004</td><td>Mapear códigos de barras</td><td>Mapear códigos de barras</td><td>Catálogo maestro</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Crear, Actualizar"><b>C</b><b>U</b></span></td></tr><tr><td class="c-rf">RF-CAT-005</td><td>Gestionar emergencias</td><td>Gestionar emergencias</td><td>Catálogo maestro</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Crear, Consultar, Actualizar"><b>C</b><b>R</b><b>U</b></span></td></tr><tr><td class="c-rf">RF-CAT-006</td><td>Configurar pesos del motor</td><td>Configurar pesos del motor</td><td>Catálogo maestro</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-RED-001</td><td>Gestionar centros de acopio</td><td>Gestionar acopios</td><td>Red de acopios</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Crear, Consultar, Actualizar"><b>C</b><b>R</b><b>U</b></span></td></tr><tr><td class="c-rf">RF-RED-011</td><td>Importar acopios de una fuente externa</td><td>Importar acopios externos</td><td>Red de acopios</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Crear, Actualizar"><b>C</b><b>U</b></span></td></tr><tr><td class="c-rf">RF-RED-005</td><td>Gestionar entidades</td><td>Gestionar entidades</td><td>Red de acopios</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Crear, Consultar, Actualizar"><b>C</b><b>R</b><b>U</b></span></td></tr><tr><td class="c-rf">RF-RED-006</td><td>Verificar entidad</td><td>Verificar entidad</td><td>Red de acopios</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-RED-007</td><td>Gestionar causas</td><td>Gestionar causas</td><td>Red de acopios</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Crear, Consultar, Actualizar"><b>C</b><b>R</b><b>U</b></span></td></tr><tr><td class="c-rf">RF-RED-010</td><td>Archivar una causa</td><td>Archivar causa</td><td>Red de acopios</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Actualizar"><b>U</b></span></td></tr><tr><td class="c-rf">RF-HOM-003</td><td>Gestionar contenido</td><td>Gestionar contenido de portada</td><td>Contenido y auditoría</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Crear, Actualizar, Eliminar"><b>C</b><b>U</b><b>D</b></span></td></tr><tr><td class="c-rf">RF-IDE-012</td><td>Bitácora de auditoría</td><td>Consultar bitácora</td><td>Contenido y auditoría</td><td>Administración y acceso</td><td><span class="crud" aria-label="Operaciones: Consultar"><b>R</b></span></td></tr><tr class="fuera"><td class="c-rf">RF-IDE-005</td><td>Autorizar cada request</td><td colspan="3">Regla de seguridad: se cumple en cada funcionalidad, no es una acción</td><td><span class="tag">Fuera</span></td></tr><tr class="fuera"><td class="c-rf">RF-INV-011</td><td>Integridad transaccional</td><td colspan="3">Propiedad del inventario: garantía transaccional, no una acción</td><td><span class="tag">Fuera</span></td></tr><tr class="fuera"><td class="c-rf">RF-CMP-002</td><td>Almacenar archivos de forma segura</td><td colspan="3">Propiedad del almacenamiento: la cumple el módulo transversal de archivos</td><td><span class="tag">Fuera</span></td></tr><tr class="fuera"><td class="c-rf">RF-TUR-006</td><td>Comunicar la naturaleza del dato</td><td colspan="3">Regla de interfaz: cómo se rotulan los cupos en toda pantalla</td><td><span class="tag">Fuera</span></td></tr></tbody>
+      </table>
+      <p class="vacio" id="sin-resultados" hidden>Ningún requerimiento coincide con la búsqueda. Prueba con un número de RF o con el nombre de un módulo.</p>
+    </div>
+  </section>
+
+  <footer>
+    <span>Fuente: requerimientos funcionales de la bóveda del proyecto (docs/01-requerimientos/funcionales) y decisión P-010.</span>
+    <span>Actualizado el 14 de septiembre de 2026 · Ingeniería de Software I · ETITC</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var raiz = document.getElementById('raiz');
+  var botones = document.querySelectorAll('.resaltar button');
+  botones.forEach(function(b){
+    b.addEventListener('click', function(){
+      var activo = b.getAttribute('aria-pressed') === 'true';
+      botones.forEach(function(o){ o.setAttribute('aria-pressed','false'); });
+      if (activo) { raiz.removeAttribute('data-resaltar'); }
+      else { b.setAttribute('aria-pressed','true'); raiz.setAttribute('data-resaltar', b.dataset.l); }
+    });
+  });
+  var entrada = document.getElementById('filtro-rf');
+  var filas = document.querySelectorAll('#cuerpo-traza tr');
+  var vacio = document.getElementById('sin-resultados');
+  var norm = function(s){ return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,''); };
+  entrada.addEventListener('input', function(){
+    var q = norm(entrada.value.trim());
+    var n = 0;
+    filas.forEach(function(tr){
+      var ok = !q || norm(tr.textContent).indexOf(q) !== -1;
+      tr.hidden = !ok; if (ok) n++;
+    });
+    vacio.hidden = n !== 0;
+  });
+})();
+</script>

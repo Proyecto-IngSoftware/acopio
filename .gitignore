@@ -1,0 +1,22 @@
+# Herramientas personales de cada integrante
+.claude/
+.agents/
+skills-lock.json
+
+# Estado local de Obsidian (la configuración compartida sí se versiona)
+docs/.obsidian/workspace*.json
+docs/.obsidian/cache
+
+# Archivos de bloqueo de Word y del sistema
+~$*
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Código (cuando exista)
+node_modules/
+dist/
+coverage/
+.env
+.env.*
+!.env.example
