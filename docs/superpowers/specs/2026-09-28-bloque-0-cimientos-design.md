@@ -2,7 +2,7 @@
 title: "Bloque 0 · Cimientos — especificación"
 type: spec
 tags: [spec, bloque-0]
-estado: borrador
+estado: vigente
 bloque: 0
 actualizado: 2026-09-28
 ---
@@ -10,7 +10,7 @@ actualizado: 2026-09-28
 # Bloque 0 · Cimientos — especificación
 
 **Fecha:** 2026-09-28
-**Estado:** borrador, pendiente de aprobación
+**Estado:** aprobada el 2026-09-28
 **Deriva de:** [especificación general](2026-08-20-acopio-design.md) §4, §6 y §13
 **Plan:** [05-planes/2026-09-28-bloque-0-cimientos.md](../../05-planes/2026-09-28-bloque-0-cimientos.md)
 
@@ -61,11 +61,12 @@ usuario, y todo eso queda en la bitácora. Todo en un equipo recién clonado, co
 
 ## 3. Decisiones de este bloque
 
-Las tres primeras son propuestas: se confirman al aprobar esta especificación.
+Aprobadas el 2026-09-28. D-01 cambió respecto de la propuesta: npm workspaces pasó a
+**Bun**.
 
 | # | Decisión | Alternativa descartada y por qué |
 |---|---|---|
-| D-01 | **npm workspaces** para el monorepo, con Node 22 LTS | pnpm o Turborepo: una herramienta más que aprender; con cuatro paquetes no hace falta caché de tareas |
+| D-01 | **Bun con workspaces** como gestor de paquetes y de scripts del monorepo. **Node 22 LTS** como runtime de la API y de las pruebas. `bun.lock` versionado | npm workspaces: instala más lento. Bun también como runtime: NestJS, Prisma y Jest se prueban y documentan sobre Node, y RTA-01 ya carga con la curva de NestJS. pnpm o Turborepo: una herramienta más; con cuatro paquetes no hace falta caché de tareas |
 | D-02 | **dependency-cruiser** en CI hace cumplir las [dependencias permitidas](../../02-arquitectura/vista-general.md#dependencias-permitidas) entre módulos | Revisarlo a mano en cada PR: se olvida, y el primer ciclo entre módulos se descubre tarde |
 | D-03 | **GitHub Actions** corre lint, tipos, pruebas unitarias y de integración en cada PR, con PostgreSQL como servicio | Solo pruebas locales: nadie sabe si `main` está sano |
 | D-04 | La autenticación va detrás de un **puerto `ProveedorIdentidad`** con adaptadores `local` y `supabase` ([P-025](../../01-requerimientos/pendientes.md)) | Programar directo contra Supabase: obliga a tener el proyecto configurado para empezar |
@@ -95,6 +96,7 @@ acopio/
 ├─ .github/workflows/ci.yml
 ├─ .env.example
 ├─ .nvmrc               22
+├─ bun.lock
 └─ package.json         workspaces: apps/*, packages/*
 ```
 
@@ -117,8 +119,8 @@ más dos nuevas.
 | **`identidad_local`** | **Nueva (D-05)** | `id uuid` (es el `sub`) · `correo citext UNIQUE` · `password_hash` bcrypt · `correo_confirmado_en?` · `creado_en`. Solo la usa el adaptador local; se exporta y se borra al pasar a Supabase |
 | **`correo_saliente`** | **Nueva** | Cola de correos: `destinatario`, `asunto`, `cuerpo`, `estado` (PENDIENTE, ENVIADO, FALLIDO), `intentos`, `ultimo_error`, `enviar_despues_de`. Hace posible la tarea «reintentar correos fallidos» de la [vista general](../../02-arquitectura/vista-general.md#tareas-programadas) |
 
-Las dos tablas nuevas se agregan al modelo de datos cuando se apruebe esta
-especificación.
+Las dos tablas nuevas ya están en el [modelo de datos](../../02-arquitectura/modelo-datos.md#identidad),
+junto con sus invariantes.
 
 ## 6. Identidad
 

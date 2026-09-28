@@ -2,7 +2,7 @@
 title: "Bloque 0 · Cimientos — plan de implementación"
 type: plan
 tags: [plan, bloque-0]
-estado: borrador
+estado: vigente
 bloque: 0
 actualizado: 2026-09-28
 ---
@@ -11,7 +11,7 @@ actualizado: 2026-09-28
 
 **Especificación:** [2026-09-28-bloque-0-cimientos-design.md](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md)
 **Sprint:** 1
-**Estado:** borrador, se aprueba junto con la especificación
+**Estado:** aprobado el 2026-09-28
 
 El reparto sigue la [especificación general §4](../superpowers/specs/2026-08-20-acopio-design.md#reparto-entre-las-4-personas-del-equipo):
 Joseph lleva `catalogo`, Michael `identidad` y `auditoria`, Brayan la interfaz base y
@@ -48,17 +48,20 @@ Fase E · Cierre                          └→ T17 (concurrencia) → T18 (sal
 
 ### T01 · Monorepo
 **Quién:** Joseph · **Depende de:** nada
-- npm workspaces (`apps/*`, `packages/*`), `.nvmrc` con 22, TypeScript en modo estricto
-  con un `tsconfig.base.json` compartido
+- Bun con workspaces (`apps/*`, `packages/*`) y `bun.lock` versionado. Node 22 como
+  runtime (`.nvmrc` y `engines`). TypeScript en modo estricto con un
+  `tsconfig.base.json` compartido
 - ESLint y Prettier con una sola configuración en la raíz
 - Scripts en la raíz: `lint`, `typecheck`, `test`, `test:int`, `format`
 
-**Verificación:** en un clon limpio, `npm ci && npm run lint && npm run typecheck`
-termina sin errores.
+**Verificación:** en un clon limpio, `bun install --frozen-lockfile && bun run lint &&
+bun run typecheck` termina sin errores, y las pruebas corren sobre Node 22.
 
 ### T02 · Docker Compose
 **Quién:** Joseph · **Depende de:** T01
 - `infra/docker-compose.yml` con `db`, `api`, `storage`, `web`, `proxy`
+- Imágenes de varias etapas: `oven/bun` instala las dependencias y construye;
+  `node:22-alpine` ejecuta la API
 - `infra/docker-compose.dev.yml` con la API en modo observador, Vite, puertos
   expuestos, `mailpit` y `AUTH_PROVEEDOR=local`
 - `.env.example` completo, con las variables de [despliegue.md](../06-operacion/despliegue.md#variables-de-entorno)
@@ -85,12 +88,13 @@ prueba de integración confirma que `acopio_app` no puede modificar la bitácora
 - dependency-cruiser con las reglas de dependencias permitidas
 
 **Verificación:** `/api/salud` responde 200 con la base arriba y 503 sin ella; un
-import prohibido entre módulos hace fallar `npm run lint`.
+import prohibido entre módulos hace fallar `bun run lint`.
 
 ### T05 · Integración continua
 **Quién:** Michael · **Depende de:** T04
 - GitHub Actions en cada PR: lint, tipos, dependency-cruiser, pruebas unitarias y de
-  integración con PostgreSQL 16 como servicio
+  integración con PostgreSQL 16 como servicio. Instala con `oven-sh/setup-bun` y corre
+  las pruebas con `actions/setup-node` en 22
 - Revisión de colores hexadecimales fuera de `packages/ui-tokens`
 
 **Verificación:** un PR con una prueba rota queda en rojo; al arreglarla, en verde.
