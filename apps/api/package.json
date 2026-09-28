@@ -1,0 +1,51 @@
+{
+  "name": "@acopio/api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "API REST de Acopio",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "start:dev": "node --watch -r @swc-node/register src/main.ts",
+    "typecheck": "prisma generate >/dev/null && tsc -p tsconfig.json --noEmit",
+    "test": "jest",
+    "test:int": "jest -c jest.int.config.cjs --runInBand",
+    "prisma": "prisma",
+    "db:migrar": "prisma migrate deploy",
+    "db:generar": "prisma generate",
+    "seed": "node -r @swc-node/register src/seed/main.ts",
+    "depcruise": "depcruise src --config .dependency-cruiser.cjs",
+    "seed:dist": "node dist/seed/main.js"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11",
+    "@nestjs/core": "^11",
+    "@nestjs/platform-express": "^11",
+    "@nestjs/schedule": "^6",
+    "@nestjs/swagger": "^11",
+    "@nestjs/throttler": "^6",
+    "@prisma/adapter-pg": "~7.10.0",
+    "@prisma/client": "~7.10.0",
+    "@supabase/supabase-js": "^2.117.2",
+    "bcryptjs": "^3.0.3",
+    "jose": "^5",
+    "nestjs-zod": "^5.5.0",
+    "nodemailer": "^10.0.12",
+    "pg": "^8.23.0",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.2",
+    "zod": "^4.6.5"
+  },
+  "devDependencies": {
+    "@nestjs/testing": "^11",
+    "@swc-node/register": "^1.12.1",
+    "@types/express": "^5.0.6",
+    "@types/nodemailer": "^8.0.2",
+    "@types/pg": "^8.23.1",
+    "@types/supertest": "^7.2.1",
+    "dependency-cruiser": "^18.4.0",
+    "dotenv": "^18.0.4",
+    "prisma": "~7.10.0",
+    "supertest": "^7.3.0"
+  }
+}

@@ -1,0 +1,29 @@
+# Perfil de desarrollo: puertos al anfitrión y Mailpit para atrapar el correo.
+services:
+  db:
+    ports:
+      - '5432:5432'
+
+  storage:
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+
+  mailpit:
+    image: axllent/mailpit:latest
+    restart: unless-stopped
+    ports:
+      - '1025:1025' # SMTP
+      - '8025:8025' # bandeja web
+
+  # La API en contenedor, con el login local y el correo hacia Mailpit.
+  # Para desarrollar con recarga, correrla fuera: bun run --filter @acopio/api start:dev
+  api:
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: development
+      AUTH_PROVEEDOR: local
+      SUPABASE_JWKS_URL: http://localhost:3000/api/auth/.well-known/jwks.json
+      SMTP_HOST: mailpit
+      SMTP_PORT: 1025

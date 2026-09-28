@@ -1,0 +1,230 @@
+// Esquema de Acopio · Bloque 0 (identidad, auditoría, notificaciones, catálogo).
+// Fuente de verdad del diseño: docs/02-arquitectura/modelo-datos.md.
+// Las restricciones que Prisma no expresa (CHECK, permisos por rol) viven en el SQL
+// de cada migración.
+
+generator client {
+  provider     = "prisma-client"
+  output       = "../apps/api/src/generado/prisma"
+  moduleFormat        = "cjs"
+  importFileExtension = ""
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ── Identidad ────────────────────────────────────────────────────────────────
+
+enum Rol {
+  ADMIN
+  OPERADOR
+  AUDITOR
+  RECEPTOR
+  DONADOR
+}
+
+enum EstadoUsuario {
+  INVITADO
+  ACTIVO
+  SUSPENDIDO
+}
+
+enum TipoUbicacion {
+  ACOPIO
+  ZONA
+}
+
+model Usuario {
+  id                   String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  username             String?       @unique @db.Citext
+  nombre               String
+  correo               String?       @unique @db.Citext
+  correo_sintetico     Boolean       @default(false)
+  rol                  Rol
+  /// `sub` del proveedor de identidad activo (local o Supabase). Sin llave foránea.
+  supabase_uid         String?       @unique @db.Uuid
+  estado               EstadoUsuario @default(INVITADO)
+  /// Tokens emitidos antes de esta fecha se rechazan. Se mueve al restablecer el
+  /// acceso (RF-IDE-009): la sesión anterior deja de servir sin esperar a que venza.
+  tokens_validos_desde DateTime?     @db.Timestamptz
+  creado_en            DateTime      @default(now()) @db.Timestamptz
+
+  asignaciones         UsuarioAsignacion[] @relation("asignaciones")
+  asignaciones_hechas  UsuarioAsignacion[] @relation("asignado_por")
+  invitaciones         Invitacion[]        @relation("invitado")
+  invitaciones_creadas Invitacion[]        @relation("creada_por")
+  bitacora             Bitacora[]
+
+  @@map("usuario")
+}
+
+model UsuarioAsignacion {
+  usuario_id     String        @db.Uuid
+  ubicacion_tipo TipoUbicacion
+  /// Acopio o zona. Sin llave foránea: apunta a dos tablas distintas.
+  ubicacion_id   String        @db.Uuid
+  asignado_por   String        @db.Uuid
+  asignado_en    DateTime      @default(now()) @db.Timestamptz
+
+  usuario   Usuario @relation("asignaciones", fields: [usuario_id], references: [id])
+  asignador Usuario @relation("asignado_por", fields: [asignado_por], references: [id])
+
+  @@id([usuario_id, ubicacion_tipo, ubicacion_id])
+  @@index([usuario_id, ubicacion_id])
+  @@map("usuario_asignacion")
+}
+
+model Invitacion {
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario_id          String    @db.Uuid
+  /// SHA-256 del token. El token en claro no se guarda (RF-IDE-002).
+  token_hash          Bytes     @unique
+  expira_en           DateTime  @db.Timestamptz
+  usada_en            DateTime? @db.Timestamptz
+  revocada_en         DateTime? @db.Timestamptz
+  es_restablecimiento Boolean   @default(false)
+  motivo              String?
+  creada_por          String?   @db.Uuid
+  creada_en           DateTime  @default(now()) @db.Timestamptz
+
+  usuario Usuario  @relation("invitado", fields: [usuario_id], references: [id])
+  creador Usuario? @relation("creada_por", fields: [creada_por], references: [id])
+
+  @@index([usuario_id])
+  @@map("invitacion")
+}
+
+/// Credenciales del adaptador de autenticación local (P-025). Hace lo que después
+/// hará Supabase Auth; se exporta y se elimina al migrar.
+model IdentidadLocal {
+  /// Es el `sub` del token y el valor de usuario.supabase_uid.
+  id                   String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  correo               String    @unique @db.Citext
+  password_hash        String
+  correo_confirmado_en DateTime? @db.Timestamptz
+  creado_en            DateTime  @default(now()) @db.Timestamptz
+
+  @@map("identidad_local")
+}
+
+// ── Auditoría ────────────────────────────────────────────────────────────────
+
+/// Append-only: el rol de la API no tiene UPDATE ni DELETE (RF-IDE-012, RNF-10).
+model Bitacora {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// Nulo en acciones del sistema: seed y tareas programadas.
+  usuario_id    String?  @db.Uuid
+  accion        String
+  entidad       String
+  entidad_id    String?
+  ubicacion_id  String?  @db.Uuid
+  datos_antes   Json?
+  datos_despues Json?
+  destacado     Boolean  @default(false)
+  ocurrido_en   DateTime @default(now()) @db.Timestamptz
+
+  usuario Usuario? @relation(fields: [usuario_id], references: [id])
+
+  @@index([usuario_id, ocurrido_en])
+  @@index([entidad, entidad_id])
+  @@index([ocurrido_en])
+  @@map("bitacora")
+}
+
+// ── Notificaciones ───────────────────────────────────────────────────────────
+
+enum EstadoCorreo {
+  PENDIENTE
+  ENVIADO
+  FALLIDO
+}
+
+model CorreoSaliente {
+  id                String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  destinatario      String       @db.Citext
+  asunto            String
+  cuerpo_texto      String
+  cuerpo_html       String?
+  estado            EstadoCorreo @default(PENDIENTE)
+  intentos          Int          @default(0)
+  ultimo_error      String?
+  enviar_despues_de DateTime     @default(now()) @db.Timestamptz
+  creado_en         DateTime     @default(now()) @db.Timestamptz
+  enviado_en        DateTime?    @db.Timestamptz
+
+  @@index([estado, enviar_despues_de])
+  @@map("correo_saliente")
+}
+
+// ── Catálogo ─────────────────────────────────────────────────────────────────
+
+enum GrupoCategoria {
+  ALIMENTOS
+  AGUA_Y_BEBIDAS
+  ASEO_PERSONAL
+  ASEO_DEL_HOGAR
+  SALUD
+  ROPA_Y_ABRIGO
+  BEBE
+  ADULTO_MAYOR
+  ANIMALES
+  HERRAMIENTAS
+}
+
+enum UnidadBase {
+  LITRO
+  KILOGRAMO
+  UNIDAD
+}
+
+model Categoria {
+  id          String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre      String         @unique @db.Citext
+  grupo       GrupoCategoria
+  unidad_base UnidadBase
+  perecedero  Boolean        @default(false)
+  sinonimos   String[]       @default([])
+  archivada   Boolean        @default(false)
+  creado_en   DateTime       @default(now()) @db.Timestamptz
+
+  canasta CanastaEstandar[]
+
+  @@map("categoria")
+}
+
+/// Versionada por vigente_desde: cambiarla no reescribe el histórico (RF-CAT-003).
+model CanastaEstandar {
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoria_id         String   @db.Uuid
+  cantidad_persona_dia Decimal  @db.Decimal(12, 4)
+  fuente               String
+  vigente_desde        DateTime @db.Date
+  creado_en            DateTime @default(now()) @db.Timestamptz
+
+  categoria Categoria @relation(fields: [categoria_id], references: [id])
+
+  @@unique([categoria_id, vigente_desde])
+  @@map("canasta_estandar")
+}
+
+enum EstadoEmergencia {
+  ACTIVA
+  EN_SEGUIMIENTO
+  CERRADA
+}
+
+model Emergencia {
+  id              String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre          String
+  tipo            String
+  inicio          DateTime         @db.Date
+  horizonte_dias  Int              @default(7)
+  estado          EstadoEmergencia @default(ACTIVA)
+  destacada_hasta DateTime         @db.Date
+  cerrada_en      DateTime?        @db.Timestamptz
+  motivo_cierre   String?
+  creado_en       DateTime         @default(now()) @db.Timestamptz
+
+  @@map("emergencia")
+}

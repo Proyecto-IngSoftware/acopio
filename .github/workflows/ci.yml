@@ -1,0 +1,68 @@
+# Integración continua (D-03 del Bloque 0). Corre en cada PR y en main.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verificar:
+    name: Lint, tipos y pruebas
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: acopio_owner
+          POSTGRES_PASSWORD: acopio
+          POSTGRES_DB: postgres
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U acopio_owner"
+          --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      PRUEBAS_PG_URL: postgresql://acopio_owner:acopio@localhost:5432
+    steps:
+      - uses: actions/checkout@v4
+
+      # D-01: Bun instala y corre los scripts; Node 22 ejecuta el código y las pruebas
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.3.11
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+
+      - name: Instalar
+        run: bun install --frozen-lockfile
+
+      - name: Lint y formato
+        run: bun run lint
+
+      - name: Tipos
+        run: bun run typecheck
+
+      - name: Límites entre módulos (D-02)
+        run: bun run --filter @acopio/api depcruise
+
+      - name: Colores fuera de los tokens
+        run: ./scripts/revisar-colores.sh
+
+      - name: Pruebas unitarias
+        run: bun run test
+
+      - name: Pruebas de integración contra PostgreSQL
+        run: bun run test:int
+
+  imagen:
+    name: Imagen de la API
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construir sin publicar
+        run: docker build -f apps/api/Dockerfile -t acopio-api:ci .

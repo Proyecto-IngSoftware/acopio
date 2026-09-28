@@ -5,4 +5,5 @@ bun.lock
 node_modules/
 dist/
 coverage/
+apps/api/src/generado/
 *.md

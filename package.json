@@ -15,7 +15,10 @@
     "format": "prettier --write .",
     "typecheck": "bun run --workspaces --if-present typecheck",
     "test": "bun run --workspaces --if-present test",
-    "test:int": "bun run --workspaces --if-present test:int"
+    "test:int": "bun run --workspaces --if-present test:int",
+    "servicios": "docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.dev.yml up -d",
+    "servicios:parar": "docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.dev.yml down",
+    "servicios:logs": "docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.dev.yml logs -f"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -30,5 +33,10 @@
     "prettier": "^3.9.9",
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.71.0"
-  }
+  },
+  "trustedDependencies": [
+    "prisma",
+    "@prisma/engines",
+    "@prisma/client"
+  ]
 }

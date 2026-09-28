@@ -20,3 +20,10 @@ coverage/
 .env
 .env.*
 !.env.example
+
+# Cliente de Prisma generado (bun run --filter @acopio/api db:generar)
+apps/api/src/generado/
+
+# Llaves del adaptador de autenticación local
+.llaves/
+apps/api/.llaves/
