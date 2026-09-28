@@ -6,9 +6,15 @@ erDiagram
     EMERGENCIA {
         uuid id PK
         text nombre
-        text estado "una activa a la vez"
+        text estado "ACTIVA | EN_SEGUIMIENTO | CERRADA"
+        date destacada_hasta "al pasarla, EN_SEGUIMIENTO"
         int horizonte_dias
-        jsonb pesos_motor
+    }
+    CONFIGURACION_MOTOR {
+        smallint id PK "fila única"
+        jsonb pesos "globales · suman 1"
+        numeric cantidad_minima
+        uuid actualizado_por FK "usuario · clúster Identidad"
     }
     CATEGORIA {
         uuid id PK

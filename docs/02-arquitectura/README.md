@@ -29,6 +29,7 @@ actualizado: 2026-09-28
 | [0009](adr/ADR-0009-mockups-claude-design.md) | Mockups con Claude Design, interfaz implementada por el equipo · reemplazada por 0011 |
 | [0010](adr/ADR-0010-varias-emergencias-activas.md) | Varias emergencias activas; el acopio no pertenece a ninguna |
 | [0011](adr/ADR-0011-interfaz-con-stitch.md) | Interfaz diseñada con Google Stitch |
+| [0012](adr/ADR-0012-almacenamiento-garage.md) | Almacenamiento de objetos con Garage, en lugar de MinIO |
 
 ## La decisión de la que cuelga todo lo demás
 

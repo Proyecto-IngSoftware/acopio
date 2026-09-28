@@ -88,7 +88,7 @@ nunca `1.240 L` a secas.
 
 | | |
 |---|---|
-| Buckets de MinIO privados sin excepción; acceso solo por URL firmada de expiración corta | |
+| Buckets de almacenamiento (Garage) privados sin excepción; acceso solo por URL firmada de expiración corta | |
 | `service_role` de Supabase jamás en el frontend, ni en variables `VITE_*` | |
 | Tokens de invitación almacenados hasheados con SHA-256; comparación en tiempo constante | |
 | Límite de intentos por IP en login, canje de invitación, auto-registro de Donador y consulta de folio | |

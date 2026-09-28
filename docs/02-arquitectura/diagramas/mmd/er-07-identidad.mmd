@@ -5,6 +5,7 @@ erDiagram
     ZONA    ||--o{ USUARIO_ASIGNACION : "ubicacion_tipo=ZONA"
     USUARIO ||--o{ INVITACION : recibe
     USUARIO ||--o{ BITACORA : genera
+    USUARIO |o--o| IDENTIDAD_LOCAL : "supabase_uid = id, solo local"
 
     ACOPIO {
         uuid id PK "clúster Red"
@@ -39,4 +40,9 @@ erDiagram
         text accion
         text entidad "sin FK real, audita cualquier tabla"
         uuid entidad_id "sin FK real"
+    }
+    IDENTIDAD_LOCAL {
+        uuid id PK "sin FK real, como Supabase"
+        citext correo UK
+        text password_hash
     }

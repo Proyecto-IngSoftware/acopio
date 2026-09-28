@@ -15,7 +15,7 @@ flowchart TB
         end
 
         DB[("db<br/>PostgreSQL 16")]
-        Storage[("storage<br/>MinIO, privado")]
+        Storage[("storage<br/>Garage, S3 privado")]
 
         Traefik -->|"/"| Web
         Traefik -->|"/api · /files"| API

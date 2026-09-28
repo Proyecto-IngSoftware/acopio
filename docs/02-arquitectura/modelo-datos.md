@@ -263,7 +263,7 @@ remision_comprobante
   PK (remision_id, comprobante_id)
 ```
 
-Los archivos guardan **claves de MinIO, nunca URLs**. Las URLs son firmadas y de
+Los archivos guardan **claves del objeto en el almacenamiento (Garage), nunca URLs**. Las URLs son firmadas y de
 vida corta; almacenarlas sería guardar algo ya vencido.
 
 **Ciclo de vida del comprobante (2026-09-12, P-018).** `PREPARADO` lo crea el

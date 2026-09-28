@@ -73,7 +73,8 @@ scripts; el código y las pruebas corren sobre Node.
 ```bash
 bun install                                   # dependencias de todos los paquetes
 cp .env.example .env                          # y ajustar contraseñas
-bun run servicios                             # PostgreSQL, MinIO y Mailpit en Docker
+bun run servicios                             # PostgreSQL, Garage y Mailpit en Docker
+bun run almacenamiento:iniciar                # la primera vez: bucket privado de Garage
 bun run --filter @acopio/api db:migrar        # esquema de la base
 bun run --filter @acopio/api seed             # catálogo, canasta y primer administrador
 bun run --filter @acopio/api start:dev        # API en http://localhost:3000/api

@@ -63,7 +63,7 @@ flowchart TB
         end
 
         DB[("db<br/>PostgreSQL 16")]
-        Storage[("storage<br/>MinIO, privado")]
+        Storage[("storage<br/>Garage, S3 privado")]
 
         Traefik -->|"/"| Web
         Traefik -->|"/api · /files"| API
@@ -86,8 +86,10 @@ once módulos —ocho de dominio y tres transversales— y sus tareas programada
 servidor SMTP para el correo, Nominatim para buscar direcciones y RedAcopio para
 importar puntos referenciados. Supabase usa el mismo servidor SMTP para sus correos.
 
-**MinIO nunca se expone.** Todo archivo pasa por la API, que entrega URLs firmadas
-de expiración corta.
+**El almacenamiento nunca se expone.** Todo archivo pasa por la API, que entrega URLs
+firmadas de expiración corta. Es Garage, compatible con S3
+([ADR-0012](adr/ADR-0012-almacenamiento-garage.md)); la API le habla por la API de
+S3, así que cambiar de servidor es configuración.
 
 **El `proxy: nginx` de antes lo reemplaza Traefik.** Dokploy lo trae incluido:
 mismas reglas de enrutamiento (`/` a `web`, `/api` y `/files` a `api`), y encima
@@ -111,7 +113,7 @@ clases internas.
 | `turnos` | Jornadas, reservas, cupos | `JornadaService` |
 | `auditoria` | Bitácora | `BitacoraService`, interceptor global |
 | `notificaciones` | Correo por SMTP: invitaciones, reservas, avisos de folio y de acopio cerrado. Envío con reintentos | `NotificacionService` |
-| `almacenamiento` | Archivos en MinIO: facturas, evidencias de remisión, documentos de verificación, logotipos. URLs firmadas | `AlmacenamientoService` |
+| `almacenamiento` | Archivos en Garage, por la API de S3: facturas, evidencias de remisión, documentos de verificación, logotipos. URLs firmadas | `AlmacenamientoService` |
 | `importacion` | Puntos referenciados desde fuentes externas, un adaptador por fuente ([RF-RED-011](../01-requerimientos/funcionales/red.md#rf-red-011--importar-acopios-de-una-fuente-externa)) | `ImportadorService` |
 
 **Validación del 2026-09-14 ([P-023](../01-requerimientos/pendientes.md)):**

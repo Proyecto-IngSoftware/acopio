@@ -1,7 +1,6 @@
 %%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Segoe UI, Arial, sans-serif","fontSize":"15px","primaryColor":"#E6F4F4","primaryTextColor":"#1C1917","primaryBorderColor":"#0F6E6E","secondaryColor":"#C7E8E8","tertiaryColor":"#FAFAF9","lineColor":"#57534E","textColor":"#1C1917","mainBkg":"#E6F4F4","nodeBorder":"#0F6E6E","clusterBkg":"#F5F5F4","clusterBorder":"#A8A29E","edgeLabelBackground":"#FFFFFF","attributeBackgroundColorOdd":"#FFFFFF","attributeBackgroundColorEven":"#F5F5F4"},"er":{"useMaxWidth":false},"flowchart":{"useMaxWidth":false,"htmlLabels":true,"curve":"basis"}}}%%
 erDiagram
     direction LR
-    EMERGENCIA ||--o{ MOVIMIENTO : agrupa
     ACOPIO ||--o{ MOVIMIENTO : "ubicacion_tipo=ACOPIO"
     ZONA   ||--o{ MOVIMIENTO : "ubicacion_tipo=ZONA"
     CATEGORIA ||--o{ MOVIMIENTO : clasifica
@@ -27,12 +26,8 @@ erDiagram
     REMISION {
         uuid id PK "clúster Custodia"
     }
-    EMERGENCIA {
-        uuid id PK "clúster Raíz y catálogo"
-    }
     MOVIMIENTO {
         uuid id PK
-        uuid emergencia_id FK
         text ubicacion_tipo
         uuid ubicacion_id "sin FK real"
         uuid categoria_id FK

@@ -30,6 +30,7 @@ documento que se reescribe hasta perder la historia.
 | [0009](ADR-0009-mockups-claude-design.md) | Mockups con Claude Design, interfaz implementada por el equipo | reemplazada por ADR-0011 |
 | [0010](ADR-0010-varias-emergencias-activas.md) | Varias emergencias activas; el acopio no pertenece a ninguna. Modifica una restricción de ADR-0008 | aceptada |
 | [0011](ADR-0011-interfaz-con-stitch.md) | Interfaz diseñada con Google Stitch | aceptada |
+| [0012](ADR-0012-almacenamiento-garage.md) | Almacenamiento de objetos con Garage. Modifica una fila de ADR-0008 | aceptada |
 
 ## Cuándo escribir una
 

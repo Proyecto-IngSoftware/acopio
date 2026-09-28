@@ -30,7 +30,7 @@ Lo que cambió al construir está en la
 | Tarea | Estado | Qué falta |
 |---|---|---|
 | T01 Monorepo | ✅ | — |
-| T02 Docker Compose | ✅ | Que cada integrante lo levante en su equipo ([#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27)). MinIO pendiente de reemplazo ([P-027](../01-requerimientos/pendientes.md)) |
+| T02 Docker Compose | ✅ | Que cada integrante lo levante en su equipo ([#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27)). Almacenamiento: Garage en lugar de MinIO ([ADR-0012](../02-arquitectura/adr/ADR-0012-almacenamiento-garage.md)); la primera vez, `bun run almacenamiento:iniciar` |
 | T03 Prisma y migración | ✅ | — |
 | T04 Esqueleto de la API | ✅ | — |
 | T05 Integración continua | ✅ escrita | Verla en verde en el primer PR |

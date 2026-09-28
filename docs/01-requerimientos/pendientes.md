@@ -505,10 +505,16 @@ quay.io conserva una copia congelada, sin actualizaciones de seguridad. El Compo
 apunta hoy a `quay.io/minio/minio:latest`.
 **Por qué:** ADR-0008 elige MinIO para facturas y evidencias. Un almacenamiento sin
 mantenimiento que guarda datos personales (Ley 1581) no es sostenible.
-**Estado:** ABIERTO — bloquea el Bloque 3, no el 0 ni el 1. Candidatos compatibles con
-S3 para evaluar: SeaweedFS, Garage, RustFS. La API no depende de MinIO en particular:
-el módulo `almacenamiento` se escribe contra la interfaz de S3. Si cambia la pieza, es
-un ADR nuevo que modifica una fila de ADR-0008.
+**Estado:** RESUELTO el 2026-09-28 →
+[ADR-0012](../02-arquitectura/adr/ADR-0012-almacenamiento-garage.md): **Garage**, en un
+solo nodo, en el mismo Compose. Se evaluaron SeaweedFS (plan B, si la retención de
+P-006 exige más reglas de ciclo de vida), RustFS (joven), la copia congelada o un fork
+de MinIO (sin mantenimiento), el disco detrás de la API (pierde S3) y servicios en la
+nube (datos fuera del país). Verificado con el SDK de AWS: subida con la llave de la
+API, URL firmada vigente (200), sin firma (403), con otra llave (403) y vencida (400).
+Actualizados el Compose, `.env.example`, despliegue, runbook, vista general, modelo de
+datos, RNF-08, RF de comprobantes y los diagramas. El respaldo de archivos pasa a
+`rclone sync` por la API de S3.
 - MinIO fuera de Docker Hub — <https://github.com/milvus-io/milvus/issues/53430> — consultado 2026-09-28
 - Copia en quay.io, congelada — <https://byteiota.com/minio-docker-hub-quay-anonymous-pull-fix/> — consultado 2026-09-28
 

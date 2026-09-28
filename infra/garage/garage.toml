@@ -1,0 +1,22 @@
+# Garage · almacenamiento de objetos compatible con S3 (ADR-0012).
+# Un solo nodo. Los secretos no van aquí: GARAGE_RPC_SECRET y GARAGE_ADMIN_TOKEN
+# llegan por variables de entorno.
+
+metadata_dir = "/var/lib/garage/meta"
+data_dir = "/var/lib/garage/data"
+db_engine = "sqlite"
+
+# Un nodo, una copia. Los respaldos cubren la pérdida del disco (despliegue.md)
+replication_factor = 1
+
+# IPv4: las redes de Docker por defecto no traen IPv6
+rpc_bind_addr = "0.0.0.0:3901"
+rpc_public_addr = "127.0.0.1:3901"
+
+[s3_api]
+s3_region = "garage"
+api_bind_addr = "0.0.0.0:3900"
+root_domain = ".s3.garage.localhost"
+
+[admin]
+api_bind_addr = "0.0.0.0:3903"
