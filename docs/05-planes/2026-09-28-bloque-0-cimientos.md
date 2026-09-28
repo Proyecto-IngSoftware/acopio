@@ -57,6 +57,18 @@ Fase E · Cierre                          └→ T17 (concurrencia) → T18 (sal
 **Verificación:** en un clon limpio, `bun install --frozen-lockfile && bun run lint &&
 bun run typecheck` termina sin errores, y las pruebas corren sobre Node 22.
 
+**Hecho el 2026-09-28.** Verificado en un clon limpio. Lo que cambió al construirlo:
+- **TypeScript fijado en 6.0.** La 7 ya salió, pero typescript-eslint declara
+  soporte hasta `<6.1`. Se sube cuando lo amplíe
+- **Jest transforma con `@swc/jest`, no con ts-jest.** ts-jest falla con las opciones
+  de módulo que TypeScript 6 marca como obsoletas. SWC solo quita los tipos; la verificación de
+  tipos la hace `typecheck`, también sobre los archivos de prueba
+- **`packages/shared` nace aquí**, con el formato de números en español de Colombia
+  (RNF-12). Sirvió para probar la cadena completa: lint, tipos y pruebas. La conversión
+  de unidades llega con los códigos de barras, en el Bloque 2
+- Los scripts de la raíz usan `bun run --workspaces --if-present`: un paquete sin
+  pruebas de integración no hace fallar `test:int`
+
 ### T02 · Docker Compose
 **Quién:** Joseph · **Depende de:** T01
 - `infra/docker-compose.yml` con `db`, `api`, `storage`, `web`, `proxy`

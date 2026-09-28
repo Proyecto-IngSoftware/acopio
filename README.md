@@ -3,7 +3,7 @@
 Plataforma de coordinación logística para respuesta a desastres.
 Proyecto de **Ingeniería de Software I** · ETITC.
 
-**Estado:** diseño aprobado. Sin código todavía.
+**Estado:** Bloque 0 en curso ([plan](docs/05-planes/2026-09-28-bloque-0-cimientos.md)).
 
 ## Qué resuelve
 
@@ -55,10 +55,25 @@ Nada se decide en un chat que nadie vuelve a leer.
 ## Estructura
 
 ```
-apps/api        NestJS · dominio y API REST
-apps/web        React + Vite · front generado con Lovable
-packages/shared reglas puras compartidas
-infra           docker-compose, nginx
-prisma          esquema y migraciones
-docs            bóveda de Obsidian  ← hoy es lo único que existe
+apps/api        NestJS · dominio y API REST                      (T04)
+apps/web        React + Vite · interfaz a partir de los mockups  (T14)
+packages/shared reglas puras compartidas                         ✔
+infra           docker-compose, nginx                            (T02)
+prisma          esquema y migraciones                            (T03)
+docs            bóveda de Obsidian                               ✔
 ```
+
+## Desarrollo
+
+Requisitos: [Bun](https://bun.sh) 1.3 y Node 22 (`.nvmrc`). Bun instala y corre los
+scripts; el código y las pruebas corren sobre Node.
+
+```bash
+bun install          # dependencias de todos los paquetes
+bun run lint         # ESLint y Prettier
+bun run typecheck    # TypeScript en cada paquete
+bun run test         # pruebas unitarias (Jest)
+bun run format       # aplica Prettier
+```
+
+Prettier no toca `docs/` ni los `.md`: la bóveda se edita con Obsidian.
