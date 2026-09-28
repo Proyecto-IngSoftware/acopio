@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-09-14
+actualizado: 2026-09-28
 ---
 
 # Pendientes — bandeja de entrada
@@ -88,13 +88,17 @@ la plataforma. Riesgo en [ADR-0008](../02-arquitectura/adr/ADR-0008-arquitectura
 verificar correo, y con su servidor por defecto solo manda 2 por hora. Se configura
 con este mismo SMTP. Microsoft 365 retira el SMTP con usuario y contraseña a fines
 de diciembre de 2026 ([I-004](../00-contexto/investigaciones.md)).
+**2026-09-28 · Remitente resuelto:** los correos de producción salen de un buzón del
+dominio del proyecto (por ejemplo `no-responder@<dominio>`), por el SMTP del
+proveedor del dominio o un relay por SMTP. La cuenta de Microsoft 365 queda solo
+para pruebas en desarrollo. Queda cerrado RTA-04 en lo que toca a producción.
 
 ### P-005 · Dominio y hosting del despliegue
 **Fecha:** 2026-08-20 · **Propuesto por:** equipo
 **Qué:** dónde vive el `docker compose` en producción y bajo qué dominio.
 **Por qué:** Supabase Auth necesita URLs de redirección configuradas, y el enlace
 de invitación tiene que apuntar a algo estable.
-**Estado:** ABIERTO solo en proveedor y dominio — el mecanismo quedó confirmado en
+**Estado:** RESUELTO el 2026-09-28 (ver al final de esta entrada) — el mecanismo quedó confirmado en
 ADR-0008 el 2026-09-14. Mecanismo decidido el 2026-09-12: **VPS con
 [Dokploy](https://dokploy.com)**, PaaS autoalojado sobre Docker y Traefik, que
 gestiona el mismo `infra/docker-compose.yml` sin reescribirlo y resuelve dominio y
@@ -103,6 +107,9 @@ cambios. Falta elegir **proveedor de VPS y dominio** — eso sigue abierto y blo
 el arranque real. Detalle en [despliegue.md](../06-operacion/despliegue.md#producción--vps-con-dokploy).
 **2026-09-14:** el mecanismo quedó aceptado con ADR-0008; sigue abierto solo el
 proveedor del VPS y el dominio.
+**2026-09-28 · RESUELTO:** el despliegue va en un servidor de pruebas propio del
+proyecto con Dokploy; servidor y dominio quedan cubiertos. Falta solo aprovisionarlo
+(pasos 2 a 6 de [despliegue.md](../06-operacion/despliegue.md#producción--vps-con-dokploy)).
 
 ### P-006 · Política de retención de imágenes
 **Fecha:** 2026-08-20 · **Propuesto por:** equipo
@@ -312,8 +319,8 @@ que impedían construirlos tal como estaban escritos. Se corrigieron así:
 construirlos. Los valores iniciales —7 días de vigencia, 5 donaciones preparadas a
 la vez— son supuestos para ajustar con el equipo. Queda por decidir a quién se le
 asigna la pantalla P13 en el reparto de la especificación.
-**Estado:** EN DISCUSIÓN — aplicado de forma provisional; confirmar en la reunión
-del 2026-09-14. Tocó `RF-CMP-001B/001C/003/004/005/006/007`, `RF-IDE-013`,
+**Estado:** RESUELTO el 2026-09-28 — confirmados los valores: **7 días** de vigencia
+de una donación `PREPARADO` y **5** donaciones preparadas a la vez por Donador. Tocó `RF-CMP-001B/001C/003/004/005/006/007`, `RF-IDE-013`,
 `RF-CAT-004`, `RF-MOT-008/009/011`,
 [modelo-datos.md](../02-arquitectura/modelo-datos.md),
 [flujos.md](../03-diseno/flujos.md) (4, 5, 6a, 6b, 6c),
@@ -369,8 +376,8 @@ las decisiones del Donador, la custodia y el despacho general.
 
 **Por qué:** cada decisión nueva deja copias viejas en otros archivos; sin un
 barrido, el documento termina contradiciéndose a sí mismo.
-**Estado:** RESUELTO. Solo el aviso al cerrar un acopio y el listado aparte de
-Donadores son criterios nuevos — confirmarlos en la reunión del 2026-09-14.
+**Estado:** RESUELTO. Los dos criterios nuevos —aviso por correo al cerrar un acopio
+y listado aparte de Donadores— quedan confirmados el 2026-09-28.
 
 ### P-021 · Lovable sale; los mockups se hacen en Claude Design
 **Fecha:** 2026-09-14 · **Propuesto por:** Joseph

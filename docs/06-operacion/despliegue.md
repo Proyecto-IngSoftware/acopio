@@ -3,7 +3,7 @@ title: "Despliegue"
 type: operacion
 tags: [operacion]
 estado: vigente
-actualizado: 2026-09-12
+actualizado: 2026-09-28
 ---
 
 # Despliegue
@@ -108,7 +108,7 @@ funciona, pero con riesgo real de quedarse sin memoria al construir la imagen de
 **Pasos:**
 
 ```
-1  Aprovisionar el VPS y el dominio               (P-005, pendiente de proveedor)
+1  Aprovisionar el servidor y el dominio          (P-005, resuelto: servidor de pruebas propio)
 2  Instalar Dokploy con su script oficial          <10 min, servidor en blanco
 3  Crear un proyecto tipo Compose, apuntado a
    infra/docker-compose.yml
