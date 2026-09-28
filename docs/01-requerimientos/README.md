@@ -3,7 +3,7 @@ title: "Requerimientos — índice"
 type: moc
 tags: [moc, requerimientos]
 estado: vigente
-actualizado: 2026-08-20
+actualizado: 2026-09-28
 ---
 
 # Requerimientos — índice
@@ -16,6 +16,7 @@ La carpeta que más se mueve. Se revisa **cada semana**.
 | [no-funcionales.md](no-funcionales.md) | 13 `RNF`, cada uno con su forma de verificación |
 | [historias/](historias/) | Historias de usuario, complemento de los `RF` |
 | [pendientes.md](pendientes.md) | **Bandeja de entrada.** Todo lo nuevo aterriza aquí |
+| [catalogo-inicial.md](catalogo-inicial.md) | Las 39 categorías del *seed* y la primera canasta estándar |
 
 ## Funcionales por módulo
 

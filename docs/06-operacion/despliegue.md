@@ -71,6 +71,7 @@ CORREO_REMITENTE=
 # Aplicación
 APP_URL=https://...          # base de los enlaces de invitación
 NODE_ENV=production
+AUTH_PROVEEDOR=supabase      # local | supabase. «local» solo en desarrollo (P-025)
 ```
 
 ### La regla que no se rompe
@@ -124,10 +125,40 @@ funciona, pero con riesgo real de quedarse sin memoria al construir la imagen de
 - `api` con `npm run start:dev` y volumen montado
 - `web` con el servidor de Vite en lugar de nginx
 - Puertos de base de datos y MinIO expuestos al anfitrión
+- `mailpit`, que atrapa todo el correo SMTP y lo muestra en una bandeja web
+- `AUTH_PROVEEDOR=local`
 
 ```bash
 docker compose -f infra/docker-compose.yml \
                -f infra/docker-compose.dev.yml up
+```
+
+## Autenticación en desarrollo
+
+**Decisión (P-025, 2026-09-28):** mientras el desarrollo es local, el login lo
+resuelve la API con el adaptador `local`. No hace falta un proyecto de Supabase para
+trabajar. Supabase Auth en la nube sigue siendo el destino
+([ADR-0001](../02-arquitectura/adr/ADR-0001-supabase-solo-auth.md)): solo inicia
+sesión, confirma el correo y envía esos correos.
+
+| | Adaptador `local` | Adaptador `supabase` |
+|---|---|---|
+| Quién emite el JWT | La API, con RS256 | Supabase Auth |
+| URL del JWKS | `http://api:3000/auth/.well-known/jwks.json` | `https://xxxx.supabase.co/auth/v1/.well-known/jwks.json` |
+| Contraseñas | bcrypt en nuestra base | bcrypt en Supabase |
+| Correos de confirmación y restablecer | SMTP de la API; en desarrollo, Mailpit | SMTP propio configurado en Supabase |
+
+El guard valida contra `SUPABASE_JWKS_URL` en los dos casos; lo único que cambia es la
+URL.
+
+**Pasar a Supabase:**
+
+```
+1  Crear el proyecto de Supabase (plan gratuito, cómputo Nano)
+2  Configurarlo según «Configuración de Supabase», más abajo
+3  Importar los usuarios con su UUID y su hash bcrypt por el API de administración
+4  AUTH_PROVEEDOR=supabase y SUPABASE_JWKS_URL del proyecto
+5  Probar login, confirmación de correo y restablecer contraseña
 ```
 
 ## Primer arranque

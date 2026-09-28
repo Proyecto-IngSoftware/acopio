@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: identidad
 bloque: 0
-actualizado: 2026-09-12
+actualizado: 2026-09-28
 ---
 
 # RF-IDE · Identidad y accesos
@@ -76,7 +76,9 @@ El Donador no pasa por aquí: entra con su correo ([RF-IDE-013](#rf-ide-013--aut
 **Actor:** Sistema · **Prioridad:** DEBE
 
 **Criterios de aceptación:**
-- [ ] Valida la firma del JWT contra el JWKS de Supabase, con claves cacheadas
+- [ ] Valida la firma del JWT contra el JWKS de Supabase, con claves cacheadas.
+      En desarrollo local, el JWKS lo sirve el adaptador `local` de la API
+      ([P-025](../pendientes.md))
 - [ ] Resuelve `supabase_uid` en `public.usuario`
 - [ ] Sin fila, o con estado distinto de `ACTIVO`, responde 403
 - [ ] En operaciones con `ubicacion_id`, verifica contra `usuario_asignacion`
