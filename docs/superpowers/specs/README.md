@@ -3,7 +3,7 @@ title: "Especificaciones — índice"
 type: moc
 tags: [moc, spec]
 estado: vigente
-actualizado: 2026-08-20
+actualizado: 2026-09-28
 ---
 
 # Especificaciones — índice
@@ -14,7 +14,7 @@ construcción.
 | Especificación | Alcance | Estado |
 |---|---|---|
 | [2026-08-20 · Diseño de Acopio](2026-08-20-acopio-design.md) | Sistema completo: alcance, arquitectura, dominio, identidad, motor, pantallas, despliegue | Aprobada |
-| Bloque 0 · Cimientos | Monorepo, Docker, Prisma, identidad, catálogo | ⬜ pendiente |
+| [2026-09-28 · Bloque 0 · Cimientos](2026-09-28-bloque-0-cimientos-design.md) | Monorepo, Docker, Prisma, identidad, catálogo | 🟡 borrador |
 | Bloque 1 · Red | Acopios, zonas, entidades, mapa, home | ⬜ pendiente |
 | Bloque 2 · Inventario | Movimientos, saldos, umbrales, entrada rápida | ⬜ pendiente |
 | Bloque 3 · Custodia | Comprobantes, conciliación, folios | ⬜ pendiente |
