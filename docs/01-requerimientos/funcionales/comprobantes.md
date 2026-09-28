@@ -138,8 +138,9 @@ donación preparada entre al inventario con su folio (P-018).
 **Actor:** Sistema · **Prioridad:** DEBE
 
 **Criterios de aceptación:**
-- [ ] MinIO con **buckets privados, sin excepción**
-- [ ] El navegador nunca habla con MinIO directamente; la API entrega URLs firmadas
+- [ ] Almacenamiento con **buckets privados, sin excepción** (Garage,
+      [ADR-0012](../../02-arquitectura/adr/ADR-0012-almacenamiento-garage.md))
+- [ ] El navegador nunca habla con el almacenamiento directamente; la API entrega URLs firmadas
       con expiración corta
 - [ ] Miniaturas generadas con `sharp` en la API
 - [ ] Se valida el tipo real del archivo, no la extensión

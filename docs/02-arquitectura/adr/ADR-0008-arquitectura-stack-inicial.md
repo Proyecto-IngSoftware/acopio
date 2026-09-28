@@ -5,7 +5,7 @@ tags: [arquitectura, adr, entrega]
 estado: vigente
 adr: 8
 decision: aceptada
-actualizado: 2026-09-14
+actualizado: 2026-09-28
 ---
 
 # ADR-0008 · Arquitectura y selección tecnológica inicial
@@ -21,6 +21,10 @@ actualizado: 2026-09-14
 > **2026-09-14 · Modificado por [ADR-0010](ADR-0010-varias-emergencias-activas.md).**
 > La restricción «una emergencia activa a la vez» ya no rige: pueden estar activas
 > varias, y el acopio no pertenece a ninguna. El resto de esta decisión sigue igual.
+
+> **2026-09-28 · Modificado por [ADR-0012](ADR-0012-almacenamiento-garage.md).**
+> El almacenamiento de archivos pasa de MinIO, que dejó de publicarse y de mantenerse,
+> a Garage, también compatible con S3. Donde este documento dice MinIO, léase Garage.
 
 ## Contexto
 

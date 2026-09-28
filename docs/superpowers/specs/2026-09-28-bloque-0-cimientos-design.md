@@ -55,7 +55,7 @@ usuario, y todo eso queda en la bitácora. Todo en un equipo recién clonado, co
 | RF-IDE-013 · Auto-registro de Donador | 3 | Solo lo necesita la custodia (P9, P13) |
 | RF-CAT-004 · Códigos de barras | 2 | Lo usa la entrada rápida |
 | RF-CAT-006 · Pesos del motor | 4 | Lo usa el motor |
-| Almacenamiento en MinIO | 3 | El contenedor ya levanta; el módulo llega con los comprobantes |
+| Almacenamiento de archivos | 3 | Garage ya levanta en el Compose ([ADR-0012](../../02-arquitectura/adr/ADR-0012-almacenamiento-garage.md)); el módulo llega con los comprobantes |
 | Recuperar contraseña por correo, sin administrador | Al pasar a Supabase | Supabase lo trae resuelto. Mientras tanto, el administrador restablece el acceso (RF-IDE-009) |
 | Lectura de RedAcopio (RTA-05) | 1 | Es del módulo `importacion` |
 

@@ -21,7 +21,8 @@ services:
   db:        postgres:16-alpine   volumen: pgdata · crea el rol acopio_app al iniciar
   api:       apps/api/Dockerfile  oven/bun construye, node:22-trixie-slim ejecuta
                                   (Bloque 0, D-01) · volumen: llaves
-  storage:   quay.io/minio/minio  volumen: miniodata · pendiente de reemplazo (P-027)
+  storage:   dxflrs/garage        volúmenes: garagemeta, garagedata · compatible con S3
+                                  (ADR-0012)
   web:       build apps/web       nginx sirviendo el build de Vite · llega con la interfaz
   proxy:     nginx:alpine         puerto 80/443 · solo en local; en el VPS lo
                                   reemplaza Traefik, incluido en Dokploy — ver
@@ -39,11 +40,12 @@ recibe `DATABASE_URL` con `acopio_app`; las migraciones, `DATABASE_URL_OWNER`.
 ```
 /          → web
 /api/*     → api
-/files/*   → api      (nunca directo a MinIO)
+/files/*   → api      (nunca directo al almacenamiento)
 ```
 
-**MinIO no se expone jamás.** Todo archivo pasa por la API, que valida permisos y
-entrega URLs firmadas de expiración corta.
+**El almacenamiento no se expone jamás.** Todo archivo pasa por la API, que valida
+permisos y entrega URLs firmadas de expiración corta. Garage escucha solo en la red
+interna de Docker; el puerto 3900 se publica únicamente en el perfil de desarrollo.
 
 ## Variables de entorno
 
@@ -62,10 +64,14 @@ SUPABASE_ANON_KEY=          # público, puede ir al frontend
 SUPABASE_SERVICE_ROLE_KEY=  # SECRETO · SOLO BACKEND · nunca VITE_*
 SUPABASE_JWKS_URL=https://xxxx.supabase.co/auth/v1/.well-known/jwks.json
 
-# MinIO
-MINIO_ROOT_USER=
-MINIO_ROOT_PASSWORD=
-MINIO_BUCKET=comprobantes
+# Almacenamiento: Garage, compatible con S3 (ADR-0012)
+GARAGE_RPC_SECRET=          # openssl rand -hex 32
+GARAGE_ADMIN_TOKEN=         # openssl rand -base64 32
+S3_ENDPOINT=http://storage:3900
+S3_REGION=garage
+S3_BUCKET=comprobantes
+S3_ACCESS_KEY=              # GK + 24 hexadecimales: echo GK$(openssl rand -hex 12)
+S3_SECRET_KEY=              # openssl rand -hex 32
 
 # Correo
 SMTP_HOST=
@@ -109,7 +115,7 @@ funciona, pero con riesgo real de quedarse sin memoria al construir la imagen de
 - **Redeploy sin repartir la llave del servidor.** El panel web de Dokploy deja ver
   logs y volver a desplegar sin que los cuatro necesiten acceso SSH al VPS.
 - **Backups y monitoreo básicos**, que complementan —no reemplazan— la rutina de
-  `pg_dump` / `mc mirror` de [Respaldos](#respaldos).
+  `pg_dump` / `rclone sync` de [Respaldos](#respaldos).
 
 **Pasos:**
 
@@ -141,7 +147,7 @@ Para desarrollar la API con recarga, se corre fuera de Docker:
 `infra/docker-compose.dev.yml` sobrescribe:
 - `api` con `npm run start:dev` y volumen montado
 - `web` con el servidor de Vite en lugar de nginx
-- Puertos de base de datos y MinIO expuestos al anfitrión
+- Puertos de la base de datos y de la API S3 de Garage expuestos al anfitrión
 - `mailpit`, que atrapa todo el correo SMTP y lo muestra en una bandeja web
 - `AUTH_PROVEEDOR=local`
 
@@ -183,14 +189,16 @@ URL.
 ```bash
 1  cp .env.example .env         # y llenarlo
 2  docker compose up -d db storage
-3  docker compose run --rm api npm run db:migrar     # migraciones, como dueño
-4  docker compose run --rm api npm run seed:dist     # catálogo, canasta y primer admin
-5  docker compose up -d
+3  DC="docker compose" ./infra/garage/iniciar.sh     # capacidad, llave y bucket privado
+4  docker compose run --rm api npm run db:migrar     # migraciones, como dueño
+5  docker compose run --rm api npm run seed:dist     # catálogo, canasta y primer admin
+6  docker compose up -d
 ```
 
-El *seed* es idempotente: correrlo de nuevo no duplica nada ni pisa lo que se editó.
+El script de Garage y el *seed* son idempotentes: correrlos de nuevo no duplica nada ni
+pisa lo que se editó.
 
-El paso 4 crea el catálogo inicial de categorías y **el primer administrador**, que
+El paso 5 crea el catálogo inicial de categorías y **el primer administrador**, que
 es el único usuario que no nace de una invitación. Su contraseña se define por
 variable de entorno en ese único arranque y debe cambiarse de inmediato.
 
@@ -214,8 +222,14 @@ En el panel del proyecto:
 | Qué | Cómo | Frecuencia |
 |---|---|---|
 | PostgreSQL | `pg_dump` a volumen externo | Diaria |
-| MinIO | `mc mirror` a destino externo | Diaria |
+| Archivos (Garage) | `rclone sync` del bucket a un destino externo, por la API de S3 | Diaria |
 | Supabase | Exportación de usuarios desde el panel | Semanal |
+
+Para los archivos, `rclone` se configura una vez con dos remotos: `garage` (el
+`S3_ENDPOINT` y las llaves de la API) y el destino externo. El respaldo es
+`rclone sync garage:comprobantes destino:acopio/comprobantes`, y restaurar es el mismo
+comando al revés. Garage guarda una sola copia (`replication_factor = 1`): sin este
+respaldo, perder el disco es perder las facturas.
 
 **Restauración probada al menos una vez antes de la sustentación.** Un respaldo que
 nunca se restauró no es un respaldo, es una suposición.
@@ -224,7 +238,7 @@ nunca se restauró no es un respaldo, es una suposición.
 
 - [ ] `.env` completo, sin valores de ejemplo
 - [ ] `SUPABASE_SERVICE_ROLE_KEY` ausente de todo artefacto del frontend
-- [ ] Buckets de MinIO en modo privado
+- [ ] Bucket de Garage privado: solo la llave de la API tiene permisos (`garage bucket info comprobantes`)
 - [ ] Migraciones aplicadas
 - [ ] HTTPS activo, HTTP redirigido
 - [ ] Respaldos programados y verificados

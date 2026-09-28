@@ -19,7 +19,8 @@
     "servicios": "docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.dev.yml up -d db storage mailpit",
     "servicios:parar": "docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.dev.yml down",
     "servicios:logs": "docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.dev.yml logs -f",
-    "servicios:todo": "docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.dev.yml up -d --build"
+    "servicios:todo": "docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.dev.yml up -d --build",
+    "almacenamiento:iniciar": "./infra/garage/iniciar.sh"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

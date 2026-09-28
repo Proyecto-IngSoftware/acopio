@@ -6,8 +6,7 @@ services:
 
   storage:
     ports:
-      - '9000:9000'
-      - '9001:9001'
+      - '3900:3900' # API S3
 
   mailpit:
     image: axllent/mailpit:latest

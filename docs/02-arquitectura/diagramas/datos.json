@@ -1,12 +1,12 @@
 {
- "introMd": "Todas las entidades están en el alcance del semestre: cada una responde a un `RF`\nexistente. `saldo` no aparece — es una vista materializada, no una tabla con llaves\npropias; se deriva de `movimiento` como explica el principio rector arriba.\n\n**Un diagrama por clúster, no uno solo.** Con 23 entidades y unas 40 relaciones, un\nsolo `erDiagram` de Mermaid es ilegible — la herramienta no tiene forma de acomodar\nmanualmente un diagrama tan grande. Se divide en los mismos siete grupos que ya\norganizan la sección [Tablas](#tablas) de arriba. Cuando una entidad aparece en un\nclúster solo como referencia de otro, se dibuja **liviana** — solo su llave primaria,\ncon una nota de dónde está completa — para no repetir atributos.\n\nAtributos abreviados a lo principal — PK, FK y los campos que gobiernan una regla de\nnegocio. La lista completa de columnas está en [Tablas](#tablas).",
+ "introMd": "Todas las entidades están en el alcance del semestre: cada una responde a un `RF`\nexistente. `saldo` no aparece — es una vista materializada, no una tabla con llaves\npropias; se deriva de `movimiento` como explica el principio rector arriba.\n\n**Un diagrama por clúster, no uno solo.** Con 24 entidades y unas 40 relaciones, un\nsolo `erDiagram` de Mermaid es ilegible — la herramienta no tiene forma de acomodar\nmanualmente un diagrama tan grande. Se divide en los mismos siete grupos que ya\norganizan la sección [Tablas](#tablas) de arriba. Cuando una entidad aparece en un\nclúster solo como referencia de otro, se dibuja **liviana** — solo su llave primaria,\ncon una nota de dónde está completa — para no repetir atributos.\n\nAtributos abreviados a lo principal — PK, FK y los campos que gobiernan una regla de\nnegocio. La lista completa de columnas está en [Tablas](#tablas).",
  "clusters": [
   {
    "titulo": "Raíz y catálogo",
    "pngs": [
     "er-01-raiz-y-catalogo.png"
    ],
-   "md": "`emergencia` es la raíz de todo el modelo. Se dibuja aquí completa pero suelta: no\ntiene relaciones dentro de este clúster — salen hacia Red, Existencias y Motor,\ndonde aparece como referencia liviana que apunta de vuelta a esta caja. El catálogo (`categoria`, `canasta_estandar`,\n`codigo_barras`) es independiente de la emergencia: una categoría sirve para\ncualquiera."
+   "md": "`emergencia` es la raíz de las zonas afectadas. Se dibuja aquí completa pero suelta:\nno tiene relaciones dentro de este clúster — salen hacia Red (`zona` y, opcional,\n`causa`) y Motor (`sugerencia`), donde aparece como referencia liviana que apunta de\nvuelta a esta caja. Desde el 2026-09-14 pueden estar activas varias, y acopios,\nentidades y movimientos no dependen de ella\n([ADR-0010](adr/ADR-0010-varias-emergencias-activas.md)). `configuracion_motor`\nguarda los pesos del motor, globales para todas las emergencias. El catálogo (`categoria`, `canasta_estandar`,\n`codigo_barras`) es independiente de la emergencia: una categoría sirve para\ncualquiera."
   },
   {
    "titulo": "Red",
@@ -142,6 +142,26 @@
   [
    "Un acopio `REFERENCIADO` no tiene movimientos, umbrales, jornadas ni asignaciones",
    "Transacción"
+  ],
+  [
+   "Una emergencia `CERRADA` tiene fecha de cierre",
+   "`CHECK`"
+  ],
+  [
+   "Una emergencia `CERRADA` no recibe zonas nuevas ni genera sugerencias",
+   "Transacción"
+  ],
+  [
+   "`configuracion_motor` tiene una sola fila y sus pesos suman 1",
+   "`CHECK`"
+  ],
+  [
+   "`bitacora` no admite `UPDATE` ni `DELETE`",
+   "Permisos de base de datos (rol `acopio_app`)"
+  ],
+  [
+   "Un correo `ENVIADO` tiene fecha de envío",
+   "`CHECK`"
   ]
  ],
  "cierreInvMd": "Cada uno se hace cumplir donde no se pueda evadir.\n\n\n**Lo que se puede expresar en el esquema, va en el esquema.** Una regla que solo\nvive en el código de la aplicación se rompe el día que alguien escribe un script.\n\n---",
@@ -156,7 +176,7 @@
    "titulo": "Contenedores",
    "bajada": "Qué corre dentro del VPS, cómo se enrutan las peticiones y qué módulos tiene la API.",
    "png": "arquitectura-02-contenedores.png",
-   "md": "**Cómo leer el diagrama.** El navegador descarga la SPA desde `web` y habla con\nla API por HTTPS a través de Traefik; solo va directo a Supabase para iniciar\nsesión y a OpenStreetMap por los mosaicos del mapa. La API es un único proceso con\nonce módulos —ocho de dominio y tres transversales— y sus tareas programadas; es la\núnica pieza que toca la base de datos, los archivos y los servicios externos: el\nservidor SMTP para el correo, Nominatim para buscar direcciones y RedAcopio para\nimportar puntos referenciados. Supabase usa el mismo servidor SMTP para sus correos.\n\n**MinIO nunca se expone.** Todo archivo pasa por la API, que entrega URLs firmadas\nde expiración corta.\n\n**El `proxy: nginx` de antes lo reemplaza Traefik.** Dokploy lo trae incluido:\nmismas reglas de enrutamiento (`/` a `web`, `/api` y `/files` a `api`), y encima\nresuelve el certificado HTTPS sin configurarlo a mano. Detalle completo en\n[despliegue.md](../06-operacion/despliegue.md#producción--vps-con-dokploy)."
+   "md": "**Cómo leer el diagrama.** El navegador descarga la SPA desde `web` y habla con\nla API por HTTPS a través de Traefik; solo va directo a Supabase para iniciar\nsesión y a OpenStreetMap por los mosaicos del mapa. La API es un único proceso con\nonce módulos —ocho de dominio y tres transversales— y sus tareas programadas; es la\núnica pieza que toca la base de datos, los archivos y los servicios externos: el\nservidor SMTP para el correo, Nominatim para buscar direcciones y RedAcopio para\nimportar puntos referenciados. Supabase usa el mismo servidor SMTP para sus correos.\n\n**El almacenamiento nunca se expone.** Todo archivo pasa por la API, que entrega URLs\nfirmadas de expiración corta. Es Garage, compatible con S3\n([ADR-0012](adr/ADR-0012-almacenamiento-garage.md)); la API le habla por la API de\nS3, así que cambiar de servidor es configuración.\n\n**El `proxy: nginx` de antes lo reemplaza Traefik.** Dokploy lo trae incluido:\nmismas reglas de enrutamiento (`/` a `web`, `/api` y `/files` a `api`), y encima\nresuelve el certificado HTTPS sin configurarlo a mano. Detalle completo en\n[despliegue.md](../06-operacion/despliegue.md#producción--vps-con-dokploy)."
   }
  ]
 }

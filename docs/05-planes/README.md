@@ -21,7 +21,7 @@ Cada plan nace de su especificación correspondiente en
 Bloque 0  Cimientos    monorepo · docker · prisma · identidad · catálogo maestro
 Bloque 1  Red          acopios · zonas · entidades · mapa · home
 Bloque 2  Inventario   movimientos · saldos · umbrales · no recibir · entrada rápida
-Bloque 3  Custodia     comprobantes · conciliación · MinIO · seguimiento por folio
+Bloque 3  Custodia     comprobantes · conciliación · Garage · seguimiento por folio
 Bloque 4  Motor        déficit · superávit · sugerencias · remisiones · QR
 Bloque 5  Turnos       jornadas · reservas · aforo
 Bloque 6  Extras       offline · bitácora enriquecida · transparencia

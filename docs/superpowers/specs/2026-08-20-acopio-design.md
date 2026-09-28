@@ -125,7 +125,7 @@ Ver `docs/00-contexto/fuera-de-alcance.md`. Resumen:
            └───────── API REST ─────────┘
                          │
         ┌────────────────┼─────────────────┐
-    PostgreSQL         MinIO         Supabase Auth
+    PostgreSQL        Garage         Supabase Auth
     (contenedor)     (contenedor)      (nube, externo)
 ```
 
@@ -139,7 +139,7 @@ Ver `docs/00-contexto/fuera-de-alcance.md`. Resumen:
 | Frontend | React + Vite + TypeScript + Tailwind + shadcn/ui | Salida de Lovable |
 | Mapa | Leaflet + OpenStreetMap | Sin API key ni tarjeta de crédito |
 | Geo | Columnas `lat`/`lng` + Haversine | PostGIS agrega fricción sin beneficio a esta escala |
-| Archivos | MinIO, buckets privados | Compatible con S3 si migra a nube |
+| Archivos | Garage, buckets privados ([ADR-0012](../../02-arquitectura/adr/ADR-0012-almacenamiento-garage.md); antes MinIO) | Compatible con S3: cambiar de servidor es configuración |
 | Escáner | `@zxing/browser` | Códigos de barras y QR con la cámara. Un componente para ambos |
 | Autenticación | Supabase Auth (nube) | Solo emite el token |
 | Autorización | NestJS contra `public.usuario` | Roles y alcance son nuestros |
@@ -514,9 +514,10 @@ por folio.
              recorrido, si se conoce, como estimado             (P10 / P13)
 ```
 
-Los archivos viven en MinIO con **buckets privados sin excepción** — son facturas
-con datos personales. La API entrega URLs firmadas de expiración corta; el
-navegador nunca habla con MinIO directamente. Miniaturas con `sharp` en la API.
+Los archivos viven en Garage ([ADR-0012](../../02-arquitectura/adr/ADR-0012-almacenamiento-garage.md))
+con **buckets privados sin excepción** — son facturas con datos personales. La API
+entrega URLs firmadas de expiración corta; el navegador nunca habla con el
+almacenamiento directamente. Miniaturas con `sharp` en la API.
 
 ---
 
@@ -593,7 +594,7 @@ primero para un teléfono en la mano de alguien que está descargando un camión
 docker compose:
   db       postgres:16          volumen persistente
   api      nestjs               multi-stage build
-  storage  minio                buckets privados, volumen persistente
+  storage  garage               buckets privados, volúmenes persistentes (ADR-0012)
   web      nginx + build Vite
   proxy    nginx                / → web · /api → api · /files → api   (solo local)
 ```
@@ -601,7 +602,7 @@ docker compose:
 **En producción el proxy es Traefik**, incluido en Dokploy sobre un VPS, con HTTPS
 automático — ver
 [despliegue.md](../../06-operacion/despliegue.md#producción--vps-con-dokploy).
-Supabase Auth es externo, en la nube. MinIO **nunca** se expone directamente.
+Supabase Auth es externo, en la nube. El almacenamiento **nunca** se expone directamente.
 `docker-compose.dev.yml` añade recarga en caliente. El equipo clona y ejecuta
 `docker compose up`.
 
@@ -632,7 +633,7 @@ Cada bloque es un ciclo de especificación, plan e implementación propio.
 Bloque 0  Cimientos      monorepo · docker · prisma · identidad · catálogo maestro
 Bloque 1  Red            acopios · zonas · entidades · mapa · home
 Bloque 2  Inventario     movimientos · saldos · umbrales · no recibir · entrada rápida
-Bloque 3  Custodia       comprobantes · conciliación · MinIO · seguimiento por folio
+Bloque 3  Custodia       comprobantes · conciliación · Garage · seguimiento por folio
 Bloque 4  Motor          déficit · superávit · sugerencias · remisiones · QR
 Bloque 5  Turnos         jornadas · reservas · aforo
 Bloque 6  Extras         offline · bitácora enriquecida · transparencia

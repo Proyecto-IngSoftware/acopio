@@ -23,7 +23,8 @@ al backend del Bloque 0.
 ```bash
 bun install
 cp .env.example .env                        # y ajustar contraseñas
-bun run servicios                           # PostgreSQL, MinIO y Mailpit en Docker
+bun run servicios                           # PostgreSQL, Garage y Mailpit en Docker
+bun run almacenamiento:iniciar              # la primera vez: bucket privado de Garage
 bun run --filter @acopio/api db:migrar      # esquema
 bun run --filter @acopio/api seed           # catálogo y primer administrador
 bun run --filter @acopio/api start:dev      # API en http://localhost:3000

@@ -92,9 +92,10 @@ sincronizarse o ser rechazados explícitamente.
 ## No se pueden ver las imágenes de comprobantes
 
 1. ¿El contenedor `storage` está arriba?
-2. ¿La API puede alcanzar a MinIO por la red interna?
-3. Las URLs firmadas vencen: si la pestaña llevaba horas abierta, recargar
-4. **Nunca hagas público el bucket para arreglar esto.** Contiene facturas con
+2. ¿La API puede alcanzar a Garage por la red interna? `docker compose exec storage /garage status`
+3. ¿El bucket existe y la llave de la API tiene permiso? `docker compose exec storage /garage bucket info comprobantes`
+4. Las URLs firmadas vencen: si la pestaña llevaba horas abierta, recargar
+5. **Nunca hagas público el bucket para arreglar esto.** Contiene facturas con
    nombre, cédula y dirección
 
 ## El motor no genera sugerencias
@@ -126,7 +127,7 @@ formada.
 ```bash
 docker compose stop api web
 docker compose exec -T db psql -U $POSTGRES_USER -d acopio < respaldo.sql
-mc mirror respaldo-minio/ local/comprobantes/
+rclone sync destino:acopio/comprobantes garage:comprobantes
 docker compose start api web
 ```
 
