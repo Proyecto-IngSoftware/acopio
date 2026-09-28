@@ -3,7 +3,9 @@
 Plataforma de coordinación logística para respuesta a desastres.
 Proyecto de **Ingeniería de Software I** · ETITC.
 
-**Estado:** diseño aprobado. Sin código todavía.
+**Estado:** Bloque 0 · backend terminado; la interfaz sigue con Google Stitch
+([plan](docs/05-planes/2026-09-28-bloque-0-cimientos.md),
+[contrato de la API](docs/03-diseno/api/README.md)).
 
 ## Qué resuelve
 
@@ -55,10 +57,41 @@ Nada se decide en un chat que nadie vuelve a leer.
 ## Estructura
 
 ```
-apps/api        NestJS · dominio y API REST
-apps/web        React + Vite · front generado con Lovable
-packages/shared reglas puras compartidas
-infra           docker-compose, nginx
-prisma          esquema y migraciones
-docs            bóveda de Obsidian  ← hoy es lo único que existe
+apps/api        NestJS · dominio y API REST                      ✔
+apps/web        React + Vite · interfaz con Google Stitch        pendiente
+packages/shared reglas puras compartidas                         ✔
+infra           docker-compose                                   ✔ (nginx llega con la web)
+prisma          esquema y migraciones                            ✔
+docs            bóveda de Obsidian                               ✔
 ```
+
+## Desarrollo
+
+Requisitos: [Bun](https://bun.sh) 1.3 y Node 22 (`.nvmrc`). Bun instala y corre los
+scripts; el código y las pruebas corren sobre Node.
+
+```bash
+bun install                                   # dependencias de todos los paquetes
+cp .env.example .env                          # y ajustar contraseñas
+bun run servicios                             # PostgreSQL, MinIO y Mailpit en Docker
+bun run --filter @acopio/api db:migrar        # esquema de la base
+bun run --filter @acopio/api seed             # catálogo, canasta y primer administrador
+bun run --filter @acopio/api start:dev        # API en http://localhost:3000/api
+```
+
+| Comando | Qué hace |
+|---|---|
+| `bun run lint` | ESLint y Prettier |
+| `bun run typecheck` | TypeScript en cada paquete |
+| `bun run test` | Pruebas unitarias (Jest) |
+| `bun run test:int` | Pruebas de integración contra PostgreSQL (`PRUEBAS_PG_URL`) |
+| `bun run --filter @acopio/api depcruise` | Límites entre módulos |
+| `bun run --filter @acopio/api openapi` | Regenera el contrato para el frontend |
+| `bun run format` | Aplica Prettier |
+
+- Documentación interactiva de la API: `http://localhost:3000/api/docs`
+- Correos de desarrollo: `http://localhost:8025` (Mailpit)
+- Las pruebas de integración crean y borran la base `acopio_test`; por defecto usan
+  `postgresql://acopio_owner:acopio@localhost:5432`
+
+Prettier no toca `docs/` ni los `.md`: la bóveda se edita con Obsidian.

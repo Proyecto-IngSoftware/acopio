@@ -37,7 +37,7 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 
 | Bloque | Especificación | Plan | Estado |
 |---|---|---|---|
-| 0 · Cimientos | [aprobada](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md) | [aprobado](2026-09-28-bloque-0-cimientos.md) | 🟡 en curso |
+| 0 · Cimientos | [aprobada](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md) | [aprobado](2026-09-28-bloque-0-cimientos.md) | 🟡 backend ✅ · interfaz con Stitch |
 | 1 · Red | pendiente | pendiente | ⬜ |
 | 2 · Inventario | pendiente | pendiente | ⬜ |
 | 3 · Custodia | pendiente | pendiente | ⬜ |

@@ -15,18 +15,22 @@ Todo va en contenedores. El equipo clona y ejecuta `docker compose up`.
 ## Servicios
 
 ```yaml
-# infra/docker-compose.yml  (esquema, no archivo final)
+# infra/docker-compose.yml
 
 services:
-  db:        postgres:16          volumen: pgdata
-  api:       build apps/api       multi-stage: oven/bun instala y construye,
-                                  node:22-alpine ejecuta (Bloque 0, D-01)
-  storage:   minio/minio          volumen: miniodata
-  web:       build apps/web       nginx sirviendo el build de Vite
+  db:        postgres:16-alpine   volumen: pgdata · crea el rol acopio_app al iniciar
+  api:       apps/api/Dockerfile  oven/bun construye, node:22-trixie-slim ejecuta
+                                  (Bloque 0, D-01) · volumen: llaves
+  storage:   quay.io/minio/minio  volumen: miniodata · pendiente de reemplazo (P-027)
+  web:       build apps/web       nginx sirviendo el build de Vite · llega con la interfaz
   proxy:     nginx:alpine         puerto 80/443 · solo en local; en el VPS lo
                                   reemplaza Traefik, incluido en Dokploy — ver
-                                  «Producción» más abajo
+                                  «Producción» más abajo · llega con la interfaz
 ```
+
+**Dos roles de base de datos.** `acopio_owner` es el dueño: corre las migraciones y el
+*seed*. `acopio_app` es el de la API: no puede modificar ni borrar la bitácora. La API
+recibe `DATABASE_URL` con `acopio_app`; las migraciones, `DATABASE_URL_OWNER`.
 
 **Supabase Auth es externo**, en la nube. No hay contenedor para él.
 
@@ -122,6 +126,18 @@ funciona, pero con riesgo real de quedarse sin memoria al construir la imagen de
 
 ## Perfil de desarrollo
 
+Los comandos, desde la raíz del repositorio:
+
+```bash
+bun run servicios          # db, storage y mailpit
+bun run servicios:todo     # además construye y levanta la api
+bun run servicios:parar
+bun run servicios:logs
+```
+
+Para desarrollar la API con recarga, se corre fuera de Docker:
+`bun run --filter @acopio/api start:dev`.
+
 `infra/docker-compose.dev.yml` sobrescribe:
 - `api` con `npm run start:dev` y volumen montado
 - `web` con el servidor de Vite en lugar de nginx
@@ -167,10 +183,12 @@ URL.
 ```bash
 1  cp .env.example .env         # y llenarlo
 2  docker compose up -d db storage
-3  docker compose run --rm api npx prisma migrate deploy
-4  docker compose run --rm api npm run seed    # catálogo y primer admin
+3  docker compose run --rm api npm run db:migrar     # migraciones, como dueño
+4  docker compose run --rm api npm run seed:dist     # catálogo, canasta y primer admin
 5  docker compose up -d
 ```
+
+El *seed* es idempotente: correrlo de nuevo no duplica nada ni pisa lo que se editó.
 
 El paso 4 crea el catálogo inicial de categorías y **el primer administrador**, que
 es el único usuario que no nace de una invitación. Su contraseña se define por

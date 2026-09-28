@@ -3,7 +3,7 @@ title: "Diseño — índice"
 type: moc
 tags: [moc, diseno]
 estado: vigente
-actualizado: 2026-09-12
+actualizado: 2026-09-28
 ---
 
 # Diseño — índice
@@ -14,6 +14,7 @@ actualizado: 2026-09-12
 | [flujos.md](flujos.md) | Los seis recorridos críticos, de punta a punta |
 | [prompts-lovable/](prompts-lovable/) | Un archivo por pantalla, listo para pegar en Lovable |
 | [prompt-video-donacion.md](prompt-video-donacion.md) | Guion y prompts del video animado: cómo donar, paso a paso |
+| [api/](api/README.md) | **Contrato de la API para el frontend**: sesión, invitaciones, errores y endpoints por pantalla. La interfaz se hace con Google Stitch ([ADR-0011](../02-arquitectura/adr/ADR-0011-interfaz-con-stitch.md)) |
 
 ## Las dos reglas que gobiernan todo lo visual
 

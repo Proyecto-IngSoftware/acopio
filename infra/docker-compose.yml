@@ -1,0 +1,76 @@
+# Acopio · servicios base. Desarrollo: combinar con docker-compose.dev.yml.
+# `api` entra en T04; `web` y `proxy` en la fase de interfaz.
+name: acopio
+
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-acopio_owner}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?falta POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-acopio}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?falta APP_DB_PASSWORD}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  storage:
+    # MinIO retiró sus imágenes de Docker Hub; quay.io conserva una copia congelada.
+    # Pendiente de decisión antes del Bloque 3 (P-026).
+    image: quay.io/minio/minio:latest
+    restart: unless-stopped
+    command: server /data --console-address ':9001'
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?falta MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?falta MINIO_ROOT_PASSWORD}
+    volumes:
+      - miniodata:/data
+    healthcheck:
+      test: ['CMD', 'mc', 'ready', 'local']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      API_PUERTO: 3000
+      APP_URL: ${APP_URL:?falta APP_URL}
+      DATABASE_URL: postgresql://acopio_app:${APP_DB_PASSWORD}@db:5432/${POSTGRES_DB:-acopio}
+      DATABASE_URL_OWNER: postgresql://${POSTGRES_USER:-acopio_owner}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-acopio}
+      AUTH_PROVEEDOR: ${AUTH_PROVEEDOR:-supabase}
+      SUPABASE_JWKS_URL: ${SUPABASE_JWKS_URL:?falta SUPABASE_JWKS_URL}
+      AUTH_LLAVES_DIR: /llaves
+      SUPABASE_URL: ${SUPABASE_URL:-}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY:-}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY:-}
+      SMTP_HOST: ${SMTP_HOST:?falta SMTP_HOST}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+      SMTP_SEGURO: ${SMTP_SEGURO:-false}
+      CORREO_REMITENTE: ${CORREO_REMITENTE:?falta CORREO_REMITENTE}
+      SEED_ADMIN_USUARIO: ${SEED_ADMIN_USUARIO:-admin}
+      SEED_ADMIN_NOMBRE: ${SEED_ADMIN_NOMBRE:-Administrador}
+      SEED_ADMIN_CORREO: ${SEED_ADMIN_CORREO:-}
+      SEED_ADMIN_CONTRASENA: ${SEED_ADMIN_CONTRASENA:-}
+    volumes:
+      - llaves:/llaves
+
+volumes:
+  llaves:
+  pgdata:
+  miniodata:

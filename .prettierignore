@@ -1,0 +1,9 @@
+# La bóveda se edita con Obsidian; Prettier no la toca
+docs/
+
+bun.lock
+node_modules/
+dist/
+coverage/
+apps/api/src/generado/
+*.md

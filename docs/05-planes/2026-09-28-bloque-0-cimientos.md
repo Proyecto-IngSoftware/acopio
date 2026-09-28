@@ -11,7 +11,7 @@ actualizado: 2026-09-28
 
 **Especificación:** [2026-09-28-bloque-0-cimientos-design.md](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md)
 **Sprint:** 1
-**Estado:** aprobado el 2026-09-28
+**Estado:** aprobado el 2026-09-28 · backend terminado el mismo día
 
 El reparto sigue la [especificación general §4](../superpowers/specs/2026-08-20-acopio-design.md#reparto-entre-las-4-personas-del-equipo):
 Joseph lleva `catalogo`, Michael `identidad` y `auditoria`, Brayan la interfaz base y
@@ -19,6 +19,31 @@ C18, y Alejandra, que no tiene módulo en este bloque, lleva `notificaciones` y 
 documentación que cambia.
 
 ---
+
+## Estado al 2026-09-28
+
+El backend completo quedó construido y probado en una sesión de trabajo. La interfaz
+pasa a Google Stitch ([ADR-0011](../02-arquitectura/adr/ADR-0011-interfaz-con-stitch.md)).
+Lo que cambió al construir está en la
+[especificación, §11](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md#11-cambios-al-construir).
+
+| Tarea | Estado | Qué falta |
+|---|---|---|
+| T01 Monorepo | ✅ | — |
+| T02 Docker Compose | ✅ | Que cada integrante lo levante en su equipo ([#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27)). MinIO pendiente de reemplazo ([P-027](../01-requerimientos/pendientes.md)) |
+| T03 Prisma y migración | ✅ | — |
+| T04 Esqueleto de la API | ✅ | — |
+| T05 Integración continua | ✅ escrita | Verla en verde en el primer PR |
+| T06 Spike de autenticación | ✅ | Probar la importación de usuarios contra un proyecto real de Supabase ([#19](https://github.com/Proyecto-IngSoftware/acopio/issues/19)) |
+| T07 Usuarios y autorización | ✅ | — |
+| T08 Invitaciones y login | ✅ | — |
+| T09 Bitácora | ✅ | Confirmar el alcance del Auditor ([P-028](../01-requerimientos/pendientes.md)) |
+| T10 Notificaciones | ✅ | La prueba con el SMTP del dominio (RTA-04) espera el dominio |
+| T11 API del catálogo | ✅ | — |
+| T12 Seed | ✅ | La canasta se cargó con la fuente marcada «por verificar» ([#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20)) |
+| T13 a T16 Interfaz | ➡️ Stitch | Se trabajan con Google Stitch sobre el [contrato de la API](../03-diseno/api/README.md) |
+| T17 Concurrencia | ✅ | La prueba del saldo se suma en el Bloque 2 |
+| T18 Revisión de salida | ⬜ | Con la interfaz y el Compose en los cuatro equipos |
 
 ## Orden y dependencias
 
@@ -56,6 +81,18 @@ Fase E · Cierre                          └→ T17 (concurrencia) → T18 (sal
 
 **Verificación:** en un clon limpio, `bun install --frozen-lockfile && bun run lint &&
 bun run typecheck` termina sin errores, y las pruebas corren sobre Node 22.
+
+**Hecho el 2026-09-28.** Verificado en un clon limpio. Lo que cambió al construirlo:
+- **TypeScript fijado en 6.0.** La 7 ya salió, pero typescript-eslint declara
+  soporte hasta `<6.1`. Se sube cuando lo amplíe
+- **Jest transforma con `@swc/jest`, no con ts-jest.** ts-jest falla con las opciones
+  de módulo que TypeScript 6 marca como obsoletas. SWC solo quita los tipos; la verificación de
+  tipos la hace `typecheck`, también sobre los archivos de prueba
+- **`packages/shared` nace aquí**, con el formato de números en español de Colombia
+  (RNF-12). Sirvió para probar la cadena completa: lint, tipos y pruebas. La conversión
+  de unidades llega con los códigos de barras, en el Bloque 2
+- Los scripts de la raíz usan `bun run --workspaces --if-present`: un paquete sin
+  pruebas de integración no hace fallar `test:int`
 
 ### T02 · Docker Compose
 **Quién:** Joseph · **Depende de:** T01

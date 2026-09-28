@@ -10,7 +10,7 @@ actualizado: 2026-09-28
 # Bloque 0 · Cimientos — especificación
 
 **Fecha:** 2026-09-28
-**Estado:** aprobada el 2026-09-28
+**Estado:** aprobada el 2026-09-28 · backend construido el mismo día ([§11](#11-cambios-al-construir))
 **Deriva de:** [especificación general](2026-08-20-acopio-design.md) §4, §6 y §13
 **Plan:** [05-planes/2026-09-28-bloque-0-cimientos.md](../../05-planes/2026-09-28-bloque-0-cimientos.md)
 
@@ -233,3 +233,35 @@ El guard no importa nada del adaptador. Solo conoce la URL del JWKS.
 | El adaptador local crece hasta ser un segundo sistema de autenticación | Solo las cuatro operaciones del puerto. Nada de recuperación por correo ni verificación en dos pasos |
 | El correo del dominio cae en spam | Configurar SPF, DKIM y DMARC del dominio antes de la prueba de salida |
 | El Compose no levanta en un equipo con Windows | Se prueba en los cuatro equipos en la primera semana, no al final ([#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27)) |
+
+## 11. Cambios al construir
+
+**2026-09-28.** El backend del bloque quedó construido y probado: 21 pruebas unitarias
+y 55 de integración contra PostgreSQL real, incluida la concurrencia. Lo que cambió
+respecto de esta especificación:
+
+| Sección | Cambio | Detalle |
+|---|---|---|
+| §3 D-01 | TypeScript 6.0, NestJS 11, Prisma 7.10 | TypeScript 7 no lo soporta typescript-eslint; NestJS 12 es solo ESM; la última de Prisma es una versión candidata |
+| §3 D-01 | Imagen de la API en Debian trixie | `oven/bun:1.3` es trixie; el motor de migraciones de Prisma que se baja al construir tiene que servir al ejecutar |
+| §4 | `comun/autorizacion` guarda los decoradores y el tipo del usuario autenticado | `identidad` usa la bitácora de `auditoria` y `auditoria` usaba los decoradores de `identidad`: era un ciclo |
+| §5 | Columnas nuevas: `usuario.tokens_validos_desde`, `invitacion.revocada_en`, `bitacora.ubicacion_id`; `correo_saliente` con texto y HTML | Ver [modelo de datos](../../02-arquitectura/modelo-datos.md#identidad) |
+| §6 | El guard lee las llaves del adaptador local en proceso | Son las que publica `/api/auth/.well-known/jwks.json`; con Supabase, el JWKS remoto |
+| §6 | Sin endpoint público que resuelva usuario a correo | La API resuelve el usuario y llama al proveedor ([P-028](../../01-requerimientos/pendientes.md)) |
+| §6 | Bloqueo ordenado de administradores al suspender o cambiar un rol | La prueba de concurrencia encontró un interbloqueo |
+| §8 | **La interfaz se hace con Google Stitch** | [ADR-0011](../../02-arquitectura/adr/ADR-0011-interfaz-con-stitch.md). El §8 sigue como requisito; el flujo de trabajo se fija en el bloque de interfaz |
+| — | Contrato OpenAPI para el frontend | [docs/03-diseno/api/](../../03-diseno/api/README.md) |
+
+### Criterios de salida, a la fecha
+
+- [x] El recorrido del §1 funciona de punta a punta en Docker Compose, con el correo de
+      invitación en Mailpit
+- [ ] Probado en los equipos de los cuatro integrantes ([#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27))
+- [ ] Correo real por el SMTP del dominio sin caer en spam (RTA-04): falta el dominio
+- [x] CI escrita: lint, tipos, dependency-cruiser, pruebas unitarias y de integración.
+      Falta verla en verde en GitHub
+- [x] La misma invitación canjeada diez veces a la vez produce un solo usuario activo
+- [x] La base rechaza `UPDATE` y `DELETE` sobre `bitacora` con el rol de la API
+- [x] «panal» encuentra «Pañales de adulto» y «aroz» encuentra «Arroz», en menos de 100 ms
+- [x] El *seed* es idempotente
+- [ ] axe-core en C01, C16 y C18: llega con la interfaz
