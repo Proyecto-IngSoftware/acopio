@@ -3,7 +3,7 @@ title: "Investigaciones — evidencia de decisiones de diseño"
 type: contexto
 tags: [contexto]
 estado: vigente
-actualizado: 2026-09-14
+actualizado: 2026-09-28
 ---
 
 # Investigaciones — evidencia de decisiones de diseño
@@ -240,6 +240,43 @@ los acopios durante la respuesta ni las emergencias simultáneas.
   manifiesto se parece a conciliar lo declarado contra lo confirmado (RF-08); rechazar
   sin almacenar se parece a «no recibir» (RF-06); y la prioridad por plazo es candidata
   para la urgencia del reporte de necesidad (RF-13), por evaluar.
+
+---
+
+## I-006 · Cantidades por persona para la canasta estándar
+
+**Fecha:** 2026-09-28
+**Pregunta:** ¿qué fuente dice cuánto necesita una persona al día de cada categoría del
+catálogo?
+**Por qué importa:** es la base del cálculo de déficit del motor
+([P-001](../01-requerimientos/pendientes.md)). Sin fuente, el número no se puede
+defender.
+
+**Hallazgo — no hay una cifra única.** Los artículos que buscó el equipo dan cantidades
+muy distintas entre sí para casi todo. Solo el agua, la energía y el jabón tienen una
+norma aceptada.
+
+**Hallazgo — Manual Esfera 2018.** 15 L de agua por persona al día para beber, cocinar
+e higiene (norma 2.1 de abastecimiento de agua). 2.100 kcal por persona al día, sin
+fijar qué alimentos. 250 g de jabón de baño y 200 g de jabón de lavar por persona al
+mes. **Supuesto a verificar:** las cifras de jabón salen de resultados de búsqueda; el
+PDF no se pudo abrir desde el entorno de trabajo.
+- Manual Esfera 2018 — <https://spherestandards.org/wp-content/uploads/Sphere-Handbook-2018-EN.pdf> — consultado 2026-09-28
+- Specialized Logistics, norma de agua de Esfera — <https://www.specializedlogistics.org/post/sizing-pump-capacity-to-sphere-water-point-standards> — consultado 2026-09-28
+
+**Hallazgo — UNGRD.** El *Manual de estandarización de la ayuda humanitaria de
+Colombia* (2013) es la guía oficial de la UNGRD para los kits de ayuda. El kit
+alimentario lleva arroz, aceite, leche, pasta, azúcar, sal, café y harina para arepa, y
+se entrega por familia según su composición. **Supuesto a verificar:** la lista sale de
+resultados de búsqueda; las cantidades por persona no se pudieron leer.
+- UNGRD, estandarización de ayuda humanitaria — <https://portal.gestiondelriesgo.gov.co/Documents/Manuales/Manual_de_Estandarizacion_AHE_de_Colombia.pdf> — consultado 2026-09-28
+- UNGRD, kit alimentario de emergencia — <https://portal.gestiondelriesgo.gov.co/Paginas/Adquisicion-productos-Kit-Alimentario-de-Emergencia.aspx> — consultado 2026-09-28
+
+**Conclusión aplicada:** solo 10 de las 39 categorías llevan canasta. Los alimentos se
+reparten para sumar las 2.100 kcal de Esfera con productos del kit de la UNGRD; es un
+cálculo propio, declarado como tal en `canasta_estandar.fuente`. Las demás categorías
+se mueven por el reporte del Receptor. Detalle y lista de verificación en
+[catalogo-inicial.md](../01-requerimientos/catalogo-inicial.md).
 
 ---
 

@@ -49,6 +49,14 @@ de déficit queda sin defensa ante el jurado.
 referencia**. El Avance 1 cita el Manual Esfera: 15 L de agua segura y 2.100 kcal por
 persona al día. Falta la cantidad de referencia del resto de categorías.
 `canasta_estandar.fuente` ya obliga a citar cada valor.
+**Avance 2026-09-28:** primera versión de la canasta en
+[catalogo-inicial.md](catalogo-inicial.md#canasta-estándar--primera-versión). Solo 10
+categorías llevan cantidad por persona: agua (15 L, Esfera), jabón y detergente
+(Esfera) y siete alimentos que suman 2.100 kcal (Esfera) con productos del kit de la
+UNGRD. Las demás quedan fuera del cálculo automático y se mueven por el reporte del
+Receptor (P-015), como ya permite RF-CAT-003. Falta confirmar las cifras en la fuente
+([I-006](../00-contexto/investigaciones.md#i-006--cantidades-por-persona-para-la-canasta-estándar));
+registro en [#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20).
 
 ### P-002 · Origen de la población estimada por zona
 **Fecha:** 2026-08-20 · **Propuesto por:** equipo
@@ -68,7 +76,10 @@ modelo.
 **Por qué:** demasiadas categorías vuelven tediosa la entrada rápida; demasiado
 pocas hacen inútil el emparejamiento. Hay que encontrar el punto, probablemente
 entre 25 y 40.
-**Estado:** ABIERTO — bloquea el Bloque 2
+**Estado:** RESUELTO el 2026-09-28 → [catalogo-inicial.md](catalogo-inicial.md):
+39 categorías en los diez grupos de RF-CAT-001. Medicamentos, fórmula infantil y comida
+preparada quedan fuera del catálogo, con su razón. Registro en
+[#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20).
 
 ### P-004 · Proveedor de correo transaccional
 **Fecha:** 2026-08-20 · **Propuesto por:** equipo
@@ -448,6 +459,34 @@ el acopio destina las donaciones a donde se necesitan
 `RF-CAT-005` (reescrito), `RF-CAT-006`, `RF-MOT-001/002/005`, `RF-HOM-001`,
 [modelo-datos.md](../02-arquitectura/modelo-datos.md), nota en `ADR-0008`, `B-08`
 promovido, corrección en P-019. Faltan los diagramas ER regenerados.
+
+### P-025 · Login local mientras el desarrollo sea local
+**Fecha:** 2026-09-28 · **Propuesto por:** Joseph
+**Qué:** mientras se trabaja en local, el inicio de sesión lo resuelve la propia API,
+con la estructura lista para pasar a Supabase Auth en la nube (plan gratuito, cómputo
+*Nano*). Supabase sigue siendo solo lo que dice ADR-0001: iniciar sesión, confirmar el
+correo y enviar esos correos.
+**Por qué:** que no haga falta un proyecto de Supabase configurado para empezar el
+Bloque 0.
+**Cómo queda estructurado:**
+- Un puerto de proveedor de identidad con dos adaptadores, `local` y `supabase`,
+  elegidos con `AUTH_PROVEEDOR`. La API no arranca con `local` si `NODE_ENV=production`
+- El adaptador local firma el JWT con RS256 y publica sus llaves en un endpoint JWKS
+  con la forma del de Supabase, con los mismos claims (`sub`, `email`). El guard de
+  RF-IDE-005 valida contra `SUPABASE_JWKS_URL` sin saber quién la sirve
+- Contraseñas con bcrypt, el formato de Supabase, para importar los usuarios sin
+  pedirles una contraseña nueva. Identificadores UUID, que se conservan al importar
+- Los correos de confirmación y de restablecer contraseña salen por el SMTP de la API
+  y en desarrollo los atrapa Mailpit
+- Migrar es: crear el proyecto de Supabase, configurarlo según
+  [despliegue.md](../06-operacion/despliegue.md#configuración-de-supabase), importar
+  los usuarios y cambiar `AUTH_PROVEEDOR=supabase`
+**Estado:** RESUELTO → validado contra el proceso ya aceptado en
+[ADR-0001](../02-arquitectura/adr/ADR-0001-supabase-solo-auth.md): no lo cambia, solo
+aplaza su configuración. Detalle en
+[despliegue.md](../06-operacion/despliegue.md#autenticación-en-desarrollo). Se prueba
+en el spike [#19](https://github.com/Proyecto-IngSoftware/acopio/issues/19); allí se
+confirma que Supabase acepta importar el hash bcrypt.
 
 ---
 

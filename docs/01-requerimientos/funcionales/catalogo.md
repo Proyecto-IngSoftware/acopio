@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: catalogo
 bloque: 0
-actualizado: 2026-09-12
+actualizado: 2026-09-28
 ---
 
 # RF-CAT · Catálogo maestro
@@ -31,6 +31,8 @@ emparejamiento.
 - [ ] Una categoría con movimientos no se elimina, se archiva
 - [ ] Objetivo de tamaño: entre 25 y 40 categorías activas (ver P-003)
 
+**Catálogo inicial:** 39 categorías en [catalogo-inicial.md](../catalogo-inicial.md).
+
 ### RF-CAT-002 · Buscar categoría por palabra clave
 **Actor:** Operador · **Prioridad:** DEBE
 
@@ -54,6 +56,8 @@ emparejamiento.
 
 **Nota:** este requerimiento está bloqueado por
 [P-001](../pendientes.md). Sin fuente citable, el motor entero queda sin defensa.
+Primera versión, con 10 categorías, en
+[catalogo-inicial.md](../catalogo-inicial.md#canasta-estándar--primera-versión).
 
 ### RF-CAT-004 · Mapear códigos de barras
 **Actor:** Administrador, Operador · **Prioridad:** DEBERÍA
