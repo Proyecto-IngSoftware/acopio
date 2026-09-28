@@ -3,7 +3,7 @@ title: "Avance 2 — Requisitos y planeación inicial"
 type: entrega
 tags: [entrega, is1]
 estado: borrador
-actualizado: 2026-09-14
+actualizado: 2026-09-28
 ---
 
 # Avance 2 — Requisitos y planeación inicial
@@ -23,7 +23,7 @@ crea un archivo nuevo.
 | 1. Requisitos funcionales | [#9](https://github.com/Proyecto-IngSoftware/acopio/issues/9) | 🟡 Borrador |
 | 2. Requisitos no funcionales y escenarios de calidad | [#10](https://github.com/Proyecto-IngSoftware/acopio/issues/10) | 🟡 Borrador |
 | 3. Restricciones y reglas de negocio | [#11](https://github.com/Proyecto-IngSoftware/acopio/issues/11) | 🟡 Borrador |
-| 4. Historias de usuario y Product Backlog | [#12](https://github.com/Proyecto-IngSoftware/acopio/issues/12), [#13](https://github.com/Proyecto-IngSoftware/acopio/issues/13), [#16](https://github.com/Proyecto-IngSoftware/acopio/issues/16) | 🟡 Borrador — tamaños por confirmar en Planning Poker |
+| 4. Historias de usuario y Product Backlog | [#12](https://github.com/Proyecto-IngSoftware/acopio/issues/12), [#13](https://github.com/Proyecto-IngSoftware/acopio/issues/13), [#16](https://github.com/Proyecto-IngSoftware/acopio/issues/16) | 🟡 Borrador — tamaños confirmados el 2026-09-28; HU-10 dividida |
 | 5. Diagrama de casos de uso | [#14](https://github.com/Proyecto-IngSoftware/acopio/issues/14) | 🟡 Borrador |
 | 6. Mapa de stakeholders | [#15](https://github.com/Proyecto-IngSoftware/acopio/issues/15) | 🟡 Borrador |
 
@@ -279,9 +279,10 @@ Una historia por requisito funcional, escrita desde el valor para un rol. Cada u
 trae criterios de comportamiento normal y, cuando aplica, de error, permisos o ausencia
 de datos.
 
-**Tamaños propuestos** en escala Fibonacci (1, 2, 3, 5, 8, 13), a partir de lo que
-exige cada historia en la bóveda. Se confirman en la sesión de Planning Poker
-([#13](https://github.com/Proyecto-IngSoftware/acopio/issues/13)). **Prioridad
+**Tamaños** en escala Fibonacci (1, 2, 3, 5, 8, 13), a partir de lo que exige cada
+historia en la bóveda. Confirmados el 2026-09-28
+([#13](https://github.com/Proyecto-IngSoftware/acopio/issues/13)): 83 puntos, con
+HU-10 dividida en HU-10a y HU-10b. **Prioridad
 MoSCoW** a partir de la prioridad de la bóveda (DEBE, DEBERÍA, PODRÍA) y del orden de
 recorte de la especificación.
 
@@ -433,28 +434,38 @@ el acopio, **para** conciliar cada donación con datos y no con una foto.
    **entonces** recibe el mismo mensaje genérico que para uno no encontrado, y ninguna
    consulta muestra datos del donante ni la factura.
 
-#### HU-10 · Mandar lo que falta a donde falta
+#### HU-10a · Ver a dónde falta y de dónde sobra
 
 | Épica | RF | Tamaño | Prioridad |
 |---|---|:-:|:-:|
-| EP-05 Zonas y motor | RF-10 | **13** | Must |
+| EP-05 Zonas y motor | RF-10 | 8 | Must |
 
-**Como** administrador, **quiero** aprobar o descartar las sugerencias de traslado con
-su justificación, **para** decidir cada envío con un dato y no con una corazonada.
+**Como** administrador, **quiero** ver el ranking de sugerencias de traslado con su
+justificación, **para** decidir cada envío con un dato y no con una corazonada.
 
 1. **Dado que** una zona tiene 12 % de cobertura en agua y un acopio tiene 800 L sobre
    su máximo, **cuando** reviso el ranking, **entonces** la sugerencia explica ambos
    datos y la distancia entre los dos.
-2. **Dado que** descarto una sugerencia, **cuando** no escribo el motivo, **entonces**
+
+#### HU-10b · Aprobar o descartar un traslado
+
+| Épica | RF | Tamaño | Prioridad |
+|---|---|:-:|:-:|
+| EP-05 Zonas y motor | RF-10 | 5 | Must |
+
+**Como** administrador, **quiero** aprobar o descartar cada sugerencia de traslado,
+**para** que ningún envío salga sin que alguien responda por él.
+
+1. **Dado que** descarto una sugerencia, **cuando** no escribo el motivo, **entonces**
    el sistema no me deja.
-3. **Dado que** apruebo una sugerencia, **cuando** confirmo, **entonces** se crea la
+2. **Dado que** apruebo una sugerencia, **cuando** confirmo, **entonces** se crea la
    remisión en borrador y queda registrado quién aprobó. Ninguna sugerencia se
    ejecuta sin aprobación.
 
-**Tamaño 13: se divide antes de planearse.** Contiene el cálculo de déficit y
-superávit y el ranking, que son el núcleo del motor. En el Sprint del Bloque 4 se
-parte en dos historias: calcular y presentar el ranking con su justificación, y
-aprobar o descartar.
+**Origen de la división.** HU-10 se propuso con tamaño 13: juntaba el cálculo de
+déficit y superávit con el ranking, que son el núcleo del motor, y la decisión del
+administrador. Se partió en la estimación del 2026-09-28; el número HU-10 no se
+reutiliza.
 
 #### HU-11 · Despachar con un documento verificable
 
@@ -541,9 +552,9 @@ clave.
 | **EP-02 Turnos de voluntariado** | Jornadas y reservas de cupo | HU-03 | 5 |
 | **EP-03 Inventario** | Movimientos, saldos y «no recibir» del acopio | HU-04, HU-05, HU-06 | 16 |
 | **EP-04 Comprobantes y custodia** | Donación con folio, conciliación y seguimiento | HU-07, HU-08, HU-09 | 16 |
-| **EP-05 Zonas y motor** | Déficit, sugerencias, remisiones y recepción en zona | HU-10 a HU-13 | 24 |
+| **EP-05 Zonas y motor** | Déficit, sugerencias, remisiones y recepción en zona | HU-10a, HU-10b, HU-11 a HU-13 | 24 |
 | **EP-06 Administración y acceso** | Usuarios, invitaciones y verificación de entidades | HU-14, HU-15 | 11 |
-| | | **15 historias** | **83** |
+| | | **16 historias** | **83** |
 
 Son los mismos seis módulos de la vista de descomposición funcional del Avance 3.
 
@@ -553,7 +564,7 @@ Son los mismos seis módulos de la vista de descomposición funcional del Avance
 [orden de construcción](../superpowers/specs/2026-08-20-acopio-design.md#13-orden-de-construcción):
 acceso y catálogo (HU-14) antes que todo; después la red pública (HU-01, HU-02,
 HU-15); luego el inventario (HU-04 a HU-06), la custodia (HU-07 a HU-09) y el motor
-(HU-10 a HU-13); por último los turnos (HU-03).
+(HU-10a a HU-13); por último los turnos (HU-03).
 
 | Prioridad | Historias | Por qué |
 |---|---|---|
@@ -562,8 +573,8 @@ HU-15); luego el inventario (HU-04 a HU-06), la custodia (HU-07 a HU-09) y el mo
 | **Could** | Captura sin conexión (RF-INV-009), voluntariado especializado (RF-TUR-007), matriz de acceso exportable (RF-IDE-011) | Detalles de requisitos del curso que se pueden aplazar sin romper el flujo |
 | **Won't** (esta versión) | Pagos, datos de personas desaparecidas, optimización de rutas, conteo físico de personas, doble factor | Descartados con razón escrita en [fuera de alcance](../00-contexto/fuera-de-alcance.md) |
 
-**Qué necesita más análisis.** HU-10 (tamaño 13) se divide antes de planearse, y
-depende de datos que todavía no existen.
+**Qué necesita más análisis.** HU-10a depende de datos que todavía no existen: la
+canasta estándar y la población por zona.
 
 **Dependencias y spike.**
 - **Spike — NestJS, Prisma y el guard de Supabase**
@@ -571,10 +582,10 @@ depende de datos que todavía no existen.
   usado NestJS; antes de estimar el Bloque 0 se construye un módulo completo y el guard
   que valida el token (RTA-01 del ADR-001).
 - **Dependencia bloqueante — canasta estándar, población por zona y catálogo inicial**
-  ([#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20)). HU-10 no se
+  ([#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20)). HU-10a no se
   puede terminar sin los valores de P-001 y P-002, y HU-04 necesita el catálogo de
   P-003.
-- **Dependencia de orden** — HU-10 a HU-13 exigen el inventario (HU-04 a HU-06) y la
+- **Dependencia de orden** — HU-10a a HU-13 exigen el inventario (HU-04 a HU-06) y la
   custodia (HU-07 a HU-09) terminados: el motor calcula sobre esos datos.
 
 ### Tablero
@@ -693,7 +704,7 @@ flowchart LR
 | RF-07 | HU-07 | CU-07, con CU-17 |
 | RF-08 | HU-08 | CU-08 |
 | RF-09 | HU-09 | CU-09 |
-| RF-10 | HU-10 | CU-10 |
+| RF-10 | HU-10a, HU-10b | CU-10 |
 | RF-11 | HU-11 | CU-11 |
 | RF-12 | HU-12 | CU-12 |
 | RF-13 | HU-13 | CU-13 |
