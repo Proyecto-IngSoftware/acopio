@@ -33,6 +33,10 @@ correo opcional y al menos una asignación de ubicación.
 - [ ] El usuario nace en estado `INVITADO`
 - [ ] Ningún otro rol puede crear usuarios
 
+**2026-09-28 · construido.** La asignación es obligatoria para Operador, Receptor y
+Auditor. El Administrador tiene alcance global y puede crearse sin ubicaciones
+([P-028](../pendientes.md)).
+
 ### RF-IDE-002 · Generar enlace de invitación
 **Actor:** Sistema · **Prioridad:** DEBE
 **Depende de:** RF-IDE-001
@@ -55,7 +59,8 @@ correo opcional y al menos una asignación de ubicación.
 - [ ] Contraseña de 12 caracteres mínimo, sin exigir símbolos
 - [ ] Se rechaza contra lista de contraseñas comunes
 - [ ] Al confirmar, el backend crea el usuario en Supabase con la Admin API y
-      `email_confirm: true`
+      `email_confirm: true`. Mientras el desarrollo es local, en el adaptador local
+      ([P-025](../pendientes.md))
 - [ ] El UUID devuelto se guarda en `usuario.supabase_uid` y el estado pasa a `ACTIVO`
 - [ ] El token queda invalidado
 - [ ] Un token vencido, ya usado o inexistente produce el mismo mensaje genérico
@@ -68,8 +73,11 @@ El Donador no pasa por aquí: entra con su correo ([RF-IDE-013](#rf-ide-013--aut
 
 **Criterios de aceptación:**
 - [ ] El formulario pide nombre de usuario, no correo
-- [ ] Un endpoint público resuelve el username a su correo asociado
-- [ ] Ese endpoint tiene límite de intentos por IP y no revela si el usuario existe
+- [ ] ~~Un endpoint público resuelve el username a su correo asociado~~ La API recibe
+      el nombre de usuario, lo resuelve a su correo y se lo pasa al proveedor. El
+      correo nunca sale hacia el navegador ([P-028](../pendientes.md))
+- [ ] El inicio de sesión tiene límite de intentos por IP y no revela si el usuario
+      existe
 - [ ] Un usuario `SUSPENDIDO` o `INVITADO` no puede iniciar sesión
 
 ### RF-IDE-005 · Autorizar cada request

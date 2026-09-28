@@ -1,5 +1,6 @@
+import { SaludDto } from '../../comun/respuestas';
 import { Controller, Get, HttpCode, ServiceUnavailableException } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { PrismaService } from '../../comun/prisma/prisma.service';
 import { Publico } from '../../comun/autorizacion/decoradores';
 
@@ -12,6 +13,7 @@ export class SaludController {
   @Publico()
   @Get()
   @HttpCode(200)
+  @ApiOkResponse({ type: SaludDto })
   async revisar(): Promise<{ estado: 'ok'; base: 'ok' }> {
     try {
       await this.prisma.$queryRaw`SELECT 1`;

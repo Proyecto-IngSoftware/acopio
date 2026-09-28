@@ -2,15 +2,15 @@
 title: "ADR-0009 · Mockups con Claude Design, interfaz implementada por el equipo"
 type: adr
 tags: [arquitectura, adr, diseno]
-estado: vigente
+estado: reemplazada
 adr: 9
-decision: aceptada
-actualizado: 2026-09-14
+decision: reemplazada por ADR-0011
+actualizado: 2026-09-28
 ---
 
 # ADR-0009 · Mockups con Claude Design, interfaz implementada por el equipo
 
-**Fecha:** 2026-09-14 · **Estado:** aceptada · **Reemplaza a:**
+**Fecha:** 2026-09-14 · **Estado:** reemplazada por [ADR-0011](ADR-0011-interfaz-con-stitch.md) el 2026-09-28 · **Reemplaza a:**
 [ADR-0004](ADR-0004-frontend-lovable-spa.md)
 
 ## Contexto

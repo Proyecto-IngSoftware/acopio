@@ -1,5 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import { PaginaBitacoraDto } from '../../comun/respuestas';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { Roles } from '../../comun/autorizacion/decoradores';
@@ -33,6 +34,7 @@ export class BitacoraController {
   /** Consulta de solo lectura para Administrador y Auditor (RF-IDE-012, C17). */
   @Roles('ADMIN', 'AUDITOR')
   @Get()
+  @ApiOkResponse({ type: PaginaBitacoraDto })
   buscar(@Query() filtro: FiltroBitacoraDto) {
     return this.bitacora.buscar(filtro);
   }

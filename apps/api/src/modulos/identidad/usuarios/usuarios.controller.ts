@@ -9,7 +9,20 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import {
+  EnlaceInvitacionDto,
+  ErrorDto,
+  RevocadasDto,
+  UsuarioCreadoDto,
+  UsuarioDto,
+} from '../../../comun/respuestas';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../../comun/autorizacion/decoradores';
@@ -70,24 +83,38 @@ export class UsuariosController {
   /** Crea un usuario INVITADO y devuelve el enlace de invitación (RF-IDE-001, 002). */
   @Roles('ADMIN')
   @Post()
+  @ApiCreatedResponse({ type: UsuarioCreadoDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   crear(@UsuarioActual() admin: UsuarioAutenticado, @Body() datos: CrearUsuarioDto) {
     return this.usuarios.crear(admin, datos);
   }
 
   @Roles('ADMIN', 'AUDITOR')
   @Get()
+  @ApiOkResponse({ type: UsuarioDto, isArray: true })
   listar(@Query() filtro: FiltroUsuariosDto) {
     return this.usuarios.listar(filtro);
   }
 
   @Roles('ADMIN', 'AUDITOR')
   @Get(':id')
+  @ApiOkResponse({ type: UsuarioDto })
   obtener(@Param('id', ParseUUIDPipe) id: string) {
     return this.usuarios.obtener(id);
   }
 
   @Roles('ADMIN')
   @Patch(':id')
+  @ApiOkResponse({ type: UsuarioDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   actualizar(
     @UsuarioActual() admin: UsuarioAutenticado,
     @Param('id', ParseUUIDPipe) id: string,
@@ -98,12 +125,19 @@ export class UsuariosController {
 
   @Roles('ADMIN')
   @Post(':id/suspender')
+  @ApiCreatedResponse({ type: UsuarioDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   suspender(@UsuarioActual() admin: UsuarioAutenticado, @Param('id', ParseUUIDPipe) id: string) {
     return this.usuarios.suspender(admin, id);
   }
 
   @Roles('ADMIN')
   @Post(':id/reactivar')
+  @ApiCreatedResponse({ type: UsuarioDto })
   reactivar(@UsuarioActual() admin: UsuarioAutenticado, @Param('id', ParseUUIDPipe) id: string) {
     return this.usuarios.reactivar(admin, id);
   }
@@ -111,12 +145,19 @@ export class UsuariosController {
   /** Nueva invitación para quien no ha canjeado la suya; revoca la anterior. */
   @Roles('ADMIN')
   @Post(':id/invitacion')
+  @ApiCreatedResponse({ type: EnlaceInvitacionDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   reinvitar(@UsuarioActual() admin: UsuarioAutenticado, @Param('id', ParseUUIDPipe) id: string) {
     return this.usuarios.reinvitar(admin, id);
   }
 
   @Roles('ADMIN')
   @Delete(':id/invitacion')
+  @ApiOkResponse({ type: RevocadasDto })
   revocarInvitacion(
     @UsuarioActual() admin: UsuarioAutenticado,
     @Param('id', ParseUUIDPipe) id: string,
@@ -127,6 +168,12 @@ export class UsuariosController {
   /** Restablecer acceso de un usuario activo, con motivo (RF-IDE-009). */
   @Roles('ADMIN')
   @Post(':id/restablecer')
+  @ApiCreatedResponse({ type: EnlaceInvitacionDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   restablecer(
     @UsuarioActual() admin: UsuarioAutenticado,
     @Param('id', ParseUUIDPipe) id: string,
@@ -137,6 +184,12 @@ export class UsuariosController {
 
   @Roles('ADMIN')
   @Post(':id/asignaciones')
+  @ApiCreatedResponse({ type: UsuarioDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   asignar(
     @UsuarioActual() admin: UsuarioAutenticado,
     @Param('id', ParseUUIDPipe) id: string,
@@ -148,6 +201,12 @@ export class UsuariosController {
   /** Si la ubicación queda sin responsable, responde 409 hasta que se confirme. */
   @Roles('ADMIN')
   @Delete(':id/asignaciones/:tipo/:ubicacionId')
+  @ApiOkResponse({ type: UsuarioDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   desasignar(
     @UsuarioActual() admin: UsuarioAutenticado,
     @Param('id', ParseUUIDPipe) id: string,

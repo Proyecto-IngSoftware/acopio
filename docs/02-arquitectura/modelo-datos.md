@@ -351,6 +351,7 @@ usuario
   rol  ADMIN | OPERADOR | AUDITOR | RECEPTOR | DONADOR
   supabase_uid uuid UNIQUE? · estado INVITADO | ACTIVO | SUSPENDIDO
   correo_sintetico bool
+  tokens_validos_desde timestamptz?   tokens emitidos antes se rechazan (RF-IDE-009)
   CHECK (rol = 'DONADOR' OR username IS NOT NULL)
   CHECK (rol <> 'DONADOR' OR (correo IS NOT NULL AND NOT correo_sintetico))
 
@@ -367,11 +368,13 @@ usuario_asignacion
   índice (usuario_id, ubicacion_id)
 
 invitacion
-  id · usuario_id · token_hash bytea · expira_en
-  usada_en? · es_restablecimiento bool · motivo? · creada_por
+  id · usuario_id · token_hash bytea UNIQUE · expira_en
+  usada_en? · revocada_en? · es_restablecimiento bool · motivo? · creada_por? · creada_en
+  CHECK (NOT es_restablecimiento OR char_length(motivo) >= 20)
 
 bitacora
-  id · usuario_id · accion · entidad · entidad_id
+  id · usuario_id?  (nulo en acciones del sistema: seed y tareas programadas)
+  accion · entidad · entidad_id? · ubicacion_id?  (filtro de C17)
   datos_antes jsonb? · datos_despues jsonb?
   destacado bool · ocurrido_en
 
@@ -394,7 +397,7 @@ su UUID y su hash, y se elimina
 
 ```
 correo_saliente
-  id · destinatario citext · asunto · cuerpo
+  id · destinatario citext · asunto · cuerpo_texto · cuerpo_html?
   estado  PENDIENTE | ENVIADO | FALLIDO
   intentos int · ultimo_error text? · enviar_despues_de timestamptz
   creado_en · enviado_en?
@@ -402,7 +405,15 @@ correo_saliente
 ```
 
 Cola de correos. La tarea «reintentar correos fallidos» toma las filas `FALLIDO` cuyo
-`enviar_despues_de` ya pasó; la espera crece con cada intento.
+`enviar_despues_de` ya pasó; la espera crece con cada intento (1, 2, 4… minutos, hasta
+dos horas) y se detiene a los 8 intentos.
+
+**2026-09-28 · construido en el Bloque 0.** Además de las columnas de arriba, la
+primera migración crea `acopio_sin_tildes(text)`, una envoltura `IMMUTABLE` de
+`unaccent` para la búsqueda de categorías (RF-CAT-002), y el rol `acopio_app` con el
+que se conecta la API: tiene `SELECT`, `INSERT`, `UPDATE` y `DELETE` en todas las
+tablas, menos `UPDATE`, `DELETE` y `TRUNCATE` sobre `bitacora`. Las tablas futuras
+heredan esos permisos; las append-only los revocan en su propia migración.
 
 ---
 

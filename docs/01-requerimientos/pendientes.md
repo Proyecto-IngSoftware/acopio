@@ -488,6 +488,49 @@ aplaza su configuración. Detalle en
 en el spike [#19](https://github.com/Proyecto-IngSoftware/acopio/issues/19); allí se
 confirma que Supabase acepta importar el hash bcrypt.
 
+### P-026 · El frontend se trabaja con Google Stitch
+**Fecha:** 2026-09-28 · **Propuesto por:** Joseph
+**Qué:** las pantallas se diseñan en Google Stitch, que también genera su código de
+interfaz. Reemplaza a Claude Design.
+**Por qué:** diseño y primer código de cada pantalla en un solo paso.
+**Estado:** RESUELTO → [ADR-0011](../02-arquitectura/adr/ADR-0011-interfaz-con-stitch.md),
+que reemplaza a ADR-0009. El código de Stitch es punto de partida: se adapta a tokens,
+componentes y al [contrato de la API](../03-diseno/api/README.md) antes de entrar al
+repositorio.
+
+### P-027 · MinIO dejó de publicar imágenes de Docker
+**Fecha:** 2026-09-28 · **Propuesto por:** Claude, al armar el Compose del Bloque 0
+**Qué:** MinIO retiró `minio/minio` de Docker Hub y archivó la edición comunitaria;
+quay.io conserva una copia congelada, sin actualizaciones de seguridad. El Compose
+apunta hoy a `quay.io/minio/minio:latest`.
+**Por qué:** ADR-0008 elige MinIO para facturas y evidencias. Un almacenamiento sin
+mantenimiento que guarda datos personales (Ley 1581) no es sostenible.
+**Estado:** ABIERTO — bloquea el Bloque 3, no el 0 ni el 1. Candidatos compatibles con
+S3 para evaluar: SeaweedFS, Garage, RustFS. La API no depende de MinIO en particular:
+el módulo `almacenamiento` se escribe contra la interfaz de S3. Si cambia la pieza, es
+un ADR nuevo que modifica una fila de ADR-0008.
+- MinIO fuera de Docker Hub — <https://github.com/milvus-io/milvus/issues/53430> — consultado 2026-09-28
+- Copia en quay.io, congelada — <https://byteiota.com/minio-docker-hub-quay-anonymous-pull-fix/> — consultado 2026-09-28
+
+### P-028 · Ajustes al construir el backend del Bloque 0
+**Fecha:** 2026-09-28 · **Propuesto por:** Claude, al implementar
+**Qué:** decisiones de detalle que aparecieron al programar. Ninguna cambia una
+decisión de arquitectura.
+
+| Qué | Por qué |
+|---|---|
+| El login recibe el nombre de usuario y la API lo resuelve a su correo; no hay endpoint público que lo revele (RF-IDE-004) | Un endpoint menos que proteger, y el correo no sale hacia el navegador |
+| El Administrador puede crearse sin ubicaciones (RF-IDE-001) | Tiene alcance global (actores.md) |
+| `usuario.tokens_validos_desde` | Al canjear un restablecimiento, las sesiones anteriores dejan de servir (RF-IDE-009) sin depender del proveedor |
+| Con el adaptador local, el guard lee las llaves en proceso, no por HTTP | Son las mismas que publica el JWKS; evita que la API se llame a sí misma |
+| Cada servicio escribe su propio registro de bitácora en la misma transacción, en vez de un interceptor | El registro se revierte si la escritura se revierte, y lleva los datos de antes y después |
+| Suspender o cambiar el rol bloquea antes a todos los administradores activos, en orden | Dos administradores que se suspenden a la vez producían un interbloqueo; ahora uno gana y el sistema conserva un administrador |
+| El Auditor consulta toda la bitácora, no solo la de sus ubicaciones | Para confirmar: la matriz de actores limita su alcance a sus ubicaciones |
+| NestJS 11 y Prisma 7.10, no las últimas | NestJS 12 es solo ESM y su ecosistema no lo acompaña; la última de Prisma es una versión candidata |
+
+**Estado:** RESUELTO → [especificación del Bloque 0](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md#11-cambios-al-construir),
+RF-IDE-001, 003 y 004. Queda por confirmar el alcance del Auditor sobre la bitácora.
+
 ---
 
 ## Resueltos

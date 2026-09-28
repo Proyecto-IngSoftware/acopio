@@ -8,14 +8,15 @@
     "start": "node dist/main.js",
     "start:dev": "node --watch -r @swc-node/register src/main.ts",
     "typecheck": "prisma generate >/dev/null && tsc -p tsconfig.json --noEmit",
-    "test": "jest",
-    "test:int": "jest -c jest.int.config.cjs --runInBand",
+    "test": "prisma generate >/dev/null && jest",
+    "test:int": "prisma generate >/dev/null && jest -c jest.int.config.cjs --runInBand",
     "prisma": "prisma",
     "db:migrar": "prisma migrate deploy",
     "db:generar": "prisma generate",
     "seed": "node -r @swc-node/register src/seed/main.ts",
     "depcruise": "depcruise src --config .dependency-cruiser.cjs",
-    "seed:dist": "node dist/seed/main.js"
+    "seed:dist": "node dist/seed/main.js",
+    "openapi": "prisma generate >/dev/null && node -r @swc-node/register src/exportar-openapi.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11",

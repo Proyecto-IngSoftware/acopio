@@ -1,6 +1,7 @@
 import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { CanjeDto, ErrorDto, InvitacionPublicaDto } from '../../../comun/respuestas';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { Publico } from '../../../comun/autorizacion/decoradores';
@@ -18,6 +19,12 @@ export class InvitacionesController {
 
   /** Lo que ve la persona al abrir el enlace: usuario, nombre y ubicaciones. */
   @Get(':token')
+  @ApiOkResponse({ type: InvitacionPublicaDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   consultar(@Param('token') token: string) {
     return this.invitaciones.consultar(token);
   }
@@ -25,6 +32,12 @@ export class InvitacionesController {
   /** Define la contraseña y activa la cuenta (RF-IDE-003) o la restablece (RF-IDE-009). */
   @Post(':token/canje')
   @HttpCode(200)
+  @ApiOkResponse({ type: CanjeDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   canjear(@Param('token') token: string, @Body() datos: CanjearDto) {
     return this.invitaciones.canjear(token, datos.contrasena);
   }

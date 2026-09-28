@@ -1,6 +1,7 @@
 import { Body, Controller, Get, HttpCode, Inject, Post } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { ErrorDto, SesionDto, YoDto } from '../../../comun/respuestas';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { Publico, UsuarioActual } from '../../../comun/autorizacion/decoradores';
@@ -28,6 +29,12 @@ export class SesionController {
   @Throttle({ default: { limit: 5, ttl: 60_000 } })
   @Post('sesion')
   @HttpCode(200)
+  @ApiOkResponse({ type: SesionDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   iniciar(@Body() datos: IniciarSesionDto) {
     return this.sesion.iniciar(datos.usuario, datos.contrasena);
   }
@@ -35,6 +42,7 @@ export class SesionController {
   /** El usuario de la sesión y sus ubicaciones. */
   @ApiBearerAuth()
   @Get('yo')
+  @ApiOkResponse({ type: YoDto })
   yo(@UsuarioActual() usuario: UsuarioAutenticado) {
     return this.sesion.yo(usuario.id);
   }

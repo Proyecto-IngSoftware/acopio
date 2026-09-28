@@ -34,7 +34,7 @@ Proyecto de **Ingeniería de Software I** · ETITC · Sprint 0.
 | Saber qué está y qué no está en alcance | [Fuera de alcance](00-contexto/fuera-de-alcance.md) |
 | Consultar un término | [Glosario](00-contexto/glosario.md) |
 | Saber por qué se decidió algo | [ADR](02-arquitectura/adr/README.md) |
-| Construir interfaz | [Sistema de diseño](03-diseno/sistema-diseno.md) |
+| Construir interfaz | [Sistema de diseño](03-diseno/sistema-diseno.md) · [Contrato de la API](03-diseno/api/README.md) |
 | Desplegar o arreglar algo roto | [Runbook](06-operacion/runbook.md) |
 
 ---

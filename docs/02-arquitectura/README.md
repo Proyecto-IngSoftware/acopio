@@ -3,7 +3,7 @@ title: "Arquitectura — índice"
 type: moc
 tags: [moc, arquitectura]
 estado: vigente
-actualizado: 2026-09-14
+actualizado: 2026-09-28
 ---
 
 # Arquitectura — índice
@@ -26,7 +26,9 @@ actualizado: 2026-09-14
 | [0006](adr/ADR-0006-color-semantico-reservado.md) | El color semántico está reservado |
 | [0007](adr/ADR-0007-donador-excepcion-rol.md) | El Donador, excepción controlada al modelo de roles |
 | [0008](adr/ADR-0008-arquitectura-stack-inicial.md) | Arquitectura y selección tecnológica inicial — el «ADR-001» del curso |
-| [0009](adr/ADR-0009-mockups-claude-design.md) | Mockups con Claude Design, interfaz implementada por el equipo |
+| [0009](adr/ADR-0009-mockups-claude-design.md) | Mockups con Claude Design, interfaz implementada por el equipo · reemplazada por 0011 |
+| [0010](adr/ADR-0010-varias-emergencias-activas.md) | Varias emergencias activas; el acopio no pertenece a ninguna |
+| [0011](adr/ADR-0011-interfaz-con-stitch.md) | Interfaz diseñada con Google Stitch |
 
 ## La decisión de la que cuelga todo lo demás
 

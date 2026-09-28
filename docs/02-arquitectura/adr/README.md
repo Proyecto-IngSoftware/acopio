@@ -3,7 +3,7 @@ title: "Registro de decisiones de arquitectura"
 type: moc
 tags: [moc, adr]
 estado: vigente
-actualizado: 2026-09-12
+actualizado: 2026-09-28
 ---
 
 # Registro de decisiones de arquitectura
@@ -27,8 +27,9 @@ documento que se reescribe hasta perder la historia.
 | [0006](ADR-0006-color-semantico-reservado.md) | El color semántico está reservado | aceptada |
 | [0007](ADR-0007-donador-excepcion-rol.md) | El Donador, excepción controlada al modelo de roles | aceptada |
 | [0008](ADR-0008-arquitectura-stack-inicial.md) | Arquitectura y selección tecnológica inicial — el «ADR-001» del curso | aceptada |
-| [0009](ADR-0009-mockups-claude-design.md) | Mockups con Claude Design, interfaz implementada por el equipo | aceptada |
+| [0009](ADR-0009-mockups-claude-design.md) | Mockups con Claude Design, interfaz implementada por el equipo | reemplazada por ADR-0011 |
 | [0010](ADR-0010-varias-emergencias-activas.md) | Varias emergencias activas; el acopio no pertenece a ninguna. Modifica una restricción de ADR-0008 | aceptada |
+| [0011](ADR-0011-interfaz-con-stitch.md) | Interfaz diseñada con Google Stitch | aceptada |
 
 ## Cuándo escribir una
 

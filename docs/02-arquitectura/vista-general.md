@@ -139,6 +139,13 @@ comprobantes   ← motor           (solo lectura, para trazabilidad)
 `notificaciones` y `almacenamiento` no dependen de ningún módulo de dominio: son
 hojas del grafo, y por eso no pueden crear ciclos.
 
+**2026-09-28 · construido en el Bloque 0.** Estas reglas las hace cumplir
+dependency-cruiser en CI (`apps/api/.dependency-cruiser.cjs`). Dos piezas que no son
+módulos de dominio: `comun/autorizacion` guarda los decoradores de rol y el tipo del
+usuario autenticado, que usan todos los módulos —si vivieran en `identidad`, habría un
+ciclo con `auditoria`—; y `salud` expone `GET /api/salud` para el chequeo del
+contenedor.
+
 ## Tareas programadas
 
 Corren dentro del proceso de la API con `@nestjs/schedule`. Con una sola instancia

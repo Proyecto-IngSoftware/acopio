@@ -10,7 +10,22 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiNoContentResponse,
+  ApiOkResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import {
+  CanastaVigenteDto,
+  CategoriaDto,
+  EmergenciaDto,
+  ErrorDto,
+  ResultadoBusquedaDto,
+  VersionCanastaRespuestaDto,
+} from '../../comun/respuestas';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
@@ -104,29 +119,44 @@ export class CatalogoController {
   // ── Categorías ──
 
   @Get('categorias')
+  @ApiOkResponse({ type: CategoriaDto, isArray: true })
   listarCategorias(@Query() filtro: FiltroCategoriasDto) {
     return this.categorias.listar(filtro);
   }
 
   /** Búsqueda por palabra clave para la entrada rápida (RF-CAT-002). */
   @Get('categorias/buscar')
+  @ApiOkResponse({ type: ResultadoBusquedaDto, isArray: true })
   buscar(@Query() datos: BuscarDto) {
     return this.categorias.buscar(datos.q, datos.limite);
   }
 
   @Get('categorias/:id')
+  @ApiOkResponse({ type: CategoriaDto })
   obtenerCategoria(@Param('id', ParseUUIDPipe) id: string) {
     return this.categorias.obtener(id);
   }
 
   @Roles('ADMIN')
   @Post('categorias')
+  @ApiCreatedResponse({ type: CategoriaDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   crearCategoria(@UsuarioActual() admin: UsuarioAutenticado, @Body() datos: CrearCategoriaDto) {
     return this.categorias.crear(admin, datos);
   }
 
   @Roles('ADMIN')
   @Patch('categorias/:id')
+  @ApiOkResponse({ type: CategoriaDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   actualizarCategoria(
     @UsuarioActual() admin: UsuarioAutenticado,
     @Param('id', ParseUUIDPipe) id: string,
@@ -137,12 +167,14 @@ export class CatalogoController {
 
   @Roles('ADMIN')
   @Post('categorias/:id/archivar')
+  @ApiCreatedResponse({ type: CategoriaDto })
   archivar(@UsuarioActual() admin: UsuarioAutenticado, @Param('id', ParseUUIDPipe) id: string) {
     return this.categorias.archivar(admin, id, true);
   }
 
   @Roles('ADMIN')
   @Post('categorias/:id/reactivar')
+  @ApiCreatedResponse({ type: CategoriaDto })
   reactivarCategoria(
     @UsuarioActual() admin: UsuarioAutenticado,
     @Param('id', ParseUUIDPipe) id: string,
@@ -154,6 +186,12 @@ export class CatalogoController {
   @Roles('ADMIN')
   @Delete('categorias/:id')
   @HttpCode(204)
+  @ApiNoContentResponse({ description: 'Eliminada' })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   eliminarCategoria(
     @UsuarioActual() admin: UsuarioAutenticado,
     @Param('id', ParseUUIDPipe) id: string,
@@ -165,11 +203,13 @@ export class CatalogoController {
 
   /** La canasta vigente hoy, con la fuente de cada valor (RF-CAT-003). */
   @Get('canasta')
+  @ApiOkResponse({ type: CanastaVigenteDto, isArray: true })
   canastaVigente() {
     return this.canasta.vigente();
   }
 
   @Get('categorias/:id/canasta')
+  @ApiOkResponse({ type: VersionCanastaRespuestaDto, isArray: true })
   historialCanasta(@Param('id', ParseUUIDPipe) id: string) {
     return this.canasta.historial(id);
   }
@@ -177,6 +217,12 @@ export class CatalogoController {
   /** Agrega una versión; las anteriores no se tocan. */
   @Roles('ADMIN')
   @Post('categorias/:id/canasta')
+  @ApiCreatedResponse({ type: VersionCanastaRespuestaDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   agregarVersion(
     @UsuarioActual() admin: UsuarioAutenticado,
     @Param('id', ParseUUIDPipe) id: string,
@@ -192,18 +238,31 @@ export class CatalogoController {
   // ── Emergencias ──
 
   @Get('emergencias')
+  @ApiOkResponse({ type: EmergenciaDto, isArray: true })
   listarEmergencias(@Query() filtro: FiltroEmergenciasDto) {
     return this.emergencias.listar(filtro.estado);
   }
 
   @Roles('ADMIN')
   @Post('emergencias')
+  @ApiCreatedResponse({ type: EmergenciaDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   crearEmergencia(@UsuarioActual() admin: UsuarioAutenticado, @Body() datos: CrearEmergenciaDto) {
     return this.emergencias.crear(admin, datos);
   }
 
   @Roles('ADMIN')
   @Patch('emergencias/:id')
+  @ApiOkResponse({ type: EmergenciaDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   actualizarEmergencia(
     @UsuarioActual() admin: UsuarioAutenticado,
     @Param('id', ParseUUIDPipe) id: string,
@@ -214,6 +273,12 @@ export class CatalogoController {
 
   @Roles('ADMIN')
   @Post('emergencias/:id/cerrar')
+  @ApiCreatedResponse({ type: EmergenciaDto })
+  @ApiResponse({
+    status: 'default',
+    type: ErrorDto,
+    description: 'Error con forma { estado, codigo, mensaje, detalles? }',
+  })
   cerrarEmergencia(
     @UsuarioActual() admin: UsuarioAutenticado,
     @Param('id', ParseUUIDPipe) id: string,
