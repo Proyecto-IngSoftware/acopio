@@ -3,7 +3,7 @@ title: "Modelo de datos"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-09-12
+actualizado: 2026-09-28
 ---
 
 # Modelo de datos
@@ -374,10 +374,35 @@ bitacora
   id · usuario_id · accion · entidad · entidad_id
   datos_antes jsonb? · datos_despues jsonb?
   destacado bool · ocurrido_en
+
+identidad_local               solo con AUTH_PROVEEDOR=local (P-025)
+  id uuid PK                  es el `sub` del token y el valor de usuario.supabase_uid
+  correo citext UNIQUE · password_hash text (bcrypt)
+  correo_confirmado_en timestamptz? · creado_en
 ```
 
 El índice `(usuario_id, ubicacion_id)` es el que permite verificar la autorización
 en cada request sin cachearla en el token.
+
+`identidad_local` hace, mientras el desarrollo es local, lo que después hará Supabase
+Auth: guardar la credencial. Por eso está aparte de `usuario` y se enlaza igual que
+Supabase, por `supabase_uid` y sin llave foránea. Al pasar a Supabase se exporta con
+su UUID y su hash, y se elimina
+([Bloque 0 §5](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md#5-datos)).
+
+### Notificaciones
+
+```
+correo_saliente
+  id · destinatario citext · asunto · cuerpo
+  estado  PENDIENTE | ENVIADO | FALLIDO
+  intentos int · ultimo_error text? · enviar_despues_de timestamptz
+  creado_en · enviado_en?
+  CHECK (estado <> 'ENVIADO' OR enviado_en IS NOT NULL)
+```
+
+Cola de correos. La tarea «reintentar correos fallidos» toma las filas `FALLIDO` cuyo
+`enviar_despues_de` ya pasó; la espera crece con cada intento.
 
 ---
 
@@ -411,6 +436,8 @@ Cada uno se hace cumplir donde no se pueda evadir.
 | Una emergencia `CERRADA` tiene fecha de cierre | `CHECK` |
 | Una emergencia `CERRADA` no recibe zonas nuevas ni genera sugerencias | Transacción |
 | `configuracion_motor` tiene una sola fila y sus pesos suman 1 | `CHECK` |
+| `bitacora` no admite `UPDATE` ni `DELETE` | Permisos de base de datos (rol `acopio_app`) |
+| Un correo `ENVIADO` tiene fecha de envío | `CHECK` |
 
 **Lo que se puede expresar en el esquema, va en el esquema.** Una regla que solo
 vive en el código de la aplicación se rompe el día que alguien escribe un script.
@@ -803,6 +830,7 @@ erDiagram
     ZONA    ||--o{ USUARIO_ASIGNACION : "ubicacion_tipo=ZONA"
     USUARIO ||--o{ INVITACION : recibe
     USUARIO ||--o{ BITACORA : genera
+    USUARIO |o--o| IDENTIDAD_LOCAL : "supabase_uid = id, solo local"
 
     ACOPIO {
         uuid id PK "clúster Red"
@@ -837,6 +865,11 @@ erDiagram
         text accion
         text entidad "sin FK real, audita cualquier tabla"
         uuid entidad_id "sin FK real"
+    }
+    IDENTIDAD_LOCAL {
+        uuid id PK "sin FK real, como Supabase"
+        citext correo UK
+        text password_hash
     }
 ```
 

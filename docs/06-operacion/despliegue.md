@@ -19,7 +19,8 @@ Todo va en contenedores. El equipo clona y ejecuta `docker compose up`.
 
 services:
   db:        postgres:16          volumen: pgdata
-  api:       build apps/api       multi-stage, node:22-alpine
+  api:       build apps/api       multi-stage: oven/bun instala y construye,
+                                  node:22-alpine ejecuta (Bloque 0, D-01)
   storage:   minio/minio          volumen: miniodata
   web:       build apps/web       nginx sirviendo el build de Vite
   proxy:     nginx:alpine         puerto 80/443 · solo en local; en el VPS lo

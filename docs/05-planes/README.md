@@ -3,7 +3,7 @@ title: "Planes de implementación"
 type: moc
 tags: [moc, planes]
 estado: vigente
-actualizado: 2026-08-20
+actualizado: 2026-09-28
 ---
 
 # Planes de implementación
@@ -37,7 +37,7 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 
 | Bloque | Especificación | Plan | Estado |
 |---|---|---|---|
-| 0 · Cimientos | pendiente | pendiente | ⬜ |
+| 0 · Cimientos | [aprobada](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md) | [aprobado](2026-09-28-bloque-0-cimientos.md) | 🟡 en curso |
 | 1 · Red | pendiente | pendiente | ⬜ |
 | 2 · Inventario | pendiente | pendiente | ⬜ |
 | 3 · Custodia | pendiente | pendiente | ⬜ |
