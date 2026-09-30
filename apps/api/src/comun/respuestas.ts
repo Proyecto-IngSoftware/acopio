@@ -200,3 +200,36 @@ export class EntidadDto extends createZodDto(
     verificacion: z.enum(['SIN_VERIFICAR', 'VERIFICADA', 'RECHAZADA']),
   }),
 ) {}
+
+const tramo = z.object({ abre: z.string(), cierra: z.string() });
+const horario = z.object({
+  dom: z.array(tramo),
+  lun: z.array(tramo),
+  mar: z.array(tramo),
+  mie: z.array(tramo),
+  jue: z.array(tramo),
+  vie: z.array(tramo),
+  sab: z.array(tramo),
+});
+const estadoAcopio = z.enum(['ACTIVO', 'PAUSADO', 'CERRADO']);
+
+export class AcopioPublicoDto extends createZodDto(
+  z.object({
+    id: z.uuid(),
+    nombre: z.string(),
+    entidad: z.object({ id: z.uuid(), nombre: z.string() }),
+    direccion: z.string(),
+    municipio: z.string(),
+    lat: z.number(),
+    lng: z.number(),
+    telefono: z.string().nullable(),
+    indicacionesAcceso: z.string().nullable(),
+    horario,
+    estado: estadoAcopio,
+    abiertoAhora: z.boolean(),
+    actualizadoEn: fecha,
+    distanciaKm: z.number().optional(),
+  }),
+) {}
+
+export class AcopioDto extends createZodDto(AcopioPublicoDto.schema.extend({ creadoEn: fecha })) {}

@@ -1,6 +1,9 @@
 import {
   ACOPIO_A,
+  ACOPIO_B,
   ADMIN,
+  ENTIDAD_PRUEBA,
+  HORARIO_PRUEBA,
   crearAppPrueba,
   crearUsuarioActivo,
   iniciarSesion,
@@ -76,6 +79,151 @@ describe('red', () => {
         .get('/api/entidades')
         .set({ authorization: `Bearer ${op.token}` })
         .expect(403);
+    });
+  });
+
+  describe('acopios (RF-RED-001, RF-RED-002, RF-RED-003)', () => {
+    const nuevo = (extra: Record<string, unknown> = {}) => ({
+      entidadId: ENTIDAD_PRUEBA,
+      nombre: unico('Acopio '),
+      direccion: 'Carrera 7 # 40-62',
+      municipio: 'Bogotá',
+      lat: 4.628,
+      lng: -74.064,
+      horario: HORARIO_PRUEBA,
+      ...extra,
+    });
+
+    it('el Administrador crea un acopio y el público lo ve', async () => {
+      const r = await a.http().post('/api/acopios').set(comoAdmin()).send(nuevo()).expect(201);
+      expect(r.body).toMatchObject({ estado: 'ACTIVO', entidad: { id: ENTIDAD_PRUEBA } });
+      const publico = await a.http().get(`/api/acopios/${r.body.id}`).expect(200);
+      expect(publico.body).toMatchObject({ nombre: r.body.nombre, lat: 4.628 });
+      expect(typeof publico.body.abiertoAhora).toBe('boolean');
+    });
+
+    it('un horario que cierra a las 24:00 da 422 con el detalle', async () => {
+      const r = await a
+        .http()
+        .post('/api/acopios')
+        .set(comoAdmin())
+        .send(nuevo({ horario: { ...HORARIO_PRUEBA, lun: [{ abre: '08:00', cierra: '24:00' }] } }))
+        .expect(422);
+      expect(r.body.codigo).toBe('HORARIO_INVALIDO');
+      expect(r.body.mensaje).toContain('24:00');
+    });
+
+    it('coordenadas fuera de Colombia: 400', async () => {
+      await a
+        .http()
+        .post('/api/acopios')
+        .set(comoAdmin())
+        .send(nuevo({ lat: 40 }))
+        .expect(400);
+    });
+
+    it('un acopio cerrado no aparece en lo público y su ficha da 404', async () => {
+      const r = await a.http().post('/api/acopios').set(comoAdmin()).send(nuevo()).expect(201);
+      await a
+        .http()
+        .patch(`/api/acopios/${r.body.id}`)
+        .set(comoAdmin())
+        .send({ estado: 'CERRADO' })
+        .expect(200);
+      const lista = await a.http().get('/api/acopios').expect(200);
+      expect((lista.body as { id: string }[]).map((x) => x.id)).not.toContain(r.body.id);
+      await a.http().get(`/api/acopios/${r.body.id}`).expect(404);
+    });
+
+    it('?abiertoAhora=true deja fuera un acopio sin horario', async () => {
+      const r = await a
+        .http()
+        .post('/api/acopios')
+        .set(comoAdmin())
+        .send(nuevo({ horario: { dom: [], lun: [], mar: [], mie: [], jue: [], vie: [], sab: [] } }))
+        .expect(201);
+      const abiertos = await a.http().get('/api/acopios?abiertoAhora=true').expect(200);
+      expect((abiertos.body as { id: string }[]).map((x) => x.id)).not.toContain(r.body.id);
+      const todos = await a.http().get('/api/acopios').expect(200);
+      expect((todos.body as { id: string }[]).map((x) => x.id)).toContain(r.body.id);
+    });
+
+    it('?cerca= ordena por distancia y ?cerca= mal escrito da 400', async () => {
+      const r = await a.http().get('/api/acopios?cerca=4.70,-74.05').expect(200);
+      const ids = (r.body as { id: string }[]).map((x) => x.id);
+      expect(ids.indexOf(ACOPIO_B)).toBeLessThan(ids.indexOf(ACOPIO_A));
+      await a.http().get('/api/acopios?cerca=abc').expect(400);
+      await a.http().get('/api/acopios?cerca=200,5').expect(400);
+    });
+
+    describe('operación por el Operador asignado (B-03)', () => {
+      let op: { token: string };
+      const comoOp = () => ({ authorization: `Bearer ${op.token}` });
+
+      beforeAll(async () => {
+        op = await crearUsuarioActivo(a, tokenAdmin, {
+          rol: 'OPERADOR',
+          asignaciones: [{ tipo: 'ACOPIO', ubicacionId: ACOPIO_A }],
+        });
+      });
+
+      it('pausa su acopio; queda PAUSADO en lo público y en la bitácora', async () => {
+        await a
+          .http()
+          .patch(`/api/acopios/${ACOPIO_A}/operacion`)
+          .set(comoOp())
+          .send({ estado: 'PAUSADO', indicacionesAcceso: 'Entrar por la puerta lateral' })
+          .expect(200);
+        const r = await a.http().get(`/api/acopios/${ACOPIO_A}`).expect(200);
+        expect(r.body).toMatchObject({
+          estado: 'PAUSADO',
+          indicacionesAcceso: 'Entrar por la puerta lateral',
+        });
+        const b = await a.prisma.bitacora.findFirst({
+          where: { entidad_id: ACOPIO_A, accion: 'acopio.operado' },
+          orderBy: { ocurrido_en: 'desc' },
+        });
+        expect(b?.ubicacion_id).toBe(ACOPIO_A);
+        await a
+          .http()
+          .patch(`/api/acopios/${ACOPIO_A}/operacion`)
+          .set(comoOp())
+          .send({ estado: 'ACTIVO' })
+          .expect(200);
+      });
+
+      it('con un acopio ajeno recibe 403', async () => {
+        await a
+          .http()
+          .patch(`/api/acopios/${ACOPIO_B}/operacion`)
+          .set(comoOp())
+          .send({ estado: 'PAUSADO' })
+          .expect(403);
+      });
+
+      it('no puede usar la ruta del Administrador ni cerrar por la de operación', async () => {
+        await a
+          .http()
+          .patch(`/api/acopios/${ACOPIO_A}`)
+          .set(comoOp())
+          .send({ nombre: 'Otro' })
+          .expect(403);
+        await a
+          .http()
+          .patch(`/api/acopios/${ACOPIO_A}/operacion`)
+          .set(comoOp())
+          .send({ estado: 'CERRADO' })
+          .expect(400);
+        const r = await a.http().get(`/api/acopios/${ACOPIO_A}`).expect(200);
+        expect(r.body).toMatchObject({ nombre: 'Acopio A', estado: 'ACTIVO' });
+      });
+
+      it('en la gestión ve solo los suyos; el Administrador ve todos, cerrados incluidos', async () => {
+        const suyos = await a.http().get('/api/acopios/gestion').set(comoOp()).expect(200);
+        expect((suyos.body as { id: string }[]).map((x) => x.id)).toEqual([ACOPIO_A]);
+        const todos = await a.http().get('/api/acopios/gestion').set(comoAdmin()).expect(200);
+        expect((todos.body as { estado: string }[]).some((x) => x.estado === 'CERRADO')).toBe(true);
+      });
     });
   });
 });

@@ -32,6 +32,16 @@ export class AlcanceService {
     return asignacion !== null;
   }
 
+  /** Ubicaciones de ese tipo asignadas al usuario. `null` para el Administrador: todas. */
+  async idsAsignados(usuario: UsuarioAutenticado, tipo: TipoUbicacion): Promise<string[] | null> {
+    if (usuario.rol === 'ADMIN') return null;
+    const filas = await this.prisma.usuarioAsignacion.findMany({
+      where: { usuario_id: usuario.id, ubicacion_tipo: tipo },
+      select: { ubicacion_id: true },
+    });
+    return filas.map((f) => f.ubicacion_id);
+  }
+
   async exigir(usuario: UsuarioAutenticado, tipo: TipoUbicacion, ubicacionId: string) {
     if (!(await this.puede(usuario, tipo, ubicacionId))) {
       throw new ForbiddenException('No tienes asignada esta ubicación');
