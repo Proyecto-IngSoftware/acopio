@@ -25,7 +25,7 @@ it('la cabecera lleva a Entrar', async () => {
   expect(await screen.findByRole('link', { name: 'Entrar' })).toHaveAttribute('href', '/entrar');
 });
 
-it.each(['/mapa', '/causas', '/voluntariado', '/mas'])(
+it.each(['/mapa', '/causas', '/voluntariado', '/proximamente'])(
   '%s muestra «Próximamente» con un enlace de vuelta',
   (ruta) => {
     render(envolver(<Rutas />, ruta));
