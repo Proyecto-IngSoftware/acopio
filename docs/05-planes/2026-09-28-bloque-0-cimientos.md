@@ -4,7 +4,7 @@ type: plan
 tags: [plan, bloque-0]
 estado: vigente
 bloque: 0
-actualizado: 2026-09-28
+actualizado: 2026-09-30
 ---
 
 # Bloque 0 · Cimientos — plan de implementación
@@ -30,7 +30,7 @@ Lo que cambió al construir está en la
 | Tarea | Estado | Qué falta |
 |---|---|---|
 | T01 Monorepo | ✅ | — |
-| T02 Docker Compose | ✅ | Que cada integrante lo levante en su equipo ([#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27)). Almacenamiento: Garage en lugar de MinIO ([ADR-0012](../02-arquitectura/adr/ADR-0012-almacenamiento-garage.md)); la primera vez, `bun run almacenamiento:iniciar`. Probado el 2026-09-30 en el equipo de Joseph: servicios sanos, migraciones, seed dos veces, invitación en Mailpit, canje y login. El 5432 estaba ocupado por un PostgreSQL local, de ahí `DB_PUERTO` ([despliegue](../06-operacion/despliegue.md#perfil-de-desarrollo)) |
+| T02 Docker Compose | ✅ | Nada. La prueba en los cuatro equipos deja de exigirse el 2026-09-30, porque solo Joseph está trabajando en el proyecto; [#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27) se cerró con la prueba en su equipo. Almacenamiento: Garage en lugar de MinIO ([ADR-0012](../02-arquitectura/adr/ADR-0012-almacenamiento-garage.md)); la primera vez, `bun run almacenamiento:iniciar`. Probado el 2026-09-30 en el equipo de Joseph: servicios sanos, migraciones, seed dos veces, invitación en Mailpit, canje y login. El 5432 estaba ocupado por un PostgreSQL local, de ahí `DB_PUERTO` ([despliegue](../06-operacion/despliegue.md#perfil-de-desarrollo)) |
 | T03 Prisma y migración | ✅ | — |
 | T04 Esqueleto de la API | ✅ | — |
 | T05 Integración continua | ✅ escrita | Verla en verde en el primer PR |
@@ -43,7 +43,7 @@ Lo que cambió al construir está en la
 | T12 Seed | ✅ | La canasta se cargó con la fuente marcada «por verificar» ([#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20)) |
 | T13 a T16 Interfaz | ➡️ Stitch | Se trabajan con Google Stitch sobre el [contrato de la API](../03-diseno/api/README.md) |
 | T17 Concurrencia | ✅ | La prueba del saldo se suma en el Bloque 2 |
-| T18 Revisión de salida | ⬜ | Con la interfaz y el Compose en los cuatro equipos |
+| T18 Revisión de salida | ⬜ | Con la interfaz. Falta también el barrido de secretos (RNF-08) que pedía #27: va antes del primer despliegue |
 
 ## Orden y dependencias
 
