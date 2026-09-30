@@ -1,10 +1,12 @@
 import { Route, Routes } from 'react-router';
+import { Entrar } from './acceso/Entrar';
+import { MarcoAcceso } from './portal/MarcoAcceso';
 import { MarcoPortal } from './portal/MarcoPortal';
 import { NoEncontrada } from './portal/NoEncontrada';
 import { Portada } from './portal/Portada';
 import { Proximamente } from './portal/Proximamente';
 
-const SIN_CONSTRUIR = ['mapa', 'causas', 'voluntariado', 'mas', 'entrar'];
+const SIN_CONSTRUIR = ['mapa', 'causas', 'voluntariado', 'mas'];
 
 /** /consola/* queda reservado para el ciclo 2. */
 export function Rutas() {
@@ -16,6 +18,9 @@ export function Rutas() {
           <Route key={ruta} path={ruta} element={<Proximamente />} />
         ))}
         <Route path="*" element={<NoEncontrada />} />
+      </Route>
+      <Route element={<MarcoAcceso />}>
+        <Route path="entrar" element={<Entrar />} />
       </Route>
     </Routes>
   );
