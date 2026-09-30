@@ -14,7 +14,8 @@ actualizado: 2026-09-30
 | Pantalla | `1ca5f216464a455bba243f9cdc2aff1f`, con el tema «Acopio · sistema de diseño» (`assets/3694704229522762996`) |
 | Exportada | 2026-09-30 |
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
-| Maqueta | [maqueta.html](maqueta.html), publicada en <https://claude.ai/artifact/ApPwoi6unvrLvo3DKsene2> |
+| Maqueta | [maqueta.html](maqueta.html), publicada en <https://claude.ai/artifact/ApPwoi6unvrLvo3DKsene2>. Aprobada por Joseph el 2026-09-30 |
+| Construida | [construida.png](construida.png), la Portada de `apps/web` a 360 px con dos emergencias reales |
 | Versión anterior | [antes/](antes/): pantalla `3c2359b7032a4987a0858b3f73ce65d4`, con el tema «Acopio Field Command», que usaba rojo como color secundario |
 
 `pantalla.html` y `maqueta.html` son referencia. `apps/web` no los importa: la Portada

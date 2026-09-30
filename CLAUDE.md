@@ -19,6 +19,7 @@ bun run almacenamiento:iniciar            # la primera vez: llave y bucket de Ga
 bun run --filter @acopio/api db:migrar
 bun run --filter @acopio/api seed         # idempotente
 bun run --filter @acopio/api start:dev    # API con recarga en localhost:3000/api
+bun run --filter @acopio/web dev          # web en localhost:5173
 
 bun run lint                              # ESLint y Prettier
 bun run typecheck
@@ -26,6 +27,7 @@ bun run test                              # unitarias
 bun run test:int                          # integración, necesita PostgreSQL
 bun run --filter @acopio/api depcruise    # límites entre módulos
 bun run --filter @acopio/api openapi      # regenera docs/03-diseno/api/openapi.json
+bun run --filter @acopio/web api:tipos    # regenera los tipos del cliente desde el contrato
 ```
 
 Una sola prueba, desde `apps/api`:
@@ -35,7 +37,9 @@ bunx jest src/config/entorno.test.ts -t 'parte del nombre'
 bunx jest -c jest.int.config.cjs --runInBand src/pruebas-integracion/catalogo.int.test.ts
 ```
 
-Las pruebas de integración crean y borran la base `acopio_test` en el servidor de `PRUEBAS_PG_URL` (por defecto `postgresql://acopio_owner:acopio@localhost:5432`). Con el Compose local hay que pasar la contraseña y el puerto del `.env`.
+Las pruebas de integración crean y borran la base `acopio_test` en el servidor de `PRUEBAS_PG_URL` (por defecto `postgresql://acopio_owner:acopio@localhost:5432`), y le cambian la contraseña al rol `acopio_app` de ese servidor. Por eso no se corren contra el PostgreSQL del Compose: la API del Compose deja de autenticarse. Se usa un contenedor aparte, por ejemplo `docker run -d --rm --name acopio-pg-pruebas -e POSTGRES_USER=acopio_owner -e POSTGRES_PASSWORD=acopio -e POSTGRES_DB=postgres -p 127.0.0.1:5439:5432 postgres:16-alpine` con `PRUEBAS_PG_URL=postgresql://acopio_owner:acopio@127.0.0.1:5439`. Si ya pasó, se arregla con `ALTER ROLE acopio_app PASSWORD '<APP_DB_PASSWORD del .env>'`.
+
+Las pruebas de la web corren con Vitest (`bun run --filter @acopio/web test`); una sola: `cd apps/web && bunx vitest run src/portal/Portada.test.tsx -t 'parte del nombre'`.
 
 Si el 5432 está ocupado por un PostgreSQL del equipo, cambiar `DB_PUERTO` en `.env` y usar el mismo puerto en `DATABASE_URL` y `DATABASE_URL_OWNER`.
 
@@ -49,7 +53,8 @@ Monorepo con workspaces de Bun:
 - `packages/shared`: funciones puras que usan la API y el frontend (formato, unidades, y más adelante las fórmulas del motor).
 - `prisma/`: esquema y migraciones, en la raíz. `apps/api/prisma.config.ts` apunta allá y carga el `.env` de la raíz.
 - `infra/`: `docker-compose.yml` es la base de producción; `docker-compose.dev.yml` añade puertos, Mailpit y el login local.
-- `apps/web` y `packages/ui-tokens` todavía no existen. La interfaz se diseña en Google Stitch y se adapta a React, Vite y Tailwind (ADR-0011).
+- `apps/web`: SPA con Vite, React, React Router, TanStack Query y Tailwind 4. Las pantallas se diseñan en Google Stitch y se reescriben con componentes propios (ADR-0011). El cliente de la API se tipa desde el contrato OpenAPI (`src/api/esquema.d.ts`, generado).
+- `packages/ui-tokens`: el único lugar con colores. Tokens del tema de Stitch con sus mismos nombres, así las clases del HTML de Stitch (`bg-primary-container`, `text-body-md`, `p-space-md`) funcionan en `apps/web` (ADR-0013).
 
 ### Módulos de la API
 
@@ -68,8 +73,9 @@ Quién puede importar a quién está en la tabla «Dependencias permitidas» de 
 - El saldo de inventario se deriva de los movimientos, no se guarda (ADR-0002).
 - El cliente de Prisma se genera en `apps/api/src/generado/` y no se versiona. Los scripts `typecheck`, `test` y `test:int` lo regeneran.
 - Los errores salen con un solo formato (`estado`, `codigo`, `mensaje`) desde `comun/errores`.
-- Si cambia un endpoint, se regenera el contrato con `openapi` y se versiona: el frontend trabaja contra `docs/03-diseno/api/`.
-- En `apps/web` no se escriben colores hexadecimales. Salen de `packages/ui-tokens` y CI lo revisa (ADR-0006).
+- Si cambia un endpoint, se regenera el contrato con `openapi`, luego los tipos de la web con `api:tipos`, y se versionan los dos.
+- En `apps/web` no se escriben colores hexadecimales. Salen de `packages/ui-tokens` y CI lo revisa. La estética la fija el diseño de Stitch (ADR-0013); cuando la bóveda y Stitch no coinciden, se alinea la bóveda.
+- Cada pantalla guarda su diseño en `docs/03-diseno/stitch/<código>-<nombre>/`: captura, HTML de Stitch, maqueta aprobada y nota con las diferencias. No se escribe código de una pantalla sin la maqueta aprobada por Joseph.
 
 ### Versiones fijadas a propósito
 
@@ -116,4 +122,4 @@ Al terminar una sesión, dejar el estado escrito donde el equipo lo lee:
 - Si apareció una decisión o un hueco, anotarlo en `pendientes.md` o en «Cambios al construir».
 - Comentar en el issue lo que se probó y lo que falta. Si una casilla solo depende de otro integrante, no bloquea el cierre: se cierra y el comentario dice qué quedó sin hacer y dónde quedó anotado.
 
-Un cambio se da por hecho cuando pasan `lint`, `typecheck`, `depcruise`, `test` y `test:int`. Si toca el Compose o el Dockerfile, además se levanta con `bun run servicios:todo`.
+Un cambio se da por hecho cuando pasan `lint`, `typecheck`, `depcruise`, `test`, `test:int` y `scripts/revisar-colores.sh`. Si toca el Compose o el Dockerfile, además se levanta con `bun run servicios:todo`.

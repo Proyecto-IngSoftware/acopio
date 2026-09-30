@@ -41,7 +41,7 @@ Lo que cambió al construir está en la
 | T10 Notificaciones | ✅ | La prueba con el SMTP del dominio (RTA-04) espera el dominio |
 | T11 API del catálogo | ✅ | — |
 | T12 Seed | ✅ | La canasta se cargó con la fuente marcada «por verificar» ([#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20)) |
-| T13 a T16 Interfaz | ➡️ Stitch | Se trabajan con Google Stitch sobre el [contrato de la API](../03-diseno/api/README.md) |
+| T13 a T16 Interfaz | 🟡 | Ciclo 1 hecho el 2026-09-30 ([plan](2026-09-30-interfaz-ciclo-1-portada.md)): tokens, esqueleto de `apps/web` y la Portada. Falta el ciclo 2: C01 Acceso y la consola (C02, C16, C17, C18) |
 | T17 Concurrencia | ✅ | La prueba del saldo se suma en el Bloque 2 |
 | T18 Revisión de salida | ⬜ | Con la interfaz. Falta también el barrido de secretos (RNF-08) que pedía #27: va antes del primer despliegue |
 

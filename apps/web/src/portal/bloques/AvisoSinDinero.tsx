@@ -17,7 +17,7 @@ export function AvisoSinDinero() {
           </p>
         </div>
       </div>
-      <p className="pt-space-xs text-[0.65rem] tracking-wider text-outline uppercase">
+      <p className="pt-space-xs text-[0.65rem] tracking-wider text-on-surface-variant uppercase">
         Cumplimiento Ley 1581 de 2012 de Protección de Datos Personales · República de Colombia
       </p>
     </footer>

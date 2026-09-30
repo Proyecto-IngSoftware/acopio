@@ -58,7 +58,8 @@ Nada se decide en un chat que nadie vuelve a leer.
 
 ```
 apps/api        NestJS · dominio y API REST                      ✔
-apps/web        React + Vite · interfaz con Google Stitch        pendiente
+apps/web        React + Vite · interfaz con Google Stitch        Portada ✔
+packages/ui-tokens tokens del tema de Stitch                      ✔
 packages/shared reglas puras compartidas                         ✔
 infra           docker-compose                                   ✔ (nginx llega con la web)
 prisma          esquema y migraciones                            ✔
@@ -78,6 +79,7 @@ bun run almacenamiento:iniciar                # la primera vez: bucket privado d
 bun run --filter @acopio/api db:migrar        # esquema de la base
 bun run --filter @acopio/api seed             # catálogo, canasta y primer administrador
 bun run --filter @acopio/api start:dev        # API en http://localhost:3000/api
+bun run --filter @acopio/web dev              # web en http://localhost:5173
 ```
 
 | Comando | Qué hace |

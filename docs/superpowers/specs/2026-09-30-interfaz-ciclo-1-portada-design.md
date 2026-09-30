@@ -219,15 +219,31 @@ máximo de cuatro que fija el sistema de diseño (§6) habla de la consola.
 
 ## 11. Criterios de salida
 
-- [ ] El tema del proyecto en Stitch usa la paleta del sistema de diseño
-- [ ] `docs/03-diseno/stitch/P01-portada/` tiene captura, HTML y nota
-- [ ] `bun install && bun run --filter @acopio/web dev` levanta la Portada en un clon limpio
-- [ ] La Portada muestra las emergencias de la API sin iniciar sesión
-- [ ] Los estados vacíos se leen y ninguno muestra datos inventados
-- [ ] `bun run lint`, `typecheck`, `test` y `test:int` pasan, con `apps/web` incluido
-- [ ] `scripts/revisar-colores.sh` revisa `apps/web` y pasa
-- [ ] axe-core sin violaciones críticas ni serias en la Portada
+- [x] ~~El tema del proyecto en Stitch usa la paleta del sistema de diseño~~ Cambió con
+      I-03: el sistema de diseño se alineó al tema de Stitch (ADR-0013)
+- [x] `docs/03-diseno/stitch/P01-portada/` tiene captura, HTML, maqueta y nota
+- [x] `bun install && bun run --filter @acopio/web dev` levanta la Portada
+- [x] La Portada muestra las emergencias de la API sin iniciar sesión
+- [x] Los estados vacíos se leen y ninguno muestra datos inventados
+- [x] `bun run lint`, `typecheck`, `test` y `test:int` pasan, con `apps/web` incluido
+- [x] `scripts/revisar-colores.sh` revisa `apps/web` y pasa
+- [x] axe-core sin violaciones críticas ni serias en la Portada, en el navegador a 360 × 640
 - [ ] El CI de `main` queda en verde
+
+### Cambios al construir
+
+| Qué | Por qué |
+|---|---|
+| Manda el diseño de Stitch y no la paleta de la bóveda (I-03, ADR-0013) | La Portada con la paleta de la bóveda no convenció |
+| Los tokens llevan los nombres de Stitch | El marcado de Stitch pasa a código sin traducir clases |
+| Íconos de Material Symbols desde Google Fonts, con `icon_names` | Son los del diseño; el parámetro baja solo los que se usan |
+| `VITE_API_URL` es el origen sin `/api` | Las rutas del contrato ya lo traen |
+| El GET de emergencias lleva `@ApiOperation({ security: [] })` además de `@Publico()` | El `@ApiBearerAuth` del controlador lo marcaba como protegido en el contrato |
+| El distintivo de estado del inventario no se construyó | Ningún bloque del ciclo lo usa. La escala de estados sigue por aprobar (ADR-0013) |
+| La cabecera no muestra «Sincronizado» | El portal no sincroniza nada; afirmaría algo falso |
+| El campo de folio lleva `aria-label` | El diseño no tenía etiqueta y axe lo marca como grave |
+| La línea de la Ley 1581 usa `on-surface-variant` en vez de `outline` | Con `outline` no llegaba al contraste AA |
+| El bundle de producción pesa 163 kB comprimido | Queda por revisar contra RF-HOM-001 (3 s en 3G) |
 
 ## 12. Riesgos
 
