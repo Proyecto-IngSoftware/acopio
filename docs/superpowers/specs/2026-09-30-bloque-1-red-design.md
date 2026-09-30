@@ -91,6 +91,7 @@ Tomadas por Joseph el 2026-09-30.
 | B-05 | `identidad` valida las ubicaciones de una asignación por un puerto, `VerificadorUbicaciones`, que implementa `acopios` | Que `identidad` importe `acopios`: la tabla de dependencias no lo permite |
 | B-06 | «No recibir» va en su propia tabla, no como columnas de `umbral` | Columnas en `umbral`: su mínimo y su máximo no existen todavía, y `umbral` también aplica a zonas, donde «no recibir» no tiene sentido |
 | B-07 | La matriz de acceso (RF-IDE-011) entra en el ciclo 2 de la interfaz. La web la arma con `GET /usuarios`, que ya trae asignaciones y restablecimientos pendientes, y con los nombres de `GET /ubicaciones`. El CSV se genera en el navegador | Un endpoint propio en `identidad`: necesitaría los nombres de las ubicaciones, que viven en `acopios`. Dejarla para otra especificación: todo lo que usa ya existe en el ciclo 2 |
+| B-08 | El buscador de ubicaciones de C16 (invitar y detalle) pasa del ciclo 2 al ciclo 1 | Desde el Bloque 1 la API rechaza ubicaciones que no existen; sin el buscador, invitar a un Operador a un acopio obliga a copiar su identificador a mano |
 
 B-07 cierra lo que el Bloque 0 dejó pendiente de RF-IDE-011. B-03 ajusta RF-RED-001, que daba toda la gestión al Administrador. B-06 cambia
 `modelo-datos.md`. Los dos se anotan en [P-033](../../01-requerimientos/pendientes.md).
@@ -217,6 +218,25 @@ Portada. La pestaña «Mapa» de la barra inferior deja de llevar a «Próximame
 C21 es un código nuevo: el catálogo de pantallas de la especificación general no tenía
 la gestión de acopios.
 
+### Flujo entre pantallas (aprobado el 2026-09-30)
+
+- Público: la pestaña «Mapa» y el botón «Donar en especie» de la Portada llevan a P5. De
+  P5 a P6 por el marcador o la lista. «Volver al mapa» conserva los filtros en la URL. Un
+  enlace compartido abre P6 directo. Un acopio cerrado muestra «Este acopio ya no está
+  activo» con el enlace al mapa.
+- Administrador: desde «Más», Acopios (C21), Entidades (C15) y Zonas (C9). Desde un
+  acopio de C21 se llega a su «No recibir» (C7). Si no hay entidades, el formulario de C21
+  ofrece «Crear entidad»; si no hay emergencias activas, C9 lleva a la pestaña de
+  emergencias de C18.
+- Operador: «Más» muestra una fila «Mi acopio» por cada acopio asignado, hasta que llegue
+  el selector del ciclo 2. De «Mi acopio» a su «No recibir».
+- Piezas compartidas: el editor de horario (C21 y Mi acopio), la etiqueta de estado
+  (acopio y zona), la tarjeta «No traigan» (C7, P5 y P6) y el mapa con pin que se
+  arrastra (C21 y C9).
+
+Los diseños aprobados, con sus diferencias, están en `docs/03-diseno/stitch/`: C15, C21,
+C09, mi-acopio, C07, P05 y P06.
+
 ### Cambios a lo que ya existe
 
 - **Selector de ubicación en la cabecera con sesión.** Muestra por nombre los acopios
@@ -238,9 +258,10 @@ la gestión de acopios.
 1. **API:** `acopios`, `inventario` con «no recibir», el puerto en `identidad`, el
    `seed:demo` y el contrato.
 2. **Interfaz, ciclo 1, pantallas nuevas:** primero las que cargan datos (C21, C15,
-   C9), después Mi acopio y C7, y al final P5 y P6.
-3. **Interfaz, ciclo 2, cambios a lo que ya existe:** el selector de la cabecera, el
-   buscador de ubicaciones en C16 y la matriz de acceso.
+   C9) y el buscador de ubicaciones de C16 (B-08), después Mi acopio y C7, y al final P5
+   y P6.
+3. **Interfaz, ciclo 2, cambios a lo que ya existe:** el selector de la cabecera y la
+   matriz de acceso.
 
 Cada ciclo de interfaz empieza pidiendo las maquetas en Stitch y termina con el
 recorrido en Chromium a 360 × 640.

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-background text-on-surface" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>P5 Mapa de acopios - Portal público</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Inter Font Family -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-fixed-dim": "#95d2c5",
+            "on-tertiary": "#ffffff",
+            "inverse-primary": "#95d2c5",
+            "on-surface": "#131b2e",
+            "on-error-container": "#93000a",
+            "outline": "#707976",
+            "secondary-fixed": "#ffdad3",
+            "on-secondary-container": "#fffbff",
+            "on-tertiary-container": "#ff9e47",
+            "primary-fixed": "#b0efe1",
+            "surface-container": "#eaedff",
+            "tertiary-fixed-dim": "#ffb77d",
+            "inverse-on-surface": "#eef0ff",
+            "on-tertiary-fixed-variant": "#6e3900",
+            "outline-variant": "#bfc9c5",
+            "surface-container-high": "#e2e7ff",
+            "on-primary-fixed-variant": "#085046",
+            "background": "#faf8ff",
+            "surface-variant": "#dae2fd",
+            "surface-tint": "#2a685d",
+            "primary": "#003730",
+            "on-error": "#ffffff",
+            "on-secondary-fixed-variant": "#8f1100",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f2f3ff",
+            "inverse-surface": "#283044",
+            "on-primary": "#ffffff",
+            "surface": "#faf8ff",
+            "secondary-fixed-dim": "#ffb4a6",
+            "on-secondary-fixed": "#3f0300",
+            "on-surface-variant": "#3f4946",
+            "surface-bright": "#faf8ff",
+            "secondary": "#b51d04",
+            "secondary-container": "#d9381e",
+            "primary-container": "#085046",
+            "tertiary-fixed": "#ffdcc3",
+            "tertiary-container": "#6e3900",
+            "tertiary": "#4d2600",
+            "on-primary-fixed": "#00201b",
+            "surface-dim": "#d2d9f4",
+            "on-background": "#131b2e",
+            "on-secondary": "#ffffff",
+            "error": "#ba1a1a",
+            "on-primary-container": "#83c1b4",
+            "surface-container-highest": "#dae2fd",
+            "error-container": "#ffdad6",
+            "on-tertiary-fixed": "#2f1500"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-xl": "2.5rem",
+            "space-lg": "1.5rem",
+            "gutter-desktop": "2rem",
+            "space-xs": "0.25rem",
+            "gutter-tablet": "1.5rem",
+            "space-md": "1rem",
+            "margin-tablet": "2rem",
+            "margin": "1rem",
+            "space-sm": "0.5rem",
+            "gutter": "1rem",
+            "margin-desktop": "3rem"
+          },
+          "fontFamily": {
+            "label-md": ["Inter"],
+            "headline-md": ["Inter"],
+            "label-metric": ["Inter"],
+            "body-md": ["Inter"],
+            "display-hero-mobile": ["Inter"],
+            "headline-lg": ["Inter"],
+            "headline-sm": ["Inter"],
+            "label-caps": ["Inter"],
+            "display-hero": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "body-sm": ["Inter"]
+          },
+          "fontSize": {
+            "label-md": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "headline-md": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-metric": ["1.25rem", { "lineHeight": "1.5rem", "letterSpacing": "0.02em", "fontWeight": "700" }],
+            "body-md": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "400" }],
+            "display-hero-mobile": ["2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg": ["2.25rem", { "lineHeight": "2.75rem", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "fontWeight": "600" }],
+            "label-caps": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.06em", "fontWeight": "700" }],
+            "display-hero": ["3rem", { "lineHeight": "3.5rem", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "body-lg": ["1.125rem", { "lineHeight": "1.75rem", "fontWeight": "400" }],
+            "headline-lg-mobile": ["1.625rem", { "lineHeight": "2.125rem", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "body-sm": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Estilos del Mapa Fiel a OSM Urbano */
+    .map-grid-pattern {
+      background-color: #f1f3f0;
+      background-image: 
+        linear-gradient(to right, #e2e8e0 1px, transparent 1px),
+        linear-gradient(to bottom, #e2e8e0 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .road-arterial {
+      background-color: #fef08a;
+      box-shadow: 0 0 0 1px #eab308;
+    }
+    .road-primary {
+      background-color: #ffffff;
+      box-shadow: 0 0 0 1px #cbd5e1;
+    }
+    .park-block {
+      background-color: #dcfce7;
+      border: 1px solid #bbf7d0;
+    }
+    .building-block {
+      background-color: #f1f5f9;
+      border: 1px solid #e2e8f0;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="h-full bg-slate-100 flex justify-center items-start antialiased selection:bg-primary-fixed-dim selection:text-primary">
+<!-- Mobile Viewport Container: 360px locked width for field tactical simulation -->
+<div class="w-full max-w-[360px] min-h-screen bg-surface flex flex-col relative shadow-xl overflow-x-hidden pb-16">
+<!-- 1. Cabecera Pública del Proyecto -->
+<header class="w-full h-14 bg-surface-container-lowest border-b border-outline-variant px-margin flex items-center justify-between sticky top-0 z-40">
+<!-- Marca -->
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="inventory_2">inventory_2</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm font-bold tracking-tight text-primary">Acopio</span>
+<span class="bg-primary-fixed text-on-primary-fixed font-label-caps text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wider">CO</span>
+</div>
+</div>
+<!-- Botón Ingreso / Login Operadores -->
+<a class="min-h-[38px] px-3 border border-outline-variant hover:border-primary text-primary bg-surface-container-lowest font-label-md text-label-md rounded-lg flex items-center gap-1.5 active:scale-95 transition-all" href="#login">
+<span class="material-symbols-outlined text-[18px]" data-icon="login">login</span>
+<span>Entrar</span>
+</a>
+</header>
+<!-- 2. Título y Propósito Claro -->
+<div class="px-margin pt-3 pb-2 bg-surface">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface tracking-tight font-bold">
+        Mapa de acopios
+      </h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant font-medium mt-0.5">
+        Antes de salir, revisa qué no reciben
+      </p>
+</div>
+<!-- 3. Búsqueda y Geolocalización -->
+<div class="px-margin py-1.5 flex items-center gap-2">
+<!-- Campo de búsqueda -->
+<div class="relative flex-1">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-[20px]" data-icon="search">search</span>
+</div>
+<input class="w-full h-12 pl-10 pr-3 bg-surface-container-lowest border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-none" placeholder="Buscar una dirección" type="text"/>
+</div>
+<!-- Botón Cerca de mí -->
+<button class="min-h-[48px] px-3.5 bg-surface-container-lowest border border-outline-variant hover:border-primary text-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-1.5 flex-shrink-0 active:scale-95 transition-all" title="Centrar en mi ubicación" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="my_location">my_location</span>
+<span class="hidden xs:inline">Cerca de mí</span>
+<span class="xs:hidden font-bold">Cerca</span>
+</button>
+</div>
+<!-- 4. Fila de Filtros en Píldoras -->
+<div class="w-full overflow-x-auto no-scrollbar px-margin py-2 flex items-center gap-2">
+<!-- Píldora Abierto Ahora (Activo) -->
+<button class="h-10 px-3.5 rounded-full border border-primary bg-primary text-on-primary font-label-md text-[13px] flex items-center gap-1.5 flex-shrink-0 shadow-sm active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[16px]" data-icon="check" data-weight="fill" style="font-variation-settings: 'FILL' 1;">check</span>
+<span>Abierto ahora</span>
+</button>
+<!-- Píldora "No recibe: Ropa" (Filtro Activo) -->
+<button class="h-10 px-3.5 rounded-full border border-secondary-container bg-error-container text-on-error-container font-label-md text-[13px] flex items-center gap-1.5 flex-shrink-0 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="do_not_disturb_on">do_not_disturb_on</span>
+<span>No recibe: <strong>Ropa</strong></span>
+<span class="material-symbols-outlined text-[16px] ml-0.5" data-icon="close">close</span>
+</button>
+<!-- Píldora Con Cupos -->
+<button class="h-10 px-3.5 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface font-label-md text-[13px] flex items-center gap-1 flex-shrink-0 hover:border-outline active:scale-95 transition-transform">
+<span>Con cupos</span>
+</button>
+<!-- Píldora Todos -->
+<button class="h-10 px-3.5 rounded-full border border-outline-variant bg-surface-container-lowest text-on-surface-variant font-label-md text-[13px] flex items-center gap-1 flex-shrink-0 hover:border-outline active:scale-95 transition-transform">
+<span>Todos</span>
+</button>
+</div>
+<!-- 5. Control Segmentado de Vista (Mapa / Lista) -->
+<div class="px-margin py-1">
+<div class="w-full h-10 p-1 bg-surface-container-high rounded-lg flex items-center border border-outline-variant/50">
+<button class="flex-1 h-full rounded bg-primary-container text-on-primary font-label-md text-label-md flex items-center justify-center gap-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="map">map</span>
+<span>Mapa</span>
+</button>
+<button class="flex-1 h-full rounded text-on-surface-variant hover:text-on-surface font-label-md text-label-md flex items-center justify-center gap-1.5">
+<span class="material-symbols-outlined text-[18px]" data-icon="format_list_bulleted">format_list_bulleted</span>
+<span>Lista</span>
+</button>
+</div>
+</div>
+<!-- 6 & 7. Componente de Mapa de OpenStreetMap & Tarjeta Flotante Inferior -->
+<div class="relative w-full flex-1 min-h-[460px] map-grid-pattern overflow-hidden border-t border-outline-variant" data-location="Bogotá" style="">
+<!-- Representación visual realista de cartografía urbana (Bogotá - Chapinero/Teusaquillo) -->
+<div class="absolute inset-0 pointer-events-none">
+<!-- Vías principales (Caracas, Carrera 7, Calle 53, Calle 63) -->
+<div class="absolute top-0 bottom-0 left-[28%] w-5 road-arterial opacity-90 transform -rotate-2"></div>
+<div class="absolute top-0 bottom-0 right-[25%] w-6 road-primary transform -rotate-1"></div>
+<div class="absolute top-[28%] left-0 right-0 h-4 road-primary transform rotate-1"></div>
+<div class="absolute top-[62%] left-0 right-0 h-5 road-arterial opacity-90"></div>
+<!-- Manzanas y Parques urbanos -->
+<div class="absolute top-8 left-4 w-16 h-20 park-block rounded">
+<span class="text-[9px] font-bold text-emerald-800 p-1 block leading-tight">Parque Sucre</span>
+</div>
+<div class="absolute top-12 right-6 w-20 h-16 building-block rounded">
+<span class="text-[8px] font-semibold text-slate-500 p-1 block">Sector Teusaquillo</span>
+</div>
+<div class="absolute top-[42%] left-6 w-24 h-16 building-block rounded">
+<span class="text-[8px] font-semibold text-slate-500 p-1 block">Chapinero Central</span>
+</div>
+<div class="absolute top-[40%] right-5 w-20 h-24 park-block rounded">
+<span class="text-[9px] font-bold text-emerald-800 p-1 block leading-tight">Parque Portugal</span>
+</div>
+<!-- Nombres viales -->
+<span class="absolute top-[30%] left-16 text-[9px] font-bold text-slate-600 bg-white/80 px-1 rounded transform -rotate-1">Cl. 63</span>
+<span class="absolute top-[64%] left-24 text-[9px] font-bold text-slate-700 bg-yellow-100/90 px-1 rounded">Cl. 53 (Arterial)</span>
+<span class="absolute top-[15%] right-[22%] text-[9px] font-bold text-slate-600 bg-white/90 px-1 rounded rotate-90">Cra. 7ma</span>
+</div>
+<!-- Marcador Acopio 1: SELECCIONADO (Verde Primario #085046 con halo y pulso) -->
+<div class="absolute top-[35%] right-[24%] transform -translate-x-1/2 -translate-y-full z-20 cursor-pointer">
+<div class="relative flex flex-col items-center">
+<div class="bg-primary-container text-on-primary px-2.5 py-1.5 rounded-full shadow-lg border-2 border-white flex items-center gap-1">
+<span class="material-symbols-outlined text-[18px]" data-icon="warehouse" data-weight="fill" style="font-variation-settings: 'FILL' 1;">warehouse</span>
+<span class="font-label-caps text-[11px] text-white">Activo</span>
+</div>
+<!-- Pin pointer tip -->
+<div class="w-3 h-3 bg-primary-container transform rotate-45 -mt-1.5 border-r-2 border-b-2 border-white"></div>
+<div class="w-4 h-1.5 bg-black/25 rounded-full blur-[1px] mt-0.5"></div>
+</div>
+</div>
+<!-- Marcador Acopio 2: CLUSTER CIRCULAR (Verde primario con texto 3) -->
+<div class="absolute top-[18%] left-[22%] z-10 cursor-pointer">
+<div class="w-10 h-10 rounded-full bg-primary-container border-2 border-white text-on-primary font-label-metric text-[14px] flex items-center justify-center shadow-md active:scale-95 transition-transform">
+          3
+        </div>
+</div>
+<!-- Marcador Acopio 3: PAUSADO (Tono Grisáceo Slate #707976 con ícono pausa) -->
+<div class="absolute top-[68%] left-[16%] z-10 cursor-pointer">
+<div class="relative flex flex-col items-center">
+<div class="bg-outline text-white px-2 py-1 rounded-full shadow-md border-2 border-white flex items-center gap-1 opacity-90">
+<span class="material-symbols-outlined text-[15px]" data-icon="pause">pause</span>
+<span class="font-label-caps text-[10px]">Pausado</span>
+</div>
+<div class="w-2.5 h-2.5 bg-outline transform rotate-45 -mt-1 border-r-2 border-b-2 border-white"></div>
+</div>
+</div>
+<!-- Controles de Zoom Táctiles (+ y -) -->
+<div class="absolute top-3 right-3 z-30 flex flex-col gap-1 shadow-md rounded-lg overflow-hidden border border-slate-300">
+<button class="w-11 h-11 bg-surface-container-lowest text-on-surface hover:bg-slate-50 flex items-center justify-center font-bold text-lg active:bg-slate-200" title="Aumentar zoom">
+<span class="material-symbols-outlined text-[20px]" data-icon="add">add</span>
+</button>
+<div class="h-[1px] bg-slate-200"></div>
+<button class="w-11 h-11 bg-surface-container-lowest text-on-surface hover:bg-slate-50 flex items-center justify-center font-bold text-lg active:bg-slate-200" title="Disminuir zoom">
+<span class="material-symbols-outlined text-[20px]" data-icon="remove">remove</span>
+</button>
+</div>
+<!-- Atribución OpenStreetMap -->
+<div class="absolute bottom-1 right-1.5 z-10 bg-white/80 backdrop-blur-xs px-1.5 py-0.5 rounded text-[9px] text-slate-500 font-medium">
+        © <a class="hover:underline" href="https://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors
+      </div>
+<!-- 7. Tarjeta Flotante Inferior del Acopio Seleccionado -->
+<div class="absolute bottom-2 left-2 right-2 z-30">
+<div class="bg-surface-container-lowest border border-slate-300 rounded-xl p-3 shadow-lg flex flex-col gap-2.5">
+<!-- Encabezado de la tarjeta y Estado -->
+<div class="flex items-start justify-between gap-2">
+<div class="flex-1">
+<div class="flex items-center gap-1.5">
+<span class="inline-flex items-center gap-1 bg-[#F0FDF4] border border-[#BBF7D0] text-[#15803D] px-2 py-0.5 rounded font-label-caps text-[10px] tracking-wide">
+<span class="w-1.5 h-1.5 rounded-full bg-[#15803D]"></span>
+                  Abierto ahora · Cierra 17:00
+                </span>
+</div>
+<h2 class="font-headline-sm text-[16px] leading-tight font-bold text-on-surface mt-1">
+                Acopio Chapinero - Fundación Manos Unidas
+              </h2>
+</div>
+<!-- Distancia Badge -->
+<div class="flex items-center gap-0.5 text-primary font-label-md text-label-md flex-shrink-0 bg-primary-fixed/30 px-2 py-1 rounded-md">
+<span class="material-symbols-outlined text-[16px]" data-icon="near_me">near_me</span>
+<span>1,2 km</span>
+</div>
+</div>
+<!-- Dirección nítida -->
+<div class="flex items-center gap-1 text-on-surface-variant font-body-sm text-[13px]">
+<span class="material-symbols-outlined text-[16px] text-outline flex-shrink-0" data-icon="pin_drop">pin_drop</span>
+<span class="truncate">Carrera 7 # 63-40 · Bogotá D.C.</span>
+</div>
+<!-- Alerta Crítica de Saturación: NO TRAIGAN -->
+<div class="bg-[#FDF2F2] border-l-4 border-[#D9381E] border-y border-r border-[#FCA5A5]/60 rounded-r-lg p-2.5 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#B3261E] text-[20px] flex-shrink-0" data-icon="block">block</span>
+<div>
+<p class="font-label-caps text-[11px] text-[#B3261E] uppercase tracking-wider">Saturación crítica</p>
+<p class="font-label-md text-[13px] text-on-surface font-bold leading-none mt-0.5">No traigan: ropa</p>
+</div>
+</div>
+<span class="bg-[#FCA5A5]/40 text-[#B3261E] font-label-caps text-[10px] px-1.5 py-0.5 rounded font-semibold">Excedente</span>
+</div>
+<!-- Botón Principal de Acción: Ver Ficha -->
+<a class="w-full min-h-[48px] bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md rounded-lg flex items-center justify-center gap-2 active:scale-[0.98] transition-all shadow-sm" href="#ficha">
+<span>Ver ficha</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+<!-- 8. Barra Inferior Fija de Navegación (BottomNavBar 5 Destinos) -->
+<!-- Segun Shared Components JSON y Regla Activa: Mapa es el destino activo -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-space-xs max-w-md mx-auto bg-surface-container-lowest border-t border-outline-variant">
+<!-- 1. Inicio -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 hover:text-primary transition-colors duration-150 active:scale-95" href="#inicio">
+<span class="material-symbols-outlined text-[22px]" data-icon="home">home</span>
+<span class="font-label-caps text-[10px] mt-0.5">Inicio</span>
+</a>
+<!-- 2. Mapa -> ACTIVO -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary rounded-xl px-2.5 py-1 active:scale-95 transition-transform duration-100 shadow-sm" href="#mapa">
+<span class="material-symbols-outlined text-[22px]" data-icon="map" data-weight="fill" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-label-caps text-[10px] mt-0.5 font-bold tracking-wide">Mapa</span>
+</a>
+<!-- 3. Causas -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 hover:text-primary transition-colors duration-150 active:scale-95" href="#causas">
+<span class="material-symbols-outlined text-[22px]" data-icon="volunteer_activism">volunteer_activism</span>
+<span class="font-label-caps text-[10px] mt-0.5">Causas</span>
+</a>
+<!-- 4. Voluntariado -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 hover:text-primary transition-colors duration-150 active:scale-95" href="#voluntariado">
+<span class="material-symbols-outlined text-[22px]" data-icon="groups">groups</span>
+<span class="font-label-caps text-[10px] mt-0.5">Voluntariado</span>
+</a>
+<!-- 5. Más -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 hover:text-primary transition-colors duration-150 active:scale-95" href="#mas">
+<span class="material-symbols-outlined text-[22px]" data-icon="more_horiz">more_horiz</span>
+<span class="font-label-caps text-[10px] mt-0.5">Más</span>
+</a>
+</nav>
+</div>
+</body></html>

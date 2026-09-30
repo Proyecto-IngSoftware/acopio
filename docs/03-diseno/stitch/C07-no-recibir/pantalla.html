@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>C7 No recibir - Consola Acopio</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Inter Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-fixed-variant": "#6e3900",
+            "on-secondary-container": "#fffbff",
+            "on-secondary-fixed-variant": "#8f1100",
+            "inverse-on-surface": "#eef0ff",
+            "secondary-fixed-dim": "#ffb4a6",
+            "on-primary-container": "#83c1b4",
+            "surface-bright": "#faf8ff",
+            "on-tertiary-container": "#ff9e47",
+            "surface-tint": "#2a685d",
+            "error-container": "#ffdad6",
+            "on-primary-fixed": "#00201b",
+            "secondary-container": "#d9381e",
+            "background": "#faf8ff",
+            "tertiary-fixed": "#ffdcc3",
+            "surface-container": "#eaedff",
+            "surface": "#faf8ff",
+            "primary-container": "#085046",
+            "surface-container-highest": "#dae2fd",
+            "primary-fixed-dim": "#95d2c5",
+            "outline-variant": "#bfc9c5",
+            "inverse-primary": "#95d2c5",
+            "on-secondary-fixed": "#3f0300",
+            "on-tertiary": "#ffffff",
+            "on-primary-fixed-variant": "#085046",
+            "surface-dim": "#d2d9f4",
+            "on-error": "#ffffff",
+            "primary-fixed": "#b0efe1",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed-dim": "#ffb77d",
+            "on-surface-variant": "#3f4946",
+            "secondary": "#b51d04",
+            "on-error-container": "#93000a",
+            "on-tertiary-fixed": "#2f1500",
+            "on-primary": "#ffffff",
+            "on-background": "#131b2e",
+            "secondary-fixed": "#ffdad3",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f2f3ff",
+            "primary": "#003730",
+            "surface-container-high": "#e2e7ff",
+            "error": "#ba1a1a",
+            "outline": "#707976",
+            "surface-variant": "#dae2fd",
+            "inverse-surface": "#283044",
+            "tertiary-container": "#6e3900",
+            "tertiary": "#4d2600",
+            "on-surface": "#131b2e"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "space-xl": "2.5rem",
+            "space-md": "1rem",
+            "gutter-desktop": "2rem",
+            "space-lg": "1.5rem",
+            "space-xs": "0.25rem",
+            "margin-desktop": "3rem",
+            "gutter-tablet": "1.5rem",
+            "margin-tablet": "2rem",
+            "gutter": "1rem",
+            "margin": "1rem"
+          },
+          "fontFamily": {
+            "headline-lg-mobile": ["Inter"],
+            "display-hero-mobile": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-md": ["Inter"],
+            "label-caps": ["Inter"],
+            "headline-sm": ["Inter"],
+            "label-metric": ["Inter"],
+            "label-md": ["Inter"],
+            "display-hero": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-lg": ["Inter"]
+          },
+          "fontSize": {
+            "headline-lg-mobile": ["1.625rem", { "lineHeight": "2.125rem", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "display-hero-mobile": ["2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-md": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "400" }],
+            "headline-md": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "label-caps": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.06em", "fontWeight": "700" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "fontWeight": "600" }],
+            "label-metric": ["1.25rem", { "lineHeight": "1.5rem", "letterSpacing": "0.02em", "fontWeight": "700" }],
+            "label-md": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "display-hero": ["3rem", { "lineHeight": "3.5rem", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "body-lg": ["1.125rem", { "lineHeight": "1.75rem", "fontWeight": "400" }],
+            "body-sm": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "400" }],
+            "headline-lg": ["2.25rem", { "lineHeight": "2.75rem", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased font-body-md min-h-screen pb-20">
+<!-- Main Container Mobile Bound (360px default / max-w-md centered) -->
+<div class="max-w-md mx-auto min-h-screen bg-surface-container-lowest flex flex-col relative shadow-sm">
+<!-- 1. Cabecera con sesión compartida del proyecto -->
+<header class="flex justify-between items-center w-full px-margin h-14 bg-surface-container-lowest border-b border-outline-variant sticky top-0 z-40">
+<!-- Bloque de marca a la izquierda -->
+<div class="flex items-center space-x-2">
+<div class="flex items-center bg-primary-container text-on-primary rounded-lg px-2.5 py-1.5 shadow-sm">
+<span class="material-symbols-outlined text-[20px] mr-1.5 text-primary-fixed" data-icon="inventory_2">inventory_2</span>
+<span class="font-headline-sm text-headline-sm text-on-primary font-bold tracking-tight text-[1.125rem]">Acopio</span>
+</div>
+<span class="bg-primary-fixed text-on-primary-fixed font-label-caps text-label-caps px-1.5 py-0.5 rounded border border-primary-fixed-dim">CO</span>
+</div>
+<!-- Avatar a la derecha -->
+<div class="flex items-center">
+<div class="w-9 h-9 rounded-full bg-primary-container text-primary-fixed font-label-md text-label-md flex items-center justify-center border-2 border-primary-fixed-dim ring-1 ring-outline-variant font-bold shadow-sm" title="Avatar de usuario: Diana Méndez (DM)">
+          DM
+        </div>
+</div>
+</header>
+<!-- 2. Subcabecera de navegación -->
+<nav aria-label="Navegación secundaria" class="px-margin pt-3 pb-2.5 border-b border-outline-variant bg-surface-container-lowest">
+<div class="flex items-center space-x-2">
+<button aria-label="Volver a la consola principal" class="w-12 h-12 flex items-center justify-center rounded-lg text-primary hover:bg-surface-container active:scale-95 transition-all -ml-2" type="button">
+<span class="material-symbols-outlined text-[24px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex-1">
+<h1 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">No recibir</h1>
+<div class="flex items-center text-on-surface-variant font-body-sm text-body-sm mt-0.5">
+<span class="material-symbols-outlined text-[16px] mr-1 text-primary" data-icon="warehouse">warehouse</span>
+<span class="font-medium text-primary">Acopio Chapinero</span>
+<span class="mx-1.5 text-outline">·</span>
+<span class="text-outline font-label-caps text-[10px]">OPERATIVO</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- Canvas Principal -->
+<main class="flex-1 px-margin pt-4 pb-8 space-y-4">
+<!-- 3. Tarjeta de resumen de advertencia «No traigan» -->
+<section class="bg-error-container/30 border-l-4 border-secondary-container rounded-r-xl p-3.5 shadow-sm border border-outline-variant/50 border-l-secondary-container">
+<div class="flex items-start space-x-2.5">
+<span class="material-symbols-outlined text-secondary-container text-[24px] shrink-0 mt-0.5 fill-icon" data-icon="do_not_disturb_on">do_not_disturb_on</span>
+<div class="flex-1">
+<div class="flex items-center justify-between">
+<h2 class="font-label-caps text-label-caps text-secondary font-bold tracking-wider">NO TRAIGAN / BLOQUEADO</h2>
+<span class="bg-error-container text-on-error-container font-label-caps text-[10px] px-1.5 py-0.5 rounded font-bold border border-secondary-container/40">3 ACTIVOS</span>
+</div>
+<p class="font-body-sm text-body-sm font-bold text-on-surface mt-1">
+              Ropa usada · Agua embotellada · Colchonetas
+            </p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1.5 flex items-center gap-1 text-[13px]">
+<span class="material-symbols-outlined text-[15px] text-primary" data-icon="cell_tower">cell_tower</span>
+              Se publica de inmediato en el mapa y en la ficha del acopio.
+            </p>
+</div>
+</div>
+</section>
+<!-- 4. Buscador ágil de categorías -->
+<section class="relative">
+<label class="sr-only" for="buscar-categoria">Buscar categoría</label>
+<div class="relative flex items-center">
+<span class="material-symbols-outlined absolute left-3.5 text-outline text-[22px] pointer-events-none" data-icon="search">search</span>
+<input class="w-full h-12 pl-11 pr-4 bg-surface-container-lowest border-2 border-outline-variant rounded-xl text-on-surface font-body-md text-body-md placeholder-outline focus:outline-none focus:border-primary-container transition-colors shadow-sm" id="buscar-categoria" placeholder="Buscar categoría..." type="search"/>
+<button aria-label="Limpiar filtro" class="absolute right-2 w-9 h-9 flex items-center justify-center text-outline hover:text-on-surface" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+</button>
+</div>
+</section>
+<!-- 5. Lista estructurada de categorías agrupadas por sección -->
+<div class="space-y-5">
+<!-- GRUPO: AGUA Y BEBIDAS -->
+<section aria-labelledby="grupo-agua" class="space-y-2">
+<div class="flex items-center justify-between px-1">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant font-bold tracking-wider" id="grupo-agua">
+              AGUA Y BEBIDAS
+            </h3>
+<span class="text-[11px] font-label-caps text-secondary font-bold">1 BLOQUEO</span>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl divide-y divide-outline-variant overflow-hidden shadow-sm">
+<!-- Fila ACTIVADA (No recibir) -->
+<article class="p-3 transition-colors bg-error-container/15">
+<div class="flex items-center justify-between min-h-[48px]">
+<div class="flex-1 pr-2">
+<div class="flex items-center space-x-1.5">
+<span class="font-headline-sm text-[15px] font-semibold text-on-surface">Agua embotellada</span>
+<span class="bg-error-container text-secondary text-[10px] font-bold font-label-caps px-1 rounded">Lleno</span>
+</div>
+<p class="font-body-sm text-[12px] text-secondary font-medium">No se reciben botellas ni garrafas</p>
+</div>
+<!-- Toggle switch accesible (48x48 min) -->
+<button aria-checked="true" aria-label="Bloquear recepción de Agua embotellada" class="w-12 h-12 flex items-center justify-center shrink-0" role="switch" type="button">
+<div class="w-11 h-6 bg-secondary-container rounded-full relative p-0.5 transition-colors">
+<div class="w-5 h-5 bg-on-secondary rounded-full shadow-md transform translate-x-5 transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-container text-[14px] font-bold" data-icon="close">close</span>
+</div>
+</div>
+</button>
+</div>
+<!-- Sub-bloque desplegado para filas ACTIVADAS -->
+<div class="mt-2.5 pt-2.5 border-t border-error-container/60 bg-surface-container-lowest/80 rounded-lg p-2.5 border border-outline-variant/60">
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-[13px]">
+<span class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="timer">timer</span>
+                      No recibir hasta:
+                    </span>
+<span class="font-body-sm text-[12px] text-on-surface-variant font-medium bg-surface-container px-2 py-0.5 rounded">Sin fecha límite</span>
+</div>
+<button class="w-full h-9 flex items-center justify-between px-3 bg-surface-container text-on-surface rounded border border-outline-variant text-[13px] font-medium hover:bg-surface-container-high transition-colors" type="button">
+<span>Hasta que la desmarques</span>
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="calendar_month">calendar_month</span>
+</button>
+<div class="flex items-center text-[12px] text-on-surface-variant mt-0.5">
+<span class="material-symbols-outlined text-[15px] mr-1 text-outline" data-icon="schedule">schedule</span>
+<span>Marcado hace 2 h por <strong>Diana Méndez</strong></span>
+</div>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- GRUPO: ROPA Y ABRIGO -->
+<section aria-labelledby="grupo-ropa" class="space-y-2">
+<div class="flex items-center justify-between px-1">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant font-bold tracking-wider" id="grupo-ropa">
+              ROPA Y ABRIGO
+            </h3>
+<span class="text-[11px] font-label-caps text-secondary font-bold">2 BLOQUEOS</span>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl divide-y divide-outline-variant overflow-hidden shadow-sm">
+<!-- Fila ACTIVADA -->
+<article class="p-3 transition-colors bg-error-container/15">
+<div class="flex items-center justify-between min-h-[48px]">
+<div class="flex-1 pr-2">
+<div class="flex items-center space-x-1.5">
+<span class="font-headline-sm text-[15px] font-semibold text-on-surface">Ropa usada de adulto</span>
+<span class="bg-error-container text-secondary text-[10px] font-bold font-label-caps px-1 rounded">Saturado</span>
+</div>
+<p class="font-body-sm text-[12px] text-secondary font-medium">Capacidad de selección colapsada</p>
+</div>
+<button aria-checked="true" aria-label="Bloquear recepción de Ropa usada de adulto" class="w-12 h-12 flex items-center justify-center shrink-0" role="switch" type="button">
+<div class="w-11 h-6 bg-secondary-container rounded-full relative p-0.5 transition-colors">
+<div class="w-5 h-5 bg-on-secondary rounded-full shadow-md transform translate-x-5 transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-container text-[14px] font-bold" data-icon="close">close</span>
+</div>
+</div>
+</button>
+</div>
+<!-- Sub-bloque desplegado -->
+<div class="mt-2.5 pt-2.5 border-t border-error-container/60 bg-surface-container-lowest/80 rounded-lg p-2.5 border border-outline-variant/60">
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-[13px]">
+<span class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="timer">timer</span>
+                      No recibir hasta:
+                    </span>
+<span class="font-body-sm text-[12px] text-on-surface-variant font-medium bg-surface-container px-2 py-0.5 rounded">Sin fecha</span>
+</div>
+<button class="w-full h-9 flex items-center justify-between px-3 bg-surface-container text-on-surface rounded border border-outline-variant text-[13px] font-medium hover:bg-surface-container-high transition-colors" type="button">
+<span>Sin fecha: hasta que la desmarques</span>
+<span class="material-symbols-outlined text-[18px] text-outline" data-icon="calendar_month">calendar_month</span>
+</button>
+<div class="flex items-center text-[12px] text-on-surface-variant mt-0.5">
+<span class="material-symbols-outlined text-[15px] mr-1 text-outline" data-icon="person">person</span>
+<span>Marcado hace 4 h por <strong>Diana Méndez</strong></span>
+</div>
+</div>
+</div>
+</article>
+<!-- Fila ACTIVADA -->
+<article class="p-3 transition-colors bg-error-container/15">
+<div class="flex items-center justify-between min-h-[48px]">
+<div class="flex-1 pr-2">
+<div class="flex items-center space-x-1.5">
+<span class="font-headline-sm text-[15px] font-semibold text-on-surface">Colchonetas y cobijas</span>
+<span class="bg-error-container text-secondary text-[10px] font-bold font-label-caps px-1 rounded">Bodega llena</span>
+</div>
+<p class="font-body-sm text-[12px] text-secondary font-medium">Volumen máximo de estantería alcanzado</p>
+</div>
+<button aria-checked="true" aria-label="Bloquear recepción de Colchonetas y cobijas" class="w-12 h-12 flex items-center justify-center shrink-0" role="switch" type="button">
+<div class="w-11 h-6 bg-secondary-container rounded-full relative p-0.5 transition-colors">
+<div class="w-5 h-5 bg-on-secondary rounded-full shadow-md transform translate-x-5 transition-transform flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary-container text-[14px] font-bold" data-icon="close">close</span>
+</div>
+</div>
+</button>
+</div>
+<!-- Sub-bloque desplegado con fecha programada opcional -->
+<div class="mt-2.5 pt-2.5 border-t border-error-container/60 bg-surface-container-lowest/80 rounded-lg p-2.5 border border-outline-variant/60">
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between text-[13px]">
+<span class="font-label-md text-label-md text-on-surface font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="schedule">schedule</span>
+                      No recibir hasta:
+                    </span>
+<span class="font-body-sm text-[12px] text-secondary font-semibold bg-error-container px-2 py-0.5 rounded">Hasta mañana 08:00</span>
+</div>
+<button class="w-full h-9 flex items-center justify-between px-3 bg-surface-container text-on-surface rounded border border-outline-variant text-[13px] font-medium hover:bg-surface-container-high transition-colors" type="button">
+<span>Programado: 24 Oct, 08:00 AM</span>
+<span class="material-symbols-outlined text-[18px] text-primary" data-icon="edit_calendar">edit_calendar</span>
+</button>
+<div class="flex items-center text-[12px] text-on-surface-variant mt-0.5">
+<span class="material-symbols-outlined text-[15px] mr-1 text-outline" data-icon="person">person</span>
+<span>Marcado hace 1 h por <strong>Carlos Ruiz</strong></span>
+</div>
+</div>
+</div>
+</article>
+</div>
+</section>
+<!-- GRUPO: ALIMENTOS -->
+<section aria-labelledby="grupo-alimentos" class="space-y-2">
+<div class="flex items-center justify-between px-1">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant font-bold tracking-wider" id="grupo-alimentos">
+              ALIMENTOS
+            </h3>
+<span class="text-[11px] font-label-caps text-primary font-bold">RECIBIENDO NORMAL</span>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl divide-y divide-outline-variant overflow-hidden shadow-sm">
+<!-- Fila INACTIVA (Recibiendo normalmente) -->
+<article class="p-3 transition-colors bg-surface-container-lowest">
+<div class="flex items-center justify-between min-h-[48px]">
+<div class="flex-1 pr-2">
+<span class="font-headline-sm text-[15px] font-semibold text-on-surface">Arroz y granos no perecederos</span>
+<div class="flex items-center space-x-1.5 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<p class="font-body-sm text-[12px] text-on-surface-variant">Recibiendo normalmente · Prioridad media</p>
+</div>
+</div>
+<!-- Toggle switch apagado -->
+<button aria-checked="false" aria-label="Permitir recepción de Arroz y granos" class="w-12 h-12 flex items-center justify-center shrink-0" role="switch" type="button">
+<div class="w-11 h-6 bg-outline-variant rounded-full relative p-0.5 transition-colors">
+<div class="w-5 h-5 bg-surface-container-lowest rounded-full shadow-sm transform translate-x-0 transition-transform flex items-center justify-center">
+</div>
+</div>
+</button>
+</div>
+</article>
+<!-- Fila INACTIVA -->
+<article class="p-3 transition-colors bg-surface-container-lowest">
+<div class="flex items-center justify-between min-h-[48px]">
+<div class="flex-1 pr-2">
+<span class="font-headline-sm text-[15px] font-semibold text-on-surface">Enlatados de atún y sardinas</span>
+<div class="flex items-center space-x-1.5 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<p class="font-body-sm text-[12px] text-on-surface-variant">Recibiendo normalmente · Requerido urgente</p>
+</div>
+</div>
+<button aria-checked="false" aria-label="Permitir recepción de Enlatados" class="w-12 h-12 flex items-center justify-center shrink-0" role="switch" type="button">
+<div class="w-11 h-6 bg-outline-variant rounded-full relative p-0.5 transition-colors">
+<div class="w-5 h-5 bg-surface-container-lowest rounded-full shadow-sm transform translate-x-0 transition-transform flex items-center justify-center">
+</div>
+</div>
+</button>
+</div>
+</article>
+</div>
+</section>
+<!-- GRUPO: ASEO PERSONAL -->
+<section aria-labelledby="grupo-aseo" class="space-y-2">
+<div class="flex items-center justify-between px-1">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant font-bold tracking-wider" id="grupo-aseo">
+              ASEO PERSONAL
+            </h3>
+<span class="text-[11px] font-label-caps text-primary font-bold">RECIBIENDO NORMAL</span>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl divide-y divide-outline-variant overflow-hidden shadow-sm">
+<!-- Fila INACTIVA -->
+<article class="p-3 transition-colors bg-surface-container-lowest">
+<div class="flex items-center justify-between min-h-[48px]">
+<div class="flex-1 pr-2">
+<span class="font-headline-sm text-[15px] font-semibold text-on-surface">Jabón de baño y champú</span>
+<div class="flex items-center space-x-1.5 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<p class="font-body-sm text-[12px] text-on-surface-variant">Recibiendo normalmente</p>
+</div>
+</div>
+<button aria-checked="false" aria-label="Permitir recepción de Jabón de baño" class="w-12 h-12 flex items-center justify-center shrink-0" role="switch" type="button">
+<div class="w-11 h-6 bg-outline-variant rounded-full relative p-0.5 transition-colors">
+<div class="w-5 h-5 bg-surface-container-lowest rounded-full shadow-sm transform translate-x-0 transition-transform flex items-center justify-center">
+</div>
+</div>
+</button>
+</div>
+</article>
+<!-- Fila INACTIVA -->
+<article class="p-3 transition-colors bg-surface-container-lowest">
+<div class="flex items-center justify-between min-h-[48px]">
+<div class="flex-1 pr-2">
+<span class="font-headline-sm text-[15px] font-semibold text-on-surface">Pañales de adulto y niños</span>
+<div class="flex items-center space-x-1.5 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span>
+<p class="font-body-sm text-[12px] text-on-surface-variant">Recibiendo normalmente · Stock crítico</p>
+</div>
+</div>
+<button aria-checked="false" aria-label="Permitir recepción de Pañales" class="w-12 h-12 flex items-center justify-center shrink-0" role="switch" type="button">
+<div class="w-11 h-6 bg-outline-variant rounded-full relative p-0.5 transition-colors">
+<div class="w-5 h-5 bg-surface-container-lowest rounded-full shadow-sm transform translate-x-0 transition-transform flex items-center justify-center">
+</div>
+</div>
+</button>
+</div>
+</article>
+</div>
+</section>
+</div>
+</main>
+<!-- 6. Barra de navegación inferior fija (Bottom Navigation Bar) -->
+<nav aria-label="Navegación principal" class="fixed bottom-0 left-0 w-full z-50 bg-surface-container-lowest border-t border-outline-variant shadow-lg">
+<div class="max-w-md mx-auto h-16 px-1 flex justify-around items-center">
+<!-- Destino 1: Inicio -->
+<a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] text-on-surface-variant hover:text-primary active:scale-95 transition-all px-1 py-1" href="#inicio">
+<span class="material-symbols-outlined text-[24px]" data-icon="home">home</span>
+<span class="font-label-caps text-[10px] mt-0.5 leading-none">Inicio</span>
+</a>
+<!-- Destino 2: Mapa -->
+<a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] text-on-surface-variant hover:text-primary active:scale-95 transition-all px-1 py-1" href="#mapa">
+<span class="material-symbols-outlined text-[24px]" data-icon="map">map</span>
+<span class="font-label-caps text-[10px] mt-0.5 leading-none">Mapa</span>
+</a>
+<!-- Destino 3: Causas -->
+<a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] text-on-surface-variant hover:text-primary active:scale-95 transition-all px-1 py-1" href="#causas">
+<span class="material-symbols-outlined text-[24px]" data-icon="volunteer_activism">volunteer_activism</span>
+<span class="font-label-caps text-[10px] mt-0.5 leading-none">Causas</span>
+</a>
+<!-- Destino 4: Voluntariado -->
+<a class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] text-on-surface-variant hover:text-primary active:scale-95 transition-all px-1 py-1" href="#voluntariado">
+<span class="material-symbols-outlined text-[24px]" data-icon="groups">groups</span>
+<span class="font-label-caps text-[10px] mt-0.5 leading-none">Voluntariado</span>
+</a>
+<!-- Destino 5: Más (ACTIVO con píldora resaltada #b0efe1 / #085046) -->
+<a aria-current="page" class="flex flex-col items-center justify-center min-w-[56px] min-h-[48px] bg-primary-container text-on-primary rounded-xl px-2.5 py-1 shadow-sm active:scale-95 transition-all" href="#mas">
+<span class="material-symbols-outlined text-[24px] text-primary-fixed fill-icon" data-icon="more_horiz">more_horiz</span>
+<span class="font-label-caps text-[10px] mt-0.5 leading-none font-bold text-primary-fixed">Más</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>
