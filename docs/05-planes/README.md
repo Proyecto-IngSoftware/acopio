@@ -3,7 +3,7 @@ title: "Planes de implementación"
 type: moc
 tags: [moc, planes]
 estado: vigente
-actualizado: 2026-09-28
+actualizado: 2026-09-30
 ---
 
 # Planes de implementación
@@ -38,6 +38,7 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 | Bloque | Especificación | Plan | Estado |
 |---|---|---|---|
 | 0 · Cimientos | [aprobada](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md) | [aprobado](2026-09-28-bloque-0-cimientos.md) | 🟡 backend ✅ · interfaz con Stitch |
+| 0 · Interfaz, ciclo 1 | [aprobada](../superpowers/specs/2026-09-30-interfaz-ciclo-1-portada-design.md) | [por revisar](2026-09-30-interfaz-ciclo-1-portada.md) | ⬜ diseño en Stitch primero; el código espera la aprobación del diseño |
 | 1 · Red | pendiente | pendiente | ⬜ |
 | 2 · Inventario | pendiente | pendiente | ⬜ |
 | 3 · Custodia | pendiente | pendiente | ⬜ |

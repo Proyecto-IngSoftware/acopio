@@ -10,10 +10,10 @@ actualizado: 2026-09-30
 # Interfaz · Ciclo 1: cimientos y Portada · especificación
 
 **Fecha:** 2026-09-30
-**Estado:** propuesta, pendiente de revisión de Joseph
+**Estado:** aprobada por Joseph el 2026-09-30
 **Deriva de:** [Bloque 0 · Cimientos](2026-09-28-bloque-0-cimientos-design.md) §8 y
 [ADR-0011](../../02-arquitectura/adr/ADR-0011-interfaz-con-stitch.md)
-**Plan:** se escribe cuando esta especificación quede aprobada
+**Plan:** [05-planes/2026-09-30-interfaz-ciclo-1-portada.md](../../05-planes/2026-09-30-interfaz-ciclo-1-portada.md)
 
 ## 1. Objetivo
 
@@ -40,7 +40,7 @@ dice qué falta.
 | `packages/ui-tokens` | Tokens como variables CSS y como tema de Tailwind | sistema de diseño §10, ADR-0006 |
 | `apps/web` | Vite, React, TypeScript, Tailwind, React Router | ADR-0011 |
 | Cliente de la API | Tipos generados desde el contrato OpenAPI | [contrato](../../03-diseno/api/README.md) |
-| Componentes base | Los que usa la Portada: botón, estados vacío, de carga y de error, distintivo de estado, barra de navegación | sistema de diseño §5 |
+| Componentes base | Los que usa la Portada: botón, estados vacío, de carga y de error, y barra de navegación. El distintivo de estado del inventario llega con el primer bloque que lo use | sistema de diseño §5 |
 | Portada (P01) | Pantalla completa con su navegación inferior | RF-HOM-001, RF-HOM-002 |
 | API | `GET /api/emergencias` se puede leer sin sesión | RF-HOM-001 |
 | CI | `apps/web` entra a lint, tipos y pruebas; el revisor de colores empieza a aplicar | RNF-13 |
@@ -128,7 +128,8 @@ Rutas de este ciclo:
 El espacio `/consola/*` queda reservado para el ciclo 2.
 
 En desarrollo Vite corre en el puerto 5173, que es el `APP_URL` que la API ya acepta
-por CORS. `VITE_API_URL` apunta a `http://localhost:3000/api` y se documenta en
+por CORS. `VITE_API_URL` apunta a `http://localhost:3000`, sin `/api` porque las rutas del
+contrato ya lo traen, y se documenta en
 `.env.example`. Ninguna variable `VITE_*` lleva secretos.
 
 ## 6. Cliente de la API
