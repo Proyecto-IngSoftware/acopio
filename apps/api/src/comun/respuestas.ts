@@ -263,3 +263,18 @@ export class UbicacionDto extends createZodDto(
 export class ResultadoGeoDto extends createZodDto(
   z.object({ etiqueta: z.string(), lat: z.number(), lng: z.number() }),
 ) {}
+
+const dia = z.iso.date();
+
+export class NoRecibirDto extends createZodDto(
+  z.object({
+    categoriaId: z.uuid(),
+    categoria: z.string(),
+    hasta: dia.nullable(),
+    marcadoEn: fecha,
+  }),
+) {}
+
+export class AcopioNoRecibeDto extends createZodDto(
+  z.object({ acopioId: z.uuid(), hasta: dia.nullable() }),
+) {}

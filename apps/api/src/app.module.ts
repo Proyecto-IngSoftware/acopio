@@ -14,6 +14,7 @@ import { AuditoriaModule } from './modulos/auditoria/auditoria.module';
 import { CatalogoModule } from './modulos/catalogo/catalogo.module';
 import { AutenticacionGuard } from './modulos/identidad/autenticacion/autenticacion.guard';
 import { IdentidadModule } from './modulos/identidad/identidad.module';
+import { InventarioModule } from './modulos/inventario/inventario.module';
 import { NotificacionesModule } from './modulos/notificaciones/notificaciones.module';
 import { SaludModule } from './modulos/salud/salud.module';
 
@@ -33,6 +34,7 @@ import { SaludModule } from './modulos/salud/salud.module';
     IdentidadModule,
     CatalogoModule,
     AcopiosModule,
+    InventarioModule,
     SaludModule,
   ],
   providers: [
