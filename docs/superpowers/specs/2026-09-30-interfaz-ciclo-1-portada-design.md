@@ -228,7 +228,7 @@ máximo de cuatro que fija el sistema de diseño (§6) habla de la consola.
 - [x] `bun run lint`, `typecheck`, `test` y `test:int` pasan, con `apps/web` incluido
 - [x] `scripts/revisar-colores.sh` revisa `apps/web` y pasa
 - [x] axe-core sin violaciones críticas ni serias en la Portada, en el navegador a 360 × 640
-- [ ] El CI de `main` queda en verde
+- [x] El CI de `main` queda en verde
 
 ### Cambios al construir
 
