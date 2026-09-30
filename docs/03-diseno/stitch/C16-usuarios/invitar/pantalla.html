@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>C16 Invitar persona - Consola Acopio</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#003730",
+            "primary-container": "#085046",
+            "primary-fixed": "#b0efe1",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#83c1b4",
+            "surface": "#faf8ff",
+            "surface-dim": "#d2d9f4",
+            "surface-bright": "#faf8ff",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f2f3ff",
+            "surface-container": "#eaedff",
+            "surface-container-high": "#e2e7ff",
+            "surface-container-highest": "#dae2fd",
+            "on-surface": "#131b2e",
+            "on-surface-variant": "#3f4946",
+            "outline": "#707976",
+            "outline-variant": "#bfc9c5",
+            "error": "#ba1a1a",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "on-error-container": "#93000a",
+            "success": "#16a34a",
+            "success-container": "#dcfce7",
+            "on-success": "#14532d"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          fontFamily: {
+            "sans": ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    input[type="radio"]:checked + div {
+      border-color: #085046;
+      background-color: #f2fbf9;
+    }
+    input[type="checkbox"]:checked {
+      background-color: #085046;
+      border-color: #085046;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-sans antialiased min-h-full flex flex-col justify-start selection:bg-primary-fixed selection:text-primary">
+  <!-- Mobile Viewport Wrapper (390px-440px ideal for field operation) -->
+  <div class="w-full max-w-md mx-auto flex-1 flex flex-col min-h-screen bg-surface pb-10">
+
+    <!-- 1. Cabecera con sesión compartida (igual a Inicio con sesión - Acopio) -->
+    <!-- Sin selector de ubicación ni "Sincronizado" según instrucciones -->
+    <header class="w-full bg-surface px-4 py-3 flex items-center justify-between border-b border-[#e2e8f0] sticky top-0 z-20">
+      <!-- Marca con recuadro #085046, "Acopio", etiqueta "CO" -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-10 h-10 rounded-[8px] bg-primary-container flex items-center justify-center text-on-primary shrink-0 shadow-sm">
+          <span class="material-symbols-outlined text-[22px]">inventory_2</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-[20px] font-bold tracking-tight text-on-surface">Acopio</span>
+          <span class="bg-primary-fixed text-primary-container font-bold text-[11px] leading-tight px-1.5 py-0.5 rounded tracking-wide">CO</span>
+        </div>
+      </div>
+      <!-- Botón redondo #003730 con "JQ" -->
+      <button type="button" aria-label="Perfil Joseph Quintero" class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold text-[14px] shrink-0 transition-transform active:scale-95 shadow-sm">
+        JQ
+      </button>
+    </header>
+
+    <!-- Main Content Stream -->
+    <main class="flex-1 px-4 pt-4 space-y-5">
+
+      <!-- Fila 1: Flecha «Volver» y el título «Invitar persona» -->
+      <div class="flex items-center gap-3">
+        <button type="button" aria-label="Volver a usuarios y accesos" class="w-12 h-12 rounded-[12px] bg-white border border-[#cbd5e1] flex items-center justify-center text-on-surface active:bg-surface-container-low transition-colors shadow-sm shrink-0">
+          <span class="material-symbols-outlined text-[24px]">arrow_back</span>
+        </button>
+        <div>
+          <h1 class="text-[22px] font-bold text-on-surface tracking-tight leading-tight">Invitar persona</h1>
+          <p class="text-[14px] text-on-surface-variant font-medium">Consola de administración · Acceso seguro</p>
+        </div>
+      </div>
+
+      <!-- Tarjeta 2: Formulario de invitación -->
+      <section class="bg-white rounded-[16px] border border-[#cbd5e1] p-5 shadow-sm space-y-5">
+
+        <!-- Campo 1: Nombre completo -->
+        <div class="space-y-1.5">
+          <label for="nombre_completo" class="block text-[15px] font-semibold text-on-surface">
+            Nombre completo <span class="text-error">*</span>
+          </label>
+          <input 
+            type="text" 
+            id="nombre_completo" 
+            name="nombre_completo" 
+            value="Daniela Méndez" 
+            placeholder="Ej. Daniela Méndez" 
+            required 
+            class="w-full min-h-[48px] px-3.5 py-2.5 rounded-[10px] border border-[#cbd5e1] bg-surface text-on-surface text-[16px] font-medium placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-colors"
+          />
+        </div>
+
+        <!-- Campo 2: Nombre de usuario -->
+        <div class="space-y-1.5">
+          <label for="username" class="block text-[15px] font-semibold text-on-surface">
+            Nombre de usuario <span class="text-error">*</span>
+          </label>
+          <div class="relative flex items-center">
+            <span class="absolute left-3.5 text-outline text-[16px] font-semibold select-none">@</span>
+            <input 
+              type="text" 
+              id="username" 
+              name="username" 
+              value="d.mendez" 
+              placeholder="d.mendez" 
+              required 
+              class="w-full min-h-[48px] pl-8 pr-3.5 py-2.5 rounded-[10px] border border-[#cbd5e1] bg-surface text-on-surface text-[16px] font-medium placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-colors"
+            />
+          </div>
+          <p class="text-[13px] text-on-surface-variant font-normal leading-normal">
+            Con él inicia sesión. Minúsculas, sin espacios.
+          </p>
+        </div>
+
+        <!-- Campo 3: Rol como selector de 4 opciones en tarjetas -->
+        <div class="space-y-2">
+          <span class="block text-[15px] font-semibold text-on-surface">
+            Rol en la plataforma <span class="text-error">*</span>
+          </span>
+          <div class="space-y-2.5" role="radiogroup" aria-label="Seleccionar rol">
+            
+            <!-- Opción 1: Operador (Seleccionado por defecto para Daniela) -->
+            <label class="block cursor-pointer relative">
+              <input type="radio" name="rol" value="operador" class="sr-only peer" checked/>
+              <div class="p-3.5 rounded-[12px] border-2 border-[#cbd5e1] peer-checked:border-primary-container peer-checked:bg-[#e6f5f2] bg-white transition-all flex items-start gap-3 min-h-[56px]">
+                <div class="w-6 h-6 rounded-full border-2 border-[#cbd5e1] peer-checked:border-primary-container flex items-center justify-center mt-0.5 shrink-0 bg-white">
+                  <div class="w-3 h-3 rounded-full bg-primary-container opacity-100"></div>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-[16px] font-bold text-on-surface">Operador</span>
+                    <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-primary-container text-white">Acopio</span>
+                  </div>
+                  <p class="text-[14px] text-on-surface-variant leading-snug mt-0.5">
+                    Registra entradas, saldos y despachos en bodega
+                  </p>
+                </div>
+              </div>
+            </label>
+
+            <!-- Opción 2: Receptor -->
+            <label class="block cursor-pointer relative">
+              <input type="radio" name="rol" value="receptor" class="sr-only peer"/>
+              <div class="p-3.5 rounded-[12px] border border-[#cbd5e1] peer-checked:border-primary-container peer-checked:bg-[#e6f5f2] bg-white transition-all flex items-start gap-3 min-h-[56px]">
+                <div class="w-6 h-6 rounded-full border-2 border-[#cbd5e1] flex items-center justify-center mt-0.5 shrink-0 bg-white">
+                  <div class="w-3 h-3 rounded-full bg-primary-container opacity-0"></div>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-[16px] font-bold text-on-surface">Receptor</span>
+                    <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-surface-container-high text-on-surface">Zona</span>
+                  </div>
+                  <p class="text-[14px] text-on-surface-variant leading-snug mt-0.5">
+                    Confirma llegadas de camiones en zona y reporta necesidades
+                  </p>
+                </div>
+              </div>
+            </label>
+
+            <!-- Opción 3: Auditor -->
+            <label class="block cursor-pointer relative">
+              <input type="radio" name="rol" value="auditor" class="sr-only peer"/>
+              <div class="p-3.5 rounded-[12px] border border-[#cbd5e1] peer-checked:border-primary-container peer-checked:bg-[#e6f5f2] bg-white transition-all flex items-start gap-3 min-h-[56px]">
+                <div class="w-6 h-6 rounded-full border-2 border-[#cbd5e1] flex items-center justify-center mt-0.5 shrink-0 bg-white">
+                  <div class="w-3 h-3 rounded-full bg-primary-container opacity-0"></div>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-[16px] font-bold text-on-surface">Auditor</span>
+                    <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-surface-container-high text-on-surface">Control</span>
+                  </div>
+                  <p class="text-[14px] text-on-surface-variant leading-snug mt-0.5">
+                    Concilia donaciones, revisa actas y consulta bitácora
+                  </p>
+                </div>
+              </div>
+            </label>
+
+            <!-- Opción 4: Administrador -->
+            <label class="block cursor-pointer relative">
+              <input type="radio" name="rol" value="administrador" class="sr-only peer"/>
+              <div class="p-3.5 rounded-[12px] border border-[#cbd5e1] peer-checked:border-primary-container peer-checked:bg-[#e6f5f2] bg-white transition-all flex items-start gap-3 min-h-[56px]">
+                <div class="w-6 h-6 rounded-full border-2 border-[#cbd5e1] flex items-center justify-center mt-0.5 shrink-0 bg-white">
+                  <div class="w-3 h-3 rounded-full bg-primary-container opacity-0"></div>
+                </div>
+                <div class="flex-1">
+                  <div class="flex items-center gap-2">
+                    <span class="text-[16px] font-bold text-on-surface">Administrador</span>
+                    <span class="px-2 py-0.5 rounded text-[11px] font-bold bg-primary text-white">Total</span>
+                  </div>
+                  <p class="text-[14px] text-on-surface-variant leading-snug mt-0.5">
+                    Gobierno total: usuarios, emergencias, traslados y causas
+                  </p>
+                </div>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <!-- Campo 4: Correo (opcional) -->
+        <div class="space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label for="correo" class="block text-[15px] font-semibold text-on-surface">
+              Correo electrónico
+            </label>
+            <span class="text-[13px] text-outline font-medium">Opcional</span>
+          </div>
+          <input 
+            type="email" 
+            id="correo" 
+            name="correo" 
+            value="daniela.mendez@acopio.org" 
+            placeholder="ejemplo@correo.com" 
+            class="w-full min-h-[48px] px-3.5 py-2.5 rounded-[10px] border border-[#cbd5e1] bg-surface text-on-surface text-[16px] font-medium placeholder:text-outline focus:border-primary-container focus:ring-1 focus:ring-primary-container outline-none transition-colors"
+          />
+          <p class="text-[13px] text-on-surface-variant font-normal leading-normal">
+            Si no tiene correo, le mandas el enlace por WhatsApp.
+          </p>
+        </div>
+
+        <!-- Campo 5: Ubicaciones asignadas (casillas) -->
+        <div class="space-y-2">
+          <span class="block text-[15px] font-semibold text-on-surface">
+            Ubicaciones asignadas <span class="text-error">*</span>
+          </span>
+          <p class="text-[13px] text-on-surface-variant -mt-1 mb-2">
+            El operador solo puede registrar movimientos en estos puntos.
+          </p>
+          <div class="bg-surface rounded-[12px] border border-[#cbd5e1] p-2 space-y-1">
+            
+            <!-- Casilla 1: Acopio Norte (marcada) -->
+            <label class="flex items-center gap-3 p-3 rounded-[8px] hover:bg-white active:bg-surface-container-high transition-colors cursor-pointer min-h-[48px]">
+              <input 
+                type="checkbox" 
+                checked 
+                class="w-5 h-5 rounded border-2 border-outline text-primary-container focus:ring-primary-container transition-colors"
+              />
+              <div class="flex-1">
+                <div class="text-[16px] font-semibold text-on-surface">Acopio Norte</div>
+                <div class="text-[13px] text-on-surface-variant">Calle 170 # 15-20 · Bogotá</div>
+              </div>
+            </label>
+
+            <!-- Casilla 2: Acopio Chapinero (marcada) -->
+            <label class="flex items-center gap-3 p-3 rounded-[8px] hover:bg-white active:bg-surface-container-high transition-colors cursor-pointer min-h-[48px]">
+              <input 
+                type="checkbox" 
+                checked 
+                class="w-5 h-5 rounded border-2 border-outline text-primary-container focus:ring-primary-container transition-colors"
+              />
+              <div class="flex-1">
+                <div class="text-[16px] font-semibold text-on-surface">Acopio Chapinero</div>
+                <div class="text-[13px] text-on-surface-variant">Carrera 7 # 63-40 · Bogotá</div>
+              </div>
+            </label>
+
+            <!-- Casilla 3: Zona Chinchiná (desmarcada) -->
+            <label class="flex items-center gap-3 p-3 rounded-[8px] hover:bg-white active:bg-surface-container-high transition-colors cursor-pointer min-h-[48px]">
+              <input 
+                type="checkbox" 
+                class="w-5 h-5 rounded border-2 border-outline text-primary-container focus:ring-primary-container transition-colors"
+              />
+              <div class="flex-1">
+                <div class="text-[16px] font-semibold text-on-surface">Zona Chinchiná</div>
+                <div class="text-[13px] text-on-surface-variant">Recepción en territorio · Caldas</div>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <!-- 3. Botón primario de ancho completo «Crear e invitar» -->
+        <button 
+          type="button" 
+          class="w-full min-h-[50px] h-[50px] bg-primary-container hover:bg-primary active:scale-[0.99] text-white font-semibold text-[16px] rounded-[12px] flex items-center justify-center gap-2 shadow-sm transition-all"
+        >
+          <span class="material-symbols-outlined text-[20px]">send</span>
+          <span>Crear e invitar</span>
+        </button>
+
+      </section>
+
+      <!-- 4. Resultado después de crear: tarjeta de éxito -->
+      <section class="bg-white rounded-[16px] border-2 border-primary-container p-5 shadow-sm space-y-4">
+        
+        <!-- Cabecera de éxito con ícono check_circle -->
+        <div class="flex items-start gap-3">
+          <div class="w-10 h-10 rounded-full bg-[#dcfce7] text-[#15803d] flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[26px]">check_circle</span>
+          </div>
+          <div>
+            <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-[#dcfce7] text-[#15803d] tracking-wide mb-1">
+              ESTADO: INVITACIÓN CREADA
+            </span>
+            <h2 class="text-[18px] font-bold text-on-surface leading-tight">
+              Invitación creada para Daniela Méndez
+            </h2>
+            <p class="text-[14px] text-on-surface-variant mt-0.5">
+              Rol: <strong>Operador</strong> · Ubicaciones: <strong>Norte y Chapinero</strong>
+            </p>
+          </div>
+        </div>
+
+        <!-- Enlace en campo de solo lectura con botón «Copiar enlace» -->
+        <div class="space-y-1.5 pt-1">
+          <label class="block text-[14px] font-semibold text-on-surface">
+            Enlace de activación único
+          </label>
+          <div class="flex items-center gap-2">
+            <input 
+              type="text" 
+              readonly 
+              value="https://acopio.co/activar?tok=7f9b2d8e4c1a" 
+              class="flex-1 min-h-[48px] px-3.5 py-2 rounded-[10px] border border-[#cbd5e1] bg-surface text-on-surface font-mono text-[14px] select-all outline-none"
+            />
+            <button 
+              type="button" 
+              title="Copiar enlace"
+              class="min-h-[48px] px-3.5 bg-surface-container hover:bg-surface-container-high active:bg-surface-dim text-on-surface border border-[#cbd5e1] font-semibold text-[14px] rounded-[10px] flex items-center gap-1.5 shrink-0 transition-colors shadow-sm"
+            >
+              <span class="material-symbols-outlined text-[18px]">content_copy</span>
+              <span>Copiar</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Botón «Compartir por WhatsApp» -->
+        <div class="pt-1">
+          <a 
+            href="#" 
+            role="button"
+            class="w-full min-h-[48px] h-[48px] bg-[#25D366] hover:bg-[#20bd5a] active:scale-[0.99] text-white font-semibold text-[16px] rounded-[12px] flex items-center justify-center gap-2.5 shadow-sm transition-all"
+          >
+            <!-- WhatsApp Vector Icon -->
+            <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24">
+              <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2m.01 1.67c2.2 0 4.26.86 5.82 2.42a8.225 8.225 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.196 8.196 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24m4.52 11.53c-.25-.13-1.47-.72-1.7-.81-.23-.08-.39-.13-.56.13-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.13-1.06-.39-2.03-1.25-.75-.67-1.26-1.5-1.41-1.75-.15-.25-.02-.39.11-.51.11-.11.25-.29.37-.44.13-.15.17-.25.25-.42.08-.17.04-.31-.02-.44s-.56-1.35-.77-1.85c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.24.9 2.44 1.03 2.61.13.17 1.78 2.71 4.3 3.8.6.26 1.07.42 1.44.54.61.19 1.16.17 1.6.1 1.48-.07 1.47-.6 1.68-1.19.21-.58.21-1.08.15-1.19-.07-.1-.23-.17-.48-.29z"/>
+            </svg>
+            <span>Compartir por WhatsApp</span>
+          </a>
+        </div>
+
+        <!-- Texto informativo de caducidad -->
+        <div class="flex items-center gap-2 p-2.5 rounded-[8px] bg-surface-container-low text-on-surface-variant border border-[#cbd5e1]">
+          <span class="material-symbols-outlined text-[20px] text-primary-container shrink-0">timer</span>
+          <p class="text-[13px] leading-snug font-medium">
+            El enlace vence en 7 días y sirve una sola vez.
+          </p>
+        </div>
+
+      </section>
+
+      <!-- Enlace para volver o cerrar -->
+      <div class="text-center pt-2">
+        <a href="#" class="inline-flex items-center gap-1.5 text-primary-container font-semibold text-[15px] hover:underline min-h-[48px] px-4 py-2">
+          <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+          <span>Volver a la lista de usuarios</span>
+        </a>
+      </div>
+
+    </main>
+
+  </div>
+</body>
+</html>
