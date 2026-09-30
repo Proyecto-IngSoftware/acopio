@@ -234,24 +234,11 @@ Todo listado define los tres. Nunca una pantalla en blanco.
 
 ### Navegación
 
-**Barra inferior fija en la consola**, cuatro destinos máximo. Nunca menú
-hamburguesa: exige dos toques y está en la esquina superior, la más lejana del
-pulgar.
-
-```
-┌──────────────────────────────────────┐
-│  Acopio Norte ▾            👤        │  ← contexto activo + perfil
-├──────────────────────────────────────┤
-│                                      │
-│           contenido                  │
-│                                      │
-├──────────────────────────────────────┤
-│  📦        ➕        📋        ⋯     │  ← inventario · entrada · pend. · más
-└──────────────────────────────────────┘
-```
-
-El botón central de entrada rápida es más grande que el resto. Es la acción que
-justifica que la aplicación exista.
+**Una sola barra inferior para todos**, con o sin sesión: Inicio, Mapa, Causas,
+Voluntariado y Más. Nunca menú hamburguesa. Las herramientas de cada rol se abren desde
+«Más». Con sesión, el inicio sigue siendo la Portada y solo cambia la cabecera. Decidido
+el 2026-09-30 al normalizar los diseños de Stitch; las piezas están en
+[stitch/_compartidos](stitch/_compartidos/README.md).
 
 ### Conmutador de contexto
 

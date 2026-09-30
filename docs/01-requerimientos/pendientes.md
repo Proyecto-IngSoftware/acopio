@@ -555,6 +555,17 @@ página al construir.
 **Estado:** RESUELTO → [especificación del ciclo 1 de la interfaz](../superpowers/specs/2026-09-30-interfaz-ciclo-1-portada-design.md),
 salvo el punto abierto.
 
+### P-030 · Piezas compartidas entre pantallas
+**Fecha:** 2026-09-30 · **Propuesto por:** Joseph
+**Qué:** tres cabeceras (pública, de acceso y con sesión) y una sola barra inferior para
+todos. Con sesión, el inicio sigue siendo la Portada; las herramientas de cada rol se
+abren desde «Más».
+**Por qué:** las pantallas de Stitch traían cabeceras y barras distintas entre sí.
+**Estado:** RESUELTO → [stitch/_compartidos](../03-diseno/stitch/_compartidos/README.md),
+[sistema-diseno.md §6](../03-diseno/sistema-diseno.md#navegación). Cambia lo que decía
+§6: antes la consola tenía su propia barra con inventario, entrada rápida, pendientes y
+más.
+
 ---
 
 ## Resueltos

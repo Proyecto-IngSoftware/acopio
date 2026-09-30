@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>C01 Activar cuenta - Consola Acopio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: '#003730',
+              'primary-container': '#085046',
+              surface: '#faf8ff',
+              text: '#131b2e',
+              muted: '#464f60',
+              border: '#dbe0ea',
+              'badge-bg': '#b0efe1',
+              'badge-text': '#085046',
+              error: '#ba1a1a',
+              'error-container': '#ffdad6',
+              'error-text': '#410002',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body class="bg-[#faf8ff] text-[#131b2e] font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-[#b0efe1] selection:text-[#085046]">
+
+  <div>
+    <!-- Cabecera compartida del portal -->
+    <header class="sticky top-0 z-30 bg-[#faf8ff]/90 backdrop-blur-md border-b border-[#dbe0ea]/80 px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <!-- Recuadro de 40px con esquinas de 8px en #085046 e ícono inventory_2 en blanco -->
+        <div class="w-10 h-10 rounded-[8px] bg-[#085046] flex items-center justify-center text-white shadow-sm flex-shrink-0">
+          <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="font-bold text-[19px] tracking-tight text-[#131b2e]">Acopio</span>
+          <!-- Etiqueta CO: fondo #b0efe1, texto #085046 -->
+          <span class="bg-[#b0efe1] text-[#085046] text-[11px] font-bold px-1.5 py-0.5 rounded-[4px] leading-none uppercase">CO</span>
+        </div>
+      </div>
+      <!-- En esta pantalla la cabecera no lleva botón «Entrar» ni indicador de sincronización ni enlace de ayuda -->
+    </header>
+
+    <!-- 1. Franja oscura #003730 -->
+    <section class="bg-[#003730] text-white px-5 pt-6 pb-7">
+      <div class="max-w-md mx-auto">
+        <h1 class="text-2xl font-bold tracking-tight text-white mb-1.5">Activa tu cuenta</h1>
+        <p class="text-[15px] text-white/85 font-normal leading-snug">
+          Un administrador te invitó a la consola de Acopio.
+        </p>
+      </div>
+    </section>
+
+    <!-- Contenedor principal para tarjetas -->
+    <main class="max-w-md mx-auto px-4 -mt-3.5 space-y-4">
+      
+      <!-- 2. Tarjeta con los datos de la invitación (solo lectura) -->
+      <section class="bg-white rounded-xl border border-[#dbe0ea] p-4 shadow-sm">
+        <div class="flex items-center justify-between pb-3 mb-3 border-b border-[#f0f2f7]">
+          <span class="text-xs font-semibold uppercase tracking-wider text-[#464f60]">Datos de la invitación</span>
+          <span class="inline-flex items-center gap-1 text-xs font-medium text-[#085046] bg-[#b0efe1]/50 px-2 py-0.5 rounded-full">
+            <span class="w-1.5 h-1.5 rounded-full bg-[#085046]"></span>
+            Invitación activa
+          </span>
+        </div>
+        <dl class="space-y-2.5 text-[14px]">
+          <div class="flex flex-col sm:flex-row sm:justify-between py-0.5">
+            <dt class="text-[#464f60] font-medium">Usuario</dt>
+            <dd class="font-mono text-[#131b2e] font-semibold text-[14px]">d.mendez</dd>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:justify-between py-0.5 border-t border-[#f4f6fa] pt-2">
+            <dt class="text-[#464f60] font-medium">Nombre</dt>
+            <dd class="text-[#131b2e] font-semibold">Daniela Méndez</dd>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:justify-between py-0.5 border-t border-[#f4f6fa] pt-2">
+            <dt class="text-[#464f60] font-medium">Rol</dt>
+            <dd class="inline-flex items-center text-[#131b2e] font-semibold">
+              <span class="material-symbols-outlined text-[18px] mr-1 text-[#085046]">badge</span>
+              Operador
+            </dd>
+          </div>
+          <div class="flex flex-col sm:flex-row sm:justify-between py-0.5 border-t border-[#f4f6fa] pt-2">
+            <dt class="text-[#464f60] font-medium">Ubicaciones</dt>
+            <dd class="text-[#131b2e] font-medium text-left sm:text-right">Acopio Norte · Acopio Chapinero</dd>
+          </div>
+        </dl>
+      </section>
+
+      <!-- 3. Tarjeta con el formulario -->
+      <section class="bg-white rounded-xl border border-[#dbe0ea] p-5 shadow-sm">
+        <form id="activate-form" class="space-y-4" onsubmit="event.preventDefault();">
+          
+          <!-- Campo Contraseña -->
+          <div>
+            <label for="password" class="block text-[14px] font-semibold text-[#131b2e] mb-1.5">
+              Contraseña
+            </label>
+            <div class="relative">
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                value="caldas2026"
+                autocomplete="new-password"
+                class="w-full h-12 pl-3.5 pr-12 rounded-lg border border-[#dbe0ea] bg-[#faf8ff] text-[#131b2e] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#085046] focus:border-transparent transition-all placeholder:text-[#464f60]/50"
+                placeholder="Escribe tu contraseña"
+              >
+              <!-- Botón para mostrar/ocultar contraseña (área táctil accesible) -->
+              <button 
+                type="button" 
+                id="toggle-password" 
+                aria-label="Mostrar u ocultar contraseña"
+                class="absolute right-0 top-0 h-12 w-12 flex items-center justify-center text-[#464f60] hover:text-[#131b2e] focus:outline-none focus:text-[#085046]"
+                onclick="togglePasswordVisibility('password', 'toggle-password-icon')"
+              >
+                <span id="toggle-password-icon" class="material-symbols-outlined text-[20px]">visibility</span>
+              </button>
+            </div>
+            <!-- Ayuda requerida -->
+            <p class="mt-1.5 text-[13px] text-[#464f60] leading-normal">
+              Mínimo 12 caracteres. Puede ser una frase; no hace falta usar símbolos.
+            </p>
+          </div>
+
+          <!-- Campo Repite la contraseña -->
+          <div>
+            <label for="password-confirm" class="block text-[14px] font-semibold text-[#131b2e] mb-1.5">
+              Repite la contraseña
+            </label>
+            <div class="relative">
+              <input 
+                type="password" 
+                id="password-confirm" 
+                name="password-confirm" 
+                value="caldas2026"
+                autocomplete="new-password"
+                class="w-full h-12 pl-3.5 pr-12 rounded-lg border border-[#dbe0ea] bg-[#faf8ff] text-[#131b2e] text-[15px] focus:outline-none focus:ring-2 focus:ring-[#085046] focus:border-transparent transition-all placeholder:text-[#464f60]/50"
+                placeholder="Repite la misma contraseña"
+              >
+              <button 
+                type="button" 
+                id="toggle-confirm" 
+                aria-label="Mostrar u ocultar contraseña repetida"
+                class="absolute right-0 top-0 h-12 w-12 flex items-center justify-center text-[#464f60] hover:text-[#131b2e] focus:outline-none focus:text-[#085046]"
+                onclick="togglePasswordVisibility('password-confirm', 'toggle-confirm-icon')"
+              >
+                <span id="toggle-confirm-icon" class="material-symbols-outlined text-[20px]">visibility</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Botón primario de ancho completo: área táctil 48px, fondo #003730 o #085046 -->
+          <div class="pt-2">
+            <button 
+              type="submit" 
+              class="w-full h-12 min-h-[48px] bg-[#003730] hover:bg-[#085046] active:bg-[#00241f] text-white font-semibold text-[15px] rounded-lg shadow-sm transition-colors flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-[#085046] focus:ring-offset-2"
+            >
+              <span>Activar mi cuenta</span>
+              <span class="material-symbols-outlined text-[19px]">arrow_forward</span>
+            </button>
+          </div>
+
+          <!-- 4. Debajo del botón, mensaje de error de ejemplo en rojo con ícono -->
+          <div class="rounded-lg bg-[#ffdad6]/60 border border-[#ba1a1a]/30 p-3.5 flex items-start gap-2.5 text-[#410002] animate-fade-in" role="alert">
+            <span class="material-symbols-outlined text-[#ba1a1a] text-[20px] flex-shrink-0 mt-0.5" style="font-variation-settings: 'FILL' 1;">error</span>
+            <span class="text-[13.5px] font-medium leading-snug">
+              La contraseña es muy común. Prueba con una frase más larga.
+            </span>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- 5. Enlace de texto «Volver a la portada» -->
+      <div class="pt-2 pb-6 text-center">
+        <a 
+          href="#" 
+          class="inline-flex items-center justify-center gap-1.5 h-12 px-4 text-[14px] font-semibold text-[#085046] hover:text-[#003730] hover:underline transition-colors"
+        >
+          <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+          <span>Volver a la portada</span>
+        </a>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Pie institucional sutil -->
+  <footer class="py-4 text-center text-xs text-[#464f60]/80 border-t border-[#dbe0ea]/50">
+    <p>Consola Interna de Acopio · Respuesta Oficial Caldas 2026</p>
+  </footer>
+
+  <script>
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.textContent = 'visibility_off';
+      } else {
+        input.type = 'password';
+        icon.textContent = 'visibility';
+      }
+    }
+  </script>
+</body>
+</html>
