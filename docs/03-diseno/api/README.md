@@ -3,7 +3,7 @@ title: "Contrato de la API para el frontend"
 type: diseno
 tags: [diseno, api, frontend]
 estado: vigente
-actualizado: 2026-09-28
+actualizado: 2026-09-30
 ---
 
 # Contrato de la API para el frontend
@@ -128,6 +128,9 @@ Todas las respuestas de error tienen la misma forma:
 | **C16 Usuarios y accesos** | `GET /usuarios` (filtros `rol`, `estado`, `q`) · `POST /usuarios` · `PATCH /usuarios/:id` · `POST /usuarios/:id/suspender` · `/reactivar` · `/invitacion` (reinvitar) · `DELETE /usuarios/:id/invitacion` · `POST /usuarios/:id/restablecer` · `POST /usuarios/:id/asignaciones` · `DELETE /usuarios/:id/asignaciones/:tipo/:ubicacionId` |
 | **C17 Bitácora** | `GET /bitacora` (filtros `usuarioId`, `ubicacionId`, `accion`, `entidad`, `destacado`, `desde`, `hasta`, `pagina`, `porPagina`) |
 | **C18 Catálogo maestro** | `GET/POST /categorias` · `PATCH/DELETE /categorias/:id` · `POST /categorias/:id/archivar` · `/reactivar` · `GET /canasta` · `GET/POST /categorias/:id/canasta` · `GET/POST /emergencias` · `PATCH /emergencias/:id` · `POST /emergencias/:id/cerrar` |
+
+**Lectura pública.** `GET /emergencias` no exige sesión: la usa la Portada. Crear,
+editar y cerrar una emergencia sigue siendo del administrador.
 
 Todas las rutas llevan el prefijo `/api`.
 

@@ -1,4 +1,10 @@
-import { ADMIN, crearAppPrueba, iniciarSesion, type AppPrueba } from '../../test/app-prueba';
+import {
+  ADMIN,
+  crearAppPrueba,
+  crearUsuarioActivo,
+  iniciarSesion,
+  type AppPrueba,
+} from '../../test/app-prueba';
 import { EmergenciasService } from '../modulos/catalogo/emergencias.service';
 
 /** T11: catálogo, canasta y emergencias (RF-CAT-001, 002, 003, 005). */
@@ -219,6 +225,26 @@ describe('catálogo', () => {
       const r = await a.http().get('/api/emergencias').set(comoAdmin()).expect(200);
       const estados = (r.body as { estado: string }[]).map((e) => e.estado);
       expect(estados.indexOf('ACTIVA')).toBeLessThan(estados.lastIndexOf('CERRADA'));
+    });
+
+    it('cualquiera las lee sin sesión; crear sigue siendo del administrador', async () => {
+      await a.http().get('/api/emergencias').expect(200);
+
+      const nueva = {
+        nombre: 'Sin permiso',
+        tipo: 'sismo',
+        inicio: '2026-09-01',
+        destacadaHasta: '2099-12-31',
+      };
+      await a.http().post('/api/emergencias').send(nueva).expect(401);
+
+      const operador = await crearUsuarioActivo(a, tokenAdmin, { rol: 'OPERADOR' });
+      await a
+        .http()
+        .post('/api/emergencias')
+        .set('authorization', `Bearer ${operador.token}`)
+        .send(nueva)
+        .expect(403);
     });
   });
 });

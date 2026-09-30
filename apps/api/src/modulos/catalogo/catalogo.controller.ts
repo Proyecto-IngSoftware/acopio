@@ -15,6 +15,7 @@ import {
   ApiCreatedResponse,
   ApiNoContentResponse,
   ApiOkResponse,
+  ApiOperation,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -28,7 +29,7 @@ import {
 } from '../../comun/respuestas';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
-import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
+import { Publico, Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { CanastaService } from './canasta.service';
 import { CategoriasService } from './categorias.service';
@@ -237,6 +238,9 @@ export class CatalogoController {
 
   // ── Emergencias ──
 
+  // La Portada es pública y muestra las emergencias vigentes
+  @Publico()
+  @ApiOperation({ summary: 'Lista las emergencias. No exige sesión', security: [] })
   @Get('emergencias')
   @ApiOkResponse({ type: EmergenciaDto, isArray: true })
   listarEmergencias(@Query() filtro: FiltroEmergenciasDto) {
