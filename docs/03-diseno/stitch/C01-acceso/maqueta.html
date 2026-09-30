@@ -1,0 +1,198 @@
+<title>Acceso a la consola de Acopio</title>
+
+
+
+
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            teal: {
+              brand: '#0F6E6E',
+              dark: '#0A4F4F',
+              badge: '#88D4D8'
+            },
+            surface: '#FAFAF9',
+            card: '#FFFFFF',
+            borderLight: '#E7E5E4'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+<style>body{background:#e2e7ff;}</style>
+<p style="max-width:430px;margin:12px auto;font:14px Inter,system-ui,sans-serif;color:#3f4946">Maqueta de C01 tal como la generó Stitch. El mensaje de error aparece aquí siempre para mostrarlo; en la aplicación solo sale cuando el inicio de sesión falla.</p>
+<div class="mx-auto max-w-[430px] min-h-screen overflow-clip rounded-xl border border-outline-variant bg-surface text-stone-900 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-teal-brand selection:text-white">
+
+<!-- BEGIN: MainContent -->
+<main class="w-full max-w-md mx-auto flex-1 flex flex-col">
+<!-- BEGIN: TopBar -->
+<header class="bg-white border-b border-stone-200 px-4 py-3 flex items-center justify-between" data-purpose="institutional-header">
+<!-- Brand & Sync Status -->
+<div class="flex items-center gap-3">
+<!-- Logo Icon Container -->
+<div aria-label="Logo Acopio" class="w-10 h-10 rounded-xl bg-[#0A4F4F] flex items-center justify-center text-white flex-shrink-0 shadow-sm">
+<svg class="w-5 h-5 stroke-current" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path>
+<path d="m3.3 7 8.7 5 8.7-5"></path>
+<path d="M12 22V12"></path>
+</svg>
+</div>
+<!-- Title and Indicator -->
+<div class="flex flex-col justify-center">
+<div class="flex items-center gap-1.5 leading-none">
+<span class="text-stone-900 font-bold text-lg tracking-tight">Acopio</span>
+<span class="bg-[#D8F3F4] text-[#0A4F4F] text-[10px] font-bold px-1.5 py-0.5 rounded leading-none uppercase">CO</span>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span class="text-[12px] text-stone-500 font-medium leading-none">Sincronizado</span>
+</div>
+</div>
+</div>
+<!-- Secondary action / Support link -->
+<a aria-label="Centro de ayuda y soporte técnico" class="inline-flex items-center justify-center min-h-[48px] px-3 text-stone-600 font-medium text-sm hover:text-stone-900 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-brand rounded-lg" href="#soporte">
+<svg class="w-5 h-5 mr-1 text-stone-500" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+<path d="M12 17h.01"></path>
+</svg>
+<span>Ayuda</span>
+</a>
+</header>
+<!-- END: TopBar -->
+<!-- BEGIN: HeroDarkSection -->
+<section class="bg-[#0A4F4F] text-white px-5 pt-7 pb-8 shadow-inner" data-purpose="page-title-banner">
+<h1 class="text-2xl sm:text-[26px] font-bold tracking-tight text-white mb-2 leading-tight">
+        Entrar a la consola
+      </h1>
+<p class="text-teal-50 text-sm sm:text-[15px] font-normal leading-relaxed opacity-95">
+        Para operadores, receptores, auditores y administradores de Acopio.
+      </p>
+</section>
+<!-- END: HeroDarkSection -->
+<!-- BEGIN: FormContainer -->
+<div class="px-4 py-6 space-y-4 -mt-3 flex-1">
+<!-- BEGIN: LoginFormCard -->
+<section class="bg-white border border-[#E7E5E4] rounded-xl p-5 shadow-sm" data-purpose="login-form">
+<form action="#" class="space-y-5" method="POST" onsubmit="event.preventDefault();">
+<!-- Field: Username -->
+<div>
+<label class="block text-sm font-medium text-stone-800 mb-1.5" for="username">
+              Nombre de usuario
+            </label>
+<input autocomplete="username" class="w-full h-12 px-3.5 bg-[#FAFAF9] border border-[#E7E5E4] rounded-lg text-base text-stone-900 placeholder:text-stone-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F6E6E] focus:border-[#0F6E6E] transition-all" id="username" name="username" placeholder="ej. d.mendez.corferias" required="" type="text"/>
+<p class="text-stone-500 text-[13px] mt-1.5 font-normal leading-normal">
+              El que te dio el administrador al invitarte
+            </p>
+</div>
+<!-- Field: Password -->
+<div>
+<label class="block text-sm font-medium text-stone-800 mb-1.5" for="password">
+              Contraseña
+            </label>
+<div class="relative flex items-center">
+<input autocomplete="current-password" class="w-full h-12 pl-3.5 pr-12 bg-[#FAFAF9] border border-[#E7E5E4] rounded-lg text-base text-stone-900 placeholder:text-stone-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F6E6E] focus:border-[#0F6E6E] transition-all" id="password" name="password" placeholder="••••••••••••" required="" type="password"/>
+<!-- Toggle Password Visibility Button (Touch Target 48px) -->
+<button aria-label="Mostrar u ocultar contraseña" class="absolute right-0 h-12 w-12 flex items-center justify-center text-stone-500 hover:text-stone-800 transition-colors focus:outline-none focus:ring-2 focus:ring-[#0F6E6E] rounded-r-lg" id="togglePassword" type="button">
+<!-- Eye Open Icon -->
+<svg class="w-5 h-5" fill="none" id="eyeIcon" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+<circle cx="12" cy="12" r="3"></circle>
+</svg>
+<!-- Eye Off Icon (hidden by default) -->
+<svg class="w-5 h-5 hidden" fill="none" id="eyeOffIcon" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="m2 2 20 20"></path>
+<path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"></path>
+<path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"></path>
+<path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"></path>
+</svg>
+</button>
+</div>
+</div>
+<!-- Primary Submit Action -->
+<div class="pt-2">
+<button class="w-full min-h-[48px] bg-[#0F6E6E] active:bg-[#0A4F4F] hover:bg-[#0c5959] text-white font-semibold text-base rounded-[10px] shadow-sm flex items-center justify-center transition-colors focus:outline-none focus:ring-2 focus:ring-[#0F6E6E] focus:ring-offset-2" type="submit">
+              Entrar
+            </button>
+</div>
+<!-- Error Feedback Container -->
+<div class="rounded-lg bg-red-50 border border-red-200 p-3 flex items-start gap-2.5 text-red-700" data-purpose="login-error-state" role="alert">
+<svg class="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<line x1="12" x2="12" y1="8" y2="12"></line>
+<line x1="12" x2="12.01" y1="16" y2="16"></line>
+</svg>
+<p class="text-sm font-medium leading-snug">
+              Usuario o contraseña incorrectos.
+            </p>
+</div>
+</form>
+</section>
+<!-- END: LoginFormCard -->
+<!-- BEGIN: PasswordResetAssistanceCard -->
+<section class="bg-white border border-[#E7E5E4] rounded-xl p-4 shadow-sm" data-purpose="recovery-notice">
+<h2 class="text-stone-900 font-semibold text-base leading-tight mb-1.5">
+          ¿Olvidaste tu contraseña?
+        </h2>
+<p class="text-stone-600 text-sm leading-relaxed">
+          Pídele a un administrador que restablezca tu acceso. Te llegará un enlace nuevo.
+        </p>
+</section>
+<!-- END: PasswordResetAssistanceCard -->
+</div>
+<!-- END: FormContainer -->
+<!-- BEGIN: BackNavigationAndFooter -->
+<footer class="px-4 py-6 text-center space-y-4 mt-auto">
+<!-- Return to Landing Page Link -->
+<div>
+<a class="inline-flex items-center justify-center min-h-[48px] px-4 text-[#0F6E6E] hover:text-[#0A4F4F] font-semibold text-sm transition-colors rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0F6E6E]" href="/">
+          ← Volver a la portada
+        </a>
+</div>
+<!-- Legal Compliance Note -->
+<p class="text-[12px] text-stone-500 leading-normal max-w-xs mx-auto">
+        Plataforma oficial de respuesta humanitaria · Ley 1581 de 2012
+      </p>
+</footer>
+<!-- END: BackNavigationAndFooter -->
+</main>
+<!-- END: MainContent -->
+<!-- BEGIN: InteractiveScripts -->
+<script data-purpose="password-visibility-toggle">
+    document.addEventListener('DOMContentLoaded', () => {
+      const toggleBtn = document.getElementById('togglePassword');
+      const passwordInput = document.getElementById('password');
+      const eyeIcon = document.getElementById('eyeIcon');
+      const eyeOffIcon = document.getElementById('eyeOffIcon');
+
+      if (toggleBtn && passwordInput) {
+        toggleBtn.addEventListener('click', () => {
+          const isPassword = passwordInput.getAttribute('type') === 'password';
+          passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+          
+          if (isPassword) {
+            eyeIcon.classList.add('hidden');
+            eyeOffIcon.classList.remove('hidden');
+          } else {
+            eyeIcon.classList.remove('hidden');
+            eyeOffIcon.classList.add('hidden');
+          }
+        });
+      }
+    });
+  </script>
+<!-- END: InteractiveScripts -->
+
+</div>
