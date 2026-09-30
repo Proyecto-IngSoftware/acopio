@@ -9,6 +9,7 @@ import { OrigenGuard } from './comun/origen.guard';
 import { PrismaModule } from './comun/prisma/prisma.module';
 import { ConfigModule } from './config/config.module';
 import { ENTORNO, type Entorno } from './config/entorno';
+import { AcopiosModule } from './modulos/acopios/acopios.module';
 import { AuditoriaModule } from './modulos/auditoria/auditoria.module';
 import { CatalogoModule } from './modulos/catalogo/catalogo.module';
 import { AutenticacionGuard } from './modulos/identidad/autenticacion/autenticacion.guard';
@@ -31,6 +32,7 @@ import { SaludModule } from './modulos/salud/salud.module';
     NotificacionesModule,
     IdentidadModule,
     CatalogoModule,
+    AcopiosModule,
     SaludModule,
   ],
   providers: [

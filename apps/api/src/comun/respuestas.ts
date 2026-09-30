@@ -186,3 +186,17 @@ export class PaginaBitacoraDto extends createZodDto(
 export class SaludDto extends createZodDto(
   z.object({ estado: z.literal('ok'), base: z.literal('ok') }),
 ) {}
+
+export class EntidadDto extends createZodDto(
+  z.object({
+    id: z.uuid(),
+    nombre: z.string(),
+    tipo: z.string(),
+    nit: z.string().nullable(),
+    sitioWeb: z.string().nullable(),
+    telefono: z.string().nullable(),
+    correo: z.string().nullable(),
+    descripcion: z.string().nullable(),
+    verificacion: z.enum(['SIN_VERIFICAR', 'VERIFICADA', 'RECHAZADA']),
+  }),
+) {}
