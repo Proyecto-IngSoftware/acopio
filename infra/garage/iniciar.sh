@@ -24,7 +24,16 @@ S3_BUCKET=$(leer S3_BUCKET)
 CAPACIDAD=$(leer GARAGE_CAPACIDAD); CAPACIDAD=${CAPACIDAD:-10G}
 : "${S3_ACCESS_KEY:?falta S3_ACCESS_KEY en .env}" "${S3_SECRET_KEY:?falta S3_SECRET_KEY en .env}" "${S3_BUCKET:?falta S3_BUCKET en .env}"
 
+# Recién levantado, Garage tarda unos segundos en crear la llave del nodo
+intentos=0
+until garage status >/dev/null 2>&1; do
+  intentos=$((intentos + 1))
+  if [ "$intentos" -ge 30 ]; then echo "Garage no respondió en 60 s" >&2; exit 1; fi
+  sleep 2
+done
+
 nodo=$(garage node id -q | cut -d@ -f1)
+if [ -z "$nodo" ]; then echo "No se pudo leer el identificador del nodo" >&2; exit 1; fi
 
 if garage layout show | grep -q "$(echo "$nodo" | cut -c1-16)"; then
   echo "Capacidad del nodo: ya asignada"
