@@ -142,3 +142,18 @@ it('no tiene violaciones graves de accesibilidad, tampoco con el detalle abierto
   await userEvent.click(await screen.findByRole('button', { name: /Archivó la categoría/ }));
   expect(await violacionesGraves(container)).toEqual([]);
 });
+
+it('con ?usuario= muestra solo la actividad de esa persona', async () => {
+  responderJson(PAGINA);
+  render(
+    envolver(
+      <Bitacora />,
+      '/consola/bitacora?usuario=u1&nombre=Daniela%20M%C3%A9ndez',
+      clienteFalso(ADMIN),
+    ),
+  );
+  expect(await screen.findByText('Solo de Daniela Méndez')).toBeInTheDocument();
+  expect(urls().at(-1)).toMatch(/usuarioId=u1/);
+  await userEvent.click(screen.getByRole('button', { name: 'Ver la bitácora de todos' }));
+  expect(urls().at(-1)).not.toMatch(/usuarioId/);
+});

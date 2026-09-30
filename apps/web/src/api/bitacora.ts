@@ -6,6 +6,7 @@ type Pagina = components['schemas']['PaginaBitacoraDto'];
 export type RegistroBitacora = Pagina['registros'][number];
 
 export interface FiltrosBitacora {
+  usuarioId?: string;
   entidad?: 'usuario' | 'categoria' | 'emergencia';
   destacado?: boolean;
   /** Fecha local AAAA-MM-DD */
@@ -29,6 +30,7 @@ export function useBitacora(filtros: FiltrosBitacora) {
         api.GET('/api/bitacora', {
           params: {
             query: {
+              usuarioId: filtros.usuarioId,
               entidad: filtros.entidad,
               destacado: filtros.destacado ? 'true' : undefined,
               desde: filtros.desde ? inicioDelDia(filtros.desde) : undefined,

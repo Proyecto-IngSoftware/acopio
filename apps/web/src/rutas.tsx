@@ -4,6 +4,9 @@ import { Entrar } from './acceso/Entrar';
 import { MarcoAcceso } from './portal/MarcoAcceso';
 import { Bitacora } from './consola/Bitacora';
 import { Catalogo } from './consola/catalogo/Catalogo';
+import { DetalleUsuario } from './consola/usuarios/DetalleUsuario';
+import { InvitarPersona } from './consola/usuarios/InvitarPersona';
+import { Usuarios } from './consola/usuarios/Usuarios';
 import { RequiereRol } from './consola/RequiereRol';
 import { MarcoPortal } from './portal/MarcoPortal';
 import { Mas } from './portal/Mas';
@@ -28,6 +31,19 @@ export function Rutas() {
             </RequiereRol>
           }
         />
+        {(
+          [
+            ['consola/usuarios', <Usuarios key="u" />],
+            ['consola/usuarios/invitar', <InvitarPersona key="i" />],
+            ['consola/usuarios/:id', <DetalleUsuario key="d" />],
+          ] as const
+        ).map(([ruta, pantalla]) => (
+          <Route
+            key={ruta}
+            path={ruta}
+            element={<RequiereRol roles={['ADMIN']}>{pantalla}</RequiereRol>}
+          />
+        ))}
         <Route
           path="consola/catalogo"
           element={

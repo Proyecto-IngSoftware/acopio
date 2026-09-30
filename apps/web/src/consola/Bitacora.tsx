@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSearchParams } from 'react-router';
 import { useBitacora, type FiltrosBitacora, type RegistroBitacora } from '../api/bitacora';
 import { Boton } from '../componentes/Boton';
 import { Esqueleto } from '../componentes/Esqueleto';
@@ -34,9 +35,14 @@ export function Bitacora() {
   const [fechas, fijarFechas] = useState<{ desde?: string; hasta?: string }>({});
   const [filtrando, fijarFiltrando] = useState(false);
   const [abierto, fijarAbierto] = useState<RegistroBitacora | null>(null);
+  // Desde el detalle de un usuario: «Ver su actividad en la bitácora»
+  const [parametros, fijarParametros] = useSearchParams();
+  const usuarioId = parametros.get('usuario') ?? undefined;
+  const nombreUsuario = parametros.get('nombre');
 
   const filtros: FiltrosBitacora = {
     ...fechas,
+    ...(usuarioId ? { usuarioId } : {}),
     ...(tipo === 'destacados' ? { destacado: true } : {}),
     ...(tipo === 'usuario' || tipo === 'categoria' || tipo === 'emergencia'
       ? { entidad: tipo }
@@ -86,6 +92,20 @@ export function Bitacora() {
           Filtrar
         </button>
       </div>
+
+      {usuarioId && (
+        <p className="flex items-center justify-between gap-space-sm rounded-xl bg-primary-fixed px-space-md py-space-xs text-body-md text-on-primary-fixed">
+          Solo de {nombreUsuario ?? 'una persona'}
+          <button
+            type="button"
+            aria-label="Ver la bitácora de todos"
+            onClick={() => fijarParametros({}, { replace: true })}
+            className="flex h-10 w-10 items-center justify-center rounded-full"
+          >
+            <Icono nombre="close" className="text-[20px]" />
+          </button>
+        </p>
+      )}
 
       {isPending && <Esqueleto etiqueta="Cargando la bitácora" className="h-48" />}
       {error && <EstadoError mensaje={error.message} alReintentar={() => void refetch()} />}
