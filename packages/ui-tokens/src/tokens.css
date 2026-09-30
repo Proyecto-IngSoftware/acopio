@@ -1,0 +1,45 @@
+/* Tokens de Acopio. Fuente: docs/03-diseno/sistema-diseno.md §2 a §4, que toma el tema
+   «Acopio Field Command» de Stitch (ADR-0013). Mismos nombres que en Stitch. No se
+   escriben colores fuera de este archivo. */
+:root {
+  /* Marca */
+  --primary: #003730;
+  --primary-container: #085046;
+  --on-primary: #ffffff;
+  --primary-fixed: #b0efe1;
+  --primary-fixed-dim: #95d2c5;
+  --on-primary-fixed: #00201b;
+  --surface-tint: #2a685d;
+
+  /* Superficies y texto */
+  --background: #faf8ff;
+  --surface: #faf8ff;
+  --surface-container-lowest: #ffffff;
+  --surface-container-low: #f2f3ff;
+  --surface-container: #eaedff;
+  --surface-container-high: #e2e7ff;
+  --surface-container-highest: #dae2fd;
+  --on-surface: #131b2e;
+  --on-surface-variant: #3f4946;
+  --outline: #707976;
+  --outline-variant: #bfc9c5;
+  --inverse-surface: #283044;
+
+  /* Detente: no traer y acciones destructivas */
+  --secondary: #b51d04;
+  --secondary-container: #d9381e;
+  --on-secondary: #ffffff;
+  --secondary-fixed: #ffdad3;
+  --on-secondary-fixed-variant: #8f1100;
+
+  /* Estados */
+  --error: #ba1a1a;
+  --error-container: #ffdad6;
+  --on-error-container: #93000a;
+  --tertiary-container: #6e3900;
+  --tertiary-fixed: #ffdcc3;
+  --exito: #15803d;
+  --exito-container: #f0fdf4;
+
+  --fuente: 'Inter Variable', 'Inter', system-ui, sans-serif;
+}

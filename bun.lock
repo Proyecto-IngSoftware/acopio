@@ -58,6 +58,10 @@
       "name": "@acopio/shared",
       "version": "0.0.0",
     },
+    "packages/ui-tokens": {
+      "name": "@acopio/ui-tokens",
+      "version": "0.0.0",
+    },
   },
   "trustedDependencies": [
     "@prisma/engines",
@@ -68,6 +72,8 @@
     "@acopio/api": ["@acopio/api@workspace:apps/api"],
 
     "@acopio/shared": ["@acopio/shared@workspace:packages/shared"],
+
+    "@acopio/ui-tokens": ["@acopio/ui-tokens@workspace:packages/ui-tokens"],
 
     "@babel/code-frame": ["@babel/code-frame@7.29.7", "", { "dependencies": { "@babel/helper-validator-identifier": "^7.29.7", "js-tokens": "^4.0.0", "picocolors": "^1.1.1" } }, "sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw=="],
 
