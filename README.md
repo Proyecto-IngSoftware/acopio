@@ -95,4 +95,9 @@ bun run --filter @acopio/api start:dev        # API en http://localhost:3000/api
 - Las pruebas de integración crean y borran la base `acopio_test`; por defecto usan
   `postgresql://acopio_owner:acopio@localhost:5432`
 
+Si `bun run servicios` falla con `address already in use` en el puerto 5432, ya hay un
+PostgreSQL corriendo en tu equipo. Cambia `DB_PUERTO` en `.env` (por ejemplo a 5440) y
+pon ese mismo puerto en `DATABASE_URL` y `DATABASE_URL_OWNER`. Para las pruebas de
+integración, apunta `PRUEBAS_PG_URL` al mismo puerto.
+
 Prettier no toca `docs/` ni los `.md`: la bóveda se edita con Obsidian.

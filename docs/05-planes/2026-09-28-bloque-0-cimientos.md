@@ -30,7 +30,7 @@ Lo que cambió al construir está en la
 | Tarea | Estado | Qué falta |
 |---|---|---|
 | T01 Monorepo | ✅ | — |
-| T02 Docker Compose | ✅ | Que cada integrante lo levante en su equipo ([#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27)). Almacenamiento: Garage en lugar de MinIO ([ADR-0012](../02-arquitectura/adr/ADR-0012-almacenamiento-garage.md)); la primera vez, `bun run almacenamiento:iniciar` |
+| T02 Docker Compose | ✅ | Que cada integrante lo levante en su equipo ([#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27)). Almacenamiento: Garage en lugar de MinIO ([ADR-0012](../02-arquitectura/adr/ADR-0012-almacenamiento-garage.md)); la primera vez, `bun run almacenamiento:iniciar`. Probado el 2026-09-30 en el equipo de Joseph: servicios sanos, migraciones, seed dos veces, invitación en Mailpit, canje y login. El 5432 estaba ocupado por un PostgreSQL local, de ahí `DB_PUERTO` ([despliegue](../06-operacion/despliegue.md#perfil-de-desarrollo)) |
 | T03 Prisma y migración | ✅ | — |
 | T04 Esqueleto de la API | ✅ | — |
 | T05 Integración continua | ✅ escrita | Verla en verde en el primer PR |

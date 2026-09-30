@@ -2,7 +2,7 @@
 services:
   db:
     ports:
-      - '5432:5432'
+      - '${DB_PUERTO:-5432}:5432' # otro puerto si el 5432 ya está ocupado
 
   storage:
     ports:

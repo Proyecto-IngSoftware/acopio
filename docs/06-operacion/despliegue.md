@@ -144,6 +144,14 @@ bun run servicios:logs
 Para desarrollar la API con recarga, se corre fuera de Docker:
 `bun run --filter @acopio/api start:dev`.
 
+**Puerto de la base.** El perfil de desarrollo publica PostgreSQL en el puerto que diga
+`DB_PUERTO`, 5432 si no se define. En un equipo que ya tiene un PostgreSQL instalado
+el 5432 está ocupado y el contenedor `db` no arranca (`address already in use`). Se
+resuelve con `DB_PUERTO=5440` en `.env` y ese mismo puerto en `DATABASE_URL` y
+`DATABASE_URL_OWNER`. Dentro de la red de Docker la API sigue hablando con `db:5432`;
+el cambio solo afecta a lo que corre en el anfitrión: migraciones, seed y la API con
+recarga.
+
 `infra/docker-compose.dev.yml` sobrescribe:
 - `api` con `npm run start:dev` y volumen montado
 - `web` con el servidor de Vite en lugar de nginx
