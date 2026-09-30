@@ -24,6 +24,7 @@
       "name": "@acopio/api",
       "version": "0.0.0",
       "dependencies": {
+        "@acopio/shared": "workspace:*",
         "@nestjs/common": "^11",
         "@nestjs/core": "^11",
         "@nestjs/platform-express": "^11",

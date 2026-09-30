@@ -17,5 +17,9 @@ module.exports = {
   testRegex: '(?<!\\.int)\\.test\\.ts$',
   transform: { '^.+\\.ts$': swc },
   // El cliente de Prisma importa con .js; Jest resuelve el .ts
-  moduleNameMapper: { '^(\\.{1,2}/.*)\\.js$': '$1' },
+  moduleNameMapper: {
+    // El paquete publica ESM en dist; Jest (CommonJS) usa el código fuente
+    '^@acopio/shared$': '<rootDir>/../../packages/shared/src/index.ts',
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+  },
 };
