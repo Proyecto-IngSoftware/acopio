@@ -2,6 +2,8 @@ import { Route, Routes } from 'react-router';
 import { ActivarCuenta } from './acceso/ActivarCuenta';
 import { Entrar } from './acceso/Entrar';
 import { MarcoAcceso } from './portal/MarcoAcceso';
+import { Bitacora } from './consola/Bitacora';
+import { RequiereRol } from './consola/RequiereRol';
 import { MarcoPortal } from './portal/MarcoPortal';
 import { Mas } from './portal/Mas';
 import { NoEncontrada } from './portal/NoEncontrada';
@@ -17,6 +19,14 @@ export function Rutas() {
       <Route element={<MarcoPortal />}>
         <Route index element={<Portada />} />
         <Route path="mas" element={<Mas />} />
+        <Route
+          path="consola/bitacora"
+          element={
+            <RequiereRol roles={['ADMIN', 'AUDITOR']}>
+              <Bitacora />
+            </RequiereRol>
+          }
+        />
         {SIN_CONSTRUIR.map((ruta) => (
           <Route key={ruta} path={ruta} element={<Proximamente />} />
         ))}
