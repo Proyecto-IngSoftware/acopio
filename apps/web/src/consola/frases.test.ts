@@ -1,4 +1,4 @@
-import { cambios } from './frases';
+import { cambios, frase } from './frases';
 
 const base = {
   id: '1',
@@ -31,4 +31,12 @@ it('muestra las fechas del antes y el después en español, sin el formato ISO',
       timeStyle: 'short',
     }),
   );
+});
+
+it('el registro del seed se lee en lenguaje llano', () => {
+  expect(
+    frase({ ...base, accion: 'seed.admin_creado', entidad: 'usuario' } as unknown as Parameters<
+      typeof frase
+    >[0]),
+  ).toBe('Se creó el administrador inicial');
 });

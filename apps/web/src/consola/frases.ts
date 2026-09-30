@@ -24,6 +24,8 @@ export function frase(r: RegistroBitacora): string {
       return despues?.rol
         ? `Invitó a ${quien} como ${nombreRol(despues.rol as Rol)}`
         : con('Invitó a');
+    case 'seed.admin_creado':
+      return 'Se creó el administrador inicial';
     case 'invitacion.canjeada':
       return 'Activó su cuenta';
     case 'invitacion.regenerada':

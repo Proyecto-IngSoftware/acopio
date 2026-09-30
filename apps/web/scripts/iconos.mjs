@@ -16,6 +16,9 @@ export function iconosUsados(dir = new URL('../src', import.meta.url).pathname) 
         // nombre={cond ? 'uno' : 'otro'}: cada texto entre las llaves
         for (const m of src.matchAll(/nombre=\{([^}]*)\}/g))
           for (const t of m[1].matchAll(/["'`]([a-z0-9_]+)["'`]/g)) nombres.add(t[1]);
+        // function iconoDe(...) { return '...' }: cada texto que devuelve
+        for (const m of src.matchAll(/function icono\w*\([^]*?\n\}/g))
+          for (const t of m[0].matchAll(/return ["'`]([a-z0-9_]+)["'`]/g)) nombres.add(t[1]);
       }
     }
   };
