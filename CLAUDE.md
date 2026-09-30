@@ -93,7 +93,7 @@ Antes de escribir documentación, un comentario o cierre de issue, o la descripc
 
 ## Flujo de trabajo
 
-Trabajo en rama y PR hacia `main`; no se hace commit directo a `main`. Los mensajes de commit van en español, con el área al inicio (`CI: …`, `Compose: …`, `ADR-0012: …`).
+Mientras Joseph trabaje solo, los cambios van directo a `main`, sin PR: se hace commit, se corre la verificación de abajo y se sube. Después del push se revisa el CI con `gh run watch`. Los mensajes de commit van en español, con el área al inicio (`CI: …`, `Compose: …`, `ADR-0012: …`).
 
 El trabajo se organiza por bloques, según el plan vigente en `docs/05-planes/`.
 
