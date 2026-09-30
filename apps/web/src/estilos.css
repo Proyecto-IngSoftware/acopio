@@ -1,0 +1,33 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@acopio/ui-tokens/tokens.css';
+@import '@acopio/ui-tokens/tailwind.css';
+
+body {
+  background-color: var(--surface);
+  color: var(--on-surface);
+  font-family: var(--fuente);
+  overscroll-behavior: none;
+}
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  line-height: 1;
+  display: inline-block;
+  white-space: nowrap;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 3px solid var(--surface-tint);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

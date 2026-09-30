@@ -9,6 +9,8 @@ WORKDIR /app
 COPY package.json bun.lock tsconfig.base.json ./
 COPY apps/api/package.json apps/api/
 COPY packages/shared/package.json packages/shared/
+COPY packages/ui-tokens/package.json packages/ui-tokens/
+COPY apps/web/package.json apps/web/
 RUN bun install --frozen-lockfile
 COPY prisma prisma
 COPY packages/shared packages/shared

@@ -6,4 +6,5 @@ node_modules/
 dist/
 coverage/
 apps/api/src/generado/
+apps/web/src/api/esquema.d.ts
 *.md
