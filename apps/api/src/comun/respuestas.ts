@@ -233,3 +233,19 @@ export class AcopioPublicoDto extends createZodDto(
 ) {}
 
 export class AcopioDto extends createZodDto(AcopioPublicoDto.schema.extend({ creadoEn: fecha })) {}
+
+export class ZonaDto extends createZodDto(
+  z.object({
+    id: z.uuid(),
+    emergenciaId: z.uuid(),
+    nombre: z.string(),
+    municipio: z.string(),
+    lat: z.number(),
+    lng: z.number(),
+    poblacionEstimada: z.number().int(),
+    poblacionFuente: z.string(),
+    poblacionFecha: fecha,
+    estado: z.enum(['SIN_ATENDER', 'EN_ATENCION', 'CUBIERTA']),
+    actualizadoEn: fecha,
+  }),
+) {}

@@ -2,6 +2,7 @@ import {
   ACOPIO_A,
   ACOPIO_B,
   ADMIN,
+  EMERGENCIA_PRUEBA,
   ENTIDAD_PRUEBA,
   HORARIO_PRUEBA,
   crearAppPrueba,
@@ -224,6 +225,69 @@ describe('red', () => {
         const todos = await a.http().get('/api/acopios/gestion').set(comoAdmin()).expect(200);
         expect((todos.body as { estado: string }[]).some((x) => x.estado === 'CERRADO')).toBe(true);
       });
+    });
+  });
+
+  describe('zonas (RF-MOT-001)', () => {
+    const nueva = (emergenciaId: string) => ({
+      emergenciaId,
+      nombre: unico('Vereda '),
+      municipio: 'Soacha',
+      lat: 4.58,
+      lng: -74.21,
+      poblacionEstimada: 340,
+      poblacionFuente: 'Junta de acción comunal',
+      poblacionFecha: '2026-09-20',
+    });
+
+    it('el Administrador crea una zona y la lista por emergencia', async () => {
+      const r = await a
+        .http()
+        .post('/api/zonas')
+        .set(comoAdmin())
+        .send(nueva(EMERGENCIA_PRUEBA))
+        .expect(201);
+      expect(r.body).toMatchObject({ estado: 'SIN_ATENDER', poblacionEstimada: 340 });
+      const lista = await a
+        .http()
+        .get(`/api/zonas?emergencia=${EMERGENCIA_PRUEBA}`)
+        .set(comoAdmin())
+        .expect(200);
+      expect((lista.body as { id: string }[]).map((z) => z.id)).toContain(r.body.id);
+    });
+
+    it('con la emergencia cerrada, la zona queda en solo lectura: 409', async () => {
+      const e = await a
+        .http()
+        .post('/api/emergencias')
+        .set(comoAdmin())
+        .send({
+          nombre: unico('Sismo '),
+          tipo: 'Sismo',
+          inicio: '2026-09-01',
+          destacadaHasta: '2099-01-01',
+        })
+        .expect(201);
+      const zona = await a
+        .http()
+        .post('/api/zonas')
+        .set(comoAdmin())
+        .send(nueva(e.body.id))
+        .expect(201);
+      await a
+        .http()
+        .post(`/api/emergencias/${e.body.id}/cerrar`)
+        .set(comoAdmin())
+        .send({ motivo: 'Atención terminada en la zona' })
+        .expect(201);
+      const r = await a
+        .http()
+        .patch(`/api/zonas/${zona.body.id}`)
+        .set(comoAdmin())
+        .send({ estado: 'CUBIERTA' })
+        .expect(409);
+      expect(r.body.codigo).toBe('ZONA_SOLO_LECTURA');
+      await a.http().post('/api/zonas').set(comoAdmin()).send(nueva(e.body.id)).expect(409);
     });
   });
 });
