@@ -173,10 +173,25 @@ Marca y botón con las iniciales. El botón abre un menú con el nombre, el rol 
 
 ## 7. Criterios de salida
 
-- [ ] El recorrido del §1 funciona en el Compose local, con el enlace de Mailpit
-- [ ] En las herramientas del navegador la cookie aparece como `HttpOnly` y el token no
-      está en `localStorage` ni en `sessionStorage`
-- [ ] Las pruebas nuevas de la API y de la web pasan, y las anteriores siguen pasando
-- [ ] axe sin violaciones graves en las pantallas nuevas, en el navegador a 360 × 640
-- [ ] El contrato OpenAPI, los tipos de la web y `api/README.md` quedan al día
+- [x] El recorrido del §1 funciona en el Compose local, con el enlace de Mailpit
+- [x] La cookie es `HttpOnly`, `SameSite=Strict` y `Path=/api`; `document.cookie` no la
+      ve y no hay nada de la sesión en `localStorage` ni en `sessionStorage`
+- [x] Las pruebas nuevas de la API y de la web pasan, y las anteriores siguen pasando
+- [x] axe sin violaciones graves en Entrar, Activar cuenta y el menú de la cuenta, en
+      Chromium a 360 × 640
+- [x] El contrato OpenAPI, los tipos de la web y `api/README.md` quedan al día
 - [ ] El CI de `main` queda en verde
+
+### Cambios al construir
+
+| Qué | Por qué |
+|---|---|
+| `cookie-sesion.ts` y el guard de origen viven en `apps/api/src/comun/` | Los usan el guard de sesión y el de origen; en `identidad/` habrían roto la regla de dependency-cruiser |
+| Prueba extra: con Bearer, el control de origen no aplica | La especificación lo decía y no tenía prueba |
+| `cerrarSesion` ignora la respuesta de `/auth/salir` | La web deja la sesión en nulo aunque la llamada falle; el token vence solo |
+| Mientras se sabe si hay sesión, la cabecera muestra solo la marca | Evita mostrar «Entrar» a quien sí tiene sesión |
+| Activar cuenta muestra «Tu acceso a Acopio» mientras carga | Evita mostrar «Activa tu cuenta» a quien viene a restablecer |
+| Las ubicaciones se muestran como cantidad; «Todas» para el Administrador | Los nombres llegan en el Bloque 1 |
+| Cada cambio de ruta vuelve al inicio de la página | Al pasar de Activar cuenta a Entrar la persona quedaba a media pantalla |
+| Sin el pie «Plataforma oficial de respuesta humanitaria» de la maqueta de Entrar, ni «Respuesta Oficial Caldas 2026» en Activar cuenta | Afirmaban cosas que la plataforma no verifica |
+| `username` se convierte a mano en la web (P-031) | El contrato exporta los campos nullable como arreglos |

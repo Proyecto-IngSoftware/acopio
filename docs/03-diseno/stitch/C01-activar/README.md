@@ -14,7 +14,8 @@ actualizado: 2026-09-30
 | Pantalla | `ddd5c11f85bc4b4ba47f5d4d41b9273f`, «C01 Activar cuenta - Consola Acopio» |
 | Exportada | 2026-09-30 |
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) · [maqueta.html](maqueta.html) |
-| Maqueta | <https://claude.ai/artifact/MZtcsQwsak2Tsje9D5vb7C>, pendiente de aprobación |
+| Maqueta | <https://claude.ai/artifact/MZtcsQwsak2Tsje9D5vb7C>, aprobada por Joseph el 2026-09-30 |
+| Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
 
 Segunda parte de C01 (RF-IDE-003): la persona abre el enlace de invitación, ve sus datos
 y define la contraseña. Sale con la cabecera de acceso de

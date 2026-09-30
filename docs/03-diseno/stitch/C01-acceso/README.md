@@ -14,7 +14,8 @@ actualizado: 2026-09-30
 | Pantalla | `1edc7a6b37d84d07aa624bf77980680f`, «C01 Acceso - Consola Interna» |
 | Exportada | 2026-09-30 |
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) · [maqueta.html](maqueta.html) |
-| Maqueta | <https://claude.ai/artifact/Sztyamh6A3wsLkhLzuLXiQ>, pendiente de aprobación |
+| Maqueta | <https://claude.ai/artifact/Sztyamh6A3wsLkhLzuLXiQ>, aprobada por Joseph el 2026-09-30 |
+| Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
 
 Cubre el inicio de sesión con nombre de usuario (RF-IDE-004). Falta la segunda parte de
 C01: canjear la invitación y definir la contraseña (RF-IDE-003).

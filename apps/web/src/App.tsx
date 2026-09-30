@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter } from 'react-router';
+import { SubirAlNavegar } from './componentes/SubirAlNavegar';
 import { Rutas } from './rutas';
 import { SesionProveedor } from './sesion/Sesion';
 
@@ -12,6 +13,7 @@ export function App() {
     <QueryClientProvider client={consultas}>
       <BrowserRouter>
         <SesionProveedor>
+          <SubirAlNavegar />
           <Rutas />
         </SesionProveedor>
       </BrowserRouter>
