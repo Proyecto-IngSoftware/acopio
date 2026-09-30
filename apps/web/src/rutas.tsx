@@ -3,6 +3,7 @@ import { ActivarCuenta } from './acceso/ActivarCuenta';
 import { Entrar } from './acceso/Entrar';
 import { MarcoAcceso } from './portal/MarcoAcceso';
 import { Bitacora } from './consola/Bitacora';
+import { Catalogo } from './consola/catalogo/Catalogo';
 import { RequiereRol } from './consola/RequiereRol';
 import { MarcoPortal } from './portal/MarcoPortal';
 import { Mas } from './portal/Mas';
@@ -24,6 +25,14 @@ export function Rutas() {
           element={
             <RequiereRol roles={['ADMIN', 'AUDITOR']}>
               <Bitacora />
+            </RequiereRol>
+          }
+        />
+        <Route
+          path="consola/catalogo"
+          element={
+            <RequiereRol roles={['ADMIN']}>
+              <Catalogo />
             </RequiereRol>
           }
         />
