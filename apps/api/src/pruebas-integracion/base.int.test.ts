@@ -1,6 +1,6 @@
 import { Client } from 'pg';
 import { URL_APP_PRUEBAS, URL_DUENO_PRUEBAS } from '../../test/entorno-pruebas';
-import { ADMIN, crearAppPrueba, type AppPrueba } from '../../test/app-prueba';
+import { ACOPIO_A, ADMIN, ZONA_A, crearAppPrueba, type AppPrueba } from '../../test/app-prueba';
 import { PROVEEDOR_IDENTIDAD } from '../modulos/identidad/proveedor/proveedor-identidad';
 import { CANASTA, CATEGORIAS } from '../seed/datos-catalogo';
 import { sembrar } from '../seed/sembrar';
@@ -41,6 +41,30 @@ describe('base de datos', () => {
       await expect(app.query(`SELECT * FROM _prisma_migrations`)).rejects.toThrow(
         /permission denied/,
       );
+    });
+  });
+
+  describe('red (Bloque 1)', () => {
+    it.each(['entidad', 'acopio', 'zona'])('acopio_app no puede borrar %s', async (tabla) => {
+      await expect(app.query(`DELETE FROM ${tabla} WHERE false`)).rejects.toThrow(
+        /permission denied/,
+      );
+    });
+
+    it('acopio_app sí puede borrar no_recibir', async () => {
+      await expect(app.query(`DELETE FROM no_recibir WHERE false`)).resolves.toBeDefined();
+    });
+
+    it('las coordenadas del acopio quedan dentro de Colombia', async () => {
+      await expect(
+        app.query(`UPDATE acopio SET lat = 40 WHERE id = '${ACOPIO_A}'`),
+      ).rejects.toThrow(/acopio_coordenadas_colombia/);
+    });
+
+    it('la población de una zona no es negativa', async () => {
+      await expect(
+        app.query(`UPDATE zona SET poblacion_estimada = -1 WHERE id = '${ZONA_A}'`),
+      ).rejects.toThrow(/zona_poblacion_no_negativa/);
     });
   });
 

@@ -1,11 +1,11 @@
-// Esquema de Acopio · Bloque 0 (identidad, auditoría, notificaciones, catálogo).
+// Esquema de Acopio · Bloques 0 y 1 (identidad, auditoría, notificaciones, catálogo, red).
 // Fuente de verdad del diseño: docs/02-arquitectura/modelo-datos.md.
 // Las restricciones que Prisma no expresa (CHECK, permisos por rol) viven en el SQL
 // de cada migración.
 
 generator client {
-  provider     = "prisma-client"
-  output       = "../apps/api/src/generado/prisma"
+  provider            = "prisma-client"
+  output              = "../apps/api/src/generado/prisma"
   moduleFormat        = "cjs"
   importFileExtension = ""
 }
@@ -188,7 +188,8 @@ model Categoria {
   archivada   Boolean        @default(false)
   creado_en   DateTime       @default(now()) @db.Timestamptz
 
-  canasta CanastaEstandar[]
+  canasta    CanastaEstandar[]
+  no_recibir NoRecibir[]
 
   @@map("categoria")
 }
@@ -225,6 +226,103 @@ model Emergencia {
   cerrada_en      DateTime?        @db.Timestamptz
   motivo_cierre   String?
   creado_en       DateTime         @default(now()) @db.Timestamptz
+  zonas           Zona[]
 
   @@map("emergencia")
+}
+
+// ── Red (Bloque 1) ──────────────────────────────────────────────────────────
+
+enum EstadoVerificacion {
+  SIN_VERIFICAR
+  VERIFICADA
+  RECHAZADA
+}
+
+enum EstadoAcopio {
+  ACTIVO
+  PAUSADO
+  CERRADO
+}
+
+enum EstadoZona {
+  SIN_ATENDER
+  EN_ATENCION
+  CUBIERTA
+}
+
+/// RF-RED-005. La verificación con documento llega con la especificación C.
+model Entidad {
+  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre       String             @unique @db.Citext
+  tipo         String
+  nit          String?
+  sitio_web    String?
+  telefono     String?
+  correo       String?
+  descripcion  String?
+  verificacion EstadoVerificacion @default(SIN_VERIFICAR)
+  creado_en    DateTime           @default(now()) @db.Timestamptz
+  acopios      Acopio[]
+
+  @@map("entidad")
+}
+
+/// RF-RED-001. Los acopios referenciados (tipo, fuente) llegan con el importador.
+model Acopio {
+  id                  String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entidad_id          String       @db.Uuid
+  entidad             Entidad      @relation(fields: [entidad_id], references: [id])
+  nombre              String
+  direccion           String
+  municipio           String
+  lat                 Decimal      @db.Decimal(9, 6)
+  lng                 Decimal      @db.Decimal(9, 6)
+  telefono            String?
+  indicaciones_acceso String?
+  /// { lun: [{ abre: "08:00", cierra: "12:00" }], … } en hora de Bogotá
+  horario             Json
+  estado              EstadoAcopio @default(ACTIVO)
+  creado_en           DateTime     @default(now()) @db.Timestamptz
+  actualizado_en      DateTime     @default(now()) @updatedAt @db.Timestamptz
+  no_recibir          NoRecibir[]
+
+  @@index([estado])
+  @@map("acopio")
+}
+
+/// RF-MOT-001. Pertenece a una emergencia; cerrada la emergencia, queda en solo lectura.
+model Zona {
+  id                 String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  emergencia_id      String     @db.Uuid
+  emergencia         Emergencia @relation(fields: [emergencia_id], references: [id])
+  nombre             String
+  municipio          String
+  lat                Decimal    @db.Decimal(9, 6)
+  lng                Decimal    @db.Decimal(9, 6)
+  poblacion_estimada Int
+  poblacion_fuente   String
+  poblacion_fecha    DateTime   @db.Date
+  estado             EstadoZona @default(SIN_ATENDER)
+  creado_en          DateTime   @default(now()) @db.Timestamptz
+  actualizado_en     DateTime   @default(now()) @updatedAt @db.Timestamptz
+
+  @@index([emergencia_id])
+  @@map("zona")
+}
+
+/// RF-INV-008, adelantado al Bloque 1 (B-02, B-06). Módulo inventario.
+/// Con `hasta` vencido la fila deja de contar al leerla.
+model NoRecibir {
+  acopio_id    String    @db.Uuid
+  acopio       Acopio    @relation(fields: [acopio_id], references: [id])
+  categoria_id String    @db.Uuid
+  categoria    Categoria @relation(fields: [categoria_id], references: [id])
+  hasta        DateTime? @db.Date
+  marcado_por  String    @db.Uuid
+  marcado_en   DateTime  @default(now()) @db.Timestamptz
+
+  @@id([acopio_id, categoria_id])
+  @@index([categoria_id])
+  @@map("no_recibir")
 }

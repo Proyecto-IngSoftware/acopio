@@ -47,6 +47,7 @@ export async function crearAppPrueba(
   const prisma = app.get(PrismaService);
   // El seed corre como dueño; en las pruebas basta con el rol de la API, que puede insertar
   await sembrar(prisma, app.get<ProveedorIdentidad>(PROVEEDOR_IDENTIDAD), ADMIN);
+  await sembrarRed(prisma);
   // Cada suite parte con el administrador del seed activo, pase lo que pase en otra
   await prisma.usuario.update({ where: { username: ADMIN.username }, data: { estado: 'ACTIVO' } });
 
@@ -80,6 +81,78 @@ export function unico(prefijo: string): string {
 
 export const ACOPIO_A = '11111111-1111-4111-8111-111111111111';
 export const ACOPIO_B = '22222222-2222-4222-8222-222222222222';
+export const ENTIDAD_PRUEBA = '44444444-4444-4444-8444-444444444444';
+export const EMERGENCIA_PRUEBA = '55555555-5555-4555-8555-555555555555';
+export const ZONA_A = '33333333-3333-4333-8333-333333333333';
+
+/** Horario de lunes a sábado, 8 a 17, para los acopios de prueba. */
+export const HORARIO_PRUEBA = {
+  dom: [],
+  lun: [{ abre: '08:00', cierra: '17:00' }],
+  mar: [{ abre: '08:00', cierra: '17:00' }],
+  mie: [{ abre: '08:00', cierra: '17:00' }],
+  jue: [{ abre: '08:00', cierra: '17:00' }],
+  vie: [{ abre: '08:00', cierra: '17:00' }],
+  sab: [{ abre: '08:00', cierra: '17:00' }],
+};
+
+/**
+ * Entidad, dos acopios, una emergencia y una zona con identificadores fijos. Cada
+ * suite los deja como nuevos: activos y sin «no recibir».
+ */
+async function sembrarRed(prisma: PrismaService): Promise<void> {
+  await prisma.entidad.upsert({
+    where: { id: ENTIDAD_PRUEBA },
+    update: {},
+    create: { id: ENTIDAD_PRUEBA, nombre: 'Entidad de prueba', tipo: 'Fundación' },
+  });
+  for (const [id, nombre, lat, lng] of [
+    [ACOPIO_A, 'Acopio A', 4.60971, -74.08175],
+    [ACOPIO_B, 'Acopio B', 4.7, -74.05],
+  ] as const) {
+    await prisma.acopio.upsert({
+      where: { id },
+      update: { nombre, estado: 'ACTIVO', horario: HORARIO_PRUEBA },
+      create: {
+        id,
+        entidad_id: ENTIDAD_PRUEBA,
+        nombre,
+        direccion: 'Calle 1 # 2-3',
+        municipio: 'Bogotá',
+        lat,
+        lng,
+        horario: HORARIO_PRUEBA,
+      },
+    });
+  }
+  await prisma.noRecibir.deleteMany({ where: { acopio_id: { in: [ACOPIO_A, ACOPIO_B] } } });
+  await prisma.emergencia.upsert({
+    where: { id: EMERGENCIA_PRUEBA },
+    update: { estado: 'ACTIVA', cerrada_en: null, motivo_cierre: null },
+    create: {
+      id: EMERGENCIA_PRUEBA,
+      nombre: 'Emergencia de prueba',
+      tipo: 'Inundación',
+      inicio: new Date('2026-09-01T00:00:00Z'),
+      destacada_hasta: new Date('2099-12-31T00:00:00Z'),
+    },
+  });
+  await prisma.zona.upsert({
+    where: { id: ZONA_A },
+    update: {},
+    create: {
+      id: ZONA_A,
+      emergencia_id: EMERGENCIA_PRUEBA,
+      nombre: 'Zona A',
+      municipio: 'Bogotá',
+      lat: 4.5,
+      lng: -74.1,
+      poblacion_estimada: 1200,
+      poblacion_fuente: 'Censo de prueba',
+      poblacion_fecha: new Date('2026-09-01T00:00:00Z'),
+    },
+  });
+}
 
 /** Crea un usuario por la API y canjea su invitación. Devuelve su id y su token. */
 export async function crearUsuarioActivo(

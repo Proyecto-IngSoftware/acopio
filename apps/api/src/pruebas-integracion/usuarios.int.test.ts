@@ -1,6 +1,7 @@
 import {
   ACOPIO_A,
   ACOPIO_B,
+  ZONA_A,
   ADMIN,
   crearAppPrueba,
   crearUsuarioActivo,
@@ -70,7 +71,7 @@ describe('usuarios y accesos', () => {
           username,
           nombre: 'Sin correo',
           rol: 'RECEPTOR',
-          asignaciones: [{ tipo: 'ZONA', ubicacionId: ACOPIO_A }],
+          asignaciones: [{ tipo: 'ZONA', ubicacionId: ZONA_A }],
         })
         .expect(201);
       expect(r.body.usuario).toMatchObject({ correo: null, sinCorreoReal: true });
@@ -175,7 +176,7 @@ describe('usuarios y accesos', () => {
     });
 
     it('quitar la última asignación responsable pide confirmación', async () => {
-      const zona = '33333333-3333-4333-8333-333333333333';
+      const zona = ZONA_A;
       const rec = await crearUsuarioActivo(a, tokenAdmin, {
         rol: 'RECEPTOR',
         asignaciones: [{ tipo: 'ZONA', ubicacionId: zona }],
