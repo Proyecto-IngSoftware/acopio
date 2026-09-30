@@ -566,6 +566,17 @@ abren desde «Más».
 §6: antes la consola tenía su propia barra con inventario, entrada rápida, pendientes y
 más.
 
+### P-031 · El contrato exporta los campos nullable como arreglos
+**Fecha:** 2026-09-30 · **Propuesto por:** Claude, al construir el ciclo 2 de la interfaz
+**Qué:** en `openapi.json`, `username` de `YoDto` y `SesionDto` sale como
+`{ "type": "array", "items": { "type": "string" } }`, aunque en la API es
+`z.string().nullable()` y la respuesta real es un texto o `null`. Lo mismo pasa con
+`motivoCierre` de `EmergenciaDto`.
+**Por qué:** los tipos que genera la web quedan mal, y hoy `cliente-auth.ts` los
+convierte a mano (`as unknown as`).
+**Estado:** ABIERTO. Revisar cómo exporta nestjs-zod los campos nullable y corregir el
+contrato en la API.
+
 ---
 
 ## Resueltos

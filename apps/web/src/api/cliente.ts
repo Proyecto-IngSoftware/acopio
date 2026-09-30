@@ -16,9 +16,29 @@ export class ErrorApi extends Error {
 const SIN_RED = 'No pudimos conectar con Acopio. Revisa tu conexión.';
 
 export const api = createClient<paths>({
-  baseUrl: import.meta.env.VITE_API_URL ?? 'http://localhost:3000',
+  // Mismo origen que la web (ADR-0014): en desarrollo Vite reenvía /api
+  baseUrl: import.meta.env.VITE_API_URL || window.location.origin,
+  // La sesión viaja en la cookie acopio_sesion
+  credentials: 'include',
   // Se resuelve en cada llamada para que las pruebas puedan simular fetch
   fetch: (peticion) => globalThis.fetch(peticion),
+});
+
+const suscriptores = new Set<() => void>();
+
+/** Avisa cada vez que la API responde 401 fuera del inicio de sesión. Devuelve cómo
+ *  dejar de escuchar. Quien decide qué hacer con el aviso es el estado de sesión. */
+export function alPerderSesion(fn: () => void): () => void {
+  suscriptores.add(fn);
+  return () => suscriptores.delete(fn);
+}
+
+api.use({
+  onResponse({ request, response }) {
+    if (response.status === 401 && !new URL(request.url).pathname.endsWith('/api/auth/sesion')) {
+      for (const fn of suscriptores) fn();
+    }
+  },
 });
 
 /** Convierte lo que devuelve openapi-fetch en datos o en un ErrorApi. */
