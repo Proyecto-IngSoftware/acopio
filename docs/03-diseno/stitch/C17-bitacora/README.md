@@ -15,6 +15,7 @@ actualizado: 2026-09-30
 | Exportada | 2026-09-30 |
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Aprobación | Joseph la aprobó en Stitch el 2026-09-30 |
+| Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
 
 Reemplaza a la primera versión, guardada en [primera/](primera/), que era demasiado densa
 para recorrerla en el teléfono. Esta usa las filas de «Más», filtros en una sola fila de

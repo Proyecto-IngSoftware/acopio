@@ -67,7 +67,8 @@ Quién puede importar a quién está en la tabla «Dependencias permitidas» de 
 - Dos roles de base de datos. `acopio_owner` (`DATABASE_URL_OWNER`) corre migraciones y seed. La API se conecta como `acopio_app` (`DATABASE_URL`), que no tiene `UPDATE` ni `DELETE` sobre `bitacora`.
 - La bitácora la escribe cada servicio dentro de la misma transacción que el cambio, con los datos de antes y después. No hay interceptor.
 - La sesión viaja en la cookie `acopio_sesion` (`HttpOnly`, `SameSite=Strict`, `Path=/api`, ADR-0014). La web nunca ve el token: todo pasa por `ClienteAuth` (`apps/web/src/sesion/`). El guard acepta la cookie o `Authorization: Bearer` (pruebas y curl); `iniciarSesion` de las pruebas de integración saca el token de `Set-Cookie`. Un guard global rechaza escrituras con la cookie desde un `Origin` distinto de `APP_URL`. En desarrollo Vite reenvía `/api` a la API.
-- Las pruebas de la web usan `envolver(ui, ruta, cliente)` de `src/pruebas/utilidades.tsx`, con un `ClienteAuth` falso (`clienteFalso(usuario)`); por defecto, sin sesión.
+- Las pruebas de la web usan `envolver(ui, ruta, cliente)` de `src/pruebas/utilidades.tsx`, con un `ClienteAuth` falso (`clienteFalso(usuario)`); por defecto, sin sesión. Para varias llamadas, `responderSegun({ 'GET /api/ruta/*': cuerpo })` responde por método y ruta; lo que no está en el mapa da 404.
+- Las herramientas de cada rol viven en `/consola/...`, detrás de `RequiereRol`, y se llega a ellas desde «Más».
 - Autenticación por un puerto `ProveedorIdentidad` con dos adaptadores, `local` y `supabase`, elegidos con `AUTH_PROVEEDOR`. La API no arranca con `local` en producción. El guard valida el JWT y lee el rol, el estado y las asignaciones de la base en cada request; nada de eso viaja en el token.
 - Todos los endpoints exigen sesión salvo los marcados con `@Publico()`. `@Roles(...)` restringe por rol y `@UsuarioActual()` entrega el usuario.
 - El correo siempre pasa por la cola `correo_saliente`. `NotificacionService.encolar` se llama dentro de la transacción de la operación y una tarea programada envía cada minuto.
@@ -76,6 +77,7 @@ Quién puede importar a quién está en la tabla «Dependencias permitidas» de 
 - El cliente de Prisma se genera en `apps/api/src/generado/` y no se versiona. Los scripts `typecheck`, `test` y `test:int` lo regeneran.
 - Los errores salen con un solo formato (`estado`, `codigo`, `mensaje`) desde `comun/errores`.
 - Si cambia un endpoint, se regenera el contrato con `openapi`, luego los tipos de la web con `api:tipos`, y se versionan los dos.
+- Los íconos son Material Symbols y `index.html` baja solo los que usa el código. Tras usar uno nuevo se corre `node scripts/iconos.mjs` en `apps/web`; `src/iconos.test.ts` falla si falta alguno.
 - En `apps/web` no se escriben colores hexadecimales. Salen de `packages/ui-tokens` y CI lo revisa. La estética la fija el diseño de Stitch (ADR-0013); cuando la bóveda y Stitch no coinciden, se alinea la bóveda.
 - Cada pantalla guarda su diseño en `docs/03-diseno/stitch/<código>-<nombre>/`: captura, HTML de Stitch, maqueta aprobada y nota con las diferencias. No se escribe código de una pantalla sin la maqueta aprobada por Joseph.
 

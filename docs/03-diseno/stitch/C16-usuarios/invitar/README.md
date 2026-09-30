@@ -14,7 +14,8 @@ actualizado: 2026-09-30
 | Pantalla | `372d85dcf2c84cd3b0fec420a02cdf70` |
 | Exportada | 2026-09-30 |
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) · [maqueta.html](maqueta.html) |
-| Maqueta | <https://claude.ai/artifact/QZBkDuPAzBPzMtMZEzNfdY>, pendiente de aprobación |
+| Maqueta | <https://claude.ai/artifact/QZBkDuPAzBPzMtMZEzNfdY>, aprobada por Joseph el 2026-09-30 |
+| Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
 
 Usa la cabecera con sesión y la barra inferior de [componentes compartidos](../../_compartidos/README.md).
 Stitch la generó en formato de escritorio con la columna móvil al centro; el código es

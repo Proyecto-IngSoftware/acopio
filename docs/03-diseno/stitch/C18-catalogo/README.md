@@ -15,6 +15,7 @@ actualizado: 2026-09-30
 | Exportada | 2026-09-30 |
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Aprobación | Joseph la aprobó en Stitch el 2026-09-30 |
+| Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
 
 Tres pestañas: categorías, canasta estándar y emergencias. Stitch dibujó las emergencias
 debajo como vista vinculada; en el código son la tercera pestaña.

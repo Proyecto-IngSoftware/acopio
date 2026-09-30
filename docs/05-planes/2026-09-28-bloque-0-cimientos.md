@@ -41,7 +41,7 @@ Lo que cambió al construir está en la
 | T10 Notificaciones | ✅ | La prueba con el SMTP del dominio (RTA-04) espera el dominio |
 | T11 API del catálogo | ✅ | — |
 | T12 Seed | ✅ | La canasta se cargó con la fuente marcada «por verificar» ([#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20)) |
-| T13 a T16 Interfaz | 🟡 | Ciclo 1 hecho el 2026-09-30 ([plan](2026-09-30-interfaz-ciclo-1-portada.md)): tokens, esqueleto de `apps/web` y la Portada. Ciclo 2 hecho el 2026-09-30 ([plan](2026-09-30-interfaz-ciclo-2-acceso.md)): sesión en cookie (ADR-0014), C01 Entrar y Activar cuenta, cabeceras compartidas. Falta el ciclo 3: las herramientas de «Más» por rol (C16, C17, C18) |
+| T13 a T16 Interfaz | ✅ | Ciclo 1 hecho el 2026-09-30 ([plan](2026-09-30-interfaz-ciclo-1-portada.md)): tokens, esqueleto de `apps/web` y la Portada. Ciclo 2 hecho el 2026-09-30 ([plan](2026-09-30-interfaz-ciclo-2-acceso.md)): sesión en cookie (ADR-0014), C01 Entrar y Activar cuenta, cabeceras compartidas. Ciclo 3 hecho el 2026-09-30 ([plan](2026-09-30-interfaz-ciclo-3-consola.md)): «Más» con sesión, C16 Usuarios, C17 Bitácora y C18 Catálogo. Las pantallas de los demás módulos llegan con su bloque |
 | T17 Concurrencia | ✅ | La prueba del saldo se suma en el Bloque 2 |
 | T18 Revisión de salida | ⬜ | Con la interfaz. Falta también el barrido de secretos (RNF-08) que pedía #27: va antes del primer despliegue |
 

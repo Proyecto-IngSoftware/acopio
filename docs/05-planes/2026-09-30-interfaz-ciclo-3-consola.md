@@ -48,3 +48,33 @@ pasa por el cliente tipado y la sesión en cookie (ADR-0014).
 
 Cada tarea sigue el mismo contrato de los ciclos 1 y 2: pruebas primero, `lint`,
 `typecheck`, `test`, colores y commit a `main`.
+
+## Estado
+
+| Tarea | Estado | Commit |
+|---|---|---|
+| 1 Más | ✅ | `f50a164` |
+| 2 Guard de consola y rutas | ✅ | `0677f4c` |
+| 3 C17 Bitácora | ✅ | `714f2b3` |
+| 4 C18 Catálogo | ✅ | `2da67da` |
+| 5 C16 Usuarios | ✅ | `e8033ec` |
+| 6 Cierre | ✅ | `b64f598`, `48f326a` y el de la documentación |
+
+El recorrido del cierre se hizo el 2026-09-30 en el Compose local, como administrador, en
+Chromium a 360 × 640. Ninguna de las seis pantallas desborda a lo ancho, axe no encontró
+violaciones graves y la consola del navegador quedó sin errores. La revisión la hizo solo
+Joseph.
+
+## Cambios al construir
+
+| Qué | Por qué |
+|---|---|
+| El botón «Compartir por WhatsApp» usa el estilo primario del tema en lugar del verde de WhatsApp que traía el diseño | En `apps/web` no hay colores fuera de `ui-tokens` (ADR-0013) |
+| Al invitar, las ubicaciones se escriben por su identificador | Los nombres de acopios llegan con el Bloque 1 (R-06) |
+| Operador y Receptor no ven herramientas en «Más» | Sus pantallas llegan con los bloques 1 a 3 (R-02) |
+| La bitácora no tiene la píldora «Invitaciones» del diseño | La API registra las invitaciones con la entidad `usuario`, así que quedan en «Usuarios» |
+| «Ver su actividad en la bitácora», en el detalle de usuario, abre la bitácora filtrada por esa persona (`?usuario=`) | Estaba en la maqueta y la API ya filtra por usuario |
+| Los `fieldset` de Invitar persona llevan `min-w-0` | Un identificador largo desbordaba la pantalla a 360 px |
+| El script de íconos también lee `nombre={cond ? 'a' : 'b'}` y los `return` de las funciones `icono*` | Faltaban `archive`, `unarchive`, `visibility`, `visibility_off` y `link`, y en su lugar se veía la palabra. El botón de mostrar contraseña estaba así desde el ciclo 2 |
+| El detalle de la bitácora muestra las fechas en formato local, y las que son solo día van sin hora | Llegaban en ISO |
+| El registro del seed dice «Se creó el administrador inicial» | Mostraba `seed.admin_creado` |
