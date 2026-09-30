@@ -603,6 +603,25 @@ frenaría el Bloque 1.
 **Estado:** RESUELTO → [especificación del Bloque 1](../superpowers/specs/2026-09-30-bloque-1-red-design.md#3-decisiones).
 RF-RED-001, `modelo-datos.md` y el catálogo de pantallas quedaron al día el 2026-09-30.
 
+### P-034 · Menores de la revisión final de la API del Bloque 1
+**Fecha:** 2026-09-30 · **Propuesto por:** revisión final del plan de la API
+**Qué:** nueve detalles que la revisión dejó como menores y que no se arreglaron:
+- `GeocodificadorNominatim` lee el cuerpo fuera del `try`: una respuesta que no es JSON
+  termina en 500, no en 503
+- «No recibir» revisa el acopio y la categoría fuera de la transacción
+- `GET /acopios/:id/no-recibir` responde para un acopio cerrado o inexistente; la ficha
+  da 404
+- Un PATCH vacío deja un registro en la bitácora que no cambia nada
+- `sitioWeb` de entidad acepta cualquier esquema, incluso `javascript:`; se mostrará como
+  enlace público
+- `engines` dice `>=22`, pero `require` de ESM sin bandera pide Node 22.12
+- `GET /ubicaciones/mias` carga todas las ubicaciones y filtra en memoria
+- `poblacionFecha` sale con hora y `hasta` sin hora
+- `no_recibir.marcado_por` no tiene llave foránea a `usuario`
+
+**Por qué:** ninguno rompe el recorrido de hoy, pero conviene cerrarlos antes de desplegar.
+**Estado:** ABIERTO.
+
 ---
 
 ## Resueltos
