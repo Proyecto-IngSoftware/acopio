@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { abiertoAhora, erroresHorario, type Horario } from '@acopio/shared';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
+import type { ClienteBd } from '../../comun/prisma/cliente-bd';
 import { PrismaService } from '../../comun/prisma/prisma.service';
 import type { Prisma } from '../../generado/prisma/client';
 import type { EstadoAcopio } from '../../generado/prisma/enums';
@@ -207,7 +208,12 @@ async function exigirEntidad(tx: Pick<PrismaService, 'entidad'>, id: string) {
   if (!e) throw new ErrorDominio('ENTIDAD_NO_ENCONTRADA', 'La entidad no existe', 404);
 }
 
-async function obtenerFila(tx: Pick<PrismaService, 'acopio'>, id: string) {
+/**
+ * Lee el acopio con la fila bloqueada hasta el fin de la transacción: un cierre que
+ * llega en medio espera, y quien sigue ve el estado nuevo (revisión final, I-1).
+ */
+async function obtenerFila(tx: ClienteBd, id: string) {
+  await tx.$queryRaw`SELECT id FROM acopio WHERE id = ${id}::uuid FOR UPDATE`;
   const f = await tx.acopio.findUnique({ where: { id }, include: conEntidad });
   if (!f) throw new ErrorDominio('ACOPIO_NO_ENCONTRADO', 'El acopio no existe', 404);
   return f;

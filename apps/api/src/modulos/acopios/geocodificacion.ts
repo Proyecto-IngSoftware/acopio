@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, Logger, Optional } from '@nestjs/common';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { ENTORNO, type Entorno } from '../../config/entorno';
 
@@ -26,25 +26,45 @@ export const relojReal: Reloj = {
 const INTERVALO_MS = 1000;
 const VIGENCIA_MS = 24 * 60 * 60 * 1000;
 
+/** Cuántas consultas distintas esperan turno y cuántas respuestas se guardan. */
+export interface LimitesGeo {
+  cola: number;
+  cache: number;
+}
+export const LIMITES_GEO = Symbol('LIMITES_GEO');
+const LIMITES_POR_DEFECTO: LimitesGeo = { cola: 10, cache: 500 };
+
 /**
  * Dirección a coordenadas (RF-RED-002). Siempre desde la API, nunca desde el navegador:
  * caché de 24 horas y una consulta por segundo como máximo, como pide Nominatim.
+ * La cola y la caché tienen tope, y las consultas iguales que llegan juntas comparten
+ * una sola llamada: el endpoint es público (revisión final, I-2).
  */
 @Injectable()
 export class GeocodificacionService {
   private readonly cache = new Map<string, { en: number; resultados: ResultadoGeo[] }>();
+  private readonly enCurso = new Map<string, Promise<ResultadoGeo[]>>();
   private cola: Promise<unknown> = Promise.resolve();
   private ultima = Number.NEGATIVE_INFINITY;
 
   constructor(
     @Inject(GEOCODIFICADOR) private readonly geocodificador: Geocodificador,
     @Inject(RELOJ) private readonly reloj: Reloj,
+    @Optional() @Inject(LIMITES_GEO) private readonly limites: LimitesGeo = LIMITES_POR_DEFECTO,
   ) {}
 
   async buscar(q: string): Promise<ResultadoGeo[]> {
     const clave = q.trim().toLocaleLowerCase('es-CO').replace(/\s+/g, ' ');
     const guardado = this.cache.get(clave);
-    if (guardado && this.reloj.ahora() - guardado.en < VIGENCIA_MS) return guardado.resultados;
+    if (guardado && this.reloj.ahora() - guardado.en < VIGENCIA_MS) {
+      // Al usarla pasa al final: la que se descarta es la menos usada
+      this.cache.delete(clave);
+      this.cache.set(clave, guardado);
+      return guardado.resultados;
+    }
+    const pendiente = this.enCurso.get(clave);
+    if (pendiente) return pendiente;
+    if (this.enCurso.size >= this.limites.cola) throw noDisponible();
 
     const turno = this.cola.then(async () => {
       const falta = this.ultima + INTERVALO_MS - this.reloj.ahora();
@@ -53,9 +73,24 @@ export class GeocodificacionService {
       return this.geocodificador.buscar(clave);
     });
     this.cola = turno.catch(() => undefined);
-    const resultados = await turno;
+    this.enCurso.set(clave, turno);
+    try {
+      const resultados = await turno;
+      this.guardar(clave, resultados);
+      return resultados;
+    } finally {
+      this.enCurso.delete(clave);
+    }
+  }
+
+  private guardar(clave: string, resultados: ResultadoGeo[]) {
+    this.cache.delete(clave);
     this.cache.set(clave, { en: this.reloj.ahora(), resultados });
-    return resultados;
+    while (this.cache.size > this.limites.cache) {
+      const masVieja = this.cache.keys().next().value;
+      if (masVieja === undefined) break;
+      this.cache.delete(masVieja);
+    }
   }
 }
 

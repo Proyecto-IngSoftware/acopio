@@ -296,3 +296,5 @@ Es idempotente y el seed real no cambia.
 | Las restricciones CHECK limitan lat y lng a Colombia, y la población a no negativa | Evitan un pin fuera del país aunque se salte la validación |
 | Los campos opcionales nuevos también salen como arreglos en el contrato | Es P-031; queda abierto |
 | La búsqueda de ubicaciones ignora mayúsculas, no tildes | Con decenas de ubicaciones basta |
+| Al editar u operar un acopio, la API lo lee con la fila bloqueada (`FOR UPDATE`) | En la revisión final apareció una carrera: un Operador que pausaba mientras el Administrador cerraba podía reabrir el acopio |
+| La geocodificación tiene tope de cola (10 consultas distintas en espera; pasado el tope, 503) y de caché (500 respuestas), y las consultas iguales que llegan juntas comparten una llamada | El endpoint es público: sin tope, unas pocas IP podían hacer esperar minutos a los demás y la caché crecía sin límite |

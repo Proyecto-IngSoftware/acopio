@@ -1,5 +1,9 @@
+import { Client } from 'pg';
+import { URL_APP_PRUEBAS } from '../../test/entorno-pruebas';
 import {
   ADMIN,
+  ENTIDAD_PRUEBA,
+  HORARIO_PRUEBA,
   crearAppPrueba,
   crearUsuarioActivo,
   iniciarSesion,
@@ -86,5 +90,45 @@ describe('concurrencia', () => {
         data: { estado: 'ACTIVO' },
       });
     }
+  });
+
+  it('un Operador que pausa mientras el Administrador cierra no reabre el acopio', async () => {
+    const creado = await a
+      .http()
+      .post('/api/acopios')
+      .set({ authorization: `Bearer ${tokenAdmin}` })
+      .send({
+        entidadId: ENTIDAD_PRUEBA,
+        nombre: unico('Acopio carrera '),
+        direccion: 'Calle 1 # 2-3',
+        municipio: 'Bogotá',
+        lat: 4.6,
+        lng: -74.08,
+        horario: HORARIO_PRUEBA,
+      })
+      .expect(201);
+    const id = creado.body.id as string;
+
+    // Otra transacción tiene la fila: así es como el cierre llega en medio de la operación
+    const cierre = new Client({ connectionString: URL_APP_PRUEBAS });
+    await cierre.connect();
+    await cierre.query('BEGIN');
+    await cierre.query('SELECT id FROM acopio WHERE id = $1 FOR UPDATE', [id]);
+
+    const operacion = a
+      .http()
+      .patch(`/api/acopios/${id}/operacion`)
+      .set({ authorization: `Bearer ${tokenAdmin}` })
+      .send({ estado: 'PAUSADO' })
+      .then((r) => r);
+    await new Promise((r) => setTimeout(r, 500));
+    await cierre.query(`UPDATE acopio SET estado = 'CERRADO' WHERE id = $1`, [id]);
+    await cierre.query('COMMIT');
+    await cierre.end();
+
+    const r = await operacion;
+    expect(r.status).toBe(409);
+    const fila = await a.prisma.acopio.findUniqueOrThrow({ where: { id } });
+    expect(fila.estado).toBe('CERRADO');
   });
 });
