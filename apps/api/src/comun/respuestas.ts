@@ -259,3 +259,7 @@ export class UbicacionDto extends createZodDto(
     estado: z.string().describe('Estado del acopio o de la zona'),
   }),
 ) {}
+
+export class ResultadoGeoDto extends createZodDto(
+  z.object({ etiqueta: z.string(), lat: z.number(), lng: z.number() }),
+) {}

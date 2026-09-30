@@ -21,6 +21,8 @@ const esquema = z
     SMTP_PASSWORD: z.string().optional(),
     SMTP_SEGURO: z.stringbool().default(false),
     CORREO_REMITENTE: z.string().min(1),
+    // Geocodificación de direcciones (RF-RED-002)
+    NOMINATIM_URL: z.url().default('https://nominatim.openstreetmap.org'),
   })
   // P-025: el login local nunca llega a producción
   .refine((e) => !(e.NODE_ENV === 'production' && e.AUTH_PROVEEDOR === 'local'), {

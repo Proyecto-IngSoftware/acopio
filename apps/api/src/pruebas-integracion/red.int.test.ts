@@ -328,4 +328,24 @@ describe('red', () => {
         .expect(403);
     });
   });
+
+  describe('geocodificación (RF-RED-002)', () => {
+    it('devuelve resultados sin sesión', async () => {
+      const r = await a.http().get('/api/geocodificar?q=Carrera 7 Bogotá').expect(200);
+      expect(r.body[0]).toMatchObject({ lat: 4.60971, lng: -74.08175 });
+    });
+
+    it('sin resultados responde lista vacía', async () => {
+      const r = await a.http().get('/api/geocodificar?q=sin resultados').expect(200);
+      expect(r.body).toEqual([]);
+    });
+
+    it('solo espacios o más de 200 caracteres: 400', async () => {
+      await a.http().get('/api/geocodificar?q=%20%20%20').expect(400);
+      await a
+        .http()
+        .get(`/api/geocodificar?q=${'a'.repeat(201)}`)
+        .expect(400);
+    });
+  });
 });

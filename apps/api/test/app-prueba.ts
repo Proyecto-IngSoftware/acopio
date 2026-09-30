@@ -7,6 +7,7 @@ import { LimiteIntentosGuard } from '../src/comun/limite-intentos.guard';
 import { PrismaService } from '../src/comun/prisma/prisma.service';
 import { configurarApp } from '../src/configurar-app';
 import { leerEntorno } from '../src/config/entorno';
+import { GEOCODIFICADOR, GeocodificadorFalso } from '../src/modulos/acopios/geocodificacion';
 import {
   PROVEEDOR_IDENTIDAD,
   type ProveedorIdentidad,
@@ -34,6 +35,8 @@ export async function crearAppPrueba(
 ): Promise<AppPrueba> {
   Object.assign(process.env, entornoPruebas());
   let constructor = Test.createTestingModule({ imports: [AppModule] });
+  // CI no sale a internet: Nominatim siempre con el adaptador falso
+  constructor = constructor.overrideProvider(GEOCODIFICADOR).useValue(new GeocodificadorFalso());
   if (!opciones.limiteDeIntentos) {
     constructor = constructor
       .overrideProvider(LimiteIntentosGuard)
