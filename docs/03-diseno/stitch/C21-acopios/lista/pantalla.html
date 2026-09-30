@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>C21 Acopios (lista) - Consola Acopio</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Inter Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-bright": "#faf8ff",
+            "tertiary-fixed": "#ffdcc3",
+            "on-primary-fixed-variant": "#085046",
+            "tertiary-fixed-dim": "#ffb77d",
+            "on-tertiary-fixed-variant": "#6e3900",
+            "surface-tint": "#2a685d",
+            "surface-container": "#eaedff",
+            "on-tertiary-container": "#ff9e47",
+            "on-primary-container": "#83c1b4",
+            "background": "#faf8ff",
+            "inverse-on-surface": "#eef0ff",
+            "primary-fixed-dim": "#95d2c5",
+            "outline": "#707976",
+            "error-container": "#ffdad6",
+            "error": "#ba1a1a",
+            "on-primary-fixed": "#00201b",
+            "inverse-surface": "#283044",
+            "surface-container-low": "#f2f3ff",
+            "on-background": "#131b2e",
+            "surface-container-lowest": "#ffffff",
+            "on-surface": "#131b2e",
+            "on-secondary": "#ffffff",
+            "tertiary-container": "#6e3900",
+            "on-tertiary": "#ffffff",
+            "surface": "#faf8ff",
+            "on-error": "#ffffff",
+            "on-surface-variant": "#3f4946",
+            "surface-variant": "#dae2fd",
+            "secondary-fixed": "#ffdad3",
+            "primary": "#003730",
+            "surface-dim": "#d2d9f4",
+            "surface-container-high": "#e2e7ff",
+            "secondary-container": "#d9381e",
+            "on-secondary-fixed-variant": "#8f1100",
+            "primary-container": "#085046",
+            "inverse-primary": "#95d2c5",
+            "secondary-fixed-dim": "#ffb4a6",
+            "primary-fixed": "#b0efe1",
+            "on-secondary-container": "#fffbff",
+            "tertiary": "#4d2600",
+            "secondary": "#b51d04",
+            "on-primary": "#ffffff",
+            "on-secondary-fixed": "#3f0300",
+            "surface-container-highest": "#dae2fd",
+            "on-error-container": "#93000a",
+            "outline-variant": "#bfc9c5",
+            "on-tertiary-fixed": "#2f1500"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "margin": "1rem",
+            "margin-tablet": "2rem",
+            "gutter-tablet": "1.5rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2.5rem",
+            "space-sm": "0.5rem",
+            "gutter": "1rem",
+            "space-lg": "1.5rem",
+            "space-md": "1rem",
+            "gutter-desktop": "2rem",
+            "margin-desktop": "3rem"
+          },
+          "fontFamily": {
+            "label-metric": ["Inter"],
+            "headline-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "display-hero-mobile": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "display-hero": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-sm": ["Inter"],
+            "label-md": ["Inter"],
+            "label-caps": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-lg": ["Inter"]
+          },
+          "fontSize": {
+            "label-metric": ["1.25rem", { "lineHeight": "1.5rem", "letterSpacing": "0.02em", "fontWeight": "700" }],
+            "headline-md": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-sm": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "400" }],
+            "display-hero-mobile": ["2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "headline-lg-mobile": ["1.625rem", { "lineHeight": "2.125rem", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "display-hero": ["3rem", { "lineHeight": "3.5rem", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "body-md": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "400" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "fontWeight": "600" }],
+            "label-md": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "label-caps": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.06em", "fontWeight": "700" }],
+            "body-lg": ["1.125rem", { "lineHeight": "1.75rem", "fontWeight": "400" }],
+            "headline-lg": ["2.25rem", { "lineHeight": "2.75rem", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased flex flex-col items-center justify-start min-h-full selection:bg-primary-fixed selection:text-primary">
+<!-- Mobile Frame Container (Max 360px - 414px optimized for mobile) -->
+<div class="w-full max-w-[360px] min-h-screen bg-surface-bright flex flex-col relative pb-20 shadow-sm">
+<!-- TopAppBar (From Shared Component Spec) -->
+<header class="bg-surface-container-lowest flex justify-between items-center w-full px-margin h-14 sticky top-0 z-40 border-b border-outline-variant">
+<!-- Left: Logo de Acopio -->
+<div class="flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-primary-container text-surface-container-lowest flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[18px]">inventory_2</span>
+</div>
+<div class="flex items-center gap-1.5">
+<span class="font-headline-sm text-headline-sm text-primary font-bold tracking-tight">Acopio</span>
+<span class="bg-surface-container-high text-primary font-label-caps text-[10px] px-1.5 py-0.5 rounded font-bold tracking-wider">CO</span>
+</div>
+</div>
+<!-- Right: Trailing Avatar JQ -->
+<div class="flex items-center">
+<button aria-label="Avatar de usuario con iniciales del administrador" class="w-10 h-10 rounded-[8px] bg-primary text-surface-container-lowest font-label-md text-label-md font-bold flex items-center justify-center shadow-none active:scale-95 transition-transform duration-100" type="button">
+          JQ
+        </button>
+</div>
+</header>
+<!-- Main Content Stream -->
+<main class="flex-1 flex flex-col px-margin pt-space-md">
+<!-- Sub-navigation: Volver -->
+<div class="mb-space-sm">
+<button class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary transition-colors py-1 min-h-[44px] -ml-1" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+<span class="font-label-md text-label-md font-medium">Volver</span>
+</button>
+</div>
+<!-- Page Headline Section -->
+<section class="mb-space-md">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile font-bold text-primary tracking-tight">
+          Acopios
+        </h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-0.5">
+          Centros de acopio de la red
+        </p>
+</section>
+<!-- Tactical Primary Action Trigger: Nuevo Acopio -->
+<div class="mb-space-md">
+<button class="w-full min-h-[48px] bg-primary-container hover:bg-primary active:scale-[0.99] transition-all text-on-primary rounded-xl px-space-lg py-2.5 font-label-md text-label-md font-bold flex items-center justify-center gap-2 shadow-sm" type="button">
+<span class="material-symbols-outlined text-[22px]">add</span>
+<span>Nuevo acopio</span>
+</button>
+</div>
+<!-- Search Field Control -->
+<div class="mb-space-md">
+<label class="sr-only" for="search-input">Buscar por nombre o municipio</label>
+<div class="relative">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-outline">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="block w-full min-h-[48px] pl-10 pr-3 py-2 bg-surface-container-lowest border border-outline-variant rounded-xl text-on-surface placeholder:text-on-surface-variant/70 font-body-md text-body-md focus:outline-none focus:border-primary-container focus:ring-1 focus:ring-primary-container" id="search-input" placeholder="Buscar por nombre o municipio" type="search"/>
+</div>
+</div>
+<!-- Horizontal Filter Pills (Scrollable Triage Bar) -->
+<div class="overflow-x-auto -mx-margin px-margin pb-2 mb-space-sm flex gap-2 no-scrollbar">
+<!-- Pill: Todos (Active) -->
+<button class="min-h-[40px] px-4 rounded-full bg-primary-container text-on-primary font-label-md text-label-md font-semibold shrink-0 flex items-center shadow-xs" type="button">
+          Todos
+        </button>
+<!-- Pill: Activos -->
+<button class="min-h-[40px] px-3.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md text-label-md font-medium shrink-0 flex items-center gap-1.5 hover:bg-surface-container-low transition-colors" type="button">
+<span>Activos</span>
+<span class="inline-flex items-center justify-center px-1.5 py-0.2 bg-surface-container text-primary font-label-caps text-[11px] rounded-full font-bold">2</span>
+</button>
+<!-- Pill: Pausados -->
+<button class="min-h-[40px] px-3.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md text-label-md font-medium shrink-0 flex items-center gap-1.5 hover:bg-surface-container-low transition-colors" type="button">
+<span>Pausados</span>
+<span class="inline-flex items-center justify-center px-1.5 py-0.2 bg-surface-container text-on-surface-variant font-label-caps text-[11px] rounded-full font-bold">1</span>
+</button>
+<!-- Pill: Cerrados -->
+<button class="min-h-[40px] px-3.5 rounded-full bg-surface-container-lowest border border-outline-variant text-on-surface font-label-md text-label-md font-medium shrink-0 flex items-center gap-1.5 hover:bg-surface-container-low transition-colors" type="button">
+<span>Cerrados</span>
+<span class="inline-flex items-center justify-center px-1.5 py-0.2 bg-surface-container text-on-surface-variant font-label-caps text-[11px] rounded-full font-bold">1</span>
+</button>
+</div>
+<!-- Card List: Distribution Points -->
+<section aria-label="Listado de centros de acopio" class="flex flex-col gap-3.5 mt-1">
+<!-- Tarjeta 1: Acopio Chapinero (Activo) -->
+<article class="bg-surface-container-lowest border border-outline-variant rounded-xl p-3.5 flex items-center justify-between gap-3 active:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex-1 min-w-0">
+<!-- Header & Badge -->
+<div class="flex items-center justify-between gap-2 mb-1">
+<h2 class="font-headline-sm text-[17px] font-bold text-on-background truncate">
+                Acopio Chapinero
+              </h2>
+</div>
+<!-- Responsibility & Municipality -->
+<p class="font-body-sm text-body-sm text-on-surface font-medium truncate">
+              Fundación Manos Unidas
+            </p>
+<div class="flex items-center gap-1 text-on-surface-variant mt-0.5 mb-2">
+<span class="material-symbols-outlined text-[16px] shrink-0 text-outline">location_on</span>
+<span class="font-body-sm text-[13px] truncate">Bogotá D.C.</span>
+</div>
+<!-- Meta Row: Status Badge & Horario -->
+<div class="flex flex-wrap items-center gap-2 pt-1 border-t border-outline-variant/40">
+<!-- Badge Activo (Esmeralda suave, sin rojo) -->
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#F0FDF4] border border-[#BBF7D0] text-[#15803D] font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Activo</span>
+</span>
+<!-- Horario -->
+<span class="inline-flex items-center gap-1 font-body-sm text-[12px] text-on-surface-variant">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-[#15803D]"></span>
+<span>Abierto ahora · Cierra 18:00</span>
+</span>
+</div>
+</div>
+<!-- Chevron Action -->
+<div class="text-outline shrink-0 pl-1">
+<span class="material-symbols-outlined text-[24px]">chevron_right</span>
+</div>
+</article>
+<!-- Tarjeta 2: Acopio Norte - Corferias (Activo) -->
+<article class="bg-surface-container-lowest border border-outline-variant rounded-xl p-3.5 flex items-center justify-between gap-3 active:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-2 mb-1">
+<h2 class="font-headline-sm text-[17px] font-bold text-on-background truncate">
+                Acopio Norte - Corferias
+              </h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface font-medium truncate">
+              Cruz Roja Colombiana
+            </p>
+<div class="flex items-center gap-1 text-on-surface-variant mt-0.5 mb-2">
+<span class="material-symbols-outlined text-[16px] shrink-0 text-outline">location_on</span>
+<span class="font-body-sm text-[13px] truncate">Bogotá D.C.</span>
+</div>
+<div class="flex flex-wrap items-center gap-2 pt-1 border-t border-outline-variant/40">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#F0FDF4] border border-[#BBF7D0] text-[#15803D] font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>Activo</span>
+</span>
+<span class="inline-flex items-center gap-1 font-body-sm text-[12px] text-on-surface-variant">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-[#15803D]"></span>
+<span>Abierto ahora · 24 horas</span>
+</span>
+</div>
+</div>
+<div class="text-outline shrink-0 pl-1">
+<span class="material-symbols-outlined text-[24px]">chevron_right</span>
+</div>
+</article>
+<!-- Tarjeta 3: Acopio Terminal Chinchiná (Pausado - Ámbar) -->
+<article class="bg-surface-container-lowest border border-outline-variant rounded-xl p-3.5 flex items-center justify-between gap-3 active:bg-surface-container-low transition-colors cursor-pointer">
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-2 mb-1">
+<h2 class="font-headline-sm text-[17px] font-bold text-on-background truncate">
+                Acopio Terminal Chinchiná
+              </h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface font-medium truncate">
+              Defensa Civil Seccional Caldas
+            </p>
+<div class="flex items-center gap-1 text-on-surface-variant mt-0.5 mb-2">
+<span class="material-symbols-outlined text-[16px] shrink-0 text-outline">location_on</span>
+<span class="font-body-sm text-[13px] truncate">Chinchiná, Caldas</span>
+</div>
+<div class="flex flex-wrap items-center gap-2 pt-1 border-t border-outline-variant/40">
+<!-- Badge Pausado (Ámbar sin rojo) -->
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#FFFBEB] border border-[#FDE68A] text-[#B45309] font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px]">pause_circle</span>
+<span>Pausado</span>
+</span>
+<span class="inline-flex items-center gap-1 font-body-sm text-[12px] text-on-surface-variant">
+<span class="material-symbols-outlined text-[13px] text-outline">schedule</span>
+<span>Cerrado ahora · Reanuda mañana 07:00</span>
+</span>
+</div>
+</div>
+<div class="text-outline shrink-0 pl-1">
+<span class="material-symbols-outlined text-[24px]">chevron_right</span>
+</div>
+</article>
+<!-- Tarjeta 4: Acopio Parque Simón Bolívar (Cerrado - Atenuado) -->
+<article class="bg-surface-container-low/70 border border-outline-variant/60 rounded-xl p-3.5 flex items-center justify-between gap-3 opacity-65 cursor-pointer">
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-2 mb-1">
+<h2 class="font-headline-sm text-[17px] font-bold text-on-surface-variant truncate">
+                Acopio Parque Simón Bolívar
+              </h2>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant font-medium truncate">
+              Alcaldía Mayor de Bogotá
+            </p>
+<div class="flex items-center gap-1 text-outline mt-0.5 mb-2">
+<span class="material-symbols-outlined text-[16px] shrink-0">location_on</span>
+<span class="font-body-sm text-[13px] truncate">Bogotá D.C.</span>
+</div>
+<div class="flex flex-wrap items-center gap-2 pt-1 border-t border-outline-variant/40">
+<!-- Badge Cerrado (Neutro pizarra, sin rojo) -->
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-[#F1F5F9] border border-[#CBD5E1] text-[#64748B] font-label-caps text-label-caps">
+<span class="material-symbols-outlined text-[14px]">cancel</span>
+<span>Cerrado</span>
+</span>
+<span class="inline-flex items-center gap-1 font-body-sm text-[12px] text-outline font-medium">
+<span>Cerrado definitivamente</span>
+</span>
+</div>
+</div>
+<div class="text-outline/70 shrink-0 pl-1">
+<span class="material-symbols-outlined text-[24px]">chevron_right</span>
+</div>
+</article>
+</section>
+<!-- List Footer Stats -->
+<footer class="py-6 text-center">
+<p class="font-body-sm text-[14px] text-on-surface-variant font-medium">
+          Mostrando 4 de 4 acopios
+        </p>
+</footer>
+</main>
+<!-- BottomNavBar (Shared Component Anchor) -->
+<!-- Destination count: 5 (Inicio, Mapa, Causas, Voluntariado, Más) | Active: Más -->
+<nav class="fixed bottom-0 left-0 right-0 w-full z-50 bg-surface-container-lowest border-t border-outline-variant">
+<div class="w-full max-w-[360px] mx-auto flex justify-around items-center h-16 px-space-xs">
+<!-- Item 1: Inicio -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 min-h-[48px] min-w-[48px] hover:text-primary transition-colors duration-150 active:scale-95" href="#inicio">
+<span class="material-symbols-outlined text-[22px]">home</span>
+<span class="font-label-caps text-label-caps mt-0.5">Inicio</span>
+</a>
+<!-- Item 2: Mapa -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 min-h-[48px] min-w-[48px] hover:text-primary transition-colors duration-150 active:scale-95" href="#mapa">
+<span class="material-symbols-outlined text-[22px]">map</span>
+<span class="font-label-caps text-label-caps mt-0.5">Mapa</span>
+</a>
+<!-- Item 3: Causas -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 min-h-[48px] min-w-[48px] hover:text-primary transition-colors duration-150 active:scale-95" href="#causas">
+<span class="material-symbols-outlined text-[22px]">volunteer_activism</span>
+<span class="font-label-caps text-label-caps mt-0.5">Causas</span>
+</a>
+<!-- Item 4: Voluntariado -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 min-h-[48px] min-w-[48px] hover:text-primary transition-colors duration-150 active:scale-95" href="#voluntariado">
+<span class="material-symbols-outlined text-[22px]">handshake</span>
+<span class="font-label-caps text-label-caps mt-0.5">Voluntariado</span>
+</a>
+<!-- Item 5: Más (ACTIVO con estilo de componente compartido) -->
+<a aria-current="page" class="flex flex-col items-center justify-center bg-primary-container text-on-primary rounded-xl px-2 py-1 min-h-[48px] min-w-[48px] active:scale-95 transition-transform duration-100" href="#mas">
+<span class="material-symbols-outlined text-[22px]">more_horiz</span>
+<span class="font-label-caps text-label-caps mt-0.5 font-bold">Más</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

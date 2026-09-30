@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-background text-on-surface" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>C9 Zonas afectadas - Consola Acopio</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS Play CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration verbatim from Design System -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-container": "#ff9e47",
+            "on-primary-container": "#83c1b4",
+            "surface-container": "#eaedff",
+            "surface": "#faf8ff",
+            "on-tertiary-fixed-variant": "#6e3900",
+            "secondary-fixed": "#ffdad3",
+            "on-secondary-fixed": "#3f0300",
+            "outline-variant": "#bfc9c5",
+            "tertiary-fixed": "#ffdcc3",
+            "background": "#faf8ff",
+            "primary-fixed": "#b0efe1",
+            "outline": "#707976",
+            "on-error": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-fixed-variant": "#085046",
+            "surface-variant": "#dae2fd",
+            "surface-container-low": "#f2f3ff",
+            "on-surface": "#131b2e",
+            "on-tertiary-fixed": "#2f1500",
+            "on-secondary-container": "#fffbff",
+            "on-surface-variant": "#3f4946",
+            "error": "#ba1a1a",
+            "on-tertiary": "#ffffff",
+            "primary-fixed-dim": "#95d2c5",
+            "inverse-on-surface": "#eef0ff",
+            "tertiary-container": "#6e3900",
+            "surface-tint": "#2a685d",
+            "primary": "#003730",
+            "tertiary": "#4d2600",
+            "primary-container": "#085046",
+            "on-error-container": "#93000a",
+            "surface-container-high": "#e2e7ff",
+            "on-secondary-fixed-variant": "#8f1100",
+            "on-primary-fixed": "#00201b",
+            "on-background": "#131b2e",
+            "secondary-container": "#d9381e",
+            "tertiary-fixed-dim": "#ffb77d",
+            "secondary-fixed-dim": "#ffb4a6",
+            "surface-container-highest": "#dae2fd",
+            "on-primary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "error-container": "#ffdad6",
+            "surface-dim": "#d2d9f4",
+            "surface-bright": "#faf8ff",
+            "secondary": "#b51d04",
+            "inverse-surface": "#283044",
+            "inverse-primary": "#95d2c5"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "margin": "1rem",
+            "margin-tablet": "2rem",
+            "gutter-tablet": "1.5rem",
+            "space-sm": "0.5rem",
+            "gutter": "1rem",
+            "gutter-desktop": "2rem",
+            "space-lg": "1.5rem",
+            "space-xl": "2.5rem",
+            "margin-desktop": "3rem",
+            "space-xs": "0.25rem",
+            "space-md": "1rem"
+          },
+          "fontFamily": {
+            "display-hero": ["Inter"],
+            "headline-sm": ["Inter"],
+            "headline-md": ["Inter"],
+            "body-lg": ["Inter"],
+            "headline-lg-mobile": ["Inter"],
+            "body-sm": ["Inter"],
+            "label-metric": ["Inter"],
+            "headline-lg": ["Inter"],
+            "label-md": ["Inter"],
+            "label-caps": ["Inter"],
+            "body-md": ["Inter"],
+            "display-hero-mobile": ["Inter"]
+          },
+          "fontSize": {
+            "display-hero": ["3rem", { "lineHeight": "3.5rem", "letterSpacing": "-0.025em", "fontWeight": "700" }],
+            "headline-sm": ["1.25rem", { "lineHeight": "1.75rem", "fontWeight": "600" }],
+            "headline-md": ["1.5rem", { "lineHeight": "2rem", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "body-lg": ["1.125rem", { "lineHeight": "1.75rem", "fontWeight": "400" }],
+            "headline-lg-mobile": ["1.625rem", { "lineHeight": "2.125rem", "letterSpacing": "-0.015em", "fontWeight": "700" }],
+            "body-sm": ["0.875rem", { "lineHeight": "1.25rem", "fontWeight": "400" }],
+            "label-metric": ["1.25rem", { "lineHeight": "1.5rem", "letterSpacing": "0.02em", "fontWeight": "700" }],
+            "headline-lg": ["2.25rem", { "lineHeight": "2.75rem", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-md": ["0.875rem", { "lineHeight": "1.25rem", "letterSpacing": "0.01em", "fontWeight": "600" }],
+            "label-caps": ["0.75rem", { "lineHeight": "1rem", "letterSpacing": "0.06em", "fontWeight": "700" }],
+            "body-md": ["1rem", { "lineHeight": "1.5rem", "fontWeight": "400" }],
+            "display-hero-mobile": ["2rem", { "lineHeight": "2.5rem", "letterSpacing": "-0.02em", "fontWeight": "700" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 600, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-full bg-[#f8fafc] text-on-surface antialiased flex justify-center">
+<!-- Mobile Viewport Container: 360px targeted, max-w-md safe constraint -->
+<main class="w-full max-w-[390px] min-h-screen bg-[#f8fafc] flex flex-col relative pb-24 shadow-sm border-x border-[#e2e8f0]">
+<!-- 1. Cabecera con sesión compartida del proyecto -->
+<header class="w-full bg-surface-container-lowest border-b border-[#e2e8f0] px-4 h-14 flex items-center justify-between sticky top-0 z-40">
+<!-- Marca Institucional -->
+<div class="flex items-center space-x-2">
+<div class="w-9 h-9 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="inventory_2">inventory_2</span>
+</div>
+<div class="flex items-center space-x-1.5">
+<span class="font-headline-sm text-headline-sm text-primary font-bold tracking-tight">Acopio</span>
+<span class="bg-primary-fixed text-on-primary-fixed-variant text-[11px] font-bold px-1.5 py-0.5 rounded leading-none uppercase">CO</span>
+</div>
+</div>
+<!-- Avatar Joseph Quintero -->
+<button aria-label="Avatar de usuario con iniciales del administrador" class="w-9 h-9 rounded-full bg-primary flex items-center justify-center text-on-primary text-xs font-bold ring-2 ring-primary-fixed-dim/40 active:scale-95 transition-transform" type="button">
+<span>JQ</span>
+</button>
+</header>
+<!-- 2. Subcabecera y Navegación de Regreso -->
+<div class="px-4 pt-3 pb-2 flex flex-col">
+<button class="inline-flex items-center text-primary-container font-label-md text-label-md active:scale-95 transition-transform self-start py-1 -ml-1" type="button">
+<span class="material-symbols-outlined text-[20px] mr-1" data-icon="arrow_back">arrow_back</span>
+<span>Volver</span>
+</button>
+<div class="mt-2">
+<h1 class="font-headline-lg-mobile text-headline-lg-mobile text-on-surface font-bold">Zonas afectadas</h1>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">Comunidades y sectores censados para el cálculo de déficit del motor</p>
+</div>
+</div>
+<!-- 3. Selector de Emergencia Desplazable Horizontalmente -->
+<div class="mt-2 px-4">
+<div class="flex space-x-2 overflow-x-auto no-scrollbar py-1">
+<!-- Píldora 1: Activa -->
+<button class="flex-shrink-0 h-11 px-4 rounded-full bg-primary-container text-on-primary flex items-center space-x-2 font-label-md text-label-md shadow-sm active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[18px] fill-icon" data-icon="crisis_alert">crisis_alert</span>
+<span class="whitespace-nowrap">Sismo en Caldas</span>
+</button>
+<!-- Píldora 2: Inactiva -->
+<button class="flex-shrink-0 h-11 px-4 rounded-full bg-surface-container-lowest border border-[#cbd5e1] text-on-surface-variant flex items-center space-x-1.5 font-label-md text-label-md active:scale-95 transition-all" type="button">
+<span class="whitespace-nowrap">Inundaciones en el bajo Cauca</span>
+</button>
+<!-- Píldora 3: Inactiva / Cerrada -->
+<button class="flex-shrink-0 h-11 px-4 rounded-full bg-surface-container-lowest border border-[#cbd5e1] text-[#707976] flex items-center space-x-1.5 font-label-md text-label-md active:scale-95 transition-all opacity-85" type="button">
+<span class="material-symbols-outlined text-[16px]" data-icon="lock">lock</span>
+<span class="whitespace-nowrap">Deslizamiento Rosas · Cauca</span>
+</button>
+</div>
+</div>
+<!-- 4. Aviso Informativo de Emergencia Archivada / Estado de Solo Lectura -->
+<div class="px-4 mt-3">
+<div class="bg-surface-container-low border border-surface-dim rounded-xl p-3 flex items-start space-x-2.5">
+<span class="material-symbols-outlined text-primary-container text-[20px] shrink-0 mt-0.5" data-icon="info">info</span>
+<p class="font-body-sm text-body-sm text-on-surface font-medium leading-tight">
+          Esta emergencia está cerrada. Sus zonas quedan en solo lectura.
+        </p>
+</div>
+</div>
+<!-- 5. Botón de Acción Principal Táctil -->
+<div class="px-4 mt-4">
+<button class="w-full min-h-[48px] bg-primary-container text-on-primary font-label-md text-label-md font-bold rounded-xl flex items-center justify-center space-x-2 shadow-sm active:scale-95 hover:bg-primary transition-all" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="add_location_alt">add_location_alt</span>
+<span>Nueva zona</span>
+</button>
+</div>
+<!-- 6. Lista de Tarjetas de Zonas Afectadas -->
+<section aria-label="Zonas afectadas registradas" class="px-4 mt-4 space-y-3">
+<!-- Zona 1: Vereda La Esperanza -->
+<article class="bg-surface-container-lowest rounded-2xl border border-[#cbd5e1] p-4 relative shadow-sm hover:border-primary-container transition-colors">
+<div class="flex items-start justify-between">
+<div class="space-y-1 pr-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">Vereda La Esperanza</h2>
+<div class="flex items-center text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-primary-container mr-1" data-icon="location_on">location_on</span>
+<span>Chinchiná, Caldas</span>
+</div>
+</div>
+<button aria-label="Abrir detalles de Vereda La Esperanza" class="text-on-surface-variant hover:text-primary active:scale-95 transition-all p-1" type="button">
+<span class="material-symbols-outlined text-[24px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<div class="mt-3 pt-3 border-t border-[#f1f5f9] flex flex-col space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-baseline space-x-1">
+<span class="font-headline-sm text-headline-sm font-semibold tabular-nums text-on-surface">340</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">personas</span>
+</div>
+<!-- Etiqueta de Estado: Sin atender -->
+<span class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-[#fee2e2] text-[#991b1b] border border-[#fca5a5] font-label-caps text-label-caps font-bold">
+<span class="material-symbols-outlined text-[14px]" data-icon="warning">warning</span>
+<span>Sin atender</span>
+</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#707976]">
+            Junta de acción comunal · 20 sep 2026
+          </p>
+</div>
+</article>
+<!-- Zona 2: Sector La Mina · Casco Urbano -->
+<article class="bg-surface-container-lowest rounded-2xl border border-[#cbd5e1] p-4 relative shadow-sm hover:border-primary-container transition-colors">
+<div class="flex items-start justify-between">
+<div class="space-y-1 pr-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">Sector La Mina · Casco Urbano</h2>
+<div class="flex items-center text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-primary-container mr-1" data-icon="location_on">location_on</span>
+<span>Villamaría, Caldas</span>
+</div>
+</div>
+<button aria-label="Abrir detalles de Sector La Mina" class="text-on-surface-variant hover:text-primary active:scale-95 transition-all p-1" type="button">
+<span class="material-symbols-outlined text-[24px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<div class="mt-3 pt-3 border-t border-[#f1f5f9] flex flex-col space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-baseline space-x-1">
+<span class="font-headline-sm text-headline-sm font-semibold tabular-nums text-on-surface">1.250</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">personas</span>
+</div>
+<!-- Etiqueta de Estado: En atención -->
+<span class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-[#fef3c7] text-[#92400e] border border-[#fde68a] font-label-caps text-label-caps font-bold">
+<span class="material-symbols-outlined text-[14px]" data-icon="sync">sync</span>
+<span>En atención</span>
+</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#707976]">
+            Censo DANE proyectado · 15 sep 2026
+          </p>
+</div>
+</article>
+<!-- Zona 3: Barrio Cervantes Alto -->
+<article class="bg-surface-container-lowest rounded-2xl border border-[#cbd5e1] p-4 relative shadow-sm hover:border-primary-container transition-colors">
+<div class="flex items-start justify-between">
+<div class="space-y-1 pr-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">Barrio Cervantes Alto</h2>
+<div class="flex items-center text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-primary-container mr-1" data-icon="location_on">location_on</span>
+<span>Manizales, Caldas</span>
+</div>
+</div>
+<button aria-label="Abrir detalles de Barrio Cervantes Alto" class="text-on-surface-variant hover:text-primary active:scale-95 transition-all p-1" type="button">
+<span class="material-symbols-outlined text-[24px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<div class="mt-3 pt-3 border-t border-[#f1f5f9] flex flex-col space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-baseline space-x-1">
+<span class="font-headline-sm text-headline-sm font-semibold tabular-nums text-on-surface">620</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">personas</span>
+</div>
+<!-- Etiqueta de Estado: Cubierta -->
+<span class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-[#dcfce7] text-[#166534] border border-[#bbf7d0] font-label-caps text-label-caps font-bold">
+<span class="material-symbols-outlined text-[14px]" data-icon="check_circle">check_circle</span>
+<span>Cubierta</span>
+</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#707976]">
+            Reporte UNGRD · 18 sep 2026
+          </p>
+</div>
+</article>
+<!-- Zona 4: Corregimiento El Trébol -->
+<article class="bg-surface-container-lowest rounded-2xl border border-[#cbd5e1] p-4 relative shadow-sm hover:border-primary-container transition-colors">
+<div class="flex items-start justify-between">
+<div class="space-y-1 pr-2">
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold leading-tight">Corregimiento El Trébol</h2>
+<div class="flex items-center text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-[16px] text-primary-container mr-1" data-icon="location_on">location_on</span>
+<span>Palestina, Caldas</span>
+</div>
+</div>
+<button aria-label="Abrir detalles de Corregimiento El Trébol" class="text-on-surface-variant hover:text-primary active:scale-95 transition-all p-1" type="button">
+<span class="material-symbols-outlined text-[24px]" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<div class="mt-3 pt-3 border-t border-[#f1f5f9] flex flex-col space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-baseline space-x-1">
+<span class="font-headline-sm text-headline-sm font-semibold tabular-nums text-on-surface">185</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant font-medium">personas</span>
+</div>
+<!-- Etiqueta de Estado: Sin atender -->
+<span class="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full bg-[#fee2e2] text-[#991b1b] border border-[#fca5a5] font-label-caps text-label-caps font-bold">
+<span class="material-symbols-outlined text-[14px]" data-icon="warning">warning</span>
+<span>Sin atender</span>
+</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#707976]">
+            Líder comunitario · 22 sep 2026
+          </p>
+</div>
+</article>
+</section>
+<!-- 7. Barra de Navegación Inferior (5 destinos fijos, pestaña 'Más' activa con acento #085046) -->
+<nav class="fixed bottom-0 left-0 right-0 w-full max-w-[390px] mx-auto z-50 h-16 bg-surface-container-lowest border-t border-[#cbd5e1] flex items-center justify-around px-2 shadow-[0_-4px_12px_-2px_rgba(15,23,42,0.08)]">
+<!-- Destino 1: Inicio -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="home">home</span>
+<span class="font-label-caps text-[10px] mt-0.5 tracking-normal">Inicio</span>
+</button>
+<!-- Destino 2: Mapa -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="map">map</span>
+<span class="font-label-caps text-[10px] mt-0.5 tracking-normal">Mapa</span>
+</button>
+<!-- Destino 3: Causas -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="volunteer_activism">volunteer_activism</span>
+<span class="font-label-caps text-[10px] mt-0.5 tracking-normal">Causas</span>
+</button>
+<!-- Destino 4: Voluntariado -->
+<button class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="groups">groups</span>
+<span class="font-label-caps text-[10px] mt-0.5 tracking-normal">Voluntariado</span>
+</button>
+<!-- Destino 5: Más (ACTIVA / DESTACADA) -->
+<button aria-current="page" class="flex flex-col items-center justify-center bg-primary-container text-on-primary rounded-xl px-3 py-1 shadow-sm active:scale-95 transition-transform" type="button">
+<span class="material-symbols-outlined text-[22px] fill-icon" data-icon="more_horiz">more_horiz</span>
+<span class="font-label-caps text-[10px] mt-0.5 tracking-normal font-bold">Más</span>
+</button>
+</nav>
+</main>
+</body></html>
