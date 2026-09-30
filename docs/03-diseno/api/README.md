@@ -10,7 +10,7 @@ actualizado: 2026-09-30
 
 Lo que necesita quien construye la interfaz con Google Stitch
 ([ADR-0011](../../02-arquitectura/adr/ADR-0011-interfaz-con-stitch.md)) para conectarla
-al backend del Bloque 0.
+al backend de los bloques 0 y 1.
 
 - **Contrato completo:** [openapi.json](openapi.json). Se regenera con
   `bun run --filter @acopio/api openapi` cada vez que cambia un endpoint
@@ -142,6 +142,22 @@ Todas las respuestas de error tienen la misma forma:
 
 **Lectura pública.** `GET /emergencias` no exige sesión: la usa la Portada. Crear,
 editar y cerrar una emergencia sigue siendo del administrador.
+
+## Endpoints del Bloque 1 · red y mapa
+
+| Pantalla | Endpoints |
+|---|---|
+| **P5 Mapa y P6 Ficha** | `GET /acopios` (`abiertoAhora`, `cerca=lat,lng`) · `GET /acopios/:id` · `GET /acopios/:id/no-recibir` · `GET /no-recibir?categoria=` · `GET /geocodificar?q=` |
+| **C21 Acopios** | `GET /acopios/gestion` · `POST /acopios` · `PATCH /acopios/:id` |
+| **Mi acopio** | `PATCH /acopios/:id/operacion` |
+| **C7 No recibir** | `PUT` y `DELETE /acopios/:id/no-recibir/:categoriaId` |
+| **C15 Entidades** | `GET/POST /entidades` · `PATCH /entidades/:id` |
+| **C9 Zonas** | `GET/POST /zonas` (`emergencia`) · `PATCH /zonas/:id` |
+| **Selector y C16** | `GET /ubicaciones/mias` · `GET /ubicaciones?q=` |
+
+**Lectura pública.** El mapa, la ficha, «no recibir» y la geocodificación no exigen
+sesión. `/geocodificar` tiene un límite de 20 consultas por minuto por IP y responde 503
+`GEOCODIFICACION_NO_DISPONIBLE` si Nominatim no contesta.
 
 Todas las rutas llevan el prefijo `/api`.
 

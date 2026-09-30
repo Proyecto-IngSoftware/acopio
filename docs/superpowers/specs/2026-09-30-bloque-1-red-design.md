@@ -282,4 +282,17 @@ Es idempotente y el seed real no cambia.
 
 ## 11. Cambios al construir
 
-Se llena al construir.
+**2026-09-30 · API.** Construida según el [plan](../../05-planes/2026-09-30-bloque-1-api.md).
+
+| Qué | Por qué |
+|---|---|
+| «Operador asignado» es `AlcanceService.exigir`, y `idsAsignados` se sumó al mismo servicio | Ya existía en `identidad`; un ayudante nuevo en `comun/autorizacion` lo habría duplicado |
+| `AcopiosModule` es global | Así `identidad` recibe el `VerificadorUbicaciones` sin importar `acopios` |
+| `nombres()` compara tipo e id | Una asignación ZONA con el id de un acopio debe dar `UBICACION_INEXISTENTE` |
+| El correo de asignación nombra el acopio o la zona | `describir()` esperaba los nombres del Bloque 1 |
+| Variable nueva `NOMINATIM_URL` | Permite apuntar a otra instancia de Nominatim sin tocar código |
+| `@acopio/shared` se compila antes que la API (`build`, `start:dev`, `typecheck`, `openapi`, `seed:demo`); Jest lee el código fuente | El paquete publica ESM y hasta ahora nadie lo consumía |
+| Las pruebas crean una entidad, dos acopios, una emergencia y una zona con id fijo | La API valida que las ubicaciones asignadas existan |
+| Las restricciones CHECK limitan lat y lng a Colombia, y la población a no negativa | Evitan un pin fuera del país aunque se salte la validación |
+| Los campos opcionales nuevos también salen como arreglos en el contrato | Es P-031; queda abierto |
+| La búsqueda de ubicaciones ignora mayúsculas, no tildes | Con decenas de ubicaciones basta |

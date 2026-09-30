@@ -3,7 +3,7 @@ title: "Vista general de arquitectura"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-09-14
+actualizado: 2026-09-30
 ---
 
 # Vista general de arquitectura
@@ -147,6 +147,13 @@ módulos de dominio: `comun/autorizacion` guarda los decoradores de rol y el tip
 usuario autenticado, que usan todos los módulos —si vivieran en `identidad`, habría un
 ciclo con `auditoria`—; y `salud` expone `GET /api/salud` para el chequeo del
 contenedor.
+
+**2026-09-30 · Bloque 1.** Nacen `acopios` (entidades, acopios, zonas, ubicaciones y
+geocodificación) e `inventario`, que por ahora solo tiene «no recibir». `identidad`
+valida las ubicaciones de una asignación por el puerto `VerificadorUbicaciones`: el
+token vive en `comun/ubicaciones` y lo implementa `acopios`, que es global solo para
+entregarlo. Es el mismo patrón de `ProveedorIdentidad`: ninguno de los dos módulos
+importa al otro.
 
 ## Tareas programadas
 

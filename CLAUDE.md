@@ -59,7 +59,7 @@ Monorepo con workspaces de Bun:
 
 ### Módulos de la API
 
-Cada carpeta de `apps/api/src/modulos/` es un límite de dominio. Hoy existen `identidad`, `auditoria`, `catalogo`, `notificaciones` y `salud`; faltan `acopios`, `inventario`, `comprobantes`, `motor`, `turnos`, `almacenamiento` e `importacion`.
+Cada carpeta de `apps/api/src/modulos/` es un límite de dominio. Hoy existen `identidad`, `auditoria`, `catalogo`, `notificaciones`, `salud`, `acopios` e `inventario` (este, solo con «no recibir»); faltan `comprobantes`, `motor`, `turnos`, `almacenamiento` e `importacion`.
 
 Quién puede importar a quién está en la tabla «Dependencias permitidas» de `docs/02-arquitectura/vista-general.md`, y `apps/api/.dependency-cruiser.cjs` la hace cumplir. Un módulo nuevo se agrega a las dos. `comun/`, `config/` y `generado/` no son módulos y los usa cualquiera; los decoradores de autorización viven en `comun/autorizacion` para evitar un ciclo entre `identidad` y `auditoria`.
 
@@ -73,6 +73,7 @@ Quién puede importar a quién está en la tabla «Dependencias permitidas» de 
 - Autenticación por un puerto `ProveedorIdentidad` con dos adaptadores, `local` y `supabase`, elegidos con `AUTH_PROVEEDOR`. La API no arranca con `local` en producción. El guard valida el JWT y lee el rol, el estado y las asignaciones de la base en cada request; nada de eso viaja en el token.
 - Todos los endpoints exigen sesión salvo los marcados con `@Publico()`. `@Roles(...)` restringe por rol y `@UsuarioActual()` entrega el usuario.
 - El correo siempre pasa por la cola `correo_saliente`. `NotificacionService.encolar` se llama dentro de la transacción de la operación y una tarea programada envía cada minuto.
+- `identidad` valida las ubicaciones de una asignación con el puerto `VerificadorUbicaciones` (token en `comun/ubicaciones`), que implementa `acopios`. Las pruebas de integración parten de una entidad, dos acopios (`ACOPIO_A`, `ACOPIO_B`), una emergencia y una zona (`ZONA_A`) con id fijo, creados en `crearAppPrueba`; Nominatim va siempre con el adaptador falso.
 - Las tareas programadas (`@Cron`) no se registran con `NODE_ENV=test`. Las pruebas llaman al método directamente.
 - El saldo de inventario se deriva de los movimientos, no se guarda (ADR-0002).
 - El cliente de Prisma se genera en `apps/api/src/generado/` y no se versiona. Los scripts `typecheck`, `test` y `test:int` lo regeneran.

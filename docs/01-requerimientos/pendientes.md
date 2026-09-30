@@ -576,6 +576,8 @@ más.
 convierte a mano (`as unknown as`).
 **Estado:** ABIERTO. Revisar cómo exporta nestjs-zod los campos nullable y corregir el
 contrato en la API.
+**Avance 2026-09-30:** en el Bloque 1 pasa lo mismo con los campos opcionales nuevos
+(`telefono`, `indicacionesAcceso` de acopio y los de entidad).
 
 ### P-032 · Todo en local hasta el mínimo viable
 **Fecha:** 2026-09-30 · **Propuesto por:** Joseph
@@ -599,7 +601,7 @@ frenaría el Bloque 1.
 | Pantalla nueva C21 Acopios, para crear y editar acopios | El catálogo de pantallas no tenía dónde gestionarlos |
 
 **Estado:** RESUELTO → [especificación del Bloque 1](../superpowers/specs/2026-09-30-bloque-1-red-design.md#3-decisiones).
-Falta actualizar RF-RED-001, `modelo-datos.md` y el catálogo de pantallas cuando se construya.
+RF-RED-001, `modelo-datos.md` y el catálogo de pantallas quedaron al día el 2026-09-30.
 
 ---
 

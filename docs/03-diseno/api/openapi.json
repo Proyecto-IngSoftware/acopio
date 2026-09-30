@@ -1514,6 +1514,835 @@
         ]
       }
     },
+    "/api/entidades": {
+      "get": {
+        "operationId": "EntidadesController_listar",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntidadDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      },
+      "post": {
+        "operationId": "EntidadesController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearEntidadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntidadDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/entidades/{id}": {
+      "patch": {
+        "operationId": "EntidadesController_actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarEntidadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntidadDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/acopios": {
+      "get": {
+        "operationId": "AcopiosController_listarPublicos",
+        "parameters": [
+          {
+            "name": "abiertoAhora",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cerca",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "pattern": "^-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AcopioPublicoDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "summary": "Acopios activos y pausados para el mapa. No exige sesión",
+        "tags": [
+          "red"
+        ]
+      },
+      "post": {
+        "operationId": "AcopiosController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearAcopioDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcopioDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/acopios/gestion": {
+      "get": {
+        "operationId": "AcopiosController_listarGestion",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AcopioDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/acopios/{id}": {
+      "get": {
+        "operationId": "AcopiosController_obtenerPublico",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcopioPublicoDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "summary": "Ficha pública de un acopio. No exige sesión",
+        "tags": [
+          "red"
+        ]
+      },
+      "patch": {
+        "operationId": "AcopiosController_actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarAcopioDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcopioDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/acopios/{id}/operacion": {
+      "patch": {
+        "operationId": "AcopiosController_operar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OperacionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcopioDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/zonas": {
+      "get": {
+        "operationId": "ZonasController_listar",
+        "parameters": [
+          {
+            "name": "emergencia",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ZonaDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      },
+      "post": {
+        "operationId": "ZonasController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearZonaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ZonaDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/zonas/{id}": {
+      "patch": {
+        "operationId": "ZonasController_actualizar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActualizarZonaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ZonaDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/ubicaciones/mias": {
+      "get": {
+        "operationId": "UbicacionesController_mias",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UbicacionDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/ubicaciones": {
+      "get": {
+        "operationId": "UbicacionesController_buscar",
+        "parameters": [
+          {
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minLength": 1,
+              "maxLength": 60,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UbicacionDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/geocodificar": {
+      "get": {
+        "operationId": "GeocodificacionController_buscar",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minLength": 3,
+              "maxLength": 200,
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResultadoGeoDto"
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Nominatim no respondió",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "summary": "Dirección a coordenadas, solo en Colombia. No exige sesión",
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/acopios/{id}/no-recibir": {
+      "get": {
+        "operationId": "NoRecibirController_listar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NoRecibirDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "summary": "Lo que un acopio no recibe hoy. No exige sesión",
+        "tags": [
+          "inventario"
+        ]
+      }
+    },
+    "/api/no-recibir": {
+      "get": {
+        "operationId": "NoRecibirController_porCategoria",
+        "parameters": [
+          {
+            "name": "categoria",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AcopioNoRecibeDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "summary": "Acopios que no reciben una categoría. No exige sesión",
+        "tags": [
+          "inventario"
+        ]
+      }
+    },
+    "/api/acopios/{id}/no-recibir/{categoriaId}": {
+      "put": {
+        "operationId": "NoRecibirController_marcar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoriaId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MarcarDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NoRecibirDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "inventario"
+        ]
+      },
+      "delete": {
+        "operationId": "NoRecibirController_desmarcar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoriaId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "inventario"
+        ]
+      }
+    },
     "/api/salud": {
       "get": {
         "operationId": "SaludController_revisar",
@@ -2801,6 +3630,1503 @@
         "required": [
           "motivo"
         ]
+      },
+      "EntidadDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "tipo": {
+            "type": "string"
+          },
+          "nit": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "sitioWeb": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "telefono": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "correo": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "descripcion": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "verificacion": {
+            "type": "string",
+            "enum": [
+              "SIN_VERIFICAR",
+              "VERIFICADA",
+              "RECHAZADA"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "nombre",
+          "tipo",
+          "nit",
+          "sitioWeb",
+          "telefono",
+          "correo",
+          "descripcion",
+          "verificacion"
+        ]
+      },
+      "CrearEntidadDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "tipo": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 60,
+            "description": "Fundación, ONG, alcaldía, iglesia…"
+          },
+          "nit": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "nullable": true
+          },
+          "sitioWeb": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "telefono": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30,
+            "nullable": true
+          },
+          "correo": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+            "nullable": true
+          },
+          "descripcion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000,
+            "nullable": true
+          }
+        },
+        "required": [
+          "nombre",
+          "tipo"
+        ]
+      },
+      "ActualizarEntidadDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          },
+          "tipo": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 60,
+            "description": "Fundación, ONG, alcaldía, iglesia…"
+          },
+          "nit": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20,
+            "nullable": true
+          },
+          "sitioWeb": {
+            "type": "string",
+            "format": "uri",
+            "nullable": true
+          },
+          "telefono": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30,
+            "nullable": true
+          },
+          "correo": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+            "nullable": true
+          },
+          "descripcion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1000,
+            "nullable": true
+          }
+        }
+      },
+      "AcopioPublicoDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "entidad": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "nombre": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "nombre"
+            ]
+          },
+          "direccion": {
+            "type": "string"
+          },
+          "municipio": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lng": {
+            "type": "number"
+          },
+          "telefono": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "indicacionesAcceso": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "horario": {
+            "type": "object",
+            "properties": {
+              "dom": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "lun": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "mar": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "mie": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "jue": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "vie": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "sab": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "dom",
+              "lun",
+              "mar",
+              "mie",
+              "jue",
+              "vie",
+              "sab"
+            ]
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "ACTIVO",
+              "PAUSADO",
+              "CERRADO"
+            ]
+          },
+          "abiertoAhora": {
+            "type": "boolean"
+          },
+          "actualizadoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "distanciaKm": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "nombre",
+          "entidad",
+          "direccion",
+          "municipio",
+          "lat",
+          "lng",
+          "telefono",
+          "indicacionesAcceso",
+          "horario",
+          "estado",
+          "abiertoAhora",
+          "actualizadoEn"
+        ]
+      },
+      "AcopioDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "entidad": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "nombre": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "nombre"
+            ]
+          },
+          "direccion": {
+            "type": "string"
+          },
+          "municipio": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lng": {
+            "type": "number"
+          },
+          "telefono": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "indicacionesAcceso": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "horario": {
+            "type": "object",
+            "properties": {
+              "dom": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "lun": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "mar": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "mie": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "jue": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "vie": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "sab": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "dom",
+              "lun",
+              "mar",
+              "mie",
+              "jue",
+              "vie",
+              "sab"
+            ]
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "ACTIVO",
+              "PAUSADO",
+              "CERRADO"
+            ]
+          },
+          "abiertoAhora": {
+            "type": "boolean"
+          },
+          "actualizadoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "distanciaKm": {
+            "type": "number"
+          },
+          "creadoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          }
+        },
+        "required": [
+          "id",
+          "nombre",
+          "entidad",
+          "direccion",
+          "municipio",
+          "lat",
+          "lng",
+          "telefono",
+          "indicacionesAcceso",
+          "horario",
+          "estado",
+          "abiertoAhora",
+          "actualizadoEn",
+          "creadoEn"
+        ]
+      },
+      "CrearAcopioDto": {
+        "type": "object",
+        "properties": {
+          "entidadId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "nombre": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "direccion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "municipio": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "lat": {
+            "type": "number",
+            "minimum": -5,
+            "maximum": 14
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -82,
+            "maximum": -66
+          },
+          "telefono": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30,
+            "nullable": true
+          },
+          "indicacionesAcceso": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "nullable": true
+          },
+          "horario": {
+            "type": "object",
+            "properties": {
+              "dom": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "lun": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "mar": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "mie": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "jue": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "vie": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "sab": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "dom",
+              "lun",
+              "mar",
+              "mie",
+              "jue",
+              "vie",
+              "sab"
+            ]
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "ACTIVO",
+              "PAUSADO",
+              "CERRADO"
+            ]
+          }
+        },
+        "required": [
+          "entidadId",
+          "nombre",
+          "direccion",
+          "municipio",
+          "lat",
+          "lng",
+          "horario"
+        ]
+      },
+      "ActualizarAcopioDto": {
+        "type": "object",
+        "properties": {
+          "entidadId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "nombre": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "direccion": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "municipio": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "lat": {
+            "type": "number",
+            "minimum": -5,
+            "maximum": 14
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -82,
+            "maximum": -66
+          },
+          "telefono": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30,
+            "nullable": true
+          },
+          "indicacionesAcceso": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "nullable": true
+          },
+          "horario": {
+            "type": "object",
+            "properties": {
+              "dom": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "lun": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "mar": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "mie": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "jue": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "vie": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "sab": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "dom",
+              "lun",
+              "mar",
+              "mie",
+              "jue",
+              "vie",
+              "sab"
+            ]
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "ACTIVO",
+              "PAUSADO",
+              "CERRADO"
+            ]
+          }
+        }
+      },
+      "OperacionDto": {
+        "type": "object",
+        "properties": {
+          "estado": {
+            "type": "string",
+            "enum": [
+              "ACTIVO",
+              "PAUSADO"
+            ]
+          },
+          "horario": {
+            "type": "object",
+            "properties": {
+              "dom": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "lun": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "mar": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "mie": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "jue": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "vie": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              },
+              "sab": {
+                "maxItems": 4,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "abre": {
+                      "type": "string"
+                    },
+                    "cierra": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "abre",
+                    "cierra"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "dom",
+              "lun",
+              "mar",
+              "mie",
+              "jue",
+              "vie",
+              "sab"
+            ]
+          },
+          "indicacionesAcceso": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500,
+            "nullable": true
+          },
+          "telefono": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 30,
+            "nullable": true
+          }
+        }
+      },
+      "ZonaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "emergenciaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "municipio": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lng": {
+            "type": "number"
+          },
+          "poblacionEstimada": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "poblacionFuente": {
+            "type": "string"
+          },
+          "poblacionFecha": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "SIN_ATENDER",
+              "EN_ATENCION",
+              "CUBIERTA"
+            ]
+          },
+          "actualizadoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          }
+        },
+        "required": [
+          "id",
+          "emergenciaId",
+          "nombre",
+          "municipio",
+          "lat",
+          "lng",
+          "poblacionEstimada",
+          "poblacionFuente",
+          "poblacionFecha",
+          "estado",
+          "actualizadoEn"
+        ]
+      },
+      "CrearZonaDto": {
+        "type": "object",
+        "properties": {
+          "emergenciaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "nombre": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "municipio": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "lat": {
+            "type": "number",
+            "minimum": -5,
+            "maximum": 14
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -82,
+            "maximum": -66
+          },
+          "poblacionEstimada": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "poblacionFuente": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "poblacionFecha": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "SIN_ATENDER",
+              "EN_ATENCION",
+              "CUBIERTA"
+            ]
+          }
+        },
+        "required": [
+          "emergenciaId",
+          "nombre",
+          "municipio",
+          "lat",
+          "lng",
+          "poblacionEstimada",
+          "poblacionFuente",
+          "poblacionFecha"
+        ]
+      },
+      "ActualizarZonaDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "municipio": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "lat": {
+            "type": "number",
+            "minimum": -5,
+            "maximum": 14
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -82,
+            "maximum": -66
+          },
+          "poblacionEstimada": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "poblacionFuente": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "poblacionFecha": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "SIN_ATENDER",
+              "EN_ATENCION",
+              "CUBIERTA"
+            ]
+          }
+        }
+      },
+      "UbicacionDto": {
+        "type": "object",
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "ACOPIO",
+              "ZONA"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "municipio": {
+            "type": "string"
+          },
+          "estado": {
+            "type": "string",
+            "description": "Estado del acopio o de la zona"
+          }
+        },
+        "required": [
+          "tipo",
+          "id",
+          "nombre",
+          "municipio",
+          "estado"
+        ]
+      },
+      "ResultadoGeoDto": {
+        "type": "object",
+        "properties": {
+          "etiqueta": {
+            "type": "string"
+          },
+          "lat": {
+            "type": "number"
+          },
+          "lng": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "etiqueta",
+          "lat",
+          "lng"
+        ]
+      },
+      "NoRecibirDto": {
+        "type": "object",
+        "properties": {
+          "categoriaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "categoria": {
+            "type": "string"
+          },
+          "hasta": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "nullable": true
+          },
+          "marcadoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          }
+        },
+        "required": [
+          "categoriaId",
+          "categoria",
+          "hasta",
+          "marcadoEn"
+        ]
+      },
+      "AcopioNoRecibeDto": {
+        "type": "object",
+        "properties": {
+          "acopioId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "hasta": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "nullable": true
+          }
+        },
+        "required": [
+          "acopioId",
+          "hasta"
+        ]
+      },
+      "MarcarDto": {
+        "type": "object",
+        "properties": {
+          "hasta": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "Fecha de reapertura; sin ella, hasta que se desmarque",
+            "nullable": true
+          }
+        }
       },
       "SaludDto": {
         "type": "object",

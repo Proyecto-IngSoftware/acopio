@@ -3,7 +3,7 @@ title: "Modelo de datos"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-09-28
+actualizado: 2026-09-30
 ---
 
 # Modelo de datos
@@ -204,6 +204,14 @@ umbral
   CHECK (minimo <= maximo)
   PK (ubicacion_tipo, ubicacion_id, categoria_id)
 ```
+
+**2026-09-30 · Bloque 1 (B-06).** «No recibir» salió de `umbral` a su propia tabla,
+`no_recibir` (`acopio_id`, `categoria_id`, `hasta`, `marcado_por`, `marcado_en`), con
+llaves foráneas reales a `acopio` y `categoria`. `umbral` nace en el Bloque 2 sin esas
+columnas: aplica también a zonas, donde «no recibir» no tiene sentido. Una fila con
+`hasta` vencido deja de contar al leerla. En el Bloque 1, `acopio` todavía no tiene las
+columnas de referenciados (`tipo`, `fuente*`, `oculto_por_admin`) ni `entidad` las de
+verificación y logotipo: llegan con el importador y con la verificación.
 
 ### Custodia
 

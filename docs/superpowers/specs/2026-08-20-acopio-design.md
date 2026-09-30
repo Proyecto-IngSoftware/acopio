@@ -3,7 +3,7 @@ title: "Acopio — Especificación de diseño"
 type: spec
 tags: [spec, arquitectura]
 estado: vigente
-actualizado: 2026-09-12
+actualizado: 2026-09-30
 ---
 
 # Acopio — Especificación de diseño
@@ -565,6 +565,7 @@ almacenamiento directamente. Miniaturas con `sharp` en la API.
 | C18 | Catálogo maestro | Categorías, unidades, canasta estándar, mapeo EAN |
 | C19 | Contenido del home | Noticias y carrusel |
 | C20 | **Reportar necesidad** | Categorías del catálogo en chips + nota corta opcional. No depende de una remisión en curso |
+| C21 | Acopios | Crear, editar y cerrar acopios. Dirección geocodificada y pin que se ajusta arrastrándolo (P-033) |
 
 ---
 

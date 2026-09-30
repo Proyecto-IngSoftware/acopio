@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: inventario
 bloque: 2
-actualizado: 2026-08-20
+actualizado: 2026-09-30
 ---
 
 # RF-INV · Inventario
@@ -92,6 +92,10 @@ Principio: **el saldo no se guarda, se deriva de movimientos inmutables.**
 
 ### RF-INV-008 · Marcar «no recibir»
 **Actor:** Operador · **Prioridad:** DEBE
+
+**Construido en el Bloque 1 (2026-09-30, B-02).** Se adelantó para que el mapa público
+pueda filtrar por lo que un acopio no recibe. Vive en el módulo `inventario`, en la tabla
+`no_recibir`.
 
 Ataca directamente el problema del acopio ahogado en un solo insumo.
 

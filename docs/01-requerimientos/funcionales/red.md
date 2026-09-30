@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: red
 bloque: 1
-actualizado: 2026-09-14
+actualizado: 2026-09-30
 ---
 
 # RF-RED · Acopios, zonas, entidades y causas
@@ -16,6 +16,11 @@ actualizado: 2026-09-14
 
 ### RF-RED-001 · Gestionar centros de acopio
 **Actor:** Administrador · **Prioridad:** DEBE
+
+**Ajuste del 2026-09-30 ([P-033](../pendientes.md)).** El Operador asignado maneja lo
+operativo de su acopio: pausar y reactivar, horario, indicaciones de acceso y teléfono.
+Crear, cerrar y cambiar entidad, nombre, dirección o coordenadas sigue siendo del
+Administrador.
 
 **Criterios de aceptación:**
 - [ ] Nombre, entidad responsable, dirección, coordenadas, teléfono, horario semanal
