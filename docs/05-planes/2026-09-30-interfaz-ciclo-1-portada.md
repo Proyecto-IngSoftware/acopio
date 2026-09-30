@@ -17,8 +17,8 @@ actualizado: 2026-09-30
 las emergencias de la API sin sesión y muestra estados vacíos donde el backend aún no
 llega.
 
-**Arquitectura:** primero se corrige el diseño en Google Stitch y Joseph lo aprueba;
-hasta ese punto no se escribe código. Después se construyen los tokens
+**Arquitectura:** primero se corrige el diseño en Google Stitch, se monta como maqueta
+en un artefacto y Joseph lo aprueba; hasta ese punto no se escribe código. Después se construyen los tokens
 (`packages/ui-tokens`), el esqueleto de la SPA, un cliente tipado desde el contrato
 OpenAPI, los componentes base y la Portada. El HTML de Stitch queda guardado en la
 bóveda como referencia y nunca se importa.
@@ -33,7 +33,8 @@ Quien ejecute lee las dos.
 ## Reglas que aplican a todas las tareas
 
 - No se escribe código de `apps/web` ni de `packages/ui-tokens` antes de que Joseph
-  apruebe el diseño al final de la Tarea 2.
+  apruebe el diseño al final de la Tarea 2. Lo aprueba sobre una maqueta publicada
+  como artefacto.
 - Ningún archivo de `apps/web/src` contiene un color hexadecimal. Los colores salen de
   `packages/ui-tokens`.
 - Paleta: marca teal `#0F6E6E`, neutros cálidos. Rojo, ámbar, verde y morado solo
@@ -199,6 +200,7 @@ git commit -m "Diseño: copia de la Portada de Stitch antes de corregir el tema"
 - Crear: `docs/03-diseno/stitch/P01-portada/captura.png`
 - Crear: `docs/03-diseno/stitch/P01-portada/pantalla.html`
 - Crear: `docs/03-diseno/stitch/P01-portada/README.md`
+- Crear: `docs/03-diseno/stitch/P01-portada/maqueta.html`
 
 Antes de empezar, invocar `frontend-design:frontend-design`. La paleta y la tipografía
 ya están fijadas por el sistema de diseño, así que el criterio de esa skill se aplica
@@ -288,21 +290,56 @@ componentes base y los tokens.
 
 El identificador de la pantalla se completa con el que devolvió el paso 2.
 
-- [ ] **Paso 4: Commit y push**
+- [ ] **Paso 4: Montar la maqueta como artefacto**
+
+La captura de Stitch muestra la Portada llena de datos de ejemplo. Lo que se va a
+construir en este ciclo tiene estados vacíos, así que Joseph aprueba sobre una maqueta
+que se ve como quedará de verdad.
+
+Antes de escribirla, cargar la skill `artifact-design`.
+
+Crear `docs/03-diseno/stitch/P01-portada/maqueta.html`: una sola página HTML, sin
+dependencias externas salvo la fuente Inter, con estas condiciones:
+
+- Los colores se definen una vez como variables CSS en `:root`, con los valores de
+  `docs/03-diseno/sistema-diseno.md` §2 a §4. Es el mismo contenido que tendrá
+  `packages/ui-tokens/src/tokens.css` en la Tarea 4.
+- Columna de 360 px de ancho máximo, centrada, con la barra inferior fija.
+- Los bloques, en el orden de la Tarea 9: encabezado con «Entrar», emergencia con su
+  selector, «Zonas sin cobertura», «Qué hace falta», «Qué no traer», «Cómo apoyar»,
+  «Jornadas de voluntariado», «Desde el terreno», el aviso «Acopio no recibe dinero»
+  y la nota de la Ley 1581.
+- Los cinco bloques sin backend aparecen como estado vacío, con el mismo texto que
+  lleva la Tarea 9.
+- Un conmutador al inicio de la página, fuera de la columna del teléfono, para ver los
+  cuatro estados: con emergencias, cargando, con error y sin emergencias. Las dos
+  emergencias de muestra solo existen en la maqueta.
+- La jerarquía, los espacios y las formas siguen `captura.png`.
+
+Publicarla con la herramienta `Artifact` (`file_path` a `maqueta.html`, `icon: "layout"`,
+título «Portada de Acopio») y guardar el enlace en el `README.md` de la carpeta, en una
+fila nueva de la tabla: `| Maqueta | <enlace del artefacto> |`.
+
+La maqueta es referencia, igual que `pantalla.html`: `apps/web` no la importa.
+
+- [ ] **Paso 5: Commit y push**
 
 ```bash
 git add docs/03-diseno/stitch
-git commit -m "Diseño: Portada de Stitch con la paleta del sistema de diseño"
+git commit -m "Diseño: Portada de Stitch con la paleta del sistema de diseño y su maqueta"
 git push origin main
 ```
 
-- [ ] **Paso 5: Aprobación de Joseph. Aquí se detiene el trabajo**
+- [ ] **Paso 6: Aprobación de Joseph. Aquí se detiene el trabajo**
 
-Mostrar a Joseph `antes/captura.png` y `captura.png` y preguntar si aprueba el diseño
-para pasar a código. No se empieza la Tarea 3 sin un sí explícito.
+Pasar a Joseph el enlace del artefacto, junto con `antes/captura.png` y `captura.png`,
+y preguntar si aprueba el diseño para pasar a código. No se empieza la Tarea 3 sin un
+sí explícito.
 
-Si pide cambios, se vuelve al paso 1. Si el diseño aprobado cambia el orden o el
-texto de algún bloque, se actualiza el marcado de la Tarea 9 antes de ejecutarla.
+Si pide cambios, se corrigen en la maqueta y se vuelve a publicar en el mismo enlace.
+Si el cambio es de fondo, se vuelve al paso 1 para que Stitch y la maqueta no se
+separen. Cuando apruebe, el orden y el texto de los bloques de la maqueta mandan: si
+difieren de la Tarea 9, se actualiza su marcado antes de ejecutarla.
 
 ---
 

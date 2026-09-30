@@ -84,9 +84,13 @@ Proyecto: «ACOPIO DISEÑO», identificador `10306891818878200068`.
    - `pantalla.html`, el código que exporta Stitch
    - `README.md` con el identificador de la pantalla en Stitch, la fecha de
      exportación y las diferencias aceptadas entre el diseño y lo construido
-4. La pantalla se escribe en `apps/web` con los componentes base y los tokens. El
+   - `maqueta.html`, la pantalla tal como se va a construir, con los tokens reales y
+     sus estados vacíos
+4. La maqueta se publica como artefacto y Joseph la aprueba. Sin esa aprobación no se
+   escribe código de la pantalla.
+5. La pantalla se escribe en `apps/web` con los componentes base y los tokens. El
    código de `apps/web` nunca importa nada de `docs/`.
-5. Se compara en 360 × 640 px contra `captura.png` con la app levantada.
+6. Se compara en 360 × 640 px contra la maqueta aprobada, con la app levantada.
 
 Si una pantalla necesita un componente que no existe, el componente se agrega a la
 base y no a la pantalla.
