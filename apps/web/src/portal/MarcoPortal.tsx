@@ -1,12 +1,23 @@
 import { Outlet } from 'react-router';
+import { useSesion } from '../sesion/Sesion';
 import { BarraNavegacion } from './BarraNavegacion';
-import { Cabecera } from './Cabecera';
+import { CabeceraAcceso } from './cabecera/CabeceraAcceso';
+import { CabeceraConSesion } from './cabecera/CabeceraConSesion';
+import { CabeceraPublica } from './cabecera/CabeceraPublica';
 
 /** Columna de ancho de teléfono entre la cabecera y la barra fijas. */
 export function MarcoPortal() {
+  const { usuario, cargando } = useSesion();
   return (
     <div className="flex min-h-screen flex-col bg-surface text-body-md text-on-surface">
-      <Cabecera />
+      {/* Mientras se sabe si hay sesión, solo la marca: evita mostrar «Entrar» de más */}
+      {cargando ? (
+        <CabeceraAcceso />
+      ) : usuario ? (
+        <CabeceraConSesion usuario={usuario} />
+      ) : (
+        <CabeceraPublica />
+      )}
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col pt-20 pb-20">
         <Outlet />
       </main>

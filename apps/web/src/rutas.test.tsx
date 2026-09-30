@@ -20,9 +20,9 @@ it('marca la sección actual', () => {
   expect(screen.getByRole('link', { name: 'Mapa' })).toHaveAttribute('aria-current', 'page');
 });
 
-it('la cabecera lleva a Entrar', () => {
+it('la cabecera lleva a Entrar', async () => {
   render(envolver(<Rutas />));
-  expect(screen.getByRole('link', { name: 'Entrar' })).toHaveAttribute('href', '/entrar');
+  expect(await screen.findByRole('link', { name: 'Entrar' })).toHaveAttribute('href', '/entrar');
 });
 
 it.each(['/mapa', '/causas', '/voluntariado', '/mas', '/entrar'])(
