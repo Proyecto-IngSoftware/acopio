@@ -17,7 +17,8 @@
     "depcruise": "depcruise src --config .dependency-cruiser.cjs",
     "seed:dist": "node dist/seed/main.js",
     "openapi": "bun run shared && prisma generate >/dev/null && node -r @swc-node/register src/exportar-openapi.ts",
-    "shared": "bun run --cwd ../../packages/shared build >/dev/null"
+    "shared": "bun run --cwd ../../packages/shared build >/dev/null",
+    "seed:demo": "bun run shared && prisma generate >/dev/null && node -r @swc-node/register src/seed/demo.ts"
   },
   "dependencies": {
     "@acopio/shared": "workspace:*",

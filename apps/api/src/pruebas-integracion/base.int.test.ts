@@ -3,6 +3,7 @@ import { URL_APP_PRUEBAS, URL_DUENO_PRUEBAS } from '../../test/entorno-pruebas';
 import { ACOPIO_A, ADMIN, ZONA_A, crearAppPrueba, type AppPrueba } from '../../test/app-prueba';
 import { PROVEEDOR_IDENTIDAD } from '../modulos/identidad/proveedor/proveedor-identidad';
 import { CANASTA, CATEGORIAS } from '../seed/datos-catalogo';
+import { sembrarDemo } from '../seed/demo';
 import { sembrar } from '../seed/sembrar';
 
 /** T03: lo que la base hace cumplir, más allá del código de la API. */
@@ -102,6 +103,15 @@ describe('base de datos', () => {
           SELECT id, '\\x01', now(), true, 'corto' FROM usuario LIMIT 1`),
       ).rejects.toThrow(/invitacion_restablecimiento_con_motivo/);
     });
+  });
+
+  it('el seed de demostración es idempotente: 2 entidades y 4 acopios con «(prueba)»', async () => {
+    await sembrarDemo(a.prisma);
+    await sembrarDemo(a.prisma);
+    const acopios = await a.prisma.acopio.count({ where: { nombre: { endsWith: '(prueba)' } } });
+    expect(acopios).toBe(4);
+    const entidades = await a.prisma.entidad.count({ where: { nombre: { endsWith: '(prueba)' } } });
+    expect(entidades).toBe(2);
   });
 
   it('el seed es idempotente: 39 categorías y 10 filas de canasta (T12)', async () => {
