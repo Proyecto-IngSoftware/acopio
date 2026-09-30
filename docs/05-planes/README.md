@@ -39,6 +39,7 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 |---|---|---|---|
 | 0 · Cimientos | [aprobada](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md) | [aprobado](2026-09-28-bloque-0-cimientos.md) | 🟡 backend ✅ · interfaz con Stitch |
 | 0 · Interfaz, ciclo 1 | [aprobada](../superpowers/specs/2026-09-30-interfaz-ciclo-1-portada-design.md) | [aprobado](2026-09-30-interfaz-ciclo-1-portada.md) | ✅ Portada construida; sigue el ciclo 2 |
+| 0 · Interfaz, ciclo 2 | [aprobada](../superpowers/specs/2026-09-30-interfaz-ciclo-2-acceso-design.md) | [por revisar](2026-09-30-interfaz-ciclo-2-acceso.md) | ⬜ |
 | 1 · Red | pendiente | pendiente | ⬜ |
 | 2 · Inventario | pendiente | pendiente | ⬜ |
 | 3 · Custodia | pendiente | pendiente | ⬜ |

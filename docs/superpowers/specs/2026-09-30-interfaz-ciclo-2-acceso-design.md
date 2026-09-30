@@ -10,11 +10,11 @@ actualizado: 2026-09-30
 # Interfaz · Ciclo 2: acceso y sesión · especificación
 
 **Fecha:** 2026-09-30
-**Estado:** propuesta, pendiente de revisión de Joseph
+**Estado:** aprobada por Joseph el 2026-09-30
 **Deriva de:** [ciclo 1](2026-09-30-interfaz-ciclo-1-portada-design.md),
 [ADR-0014](../../02-arquitectura/adr/ADR-0014-sesion-en-cookie.md) y
 [componentes compartidos](../../03-diseno/stitch/_compartidos/README.md)
-**Plan:** se escribe cuando esta especificación quede aprobada
+**Plan:** [05-planes/2026-09-30-interfaz-ciclo-2-acceso.md](../../05-planes/2026-09-30-interfaz-ciclo-2-acceso.md)
 
 ## 1. Objetivo
 
