@@ -15,7 +15,7 @@ actualizado: 2026-09-30
 [RF-RED](../../01-requerimientos/funcionales/red.md),
 [RF-MOT-001](../../01-requerimientos/funcionales/motor.md#rf-mot-001--registrar-zona-afectada)
 y [RF-INV-008](../../01-requerimientos/funcionales/inventario.md#rf-inv-008--marcar-no-recibir)
-**Plan:** pendiente
+**Plan:** [API](../../05-planes/2026-09-30-bloque-1-api.md); las interfaces, un plan por ciclo
 
 ---
 
