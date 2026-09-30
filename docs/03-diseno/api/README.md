@@ -37,21 +37,32 @@ bun run --filter @acopio/api start:dev      # API en http://localhost:3000
 
 ## Sesión
 
+La sesión viaja en una cookie `HttpOnly` ([ADR-0014](../../02-arquitectura/adr/ADR-0014-sesion-en-cookie.md)).
+La web nunca ve el token.
+
 ```
 POST /api/auth/sesion   { usuario, contrasena }
-  → 200 { accessToken, expiraEn, usuario: { id, username, nombre, rol } }
+  → 200 { expiraEn, usuario: { id, username, nombre, rol } }
+        Set-Cookie: acopio_sesion=…; HttpOnly; SameSite=Strict; Path=/api
   → 401 «Usuario o contraseña incorrectos»   (el mismo mensaje en todos los casos)
   → 429 tras 5 intentos por minuto desde la misma IP
+
+POST /api/auth/salir    → 204 y la cookie vencida. No exige sesión
 ```
 
-- **Cada request lleva** `Authorization: Bearer <accessToken>`
+- **Desde la web**, cada llamada va con `credentials: 'include'` y sin cabecera
+  `Authorization`. La web y la API comparten origen: en desarrollo Vite reenvía `/api`
+- **Pruebas y herramientas** (curl, supertest) pueden mandar el mismo token como
+  `Authorization: Bearer <token>`, sacándolo de la cookie
 - **El token dura 8 horas y no se renueva** mientras la autenticación sea local
-  ([P-025](../../01-requerimientos/pendientes.md)). Al pasar a Supabase llega la
-  renovación; por eso toda llamada de sesión pasa por `ClienteAuth` (D-06)
+  ([P-025](../../01-requerimientos/pendientes.md)). Toda llamada de sesión pasa por
+  `ClienteAuth` (D-06)
 - **401** en cualquier endpoint: la sesión venció o se restableció el acceso. Volver
   a C01
 - **403 `NO_AUTORIZADO`**: el usuario fue suspendido o su rol no permite la acción.
   Mostrar el mensaje; no reintentar
+- **403 `ORIGEN_NO_PERMITIDO`**: una escritura llegó con la cookie desde un origen
+  distinto de `APP_URL`
 - El inicio de sesión es con **nombre de usuario**, no con correo (RF-IDE-004)
 
 ### Conmutador de contexto (RF-IDE-010)

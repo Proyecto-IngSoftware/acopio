@@ -173,6 +173,20 @@
         ]
       }
     },
+    "/api/auth/salir": {
+      "post": {
+        "operationId": "SesionController_salir",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "sesión"
+        ]
+      }
+    },
     "/api/auth/yo": {
       "get": {
         "operationId": "SesionController_yo",
@@ -1677,10 +1691,6 @@
       "SesionDto": {
         "type": "object",
         "properties": {
-          "accessToken": {
-            "type": "string",
-            "description": "Se envía como Authorization: Bearer <token>"
-          },
           "expiraEn": {
             "type": "string",
             "format": "date-time",
@@ -1723,7 +1733,6 @@
           }
         },
         "required": [
-          "accessToken",
           "expiraEn",
           "usuario"
         ]

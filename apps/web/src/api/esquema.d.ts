@@ -36,6 +36,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/salir": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["SesionController_salir"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/yo": {
         parameters: {
             query?: never;
@@ -442,8 +458,6 @@ export interface components {
             contrasena: string;
         };
         SesionDto: {
-            /** @description Se envía como Authorization: Bearer <token> */
-            accessToken: string;
             /** Format: date-time */
             expiraEn: string;
             usuario: {
@@ -799,6 +813,23 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["ErrorDto"];
                 };
+            };
+        };
+    };
+    SesionController_salir: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
