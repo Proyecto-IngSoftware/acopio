@@ -588,6 +588,19 @@ frenaría el Bloque 1.
 **Estado:** RESUELTO → [plan del Bloque 0](../05-planes/2026-09-28-bloque-0-cimientos.md),
 [índice de planes](../05-planes/README.md).
 
+### P-033 · Ajustes al especificar el Bloque 1
+**Fecha:** 2026-09-30 · **Propuesto por:** Joseph
+**Qué:** tres cambios a la bóveda que salieron al especificar la red base y el mapa.
+
+| Qué | Por qué |
+|---|---|
+| El Operador asignado pausa y reactiva su acopio, y edita el horario, las indicaciones y el teléfono. RF-RED-001 daba todo al Administrador | Quien está en el acopio sabe si se llenó o si cambió el horario. Dónde queda y quién responde por él siguen siendo del Administrador |
+| «No recibir» va en su propia tabla, `no_recibir`, con llaves foráneas reales a `acopio` y `categoria`. `modelo-datos.md` lo tenía como columnas de `umbral` | Los umbrales llegan en el Bloque 2 y también aplican a zonas, donde «no recibir» no tiene sentido |
+| Pantalla nueva C21 Acopios, para crear y editar acopios | El catálogo de pantallas no tenía dónde gestionarlos |
+
+**Estado:** RESUELTO → [especificación del Bloque 1](../superpowers/specs/2026-09-30-bloque-1-red-design.md#3-decisiones).
+Falta actualizar RF-RED-001, `modelo-datos.md` y el catálogo de pantallas cuando se construya.
+
 ---
 
 ## Resueltos
