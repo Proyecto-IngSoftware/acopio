@@ -88,7 +88,18 @@ function valor(v: unknown): string {
   if (Array.isArray(v))
     return v.length === 0 ? '—' : `${v.length} elemento${v.length === 1 ? '' : 's'}`;
   if (typeof v === 'object') return JSON.stringify(v);
+  if (typeof v === 'string' && ISO.test(v)) return fecha(v);
   return String(v);
+}
+
+const ISO = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/;
+
+/** Las fechas sin hora llegan como medianoche UTC; esas se muestran sin hora. */
+function fecha(iso: string): string {
+  const d = new Date(iso);
+  return iso.includes('T00:00:00.000Z')
+    ? d.toLocaleDateString('es-CO', { dateStyle: 'medium', timeZone: 'UTC' })
+    : d.toLocaleString('es-CO', { dateStyle: 'medium', timeStyle: 'short' });
 }
 
 /** Campos que cambiaron entre el antes y el después. */
