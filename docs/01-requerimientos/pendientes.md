@@ -577,6 +577,17 @@ convierte a mano (`as unknown as`).
 **Estado:** ABIERTO. Revisar cómo exporta nestjs-zod los campos nullable y corregir el
 contrato en la API.
 
+### P-032 · Todo en local hasta el mínimo viable
+**Fecha:** 2026-09-30 · **Propuesto por:** Joseph
+**Qué:** el proyecto corre solo en local, con el Compose de desarrollo, hasta tener un
+mínimo viable. El Bloque 0 se cierra sin RTA-04: la prueba del correo real por el SMTP
+del dominio pasa al primer despliegue, junto con el VPS y el dominio
+([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)).
+**Por qué:** RTA-04 necesita el dominio y el servidor, que todavía no existen. Esperarlos
+frenaría el Bloque 1.
+**Estado:** RESUELTO → [plan del Bloque 0](../05-planes/2026-09-28-bloque-0-cimientos.md),
+[índice de planes](../05-planes/README.md).
+
 ---
 
 ## Resueltos

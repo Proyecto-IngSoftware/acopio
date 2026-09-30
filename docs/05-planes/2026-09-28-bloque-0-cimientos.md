@@ -38,12 +38,12 @@ Lo que cambió al construir está en la
 | T07 Usuarios y autorización | ✅ | — |
 | T08 Invitaciones y login | ✅ | — |
 | T09 Bitácora | ✅ | Confirmar el alcance del Auditor ([P-028](../01-requerimientos/pendientes.md)) |
-| T10 Notificaciones | ✅ | La prueba con el SMTP del dominio (RTA-04) espera el dominio |
+| T10 Notificaciones | ✅ | La prueba con el SMTP del dominio (RTA-04) pasa al primer despliegue (P-032) |
 | T11 API del catálogo | ✅ | — |
 | T12 Seed | ✅ | La canasta se cargó con la fuente marcada «por verificar» ([#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20)) |
 | T13 a T16 Interfaz | ✅ | Ciclo 1 hecho el 2026-09-30 ([plan](2026-09-30-interfaz-ciclo-1-portada.md)): tokens, esqueleto de `apps/web` y la Portada. Ciclo 2 hecho el 2026-09-30 ([plan](2026-09-30-interfaz-ciclo-2-acceso.md)): sesión en cookie (ADR-0014), C01 Entrar y Activar cuenta, cabeceras compartidas. Ciclo 3 hecho el 2026-09-30 ([plan](2026-09-30-interfaz-ciclo-3-consola.md)): «Más» con sesión, C16 Usuarios, C17 Bitácora y C18 Catálogo. Las pantallas de los demás módulos llegan con su bloque |
 | T17 Concurrencia | ✅ | La prueba del saldo se suma en el Bloque 2 |
-| T18 Revisión de salida | ✅ | Hecha el 2026-09-30 en un clon limpio ([criterios](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md#criterios-de-salida-en-la-revisión-de-salida-t18)). Solo falta RTA-04, que espera el dominio ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)) |
+| T18 Revisión de salida | ✅ | Hecha el 2026-09-30 en un clon limpio ([criterios](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md#criterios-de-salida-en-la-revisión-de-salida-t18)). RTA-04 pasa al primer despliegue ([P-032](../01-requerimientos/pendientes.md)) |
 
 ## Orden y dependencias
 
