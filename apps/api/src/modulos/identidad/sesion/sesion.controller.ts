@@ -47,6 +47,14 @@ export class SesionController {
     return sesion;
   }
 
+  /** Borra la cookie de sesión. Público: sirve aunque el token ya haya vencido. */
+  @Publico()
+  @Post('salir')
+  @HttpCode(204)
+  salir(@Res({ passthrough: true }) res: Response) {
+    res.clearCookie(COOKIE_SESION, opcionesCookie(this.entorno));
+  }
+
   /** El usuario de la sesión y sus ubicaciones. */
   @ApiBearerAuth()
   @Get('yo')

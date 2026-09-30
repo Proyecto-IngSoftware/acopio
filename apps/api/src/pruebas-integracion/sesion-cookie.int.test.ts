@@ -32,4 +32,53 @@ describe('sesión en cookie', () => {
     const r = await entrar();
     await a.http().get('/api/auth/yo').set('Cookie', cookies(r)).expect(200);
   });
+
+  it('/auth/salir vence la cookie', async () => {
+    const r = await a.http().post('/api/auth/salir').expect(204);
+    const cookie = cookies(r).join(';');
+    expect(cookie).toMatch(/acopio_sesion=;/);
+    expect(cookie).toMatch(/Expires=Thu, 01 Jan 1970/i);
+  });
+
+  const nueva = (nombre: string) => ({
+    nombre,
+    tipo: 'sismo',
+    inicio: '2026-09-01',
+    destacadaHasta: '2099-12-31',
+  });
+
+  it('una escritura con cookie desde otro origen: 403', async () => {
+    const r = await entrar();
+    const res = await a
+      .http()
+      .post('/api/emergencias')
+      .set('Cookie', cookies(r))
+      .set('Origin', 'https://otro.sitio')
+      .send(nueva('Desde otro sitio'))
+      .expect(403);
+    expect(res.body.codigo).toBe('ORIGEN_NO_PERMITIDO');
+  });
+
+  it('la misma escritura desde el origen de la web pasa', async () => {
+    const r = await entrar();
+    await a
+      .http()
+      .post('/api/emergencias')
+      .set('Cookie', cookies(r))
+      .set('Origin', 'http://localhost:5173')
+      .send(nueva('Desde la web'))
+      .expect(201);
+  });
+
+  it('con Bearer y otro origen no aplica el control: la cookie es lo que se protege', async () => {
+    const r = await entrar();
+    const token = /acopio_sesion=([^;]+)/.exec(cookies(r).join(';'))![1]!;
+    await a
+      .http()
+      .post('/api/emergencias')
+      .set('authorization', `Bearer ${decodeURIComponent(token)}`)
+      .set('Origin', 'https://otro.sitio')
+      .send(nueva('Con Bearer'))
+      .expect(201);
+  });
 });

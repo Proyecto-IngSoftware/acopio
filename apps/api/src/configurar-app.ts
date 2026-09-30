@@ -8,7 +8,8 @@ import './config/zod-es';
 /** Configuración común al servidor y a las pruebas de integración. */
 export function configurarApp(app: INestApplication, entorno: Entorno): void {
   app.setGlobalPrefix('api');
-  app.enableCors({ origin: entorno.APP_URL });
+  // Con credenciales: la sesión viaja en una cookie (ADR-0014)
+  app.enableCors({ origin: entorno.APP_URL, credentials: true });
   // Detrás del proxy, la IP real del cliente viene en X-Forwarded-For (límite por IP)
   (app as NestExpressApplication).set('trust proxy', 1);
   app.enableShutdownHooks();

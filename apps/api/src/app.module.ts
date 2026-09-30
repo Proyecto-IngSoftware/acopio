@@ -5,6 +5,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { ZodValidationPipe } from 'nestjs-zod';
 import { FiltroErrores } from './comun/errores/filtro-errores';
 import { LimiteIntentosGuard } from './comun/limite-intentos.guard';
+import { OrigenGuard } from './comun/origen.guard';
 import { PrismaModule } from './comun/prisma/prisma.module';
 import { ConfigModule } from './config/config.module';
 import { ENTORNO, type Entorno } from './config/entorno';
@@ -33,7 +34,8 @@ import { SaludModule } from './modulos/salud/salud.module';
     SaludModule,
   ],
   providers: [
-    // Orden de los guards: primero el límite de intentos, después la sesión
+    // Orden de los guards: origen de la cookie, límite de intentos y después la sesión
+    { provide: APP_GUARD, useClass: OrigenGuard },
     LimiteIntentosGuard,
     { provide: APP_GUARD, useExisting: LimiteIntentosGuard },
     { provide: APP_GUARD, useExisting: AutenticacionGuard },
