@@ -32,6 +32,7 @@ documento que se reescribe hasta perder la historia.
 | [0011](ADR-0011-interfaz-con-stitch.md) | Interfaz diseñada con Google Stitch | aceptada |
 | [0012](ADR-0012-almacenamiento-garage.md) | Almacenamiento de objetos con Garage. Modifica una fila de ADR-0008 | aceptada |
 | [0013](ADR-0013-estetica-desde-stitch.md) | La estética sale del diseño de Stitch. Modifica la paleta de ADR-0006 | aceptada |
+| [0014](ADR-0014-sesion-en-cookie.md) | La sesión viaja en una cookie HttpOnly. Ajusta D-06 del Bloque 0 | aceptada |
 
 ## Cuándo escribir una
 

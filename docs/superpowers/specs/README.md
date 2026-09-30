@@ -16,6 +16,7 @@ construcción.
 | [2026-08-20 · Diseño de Acopio](2026-08-20-acopio-design.md) | Sistema completo: alcance, arquitectura, dominio, identidad, motor, pantallas, despliegue | Aprobada |
 | [2026-09-28 · Bloque 0 · Cimientos](2026-09-28-bloque-0-cimientos-design.md) | Monorepo, Docker, Prisma, identidad, catálogo | Aprobada |
 | [2026-09-30 · Interfaz · Ciclo 1](2026-09-30-interfaz-ciclo-1-portada-design.md) | Flujo con Stitch, `apps/web`, tokens, componentes base y la Portada | Aprobada |
+| [2026-09-30 · Interfaz · Ciclo 2](2026-09-30-interfaz-ciclo-2-acceso-design.md) | Sesión en cookie, C01 Entrar y Activar cuenta, cabeceras compartidas | Propuesta |
 | Bloque 1 · Red | Acopios, zonas, entidades, mapa, home | ⬜ pendiente |
 | Bloque 2 · Inventario | Movimientos, saldos, umbrales, entrada rápida | ⬜ pendiente |
 | Bloque 3 · Custodia | Comprobantes, conciliación, folios | ⬜ pendiente |
