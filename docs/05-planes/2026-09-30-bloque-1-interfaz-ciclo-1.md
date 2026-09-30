@@ -72,7 +72,7 @@ filtros, y se revisa en Chromium.
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 Base | ⬜ | |
+| 1 Base | ✅ | La web lee `@acopio/shared` desde su código fuente (alias de Vite y `paths` de TypeScript), no desde `dist`: así la API y la web no compilan el paquete a la vez |
 | 2 Mapa | ⬜ | |
 | 3 C15 | ⬜ | |
 | 4 C21 | ⬜ | |
