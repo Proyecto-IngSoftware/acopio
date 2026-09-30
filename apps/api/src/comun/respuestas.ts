@@ -249,3 +249,13 @@ export class ZonaDto extends createZodDto(
     actualizadoEn: fecha,
   }),
 ) {}
+
+export class UbicacionDto extends createZodDto(
+  z.object({
+    tipo: tipoUbicacion,
+    id: z.uuid(),
+    nombre: z.string(),
+    municipio: z.string(),
+    estado: z.string().describe('Estado del acopio o de la zona'),
+  }),
+) {}

@@ -143,6 +143,40 @@ describe('usuarios y accesos', () => {
     });
   });
 
+  describe('ubicaciones reales (B-05)', () => {
+    it('asignar una ubicación que no existe da 422 UBICACION_INEXISTENTE', async () => {
+      const r = await a
+        .http()
+        .post('/api/usuarios')
+        .set(comoAdmin())
+        .send({
+          username: unico('fantasma'),
+          nombre: 'Sin acopio real',
+          rol: 'OPERADOR',
+          asignaciones: [{ tipo: 'ACOPIO', ubicacionId: '99999999-9999-4999-8999-999999999999' }],
+        })
+        .expect(422);
+      expect(r.body.codigo).toBe('UBICACION_INEXISTENTE');
+    });
+
+    it('el correo de asignación nombra el acopio', async () => {
+      const op = await crearUsuarioActivo(a, tokenAdmin, { rol: 'OPERADOR' });
+      await a
+        .http()
+        .post(`/api/usuarios/${op.id}/asignaciones`)
+        .set(comoAdmin())
+        .send({ tipo: 'ACOPIO', ubicacionId: ACOPIO_B })
+        .expect(201);
+      const correo = await a.prisma.correoSaliente.findFirst({
+        where: {
+          destinatario: `${op.username}@acopio.test`,
+          cuerpo_texto: { contains: 'Acopio B' },
+        },
+      });
+      expect(correo).not.toBeNull();
+    });
+  });
+
   describe('último administrador (RF-IDE-008)', () => {
     it('un administrador no puede cambiarse su propio rol ni suspenderse', async () => {
       await a

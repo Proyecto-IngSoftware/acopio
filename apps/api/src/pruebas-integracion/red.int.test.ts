@@ -9,6 +9,7 @@ import {
   crearUsuarioActivo,
   iniciarSesion,
   unico,
+  ZONA_A,
   type AppPrueba,
 } from '../../test/app-prueba';
 
@@ -288,6 +289,43 @@ describe('red', () => {
         .expect(409);
       expect(r.body.codigo).toBe('ZONA_SOLO_LECTURA');
       await a.http().post('/api/zonas').set(comoAdmin()).send(nueva(e.body.id)).expect(409);
+    });
+  });
+
+  describe('ubicaciones', () => {
+    it('el Operador ve por nombre sus ubicaciones; el Administrador no tiene lista', async () => {
+      const op = await crearUsuarioActivo(a, tokenAdmin, {
+        rol: 'OPERADOR',
+        asignaciones: [{ tipo: 'ACOPIO', ubicacionId: ACOPIO_A }],
+      });
+      const r = await a
+        .http()
+        .get('/api/ubicaciones/mias')
+        .set({ authorization: `Bearer ${op.token}` })
+        .expect(200);
+      expect(r.body).toEqual([
+        expect.objectContaining({ tipo: 'ACOPIO', id: ACOPIO_A, nombre: 'Acopio A' }),
+      ]);
+      const admin = await a.http().get('/api/ubicaciones/mias').set(comoAdmin()).expect(200);
+      expect(admin.body).toEqual([]);
+    });
+
+    it('la búsqueda encuentra acopios y zonas sin importar mayúsculas', async () => {
+      const r = await a.http().get('/api/ubicaciones?q=acopio a').set(comoAdmin()).expect(200);
+      expect((r.body as { id: string }[]).map((u) => u.id)).toContain(ACOPIO_A);
+      const z = await a.http().get('/api/ubicaciones?q=ZONA').set(comoAdmin()).expect(200);
+      expect((z.body as { id: string }[]).map((u) => u.id)).toContain(ZONA_A);
+    });
+
+    it('sin q devuelve todas (para la matriz de acceso) y el Operador no puede: 403', async () => {
+      const r = await a.http().get('/api/ubicaciones').set(comoAdmin()).expect(200);
+      expect((r.body as unknown[]).length).toBeGreaterThanOrEqual(3);
+      const op = await crearUsuarioActivo(a, tokenAdmin, { rol: 'OPERADOR' });
+      await a
+        .http()
+        .get('/api/ubicaciones')
+        .set({ authorization: `Bearer ${op.token}` })
+        .expect(403);
     });
   });
 });

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ErrorDominio } from '../../../comun/errores/error-dominio';
 import type { ClienteBd } from '../../../comun/prisma/cliente-bd';
 import { PrismaService } from '../../../comun/prisma/prisma.service';
@@ -9,6 +9,10 @@ import { BitacoraService } from '../../auditoria/bitacora.service';
 import { NotificacionService } from '../../notificaciones/notificacion.service';
 import { plantillas } from '../../notificaciones/plantillas';
 import type { UsuarioAutenticado } from '../../../comun/autorizacion/usuario-autenticado';
+import {
+  VERIFICADOR_UBICACIONES,
+  type VerificadorUbicaciones,
+} from '../../../comun/ubicaciones/verificador-ubicaciones';
 import { InvitacionesService, type InvitacionEmitida } from '../invitaciones/invitaciones.service';
 
 /** Dominio de los correos que se generan para quien no tiene uno (RF-IDE-001). */
@@ -85,7 +89,23 @@ export class UsuariosService {
     private readonly bitacora: BitacoraService,
     private readonly notificaciones: NotificacionService,
     private readonly invitaciones: InvitacionesService,
+    @Inject(VERIFICADOR_UBICACIONES) private readonly ubicaciones: VerificadorUbicaciones,
   ) {}
+
+  /** 422 si alguna ubicación no existe (B-05). Devuelve los nombres para los correos. */
+  private async exigirUbicaciones(asignaciones: Asignacion[]): Promise<string[]> {
+    const nombres = await this.ubicaciones.nombres(asignaciones);
+    const faltan = asignaciones.filter((_, i) => nombres[i] === null);
+    if (faltan.length) {
+      throw new ErrorDominio(
+        'UBICACION_INEXISTENTE',
+        'Alguna de las ubicaciones asignadas no existe',
+        422,
+        faltan.map((f) => ({ campo: 'asignaciones', mensaje: `${f.tipo} ${f.ubicacionId}` })),
+      );
+    }
+    return nombres as string[];
+  }
 
   /** RF-IDE-001 y RF-IDE-002: crea el usuario INVITADO y su invitación. */
   async crear(admin: UsuarioAutenticado, datos: DatosNuevoUsuario) {
@@ -95,6 +115,7 @@ export class UsuariosService {
         'Un operador, receptor o auditor necesita al menos una ubicación asignada',
       );
     }
+    await this.exigirUbicaciones(datos.asignaciones);
     const correoReal = datos.correo?.trim() || null;
     const correo = correoReal ?? `${datos.username.toLowerCase()}@${DOMINIO_SINTETICO}`;
 
@@ -374,6 +395,7 @@ export class UsuariosService {
 
   /** RF-IDE-006: agregar una ubicación. */
   async asignar(admin: UsuarioAutenticado, id: string, asignacion: Asignacion) {
+    const [nombre] = await this.exigirUbicaciones([asignacion]);
     return this.prisma.$transaction(async (tx) => {
       const usuario = await this.bloquearUsuario(tx, id);
       if (usuario.rol === 'DONADOR') {
@@ -393,7 +415,10 @@ export class UsuariosService {
         await this.notificaciones.encolar(
           tx,
           usuario.correo,
-          plantillas.asignacion({ nombre: usuario.nombre, ubicacion: describir(asignacion) }),
+          plantillas.asignacion({
+            nombre: usuario.nombre,
+            ubicacion: describir(asignacion, nombre),
+          }),
         );
       }
       await this.bitacora.registrar(tx, {
@@ -418,6 +443,7 @@ export class UsuariosService {
     asignacion: Asignacion,
     confirmar: boolean,
   ) {
+    const [nombre] = await this.ubicaciones.nombres([asignacion]);
     return this.prisma.$transaction(async (tx) => {
       const usuario = await this.bloquearUsuario(tx, id);
       const donde = {
@@ -447,7 +473,10 @@ export class UsuariosService {
         await this.notificaciones.encolar(
           tx,
           usuario.correo,
-          plantillas.revocacion({ nombre: usuario.nombre, ubicacion: describir(asignacion) }),
+          plantillas.revocacion({
+            nombre: usuario.nombre,
+            ubicacion: describir(asignacion, nombre ?? undefined),
+          }),
         );
       }
       await this.bitacora.registrar(tx, {
@@ -505,8 +534,8 @@ function presentarInvitacion(i: InvitacionEmitida) {
   return { enlace: i.enlace, venceEn: i.venceEn };
 }
 
-function describir(a: Asignacion): string {
-  // El nombre del acopio o de la zona llega en el Bloque 1, con sus tablas
+function describir(a: Asignacion, nombre?: string): string {
+  if (nombre) return `${a.tipo === 'ACOPIO' ? 'el acopio' : 'la zona'} ${nombre}`;
   return a.tipo === 'ACOPIO' ? 'un acopio' : 'una zona';
 }
 
