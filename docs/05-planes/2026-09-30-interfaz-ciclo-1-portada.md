@@ -30,10 +30,10 @@ instala y corre los scripts; Node 22 ejecuta.
 **Especificación:** [2026-09-30-interfaz-ciclo-1-portada-design.md](../superpowers/specs/2026-09-30-interfaz-ciclo-1-portada-design.md).
 Quien ejecute lee las dos.
 
-> **Pendiente de ajustar (2026-09-30).** Joseph decidió que manda el diseño de Stitch y
-> no la paleta de la bóveda (I-03 de la especificación). Las tareas 1, 2, 4, 7 y 9 de
-> este plan todavía describen la paleta anterior y se reescriben cuando apruebe la
-> maqueta fiel a Stitch. No ejecutar la fase B con el texto actual.
+> **Enmienda del 2026-09-30.** Manda el diseño de Stitch (ADR-0013). La fase A ya se
+> hizo y Joseph aprobó la maqueta. Antes de ejecutar las tareas 4, 5, 7, 8 y 9, leer la
+> sección «Enmienda: fase B con el diseño de Stitch» al final de este plan: donde
+> contradice el texto de la tarea, manda la enmienda.
 
 ## Reglas que aplican a todas las tareas
 
@@ -42,8 +42,9 @@ Quien ejecute lee las dos.
   como artefacto.
 - Ningún archivo de `apps/web/src` contiene un color hexadecimal. Los colores salen de
   `packages/ui-tokens`.
-- Paleta: marca teal `#0F6E6E`, neutros cálidos. Rojo, ámbar, verde y morado solo
-  para el semáforo de inventario (ADR-0006).
+- Paleta, tipografía y formas: las del tema de Stitch, con sus nombres de token
+  (ADR-0013 y `sistema-diseno.md` §2 a §4). Los colores de estado solo significan
+  estado.
 - Ningún dato de ejemplo incrustado en los componentes (ADR-0011). Los datos de
   prueba viven en los archivos `*.test.tsx`.
 - Texto de datos en 16 px como mínimo. Áreas tocables de 48 px o más.
@@ -2118,3 +2119,78 @@ gh run watch "$(gh run list --branch main --limit 1 --json databaseId -q '.[0].d
 ```
 
 Resultado esperado: el CI de `main` termina en verde.
+
+---
+
+# Enmienda: fase B con el diseño de Stitch
+
+**Estado de la fase A.** Hecha el 2026-09-30. La Portada que manda es la original de
+Stitch (`antes/pantalla.html`). La maqueta aprobada es
+`docs/03-diseno/stitch/P01-portada/maqueta.html`; su vista «Ciclo 1» es la referencia de
+marcado, clases y textos de la Portada. El tema con la paleta de la bóveda que se probó
+en Stitch quedó descartado.
+
+**Tarea 4.** `tokens.css` declara los tokens de `sistema-diseno.md` §2 con sus nombres
+de Stitch (`--primary-container`, `--surface-container-low`, `--on-surface-variant`...).
+`tailwind.css` los expone como `--color-<nombre>` para que existan las mismas clases que
+usa Stitch (`bg-primary-container`, `text-on-surface-variant`). También la escala de
+texto de §3 (`--text-body-md` con su `--text-body-md--line-height` y
+`--text-body-md--font-weight`, igual para cada nivel), los espacios de §4 como
+`--spacing-space-md` y demás, y los radios `--radius`, `--radius-lg`, `--radius-xl` y
+`--radius-full` con los valores de §4. La prueba de contraste comprueba:
+`on-surface` sobre `background` ≥ 7, `on-primary` sobre `primary-container` ≥ 4,5,
+`on-surface-variant` sobre `surface-container-lowest` ≥ 4,5 y `primary-fixed-dim` sobre
+`primary` ≥ 4,5.
+
+**Tarea 5.** Los íconos son Material Symbols Outlined, como en Stitch, cargados desde
+Google Fonts en `index.html` con el parámetro `icon_names` para bajar solo los que se
+usan. Sin `lucide-react`.
+
+**Tarea 7.** Los componentes usan las clases de la maqueta. Botón primario:
+`bg-primary-container text-on-primary rounded-xl min-h-[48px] font-label-md text-label-md`.
+Estado vacío: `p-space-md rounded-xl bg-surface-container-low text-on-surface-variant
+text-body-sm`. Estado de error: tarjeta `bg-surface-container-lowest rounded-xl shadow-md`
+con el ícono `error`. Esqueleto: `bg-surface-container-high rounded-xl animate-pulse`.
+Las pruebas de la tarea no cambian.
+
+**Tarea 8.** Cabecera y barra inferior con el marcado de la maqueta: bloque de marca con
+el ícono `inventory_2` y la etiqueta «CO», botón «Entrar» y barra con los íconos
+`home`, `map`, `volunteer_activism`, `groups` y `more_horiz`. La cabecera omite el
+indicador «Sincronizado»: el portal no sincroniza nada y afirmaría algo falso. Las
+pruebas de la tarea no cambian.
+
+**Tarea 9.** Marcado y textos de la vista «Ciclo 1» de la maqueta:
+
+- Franja oscura (`bg-primary`) con el selector de emergencia como botón desplegable: su
+  rótulo dice «Emergencia activa (1 de N)» o «En seguimiento» y el nombre de la
+  elegida; al abrirlo muestra una opción por emergencia. Debajo, el título fijo
+  «Revisa qué hace falta antes de donar.» y el párrafo de Stitch sobre revisar la
+  necesidad real antes de comprar o movilizarse.
+- Tarjeta «Balance de recepción» con las pestañas «Qué hace falta» y «No traigan»
+  (`role="tablist"`) y un estado vacío cuyo texto cambia con la pestaña.
+- «¿Cómo apoyar?» con las tres filas de Stitch («Donar Productos», «Donar a una Causa»,
+  «Ser voluntario») y su chevron.
+- «Rastrear Folio de Donación» con su formulario; al enviarlo responde «El rastreo por
+  folio todavía no está disponible.»
+- «Jornadas de Voluntariado» y «Reporte en Terreno» como estados vacíos.
+- El aviso «Canal Oficial Sin Intermediación Financiera» con el texto de Stitch y la
+  línea de la Ley 1581.
+
+Las pruebas cambian así:
+
+- El `h1` es «Revisa qué hace falta antes de donar.» cuando hay emergencias. La
+  emergencia elegida se comprueba en el botón del selector:
+  `getByRole('button', { name: /Sismo en Caldas/ })`.
+- Elegir otra emergencia es pulsar ese botón y luego la opción
+  (`getByRole('menuitemradio', { name: /Inundación en La Mojana/ })`).
+- Con una sola emergencia el botón existe pero no despliega nada: no tiene
+  `aria-haspopup`.
+- Las regiones vacías se buscan por «Balance de recepción», «Jornadas de voluntariado» y
+  «Reporte en terreno».
+- `FIJOS` pasa a `['¿Cómo apoyar?', 'Canal Oficial Sin Intermediación Financiera']`.
+- Se agrega: enviar el formulario de folio muestra «El rastreo por folio todavía no está
+  disponible.» y no llama a `fetch`.
+- Se agrega: cambiar a la pestaña «No traigan» cambia el texto del estado vacío.
+
+Las demás pruebas de la tarea (URL, identificador desconocido, carga, error y sin
+emergencias) se quedan como están, con el `h1` de «sin emergencias» igual.
