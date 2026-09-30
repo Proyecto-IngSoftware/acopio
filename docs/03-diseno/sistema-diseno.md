@@ -3,7 +3,7 @@ title: "Sistema de diseño"
 type: diseno
 tags: [diseno]
 estado: vigente
-actualizado: 2026-08-20
+actualizado: 2026-09-30
 ---
 
 # Sistema de diseño
@@ -25,7 +25,7 @@ Ninguna decisión visual de este documento es estética. Todas salen de esa fras
 |---|---|
 | Una sola mano | Acciones primarias en la mitad inferior de la pantalla |
 | Con guantes | Área táctil mínima de 48 × 48 px, sin excepción |
-| Bajo sol | Contraste AAA, bordes en vez de sombras, cero degradados |
+| Bajo sol | Contraste AAA en el texto, cero degradados |
 | Batería baja | Fondo claro, sin animación decorativa, sin video |
 | Señal intermitente | Estado offline siempre visible, nunca un error genérico |
 | Con prisa | Un dato por línea, jerarquía brutal, cero adorno |
@@ -34,116 +34,132 @@ Ninguna decisión visual de este documento es estética. Todas salen de esa fras
 
 ## 2. Color
 
+La paleta sale del tema «Acopio Field Command» del proyecto de Stitch
+([ADR-0013](../02-arquitectura/adr/ADR-0013-estetica-desde-stitch.md)). Los tokens
+llevan los mismos nombres que en Stitch.
+
 ### La regla que manda sobre todas
 
-**El color semántico está reservado.** Ver
-[ADR-0006](../02-arquitectura/adr/ADR-0006-color-semantico-reservado.md).
-
-Si el botón primario fuera verde, el verde dejaría de significar «hay suficiente».
-Por eso la marca es teal, no roja ni verde.
+**Los colores de estado significan estado.** El verde de éxito, el ámbar y el rojo de
+error no decoran botones, enlaces ni fondos. El rojo coral de la marca se usa solo
+para lo que no se debe traer y para acciones destructivas: en los dos casos dice
+«detente». Viene de [ADR-0006](../02-arquitectura/adr/ADR-0006-color-semantico-reservado.md),
+ajustado por ADR-0013.
 
 ### Tokens
 
 ```css
 /* Marca */
---marca-900: #0A4F4F;
---marca-700: #0F6E6E;   /* primario */
---marca-500: #14A0A0;
---marca-100: #C7E8E8;
---marca-50:  #E6F4F4;
+--primary:                   #003730;  /* franja oscura, botones de mayor peso */
+--primary-container:         #085046;  /* color de marca, acción principal */
+--on-primary:                #ffffff;
+--primary-fixed:             #b0efe1;  /* fondos suaves de marca */
+--primary-fixed-dim:         #95d2c5;  /* texto secundario sobre la franja */
+--on-primary-fixed:          #00201b;
+--surface-tint:              #2a685d;
 
-/* Neutros — gris cálido, no azulado */
---neutro-900: #1C1917;  /* texto principal */
---neutro-700: #44403C;
---neutro-600: #57534E;  /* texto secundario */
---neutro-400: #A8A29E;  /* deshabilitado */
---neutro-200: #E7E5E4;  /* bordes */
---neutro-100: #F5F5F4;  /* fondo de tarjeta */
---neutro-50:  #FAFAF9;  /* lienzo */
---blanco:     #FFFFFF;
+/* Superficies y texto */
+--background:                #faf8ff;
+--surface:                   #faf8ff;
+--surface-container-lowest:  #ffffff;  /* tarjetas */
+--surface-container-low:     #f2f3ff;  /* filas dentro de una tarjeta */
+--surface-container:         #eaedff;
+--surface-container-high:    #e2e7ff;  /* avisos, botones terciarios */
+--surface-container-highest: #dae2fd;
+--on-surface:                #131b2e;  /* texto principal */
+--on-surface-variant:        #3f4946;  /* texto secundario */
+--outline:                   #707976;
+--outline-variant:           #bfc9c5;  /* bordes */
+--inverse-surface:           #283044;
 
-/* Semáforo — RESERVADOS */
---estado-critico:    #DC2626;  /* escaso, bajo el mínimo */
---estado-atencion:   #D97706;  /* cerca del mínimo */
---estado-ok:         #16A34A;  /* en rango */
---estado-saturado:   #7C3AED;  /* sobre el máximo, no recibir */
+/* Detente: no traer y acciones destructivas */
+--secondary:                 #b51d04;
+--secondary-container:       #d9381e;
+--on-secondary:              #ffffff;
+--secondary-fixed:           #ffdad3;
+--on-secondary-fixed-variant:#8f1100;
 
-/* Fondos de estado, para tarjetas y filas */
---fondo-critico:  #FEF2F2;
---fondo-atencion: #FFFBEB;
---fondo-ok:       #F0FDF4;
---fondo-saturado: #F5F3FF;
+/* Estados */
+--error:                     #ba1a1a;
+--error-container:           #ffdad6;
+--on-error-container:        #93000a;
+--tertiary-container:        #6e3900;
+--tertiary-fixed:            #ffdcc3;
+--exito:                     #15803d;  /* del texto del tema de Stitch */
+--exito-container:           #f0fdf4;
 ```
 
-### Uso del semáforo
+### Escala de estados (propuesta por aprobar)
 
-| Estado | Condición | Color | Ícono | Texto |
-|---|---|---|---|---|
-| Crítico | `saldo < minimo` | rojo | ▼ | Escaso |
-| Atención | `saldo < minimo × 1.25` | ámbar | ! | Poco |
-| Suficiente | en rango | verde | ✓ | Bien |
-| Saturado | `saldo > maximo` | morado | ▲ | De sobra |
-| No recibir | interruptor activo | morado | ✕ | No recibir |
+La Portada de Stitch pinta «Crítico» y «Urgente» con el mismo rojo, y no se
+distinguen. La propuesta los separa por intensidad dentro del mismo rojo, y además por
+ícono y texto:
 
-**El color nunca va solo.** Siempre ícono y texto además del color. Alrededor del
-8 % de los hombres tiene alguna deficiencia en la visión del rojo y el verde; aquí
-leer mal el estado significa mandar agua al lugar equivocado.
+| Estado | Condición | Aspecto | Ícono |
+|---|---|---|---|
+| Crítico | Agotado, o bajo la mitad del mínimo | Relleno `--error` `#ba1a1a`, texto blanco | `error` |
+| Urgente | Bajo el mínimo | Fondo `--error-container` `#ffdad6`, texto `--on-error-container` `#93000a` | `priority_high` |
+| Moderado | Por debajo de 1,25 veces el mínimo | Fondo `--tertiary-fixed` `#ffdcc3`, texto `--tertiary-container` `#6e3900` | `schedule` |
+| Suficiente | En rango | Fondo `--exito-container` `#f0fdf4`, texto `--exito` `#15803d` | `check_circle` |
+| Saturado | Sobre el máximo | Relleno `--secondary-container` `#d9381e`, texto blanco | `inventory` |
+| No recibir | Interruptor del acopio o categoría vetada | Relleno `--secondary-container`, texto blanco, nombre tachado | `block` |
+
+Crítico lleva relleno sólido y Urgente solo un fondo tenue: la diferencia se ve aunque
+se lea en escala de grises. Las condiciones cambian las de la escala anterior, que tenía
+un solo nivel bajo el mínimo; cuando se apruebe, `packages/shared` las implementa.
+
+**El color nunca va solo.** Siempre ícono y texto además del color.
 
 ---
 
 ## 3. Tipografía
 
-**Inter.** Sin alternativa, sin segunda familia. Una familia bien usada se ve más
-intencional que dos combinadas.
+**Inter**, una sola familia, con la escala del tema de Stitch:
 
-```css
---fuente: 'Inter', system-ui, sans-serif;
-
---texto-xs:   12px;  /* solo etiquetas y antigüedad */
---texto-sm:   14px;  /* solo texto secundario */
---texto-base: 16px;  /* PISO para todo dato operativo */
---texto-lg:   18px;
---texto-xl:   22px;
---texto-2xl:  28px;
---texto-3xl:  36px;  /* cifras grandes de tablero */
-
---peso-normal: 400;
---peso-medio:  500;
---peso-fuerte: 700;
-```
+| Token | Tamaño / interlínea | Peso | Uso |
+|---|---|---|---|
+| `display-hero-mobile` | 32 / 40 px | 700 | Cifra o titular principal en móvil |
+| `headline-lg-mobile` | 26 / 34 px | 700 | Título de la franja de emergencia |
+| `headline-md` | 24 / 32 px | 600 | Títulos de pantalla |
+| `headline-sm` | 20 / 28 px | 600 | Títulos de sección |
+| `body-lg` | 18 / 28 px | 400 | Texto destacado |
+| `body-md` | 16 / 24 px | 400 | Texto corriente y datos |
+| `body-sm` | 14 / 20 px | 400 | Texto secundario |
+| `label-md` | 14 / 20 px | 600 | Etiquetas de botones y filas |
+| `label-caps` | 12 / 16 px, espaciado 0,06em | 700 | Rótulos cortos en mayúsculas |
+| `label-metric` | 20 / 24 px | 700 | Cifras de tablero |
 
 ### Reglas
 
-- **16 px es el piso para cualquier dato operativo.** 14 px solo para texto
-  secundario, 12 px solo para etiquetas y marcas de antigüedad.
+- **16 px es el piso para cualquier dato operativo.** 14 px para texto secundario y
+  etiquetas; 12 px solo en `label-caps`.
+- `label-caps` se usa para rótulos cortos (estados, «Emergencia activa»), nunca para
+  frases.
 - **Cifras tabulares siempre** en cantidades: `font-variant-numeric: tabular-nums`.
-  Sin esto, las columnas de números bailan y el ojo no puede compararlas.
-- **La unidad va siempre junto a la cifra**, en peso menor:
-  `1.240 L`, nunca `1240`.
+- **La unidad va siempre junto a la cifra**, en peso menor: `1.240 L`, nunca `1240`.
 - Formato colombiano: punto de miles, coma decimal. `1.240,5 L`.
-- Títulos en 700. Nada de 300 ni 200: bajo sol desaparecen.
+- Nada de pesos 300 ni 200.
 
 ---
 
-## 4. Espaciado, radio y borde
+## 4. Espaciado, radio y sombra
 
 ```css
---esp-1: 4px;   --esp-4: 16px;   --esp-8: 32px;
---esp-2: 8px;   --esp-5: 20px;   --esp-10: 40px;
---esp-3: 12px;  --esp-6: 24px;   --esp-12: 48px;
+--space-xs: 4px;   --space-md: 16px;   --space-xl: 40px;
+--space-sm: 8px;   --space-lg: 24px;   --margin:   16px;
 
---radio-sm: 8px;    /* etiquetas */
---radio-md: 10px;   /* botones, campos */
---radio-lg: 12px;   /* tarjetas */
---radio-full: 999px;
-
---borde: 1px solid var(--neutro-200);
---borde-fuerte: 2px solid var(--neutro-900);
+--radius:      2px;
+--radius-lg:   4px;    /* etiquetas de estado */
+--radius-xl:   8px;    /* tarjetas, botones, filas */
+--radius-full: 12px;   /* píldoras */
 ```
 
-**Sin sombras difusas.** Bajo sol directo desaparecen y no separan nada. Los
-límites se marcan con borde de 1 px de alto contraste. Se permite una sombra sutil
-únicamente en elementos flotantes sobre contenido: hoja inferior y menú desplegable.
+Los nombres siguen la configuración de Tailwind que exporta Stitch, donde `rounded-xl`
+vale 8 px.
+
+**Sombras cortas y de poco alcance** para separar tarjetas del fondo (`shadow-sm` en
+filas, `shadow-md` en tarjetas principales). La cabecera y la barra inferior llevan
+fondo translúcido con desenfoque. Sin degradados.
 
 ---
 
@@ -306,5 +322,7 @@ Los tokens viven en `packages/ui-tokens` como única fuente de verdad, exportado
 la configuración de Tailwind y a variables CSS. **Ningún componente escribe un
 valor hexadecimal directo.**
 
-Base de componentes: shadcn/ui, que es lo que Lovable genera, con los tokens de
-este documento sobrescritos en la configuración de Tailwind.
+Los tokens de Tailwind llevan los nombres de Stitch (`bg-primary-container`,
+`text-on-surface-variant`, `rounded-xl`), así el marcado que exporta Stitch se adapta
+a componentes propios sin traducir colores. Los componentes son propios, en
+`apps/web/src/componentes`.

@@ -3,7 +3,7 @@ title: "Registro de decisiones de arquitectura"
 type: moc
 tags: [moc, adr]
 estado: vigente
-actualizado: 2026-09-28
+actualizado: 2026-09-30
 ---
 
 # Registro de decisiones de arquitectura
@@ -31,6 +31,7 @@ documento que se reescribe hasta perder la historia.
 | [0010](ADR-0010-varias-emergencias-activas.md) | Varias emergencias activas; el acopio no pertenece a ninguna. Modifica una restricción de ADR-0008 | aceptada |
 | [0011](ADR-0011-interfaz-con-stitch.md) | Interfaz diseñada con Google Stitch | aceptada |
 | [0012](ADR-0012-almacenamiento-garage.md) | Almacenamiento de objetos con Garage. Modifica una fila de ADR-0008 | aceptada |
+| [0013](ADR-0013-estetica-desde-stitch.md) | La estética sale del diseño de Stitch. Modifica la paleta de ADR-0006 | aceptada |
 
 ## Cuándo escribir una
 

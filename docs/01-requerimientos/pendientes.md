@@ -545,7 +545,7 @@ RF-IDE-001, 003 y 004. Queda por confirmar el alcance del Auditor sobre la bitá
 |---|---|
 | El primer ciclo es la Portada pública (P01) con los cimientos de `apps/web`; usuarios y consola van después | La Portada ya está diseñada en Stitch y es la pantalla que ve todo el mundo |
 | Los bloques de la Portada sin backend muestran un estado vacío | ADR-0011 no admite datos de ejemplo incrustados |
-| ~~Manda la paleta del sistema de diseño; el tema del proyecto en Stitch se corrige~~ **Cambiado el mismo día: manda el diseño de Stitch.** | Joseph vio la Portada con la paleta de la bóveda y no le gustó; el tema de Stitch («Acopio Field Command») resuelve mejor el color y la experiencia. Falta alinear `sistema-diseno.md` y ADR-0006 con ese tema |
+| ~~Manda la paleta del sistema de diseño; el tema del proyecto en Stitch se corrige~~ **Cambiado el mismo día: manda el diseño de Stitch.** | Joseph vio la Portada con la paleta de la bóveda y no le gustó; el tema de Stitch («Acopio Field Command») resuelve mejor el color y la experiencia. Alineados `sistema-diseno.md` y ADR-0006 con [ADR-0013](../02-arquitectura/adr/ADR-0013-estetica-desde-stitch.md). Queda por aprobar la escala de estados, que separa Crítico de Urgente |
 | `GET /api/emergencias` se puede leer sin sesión | La Portada es pública y necesita las emergencias activas |
 | Las pruebas de `apps/web` corren con Vitest; Jest sigue en la API y en `packages/shared` | Vitest usa la configuración de Vite. Ajusta la fila «Pruebas previstas» de ADR-0008 solo para la web |
 

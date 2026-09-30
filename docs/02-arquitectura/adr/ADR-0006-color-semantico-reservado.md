@@ -5,12 +5,14 @@ tags: [arquitectura, adr]
 estado: vigente
 adr: 6
 decision: aceptada
-actualizado: 2026-08-20
+actualizado: 2026-09-30
 ---
 
 # ADR-0006 · El color semántico está reservado
 
-**Fecha:** 2026-08-20 · **Estado:** aceptada
+**Fecha:** 2026-08-20 · **Estado:** aceptada · **Modificada por:**
+[ADR-0013](ADR-0013-estetica-desde-stitch.md), que cambia la paleta. La regla de que el
+color de estado significa estado, y nunca va solo, sigue vigente
 
 ## Contexto
 
