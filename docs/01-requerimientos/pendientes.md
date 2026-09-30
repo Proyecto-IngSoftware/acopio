@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-09-28
+actualizado: 2026-09-30
 ---
 
 # Pendientes — bandeja de entrada
@@ -536,6 +536,24 @@ decisión de arquitectura.
 
 **Estado:** RESUELTO → [especificación del Bloque 0](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md#11-cambios-al-construir),
 RF-IDE-001, 003 y 004. Queda por confirmar el alcance del Auditor sobre la bitácora.
+
+### P-029 · Decisiones al arrancar la interfaz
+**Fecha:** 2026-09-30 · **Propuesto por:** Joseph
+**Qué:** lo que se fijó para el primer ciclo de la interfaz.
+
+| Qué | Por qué |
+|---|---|
+| El primer ciclo es la Portada pública (P01) con los cimientos de `apps/web`; usuarios y consola van después | La Portada ya está diseñada en Stitch y es la pantalla que ve todo el mundo |
+| Los bloques de la Portada sin backend muestran un estado vacío | ADR-0011 no admite datos de ejemplo incrustados |
+| Manda la paleta del sistema de diseño; el tema del proyecto en Stitch se corrige | El tema de Stitch usa rojo como color secundario y rompe la reserva del semáforo (ADR-0006) |
+| `GET /api/emergencias` se puede leer sin sesión | La Portada es pública y necesita las emergencias activas |
+| Las pruebas de `apps/web` corren con Vitest; Jest sigue en la API y en `packages/shared` | Vitest usa la configuración de Vite. Ajusta la fila «Pruebas previstas» de ADR-0008 solo para la web |
+
+**Abierto:** RF-HOM-001 pide que el hero se lea sin JavaScript. Una SPA no lo cumple
+sin una página estática aparte. Falta decidir si se relaja el criterio o se genera esa
+página al construir.
+**Estado:** RESUELTO → [especificación del ciclo 1 de la interfaz](../superpowers/specs/2026-09-30-interfaz-ciclo-1-portada-design.md),
+salvo el punto abierto.
 
 ---
 
