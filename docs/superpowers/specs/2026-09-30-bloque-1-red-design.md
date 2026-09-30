@@ -2,7 +2,7 @@
 title: "Bloque 1 · Red de acopios y mapa público · especificación"
 type: spec
 tags: [spec, bloque-1]
-estado: borrador
+estado: vigente
 bloque: 1
 actualizado: 2026-09-30
 ---
@@ -10,7 +10,7 @@ actualizado: 2026-09-30
 # Bloque 1 · Red de acopios y mapa público · especificación
 
 **Fecha:** 2026-09-30
-**Estado:** borrador, pendiente de la revisión de Joseph
+**Estado:** aprobada por Joseph el 2026-09-30
 **Deriva de:** [especificación general](2026-08-20-acopio-design.md) §13,
 [RF-RED](../../01-requerimientos/funcionales/red.md),
 [RF-MOT-001](../../01-requerimientos/funcionales/motor.md#rf-mot-001--registrar-zona-afectada)
@@ -60,6 +60,7 @@ Joseph eligió ese orden el 2026-09-30: C, D y E van después del inventario.
 | No recibir | Interruptor por categoría y acopio, con reapertura opcional | RF-INV-008, adelantado del Bloque 2 |
 | Asignaciones | Elegir acopios y zonas reales por su nombre | Pendiente del Bloque 0 ([§2](2026-09-28-bloque-0-cimientos-design.md#fuera-y-a-qué-bloque-va)) |
 | Selector de ubicación | En la cabecera con sesión | S-02 del [ciclo 2](2026-09-30-interfaz-ciclo-2-acceso-design.md#3-decisiones) |
+| Matriz de acceso | Usuarios × ubicaciones, filtrable y exportable a CSV | RF-IDE-011, pendiente del Bloque 0 |
 | Mapa público | Leaflet con OSM, filtros «abierto ahora» y «qué no recibe», cerca de mí, búsqueda por dirección | RF-RED-002 |
 | Ficha pública | Datos del acopio, «No traigan», compartir por WhatsApp | RF-RED-003 |
 | Geocodificación | Nominatim desde la API, con caché y ritmo limitado | RF-RED-002 |
@@ -75,7 +76,6 @@ Joseph eligió ese orden el 2026-09-30: C, D y E van después del inventario.
 | Open Graph y vista previa en WhatsApp | Especificación D | Una SPA necesita algo del lado del servidor para los metadatos |
 | Acopios referenciados | Especificación E | Llegan con el importador |
 | C10 Ficha de zona | Bloque 4 | Su contenido es el déficit que calcula el motor |
-| RF-IDE-011 Matriz de acceso | Por decidir | Quedó para el Bloque 1 en la especificación del Bloque 0 y no se habló al especificar este. Joseph lo decide en la revisión |
 | Mapa de necesidades por zona (RF-RED-009) | Bloque 4 | Se alimenta de los reportes del Receptor (RF-MOT-011) |
 
 ## 3. Decisiones
@@ -90,8 +90,9 @@ Tomadas por Joseph el 2026-09-30.
 | B-04 | Se sigue la [arquitectura](../../02-arquitectura/vista-general.md) tal cual: nace `acopios` y nace `inventario` solo con «no recibir». La web arma la ficha con dos llamadas | Todo en `acopios`: rompe la tabla de dependencias y en el Bloque 2 hay que mudarlo. Un módulo `portal` de lectura: sale de la arquitectura aprobada y no hace falta con decenas de acopios |
 | B-05 | `identidad` valida las ubicaciones de una asignación por un puerto, `VerificadorUbicaciones`, que implementa `acopios` | Que `identidad` importe `acopios`: la tabla de dependencias no lo permite |
 | B-06 | «No recibir» va en su propia tabla, no como columnas de `umbral` | Columnas en `umbral`: su mínimo y su máximo no existen todavía, y `umbral` también aplica a zonas, donde «no recibir» no tiene sentido |
+| B-07 | La matriz de acceso (RF-IDE-011) entra en el ciclo 2 de la interfaz. La web la arma con `GET /usuarios`, que ya trae asignaciones y restablecimientos pendientes, y con los nombres de `GET /ubicaciones`. El CSV se genera en el navegador | Un endpoint propio en `identidad`: necesitaría los nombres de las ubicaciones, que viven en `acopios`. Dejarla para otra especificación: todo lo que usa ya existe en el ciclo 2 |
 
-B-03 ajusta RF-RED-001, que daba toda la gestión al Administrador. B-06 cambia
+B-07 cierra lo que el Bloque 0 dejó pendiente de RF-IDE-011. B-03 ajusta RF-RED-001, que daba toda la gestión al Administrador. B-06 cambia
 `modelo-datos.md`. Los dos se anotan en [P-033](../../01-requerimientos/pendientes.md).
 
 ## 4. Datos
@@ -157,7 +158,7 @@ Mismas convenciones del Bloque 0: rutas en español, `@Publico()` para lo abiert
 | `GET` · `POST` · `PATCH /entidades` | Administrador | Entidades |
 | `GET` · `POST` · `PATCH /zonas` | Administrador | `?emergencia=` filtra. Con la emergencia cerrada responde 409 `ZONA_SOLO_LECTURA` |
 | `GET /ubicaciones/mias` | Con sesión | Nombre y tipo de los acopios y zonas asignados |
-| `GET /ubicaciones?q=` | Administrador | Busca acopios y zonas por nombre |
+| `GET /ubicaciones?q=` | Administrador · Auditor | Acopios y zonas con su nombre y tipo; `q` filtra por nombre. Lo usan el buscador de C16 y la matriz de acceso |
 | `GET /geocodificar?q=` | Público | Dirección a coordenadas |
 
 ### Módulo `inventario`
@@ -224,6 +225,11 @@ la gestión de acopios.
 - **C16 Invitar y Detalle.** El campo de identificador se cambia por un buscador de
   acopios y zonas por nombre, y el detalle muestra los nombres. Se cierra R-06 del
   [ciclo 3](../../05-planes/2026-09-30-interfaz-ciclo-3-consola.md).
+- **Matriz de acceso (RF-IDE-011), dentro de C16.** Para Administrador y Auditor. Filas
+  de usuarios y columnas de ubicaciones, filtrable por rol, estado y ubicación. Marca los
+  restablecimientos pendientes y se exporta a CSV. A 360 px se lee por ubicación: se
+  elige una y se ve quién puede tocarla. Todavía no hay Donadores; su listado aparte
+  llega con el Bloque 3.
 - **«Más».** Cada pantalla nueva suma su fila en el mismo ciclo que la construye. El
   Operador tiene por fin herramientas propias.
 
@@ -233,8 +239,8 @@ la gestión de acopios.
    `seed:demo` y el contrato.
 2. **Interfaz, ciclo 1, pantallas nuevas:** primero las que cargan datos (C21, C15,
    C9), después Mi acopio y C7, y al final P5 y P6.
-3. **Interfaz, ciclo 2, cambios a lo que ya existe:** el selector de la cabecera y el
-   buscador de ubicaciones en C16.
+3. **Interfaz, ciclo 2, cambios a lo que ya existe:** el selector de la cabecera, el
+   buscador de ubicaciones en C16 y la matriz de acceso.
 
 Cada ciclo de interfaz empieza pidiendo las maquetas en Stitch y termina con el
 recorrido en Chromium a 360 × 640.
@@ -252,6 +258,7 @@ Es idempotente y el seed real no cambia.
 | `abiertoAhora` | Unitarias: varios tramos en un día, día sin horario, justo en la hora de apertura y de cierre, instante en UTC que en Bogotá es otro día. La validación rechaza tramos al revés o solapados |
 | API | Integración contra PostgreSQL: CRUD con su bitácora; Operador con acopio ajeno recibe 403; acopio cerrado da 404 en lo público; zona de emergencia cerrada da 409; ubicación inexistente al asignar da 422; «no recibir» vencido no aparece; el filtro por categoría y `abiertoAhora` devuelven lo esperado; `acopio_app` no puede borrar acopios |
 | Geocodificación | Con el adaptador falso: la caché evita la segunda consulta y la cola respeta una por segundo, con reloj simulado. CI no sale a internet |
+| Matriz de acceso | Vitest: cruce de usuarios con nombres, filtros por rol, estado y ubicación, marca de restablecimiento pendiente y contenido del CSV |
 | Web | Vitest y axe por pantalla. En jsdom Leaflet no funciona, así que se prueban la vista de lista y los filtros; el mapa se revisa en el recorrido con Chromium |
 
 ## 9. Criterios de salida
