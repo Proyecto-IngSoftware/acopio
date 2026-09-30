@@ -30,6 +30,11 @@ instala y corre los scripts; Node 22 ejecuta.
 **Especificación:** [2026-09-30-interfaz-ciclo-1-portada-design.md](../superpowers/specs/2026-09-30-interfaz-ciclo-1-portada-design.md).
 Quien ejecute lee las dos.
 
+> **Pendiente de ajustar (2026-09-30).** Joseph decidió que manda el diseño de Stitch y
+> no la paleta de la bóveda (I-03 de la especificación). Las tareas 1, 2, 4, 7 y 9 de
+> este plan todavía describen la paleta anterior y se reescriben cuando apruebe la
+> maqueta fiel a Stitch. No ejecutar la fase B con el texto actual.
+
 ## Reglas que aplican a todas las tareas
 
 - No se escribe código de `apps/web` ni de `packages/ui-tokens` antes de que Joseph

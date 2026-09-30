@@ -36,7 +36,7 @@ dice qué falta.
 | Área | Qué | Referencia |
 |---|---|---|
 | Flujo con Stitch | Cómo se guarda cada diseño y cómo pasa a código | ADR-0011 lo dejó pendiente |
-| Tema en Stitch | El proyecto de Stitch usa la paleta del sistema de diseño | [sistema-diseno.md](../../03-diseno/sistema-diseno.md) §2 |
+| Sistema de diseño | `sistema-diseno.md` y ADR-0006 se alinean con el tema de Stitch | I-03 |
 | `packages/ui-tokens` | Tokens como variables CSS y como tema de Tailwind | sistema de diseño §10, ADR-0006 |
 | `apps/web` | Vite, React, TypeScript, Tailwind, React Router | ADR-0011 |
 | Cliente de la API | Tipos generados desde el contrato OpenAPI | [contrato](../../03-diseno/api/README.md) |
@@ -66,7 +66,7 @@ Tomadas por Joseph el 2026-09-30.
 |---|---|---|
 | I-01 | El primer ciclo construye los cimientos y la Portada. Usuarios y el resto de la consola van después | Empezar por el inicio de sesión y el tablero: prueba la cadena con la API, pero deja para más tarde la pantalla que ve todo el mundo |
 | I-02 | Los bloques de la Portada sin backend muestran un estado vacío | Datos simulados detrás del cliente de la API: es trabajo que se tira y roza la regla de ADR-0011. Recortar los bloques: la pantalla no se parecería al diseño |
-| I-03 | Manda la paleta del sistema de diseño. El tema de Stitch se corrige para que coincida | Adoptar el tema de Stitch: usa rojo como color secundario y rompe la reserva del semáforo (ADR-0006) |
+| I-03 | Manda el diseño de Stitch, con su tema «Acopio Field Command». Los tokens de `packages/ui-tokens` salen de ese tema, y `sistema-diseno.md` y ADR-0006 se alinean con él. Cambiada el 2026-09-30: la primera versión ponía a mandar la paleta de la bóveda, y la Portada montada así no convenció | Mantener la paleta de la bóveda y corregir Stitch: se probó y el resultado perdió lo que el diseño de Stitch tenía resuelto |
 | I-04 | Cada pantalla se escribe con componentes propios y el HTML de Stitch queda como referencia | Convertir el HTML a JSX: cada pantalla trae su marcado repetido y decenas de colores escritos a mano |
 | I-05 | Las pruebas de `apps/web` corren con Vitest y Testing Library. Jest sigue en la API y en `packages/shared` | Jest también en la web, como dice ADR-0008: obliga a mantener una segunda configuración de transformación junto a la de Vite |
 | I-06 | La lectura de emergencias es pública | Un endpoint aparte para el portal: duplicaría una consulta que ya existe |
@@ -75,10 +75,9 @@ Tomadas por Joseph el 2026-09-30.
 
 Proyecto: «ACOPIO DISEÑO», identificador `10306891818878200068`.
 
-1. El tema del proyecto se actualiza una vez con los tokens de `sistema-diseno.md`:
-   marca teal, neutros cálidos, y rojo, ámbar, verde y morado solo para el semáforo.
-2. La pantalla se regenera o se edita en Stitch hasta que use ese tema y los nombres
-   de estado del sistema de diseño (Escaso, Poco, Bien, De sobra, No recibir).
+1. El tema del proyecto en Stitch, «Acopio Field Command», es la referencia de color,
+   tipografía y forma. No se modifica desde aquí.
+2. La pantalla se diseña o se ajusta en Stitch.
 3. Se guarda en `docs/03-diseno/stitch/<codigo>-<nombre>/`:
    - `captura.png`
    - `pantalla.html`, el código que exporta Stitch
