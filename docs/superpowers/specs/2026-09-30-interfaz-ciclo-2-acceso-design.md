@@ -180,7 +180,7 @@ Marca y botón con las iniciales. El botón abre un menú con el nombre, el rol 
 - [x] axe sin violaciones graves en Entrar, Activar cuenta y el menú de la cuenta, en
       Chromium a 360 × 640
 - [x] El contrato OpenAPI, los tipos de la web y `api/README.md` quedan al día
-- [ ] El CI de `main` queda en verde
+- [x] El CI de `main` queda en verde
 
 ### Cambios al construir
 
