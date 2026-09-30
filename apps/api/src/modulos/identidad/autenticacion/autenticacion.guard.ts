@@ -11,6 +11,7 @@ import { PrismaService } from '../../../comun/prisma/prisma.service';
 import type { Rol } from '../../../generado/prisma/enums';
 import { CLAVE_PUBLICO, CLAVE_ROLES } from '../../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../../comun/autorizacion/usuario-autenticado';
+import { COOKIE_SESION, leerCookie } from '../../../comun/cookie-sesion';
 import { VerificadorToken } from './verificador-token';
 
 /**
@@ -79,7 +80,10 @@ export class AutenticacionGuard implements CanActivate {
   }
 }
 
+/** Primero la cookie de la web (ADR-0014); si no hay, Bearer para pruebas y herramientas. */
 function extraerToken(request: Request): string | null {
+  const deCookie = leerCookie(request.headers.cookie, COOKIE_SESION);
+  if (deCookie) return deCookie;
   const [tipo, valor] = request.headers.authorization?.split(' ') ?? [];
   return tipo === 'Bearer' && valor ? valor : null;
 }

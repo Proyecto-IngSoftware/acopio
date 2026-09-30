@@ -24,7 +24,6 @@ export class ErrorDto extends createZodDto(
 
 export class SesionDto extends createZodDto(
   z.object({
-    accessToken: z.string().describe('Se envía como Authorization: Bearer <token>'),
     expiraEn: fecha,
     usuario: z.object({ id: z.uuid(), username: z.string().nullable(), nombre: z.string(), rol }),
   }),

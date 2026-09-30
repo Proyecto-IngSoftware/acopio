@@ -64,7 +64,11 @@ export async function iniciarSesion(
   contrasena: string,
 ): Promise<string> {
   const r = await a.http().post('/api/auth/sesion').send({ usuario, contrasena }).expect(200);
-  return r.body.accessToken as string;
+  // El token llega en la cookie (ADR-0014); las pruebas lo usan como Bearer
+  const cookie = ([] as string[]).concat(r.headers['set-cookie'] ?? []).join(';');
+  const token = /acopio_sesion=([^;]+)/.exec(cookie)?.[1];
+  if (!token) throw new Error('El inicio de sesión no devolvió la cookie');
+  return decodeURIComponent(token);
 }
 
 let consecutivo = 0;
