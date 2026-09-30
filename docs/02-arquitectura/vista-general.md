@@ -160,7 +160,7 @@ protege con un bloqueo en PostgreSQL para que no corra dos veces.
 | Cancelar folios `PREPARADO` con más de 7 días | Diaria | `comprobantes` |
 | Archivar causas vencidas o de entidades con verificación caducada | Diaria | `acopios` |
 | Alertas de vencimiento de perecederos | Diaria | `inventario` |
-| Reintentar correos fallidos | Cada 5 min | `notificaciones` |
+| Enviar la cola de correo y reintentar los fallidos | Cada minuto | `notificaciones` |
 
 `motor` es el módulo más dependiente y el más profundo. Es también el que se
 construye último, cuando sus cimientos ya están firmes.

@@ -250,6 +250,7 @@ respecto de esta especificación:
 | §6 | Sin endpoint público que resuelva usuario a correo | La API resuelve el usuario y llama al proveedor ([P-028](../../01-requerimientos/pendientes.md)) |
 | §6 | Bloqueo ordenado de administradores al suspender o cambiar un rol | La prueba de concurrencia encontró un interbloqueo |
 | §8 | **La interfaz se hace con Google Stitch** | [ADR-0011](../../02-arquitectura/adr/ADR-0011-interfaz-con-stitch.md). El §8 sigue como requisito; el flujo de trabajo se fija en el bloque de interfaz |
+| T10 | La cola de correo se procesa cada minuto, no cada 5 | La misma tarea hace el primer envío: con 5 minutos, una invitación tardaría hasta 5 en salir. La espera entre reintentos sigue creciendo: 1, 2, 4… minutos, hasta 2 horas |
 | — | Contrato OpenAPI para el frontend | [docs/03-diseno/api/](../../03-diseno/api/README.md) |
 
 ### Criterios de salida, a la fecha

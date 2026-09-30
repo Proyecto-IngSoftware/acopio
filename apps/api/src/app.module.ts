@@ -7,6 +7,7 @@ import { FiltroErrores } from './comun/errores/filtro-errores';
 import { LimiteIntentosGuard } from './comun/limite-intentos.guard';
 import { PrismaModule } from './comun/prisma/prisma.module';
 import { ConfigModule } from './config/config.module';
+import { ENTORNO, type Entorno } from './config/entorno';
 import { AuditoriaModule } from './modulos/auditoria/auditoria.module';
 import { CatalogoModule } from './modulos/catalogo/catalogo.module';
 import { AutenticacionGuard } from './modulos/identidad/autenticacion/autenticacion.guard';
@@ -18,7 +19,11 @@ import { SaludModule } from './modulos/salud/salud.module';
   imports: [
     ConfigModule,
     PrismaModule,
-    ScheduleModule.forRoot(),
+    // En las pruebas las tareas no se programan: cada prueba las llama cuando le toca
+    ScheduleModule.forRootAsync({
+      useFactory: (entorno: Entorno) => ({ cronJobs: entorno.NODE_ENV !== 'test' }),
+      inject: [ENTORNO],
+    }),
     // Límite general por IP; los endpoints sensibles ponen uno más estricto
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 300 }]),
     AuditoriaModule,

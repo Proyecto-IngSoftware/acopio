@@ -1,3 +1,4 @@
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { createTransport } from 'nodemailer';
 import { crearAppPrueba, type AppPrueba } from '../../test/app-prueba';
 import { MAX_INTENTOS, NotificacionService } from '../modulos/notificaciones/notificacion.service';
@@ -24,6 +25,11 @@ describe('notificaciones', () => {
       destinatario,
       plantillas.asignacion({ nombre: 'Ana', ubicacion: 'un acopio' }),
     );
+
+  it('las tareas programadas no corren solas durante las pruebas', () => {
+    // Una tarea real que se dispara a mitad de una suite escribe después del cierre
+    expect(a.app.get(SchedulerRegistry).getCronJobs().size).toBe(0);
+  });
 
   it('con el SMTP arriba, el correo sale y queda ENVIADO', async () => {
     usarTransporte(createTransport({ jsonTransport: true }));
