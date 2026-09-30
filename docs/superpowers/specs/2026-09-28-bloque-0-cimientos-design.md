@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-0]
 estado: vigente
 bloque: 0
-actualizado: 2026-09-28
+actualizado: 2026-09-30
 ---
 
 # Bloque 0 · Cimientos — especificación
@@ -252,17 +252,33 @@ respecto de esta especificación:
 | §8 | **La interfaz se hace con Google Stitch** | [ADR-0011](../../02-arquitectura/adr/ADR-0011-interfaz-con-stitch.md). El §8 sigue como requisito; el flujo de trabajo se fija en el bloque de interfaz |
 | T10 | La cola de correo se procesa cada minuto, no cada 5 | La misma tarea hace el primer envío: con 5 minutos, una invitación tardaría hasta 5 en salir. La espera entre reintentos sigue creciendo: 1, 2, 4… minutos, hasta 2 horas |
 | — | Contrato OpenAPI para el frontend | [docs/03-diseno/api/](../../03-diseno/api/README.md) |
+| T18 | `almacenamiento:iniciar` espera a que Garage responda | En un clon limpio corría antes de que Garage creara la llave del nodo, decía «ya asignada» y no importaba la llave de la API |
+| T18 | `seed` y `start:dev` generan el cliente de Prisma | El cliente no se versiona; en un clon limpio el seed fallaba |
 
-### Criterios de salida, a la fecha
+### Criterios de salida en la revisión de salida (T18)
 
-- [x] El recorrido del §1 funciona de punta a punta en Docker Compose, con el correo de
-      invitación en Mailpit
-- [ ] Probado en los equipos de los cuatro integrantes ([#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27))
-- [ ] Correo real por el SMTP del dominio sin caer en spam (RTA-04): falta el dominio
-- [x] CI escrita: lint, tipos, dependency-cruiser, pruebas unitarias y de integración.
-      Falta verla en verde en GitHub
-- [x] La misma invitación canjeada diez veces a la vez produce un solo usuario activo
-- [x] La base rechaza `UPDATE` y `DELETE` sobre `bitacora` con el rol de la API
-- [x] «panal» encuentra «Pañales de adulto» y «aroz» encuentra «Arroz», en menos de 100 ms
-- [x] El *seed* es idempotente
-- [ ] axe-core en C01, C16 y C18: llega con la interfaz
+Joseph recorrió los criterios el 2026-09-30 en un clon recién hecho desde GitHub, con
+`cp .env.example .env` y otro nombre de proyecto de Compose para no tocar sus volúmenes.
+Del `.env` solo cambió `DB_PUERTO`, porque en su equipo el 5432 lo ocupa un PostgreSQL
+local.
+
+- [x] El clon levanta con los pasos de `CLAUDE.md`. Aparecieron dos fallas, corregidas en
+      `5f00437` (tabla de arriba)
+- [x] El recorrido del §1 funciona de punta a punta: el administrador invita a una
+      operadora, el correo llega a Mailpit, ella activa la cuenta y entra, y la bitácora
+      registra la invitación, el canje y el seed
+- [x] Probado solo en el equipo de Joseph, el único que trabaja hoy en el proyecto
+      ([#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27))
+- [ ] Correo real por el SMTP del dominio sin caer en spam (RTA-04): espera el dominio
+      ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26))
+- [x] CI en verde en `main`
+- [x] Diez canjes simultáneos de la misma invitación dejan un solo usuario activo
+      (`concurrencia.int.test.ts`)
+- [x] `acopio_app` recibe `permission denied` con `UPDATE` y `DELETE` sobre `bitacora`, y
+      sí puede insertar
+- [x] «panal» encuentra «Pañales de adulto» y «aroz» encuentra «Arroz», en menos de 10 ms
+- [x] Dos corridas del seed dejan 39 categorías y 10 filas de canasta
+- [x] axe-core sin violaciones críticas en C01 (Entrar y Activar cuenta), C16 (lista e
+      invitar) y C18
+- [x] Barrido de secretos (RNF-08, pedido en #27): gitleaks revisó los 62 commits del
+      historial y no encontró filtraciones

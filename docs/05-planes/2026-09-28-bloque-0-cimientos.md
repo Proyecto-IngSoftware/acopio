@@ -33,7 +33,7 @@ Lo que cambió al construir está en la
 | T02 Docker Compose | ✅ | Nada. La prueba en los cuatro equipos deja de exigirse el 2026-09-30, porque solo Joseph está trabajando en el proyecto; [#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27) se cerró con la prueba en su equipo. Almacenamiento: Garage en lugar de MinIO ([ADR-0012](../02-arquitectura/adr/ADR-0012-almacenamiento-garage.md)); la primera vez, `bun run almacenamiento:iniciar`. Probado el 2026-09-30 en el equipo de Joseph: servicios sanos, migraciones, seed dos veces, invitación en Mailpit, canje y login. El 5432 estaba ocupado por un PostgreSQL local, de ahí `DB_PUERTO` ([despliegue](../06-operacion/despliegue.md#perfil-de-desarrollo)) |
 | T03 Prisma y migración | ✅ | — |
 | T04 Esqueleto de la API | ✅ | — |
-| T05 Integración continua | ✅ escrita | Verla en verde en el primer PR |
+| T05 Integración continua | ✅ | — |
 | T06 Spike de autenticación | ✅ | Probar la importación de usuarios contra un proyecto real de Supabase ([#19](https://github.com/Proyecto-IngSoftware/acopio/issues/19)) |
 | T07 Usuarios y autorización | ✅ | — |
 | T08 Invitaciones y login | ✅ | — |
@@ -43,7 +43,7 @@ Lo que cambió al construir está en la
 | T12 Seed | ✅ | La canasta se cargó con la fuente marcada «por verificar» ([#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20)) |
 | T13 a T16 Interfaz | ✅ | Ciclo 1 hecho el 2026-09-30 ([plan](2026-09-30-interfaz-ciclo-1-portada.md)): tokens, esqueleto de `apps/web` y la Portada. Ciclo 2 hecho el 2026-09-30 ([plan](2026-09-30-interfaz-ciclo-2-acceso.md)): sesión en cookie (ADR-0014), C01 Entrar y Activar cuenta, cabeceras compartidas. Ciclo 3 hecho el 2026-09-30 ([plan](2026-09-30-interfaz-ciclo-3-consola.md)): «Más» con sesión, C16 Usuarios, C17 Bitácora y C18 Catálogo. Las pantallas de los demás módulos llegan con su bloque |
 | T17 Concurrencia | ✅ | La prueba del saldo se suma en el Bloque 2 |
-| T18 Revisión de salida | ⬜ | Con la interfaz. Falta también el barrido de secretos (RNF-08) que pedía #27: va antes del primer despliegue |
+| T18 Revisión de salida | ✅ | Hecha el 2026-09-30 en un clon limpio ([criterios](../superpowers/specs/2026-09-28-bloque-0-cimientos-design.md#criterios-de-salida-en-la-revisión-de-salida-t18)). Solo falta RTA-04, que espera el dominio ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)) |
 
 ## Orden y dependencias
 
