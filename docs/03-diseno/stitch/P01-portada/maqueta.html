@@ -1,0 +1,399 @@
+<title>Portada de Acopio</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap">
+<style>
+  /* Una columna de teléfono con la Portada tal como se va a construir; encima, un
+     conmutador para recorrer sus cuatro estados. Un solo tema, claro: la pantalla
+     está pensada para leerse bajo el sol. */
+  :root {
+    --marca-900: #0A4F4F;
+    --marca-700: #0F6E6E;
+    --marca-500: #14A0A0;
+    --marca-100: #C7E8E8;
+    --marca-50: #E6F4F4;
+    --neutro-900: #1C1917;
+    --neutro-700: #44403C;
+    --neutro-600: #57534E;
+    --neutro-400: #A8A29E;
+    --neutro-200: #E7E5E4;
+    --neutro-100: #F5F5F4;
+    --neutro-50: #FAFAF9;
+    --blanco: #FFFFFF;
+    --fuente: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --radio-sm: 8px;
+    --radio-md: 10px;
+    --radio-lg: 12px;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--neutro-200);
+    color: var(--neutro-900);
+    font-family: var(--fuente);
+    font-size: 16px;
+    line-height: 1.5;
+    padding-inline: 16px;
+    padding-block: 16px 32px;
+  }
+  h1, h2, p { margin: 0; }
+  h1, h2 { text-wrap: balance; }
+  :focus-visible { outline: 3px solid var(--marca-500); outline-offset: 2px; }
+
+  /* ── Controles de la maqueta, fuera del teléfono ── */
+  .maqueta {
+    max-width: 390px;
+    margin-inline: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .maqueta-nota { font-size: 14px; color: var(--neutro-700); }
+  .estados { display: flex; flex-wrap: wrap; gap: 8px; }
+  .estados button {
+    min-height: 44px;
+    padding-inline: 12px;
+    border: 1px solid var(--neutro-400);
+    border-radius: var(--radio-md);
+    background: var(--blanco);
+    color: var(--neutro-900);
+    font: inherit;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .estados button[aria-pressed="true"] {
+    background: var(--neutro-900);
+    border-color: var(--neutro-900);
+    color: var(--blanco);
+    font-weight: 700;
+  }
+
+  /* ── El teléfono ── */
+  .telefono {
+    background: var(--neutro-50);
+    border: 1px solid var(--neutro-400);
+    border-radius: 20px;
+    overflow: clip;
+  }
+
+  .cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: var(--blanco);
+    border-bottom: 1px solid var(--neutro-200);
+  }
+  .marca { font-size: 18px; font-weight: 700; color: var(--marca-900); }
+  .entrar {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    padding-inline: 16px;
+    border: 2px solid var(--marca-700);
+    border-radius: var(--radio-md);
+    color: var(--marca-700);
+    font-weight: 500;
+    text-decoration: none;
+  }
+
+  /* Franja de la emergencia: lo primero que se lee */
+  .emergencia {
+    background: var(--marca-900);
+    color: var(--blanco);
+    padding: 20px 16px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .emergencia h1 { font-size: 28px; line-height: 1.2; font-weight: 700; overflow-wrap: anywhere; }
+  .emergencia-dato { color: var(--marca-100); }
+  .seguimiento {
+    align-self: flex-start;
+    padding: 2px 10px;
+    border: 1px solid var(--marca-100);
+    border-radius: var(--radio-sm);
+    font-size: 14px;
+    color: var(--marca-100);
+  }
+  .selector { display: flex; flex-direction: column; gap: 4px; }
+  .selector label { font-size: 14px; color: var(--marca-100); }
+  .selector select {
+    min-height: 48px;
+    width: 100%;
+    padding-inline: 12px;
+    border: 1px solid var(--marca-100);
+    border-radius: var(--radio-md);
+    background: var(--blanco);
+    color: var(--neutro-900);
+    font: inherit;
+  }
+  .hueso { border-radius: var(--radio-sm); background: var(--marca-700); animation: pulso 1.4s ease-in-out infinite; }
+  .hueso.titulo { height: 34px; width: 85%; }
+  .hueso.linea { height: 18px; width: 55%; }
+  .hueso.campo { height: 48px; width: 100%; }
+  @keyframes pulso { 50% { opacity: 0.55; } }
+  @media (prefers-reduced-motion: reduce) { .hueso { animation: none; } }
+
+  .contenido {
+    padding: 24px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+  .bloque { display: flex; flex-direction: column; gap: 8px; }
+  .bloque h2 { font-size: 22px; line-height: 1.25; font-weight: 700; }
+
+  /* Bloque cuyo módulo aún no existe: dice qué mostrará y por qué está vacío */
+  .vacio {
+    padding: 12px 16px;
+    border: 1px dashed var(--neutro-400);
+    border-radius: var(--radio-lg);
+    background: var(--neutro-100);
+    color: var(--neutro-700);
+  }
+  .vacio strong { display: block; color: var(--neutro-900); font-weight: 500; }
+
+  .error {
+    padding: 16px;
+    border: 2px solid var(--neutro-900);
+    border-radius: var(--radio-lg);
+    background: var(--blanco);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+  .error p { font-weight: 500; }
+  .boton-secundario {
+    min-height: 48px;
+    padding-inline: 16px;
+    border: 2px solid var(--marca-700);
+    border-radius: var(--radio-md);
+    background: var(--blanco);
+    color: var(--marca-700);
+    font: inherit;
+    font-weight: 500;
+    cursor: pointer;
+  }
+
+  .sin-emergencias { display: flex; flex-direction: column; gap: 8px; }
+  .sin-emergencias h1 { font-size: 28px; line-height: 1.2; font-weight: 700; }
+  .sin-emergencias p { color: var(--neutro-600); }
+
+  /* Cómo apoyar: tres acciones del mismo peso */
+  .acciones { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .acciones a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 56px;
+    padding-inline: 16px;
+    border: 1px solid var(--neutro-200);
+    border-radius: var(--radio-lg);
+    background: var(--blanco);
+    color: var(--neutro-900);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .acciones svg { color: var(--marca-700); flex: none; }
+  .folio {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    color: var(--marca-700);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .aviso {
+    padding: 16px;
+    border: 2px solid var(--neutro-900);
+    border-radius: var(--radio-lg);
+    background: var(--blanco);
+  }
+  .aviso h2 { font-size: 18px; }
+  .aviso p { margin-top: 4px; color: var(--neutro-700); }
+  .legal { font-size: 14px; color: var(--neutro-600); }
+
+  .barra {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    margin: 0;
+    padding: 0 0 env(safe-area-inset-bottom, 0px);
+    list-style: none;
+    background: var(--blanco);
+    border-top: 1px solid var(--neutro-200);
+  }
+  .barra li { flex: 1; min-width: 0; }
+  .barra a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    min-height: 56px;
+    font-size: 12px;
+    color: var(--neutro-600);
+    text-decoration: none;
+  }
+  .barra a[aria-current="page"] { color: var(--marca-700); font-weight: 700; }
+</style>
+
+<div class="maqueta">
+  <p class="maqueta-nota">
+    Maqueta de la Portada para aprobar antes de escribir código. Las dos emergencias son
+    de muestra; en la aplicación salen de la API. Cambia de estado con estos botones:
+  </p>
+  <div class="estados" role="group" aria-label="Estado de la maqueta">
+    <button type="button" id="ver-datos" data-estado="datos" aria-pressed="true">Con emergencias</button>
+    <button type="button" id="ver-cargando" data-estado="cargando" aria-pressed="false">Cargando</button>
+    <button type="button" id="ver-error" data-estado="error" aria-pressed="false">Con error</button>
+    <button type="button" id="ver-vacio" data-estado="vacio" aria-pressed="false">Sin emergencias</button>
+  </div>
+
+  <div class="telefono">
+    <header class="cabecera">
+      <span class="marca">Acopio</span>
+      <a class="entrar" href="#entrar">Entrar</a>
+    </header>
+
+    <section class="emergencia" data-ver="datos">
+      <h1 id="nombre-emergencia"></h1>
+      <p class="seguimiento" id="marca-seguimiento" hidden>En seguimiento</p>
+      <p class="emergencia-dato" id="dato-emergencia"></p>
+      <div class="selector">
+        <label for="emergencia">Emergencia</label>
+        <select id="emergencia"></select>
+      </div>
+    </section>
+
+    <section class="emergencia" data-ver="cargando" role="status" aria-label="Cargando emergencias" hidden>
+      <div class="hueso titulo"></div>
+      <div class="hueso linea"></div>
+      <div class="hueso campo"></div>
+    </section>
+
+    <div class="contenido">
+      <div class="error" role="alert" data-ver="error" hidden>
+        <p>No pudimos conectar con Acopio. Revisa tu conexión.</p>
+        <button type="button" class="boton-secundario" id="reintentar">Reintentar</button>
+      </div>
+
+      <section class="sin-emergencias" data-ver="vacio" hidden>
+        <h1>No hay emergencias activas</h1>
+        <p>Cuando se declare una, aquí verás qué hace falta y dónde entregarlo.</p>
+      </section>
+
+      <section class="bloque" data-ver="datos">
+        <h2>Zonas sin cobertura</h2>
+        <p class="vacio"><strong>Sin datos por ahora</strong>Todavía no hay zonas registradas. Aquí verás cuántas siguen sin recibir lo necesario.</p>
+      </section>
+
+      <section class="bloque" data-ver="datos">
+        <h2>Qué hace falta</h2>
+        <p class="vacio"><strong>Sin datos por ahora</strong>Todavía no hay acopios registrados. Aquí verás qué insumos escasean en cada uno.</p>
+      </section>
+
+      <section class="bloque" data-ver="datos">
+        <h2>Qué no traer</h2>
+        <p class="vacio"><strong>Sin datos por ahora</strong>Todavía no hay acopios registrados. Aquí verás qué ya sobra, para que no lo lleves.</p>
+      </section>
+
+      <section class="bloque">
+        <h2>Cómo apoyar</h2>
+        <ul class="acciones">
+          <li><a href="#mapa">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 8 12 3 3 8v8l9 5 9-5V8Z"/><path d="m3 8 9 5 9-5"/><path d="M12 13v8"/></svg>
+            Donar en especie</a></li>
+          <li><a href="#causas">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M5 21V10"/><path d="M19 21V10"/><path d="M9 21V10"/><path d="M15 21V10"/><path d="M12 3 3 8v2h18V8l-9-5Z"/></svg>
+            Donar a una causa</a></li>
+          <li><a href="#voluntariado">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="4"/><path d="M2 21a7 7 0 0 1 14 0"/><path d="M19 8v6"/><path d="M22 11h-6"/></svg>
+            Ser voluntario</a></li>
+        </ul>
+        <a class="folio" href="#mas">Rastrear una donación con su folio</a>
+      </section>
+
+      <section class="bloque" data-ver="datos">
+        <h2>Jornadas de voluntariado</h2>
+        <p class="vacio"><strong>Sin datos por ahora</strong>Todavía no hay jornadas publicadas. Aquí podrás reservar un cupo.</p>
+      </section>
+
+      <section class="bloque" data-ver="datos">
+        <h2>Desde el terreno</h2>
+        <p class="vacio"><strong>Sin datos por ahora</strong>Todavía no hay reportes. Aquí verás las novedades de las entidades que atienden la emergencia.</p>
+      </section>
+
+      <section class="aviso">
+        <h2>Acopio no recibe dinero</h2>
+        <p>Si quieres donar dinero, te llevamos al sitio oficial de cada entidad. La donación se hace allá, nunca aquí.</p>
+      </section>
+
+      <p class="legal">Tratamos los datos personales según la Ley 1581 de 2012.</p>
+    </div>
+
+    <nav aria-label="Secciones">
+      <ul class="barra">
+        <li><a href="#inicio" aria-current="page">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/></svg>
+          Inicio</a></li>
+        <li><a href="#mapa">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 4-6 2v14l6-2 6 2 6-2V4l-6 2-6-2Z"/><path d="M9 4v14"/><path d="M15 6v14"/></svg>
+          Mapa</a></li>
+        <li><a href="#causas">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10Z"/></svg>
+          Causas</a></li>
+        <li><a href="#voluntariado">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><circle cx="17.5" cy="9" r="2.5"/><path d="M17 14.5a5 5 0 0 1 4.5 5"/></svg>
+          Voluntariado</a></li>
+        <li><a href="#mas">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16"/><path d="M4 12h16"/><path d="M4 17h16"/></svg>
+          Más</a></li>
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<script>
+  // Emergencias de muestra, solo para la maqueta. En la aplicación salen de GET /api/emergencias.
+  const EMERGENCIAS = [
+    { id: 'a', nombre: 'Inundaciones en el bajo Cauca antioqueño y el sur de Córdoba', tipo: 'Inundación', inicio: '20 de septiembre de 2026', estado: 'ACTIVA' },
+    { id: 'b', nombre: 'Sismo en Caldas', tipo: 'Sismo', inicio: '2 de agosto de 2026', estado: 'EN_SEGUIMIENTO' },
+  ];
+
+  const selector = document.getElementById('emergencia');
+  for (const e of EMERGENCIAS) {
+    const opcion = document.createElement('option');
+    opcion.value = e.id;
+    opcion.textContent = e.nombre + (e.estado === 'EN_SEGUIMIENTO' ? ' (en seguimiento)' : '');
+    selector.append(opcion);
+  }
+
+  function mostrarEmergencia(id) {
+    const e = EMERGENCIAS.find((x) => x.id === id) ?? EMERGENCIAS[0];
+    document.getElementById('nombre-emergencia').textContent = e.nombre;
+    document.getElementById('dato-emergencia').textContent = e.tipo + ', desde el ' + e.inicio;
+    document.getElementById('marca-seguimiento').hidden = e.estado !== 'EN_SEGUIMIENTO';
+    selector.value = e.id;
+  }
+  selector.addEventListener('change', () => mostrarEmergencia(selector.value));
+
+  function mostrarEstado(estado) {
+    for (const nodo of document.querySelectorAll('[data-ver]')) nodo.hidden = nodo.dataset.ver !== estado;
+    for (const boton of document.querySelectorAll('.estados button')) {
+      boton.setAttribute('aria-pressed', String(boton.dataset.estado === estado));
+    }
+  }
+  for (const boton of document.querySelectorAll('.estados button')) {
+    boton.addEventListener('click', () => mostrarEstado(boton.dataset.estado));
+  }
+  document.getElementById('reintentar').addEventListener('click', () => mostrarEstado('datos'));
+  // Los enlaces de la maqueta no navegan
+  for (const enlace of document.querySelectorAll('.telefono a')) {
+    enlace.addEventListener('click', (evento) => evento.preventDefault());
+  }
+
+  mostrarEmergencia('a');
+  mostrarEstado('datos');
+</script>
