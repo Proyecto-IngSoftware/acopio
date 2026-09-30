@@ -1,4 +1,5 @@
 import { Route, Routes } from 'react-router';
+import { ActivarCuenta } from './acceso/ActivarCuenta';
 import { Entrar } from './acceso/Entrar';
 import { MarcoAcceso } from './portal/MarcoAcceso';
 import { MarcoPortal } from './portal/MarcoPortal';
@@ -21,6 +22,7 @@ export function Rutas() {
       </Route>
       <Route element={<MarcoAcceso />}>
         <Route path="entrar" element={<Entrar />} />
+        <Route path="invitacion/:token" element={<ActivarCuenta />} />
       </Route>
     </Routes>
   );
