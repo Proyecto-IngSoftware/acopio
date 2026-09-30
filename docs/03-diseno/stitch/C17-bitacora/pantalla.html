@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
-  <title>C17 Bitácora - Consola Acopio</title>
+  <title>Acopio CO - Bitácora Móvil</title>
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
   <!-- Material Symbols Outlined -->
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
@@ -18,42 +18,25 @@
       theme: {
         extend: {
           colors: {
+            "primary": "#003730",
+            "primary-container": "#085046",
+            "primary-fixed": "#b0efe1",
+            "on-primary": "#ffffff",
             "surface": "#faf8ff",
-            "surface-dim": "#d2d9f4",
-            "surface-bright": "#faf8ff",
-            "surface-container-lowest": "#ffffff",
+            "on-surface": "#131b2e",
+            "outline-variant": "#bfc9c5",
+            "outline": "#707976",
             "surface-container-low": "#f2f3ff",
             "surface-container": "#eaedff",
             "surface-container-high": "#e2e7ff",
             "surface-container-highest": "#dae2fd",
-            "on-surface": "#131b2e",
-            "on-surface-variant": "#3f4946",
-            "outline": "#707976",
-            "outline-variant": "#bfc9c5",
-            "primary": "#003730",
-            "primary-container": "#085046",
-            "on-primary": "#ffffff",
-            "on-primary-container": "#83c1b4",
-            "primary-fixed": "#b0efe1",
-            "on-primary-fixed": "#00201b",
-            "primary-fixed-dim": "#95d2c5",
-            "secondary": "#b51d04",
-            "secondary-container": "#d9381e",
-            "error": "#ba1a1a",
-            "error-container": "#ffdad6",
-            "tertiary": "#4d2600"
-          },
-          borderRadius: {
-            "DEFAULT": "0.125rem",
-            "sm": "0.25rem",
-            "md": "0.375rem",
-            "lg": "0.5rem",
-            "xl": "0.75rem",
-            "2xl": "1rem",
-            "full": "9999px"
+            "surface-dim": "#d2d9f4",
+            "surface-bright": "#faf8ff",
+            "tertiary": "#ffdcc3",
+            "error": "#ba1a1a"
           },
           fontFamily: {
-            "sans": ["Inter", "sans-serif"]
+            sans: ["Inter", "sans-serif"]
           }
         }
       }
@@ -76,10 +59,7 @@
       text-rendering: optimizeLegibility;
       -moz-osx-font-smoothing: grayscale;
     }
-    .font-tabular {
-      font-variant-numeric: tabular-nums;
-    }
-    /* Estilo sutil para scrollbar de chips */
+    /* Hide scrollbar for clean pill scrolling */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
@@ -90,11 +70,13 @@
   </style>
 </head>
 <body class="bg-surface text-on-surface font-sans antialiased min-h-full flex flex-col justify-between selection:bg-primary-fixed selection:text-primary">
-  <div class="w-full max-w-md mx-auto flex-1 flex flex-col min-h-screen bg-surface">
 
-    <!-- 1. Cabecera con sesión compartida idéntica al estándar -->
+  <!-- Mobile Viewport Container -->
+  <div class="w-full max-w-md mx-auto flex-1 flex flex-col min-h-screen bg-surface relative shadow-xl">
+    
+    <!-- 1. Cabecera con sesión compartida -->
     <header class="w-full bg-surface px-4 py-3 flex items-center justify-between border-b border-[#e2e8f0] sticky top-0 z-30">
-      <!-- Marca -->
+      <!-- Brand Cluster -->
       <div class="flex items-center gap-2.5">
         <div class="w-10 h-10 rounded-[8px] bg-primary-container flex items-center justify-center text-on-primary shrink-0 shadow-sm">
           <span class="material-symbols-outlined text-[22px]">inventory_2</span>
@@ -104,413 +86,329 @@
           <span class="bg-primary-fixed text-primary-container font-bold text-[11px] leading-tight px-1.5 py-0.5 rounded tracking-wide">CO</span>
         </div>
       </div>
-      <!-- Botón de usuario Administrador (Joseph Quintero) -->
+      <!-- Avatar Button -->
       <button aria-label="Perfil Joseph Quintero" class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold text-[14px] shrink-0 transition-transform active:scale-95 shadow-sm" type="button">
         JQ
       </button>
     </header>
 
-    <!-- Contenido principal -->
-    <main class="flex-1 px-4 pt-4 pb-8 space-y-4">
+    <!-- Main Content Stream -->
+    <main class="flex-1 pb-10">
 
-      <!-- 2. Volver a Más y Título con frase inmutable -->
-      <section class="space-y-1">
-        <a href="#" class="inline-flex items-center gap-1 text-primary-container font-semibold text-[15px] -ml-1 py-1 px-1 rounded-md active:bg-[#e2e8f0]/40 transition-colors">
-          <span class="material-symbols-outlined text-[20px]">arrow_back</span>
-          <span>Volver a Más</span>
-        </a>
-        <div class="pt-1">
-          <div class="flex items-center justify-between">
-            <h1 class="text-[26px] font-bold text-on-surface tracking-tight leading-tight">Bitácora</h1>
-            <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] text-[12px] font-semibold bg-[#e6f5f2] text-primary-container border border-primary-fixed">
-              <span class="material-symbols-outlined text-[15px]">lock</span>
-              Auditoría
-            </span>
-          </div>
-          <p class="text-[14px] text-on-surface-variant font-medium mt-1 leading-snug">
-            Solo lectura. Nada de aquí se puede editar ni borrar.
-          </p>
+      <!-- 2. Subcabecera: Volver, Título y Solo lectura -->
+      <div class="px-4 pt-4 pb-3">
+        <button class="inline-flex items-center gap-1 text-primary-container font-medium text-[16px] -ml-1 py-1 px-2 rounded-lg hover:bg-surface-container active:bg-surface-container-high transition-colors min-h-[48px]" type="button">
+          <span class="material-symbols-outlined text-[22px]">arrow_back</span>
+          <span>Volver</span>
+        </button>
+        <div class="mt-1 flex items-baseline justify-between">
+          <h1 class="text-[26px] font-bold text-on-surface tracking-tight leading-tight">Bitácora</h1>
+          <span class="inline-flex items-center gap-1 text-[14px] font-medium text-[#505565] bg-[#eaedff] px-2.5 py-1 rounded-full border border-[#dae2fd]">
+            <span class="material-symbols-outlined text-[16px] text-primary-container">lock</span>
+            Solo lectura
+          </span>
         </div>
-      </section>
+      </div>
 
-      <!-- 3. Tarjeta de Filtros -->
-      <section class="bg-surface-container-lowest rounded-2xl border border-[#e2e8f0] p-4 shadow-sm space-y-3.5">
-        <!-- Buscador por persona -->
-        <div>
-          <label for="buscar-persona" class="block text-[13px] font-semibold text-on-surface mb-1.5">Buscar por persona o usuario</label>
-          <div class="relative">
-            <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px] pointer-events-none">search</span>
-            <input 
-              id="buscar-persona" 
-              type="text" 
-              placeholder="Ej. Joseph Quintero, @d.mendez" 
-              class="w-full min-h-[48px] pl-10 pr-3 rounded-xl border border-[#cbd5e1] bg-surface text-on-surface text-[15px] placeholder:text-on-surface-variant/70 focus:border-primary-container focus:ring-1 focus:ring-primary-container"
-            />
-          </div>
-        </div>
-
-        <!-- Selector de tipo de acción (chips horizontales scrolleables) -->
-        <div>
-          <span class="block text-[13px] font-semibold text-on-surface mb-1.5">Tipo de acción</span>
-          <div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5 -mx-1 px-1">
-            <button type="button" class="shrink-0 min-h-[40px] px-3.5 rounded-full text-[14px] font-semibold bg-primary-container text-on-primary shadow-xs">
-              Todas
-            </button>
-            <button type="button" class="shrink-0 min-h-[40px] px-3.5 rounded-full text-[14px] font-medium bg-surface text-on-surface border border-[#cbd5e1] hover:bg-surface-container-high transition-colors">
-              Usuarios
-            </button>
-            <button type="button" class="shrink-0 min-h-[40px] px-3.5 rounded-full text-[14px] font-medium bg-surface text-on-surface border border-[#cbd5e1] hover:bg-surface-container-high transition-colors">
-              Invitaciones
-            </button>
-            <button type="button" class="shrink-0 min-h-[40px] px-3.5 rounded-full text-[14px] font-medium bg-surface text-on-surface border border-[#cbd5e1] hover:bg-surface-container-high transition-colors">
-              Catálogo
-            </button>
-            <button type="button" class="shrink-0 min-h-[40px] px-3.5 rounded-full text-[14px] font-medium bg-surface text-on-surface border border-[#cbd5e1] hover:bg-surface-container-high transition-colors">
-              Emergencias
-            </button>
-          </div>
+      <!-- 3. Fila de píldoras desplazable + botón Filtrar -->
+      <div class="border-y border-[#e2e8f0] bg-white py-2.5 px-4 flex items-center gap-2.5 sticky top-[57px] z-20 shadow-[0_1px_3px_rgba(0,0,0,0.03)]">
+        <!-- Píldoras con scroll horizontal -->
+        <div class="flex-1 flex items-center gap-2 overflow-x-auto no-scrollbar py-0.5">
+          <!-- Todo (Activo) -->
+          <button class="shrink-0 px-3.5 py-1.5 rounded-full text-[15px] font-semibold bg-primary-container text-white shadow-sm min-h-[44px] flex items-center" type="button">
+            Todo
+          </button>
+          <!-- Destacados -->
+          <button class="shrink-0 px-3.5 py-1.5 rounded-full text-[15px] font-medium bg-[#f2f3ff] text-on-surface hover:bg-[#eaedff] border border-[#dae2fd] min-h-[44px] flex items-center gap-1" type="button">
+            <span class="material-symbols-outlined text-[16px] text-[#b45309]" style="font-variation-settings: 'FILL' 1;">star</span>
+            Destacados
+          </button>
+          <!-- Usuarios -->
+          <button class="shrink-0 px-3.5 py-1.5 rounded-full text-[15px] font-medium bg-[#f2f3ff] text-on-surface hover:bg-[#eaedff] border border-[#dae2fd] min-h-[44px] flex items-center" type="button">
+            Usuarios
+          </button>
+          <!-- Invitaciones -->
+          <button class="shrink-0 px-3.5 py-1.5 rounded-full text-[15px] font-medium bg-[#f2f3ff] text-on-surface hover:bg-[#eaedff] border border-[#dae2fd] min-h-[44px] flex items-center" type="button">
+            Invitaciones
+          </button>
+          <!-- Catálogo -->
+          <button class="shrink-0 px-3.5 py-1.5 rounded-full text-[15px] font-medium bg-[#f2f3ff] text-on-surface hover:bg-[#eaedff] border border-[#dae2fd] min-h-[44px] flex items-center" type="button">
+            Catálogo
+          </button>
+          <!-- Emergencias -->
+          <button class="shrink-0 px-3.5 py-1.5 rounded-full text-[15px] font-medium bg-[#f2f3ff] text-on-surface hover:bg-[#eaedff] border border-[#dae2fd] min-h-[44px] flex items-center" type="button">
+            Emergencias
+          </button>
         </div>
 
-        <!-- Rango de fechas Desde / Hasta -->
-        <div class="grid grid-cols-2 gap-2.5 pt-0.5">
-          <div>
-            <label for="fecha-desde" class="block text-[12px] font-semibold text-on-surface-variant mb-1">Desde</label>
-            <div class="relative">
-              <input 
-                id="fecha-desde" 
-                type="date" 
-                value="2026-09-28" 
-                class="w-full min-h-[48px] px-3 rounded-xl border border-[#cbd5e1] bg-surface text-on-surface text-[14px] font-tabular focus:border-primary-container focus:ring-1 focus:ring-primary-container"
-              />
-            </div>
-          </div>
-          <div>
-            <label for="fecha-hasta" class="block text-[12px] font-semibold text-on-surface-variant mb-1">Hasta</label>
-            <div class="relative">
-              <input 
-                id="fecha-hasta" 
-                type="date" 
-                value="2026-09-30" 
-                class="w-full min-h-[48px] px-3 rounded-xl border border-[#cbd5e1] bg-surface text-on-surface text-[14px] font-tabular focus:border-primary-container focus:ring-1 focus:ring-primary-container"
-              />
-            </div>
-          </div>
-        </div>
+        <!-- Separador visual -->
+        <div class="w-px h-7 bg-[#cbd5e1] shrink-0"></div>
 
-        <!-- Interruptor «Solo destacados» -->
-        <div class="pt-1 flex items-center justify-between border-t border-[#e2e8f0]/80">
-          <div class="flex items-center gap-2">
-            <span class="material-symbols-outlined text-[20px] text-[#b45309]" style="font-variation-settings: 'FILL' 1;">star</span>
-            <div>
-              <span class="text-[14px] font-semibold text-on-surface block leading-tight">Solo destacados</span>
-              <span class="text-[12px] text-on-surface-variant block">Muestra eventos críticos o de alta seguridad</span>
-            </div>
-          </div>
-          <!-- Toggle accessible -->
-          <label class="relative inline-flex items-center cursor-pointer min-h-[48px] p-2 -mr-2">
-            <input type="checkbox" checked class="sr-only peer"/>
-            <div class="w-11 h-6 bg-[#cbd5e1] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[14px] after:left-[10px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-container"></div>
-          </label>
-        </div>
-      </section>
+        <!-- Botón Filtrar (ícono tune) -->
+        <button class="shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-[10px] bg-white border border-[#cbd5e1] hover:bg-[#f8fafc] text-on-surface text-[15px] font-semibold min-h-[44px] shadow-sm active:scale-95 transition-transform" type="button" aria-label="Abrir filtros de persona y rango de fechas">
+          <span class="material-symbols-outlined text-[20px] text-primary-container">tune</span>
+          <span class="hidden sm:inline">Filtrar</span>
+        </button>
+      </div>
 
-      <!-- 4. Lista cronológica agrupada por día -->
-      <section class="space-y-4 pt-1">
+      <!-- 4. Lista agrupada por día con encabezados fijos (sticky) -->
+      <div class="px-4 pt-3 space-y-4">
 
         <!-- GRUPO: HOY -->
-        <div class="space-y-2">
-          <div class="flex items-center justify-between px-1">
-            <h2 class="text-[14px] font-bold text-on-surface-variant uppercase tracking-wider">Hoy · 30 sep 2026</h2>
-            <span class="text-[13px] text-on-surface-variant font-medium">12 registros</span>
+        <section class="space-y-2">
+          <!-- Encabezado de día fijo -->
+          <div class="sticky top-[113px] z-10 bg-surface/95 backdrop-blur-sm py-1.5 px-1 flex items-center justify-between">
+            <span class="text-[14px] font-bold uppercase tracking-wider text-[#424754]">Hoy</span>
+            <span class="text-[13px] font-medium text-[#64748b]">30 sep 2026</span>
           </div>
 
-          <div class="bg-surface-container-lowest rounded-2xl border border-[#e2e8f0] divide-y divide-[#e2e8f0] overflow-hidden shadow-sm">
+          <!-- Tarjetas estilo «Más» con borde y fondo blanco -->
+          <div class="bg-white rounded-[16px] border border-[#e2e8f0] divide-y divide-[#e2e8f0] overflow-hidden shadow-sm">
             
-            <!-- Registro 1 (Destacado - Crear emergencia) -->
-            <article class="p-4 hover:bg-[#faf8ff] active:bg-[#f2f3ff] transition-colors cursor-pointer group">
-              <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2">
-                  <span class="font-tabular text-[14px] font-bold text-primary-container bg-[#e6f5f2] px-2 py-0.5 rounded-[4px]">14:32</span>
-                  <span class="text-[15px] font-bold text-on-surface">Joseph Quintero</span>
-                </div>
-                <!-- Badge Destacado -->
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-[4px] text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0">
-                  <span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">star</span>
-                  Destacado
-                </span>
+            <!-- Fila 1: Emergencia (Destacada) -->
+            <button class="w-full flex items-center gap-3.5 p-4 hover:bg-[#faf8ff] active:bg-[#f2f3ff] text-left transition-colors min-h-[68px] group" type="button">
+              <div class="w-10 h-10 rounded-[8px] bg-[#e6f5f2] text-primary-container flex items-center justify-center shrink-0 group-hover:bg-primary-container group-hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-[22px]">emergency</span>
               </div>
-              <p class="text-[16px] font-medium text-on-surface mt-2 leading-snug">
-                Creó la emergencia Inundaciones en La Mojana
-              </p>
-              
-              <!-- Detalle expandible tocable: Antes / Después -->
-              <div class="mt-2.5 bg-[#f8fafc] rounded-xl border border-[#e2e8f0] p-3 text-[13px] space-y-1.5">
-                <div class="flex items-center justify-between text-on-surface-variant pb-1 border-b border-[#e2e8f0]">
-                  <span class="font-semibold text-primary-container flex items-center gap-1">
-                    <span class="material-symbols-outlined text-[15px]">compare_arrows</span>
-                    Cambio registrado
-                  </span>
-                  <span class="text-[11px]">ID #EV-8841</span>
-                </div>
-                <div class="grid grid-cols-2 gap-2 text-left pt-0.5">
-                  <div>
-                    <span class="text-[11px] font-bold text-[#b51d04] uppercase tracking-wide block">Antes</span>
-                    <span class="text-on-surface-variant font-tabular">1 emergencia activa (Caldas)</span>
-                  </div>
-                  <div>
-                    <span class="text-[11px] font-bold text-primary-container uppercase tracking-wide block">Después</span>
-                    <span class="text-on-surface font-semibold font-tabular">2 emergencias activas (+ La Mojana)</span>
-                  </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[16px] font-semibold text-on-surface leading-snug">Creó la emergencia Inundaciones en La Mojana</div>
+                <div class="flex items-center gap-1.5 text-[15px] text-[#505565] mt-0.5">
+                  <span class="font-normal truncate">Joseph Quintero · 14:32</span>
+                  <span class="material-symbols-outlined text-[16px] text-[#b45309] shrink-0" style="font-variation-settings: 'FILL' 1;" title="Destacado">star</span>
                 </div>
               </div>
+              <span class="material-symbols-outlined text-[#707976] group-hover:text-on-surface transition-colors shrink-0">chevron_right</span>
+            </button>
 
-              <div class="mt-2 flex items-center justify-between text-[13px] text-on-surface-variant pt-0.5">
-                <span class="flex items-center gap-1">
-                  <span class="material-symbols-outlined text-[16px] text-primary-container">shield</span>
-                  Rol: Administrador
-                </span>
-                <span class="text-primary-container font-semibold flex items-center gap-0.5 group-hover:translate-x-0.5 transition-transform">
-                  Ver detalle
-                  <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-                </span>
+            <!-- Fila 2: Invitación a Daniela Méndez (SELECCIONADA / ACTIVA PARA EL DETALLE) -->
+            <button class="w-full flex items-center gap-3.5 p-4 bg-[#f2fbf8] border-l-4 border-l-primary-container text-left transition-colors min-h-[68px] group" type="button" aria-current="true">
+              <div class="w-10 h-10 rounded-[8px] bg-primary-container text-white flex items-center justify-center shrink-0 shadow-sm">
+                <span class="material-symbols-outlined text-[22px]">person_add</span>
               </div>
-            </article>
-
-            <!-- Registro 2 (Invitación de usuario) -->
-            <article class="p-4 hover:bg-[#faf8ff] active:bg-[#f2f3ff] transition-colors cursor-pointer group">
-              <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2">
-                  <span class="font-tabular text-[14px] font-semibold text-on-surface-variant bg-[#f1f5f9] px-2 py-0.5 rounded-[4px]">11:15</span>
-                  <span class="text-[15px] font-bold text-on-surface">Joseph Quintero</span>
-                </div>
-                <span class="text-[12px] text-on-surface-variant font-medium">Invitaciones</span>
-              </div>
-              <p class="text-[16px] font-medium text-on-surface mt-2 leading-snug">
-                Invitó a Daniela Méndez como Operador
-              </p>
-              
-              <!-- Antes / Después -->
-              <div class="mt-2.5 bg-[#f8fafc] rounded-xl border border-[#e2e8f0] p-3 text-[13px] space-y-1">
-                <div class="grid grid-cols-2 gap-2 text-left">
-                  <div>
-                    <span class="text-[11px] font-bold text-[#b51d04] uppercase tracking-wide block">Antes</span>
-                    <span class="text-on-surface-variant">Sin usuario registrado</span>
-                  </div>
-                  <div>
-                    <span class="text-[11px] font-bold text-primary-container uppercase tracking-wide block">Después</span>
-                    <span class="text-on-surface font-semibold">@d.mendez (Norte, Chapinero)</span>
-                  </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[16px] font-semibold text-on-surface leading-snug">Invitó a Daniela Méndez como Operador</div>
+                <div class="text-[15px] text-[#505565] mt-0.5 truncate">
+                  Joseph Quintero · 11:15
                 </div>
               </div>
-
-              <div class="mt-2 flex items-center justify-between text-[13px] text-on-surface-variant pt-0.5">
-                <span class="flex items-center gap-1">
-                  <span class="material-symbols-outlined text-[16px] text-primary-container">link</span>
-                  Enlace único generado (WhatsApp)
-                </span>
-                <span class="text-primary-container font-semibold flex items-center gap-0.5">
-                  Ver detalle
-                  <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-                </span>
-              </div>
-            </article>
+              <span class="material-symbols-outlined text-primary-container font-bold shrink-0">keyboard_arrow_down</span>
+            </button>
 
           </div>
-        </div>
+        </section>
 
         <!-- GRUPO: AYER -->
-        <div class="space-y-2 pt-1">
-          <div class="flex items-center justify-between px-1">
-            <h2 class="text-[14px] font-bold text-on-surface-variant uppercase tracking-wider">Ayer · 29 sep 2026</h2>
-            <span class="text-[13px] text-on-surface-variant font-medium">18 registros</span>
+        <section class="space-y-2">
+          <!-- Encabezado de día fijo -->
+          <div class="sticky top-[113px] z-10 bg-surface/95 backdrop-blur-sm py-1.5 px-1 flex items-center justify-between">
+            <span class="text-[14px] font-bold uppercase tracking-wider text-[#424754]">Ayer</span>
+            <span class="text-[13px] font-medium text-[#64748b]">29 sep 2026</span>
           </div>
 
-          <div class="bg-surface-container-lowest rounded-2xl border border-[#e2e8f0] divide-y divide-[#e2e8f0] overflow-hidden shadow-sm">
+          <div class="bg-white rounded-[16px] border border-[#e2e8f0] divide-y divide-[#e2e8f0] overflow-hidden shadow-sm">
             
-            <!-- Registro 3 (Destacado - Restablecimiento de acceso) -->
-            <article class="p-4 hover:bg-[#faf8ff] active:bg-[#f2f3ff] transition-colors cursor-pointer group">
-              <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2">
-                  <span class="font-tabular text-[14px] font-bold text-primary-container bg-[#e6f5f2] px-2 py-0.5 rounded-[4px]">17:40</span>
-                  <span class="text-[15px] font-bold text-on-surface">Joseph Quintero</span>
-                </div>
-                <!-- Badge Destacado -->
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-[4px] text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0">
-                  <span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">star</span>
-                  Destacado
-                </span>
+            <!-- Fila 3: Restableció acceso (Destacado) -->
+            <button class="w-full flex items-center gap-3.5 p-4 hover:bg-[#faf8ff] active:bg-[#f2f3ff] text-left transition-colors min-h-[68px] group" type="button">
+              <div class="w-10 h-10 rounded-[8px] bg-[#e6f5f2] text-primary-container flex items-center justify-center shrink-0 group-hover:bg-primary-container group-hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-[22px]">lock_reset</span>
               </div>
-              <p class="text-[16px] font-medium text-on-surface mt-2 leading-snug">
-                Restableció el acceso de Carlos Rojas
-              </p>
-              
-              <!-- Antes / Después -->
-              <div class="mt-2.5 bg-[#f8fafc] rounded-xl border border-[#e2e8f0] p-3 text-[13px] space-y-1">
-                <div class="grid grid-cols-2 gap-2 text-left">
-                  <div>
-                    <span class="text-[11px] font-bold text-[#b51d04] uppercase tracking-wide block">Antes</span>
-                    <span class="text-on-surface-variant">Sesiones abiertas: 2 dispositivos</span>
-                  </div>
-                  <div>
-                    <span class="text-[11px] font-bold text-primary-container uppercase tracking-wide block">Después</span>
-                    <span class="text-on-surface font-semibold">Sesiones cerradas, token invalidado</span>
-                  </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[16px] font-semibold text-on-surface leading-snug">Restableció el acceso de Carlos Rojas</div>
+                <div class="flex items-center gap-1.5 text-[15px] text-[#505565] mt-0.5">
+                  <span class="font-normal truncate">Joseph Quintero · 17:40</span>
+                  <span class="material-symbols-outlined text-[16px] text-[#b45309] shrink-0" style="font-variation-settings: 'FILL' 1;" title="Destacado">star</span>
                 </div>
               </div>
+              <span class="material-symbols-outlined text-[#707976] group-hover:text-on-surface transition-colors shrink-0">chevron_right</span>
+            </button>
 
-              <div class="mt-2 flex items-center justify-between text-[13px] text-on-surface-variant pt-0.5">
-                <span class="flex items-center gap-1">
-                  <span class="material-symbols-outlined text-[16px] text-secondary">lock_reset</span>
-                  Seguridad de credenciales
-                </span>
-                <span class="text-primary-container font-semibold flex items-center gap-0.5">
-                  Ver detalle
-                  <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-                </span>
+            <!-- Fila 4: Catálogo -->
+            <button class="w-full flex items-center gap-3.5 p-4 hover:bg-[#faf8ff] active:bg-[#f2f3ff] text-left transition-colors min-h-[68px] group" type="button">
+              <div class="w-10 h-10 rounded-[8px] bg-[#e6f5f2] text-primary-container flex items-center justify-center shrink-0 group-hover:bg-primary-container group-hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-[22px]">inventory_2</span>
               </div>
-            </article>
-
-            <!-- Registro 4 (Catálogo - Archivar categoría) -->
-            <article class="p-4 hover:bg-[#faf8ff] active:bg-[#f2f3ff] transition-colors cursor-pointer group">
-              <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2">
-                  <span class="font-tabular text-[14px] font-semibold text-on-surface-variant bg-[#f1f5f9] px-2 py-0.5 rounded-[4px]">09:04</span>
-                  <span class="text-[15px] font-bold text-on-surface">Ana Pérez</span>
-                </div>
-                <span class="text-[12px] text-on-surface-variant font-medium">Catálogo</span>
-              </div>
-              <p class="text-[16px] font-medium text-on-surface mt-2 leading-snug">
-                Archivó la categoría Juguetes
-              </p>
-              
-              <!-- Antes / Después -->
-              <div class="mt-2.5 bg-[#f8fafc] rounded-xl border border-[#e2e8f0] p-3 text-[13px] space-y-1">
-                <div class="grid grid-cols-2 gap-2 text-left">
-                  <div>
-                    <span class="text-[11px] font-bold text-[#b51d04] uppercase tracking-wide block">Antes</span>
-                    <span class="text-on-surface-variant">Estado: Activo en canasta no prioritaria</span>
-                  </div>
-                  <div>
-                    <span class="text-[11px] font-bold text-primary-container uppercase tracking-wide block">Después</span>
-                    <span class="text-on-surface font-semibold">Estado: Archivado (oculto en recepción)</span>
-                  </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[16px] font-semibold text-on-surface leading-snug">Archivó la categoría Juguetes</div>
+                <div class="text-[15px] text-[#505565] mt-0.5 truncate">
+                  Ana Pérez · 09:04
                 </div>
               </div>
-
-              <div class="mt-2 flex items-center justify-between text-[13px] text-on-surface-variant pt-0.5">
-                <span class="flex items-center gap-1">
-                  <span class="material-symbols-outlined text-[16px] text-primary-container">verified</span>
-                  Rol: Auditor
-                </span>
-                <span class="text-primary-container font-semibold flex items-center gap-0.5">
-                  Ver detalle
-                  <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-                </span>
-              </div>
-            </article>
+              <span class="material-symbols-outlined text-[#707976] group-hover:text-on-surface transition-colors shrink-0">chevron_right</span>
+            </button>
 
           </div>
-        </div>
+        </section>
 
-        <!-- GRUPO: 28 SEP 2026 -->
-        <div class="space-y-2 pt-1">
-          <div class="flex items-center justify-between px-1">
-            <h2 class="text-[14px] font-bold text-on-surface-variant uppercase tracking-wider">28 sep 2026</h2>
-            <span class="text-[13px] text-on-surface-variant font-medium">20 registros</span>
+        <!-- GRUPO: 28 SEP -->
+        <section class="space-y-2">
+          <!-- Encabezado de día fijo -->
+          <div class="sticky top-[113px] z-10 bg-surface/95 backdrop-blur-sm py-1.5 px-1 flex items-center justify-between">
+            <span class="text-[14px] font-bold uppercase tracking-wider text-[#424754]">28 sep</span>
+            <span class="text-[13px] font-medium text-[#64748b]">2026</span>
           </div>
 
-          <div class="bg-surface-container-lowest rounded-2xl border border-[#e2e8f0] divide-y divide-[#e2e8f0] overflow-hidden shadow-sm">
+          <div class="bg-white rounded-[16px] border border-[#e2e8f0] divide-y divide-[#e2e8f0] overflow-hidden shadow-sm">
             
-            <!-- Registro 5 (Suspensión de cuenta) -->
-            <article class="p-4 hover:bg-[#faf8ff] active:bg-[#f2f3ff] transition-colors cursor-pointer group">
-              <div class="flex items-start justify-between gap-2">
-                <div class="flex items-center gap-2">
-                  <span class="font-tabular text-[14px] font-bold text-primary-container bg-[#e6f5f2] px-2 py-0.5 rounded-[4px]">16:20</span>
-                  <span class="text-[15px] font-bold text-on-surface">Joseph Quintero</span>
-                </div>
-                <!-- Badge Destacado -->
-                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-[4px] text-[11px] font-bold bg-[#fef3c7] text-[#92400e] border border-[#fde68a] shrink-0">
-                  <span class="material-symbols-outlined text-[13px]" style="font-variation-settings: 'FILL' 1;">star</span>
-                  Destacado
-                </span>
+            <!-- Fila 5: Suspendió usuario (Destacado) -->
+            <button class="w-full flex items-center gap-3.5 p-4 hover:bg-[#faf8ff] active:bg-[#f2f3ff] text-left transition-colors min-h-[68px] group" type="button">
+              <div class="w-10 h-10 rounded-[8px] bg-[#fee2e2] text-[#991b1b] flex items-center justify-center shrink-0 group-hover:bg-[#b91c1c] group-hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-[22px]">person_off</span>
               </div>
-              <p class="text-[16px] font-medium text-on-surface mt-2 leading-snug">
-                Suspendió el usuario @m.torres por cambio de sede
-              </p>
-              
-              <!-- Antes / Después -->
-              <div class="mt-2.5 bg-[#f8fafc] rounded-xl border border-[#e2e8f0] p-3 text-[13px] space-y-1">
-                <div class="grid grid-cols-2 gap-2 text-left">
-                  <div>
-                    <span class="text-[11px] font-bold text-[#b51d04] uppercase tracking-wide block">Antes</span>
-                    <span class="text-on-surface-variant">Estado: Activo · Receptor Chinchiná</span>
-                  </div>
-                  <div>
-                    <span class="text-[11px] font-bold text-secondary uppercase tracking-wide block">Después</span>
-                    <span class="text-secondary font-semibold">Estado: Suspendido (corte inmediato en API)</span>
-                  </div>
+              <div class="flex-1 min-w-0">
+                <div class="text-[16px] font-semibold text-on-surface leading-snug">Suspendió el usuario @m.torres por cambio de sede</div>
+                <div class="flex items-center gap-1.5 text-[15px] text-[#505565] mt-0.5">
+                  <span class="font-normal truncate">Joseph Quintero · 16:20</span>
+                  <span class="material-symbols-outlined text-[16px] text-[#b45309] shrink-0" style="font-variation-settings: 'FILL' 1;" title="Destacado">star</span>
                 </div>
               </div>
-
-              <div class="mt-2 flex items-center justify-between text-[13px] text-on-surface-variant pt-0.5">
-                <span class="flex items-center gap-1">
-                  <span class="material-symbols-outlined text-[16px] text-on-surface-variant">gavel</span>
-                  Motivo: Reasignación PMU
-                </span>
-                <span class="text-primary-container font-semibold flex items-center gap-0.5">
-                  Ver detalle
-                  <span class="material-symbols-outlined text-[16px]">chevron_right</span>
-                </span>
-              </div>
-            </article>
+              <span class="material-symbols-outlined text-[#707976] group-hover:text-on-surface transition-colors shrink-0">chevron_right</span>
+            </button>
 
           </div>
-        </div>
+        </section>
 
-      </section>
+      </div>
 
-      <!-- 5. Pie de lista con conteo y botón Cargar más -->
-      <section class="pt-2 text-center space-y-3">
-        <p class="text-[15px] font-tabular font-semibold text-on-surface-variant">
-          Mostrando 50 de 312 registros
-        </p>
-        <button 
-          type="button" 
-          class="w-full min-h-[48px] h-[50px] bg-surface-container-lowest border-[1.5px] border-[#cbd5e1] hover:border-primary-container active:bg-[#f1f5f9] text-primary-container font-bold text-[16px] rounded-xl flex items-center justify-center gap-2 transition-all shadow-xs"
-        >
-          <span class="material-symbols-outlined text-[20px]">expand_more</span>
+      <!-- 5. Hoja Inferior abierta como ejemplo del detalle de un registro (Ítem 5 del requerimiento) -->
+      <div class="px-4 mt-6">
+        <section class="bg-white rounded-[20px] border-2 border-[#b0efe1] shadow-lg overflow-hidden relative" aria-labelledby="detalle-registro-titulo">
+          
+          <!-- Pestaña de arrastre (Handle visual de bottom sheet) -->
+          <div class="pt-3 pb-1 flex justify-center bg-[#f8fafc]">
+            <div class="w-10 h-1.5 bg-[#cbd5e1] rounded-full"></div>
+          </div>
+
+          <!-- Cabecera de la hoja inferior -->
+          <div class="px-5 pt-3 pb-4 bg-[#f8fafc] border-b border-[#e2e8f0]">
+            <div class="flex items-center justify-between">
+              <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] text-[12px] font-bold uppercase tracking-wider bg-primary-container text-white">
+                <span class="material-symbols-outlined text-[14px]">person_add</span>
+                Invitaciones
+              </span>
+              <button class="w-9 h-9 rounded-full flex items-center justify-center text-[#64748b] hover:bg-[#e2e8f0] active:scale-95 transition-colors" aria-label="Cerrar detalle" type="button">
+                <span class="material-symbols-outlined text-[20px]">close</span>
+              </button>
+            </div>
+
+            <h2 id="detalle-registro-titulo" class="text-[19px] font-bold text-on-surface leading-snug mt-2.5">
+              Invitó a Daniela Méndez como Operador
+            </h2>
+
+            <div class="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[15px] text-[#475569]">
+              <div class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[17px] text-primary-container">account_circle</span>
+                <span class="font-medium text-on-surface">Joseph Quintero</span>
+              </div>
+              <div class="flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-[17px] text-[#64748b]">schedule</span>
+                <span>Hoy · 11:15</span>
+              </div>
+              <div class="text-[13px] font-mono text-[#64748b]">
+                ID: #EV-8840
+              </div>
+            </div>
+          </div>
+
+          <!-- Contenido: Tabla simple de dos columnas «Antes» y «Después» -->
+          <div class="p-5 space-y-4">
+            <div>
+              <div class="text-[13px] font-bold uppercase tracking-wider text-[#64748b] mb-2">Campos modificados</div>
+              
+              <!-- Tabla de comparación Antes vs Después -->
+              <div class="rounded-[12px] border border-[#e2e8f0] overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                  <thead>
+                    <tr class="bg-[#f1f5f9] border-b border-[#e2e8f0] text-[13px] font-bold text-[#475569] uppercase tracking-wider">
+                      <th class="py-2.5 px-3.5 w-1/2 border-r border-[#e2e8f0]">Antes</th>
+                      <th class="py-2.5 px-3.5 w-1/2 bg-[#f0fdf4] text-[#166534]">Después</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-[#e2e8f0] text-[15px]">
+                    <tr>
+                      <td class="py-3 px-3.5 text-[#64748b] align-top border-r border-[#e2e8f0]">
+                        <span class="block text-[12px] font-semibold text-[#94a3b8] uppercase">Usuario</span>
+                        Sin registro previo
+                      </td>
+                      <td class="py-3 px-3.5 text-on-surface font-medium bg-[#f0fdf4]/50 align-top">
+                        <span class="block text-[12px] font-semibold text-[#16a34a] uppercase">Usuario</span>
+                        @d.mendez
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="py-3 px-3.5 text-[#64748b] align-top border-r border-[#e2e8f0]">
+                        <span class="block text-[12px] font-semibold text-[#94a3b8] uppercase">Rol</span>
+                        Ninguno
+                      </td>
+                      <td class="py-3 px-3.5 text-on-surface font-medium bg-[#f0fdf4]/50 align-top">
+                        <span class="block text-[12px] font-semibold text-[#16a34a] uppercase">Rol</span>
+                        Operador
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="py-3 px-3.5 text-[#64748b] align-top border-r border-[#e2e8f0]">
+                        <span class="block text-[12px] font-semibold text-[#94a3b8] uppercase">Sedes asignadas</span>
+                        0 sedes
+                      </td>
+                      <td class="py-3 px-3.5 text-on-surface font-medium bg-[#f0fdf4]/50 align-top">
+                        <span class="block text-[12px] font-semibold text-[#16a34a] uppercase">Sedes asignadas</span>
+                        Acopio Norte, Chapinero
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Canal utilizado -->
+            <div class="bg-[#f8fafc] rounded-[10px] p-3 border border-[#e2e8f0] flex items-center justify-between text-[14px]">
+              <span class="text-[#64748b]">Canal de entrega:</span>
+              <span class="font-semibold text-on-surface flex items-center gap-1 text-[#047857]">
+                <span class="material-symbols-outlined text-[16px]">link</span>
+                Enlace único (WhatsApp)
+              </span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- 6. Botón «Cargar más» al final -->
+      <div class="px-4 pt-6">
+        <button class="w-full min-h-[50px] bg-white border border-[#cbd5e1] hover:border-primary-container active:bg-[#f8fafc] text-on-surface font-semibold text-[16px] rounded-[12px] flex items-center justify-center gap-2 transition-all shadow-sm" type="button">
+          <span class="material-symbols-outlined text-[20px] text-primary-container">arrow_downward</span>
           <span>Cargar más</span>
         </button>
-      </section>
+        <div class="text-center text-[13px] text-[#64748b] mt-2 font-medium">
+          Mostrando 5 de 312 registros
+        </div>
+      </div>
 
     </main>
 
-    <!-- 6. Barra de navegación inferior fija idéntica a Inicio con sesión (Más ACTIVO) -->
-    <nav aria-label="Navegación principal" class="sticky bottom-0 z-30 w-full bg-white border-t border-[#e2e8f0] px-2 py-1 shadow-[0_-2px_10px_rgba(0,0,0,0.03)]">
+    <!-- 7. Barra de navegación inferior fija con «Más» activo -->
+    <nav aria-label="Navegación principal" class="sticky bottom-0 z-30 w-full bg-white border-t border-[#e2e8f0] px-2 py-1 shadow-[0_-2px_10px_rgba(0,0,0,0.04)]">
       <div class="grid grid-cols-5 items-center">
         <!-- 1. Inicio -->
-        <a class="flex flex-col items-center justify-center min-h-[48px] py-1 text-[#727785] hover:text-on-surface transition-colors" href="#">
+        <a class="flex flex-col items-center justify-center min-h-[52px] py-1 text-[#727785] hover:text-on-surface transition-colors" href="#">
           <span class="material-symbols-outlined text-[24px]">home</span>
           <span class="text-[11px] font-medium tracking-[0.015em] mt-0.5">Inicio</span>
         </a>
         <!-- 2. Mapa -->
-        <a class="flex flex-col items-center justify-center min-h-[48px] py-1 text-[#727785] hover:text-on-surface transition-colors" href="#">
+        <a class="flex flex-col items-center justify-center min-h-[52px] py-1 text-[#727785] hover:text-on-surface transition-colors" href="#">
           <span class="material-symbols-outlined text-[24px]">map</span>
           <span class="text-[11px] font-medium tracking-[0.015em] mt-0.5">Mapa</span>
         </a>
         <!-- 3. Causas -->
-        <a class="flex flex-col items-center justify-center min-h-[48px] py-1 text-[#727785] hover:text-on-surface transition-colors" href="#">
+        <a class="flex flex-col items-center justify-center min-h-[52px] py-1 text-[#727785] hover:text-on-surface transition-colors" href="#">
           <span class="material-symbols-outlined text-[24px]">volunteer_activism</span>
           <span class="text-[11px] font-medium tracking-[0.015em] mt-0.5">Causas</span>
         </a>
         <!-- 4. Voluntariado -->
-        <a class="flex flex-col items-center justify-center min-h-[48px] py-1 text-[#727785] hover:text-on-surface transition-colors" href="#">
+        <a class="flex flex-col items-center justify-center min-h-[52px] py-1 text-[#727785] hover:text-on-surface transition-colors" href="#">
           <span class="material-symbols-outlined text-[24px]">groups</span>
           <span class="text-[11px] font-medium tracking-[0.015em] mt-0.5">Voluntariado</span>
         </a>
         <!-- 5. Más (ACTIVO) -->
-        <a class="flex flex-col items-center justify-center min-h-[48px] py-1 text-primary-container font-semibold relative" href="#">
-          <!-- Active Indicator Pill -->
+        <a class="flex flex-col items-center justify-center min-h-[52px] py-1 text-primary-container font-semibold relative" href="#">
           <div class="w-12 h-7 bg-primary-fixed text-primary-container rounded-full flex items-center justify-center mb-0.5 transition-colors">
             <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">more_horiz</span>
           </div>
@@ -520,5 +418,6 @@
     </nav>
 
   </div>
+
 </body>
 </html>

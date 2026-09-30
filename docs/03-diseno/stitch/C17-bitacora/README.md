@@ -11,11 +11,11 @@ actualizado: 2026-09-30
 | | |
 |---|---|
 | Proyecto | ACOPIO DISEÑO (`10306891818878200068`), tema «Acopio Field Command» |
-| Pantalla | `3c7f26fb12a843e5a8bd50b45c103d33` |
+| Pantalla | `c460e08d0cb64d61bd7c215b9551f150` |
 | Exportada | 2026-09-30 |
-| Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) · [maqueta.html](maqueta.html) |
-| Maqueta | <https://claude.ai/artifact/PyGukurxsVNsfm8VkbUDUh>, pendiente de aprobación |
+| Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
+| Aprobación | Joseph la aprobó en Stitch el 2026-09-30 |
 
-Usa la cabecera con sesión y la barra inferior de [componentes compartidos](../_compartidos/README.md).
-Stitch la generó en formato de escritorio con la columna móvil al centro; el código es
-móvil primero.
+Reemplaza a la primera versión, guardada en [primera/](primera/), que era demasiado densa
+para recorrerla en el teléfono. Esta usa las filas de «Más», filtros en una sola fila de
+píldoras con «Filtrar» para las fechas, y el antes y el después en una hoja inferior.
