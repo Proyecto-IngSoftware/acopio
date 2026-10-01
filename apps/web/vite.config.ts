@@ -2,10 +2,56 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
+
+// Pantallas que se descargan al abrirlas pero que suelen ser la primera visita, por un
+// enlace compartido. Si la dirección coincide, el HTML pide sus archivos desde el
+// principio, en paralelo con el principal, y no después de él (§9 del Bloque 1: el mapa
+// en menos de 3 s en 3G)
+const PRECARGAS: Record<string, string> = {
+  '/mapa': 'src/portal/mapa/Mapa.tsx',
+  '/acopios/': 'src/portal/ficha/FichaAcopio.tsx',
+};
+
+function precargarPantallas(): Plugin {
+  return {
+    name: 'acopio:precargar-pantallas',
+    apply: 'build',
+    transformIndexHtml: {
+      order: 'post',
+      handler(html, ctx) {
+        const bundle = ctx.bundle;
+        if (!bundle) return html;
+        const entrada = Object.values(bundle).find((c) => c.type === 'chunk' && c.isEntry);
+        const yaEstan = new Set(
+          entrada?.type === 'chunk' ? [entrada.fileName, ...entrada.imports] : [],
+        );
+        const mapa: Record<string, string[]> = {};
+        for (const [prefijo, modulo] of Object.entries(PRECARGAS)) {
+          const raiz = Object.values(bundle).find(
+            (c) => c.type === 'chunk' && c.facadeModuleId?.endsWith(modulo),
+          );
+          if (!raiz) throw new Error(`precarga: no hay fragmento para ${modulo}`);
+          const archivos = new Set<string>();
+          const visitar = (nombre: string) => {
+            const c = bundle[nombre];
+            if (!c || c.type !== 'chunk' || yaEstan.has(nombre) || archivos.has(nombre)) return;
+            archivos.add(nombre);
+            c.viteMetadata?.importedCss.forEach((css) => archivos.add(css));
+            c.imports.forEach(visitar);
+          };
+          visitar(raiz.fileName);
+          mapa[prefijo] = [...archivos].map((f) => `/${f}`);
+        }
+        const script = `(function(){var p=location.pathname,m=${JSON.stringify(mapa)};for(var k in m){if(k.slice(-1)==='/'?p.indexOf(k)!==0:p!==k)continue;m[k].forEach(function(h){var l=document.createElement('link');if(/\\.css$/.test(h)){l.rel='stylesheet'}else{l.rel='modulepreload';l.crossOrigin=''}l.href=h;document.head.appendChild(l)})}})()`;
+        return { html, tags: [{ tag: 'script', children: script, injectTo: 'head-prepend' }] };
+      },
+    },
+  };
+}
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [react(), tailwindcss(), precargarPantallas()],
   // Las reglas compartidas se compilan desde su código fuente: la web no depende del dist
   resolve: {
     alias: {

@@ -284,12 +284,16 @@ Es idempotente y el seed real no cambia.
 
 ## 9. Criterios de salida
 
-- [ ] El recorrido del §1 funciona en el Compose local
-- [ ] La Portada no crece por Leaflet, y el mapa carga en menos de 3 s con la
-      simulación de 3G de Chromium
-- [ ] axe sin violaciones graves en cada pantalla nueva a 360 × 640, y la vista de
-      lista del mapa se usa entera con el teclado
-- [ ] Pasan `lint`, `typecheck`, `depcruise`, `test`, `test:int` y
+Cumplidos el 2026-10-01; la verificación fue de Joseph.
+
+- [x] El recorrido del §1 funciona en el Compose local (cierre de los ciclos 1 y 2)
+- [x] La Portada no crece por Leaflet, y el mapa carga en menos de 3 s con la
+      simulación de 3G de Chromium: los marcadores salen a 2,9 s, con el build servido
+      con gzip y la caché vacía. Las teselas de OpenStreetMap llegan a 4,4 s
+- [x] axe sin violaciones graves en cada pantalla nueva a 360 × 640, y la vista de
+      lista del mapa se usa entera con el teclado: Tab llega a los filtros, a «Mapa /
+      Lista» y a cada acopio, con el foco visible, y Enter abre la ficha
+- [x] Pasan `lint`, `typecheck`, `depcruise`, `test`, `test:int` y
       `scripts/revisar-colores.sh`; el contrato y los tipos quedan al día y el CI de
       `main` en verde
 
@@ -341,4 +345,11 @@ Es idempotente y el seed real no cambia.
 | Los Administradores no ocupan filas en la matriz; una línea dice cuántos son | Marcados en todas las columnas no informan nada |
 | El CSV usa `;`, BOM y una fila por persona y ubicación | Así lo abre Excel en Colombia, con las tildes bien |
 | Con conmutador, la cabecera muestra solo el logo en un teléfono | A 360 px el nombre de la ubicación se cortaba en «Acopi…» |
+
+**2026-10-01 · Cierre.** El mapa tardaba 3,9 s en mostrar los marcadores en Fast 3G porque todo iba en cadena: primero el archivo principal, después la pantalla y Leaflet, y solo al final la consulta de acopios.
+
+| Qué | Por qué |
+|---|---|
+| Un plugin del build (`PRECARGAS` en `apps/web/vite.config.ts`) mete en el HTML un script que, en `/mapa` y `/acopios/:id`, pide los archivos de esa pantalla desde el principio | Bajaban después del archivo principal. El script va al principio del `head`, porque detrás de la hoja de estilos de los íconos esperaba a que esta cargara |
+| `App` lanza la consulta de acopios al arrancar cuando la dirección es `/mapa` | Salía cuando la pantalla ya estaba dibujada. Con los dos cambios, los marcadores salen a 2,9 s |
 

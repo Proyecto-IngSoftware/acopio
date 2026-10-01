@@ -54,7 +54,7 @@ Monorepo con workspaces de Bun:
 - `packages/shared`: funciones puras que usan la API y el frontend (formato, unidades, y más adelante las fórmulas del motor).
 - `prisma/`: esquema y migraciones, en la raíz. `apps/api/prisma.config.ts` apunta allá y carga el `.env` de la raíz.
 - `infra/`: `docker-compose.yml` es la base de producción; `docker-compose.dev.yml` añade puertos, Mailpit y el login local.
-- `apps/web`: SPA con Vite, React, React Router, TanStack Query y Tailwind 4. Las pantallas se diseñan en Google Stitch y se reescriben con componentes propios (ADR-0011). El cliente de la API se tipa desde el contrato OpenAPI (`src/api/esquema.d.ts`, generado). Lee `@acopio/shared` desde su código fuente (alias en `vite.config.ts`). El script `build` fija `NODE_ENV=production` porque el `.env` de la raíz trae `development` para la API y Vite lo leería.
+- `apps/web`: SPA con Vite, React, React Router, TanStack Query y Tailwind 4. Las pantallas se diseñan en Google Stitch y se reescriben con componentes propios (ADR-0011). El cliente de la API se tipa desde el contrato OpenAPI (`src/api/esquema.d.ts`, generado). Lee `@acopio/shared` desde su código fuente (alias en `vite.config.ts`). El script `build` fija `NODE_ENV=production` porque el `.env` de la raíz trae `development` para la API y Vite lo leería. El build mete en el HTML la precarga de las pantallas que suelen abrirse primero por un enlace (`PRECARGAS` en `vite.config.ts`); una pantalla así se agrega ahí.
 - `packages/ui-tokens`: el único lugar con colores. Tokens del tema de Stitch con sus mismos nombres, así las clases del HTML de Stitch (`bg-primary-container`, `text-body-md`, `p-space-md`) funcionan en `apps/web` (ADR-0013).
 
 ### Módulos de la API

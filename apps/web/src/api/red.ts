@@ -1,5 +1,5 @@
 import type { Horario } from '@acopio/shared';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { queryOptions, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { api, desenvolver, type ErrorApi } from './cliente';
 import type { components } from './esquema';
 
@@ -50,9 +50,12 @@ function useCambio<T, R>(hacer: (datos: T) => Promise<R>, claves: string[][]) {
 
 // ── Acopios ──
 
-export function useAcopiosPublicos(filtro: { abiertoAhora?: boolean; cerca?: Punto | null }) {
+type FiltroPublico = { abiertoAhora?: boolean; cerca?: Punto | null };
+
+/** Consulta de P5; la usa también `App` para lanzarla antes de que llegue la pantalla. */
+export function opcionesAcopiosPublicos(filtro: FiltroPublico) {
   const cerca = filtro.cerca ? `${filtro.cerca.lat},${filtro.cerca.lng}` : undefined;
-  return useQuery<AcopioPublico[], ErrorApi>({
+  return queryOptions<AcopioPublico[], ErrorApi>({
     queryKey: ['acopios', 'publicos', filtro.abiertoAhora ?? false, cerca],
     queryFn: async () => {
       const filas = await desenvolver(
@@ -65,6 +68,10 @@ export function useAcopiosPublicos(filtro: { abiertoAhora?: boolean; cerca?: Pun
       return (filas as unknown as AcopioPublico[]).map(acopio);
     },
   });
+}
+
+export function useAcopiosPublicos(filtro: FiltroPublico) {
+  return useQuery(opcionesAcopiosPublicos(filtro));
 }
 
 export function useAcopio(id: string) {

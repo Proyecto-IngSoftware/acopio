@@ -20,21 +20,16 @@ import { Segmentado } from '../../componentes/Segmentado';
 // Esta pantalla ya se descarga al abrirla (rutas.tsx); Leaflet viaja en su mismo fragmento
 // y así se ahorra una ida y vuelta en 3G (I-02)
 import MapaAcopios from './MapaAcopios';
+import { filtroDelMapa } from './filtro';
 import { TarjetaAcopio, aperturaPublica, km } from './TarjetaAcopio';
-
-const leerPunto = (texto: string | null): Punto | null => {
-  const [lat, lng] = (texto ?? '').split(',').map(Number);
-  return texto && Number.isFinite(lat) && Number.isFinite(lng) ? { lat: lat!, lng: lng! } : null;
-};
 
 /** P5 Mapa de acopios (RF-RED-002). Los filtros viven en la URL, así «Volver al mapa»
  *  los conserva. */
 export function Mapa() {
   const [parametros, fijarParametros] = useSearchParams();
   const vista = parametros.get('vista') === 'lista' ? 'lista' : 'mapa';
-  const abierto = parametros.get('abierto') === '1';
+  const { abiertoAhora: abierto, cerca } = filtroDelMapa(parametros);
   const lleva = parametros.get('lleva');
-  const cerca = leerPunto(parametros.get('cerca'));
   const [elegido, fijarElegido] = useState<string | null>(null);
 
   const cambiar = (clave: string, valor: string | null) =>
