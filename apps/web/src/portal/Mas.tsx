@@ -32,6 +32,13 @@ const HERRAMIENTAS: Herramienta[] = [
     roles: ['ADMIN', 'AUDITOR'],
   },
   {
+    a: '/consola/accesos',
+    icono: 'grid_view',
+    titulo: 'Matriz de acceso',
+    descripcion: 'Quién puede tocar cada ubicación',
+    roles: ['AUDITOR'],
+  },
+  {
     a: '/consola/catalogo',
     icono: 'category',
     titulo: 'Catálogo maestro',

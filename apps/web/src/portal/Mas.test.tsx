@@ -54,11 +54,15 @@ it('el Administrador ve su cuenta y sus herramientas, también las de la red', a
   expect(screen.queryByRole('region', { name: 'Mi acopio' })).not.toBeInTheDocument();
 });
 
-it('el Auditor solo ve la bitácora', async () => {
+it('el Auditor ve la bitácora y la matriz de acceso', async () => {
   pantalla(persona('AUDITOR'));
   const admin = await screen.findByRole('region', { name: 'Administración' });
-  expect(within(admin).getAllByRole('link')).toHaveLength(1);
+  expect(within(admin).getAllByRole('link')).toHaveLength(2);
   expect(within(admin).getByRole('link', { name: /Bitácora/ })).toBeInTheDocument();
+  expect(within(admin).getByRole('link', { name: /Matriz de acceso/ })).toHaveAttribute(
+    'href',
+    '/consola/accesos',
+  );
 });
 
 it('un Operador ve «Mi acopio» solo para la ubicación activa', async () => {

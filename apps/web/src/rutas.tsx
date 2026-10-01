@@ -14,6 +14,9 @@ const ActivarCuenta = lazy(() =>
   import('./acceso/ActivarCuenta').then((m) => ({ default: m.ActivarCuenta })),
 );
 const Entrar = lazy(() => import('./acceso/Entrar').then((m) => ({ default: m.Entrar })));
+const MatrizAcceso = lazy(() =>
+  import('./consola/accesos/MatrizAcceso').then((m) => ({ default: m.MatrizAcceso })),
+);
 const Bitacora = lazy(() => import('./consola/Bitacora').then((m) => ({ default: m.Bitacora })));
 const Catalogo = lazy(() =>
   import('./consola/catalogo/Catalogo').then((m) => ({ default: m.Catalogo })),
@@ -62,6 +65,14 @@ export function Rutas() {
           element={
             <RequiereRol roles={['ADMIN', 'AUDITOR']}>
               <Bitacora />
+            </RequiereRol>
+          }
+        />
+        <Route
+          path="consola/accesos"
+          element={
+            <RequiereRol roles={['ADMIN', 'AUDITOR']}>
+              <MatrizAcceso />
             </RequiereRol>
           }
         />

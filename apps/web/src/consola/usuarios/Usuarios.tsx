@@ -5,6 +5,7 @@ import { EnlaceBoton } from '../../componentes/Boton';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
 import { Icono } from '../../componentes/Icono';
+import { Pildora } from '../../componentes/Pildora';
 import { iniciales } from '../../sesion/roles';
 import { Encabezado } from '../Encabezado';
 import { DistintivoEstado, ROLES } from './comun';
@@ -15,31 +16,6 @@ const FILTRO_ESTADO: { estado?: EstadoUsuario; texto: string }[] = [
   { estado: 'INVITADO', texto: 'Invitados' },
   { estado: 'SUSPENDIDO', texto: 'Suspendidos' },
 ];
-
-function Pildora({
-  activa,
-  texto,
-  alTocar,
-}: {
-  activa: boolean;
-  texto: string;
-  alTocar: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={activa}
-      onClick={alTocar}
-      className={`min-h-[40px] shrink-0 rounded-full px-space-md text-label-md ${
-        activa
-          ? 'bg-primary-container text-on-primary'
-          : 'bg-surface-container text-on-surface-variant'
-      }`}
-    >
-      {texto}
-    </button>
-  );
-}
 
 /** C16 Usuarios y accesos (RF-IDE-001 a 011). Diseño: docs/03-diseno/stitch/C16-usuarios. */
 export function Usuarios() {
@@ -126,6 +102,10 @@ export function Usuarios() {
         </ul>
       )}
 
+      <EnlaceBoton a="/consola/accesos" variante="secundario" className="min-h-[56px] w-full">
+        <Icono nombre="grid_view" className="text-[20px]" />
+        Matriz de acceso
+      </EnlaceBoton>
       <EnlaceBoton a="/consola/usuarios/invitar" className="min-h-[56px] w-full">
         <Icono nombre="person_add" className="text-[20px]" />
         Invitar persona

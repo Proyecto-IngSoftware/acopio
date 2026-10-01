@@ -67,5 +67,5 @@ RF-IDE-011 en cualquier ancho.
 | 1 Maquetas | ✅ | Stitch se cortó por tiempo dos veces sin dejar pantalla. La maqueta se armó con los tokens del tema y Joseph la aprobó el 2026-10-01 |
 | 2 Cruce y CSV | ✅ | `consola/accesos/matriz.ts`. El CSV antepone una comilla simple a los campos que empiezan con `=`, `+`, `-` o `@`, para que Excel no los lea como fórmula |
 | 3 Selector | ✅ | `useUbicacionActiva` (en `sesion/`) guarda la elección con `useSyncExternalStore`, así la cabecera y «Más» cambian juntas. `scripts/iconos.mjs` no ve un ícono que sale de una variable; el del selector se escribió como `function iconoDe` para que lo encuentre |
-| 4 Matriz | ⬜ | |
+| 4 Matriz | ✅ | `/consola/accesos`. `MarcoPortal` deja esta ruta más ancha desde 768 px (lista `AMPLIAS`). El CSV sale con los filtros de rol y estado aplicados. `Pildora` pasó de C16 a `componentes/` |
 | 5 Cierre | ⬜ | |
