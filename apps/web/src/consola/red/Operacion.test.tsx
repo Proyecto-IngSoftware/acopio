@@ -1,7 +1,6 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes } from 'react-router';
-import { vi } from 'vitest';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
 import { acopioDePrueba } from '../../pruebas/datos-red';
 import {
