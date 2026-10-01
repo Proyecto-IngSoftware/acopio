@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-1]
 estado: vigente
 bloque: 1
-actualizado: 2026-09-30
+actualizado: 2026-10-01
 ---
 
 # Bloque 1 · Red de acopios y mapa público · especificación
@@ -319,3 +319,15 @@ Es idempotente y el seed real no cambia.
 | La búsqueda de ubicaciones ignora mayúsculas, no tildes | Con decenas de ubicaciones basta |
 | Al editar u operar un acopio, la API lo lee con la fila bloqueada (`FOR UPDATE`) | En la revisión final apareció una carrera: un Operador que pausaba mientras el Administrador cerraba podía reabrir el acopio |
 | La geocodificación tiene tope de cola (10 consultas distintas en espera; pasado el tope, 503) y de caché (500 respuestas), y las consultas iguales que llegan juntas comparten una llamada | El endpoint es público: sin tope, unas pocas IP podían hacer esperar minutos a los demás y la caché crecía sin límite |
+
+**2026-10-01 · Interfaz, ciclo 1.** Construida según el [plan](../../05-planes/2026-09-30-bloque-1-interfaz-ciclo-1.md).
+
+| Qué | Por qué |
+|---|---|
+| El filtro de categorías de P5 es «¿Qué vas a llevar?»: oculta los acopios que no reciben esa categoría y dice cuántos ocultó | El diseño de Stitch decía «No recibe: Ropa» como filtro, que muestra lo contrario de lo que pide RF-RED-002 |
+| `GET /categorias/vigentes`, pública | `GET /categorias` exige sesión y además lista las archivadas para el Administrador |
+| `distanciaKm` pasó de la API a `@acopio/shared`, y se sumaron `tramoActual` y `diaEnBogota` | La web calcula la distancia, «Cierra 12:00» y el día de hoy con las mismas reglas que la API |
+| La web lee `@acopio/shared` desde su código fuente (alias de Vite y `paths`) | Así no hay que compilar el paquete antes de la web |
+| El buscador de ubicaciones de C16 entró en este ciclo (B-08) | Sin él, asignar un acopio o una zona pedía pegar un id |
+| La consola, el acceso y el mapa se cargan al abrirlos, y el build de la web fija `NODE_ENV=production` | En Fast 3G la Portada tardaba 3,0 s; ahora 2,6 s. El `.env` de la raíz trae `NODE_ENV=development` y Vite lo usaba en el build |
+| El pin arrastrable lleva título y texto alternativo, y los mapas llevan `isolate` | axe pedía nombre para el marcador, y Leaflet tapaba la cabecera y la barra inferior |

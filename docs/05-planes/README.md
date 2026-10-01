@@ -3,7 +3,7 @@ title: "Planes de implementación"
 type: moc
 tags: [moc, planes]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-01
 ---
 
 # Planes de implementación
@@ -42,7 +42,7 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 | 0 · Interfaz, ciclo 2 | [aprobada](../superpowers/specs/2026-09-30-interfaz-ciclo-2-acceso-design.md) | [aprobado](2026-09-30-interfaz-ciclo-2-acceso.md) | ✅ acceso y sesión construidos |
 | 0 · Interfaz, ciclo 3 | sin especificación; los diseños están en el [plan](2026-09-30-interfaz-ciclo-3-consola.md) | [aprobado](2026-09-30-interfaz-ciclo-3-consola.md) | ✅ «Más» y consola (C16, C17, C18) construidos |
 | 1 · Red, API | [aprobada](../superpowers/specs/2026-09-30-bloque-1-red-design.md) | [aprobado](2026-09-30-bloque-1-api.md) | 🟡 API ✅; siguen las pantallas, un plan por ciclo |
-| 1 · Red, interfaz ciclo 1 | [aprobada](../superpowers/specs/2026-09-30-bloque-1-red-design.md) | [por aprobar](2026-09-30-bloque-1-interfaz-ciclo-1.md) | ⬜ diseños aprobados; falta construir |
+| 1 · Red, interfaz ciclo 1 | [aprobada](../superpowers/specs/2026-09-30-bloque-1-red-design.md) | [aprobado](2026-09-30-bloque-1-interfaz-ciclo-1.md) | ✅ red y mapa construidos; sigue el ciclo 2 (selector de la cabecera y matriz de acceso) |
 | 2 · Inventario | pendiente | pendiente | ⬜ |
 | 3 · Custodia | pendiente | pendiente | ⬜ |
 | 4 · Motor | pendiente | pendiente | ⬜ |

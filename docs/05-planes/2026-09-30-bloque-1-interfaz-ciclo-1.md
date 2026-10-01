@@ -4,7 +4,7 @@ type: plan
 tags: [plan, interfaz, bloque-1]
 estado: vigente
 bloque: 1
-actualizado: 2026-09-30
+actualizado: 2026-10-01
 ---
 
 # Bloque 1 · Interfaz, ciclo 1: red y mapa · plan
@@ -82,4 +82,4 @@ filtros, y se revisa en Chromium.
 | 8 Mi acopio y C7 | ✅ | C7 muestra «Marcado hace 2 h» sin el nombre de quien marcó: la API no lo devuelve. Con fecha de reapertura dice «Vuelve a recibir al día siguiente» |
 | 9 P5 | ✅ | El filtro se volvió «¿Qué vas a llevar?»: oculta los acopios que no reciben esa categoría y dice cuántos ocultó. La API suma `GET /categorias/vigentes`, pública, porque `GET /categorias` exige sesión |
 | 10 P6 | ✅ | `distanciaKm` pasó de la API a `@acopio/shared` y se sumó `diaEnBogota`. La ficha deja marcada la pestaña «Mapa» |
-| 11 Cierre | ⬜ | |
+| 11 Cierre | ✅ | Recorrido en el Compose y axe en Chromium a 360 × 640 sin hallazgos; capturas `construida.png` en las ocho carpetas. En Fast 3G la Portada carga en 2,6 s y el mapa muestra los marcadores en 4,6 s. Para llegar ahí, la consola, el acceso y el mapa se cargan al abrirlos, y el build fija `NODE_ENV=production`: el `.env` de la raíz trae `development` para la API, Vite lo leía y metía React de desarrollo (el fragmento principal bajó de 151 a 94 kB gzip). El mapa no tiene meta propia en los no funcionales |
