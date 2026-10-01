@@ -265,6 +265,12 @@ function Formulario({ acopio, entidades }: { acopio: Acopio | null; entidades: E
               descripcion="Categorías que este acopio hoy no recibe"
               a={`/consola/acopios/${acopio.id}/no-recibir`}
             />
+            <FilaMenu
+              icono="inventory"
+              titulo="Inventario"
+              descripcion="Saldo, estado e historial de cada categoría"
+              a={`/consola/acopios/${acopio.id}/inventario`}
+            />
           </ul>
           <section className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md">
             {cerrado ? (

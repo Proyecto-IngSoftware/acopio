@@ -14,6 +14,15 @@ const ActivarCuenta = lazy(() =>
   import('./acceso/ActivarCuenta').then((m) => ({ default: m.ActivarCuenta })),
 );
 const Entrar = lazy(() => import('./acceso/Entrar').then((m) => ({ default: m.Entrar })));
+const Inventario = lazy(() =>
+  import('./consola/inventario/Inventario').then((m) => ({ default: m.Inventario })),
+);
+const Historial = lazy(() =>
+  import('./consola/inventario/Historial').then((m) => ({ default: m.Historial })),
+);
+const EntradaRapida = lazy(() =>
+  import('./consola/inventario/EntradaRapida').then((m) => ({ default: m.EntradaRapida })),
+);
 const MatrizAcceso = lazy(() =>
   import('./consola/accesos/MatrizAcceso').then((m) => ({ default: m.MatrizAcceso })),
 );
@@ -65,6 +74,26 @@ export function Rutas() {
           element={
             <RequiereRol roles={['ADMIN', 'AUDITOR']}>
               <Bitacora />
+            </RequiereRol>
+          }
+        />
+        {(
+          [
+            ['consola/acopios/:id/inventario', <Inventario key="inv" />],
+            ['consola/acopios/:id/inventario/:categoriaId', <Historial key="his" />],
+          ] as const
+        ).map(([ruta, pantalla]) => (
+          <Route
+            key={ruta}
+            path={ruta}
+            element={<RequiereRol roles={['ADMIN', 'AUDITOR', 'OPERADOR']}>{pantalla}</RequiereRol>}
+          />
+        ))}
+        <Route
+          path="consola/acopios/:id/entrada"
+          element={
+            <RequiereRol roles={['OPERADOR']}>
+              <EntradaRapida />
             </RequiereRol>
           }
         />

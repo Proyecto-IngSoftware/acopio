@@ -68,18 +68,39 @@ const HERRAMIENTAS: Herramienta[] = [
   },
 ];
 
-/** El acopio donde opera la persona, si la ubicación activa es un acopio (J-04). */
+/** Las herramientas del acopio donde opera la persona, según su rol (J-04, E-07). */
 function MiAcopio() {
+  const { usuario } = useSesion();
   const { activa } = useUbicacionActiva();
-  if (activa?.tipo !== 'ACOPIO') return null;
+  if (activa?.tipo !== 'ACOPIO' || !usuario) return null;
+  const operador = usuario.rol === 'OPERADOR';
+  const base = `/consola/acopios/${activa.id}`;
   return (
     <SeccionMenu id="mi-acopio" titulo="Mi acopio">
-      <FilaMenu
-        a={`/consola/acopios/${activa.id}/operacion`}
-        icono="inventory_2"
-        titulo={activa.nombre}
-        descripcion="Estado, horario y lo que no recibe"
-      />
+      {operador && (
+        <FilaMenu
+          a={`${base}/entrada`}
+          icono="add_circle"
+          titulo="Entrada rápida"
+          descripcion="Registrar lo que llega"
+        />
+      )}
+      {(operador || usuario.rol === 'AUDITOR') && (
+        <FilaMenu
+          a={`${base}/inventario`}
+          icono="inventory"
+          titulo="Inventario"
+          descripcion="Saldo y estado de cada categoría"
+        />
+      )}
+      {operador && (
+        <FilaMenu
+          a={`${base}/operacion`}
+          icono="inventory_2"
+          titulo={activa.nombre}
+          descripcion="Estado, horario y lo que no recibe"
+        />
+      )}
     </SeccionMenu>
   );
 }

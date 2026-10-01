@@ -55,7 +55,7 @@ it('con varias, el conmutador muestra la primera y «Más» solo esa', async () 
   pantalla();
   expect(await conmutador()).toHaveTextContent('Coliseo El Salitre');
   const mio = await screen.findByRole('region', { name: 'Mi acopio' });
-  expect(within(mio).getAllByRole('link')).toHaveLength(1);
+  expect(within(mio).getAllByRole('link')).toHaveLength(3);
   expect(within(mio).getByRole('link', { name: /Coliseo El Salitre/ })).toHaveAttribute(
     'href',
     '/consola/acopios/a1/operacion',

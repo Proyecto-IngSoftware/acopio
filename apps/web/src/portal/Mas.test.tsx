@@ -85,8 +85,35 @@ it('un Operador ve «Mi acopio» solo para la ubicación activa', async () => {
     'href',
     '/consola/acopios/x1/operacion',
   );
-  expect(within(mio).getAllByRole('link')).toHaveLength(1);
+  expect(within(mio).getByRole('link', { name: /Entrada rápida/ })).toHaveAttribute(
+    'href',
+    '/consola/acopios/x1/entrada',
+  );
+  expect(within(mio).getByRole('link', { name: /Inventario/ })).toHaveAttribute(
+    'href',
+    '/consola/acopios/x1/inventario',
+  );
+  expect(within(mio).getAllByRole('link')).toHaveLength(3);
   expect(screen.queryByRole('region', { name: 'Administración' })).not.toBeInTheDocument();
+});
+
+it('el Auditor ve solo el inventario de su ubicación activa', async () => {
+  responderSegun({
+    'GET /api/ubicaciones/mias': [
+      {
+        tipo: 'ACOPIO',
+        id: 'x1',
+        nombre: 'Acopio Chapinero',
+        municipio: 'Bogotá',
+        estado: 'ACTIVO',
+      },
+    ],
+  });
+  pantalla(persona('AUDITOR'));
+  const mio = await screen.findByRole('region', { name: 'Mi acopio' });
+  const enlaces = await within(mio).findAllByRole('link');
+  expect(enlaces).toHaveLength(1);
+  expect(enlaces[0]).toHaveAttribute('href', '/consola/acopios/x1/inventario');
 });
 
 it('Cerrar sesión cierra la sesión', async () => {

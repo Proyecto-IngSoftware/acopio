@@ -172,6 +172,10 @@ describe('C21 formulario', () => {
       'href',
       '/consola/acopios/x1/no-recibir',
     );
+    expect(screen.getByRole('link', { name: /Inventario/ })).toHaveAttribute(
+      'href',
+      '/consola/acopios/x1/inventario',
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Cerrar acopio' }));
     const hoja = screen.getByRole('dialog', { name: '¿Cerrar Acopio Chapinero?' });
     await userEvent.click(within(hoja).getByRole('button', { name: 'Sí, cerrar' }));
