@@ -123,7 +123,7 @@ export function Mapa() {
 
       {acopios.data && vista === 'mapa' && visibles.length > 0 && (
         <>
-          <div className="h-[55vh] min-h-72 overflow-hidden rounded-xl border border-outline-variant">
+          <div className="isolate h-[55vh] min-h-72 overflow-hidden rounded-xl border border-outline-variant">
             <Suspense fallback={<Esqueleto etiqueta="Cargando el mapa" className="h-full" />}>
               <MapaAcopios
                 acopios={visibles}

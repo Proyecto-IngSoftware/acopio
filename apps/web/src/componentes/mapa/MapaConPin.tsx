@@ -33,7 +33,7 @@ export function MapaConPin({ valor, alCambiar }: Props) {
 
   return (
     <div className="flex flex-col gap-space-sm">
-      <div className="h-56 overflow-hidden rounded-xl border border-outline-variant">
+      <div className="isolate h-56 overflow-hidden rounded-xl border border-outline-variant">
         <Suspense fallback={<Esqueleto etiqueta="Cargando el mapa" className="h-56" />}>
           <MapaLeaflet valor={valor} alCambiar={alCambiar} />
         </Suspense>
