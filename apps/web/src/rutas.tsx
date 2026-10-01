@@ -4,6 +4,7 @@ import { Entrar } from './acceso/Entrar';
 import { MarcoAcceso } from './portal/MarcoAcceso';
 import { Bitacora } from './consola/Bitacora';
 import { Catalogo } from './consola/catalogo/Catalogo';
+import { Entidades } from './consola/red/Entidades';
 import { DetalleUsuario } from './consola/usuarios/DetalleUsuario';
 import { InvitarPersona } from './consola/usuarios/InvitarPersona';
 import { Usuarios } from './consola/usuarios/Usuarios';
@@ -36,6 +37,7 @@ export function Rutas() {
             ['consola/usuarios', <Usuarios key="u" />],
             ['consola/usuarios/invitar', <InvitarPersona key="i" />],
             ['consola/usuarios/:id', <DetalleUsuario key="d" />],
+            ['consola/entidades', <Entidades key="e" />],
           ] as const
         ).map(([ruta, pantalla]) => (
           <Route

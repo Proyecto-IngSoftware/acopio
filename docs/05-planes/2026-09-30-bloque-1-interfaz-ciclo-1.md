@@ -74,7 +74,7 @@ filtros, y se revisa en Chromium.
 |---|---|---|
 | 1 Base | ✅ | La web lee `@acopio/shared` desde su código fuente (alias de Vite y `paths` de TypeScript), no desde `dist`: así la API y la web no compilan el paquete a la vez |
 | 2 Mapa | ✅ | `MapaConPin` con Leaflet en carga diferida y coordenadas a mano para teclado; `BuscadorDireccion`. La división del fragmento se confirma cuando C21 lo use |
-| 3 C15 | ⬜ | |
+| 3 C15 | ✅ | La cantidad de acopios por entidad sale de `GET /acopios/gestion`; la API no la da |
 | 4 C21 | ⬜ | |
 | 5 C9 | ⬜ | |
 | 6 C16 buscador | ⬜ | |
