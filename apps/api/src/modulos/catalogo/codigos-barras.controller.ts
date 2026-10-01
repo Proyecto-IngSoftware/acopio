@@ -5,11 +5,12 @@ import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { CodigoBarrasDto } from '../../comun/respuestas';
+import { cantidadPositiva } from '../../comun/validacion/cantidades';
 import { CodigosBarrasService } from './codigos-barras.service';
 
 // EAN-8, UPC-A (12), EAN-13 y GTIN-14
 const ean = z.string().regex(/^(\d{8}|\d{12,14})$/, 'El código debe tener 8, 12, 13 o 14 dígitos');
-const contenido = z.number().positive().lt(1_000_000).nullable().optional();
+const contenido = cantidadPositiva.nullable().optional();
 
 class AsociarDto extends createZodDto(
   z.object({

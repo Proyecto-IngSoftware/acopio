@@ -12,14 +12,10 @@ import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDto, ResultadoMovimientoDto } from '../../comun/respuestas';
+import { cantidadNoNegativa, cantidadPositiva } from '../../comun/validacion/cantidades';
 import { MovimientosService } from './movimientos.service';
 
-/** Mayor que cero, hasta 3 decimales y menos de mil millones (numeric(12,3)). */
-export const cantidad = z
-  .number()
-  .positive()
-  .lt(1_000_000_000)
-  .refine((n) => Math.abs(n * 1000 - Math.round(n * 1000)) < 1e-6, 'Máximo 3 decimales');
+export const cantidad = cantidadPositiva;
 
 const dia = z.iso.date().transform((d) => new Date(`${d}T00:00:00Z`));
 
@@ -49,11 +45,7 @@ class SalidaDto extends createZodDto(
 class AjusteDto extends createZodDto(
   z.object({
     categoriaId: z.uuid(),
-    cantidadContada: z
-      .number()
-      .min(0)
-      .lt(1_000_000_000)
-      .refine((n) => Math.abs(n * 1000 - Math.round(n * 1000)) < 1e-6, 'Máximo 3 decimales'),
+    cantidadContada: cantidadNoNegativa,
     motivo: z.string().trim().min(10, 'El motivo necesita al menos 10 caracteres').max(500),
   }),
 ) {}

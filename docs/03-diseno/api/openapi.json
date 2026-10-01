@@ -4288,8 +4288,7 @@
           },
           "contenido": {
             "type": "number",
-            "exclusiveMinimum": 0,
-            "exclusiveMaximum": 1000000,
+            "exclusiveMaximum": 1000000000,
             "nullable": true
           },
           "descripcion": {
@@ -4313,8 +4312,7 @@
           },
           "contenido": {
             "type": "number",
-            "exclusiveMinimum": 0,
-            "exclusiveMaximum": 1000000,
+            "exclusiveMaximum": 1000000000,
             "nullable": true
           },
           "descripcion": {
@@ -5839,9 +5837,7 @@
           },
           "cantidad": {
             "type": "number",
-            "exclusiveMinimum": true,
             "exclusiveMaximum": true,
-            "minimum": 0,
             "maximum": 1000000000
           },
           "venceEn": {
@@ -5990,9 +5986,7 @@
           },
           "cantidad": {
             "type": "number",
-            "exclusiveMinimum": true,
             "exclusiveMaximum": true,
-            "minimum": 0,
             "maximum": 1000000000
           },
           "motivoSalida": {

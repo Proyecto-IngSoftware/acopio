@@ -12,13 +12,10 @@ import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { UmbralDto } from '../../comun/respuestas';
 import { errores } from './movimientos.controller';
+import { cantidadNoNegativa } from '../../comun/validacion/cantidades';
 import { UmbralesService } from './umbrales.service';
 
-const valor = z
-  .number()
-  .min(0)
-  .lt(1_000_000_000)
-  .refine((n) => Math.abs(n * 1000 - Math.round(n * 1000)) < 1e-6, 'Máximo 3 decimales');
+const valor = cantidadNoNegativa;
 
 class FijarUmbralDto extends createZodDto(
   z.object({ minimo: valor, maximo: valor }).refine((u) => u.minimo <= u.maximo, {

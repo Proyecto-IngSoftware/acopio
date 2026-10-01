@@ -89,6 +89,37 @@ describe('códigos de barras', () => {
       .expect(400);
   });
 
+  it('contenido con más de 3 decimales: 400', async () => {
+    await a
+      .http()
+      .post('/api/codigos-barras')
+      .set(como(op.token))
+      .send({ ean: '7702001043251', categoriaId: agua, contenido: 0.0001 })
+      .expect(400);
+  });
+
+  it('PATCH a una categoría inexistente o archivada: 404, sin cambiar la asociación', async () => {
+    const archivada = await a.prisma.categoria.create({
+      data: {
+        nombre: unico('Archivada EAN '),
+        grupo: 'AGUA_Y_BEBIDAS',
+        unidad_base: 'LITRO',
+        archivada: true,
+      },
+    });
+    for (const categoriaId of ['99999999-9999-4999-8999-999999999999', archivada.id]) {
+      const r = await a
+        .http()
+        .patch(`/api/codigos-barras/${ean}`)
+        .set(como(tokenAdmin))
+        .send({ categoriaId })
+        .expect(404);
+      expect(r.body.codigo).toBe('CATEGORIA_NO_ENCONTRADA');
+    }
+    const g = await a.http().get(`/api/codigos-barras/${ean}`).set(como(op.token)).expect(200);
+    expect(g.body.categoriaId).toBe(agua);
+  });
+
   it('el Administrador lista los sin revisar y los revisa', async () => {
     const l = await a
       .http()

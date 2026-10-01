@@ -243,5 +243,51 @@ describe('concurrencia', () => {
       expect(await a.prisma.movimiento.count({ where: { id } })).toBe(1);
       expect(await saldoGuardado(cat)).toBe(4);
     });
+
+    it('20 entradas simultáneas: el antes y después de cada bitácora cuadran con su cantidad', async () => {
+      const cat = await nuevaCategoria();
+      await simultaneas(20, (i) =>
+        a
+          .http()
+          .post(`/api/acopios/${ACOPIO_A}/entradas`)
+          .set(como(i % 2 ? op1.token : op2.token))
+          .send({ categoriaId: cat, cantidad: i + 1 })
+          .expect(201),
+      );
+      const filas = await a.prisma.bitacora.findMany({
+        where: { accion: 'movimiento.entrada', datos_despues: { path: ['categoria'], not: '' } },
+      });
+      const nombre = (await a.prisma.categoria.findUniqueOrThrow({ where: { id: cat } })).nombre;
+      const deEsta = filas.filter(
+        (f) => (f.datos_despues as { categoria: string }).categoria === nombre,
+      );
+      expect(deEsta).toHaveLength(20);
+      for (const f of deEsta) {
+        const antes = f.datos_antes as { saldo: number };
+        const despues = f.datos_despues as { saldo: number; cantidad: number };
+        expect(despues.saldo - antes.saldo).toBe(despues.cantidad);
+      }
+    });
+
+    it('60 salidas simultáneas de la misma categoría: ninguna termina en 500', async () => {
+      const cat = await nuevaCategoria();
+      await a
+        .http()
+        .post(`/api/acopios/${ACOPIO_A}/entradas`)
+        .set(como(op1.token))
+        .send({ categoriaId: cat, cantidad: 30 })
+        .expect(201);
+      const respuestas = await simultaneas(60, (i) =>
+        a
+          .http()
+          .post(`/api/acopios/${ACOPIO_A}/salidas`)
+          .set(como(i % 2 ? op1.token : op2.token))
+          .send({ categoriaId: cat, cantidad: 1, motivoSalida: 'VENCIDO' }),
+      );
+      const estados = respuestas.map((r) => r.status);
+      expect(estados.filter((s) => s === 201)).toHaveLength(30);
+      expect(estados.filter((s) => s === 409)).toHaveLength(30);
+      expect(await saldoGuardado(cat)).toBe(0);
+    });
   });
 });

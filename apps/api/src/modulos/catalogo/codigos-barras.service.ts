@@ -124,6 +124,16 @@ export class CodigosBarrasService {
       revisado?: boolean;
     },
   ) {
+    if (cambios.categoriaId) {
+      const cat = await this.prisma.categoria.findUnique({ where: { id: cambios.categoriaId } });
+      if (!cat || cat.archivada) {
+        throw new ErrorDominio(
+          'CATEGORIA_NO_ENCONTRADA',
+          'La categoría no existe o está archivada',
+          404,
+        );
+      }
+    }
     return this.prisma.$transaction(async (tx) => {
       const antes = await tx.codigoBarras.findUnique({ where: { ean }, include: conCategoria });
       if (!antes)

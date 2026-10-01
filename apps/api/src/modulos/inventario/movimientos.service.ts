@@ -42,6 +42,9 @@ export interface ResultadoMovimiento {
 }
 
 const SIETE_DIAS = 7 * 86400_000;
+// Con muchas salidas de la misma categoría a la vez, cada una espera el candado: más
+// margen que los 5 s por defecto de Prisma antes de abandonar
+const TRANSACCION = { timeout: 15_000, maxWait: 10_000 };
 const CINCO_MINUTOS = 5 * 60_000;
 const soloDia = (d: Date | null) => (d ? d.toISOString().slice(0, 10) : null);
 
@@ -129,7 +132,8 @@ export class MovimientosService {
             'Esta categoría es perecedera: indica la fecha de vencimiento',
           );
         }
-        const antes = await this.saldoDe(tx, acopioId, datos.categoriaId);
+        // El candado deja el antes y el después de la bitácora sin entradas ajenas en medio
+        const antes = await this.bloquearSaldo(tx, acopioId, datos.categoriaId);
         const fila = await tx.movimiento.create({
           data: {
             id: datos.id,
@@ -155,7 +159,7 @@ export class MovimientosService {
           despues: { categoria: cat.nombre, cantidad: datos.cantidad, saldo },
         });
         return { movimiento: aMovimientoVista(fila), saldo };
-      });
+      }, TRANSACCION);
       return {
         resultado: { ...resultado, noRecibe: await this.noRecibe(acopioId, datos.categoriaId) },
         nuevo: true,
@@ -238,7 +242,7 @@ export class MovimientosService {
           },
         });
         return { movimiento: aMovimientoVista(fila), saldo, noRecibe: false };
-      }),
+      }, TRANSACCION),
     );
   }
 
@@ -291,7 +295,7 @@ export class MovimientosService {
           },
         });
         return { movimiento: aMovimientoVista(fila), saldo, noRecibe: false };
-      }),
+      }, TRANSACCION),
     );
   }
 

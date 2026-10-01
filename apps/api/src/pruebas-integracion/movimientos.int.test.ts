@@ -125,6 +125,24 @@ describe('movimientos', () => {
       }
     });
 
+    it('una cantidad diminuta (1e-10) no entra ni sale: 400', async () => {
+      await entrada({ categoriaId: arroz, cantidad: 1e-10, venceEn: '2026-12-31' }).expect(400);
+      await a
+        .http()
+        .post(`/api/acopios/${ACOPIO_A}/salidas`)
+        .set(como(op.token))
+        .send({ categoriaId: arroz, cantidad: 1e-10, motivoSalida: 'VENCIDO' })
+        .expect(400);
+    });
+
+    it('una cantidad con ruido de punto flotante se guarda redondeada y su reintento coincide', async () => {
+      const id = randomUUID();
+      const datos = { id, categoriaId: arroz, cantidad: 1.0000000001, venceEn: '2026-12-31' };
+      const r = await entrada(datos).expect(201);
+      expect(r.body.movimiento.cantidad).toBe(1);
+      await entrada(datos).expect(200);
+    });
+
     it('el mismo id con otro contenido: 409', async () => {
       const id = randomUUID();
       await entrada({ id, categoriaId: panal, cantidad: 1 }).expect(201);

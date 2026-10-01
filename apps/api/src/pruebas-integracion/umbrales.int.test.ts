@@ -67,6 +67,44 @@ describe('umbrales', () => {
     await a.http().put(ruta()).set(como(op.token)).send({ minimo: 60, maximo: 50 }).expect(400);
   });
 
+  it('un valor diminuto (1e-10): 400', async () => {
+    await a.http().put(ruta()).set(como(op.token)).send({ minimo: 1e-10, maximo: 5 }).expect(400);
+  });
+
+  it('quitar el umbral de un acopio cerrado: 409', async () => {
+    await a.http().put(ruta()).set(como(op.token)).send({ minimo: 1, maximo: 5 }).expect(200);
+    await a.prisma.acopio.update({ where: { id: ACOPIO_A }, data: { estado: 'CERRADO' } });
+    try {
+      const r = await a.http().delete(ruta()).set(como(op.token)).expect(409);
+      expect(r.body.codigo).toBe('ACOPIO_CERRADO');
+    } finally {
+      await a.prisma.acopio.update({ where: { id: ACOPIO_A }, data: { estado: 'ACTIVO' } });
+    }
+  });
+
+  it('dos PUT simultáneos de un umbral nuevo: los dos responden 200', async () => {
+    for (let i = 0; i < 5; i++) {
+      const nueva = (
+        await a.prisma.categoria.create({
+          data: { nombre: unico('Umbral simultáneo '), grupo: 'SALUD', unidad_base: 'UNIDAD' },
+        })
+      ).id;
+      const [x, y] = await Promise.all([
+        a
+          .http()
+          .put(`/api/acopios/${ACOPIO_A}/umbrales/${nueva}`)
+          .set(como(op.token))
+          .send({ minimo: 1, maximo: 5 }),
+        a
+          .http()
+          .put(`/api/acopios/${ACOPIO_A}/umbrales/${nueva}`)
+          .set(como(tokenAdmin))
+          .send({ minimo: 2, maximo: 6 }),
+      ]);
+      expect([x.status, y.status]).toEqual([200, 200]);
+    }
+  });
+
   it('negativos: 400', async () => {
     await a.http().put(ruta()).set(como(op.token)).send({ minimo: -1, maximo: 5 }).expect(400);
   });

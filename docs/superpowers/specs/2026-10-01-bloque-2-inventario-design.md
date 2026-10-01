@@ -169,7 +169,7 @@ después; los ajustes van `destacado`.
 |---|---|---|
 | `POST /acopios/:id/entradas` | Operador asignado | `{ id?, categoriaId, cantidad, venceEn?, ocurridoEn?, origenOffline? }` → movimiento, saldo y `noRecibe` |
 | `POST /acopios/:id/salidas` | Operador asignado | `{ categoriaId, cantidad, motivoSalida, nota? }`. Sin saldo suficiente: 409 `SALDO_INSUFICIENTE` con el saldo actual |
-| `POST /acopios/:id/ajustes` | Operador asignado | `{ categoriaId, cantidadContada, motivo }`. La diferencia se calcula con la fila de `saldo` bloqueada; si es cero, 422 `SIN_DIFERENCIA` |
+| `POST /acopios/:id/ajustes` | Operador asignado | `{ categoriaId, cantidadContada, motivo }`. La diferencia se calcula con el saldo leído bajo el candado de (acopio, categoría) (§12); si es cero, 422 `SIN_DIFERENCIA` |
 | `GET /acopios/:id/saldos` | Operador asignado, Administrador, Auditor | Por categoría: saldo, unidad, umbral, semáforo, último movimiento y vencimiento estimado. Incluye las categorías con umbral y saldo cero |
 | `GET /acopios/:id/movimientos?categoriaId=&cursor=` | Los mismos | Historial con el saldo corriente de cada fila, en el orden en que entraron los movimientos (§12) |
 | `PUT /acopios/:id/umbrales/:categoriaId` | Operador asignado, Administrador | `{ minimo, maximo }` |
@@ -308,5 +308,6 @@ Si el tiempo no alcanza se recorta primero el ciclo 3 y después el escáner.
 | `SALDO_INSUFICIENTE` trae `detalles: { saldo }`, y `ErrorDto.detalles` admite un objeto además de la lista de campos | La interfaz muestra cuánto hay disponible sin otra consulta |
 | `seed:demo` deja 6 entradas en el primer acopio de prueba | Para ver C3 con datos en local |
 | `movimiento.secuencia` (`bigserial`) ordena el historial, su saldo corriente y el cursor | `registrado_en` es la hora de inicio de la transacción: una salida que esperó el candado podía quedar antes de la entrada que gastó y mostrar un saldo negativo. Además, el cursor con milisegundos perdía filas del mismo milisegundo. Hallazgo de la revisión final |
+| Las cantidades se validan en milésimas: el ruido de punto flotante (1,0000000001) se redondea y un cuarto decimal o un valor diminuto se rechaza con 400. Las entradas también toman el candado, las transacciones de movimientos esperan hasta 15 s, el umbral reintenta una vez ante dos `PUT` simultáneos, quitar un umbral exige el acopio abierto y el `PATCH` de un EAN valida la categoría | Menores de la revisión final: varios terminaban en 500 o dejaban la bitácora sin cuadrar. Los dos `PUT` simultáneos y las 60 salidas simultáneas no fallaron en local antes del arreglo; sus pruebas quedan de guarda |
 | Una entrada con un `id` repetido se busca justo después del control de alcance, antes de validar el acopio y la fecha, y compara la fecha de vencimiento tal como se guardó | Un reintento de la cola recibía 409 o 422 aunque el movimiento ya existiera (acopio cerrado entre los dos envíos, fecha al borde de los 7 días, o `venceEn` en una categoría no perecedera, que se descarta), y el Operador podía registrarlo dos veces. Hallazgo de la revisión final |
 
