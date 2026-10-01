@@ -7,6 +7,8 @@ import { Catalogo } from './consola/catalogo/Catalogo';
 import { Acopios } from './consola/red/Acopios';
 import { Entidades } from './consola/red/Entidades';
 import { FormularioAcopio } from './consola/red/FormularioAcopio';
+import { MiAcopio } from './consola/red/MiAcopio';
+import { NoRecibir } from './consola/red/NoRecibir';
 import { Zonas } from './consola/red/Zonas';
 import { DetalleUsuario } from './consola/usuarios/DetalleUsuario';
 import { InvitarPersona } from './consola/usuarios/InvitarPersona';
@@ -51,6 +53,18 @@ export function Rutas() {
             key={ruta}
             path={ruta}
             element={<RequiereRol roles={['ADMIN']}>{pantalla}</RequiereRol>}
+          />
+        ))}
+        {(
+          [
+            ['consola/acopios/:id/operacion', <MiAcopio key="mi" />],
+            ['consola/acopios/:id/no-recibir', <NoRecibir key="nr" />],
+          ] as const
+        ).map(([ruta, pantalla]) => (
+          <Route
+            key={ruta}
+            path={ruta}
+            element={<RequiereRol roles={['ADMIN', 'OPERADOR']}>{pantalla}</RequiereRol>}
           />
         ))}
         <Route

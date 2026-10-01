@@ -79,7 +79,7 @@ filtros, y se revisa en Chromium.
 | 5 C9 | ✅ | El formulario va en una hoja con el mapa; el estado de la zona solo se elige al editar (al crear es «Sin atender») |
 | 6 C16 buscador | ✅ | El buscador carga todas las ubicaciones una vez y filtra en la web. El detalle asigna y quita por nombre; si la ubicación quedaría sin responsable, pide confirmar (409 de la API) |
 | 7 Más | ✅ | El Administrador suma Acopios, Entidades y Zonas a «Administración». El Operador ve la sección «Mi acopio», con los nombres de `GET /ubicaciones/mias` |
-| 8 Mi acopio y C7 | ⬜ | |
+| 8 Mi acopio y C7 | ✅ | C7 muestra «Marcado hace 2 h» sin el nombre de quien marcó: la API no lo devuelve. Con fecha de reapertura dice «Vuelve a recibir al día siguiente» |
 | 9 P5 | ⬜ | |
 | 10 P6 | ⬜ | |
 | 11 Cierre | ⬜ | |
