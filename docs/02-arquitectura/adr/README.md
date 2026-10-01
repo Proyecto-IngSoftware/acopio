@@ -3,7 +3,7 @@ title: "Registro de decisiones de arquitectura"
 type: moc
 tags: [moc, adr]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-01
 ---
 
 # Registro de decisiones de arquitectura
@@ -33,6 +33,8 @@ documento que se reescribe hasta perder la historia.
 | [0012](ADR-0012-almacenamiento-garage.md) | Almacenamiento de objetos con Garage. Modifica una fila de ADR-0008 | aceptada |
 | [0013](ADR-0013-estetica-desde-stitch.md) | La estética sale del diseño de Stitch. Modifica la paleta de ADR-0006 | aceptada |
 | [0014](ADR-0014-sesion-en-cookie.md) | La sesión viaja en una cookie HttpOnly. Ajusta D-06 del Bloque 0 | aceptada |
+| [0015](ADR-0015-saldo-en-tabla-por-disparador.md) | El saldo vive en una tabla que mantiene un disparador. Ajusta la estrategia de ADR-0002 | aceptada |
+| [0016](ADR-0016-service-worker-con-vite-plugin-pwa.md) | La captura sin conexión usa un service worker de vite-plugin-pwa | aceptada |
 
 ## Cuándo escribir una
 

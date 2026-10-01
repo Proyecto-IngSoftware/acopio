@@ -634,6 +634,21 @@ RF-RED-002.
 **Estado:** ABIERTO, deuda importante. La diferencia ya quedó en la
 [nota de P5](../03-diseno/stitch/P05-mapa/README.md).
 
+### P-036 · Decisiones al especificar el Bloque 2
+**Fecha:** 2026-10-01 · **Propuesto por:** Joseph
+**Qué:** el alcance y los ajustes a la bóveda que salieron al especificar el inventario.
+
+| Qué | Por qué |
+|---|---|
+| Entran el escáner (con RF-CAT-004) y la captura sin conexión; la alerta de vencimiento (RF-INV-010) queda fuera del bloque | La alerta pide saldo por lote, y el saldo es por categoría (V-02) |
+| El saldo vive en una tabla mantenida por disparador, no en una vista materializada | PostgreSQL no refresca una vista materializada por fila. [ADR-0015](../02-arquitectura/adr/ADR-0015-saldo-en-tabla-por-disparador.md) |
+| Sin umbral configurado, la categoría dice «Sin umbral» | Un acopio no tiene población y la canasta no da un mínimo. Ajusta RF-INV-007 |
+| Las salidas sin remisión eligen motivo de una lista corta | Se pueden contar y filtrar. Ajusta RF-INV-003 |
+| Service worker con `vite-plugin-pwa`; sin conexión solo entradas | [ADR-0016](../02-arquitectura/adr/ADR-0016-service-worker-con-vite-plugin-pwa.md) |
+
+**Estado:** RESUELTO → [especificación del Bloque 2](../superpowers/specs/2026-10-01-bloque-2-inventario-design.md#3-decisiones).
+RF-INV-010 sigue abierto para un bloque posterior.
+
 ---
 
 ## Resueltos

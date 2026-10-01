@@ -3,7 +3,7 @@ title: "Componentes compartidos · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, componentes]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-01
 ---
 
 # Componentes compartidos
@@ -30,7 +30,7 @@ Maqueta: [maqueta.html](maqueta.html), publicada en
   se abren desde «Más», como en las pantallas «Más - Perfil…» de Stitch.
 - El conmutador de ubicación solo aparece si la persona tiene más de una ubicación
   asignada (sistema de diseño §6).
-- Ninguna cabecera muestra «Sincronizado» mientras no exista el modo sin conexión.
+- Ninguna cabecera muestra «Sincronizado». Con la captura sin conexión (ciclo 3 del Bloque 2), la cabecera con sesión muestra una pastilla «N sin sincronizar» mientras haya entradas pendientes, y nada cuando no las hay.
 - En `apps/web` las piezas usan los tokens. En la cabecera con sesión, Stitch dejó un
   fondo `#f0fdf9` y un alto de 36 px en el conmutador; en la maqueta ya van como
   `surface-container-lowest` y 44 px de alto.

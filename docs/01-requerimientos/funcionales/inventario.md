@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: inventario
 bloque: 2
-actualizado: 2026-09-30
+actualizado: 2026-10-01
 ---
 
 # RF-INV · Inventario
@@ -46,6 +46,8 @@ Principio: **el saldo no se guarda, se deriva de movimientos inmutables.**
 ### RF-INV-003 · Registrar salida
 **Actor:** Operador · **Prioridad:** DEBE
 
+**2026-10-01 · Bloque 2 (V-05).** Mientras no existan las remisiones, el motivo se elige de una lista corta: Entrega directa a familias, Traslado a otra organización, Vencido o dañado, u Otro. Traslado y Otro piden una nota. Lo que vence primero se estima a partir de los movimientos (V-02).
+
 **Criterios de aceptación:**
 - [ ] Toda salida se asocia a una remisión, o a un motivo explícito si no la hay
 - [ ] La transacción falla si el saldo quedaría negativo
@@ -84,6 +86,8 @@ Principio: **el saldo no se guarda, se deriva de movimientos inmutables.**
 ### RF-INV-007 · Configurar umbrales
 **Actor:** Operador, Administrador · **Prioridad:** DEBE
 
+**2026-10-01 · Bloque 2 (V-03).** Un acopio no tiene población, así que la canasta no da un mínimo. Sin umbral configurado, la categoría muestra «Sin umbral» y no lleva semáforo. La canasta servirá de referencia cuando haya población (zonas, Bloque 4).
+
 **Criterios de aceptación:**
 - [ ] Mínimo y máximo por categoría y por ubicación
 - [ ] Valida `min <= max`
@@ -108,6 +112,8 @@ Ataca directamente el problema del acopio ahogado en un solo insumo.
 
 ### RF-INV-009 · Captura sin conexión
 **Actor:** Operador · **Prioridad:** DEBERÍA
+
+**2026-10-01 · Bloque 2 (V-07, [ADR-0016](../../02-arquitectura/adr/ADR-0016-service-worker-con-vite-plugin-pwa.md)).** Sin conexión solo se capturan entradas. `ocurrido_en` se acepta hasta 7 días atrás.
 
 **Criterios de aceptación:**
 - [ ] C04 funciona sin red en un dispositivo previamente autenticado

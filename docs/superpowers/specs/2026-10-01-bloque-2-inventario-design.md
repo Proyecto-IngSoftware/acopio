@@ -2,7 +2,7 @@
 title: "Bloque 2 · Inventario · especificación"
 type: spec
 tags: [spec, bloque-2]
-estado: borrador
+estado: vigente
 bloque: 2
 actualizado: 2026-10-01
 ---
@@ -10,7 +10,7 @@ actualizado: 2026-10-01
 # Bloque 2 · Inventario · especificación
 
 **Fecha:** 2026-10-01
-**Estado:** borrador, pendiente de la revisión de Joseph
+**Estado:** aprobada por Joseph el 2026-10-01
 **Deriva de:** [especificación general](2026-08-20-acopio-design.md) §13,
 [RF-INV](../../01-requerimientos/funcionales/inventario.md),
 [RF-CAT-004](../../01-requerimientos/funcionales/catalogo.md#rf-cat-004--mapear-códigos-de-barras),

@@ -3,7 +3,7 @@ title: "Acopio — Especificación de diseño"
 type: spec
 tags: [spec, arquitectura]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-01
 ---
 
 # Acopio — Especificación de diseño
@@ -549,7 +549,7 @@ almacenamiento directamente. Miniaturas con `sharp` en la API.
 | C2 | Tablero | Distinto por rol. Lo urgente arriba |
 | C3 | Inventario | Saldo por categoría, semáforo, antigüedad |
 | C4 | **Entrada rápida** | Pantalla más importante. Escáner, búsqueda por palabra clave, teclado numérico grande, confirmación en un toque. Funciona offline |
-| C5 | Despacho | Salida hacia una remisión |
+| C5 | Despacho | Salida hacia una remisión. Mientras no haya remisiones (Bloque 2, V-05), salida con motivo de una lista |
 | C6 | Conteo físico | Ajuste con motivo obligatorio |
 | C7 | Umbrales y no recibir | Mínimo, máximo e interruptor por categoría |
 | C8 | Bandeja de comprobantes | Pendientes → conciliar → aprobar o rechazar |

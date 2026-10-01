@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: catalogo
 bloque: 0
-actualizado: 2026-09-28
+actualizado: 2026-10-01
 ---
 
 # RF-CAT · Catálogo maestro
@@ -61,6 +61,8 @@ Primera versión, con 10 categorías, en
 
 ### RF-CAT-004 · Mapear códigos de barras
 **Actor:** Administrador, Operador · **Prioridad:** DEBERÍA
+
+**2026-10-01 · Bloque 2 (V-01).** Entra con el escáner. Un EAN que asocia un Operador queda sin revisar hasta que el Administrador lo confirma en la pestaña «Códigos de barras» de C18.
 
 **Criterios de aceptación:**
 - [ ] Tabla de EAN a categoría, muchos a uno

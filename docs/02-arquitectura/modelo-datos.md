@@ -3,7 +3,7 @@ title: "Modelo de datos"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-01
 ---
 
 # Modelo de datos
@@ -195,6 +195,15 @@ saldo   VISTA MATERIALIZADA
 ```
 
 `ultimo_movimiento` es lo que alimenta la antigüedad visible exigida por RNF-04.
+
+**2026-10-01 · Bloque 2 (V-06, V-08, [ADR-0015](adr/ADR-0015-saldo-en-tabla-por-disparador.md)).**
+`saldo` es una tabla, no una vista materializada: la mantiene un disparador `AFTER
+INSERT` sobre `movimiento` y tiene `CHECK (cantidad >= 0)`. `movimiento` y `umbral`
+llevan `acopio_id` con llave foránea en lugar de `ubicacion_tipo` + `ubicacion_id`; las
+zonas sumarán `zona_id` cuando tengan movimientos. `movimiento.tipo` nace sin
+`RECEPCION`, gana `motivo_salida` (`ENTREGA_FAMILIAS | TRASLADO | VENCIDO | OTRO`) y
+`nota`, y `vence_en` solo se acepta en entradas. `comprobante_id` y `remision_id` llegan
+en sus bloques. Detalle en la [especificación del Bloque 2](../superpowers/specs/2026-10-01-bloque-2-inventario-design.md#4-datos).
 
 ```
 umbral
@@ -465,8 +474,9 @@ vive en el código de la aplicación se rompe el día que alguien escribe un scr
 
 ## Estrategia de saldos
 
-Vista materializada refrescada por disparador `AFTER INSERT` sobre `movimiento`,
-con refresco selectivo de la fila `(ubicacion, categoria)` afectada.
+**2026-10-01 · reemplazado por [ADR-0015](adr/ADR-0015-saldo-en-tabla-por-disparador.md).** PostgreSQL no refresca una vista materializada por fila; el saldo vive en una tabla que mantiene el disparador.
+
+~~Vista materializada refrescada por disparador `AFTER INSERT` sobre `movimiento`, con refresco selectivo de la fila `(ubicacion, categoria)` afectada.~~
 
 Si el volumen lo justifica, se sustituye por una tabla `saldo` mantenida por el
 mismo disparador, con reconciliación programada contra la suma real. Se mide antes
