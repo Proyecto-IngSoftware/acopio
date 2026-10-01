@@ -85,7 +85,9 @@ describe('saldos e historial', () => {
       semaforo: 'SIN_UMBRAL',
       vencimientos: [{ venceEn: '2026-10-30', cantidad: 70 }],
     });
-    expect(typeof (fila as { ultimoMovimiento: string }).ultimoMovimiento).toBe('string');
+    expect(typeof (fila as unknown as { ultimoMovimiento: string }).ultimoMovimiento).toBe(
+      'string',
+    );
     const mantas = (r.body as { categoriaId: string; vencimientos: unknown[] }[]).find(
       (x) => x.categoriaId === manta,
     );
