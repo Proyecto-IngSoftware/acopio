@@ -1,3 +1,4 @@
+import { useUbicacionesMias } from '../api/red';
 import { Boton } from '../componentes/Boton';
 import { Icono } from '../componentes/Icono';
 import { FilaMenu, SeccionMenu } from '../componentes/Menu';
@@ -37,7 +38,48 @@ const HERRAMIENTAS: Herramienta[] = [
     descripcion: 'Categorías, canasta y emergencias',
     roles: ['ADMIN'],
   },
+  {
+    a: '/consola/acopios',
+    icono: 'inventory_2',
+    titulo: 'Acopios',
+    descripcion: 'Crear, editar, pausar y cerrar',
+    roles: ['ADMIN'],
+  },
+  {
+    a: '/consola/entidades',
+    icono: 'verified_user',
+    titulo: 'Entidades',
+    descripcion: 'Quién responde por cada acopio',
+    roles: ['ADMIN'],
+  },
+  {
+    a: '/consola/zonas',
+    icono: 'map',
+    titulo: 'Zonas afectadas',
+    descripcion: 'Comunidades de cada emergencia',
+    roles: ['ADMIN'],
+  },
 ];
+
+/** Una fila por acopio asignado, hasta que llegue el selector de la cabecera (ciclo 2). */
+function MiAcopio() {
+  const { data } = useUbicacionesMias();
+  const acopios = (data ?? []).filter((u) => u.tipo === 'ACOPIO');
+  if (acopios.length === 0) return null;
+  return (
+    <SeccionMenu id="mi-acopio" titulo="Mi acopio">
+      {acopios.map((a) => (
+        <FilaMenu
+          key={a.id}
+          a={`/consola/acopios/${a.id}/operacion`}
+          icono="inventory_2"
+          titulo={a.nombre}
+          descripcion="Estado, horario y lo que no recibe"
+        />
+      ))}
+    </SeccionMenu>
+  );
+}
 
 /** «Más» para todos: con sesión suma la cuenta y las herramientas del rol (R-01).
  *  Diseño: docs/03-diseno/stitch/mas-con-sesion. */
@@ -65,6 +107,8 @@ export function Mas() {
           />
         </SeccionMenu>
       )}
+
+      {usuario?.rol === 'OPERADOR' && <MiAcopio />}
 
       {herramientas.length > 0 && (
         <SeccionMenu id="administracion" titulo="Administración">

@@ -78,7 +78,7 @@ filtros, y se revisa en Chromium.
 | 4 C21 | ✅ | `tramoActual` se sumó a `@acopio/shared` para «Cierra 12:00». Cerrar pide confirmación en una hoja. Leaflet sale en su propio fragmento (45 kB gzip); el fragmento principal ya pesa 189 kB gzip y se revisa en el cierre |
 | 5 C9 | ✅ | El formulario va en una hoja con el mapa; el estado de la zona solo se elige al editar (al crear es «Sin atender») |
 | 6 C16 buscador | ✅ | El buscador carga todas las ubicaciones una vez y filtra en la web. El detalle asigna y quita por nombre; si la ubicación quedaría sin responsable, pide confirmar (409 de la API) |
-| 7 Más | ⬜ | |
+| 7 Más | ✅ | El Administrador suma Acopios, Entidades y Zonas a «Administración». El Operador ve la sección «Mi acopio», con los nombres de `GET /ubicaciones/mias` |
 | 8 Mi acopio y C7 | ⬜ | |
 | 9 P5 | ⬜ | |
 | 10 P6 | ⬜ | |

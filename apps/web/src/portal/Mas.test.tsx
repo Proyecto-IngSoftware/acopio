@@ -1,7 +1,7 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { violacionesGraves } from '../pruebas/accesibilidad';
-import { clienteFalso, envolver } from '../pruebas/utilidades';
+import { clienteFalso, envolver, responderSegun } from '../pruebas/utilidades';
 import type { UsuarioSesion } from '../sesion/cliente-auth';
 import { Mas } from './Mas';
 
@@ -23,7 +23,7 @@ it('sin sesión muestra las secciones públicas y nada de la consola', async () 
   expect(screen.queryByRole('button', { name: 'Cerrar sesión' })).not.toBeInTheDocument();
 });
 
-it('el Administrador ve su cuenta y las tres herramientas', async () => {
+it('el Administrador ve su cuenta y sus herramientas, también las de la red', async () => {
   pantalla(persona('ADMIN'));
   const cuenta = await screen.findByRole('region', { name: 'Tu cuenta' });
   expect(cuenta).toHaveTextContent('Joseph Quintero');
@@ -41,6 +41,17 @@ it('el Administrador ve su cuenta y las tres herramientas', async () => {
     'href',
     '/consola/catalogo',
   );
+  for (const [nombre, a] of [
+    ['Acopios', '/consola/acopios'],
+    ['Entidades', '/consola/entidades'],
+    ['Zonas afectadas', '/consola/zonas'],
+  ]) {
+    expect(within(admin).getByRole('link', { name: new RegExp(nombre!) })).toHaveAttribute(
+      'href',
+      a,
+    );
+  }
+  expect(screen.queryByRole('region', { name: 'Mi acopio' })).not.toBeInTheDocument();
 });
 
 it('el Auditor solo ve la bitácora', async () => {
@@ -50,9 +61,29 @@ it('el Auditor solo ve la bitácora', async () => {
   expect(within(admin).getByRole('link', { name: /Bitácora/ })).toBeInTheDocument();
 });
 
-it('un Operador no tiene herramientas de administración todavía', async () => {
+it('un Operador ve una fila «Mi acopio» por cada acopio asignado', async () => {
+  responderSegun({
+    'GET /api/ubicaciones/mias': [
+      {
+        tipo: 'ACOPIO',
+        id: 'x1',
+        nombre: 'Acopio Chapinero',
+        municipio: 'Bogotá',
+        estado: 'ACTIVO',
+      },
+      { tipo: 'ACOPIO', id: 'x2', nombre: 'Acopio Suba', municipio: 'Bogotá', estado: 'PAUSADO' },
+    ],
+  });
   pantalla(persona('OPERADOR'));
-  await screen.findByRole('region', { name: 'Tu cuenta' });
+  const mio = await screen.findByRole('region', { name: 'Mi acopio' });
+  expect(await within(mio).findByRole('link', { name: /Acopio Chapinero/ })).toHaveAttribute(
+    'href',
+    '/consola/acopios/x1/operacion',
+  );
+  expect(within(mio).getByRole('link', { name: /Acopio Suba/ })).toHaveAttribute(
+    'href',
+    '/consola/acopios/x2/operacion',
+  );
   expect(screen.queryByRole('region', { name: 'Administración' })).not.toBeInTheDocument();
 });
 
