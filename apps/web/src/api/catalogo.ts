@@ -149,3 +149,12 @@ export const useCerrarEmergencia = () =>
       ),
     ['emergencias'],
   );
+
+/** Categorías vigentes sin sesión: el filtro del mapa público (P5). */
+export function useCategoriasVigentes() {
+  return useQuery<Categoria[], ErrorApi>({
+    queryKey: ['categorias', 'vigentes'],
+    queryFn: async () =>
+      (await desenvolver(api.GET('/api/categorias/vigentes'))) as unknown as Categoria[],
+  });
+}

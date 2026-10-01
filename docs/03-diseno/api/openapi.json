@@ -955,6 +955,32 @@
         ]
       }
     },
+    "/api/categorias/vigentes": {
+      "get": {
+        "operationId": "CatalogoController_listarVigentes",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CategoriaDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "summary": "Categorías vigentes, sin las archivadas. No exige sesión",
+        "tags": [
+          "catálogo"
+        ]
+      }
+    },
     "/api/categorias/buscar": {
       "get": {
         "operationId": "CatalogoController_buscar",

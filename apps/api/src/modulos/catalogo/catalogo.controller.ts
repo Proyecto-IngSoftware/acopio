@@ -125,6 +125,18 @@ export class CatalogoController {
     return this.categorias.listar(filtro);
   }
 
+  // El filtro «qué no recibe» del mapa público necesita la lista sin sesión (P5)
+  @Publico()
+  @ApiOperation({
+    summary: 'Categorías vigentes, sin las archivadas. No exige sesión',
+    security: [],
+  })
+  @Get('categorias/vigentes')
+  @ApiOkResponse({ type: CategoriaDto, isArray: true })
+  listarVigentes() {
+    return this.categorias.listar({ incluirArchivadas: false });
+  }
+
   /** Búsqueda por palabra clave para la entrada rápida (RF-CAT-002). */
   @Get('categorias/buscar')
   @ApiOkResponse({ type: ResultadoBusquedaDto, isArray: true })

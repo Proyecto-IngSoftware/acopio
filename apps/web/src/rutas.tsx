@@ -17,10 +17,11 @@ import { RequiereRol } from './consola/RequiereRol';
 import { MarcoPortal } from './portal/MarcoPortal';
 import { Mas } from './portal/Mas';
 import { NoEncontrada } from './portal/NoEncontrada';
+import { Mapa } from './portal/mapa/Mapa';
 import { Portada } from './portal/Portada';
 import { Proximamente } from './portal/Proximamente';
 
-const SIN_CONSTRUIR = ['mapa', 'causas', 'voluntariado', 'proximamente'];
+const SIN_CONSTRUIR = ['causas', 'voluntariado', 'proximamente'];
 
 /** /consola/* queda reservado para el ciclo 2. */
 export function Rutas() {
@@ -29,6 +30,7 @@ export function Rutas() {
       <Route element={<MarcoPortal />}>
         <Route index element={<Portada />} />
         <Route path="mas" element={<Mas />} />
+        <Route path="mapa" element={<Mapa />} />
         <Route
           path="consola/bitacora"
           element={

@@ -57,6 +57,14 @@ describe('catálogo', () => {
   });
 
   describe('categorías (RF-CAT-001)', () => {
+    it('las categorías vigentes se leen sin sesión, para el filtro del mapa público', async () => {
+      const r = await a.http().get('/api/categorias/vigentes').expect(200);
+      const nombres = (r.body as { nombre: string; archivada: boolean }[]).map((c) => c.nombre);
+      expect(nombres).toContain('Arroz');
+      expect((r.body as { archivada: boolean }[]).every((c) => !c.archivada)).toBe(true);
+      await a.http().get('/api/categorias').expect(401);
+    });
+
     it('una categoría con canasta no se elimina; se archiva', async () => {
       const agua = (
         await a.prisma.categoria.findUniqueOrThrow({ where: { nombre: 'Agua potable' } })
