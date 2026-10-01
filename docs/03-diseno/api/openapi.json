@@ -1540,6 +1540,162 @@
         ]
       }
     },
+    "/api/codigos-barras": {
+      "get": {
+        "operationId": "CodigosBarrasController_listar",
+        "parameters": [
+          {
+            "name": "revisado",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "true",
+                "false"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CodigoBarrasDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "catalogo"
+        ]
+      },
+      "post": {
+        "operationId": "CodigosBarrasController_asociar",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AsociarDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodigoBarrasDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "catalogo"
+        ]
+      }
+    },
+    "/api/codigos-barras/{ean}": {
+      "get": {
+        "operationId": "CodigosBarrasController_obtener",
+        "parameters": [
+          {
+            "name": "ean",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "pattern": "^(\\d{8}|\\d{12,14})$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodigoBarrasDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "catalogo"
+        ]
+      },
+      "patch": {
+        "operationId": "CodigosBarrasController_editar",
+        "parameters": [
+          {
+            "name": "ean",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "pattern": "^(\\d{8}|\\d{12,14})$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditarDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodigoBarrasDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "catalogo"
+        ]
+      }
+    },
     "/api/entidades": {
       "get": {
         "operationId": "EntidadesController_listar",
@@ -2369,6 +2525,410 @@
         ]
       }
     },
+    "/api/acopios/{id}/entradas": {
+      "post": {
+        "operationId": "MovimientosController_entrada",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntradaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reintento: el movimiento ya existía",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultadoMovimientoDto"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Movimiento nuevo",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultadoMovimientoDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "inventario"
+        ]
+      }
+    },
+    "/api/acopios/{id}/salidas": {
+      "post": {
+        "operationId": "MovimientosController_salida",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SalidaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultadoMovimientoDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "inventario"
+        ]
+      }
+    },
+    "/api/acopios/{id}/ajustes": {
+      "post": {
+        "operationId": "MovimientosController_ajuste",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AjusteDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultadoMovimientoDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "inventario"
+        ]
+      }
+    },
+    "/api/acopios/{id}/saldos": {
+      "get": {
+        "operationId": "ConsultasController_saldos",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SaldoDto"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "inventario"
+        ]
+      }
+    },
+    "/api/acopios/{id}/movimientos": {
+      "get": {
+        "operationId": "ConsultasController_historial",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoriaId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "cursor",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "maxLength": 100,
+              "type": "string"
+            }
+          },
+          {
+            "name": "limite",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginaHistorialDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "inventario"
+        ]
+      }
+    },
+    "/api/acopios/{id}/umbrales/{categoriaId}": {
+      "put": {
+        "operationId": "UmbralesController_fijar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoriaId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FijarUmbralDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UmbralDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "inventario"
+        ]
+      },
+      "delete": {
+        "operationId": "UmbralesController_quitar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "categoriaId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "inventario"
+        ]
+      }
+    },
     "/api/salud": {
       "get": {
         "operationId": "SaludController_revisar",
@@ -2609,23 +3169,31 @@
             "description": "Mensaje en español, listo para mostrar"
           },
           "detalles": {
-            "description": "Solo en errores de validación: un mensaje por campo",
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "campo": {
-                  "type": "string"
-                },
-                "mensaje": {
-                  "type": "string"
+            "description": "En errores de validación, un mensaje por campo. En algunos errores de dominio, datos para la interfaz (SALDO_INSUFICIENTE trae { saldo })",
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "campo": {
+                      "type": "string"
+                    },
+                    "mensaje": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "campo",
+                    "mensaje"
+                  ]
                 }
               },
-              "required": [
-                "campo",
-                "mensaje"
-              ]
-            }
+              {
+                "type": "object",
+                "additionalProperties": {}
+              }
+            ]
           }
         },
         "required": [
@@ -3656,6 +4224,108 @@
         "required": [
           "motivo"
         ]
+      },
+      "CodigoBarrasDto": {
+        "type": "object",
+        "properties": {
+          "ean": {
+            "type": "string"
+          },
+          "categoriaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "categoria": {
+            "type": "string"
+          },
+          "unidad": {
+            "type": "string",
+            "enum": [
+              "LITRO",
+              "KILOGRAMO",
+              "UNIDAD"
+            ]
+          },
+          "contenido": {
+            "description": "Unidad base que trae una presentación",
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "descripcion": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "revisado": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ean",
+          "categoriaId",
+          "categoria",
+          "unidad",
+          "contenido",
+          "descripcion",
+          "revisado"
+        ]
+      },
+      "AsociarDto": {
+        "type": "object",
+        "properties": {
+          "ean": {
+            "type": "string",
+            "pattern": "^(\\d{8}|\\d{12,14})$"
+          },
+          "categoriaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "contenido": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "exclusiveMaximum": 1000000,
+            "nullable": true
+          },
+          "descripcion": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          }
+        },
+        "required": [
+          "ean",
+          "categoriaId"
+        ]
+      },
+      "EditarDto": {
+        "type": "object",
+        "properties": {
+          "categoriaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "contenido": {
+            "type": "number",
+            "exclusiveMinimum": 0,
+            "exclusiveMaximum": 1000000,
+            "nullable": true
+          },
+          "descripcion": {
+            "type": "string",
+            "maxLength": 120,
+            "nullable": true
+          },
+          "revisado": {
+            "type": "boolean"
+          }
+        }
       },
       "EntidadDto": {
         "type": "object",
@@ -5153,6 +5823,492 @@
             "nullable": true
           }
         }
+      },
+      "EntradaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "categoriaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "cantidad": {
+            "type": "number",
+            "exclusiveMinimum": true,
+            "exclusiveMaximum": true,
+            "minimum": 0,
+            "maximum": 1000000000
+          },
+          "venceEn": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "ocurridoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+          },
+          "origenOffline": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "categoriaId",
+          "cantidad"
+        ]
+      },
+      "ResultadoMovimientoDto": {
+        "type": "object",
+        "properties": {
+          "movimiento": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "tipo": {
+                "type": "string",
+                "enum": [
+                  "ENTRADA",
+                  "SALIDA",
+                  "AJUSTE"
+                ]
+              },
+              "categoriaId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "cantidad": {
+                "type": "number",
+                "description": "Siempre positiva; el signo lo da el tipo"
+              },
+              "signo": {
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "enum": [
+                      1
+                    ]
+                  },
+                  {
+                    "type": "number",
+                    "enum": [
+                      -1
+                    ]
+                  }
+                ]
+              },
+              "motivoSalida": {
+                "type": "string",
+                "enum": [
+                  "ENTREGA_FAMILIAS",
+                  "TRASLADO",
+                  "VENCIDO",
+                  "OTRO",
+                  null
+                ],
+                "nullable": true
+              },
+              "nota": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "motivo": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "venceEn": {
+                "type": "string",
+                "format": "date",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                "nullable": true
+              },
+              "ocurridoEn": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              "registradoEn": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+              },
+              "origenOffline": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "id",
+              "tipo",
+              "categoriaId",
+              "cantidad",
+              "signo",
+              "motivoSalida",
+              "nota",
+              "motivo",
+              "venceEn",
+              "ocurridoEn",
+              "registradoEn",
+              "origenOffline"
+            ]
+          },
+          "saldo": {
+            "type": "number",
+            "description": "Saldo de la categoría en el acopio después del movimiento"
+          },
+          "noRecibe": {
+            "type": "boolean",
+            "description": "La categoría está marcada «no recibir» en el acopio"
+          }
+        },
+        "required": [
+          "movimiento",
+          "saldo",
+          "noRecibe"
+        ]
+      },
+      "SalidaDto": {
+        "type": "object",
+        "properties": {
+          "categoriaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "cantidad": {
+            "type": "number",
+            "exclusiveMinimum": true,
+            "exclusiveMaximum": true,
+            "minimum": 0,
+            "maximum": 1000000000
+          },
+          "motivoSalida": {
+            "type": "string",
+            "enum": [
+              "ENTREGA_FAMILIAS",
+              "TRASLADO",
+              "VENCIDO",
+              "OTRO"
+            ]
+          },
+          "nota": {
+            "type": "string",
+            "maxLength": 280
+          }
+        },
+        "required": [
+          "categoriaId",
+          "cantidad",
+          "motivoSalida"
+        ]
+      },
+      "AjusteDto": {
+        "type": "object",
+        "properties": {
+          "categoriaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "cantidadContada": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMaximum": true,
+            "maximum": 1000000000
+          },
+          "motivo": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "categoriaId",
+          "cantidadContada",
+          "motivo"
+        ]
+      },
+      "SaldoDto": {
+        "type": "object",
+        "properties": {
+          "categoriaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "categoria": {
+            "type": "string"
+          },
+          "grupo": {
+            "type": "string"
+          },
+          "unidad": {
+            "type": "string",
+            "enum": [
+              "LITRO",
+              "KILOGRAMO",
+              "UNIDAD"
+            ]
+          },
+          "perecedero": {
+            "type": "boolean"
+          },
+          "cantidad": {
+            "type": "number"
+          },
+          "umbral": {
+            "type": "object",
+            "properties": {
+              "minimo": {
+                "type": "number"
+              },
+              "maximo": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "minimo",
+              "maximo"
+            ],
+            "nullable": true
+          },
+          "semaforo": {
+            "type": "string",
+            "enum": [
+              "SIN_UMBRAL",
+              "BAJO",
+              "CERCA",
+              "EN_RANGO",
+              "SOBRE"
+            ]
+          },
+          "ultimoMovimiento": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+            "nullable": true
+          },
+          "vencimientos": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "venceEn": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                  "nullable": true
+                },
+                "cantidad": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "venceEn",
+                "cantidad"
+              ]
+            },
+            "description": "Estimado: supone que sale primero lo que vence antes (V-02). Vacío si no es perecedero"
+          }
+        },
+        "required": [
+          "categoriaId",
+          "categoria",
+          "grupo",
+          "unidad",
+          "perecedero",
+          "cantidad",
+          "umbral",
+          "semaforo",
+          "ultimoMovimiento",
+          "vencimientos"
+        ]
+      },
+      "PaginaHistorialDto": {
+        "type": "object",
+        "properties": {
+          "filas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "tipo": {
+                  "type": "string",
+                  "enum": [
+                    "ENTRADA",
+                    "SALIDA",
+                    "AJUSTE"
+                  ]
+                },
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "cantidad": {
+                  "type": "number",
+                  "description": "Siempre positiva; el signo lo da el tipo"
+                },
+                "signo": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "enum": [
+                        1
+                      ]
+                    },
+                    {
+                      "type": "number",
+                      "enum": [
+                        -1
+                      ]
+                    }
+                  ]
+                },
+                "motivoSalida": {
+                  "type": "string",
+                  "enum": [
+                    "ENTREGA_FAMILIAS",
+                    "TRASLADO",
+                    "VENCIDO",
+                    "OTRO",
+                    null
+                  ],
+                  "nullable": true
+                },
+                "nota": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "motivo": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "venceEn": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                  "nullable": true
+                },
+                "ocurridoEn": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "registradoEn": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "origenOffline": {
+                  "type": "boolean"
+                },
+                "usuario": {
+                  "type": "string"
+                },
+                "saldoDespues": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "tipo",
+                "categoriaId",
+                "cantidad",
+                "signo",
+                "motivoSalida",
+                "nota",
+                "motivo",
+                "venceEn",
+                "ocurridoEn",
+                "registradoEn",
+                "origenOffline",
+                "usuario",
+                "saldoDespues"
+              ]
+            }
+          },
+          "siguiente": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "filas",
+          "siguiente"
+        ]
+      },
+      "FijarUmbralDto": {
+        "type": "object",
+        "properties": {
+          "minimo": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMaximum": true,
+            "maximum": 1000000000
+          },
+          "maximo": {
+            "type": "number",
+            "minimum": 0,
+            "exclusiveMaximum": true,
+            "maximum": 1000000000
+          }
+        },
+        "required": [
+          "minimo",
+          "maximo"
+        ]
+      },
+      "UmbralDto": {
+        "type": "object",
+        "properties": {
+          "categoriaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "minimo": {
+            "type": "number"
+          },
+          "maximo": {
+            "type": "number"
+          },
+          "actualizadoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          }
+        },
+        "required": [
+          "categoriaId",
+          "minimo",
+          "maximo",
+          "actualizadoEn"
+        ]
       },
       "SaludDto": {
         "type": "object",

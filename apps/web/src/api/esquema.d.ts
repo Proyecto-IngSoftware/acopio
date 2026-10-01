@@ -4,2843 +4,3396 @@
  */
 
 export interface paths {
-  '/api/bitacora': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/bitacora": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BitacoraController_buscar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['BitacoraController_buscar'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/auth/sesion': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/auth/sesion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["SesionController_iniciar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['SesionController_iniciar'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/auth/salir': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/auth/salir": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["SesionController_salir"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['SesionController_salir'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/auth/yo': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/auth/yo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SesionController_yo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['SesionController_yo'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/auth/.well-known/jwks.json': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/auth/.well-known/jwks.json": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SesionController_jwks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['SesionController_jwks'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/invitaciones/{token}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/invitaciones/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["InvitacionesController_consultar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['InvitacionesController_consultar'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/invitaciones/{token}/canje': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/invitaciones/{token}/canje": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["InvitacionesController_canjear"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['InvitacionesController_canjear'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/usuarios': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/usuarios": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["UsuariosController_listar"];
+        put?: never;
+        post: operations["UsuariosController_crear"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['UsuariosController_listar'];
-    put?: never;
-    post: operations['UsuariosController_crear'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/usuarios/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/usuarios/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["UsuariosController_obtener"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["UsuariosController_actualizar"];
+        trace?: never;
     };
-    get: operations['UsuariosController_obtener'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch: operations['UsuariosController_actualizar'];
-    trace?: never;
-  };
-  '/api/usuarios/{id}/suspender': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/usuarios/{id}/suspender": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["UsuariosController_suspender"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['UsuariosController_suspender'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/usuarios/{id}/reactivar': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/usuarios/{id}/reactivar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["UsuariosController_reactivar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['UsuariosController_reactivar'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/usuarios/{id}/invitacion': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/usuarios/{id}/invitacion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["UsuariosController_reinvitar"];
+        delete: operations["UsuariosController_revocarInvitacion"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['UsuariosController_reinvitar'];
-    delete: operations['UsuariosController_revocarInvitacion'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/usuarios/{id}/restablecer': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/usuarios/{id}/restablecer": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["UsuariosController_restablecer"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['UsuariosController_restablecer'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/usuarios/{id}/asignaciones': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/usuarios/{id}/asignaciones": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["UsuariosController_asignar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['UsuariosController_asignar'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/usuarios/{id}/asignaciones/{tipo}/{ubicacionId}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/usuarios/{id}/asignaciones/{tipo}/{ubicacionId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["UsuariosController_desasignar"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete: operations['UsuariosController_desasignar'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/categorias': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/categorias": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CatalogoController_listarCategorias"];
+        put?: never;
+        post: operations["CatalogoController_crearCategoria"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['CatalogoController_listarCategorias'];
-    put?: never;
-    post: operations['CatalogoController_crearCategoria'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/categorias/vigentes': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/categorias/vigentes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Categorías vigentes, sin las archivadas. No exige sesión */
+        get: operations["CatalogoController_listarVigentes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Categorías vigentes, sin las archivadas. No exige sesión */
-    get: operations['CatalogoController_listarVigentes'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/categorias/buscar': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/categorias/buscar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CatalogoController_buscar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['CatalogoController_buscar'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/categorias/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/categorias/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CatalogoController_obtenerCategoria"];
+        put?: never;
+        post?: never;
+        delete: operations["CatalogoController_eliminarCategoria"];
+        options?: never;
+        head?: never;
+        patch: operations["CatalogoController_actualizarCategoria"];
+        trace?: never;
     };
-    get: operations['CatalogoController_obtenerCategoria'];
-    put?: never;
-    post?: never;
-    delete: operations['CatalogoController_eliminarCategoria'];
-    options?: never;
-    head?: never;
-    patch: operations['CatalogoController_actualizarCategoria'];
-    trace?: never;
-  };
-  '/api/categorias/{id}/archivar': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/categorias/{id}/archivar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CatalogoController_archivar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['CatalogoController_archivar'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/categorias/{id}/reactivar': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/categorias/{id}/reactivar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CatalogoController_reactivarCategoria"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['CatalogoController_reactivarCategoria'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/canasta': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/canasta": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CatalogoController_canastaVigente"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['CatalogoController_canastaVigente'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/categorias/{id}/canasta': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/categorias/{id}/canasta": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CatalogoController_historialCanasta"];
+        put?: never;
+        post: operations["CatalogoController_agregarVersion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['CatalogoController_historialCanasta'];
-    put?: never;
-    post: operations['CatalogoController_agregarVersion'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/emergencias': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/emergencias": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lista las emergencias. No exige sesión */
+        get: operations["CatalogoController_listarEmergencias"];
+        put?: never;
+        post: operations["CatalogoController_crearEmergencia"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Lista las emergencias. No exige sesión */
-    get: operations['CatalogoController_listarEmergencias'];
-    put?: never;
-    post: operations['CatalogoController_crearEmergencia'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/emergencias/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/emergencias/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["CatalogoController_actualizarEmergencia"];
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch: operations['CatalogoController_actualizarEmergencia'];
-    trace?: never;
-  };
-  '/api/emergencias/{id}/cerrar': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/emergencias/{id}/cerrar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CatalogoController_cerrarEmergencia"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post: operations['CatalogoController_cerrarEmergencia'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/entidades': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/codigos-barras": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CodigosBarrasController_listar"];
+        put?: never;
+        post: operations["CodigosBarrasController_asociar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['EntidadesController_listar'];
-    put?: never;
-    post: operations['EntidadesController_crear'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/entidades/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/codigos-barras/{ean}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CodigosBarrasController_obtener"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["CodigosBarrasController_editar"];
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch: operations['EntidadesController_actualizar'];
-    trace?: never;
-  };
-  '/api/acopios': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/entidades": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["EntidadesController_listar"];
+        put?: never;
+        post: operations["EntidadesController_crear"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Acopios activos y pausados para el mapa. No exige sesión */
-    get: operations['AcopiosController_listarPublicos'];
-    put?: never;
-    post: operations['AcopiosController_crear'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/acopios/gestion': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/entidades/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["EntidadesController_actualizar"];
+        trace?: never;
     };
-    get: operations['AcopiosController_listarGestion'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/acopios/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/acopios": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Acopios activos y pausados para el mapa. No exige sesión */
+        get: operations["AcopiosController_listarPublicos"];
+        put?: never;
+        post: operations["AcopiosController_crear"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Ficha pública de un acopio. No exige sesión */
-    get: operations['AcopiosController_obtenerPublico'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch: operations['AcopiosController_actualizar'];
-    trace?: never;
-  };
-  '/api/acopios/{id}/operacion': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/acopios/gestion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AcopiosController_listarGestion"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch: operations['AcopiosController_operar'];
-    trace?: never;
-  };
-  '/api/zonas': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/acopios/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Ficha pública de un acopio. No exige sesión */
+        get: operations["AcopiosController_obtenerPublico"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["AcopiosController_actualizar"];
+        trace?: never;
     };
-    get: operations['ZonasController_listar'];
-    put?: never;
-    post: operations['ZonasController_crear'];
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/zonas/{id}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/acopios/{id}/operacion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["AcopiosController_operar"];
+        trace?: never;
     };
-    get?: never;
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch: operations['ZonasController_actualizar'];
-    trace?: never;
-  };
-  '/api/ubicaciones/mias': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/zonas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ZonasController_listar"];
+        put?: never;
+        post: operations["ZonasController_crear"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['UbicacionesController_mias'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/ubicaciones': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/zonas/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["ZonasController_actualizar"];
+        trace?: never;
     };
-    get: operations['UbicacionesController_buscar'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/geocodificar': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/ubicaciones/mias": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["UbicacionesController_mias"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Dirección a coordenadas, solo en Colombia. No exige sesión */
-    get: operations['GeocodificacionController_buscar'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/acopios/{id}/no-recibir': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/ubicaciones": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["UbicacionesController_buscar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Lo que un acopio no recibe hoy. No exige sesión */
-    get: operations['NoRecibirController_listar'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/no-recibir': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/geocodificar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Dirección a coordenadas, solo en Colombia. No exige sesión */
+        get: operations["GeocodificacionController_buscar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    /** Acopios que no reciben una categoría. No exige sesión */
-    get: operations['NoRecibirController_porCategoria'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/acopios/{id}/no-recibir/{categoriaId}': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/acopios/{id}/no-recibir": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lo que un acopio no recibe hoy. No exige sesión */
+        get: operations["NoRecibirController_listar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get?: never;
-    put: operations['NoRecibirController_marcar'];
-    post?: never;
-    delete: operations['NoRecibirController_desmarcar'];
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
-  '/api/salud': {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
+    "/api/no-recibir": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Acopios que no reciben una categoría. No exige sesión */
+        get: operations["NoRecibirController_porCategoria"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
     };
-    get: operations['SaludController_revisar'];
-    put?: never;
-    post?: never;
-    delete?: never;
-    options?: never;
-    head?: never;
-    patch?: never;
-    trace?: never;
-  };
+    "/api/acopios/{id}/no-recibir/{categoriaId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["NoRecibirController_marcar"];
+        post?: never;
+        delete: operations["NoRecibirController_desmarcar"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/acopios/{id}/entradas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MovimientosController_entrada"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/acopios/{id}/salidas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MovimientosController_salida"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/acopios/{id}/ajustes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["MovimientosController_ajuste"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/acopios/{id}/saldos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ConsultasController_saldos"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/acopios/{id}/movimientos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ConsultasController_historial"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/acopios/{id}/umbrales/{categoriaId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["UmbralesController_fijar"];
+        post?: never;
+        delete: operations["UmbralesController_quitar"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/salud": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SaludController_revisar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-  schemas: {
-    PaginaBitacoraDto: {
-      total: number;
-      pagina: number;
-      porPagina: number;
-      registros: {
-        /** Format: uuid */
-        id: string;
-        /** Format: uuid */
-        usuario_id: string | null;
-        accion: string;
-        entidad: string;
-        entidad_id: string | null;
-        /** Format: uuid */
-        ubicacion_id: string | null;
-        datos_antes: unknown;
-        datos_despues: unknown;
-        destacado: boolean;
-        /** Format: date-time */
-        ocurrido_en: string;
-        usuario: {
-          /** Format: uuid */
-          id: string;
-          username: string | null;
-          nombre: string;
-        } | null;
-      }[];
+    schemas: {
+        PaginaBitacoraDto: {
+            total: number;
+            pagina: number;
+            porPagina: number;
+            registros: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                usuario_id: string | null;
+                accion: string;
+                entidad: string;
+                entidad_id: string | null;
+                /** Format: uuid */
+                ubicacion_id: string | null;
+                datos_antes: unknown;
+                datos_despues: unknown;
+                destacado: boolean;
+                /** Format: date-time */
+                ocurrido_en: string;
+                usuario: {
+                    /** Format: uuid */
+                    id: string;
+                    username: string | null;
+                    nombre: string;
+                } | null;
+            }[];
+        };
+        IniciarSesionDto: {
+            /** @description Nombre de usuario, no correo */
+            usuario: string;
+            contrasena: string;
+        };
+        SesionDto: {
+            /** Format: date-time */
+            expiraEn: string;
+            usuario: {
+                /** Format: uuid */
+                id: string;
+                username: string | null;
+                nombre: string;
+                /** @enum {string} */
+                rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
+            };
+        };
+        ErrorDto: {
+            estado: number;
+            /** @description Código estable para la interfaz, por ejemplo ULTIMO_ADMIN */
+            codigo: string;
+            /** @description Mensaje en español, listo para mostrar */
+            mensaje: string;
+            /** @description En errores de validación, un mensaje por campo. En algunos errores de dominio, datos para la interfaz (SALDO_INSUFICIENTE trae { saldo }) */
+            detalles?: {
+                campo: string;
+                mensaje: string;
+            }[] | {
+                [key: string]: unknown;
+            };
+        };
+        YoDto: {
+            /** Format: uuid */
+            id: string;
+            username: string[];
+            nombre: string;
+            /** @enum {string} */
+            rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
+            /** @description El Administrador actúa sobre todas las ubicaciones */
+            alcanceGlobal: boolean;
+            asignaciones: {
+                /** @enum {string} */
+                tipo: "ACOPIO" | "ZONA";
+                /** Format: uuid */
+                ubicacionId: string;
+            }[];
+        };
+        InvitacionPublicaDto: {
+            username: string[];
+            nombre: string;
+            /** @enum {string} */
+            rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
+            esRestablecimiento: boolean;
+            /** Format: date-time */
+            venceEn: string;
+            asignaciones: {
+                /** @enum {string} */
+                tipo: "ACOPIO" | "ZONA";
+                /** Format: uuid */
+                ubicacionId: string;
+            }[];
+        };
+        CanjearDto: {
+            contrasena: string;
+        };
+        CanjeDto: {
+            username: string[];
+        };
+        CrearUsuarioDto: {
+            username: string;
+            nombre: string;
+            /** @enum {string} */
+            rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR";
+            /**
+             * Format: email
+             * @description Sin correo no hay recuperación de contraseña
+             */
+            correo?: string | null;
+            /** @default [] */
+            asignaciones: {
+                /** @enum {string} */
+                tipo: "ACOPIO" | "ZONA";
+                /** Format: uuid */
+                ubicacionId: string;
+            }[];
+        };
+        UsuarioCreadoDto: {
+            usuario: {
+                /** Format: uuid */
+                id: string;
+                username: string | null;
+                nombre: string;
+                /** @description Nulo si no tiene correo real */
+                correo: string | null;
+                sinCorreoReal: boolean;
+                /** @enum {string} */
+                rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
+                /** @enum {string} */
+                estado: "INVITADO" | "ACTIVO" | "SUSPENDIDO";
+                /** Format: date-time */
+                creadoEn: string;
+                asignaciones: {
+                    /** @enum {string} */
+                    tipo: "ACOPIO" | "ZONA";
+                    /** Format: uuid */
+                    ubicacionId: string;
+                    /** Format: uuid */
+                    asignadoPor: string;
+                    /** Format: date-time */
+                    asignadoEn: string;
+                }[];
+                invitacionPendiente: {
+                    /** Format: date-time */
+                    venceEn: string;
+                } | null;
+                restablecimientoPendiente: {
+                    /** Format: date-time */
+                    venceEn: string;
+                } | null;
+            };
+            invitacion: {
+                /** @description APP_URL/invitacion/<token>. Copiable para WhatsApp */
+                enlace: string;
+                /** Format: date-time */
+                venceEn: string;
+            };
+        };
+        UsuarioDto: {
+            /** Format: uuid */
+            id: string;
+            username: string[];
+            nombre: string;
+            /** @description Nulo si no tiene correo real */
+            correo: string[];
+            sinCorreoReal: boolean;
+            /** @enum {string} */
+            rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
+            /** @enum {string} */
+            estado: "INVITADO" | "ACTIVO" | "SUSPENDIDO";
+            /** Format: date-time */
+            creadoEn: string;
+            asignaciones: {
+                /** @enum {string} */
+                tipo: "ACOPIO" | "ZONA";
+                /** Format: uuid */
+                ubicacionId: string;
+                /** Format: uuid */
+                asignadoPor: string;
+                /** Format: date-time */
+                asignadoEn: string;
+            }[];
+            invitacionPendiente: {
+                /** Format: date-time */
+                venceEn: string;
+            } | null;
+            restablecimientoPendiente: {
+                /** Format: date-time */
+                venceEn: string;
+            } | null;
+        };
+        ActualizarUsuarioDto: {
+            nombre?: string;
+            /** @enum {string} */
+            rol?: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR";
+            /** Format: email */
+            correo?: string | null;
+        };
+        EnlaceInvitacionDto: {
+            /** @description APP_URL/invitacion/<token>. Copiable para WhatsApp */
+            enlace: string;
+            /** Format: date-time */
+            venceEn: string;
+        };
+        RevocadasDto: {
+            revocadas: number;
+        };
+        RestablecerDto: {
+            motivo: string;
+        };
+        AsignacionDto: {
+            /** @enum {string} */
+            tipo: "ACOPIO" | "ZONA";
+            /** Format: uuid */
+            ubicacionId: string;
+        };
+        CategoriaDto: {
+            /** Format: uuid */
+            id: string;
+            nombre: string;
+            /** @enum {string} */
+            grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
+            /** @enum {string} */
+            unidadBase: "LITRO" | "KILOGRAMO" | "UNIDAD";
+            perecedero: boolean;
+            sinonimos: string[];
+            archivada: boolean;
+        };
+        ResultadoBusquedaDto: {
+            /** Format: uuid */
+            id: string;
+            nombre: string;
+            /** @enum {string} */
+            grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
+            /** @enum {string} */
+            unidadBase: "LITRO" | "KILOGRAMO" | "UNIDAD";
+            perecedero: boolean;
+            /** @description 0 a 1; mayor es mejor coincidencia */
+            puntaje: number;
+        };
+        CrearCategoriaDto: {
+            nombre: string;
+            /** @enum {string} */
+            grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
+            /** @enum {string} */
+            unidadBase: "LITRO" | "KILOGRAMO" | "UNIDAD";
+            /** @default false */
+            perecedero: boolean;
+            /** @default [] */
+            sinonimos: string[];
+        };
+        ActualizarCategoriaDto: {
+            nombre?: string;
+            /** @enum {string} */
+            grupo?: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
+            perecedero?: boolean;
+            sinonimos?: string[];
+        };
+        CanastaVigenteDto: {
+            /** Format: uuid */
+            categoriaId: string;
+            categoria: string;
+            /** @enum {string} */
+            unidadBase: "LITRO" | "KILOGRAMO" | "UNIDAD";
+            cantidadPersonaDia: number;
+            fuente: string;
+            /** Format: date-time */
+            vigenteDesde: string;
+        };
+        VersionCanastaRespuestaDto: {
+            /** Format: uuid */
+            id: string;
+            cantidadPersonaDia: number;
+            fuente: string;
+            /** Format: date-time */
+            vigenteDesde: string;
+        };
+        VersionCanastaDto: {
+            cantidadPersonaDia: number;
+            /** @description Obligatoria: Esfera, UNGRD, Cruz Roja u otra */
+            fuente: string;
+            /** Format: date */
+            vigenteDesde?: string;
+        };
+        EmergenciaDto: {
+            /** Format: uuid */
+            id: string;
+            nombre: string;
+            tipo: string;
+            /** Format: date-time */
+            inicio: string;
+            horizonteDias: number;
+            /** @enum {string} */
+            estado: "ACTIVA" | "EN_SEGUIMIENTO" | "CERRADA";
+            /** Format: date-time */
+            destacadaHasta: string;
+            /** Format: date-time */
+            cerradaEn: string | null;
+            motivoCierre: string[];
+        };
+        CrearEmergenciaDto: {
+            nombre: string;
+            tipo: string;
+            /** Format: date */
+            inicio: string;
+            horizonteDias?: number;
+            /** Format: date */
+            destacadaHasta: string;
+        };
+        ActualizarEmergenciaDto: {
+            nombre?: string;
+            tipo?: string;
+            /** Format: date */
+            inicio?: string;
+            horizonteDias?: number;
+            /** Format: date */
+            destacadaHasta?: string;
+        };
+        CerrarEmergenciaDto: {
+            motivo: string;
+        };
+        CodigoBarrasDto: {
+            ean: string;
+            /** Format: uuid */
+            categoriaId: string;
+            categoria: string;
+            /** @enum {string} */
+            unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
+            /** @description Unidad base que trae una presentación */
+            contenido: number[];
+            descripcion: string[];
+            revisado: boolean;
+        };
+        AsociarDto: {
+            ean: string;
+            /** Format: uuid */
+            categoriaId: string;
+            contenido?: number | null;
+            descripcion?: string | null;
+        };
+        EditarDto: {
+            /** Format: uuid */
+            categoriaId?: string;
+            contenido?: number | null;
+            descripcion?: string | null;
+            revisado?: boolean;
+        };
+        EntidadDto: {
+            /** Format: uuid */
+            id: string;
+            nombre: string;
+            tipo: string;
+            nit: string[];
+            sitioWeb: string[];
+            telefono: string[];
+            correo: string[];
+            descripcion: string[];
+            /** @enum {string} */
+            verificacion: "SIN_VERIFICAR" | "VERIFICADA" | "RECHAZADA";
+        };
+        CrearEntidadDto: {
+            nombre: string;
+            /** @description Fundación, ONG, alcaldía, iglesia… */
+            tipo: string;
+            nit?: string | null;
+            /** Format: uri */
+            sitioWeb?: string | null;
+            telefono?: string | null;
+            /** Format: email */
+            correo?: string | null;
+            descripcion?: string | null;
+        };
+        ActualizarEntidadDto: {
+            nombre?: string;
+            /** @description Fundación, ONG, alcaldía, iglesia… */
+            tipo?: string;
+            nit?: string | null;
+            /** Format: uri */
+            sitioWeb?: string | null;
+            telefono?: string | null;
+            /** Format: email */
+            correo?: string | null;
+            descripcion?: string | null;
+        };
+        AcopioPublicoDto: {
+            /** Format: uuid */
+            id: string;
+            nombre: string;
+            entidad: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+            };
+            direccion: string;
+            municipio: string;
+            lat: number;
+            lng: number;
+            telefono: string[];
+            indicacionesAcceso: string[];
+            horario: {
+                dom: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                lun: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                mar: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                mie: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                jue: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                vie: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                sab: {
+                    abre: string;
+                    cierra: string;
+                }[];
+            };
+            /** @enum {string} */
+            estado: "ACTIVO" | "PAUSADO" | "CERRADO";
+            abiertoAhora: boolean;
+            /** Format: date-time */
+            actualizadoEn: string;
+            distanciaKm?: number;
+        };
+        AcopioDto: {
+            /** Format: uuid */
+            id: string;
+            nombre: string;
+            entidad: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+            };
+            direccion: string;
+            municipio: string;
+            lat: number;
+            lng: number;
+            telefono: string[];
+            indicacionesAcceso: string[];
+            horario: {
+                dom: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                lun: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                mar: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                mie: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                jue: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                vie: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                sab: {
+                    abre: string;
+                    cierra: string;
+                }[];
+            };
+            /** @enum {string} */
+            estado: "ACTIVO" | "PAUSADO" | "CERRADO";
+            abiertoAhora: boolean;
+            /** Format: date-time */
+            actualizadoEn: string;
+            distanciaKm?: number;
+            /** Format: date-time */
+            creadoEn: string;
+        };
+        CrearAcopioDto: {
+            /** Format: uuid */
+            entidadId: string;
+            nombre: string;
+            direccion: string;
+            municipio: string;
+            lat: number;
+            lng: number;
+            telefono?: string | null;
+            indicacionesAcceso?: string | null;
+            horario: {
+                dom: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                lun: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                mar: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                mie: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                jue: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                vie: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                sab: {
+                    abre: string;
+                    cierra: string;
+                }[];
+            };
+            /** @enum {string} */
+            estado?: "ACTIVO" | "PAUSADO" | "CERRADO";
+        };
+        ActualizarAcopioDto: {
+            /** Format: uuid */
+            entidadId?: string;
+            nombre?: string;
+            direccion?: string;
+            municipio?: string;
+            lat?: number;
+            lng?: number;
+            telefono?: string | null;
+            indicacionesAcceso?: string | null;
+            horario?: {
+                dom: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                lun: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                mar: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                mie: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                jue: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                vie: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                sab: {
+                    abre: string;
+                    cierra: string;
+                }[];
+            };
+            /** @enum {string} */
+            estado?: "ACTIVO" | "PAUSADO" | "CERRADO";
+        };
+        OperacionDto: {
+            /** @enum {string} */
+            estado?: "ACTIVO" | "PAUSADO";
+            horario?: {
+                dom: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                lun: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                mar: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                mie: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                jue: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                vie: {
+                    abre: string;
+                    cierra: string;
+                }[];
+                sab: {
+                    abre: string;
+                    cierra: string;
+                }[];
+            };
+            indicacionesAcceso?: string | null;
+            telefono?: string | null;
+        };
+        ZonaDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            emergenciaId: string;
+            nombre: string;
+            municipio: string;
+            lat: number;
+            lng: number;
+            poblacionEstimada: number;
+            poblacionFuente: string;
+            /** Format: date-time */
+            poblacionFecha: string;
+            /** @enum {string} */
+            estado: "SIN_ATENDER" | "EN_ATENCION" | "CUBIERTA";
+            /** Format: date-time */
+            actualizadoEn: string;
+        };
+        CrearZonaDto: {
+            /** Format: uuid */
+            emergenciaId: string;
+            nombre: string;
+            municipio: string;
+            lat: number;
+            lng: number;
+            poblacionEstimada: number;
+            poblacionFuente: string;
+            /** Format: date */
+            poblacionFecha: string;
+            /** @enum {string} */
+            estado?: "SIN_ATENDER" | "EN_ATENCION" | "CUBIERTA";
+        };
+        ActualizarZonaDto: {
+            nombre?: string;
+            municipio?: string;
+            lat?: number;
+            lng?: number;
+            poblacionEstimada?: number;
+            poblacionFuente?: string;
+            /** Format: date */
+            poblacionFecha?: string;
+            /** @enum {string} */
+            estado?: "SIN_ATENDER" | "EN_ATENCION" | "CUBIERTA";
+        };
+        UbicacionDto: {
+            /** @enum {string} */
+            tipo: "ACOPIO" | "ZONA";
+            /** Format: uuid */
+            id: string;
+            nombre: string;
+            municipio: string;
+            /** @description Estado del acopio o de la zona */
+            estado: string;
+        };
+        ResultadoGeoDto: {
+            etiqueta: string;
+            lat: number;
+            lng: number;
+        };
+        NoRecibirDto: {
+            /** Format: uuid */
+            categoriaId: string;
+            categoria: string;
+            /** Format: date */
+            hasta: string | null;
+            /** Format: date-time */
+            marcadoEn: string;
+        };
+        AcopioNoRecibeDto: {
+            /** Format: uuid */
+            acopioId: string;
+            /** Format: date */
+            hasta: string | null;
+        };
+        MarcarDto: {
+            /**
+             * Format: date
+             * @description Fecha de reapertura; sin ella, hasta que se desmarque
+             */
+            hasta?: string | null;
+        };
+        EntradaDto: {
+            /** Format: uuid */
+            id?: string;
+            /** Format: uuid */
+            categoriaId: string;
+            cantidad: number;
+            /** Format: date */
+            venceEn?: string;
+            /** Format: date-time */
+            ocurridoEn?: string;
+            origenOffline?: boolean;
+        };
+        ResultadoMovimientoDto: {
+            movimiento: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                tipo: "ENTRADA" | "SALIDA" | "AJUSTE";
+                /** Format: uuid */
+                categoriaId: string;
+                /** @description Siempre positiva; el signo lo da el tipo */
+                cantidad: number;
+                signo: 1 | -1;
+                /** @enum {string|null} */
+                motivoSalida: "ENTREGA_FAMILIAS" | "TRASLADO" | "VENCIDO" | "OTRO" | null;
+                nota: string | null;
+                motivo: string | null;
+                /** Format: date */
+                venceEn: string | null;
+                /** Format: date-time */
+                ocurridoEn: string;
+                /** Format: date-time */
+                registradoEn: string;
+                origenOffline: boolean;
+            };
+            /** @description Saldo de la categoría en el acopio después del movimiento */
+            saldo: number;
+            /** @description La categoría está marcada «no recibir» en el acopio */
+            noRecibe: boolean;
+        };
+        SalidaDto: {
+            /** Format: uuid */
+            categoriaId: string;
+            cantidad: number;
+            /** @enum {string} */
+            motivoSalida: "ENTREGA_FAMILIAS" | "TRASLADO" | "VENCIDO" | "OTRO";
+            nota?: string;
+        };
+        AjusteDto: {
+            /** Format: uuid */
+            categoriaId: string;
+            cantidadContada: number;
+            motivo: string;
+        };
+        SaldoDto: {
+            /** Format: uuid */
+            categoriaId: string;
+            categoria: string;
+            grupo: string;
+            /** @enum {string} */
+            unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
+            perecedero: boolean;
+            cantidad: number;
+            umbral: {
+                minimo: number;
+                maximo: number;
+            } | null;
+            /** @enum {string} */
+            semaforo: "SIN_UMBRAL" | "BAJO" | "CERCA" | "EN_RANGO" | "SOBRE";
+            /** Format: date-time */
+            ultimoMovimiento: string | null;
+            /** @description Estimado: supone que sale primero lo que vence antes (V-02). Vacío si no es perecedero */
+            vencimientos: {
+                /** Format: date */
+                venceEn: string | null;
+                cantidad: number;
+            }[];
+        };
+        PaginaHistorialDto: {
+            filas: {
+                /** Format: uuid */
+                id: string;
+                /** @enum {string} */
+                tipo: "ENTRADA" | "SALIDA" | "AJUSTE";
+                /** Format: uuid */
+                categoriaId: string;
+                /** @description Siempre positiva; el signo lo da el tipo */
+                cantidad: number;
+                signo: 1 | -1;
+                /** @enum {string|null} */
+                motivoSalida: "ENTREGA_FAMILIAS" | "TRASLADO" | "VENCIDO" | "OTRO" | null;
+                nota: string | null;
+                motivo: string | null;
+                /** Format: date */
+                venceEn: string | null;
+                /** Format: date-time */
+                ocurridoEn: string;
+                /** Format: date-time */
+                registradoEn: string;
+                origenOffline: boolean;
+                usuario: string;
+                saldoDespues: number;
+            }[];
+            siguiente: string[];
+        };
+        FijarUmbralDto: {
+            minimo: number;
+            maximo: number;
+        };
+        UmbralDto: {
+            /** Format: uuid */
+            categoriaId: string;
+            minimo: number;
+            maximo: number;
+            /** Format: date-time */
+            actualizadoEn: string;
+        };
+        SaludDto: {
+            /** @enum {string} */
+            estado: "ok";
+            /** @enum {string} */
+            base: "ok";
+        };
     };
-    IniciarSesionDto: {
-      /** @description Nombre de usuario, no correo */
-      usuario: string;
-      contrasena: string;
-    };
-    SesionDto: {
-      /** Format: date-time */
-      expiraEn: string;
-      usuario: {
-        /** Format: uuid */
-        id: string;
-        username: string | null;
-        nombre: string;
-        /** @enum {string} */
-        rol: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR' | 'DONADOR';
-      };
-    };
-    ErrorDto: {
-      estado: number;
-      /** @description Código estable para la interfaz, por ejemplo ULTIMO_ADMIN */
-      codigo: string;
-      /** @description Mensaje en español, listo para mostrar */
-      mensaje: string;
-      /** @description Solo en errores de validación: un mensaje por campo */
-      detalles?: {
-        campo: string;
-        mensaje: string;
-      }[];
-    };
-    YoDto: {
-      /** Format: uuid */
-      id: string;
-      username: string[];
-      nombre: string;
-      /** @enum {string} */
-      rol: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR' | 'DONADOR';
-      /** @description El Administrador actúa sobre todas las ubicaciones */
-      alcanceGlobal: boolean;
-      asignaciones: {
-        /** @enum {string} */
-        tipo: 'ACOPIO' | 'ZONA';
-        /** Format: uuid */
-        ubicacionId: string;
-      }[];
-    };
-    InvitacionPublicaDto: {
-      username: string[];
-      nombre: string;
-      /** @enum {string} */
-      rol: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR' | 'DONADOR';
-      esRestablecimiento: boolean;
-      /** Format: date-time */
-      venceEn: string;
-      asignaciones: {
-        /** @enum {string} */
-        tipo: 'ACOPIO' | 'ZONA';
-        /** Format: uuid */
-        ubicacionId: string;
-      }[];
-    };
-    CanjearDto: {
-      contrasena: string;
-    };
-    CanjeDto: {
-      username: string[];
-    };
-    CrearUsuarioDto: {
-      username: string;
-      nombre: string;
-      /** @enum {string} */
-      rol: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR';
-      /**
-       * Format: email
-       * @description Sin correo no hay recuperación de contraseña
-       */
-      correo?: string | null;
-      /** @default [] */
-      asignaciones: {
-        /** @enum {string} */
-        tipo: 'ACOPIO' | 'ZONA';
-        /** Format: uuid */
-        ubicacionId: string;
-      }[];
-    };
-    UsuarioCreadoDto: {
-      usuario: {
-        /** Format: uuid */
-        id: string;
-        username: string | null;
-        nombre: string;
-        /** @description Nulo si no tiene correo real */
-        correo: string | null;
-        sinCorreoReal: boolean;
-        /** @enum {string} */
-        rol: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR' | 'DONADOR';
-        /** @enum {string} */
-        estado: 'INVITADO' | 'ACTIVO' | 'SUSPENDIDO';
-        /** Format: date-time */
-        creadoEn: string;
-        asignaciones: {
-          /** @enum {string} */
-          tipo: 'ACOPIO' | 'ZONA';
-          /** Format: uuid */
-          ubicacionId: string;
-          /** Format: uuid */
-          asignadoPor: string;
-          /** Format: date-time */
-          asignadoEn: string;
-        }[];
-        invitacionPendiente: {
-          /** Format: date-time */
-          venceEn: string;
-        } | null;
-        restablecimientoPendiente: {
-          /** Format: date-time */
-          venceEn: string;
-        } | null;
-      };
-      invitacion: {
-        /** @description APP_URL/invitacion/<token>. Copiable para WhatsApp */
-        enlace: string;
-        /** Format: date-time */
-        venceEn: string;
-      };
-    };
-    UsuarioDto: {
-      /** Format: uuid */
-      id: string;
-      username: string[];
-      nombre: string;
-      /** @description Nulo si no tiene correo real */
-      correo: string[];
-      sinCorreoReal: boolean;
-      /** @enum {string} */
-      rol: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR' | 'DONADOR';
-      /** @enum {string} */
-      estado: 'INVITADO' | 'ACTIVO' | 'SUSPENDIDO';
-      /** Format: date-time */
-      creadoEn: string;
-      asignaciones: {
-        /** @enum {string} */
-        tipo: 'ACOPIO' | 'ZONA';
-        /** Format: uuid */
-        ubicacionId: string;
-        /** Format: uuid */
-        asignadoPor: string;
-        /** Format: date-time */
-        asignadoEn: string;
-      }[];
-      invitacionPendiente: {
-        /** Format: date-time */
-        venceEn: string;
-      } | null;
-      restablecimientoPendiente: {
-        /** Format: date-time */
-        venceEn: string;
-      } | null;
-    };
-    ActualizarUsuarioDto: {
-      nombre?: string;
-      /** @enum {string} */
-      rol?: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR';
-      /** Format: email */
-      correo?: string | null;
-    };
-    EnlaceInvitacionDto: {
-      /** @description APP_URL/invitacion/<token>. Copiable para WhatsApp */
-      enlace: string;
-      /** Format: date-time */
-      venceEn: string;
-    };
-    RevocadasDto: {
-      revocadas: number;
-    };
-    RestablecerDto: {
-      motivo: string;
-    };
-    AsignacionDto: {
-      /** @enum {string} */
-      tipo: 'ACOPIO' | 'ZONA';
-      /** Format: uuid */
-      ubicacionId: string;
-    };
-    CategoriaDto: {
-      /** Format: uuid */
-      id: string;
-      nombre: string;
-      /** @enum {string} */
-      grupo:
-        | 'ALIMENTOS'
-        | 'AGUA_Y_BEBIDAS'
-        | 'ASEO_PERSONAL'
-        | 'ASEO_DEL_HOGAR'
-        | 'SALUD'
-        | 'ROPA_Y_ABRIGO'
-        | 'BEBE'
-        | 'ADULTO_MAYOR'
-        | 'ANIMALES'
-        | 'HERRAMIENTAS';
-      /** @enum {string} */
-      unidadBase: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
-      perecedero: boolean;
-      sinonimos: string[];
-      archivada: boolean;
-    };
-    ResultadoBusquedaDto: {
-      /** Format: uuid */
-      id: string;
-      nombre: string;
-      /** @enum {string} */
-      grupo:
-        | 'ALIMENTOS'
-        | 'AGUA_Y_BEBIDAS'
-        | 'ASEO_PERSONAL'
-        | 'ASEO_DEL_HOGAR'
-        | 'SALUD'
-        | 'ROPA_Y_ABRIGO'
-        | 'BEBE'
-        | 'ADULTO_MAYOR'
-        | 'ANIMALES'
-        | 'HERRAMIENTAS';
-      /** @enum {string} */
-      unidadBase: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
-      perecedero: boolean;
-      /** @description 0 a 1; mayor es mejor coincidencia */
-      puntaje: number;
-    };
-    CrearCategoriaDto: {
-      nombre: string;
-      /** @enum {string} */
-      grupo:
-        | 'ALIMENTOS'
-        | 'AGUA_Y_BEBIDAS'
-        | 'ASEO_PERSONAL'
-        | 'ASEO_DEL_HOGAR'
-        | 'SALUD'
-        | 'ROPA_Y_ABRIGO'
-        | 'BEBE'
-        | 'ADULTO_MAYOR'
-        | 'ANIMALES'
-        | 'HERRAMIENTAS';
-      /** @enum {string} */
-      unidadBase: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
-      /** @default false */
-      perecedero: boolean;
-      /** @default [] */
-      sinonimos: string[];
-    };
-    ActualizarCategoriaDto: {
-      nombre?: string;
-      /** @enum {string} */
-      grupo?:
-        | 'ALIMENTOS'
-        | 'AGUA_Y_BEBIDAS'
-        | 'ASEO_PERSONAL'
-        | 'ASEO_DEL_HOGAR'
-        | 'SALUD'
-        | 'ROPA_Y_ABRIGO'
-        | 'BEBE'
-        | 'ADULTO_MAYOR'
-        | 'ANIMALES'
-        | 'HERRAMIENTAS';
-      perecedero?: boolean;
-      sinonimos?: string[];
-    };
-    CanastaVigenteDto: {
-      /** Format: uuid */
-      categoriaId: string;
-      categoria: string;
-      /** @enum {string} */
-      unidadBase: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
-      cantidadPersonaDia: number;
-      fuente: string;
-      /** Format: date-time */
-      vigenteDesde: string;
-    };
-    VersionCanastaRespuestaDto: {
-      /** Format: uuid */
-      id: string;
-      cantidadPersonaDia: number;
-      fuente: string;
-      /** Format: date-time */
-      vigenteDesde: string;
-    };
-    VersionCanastaDto: {
-      cantidadPersonaDia: number;
-      /** @description Obligatoria: Esfera, UNGRD, Cruz Roja u otra */
-      fuente: string;
-      /** Format: date */
-      vigenteDesde?: string;
-    };
-    EmergenciaDto: {
-      /** Format: uuid */
-      id: string;
-      nombre: string;
-      tipo: string;
-      /** Format: date-time */
-      inicio: string;
-      horizonteDias: number;
-      /** @enum {string} */
-      estado: 'ACTIVA' | 'EN_SEGUIMIENTO' | 'CERRADA';
-      /** Format: date-time */
-      destacadaHasta: string;
-      /** Format: date-time */
-      cerradaEn: string | null;
-      motivoCierre: string[];
-    };
-    CrearEmergenciaDto: {
-      nombre: string;
-      tipo: string;
-      /** Format: date */
-      inicio: string;
-      horizonteDias?: number;
-      /** Format: date */
-      destacadaHasta: string;
-    };
-    ActualizarEmergenciaDto: {
-      nombre?: string;
-      tipo?: string;
-      /** Format: date */
-      inicio?: string;
-      horizonteDias?: number;
-      /** Format: date */
-      destacadaHasta?: string;
-    };
-    CerrarEmergenciaDto: {
-      motivo: string;
-    };
-    EntidadDto: {
-      /** Format: uuid */
-      id: string;
-      nombre: string;
-      tipo: string;
-      nit: string[];
-      sitioWeb: string[];
-      telefono: string[];
-      correo: string[];
-      descripcion: string[];
-      /** @enum {string} */
-      verificacion: 'SIN_VERIFICAR' | 'VERIFICADA' | 'RECHAZADA';
-    };
-    CrearEntidadDto: {
-      nombre: string;
-      /** @description Fundación, ONG, alcaldía, iglesia… */
-      tipo: string;
-      nit?: string | null;
-      /** Format: uri */
-      sitioWeb?: string | null;
-      telefono?: string | null;
-      /** Format: email */
-      correo?: string | null;
-      descripcion?: string | null;
-    };
-    ActualizarEntidadDto: {
-      nombre?: string;
-      /** @description Fundación, ONG, alcaldía, iglesia… */
-      tipo?: string;
-      nit?: string | null;
-      /** Format: uri */
-      sitioWeb?: string | null;
-      telefono?: string | null;
-      /** Format: email */
-      correo?: string | null;
-      descripcion?: string | null;
-    };
-    AcopioPublicoDto: {
-      /** Format: uuid */
-      id: string;
-      nombre: string;
-      entidad: {
-        /** Format: uuid */
-        id: string;
-        nombre: string;
-      };
-      direccion: string;
-      municipio: string;
-      lat: number;
-      lng: number;
-      telefono: string[];
-      indicacionesAcceso: string[];
-      horario: {
-        dom: {
-          abre: string;
-          cierra: string;
-        }[];
-        lun: {
-          abre: string;
-          cierra: string;
-        }[];
-        mar: {
-          abre: string;
-          cierra: string;
-        }[];
-        mie: {
-          abre: string;
-          cierra: string;
-        }[];
-        jue: {
-          abre: string;
-          cierra: string;
-        }[];
-        vie: {
-          abre: string;
-          cierra: string;
-        }[];
-        sab: {
-          abre: string;
-          cierra: string;
-        }[];
-      };
-      /** @enum {string} */
-      estado: 'ACTIVO' | 'PAUSADO' | 'CERRADO';
-      abiertoAhora: boolean;
-      /** Format: date-time */
-      actualizadoEn: string;
-      distanciaKm?: number;
-    };
-    AcopioDto: {
-      /** Format: uuid */
-      id: string;
-      nombre: string;
-      entidad: {
-        /** Format: uuid */
-        id: string;
-        nombre: string;
-      };
-      direccion: string;
-      municipio: string;
-      lat: number;
-      lng: number;
-      telefono: string[];
-      indicacionesAcceso: string[];
-      horario: {
-        dom: {
-          abre: string;
-          cierra: string;
-        }[];
-        lun: {
-          abre: string;
-          cierra: string;
-        }[];
-        mar: {
-          abre: string;
-          cierra: string;
-        }[];
-        mie: {
-          abre: string;
-          cierra: string;
-        }[];
-        jue: {
-          abre: string;
-          cierra: string;
-        }[];
-        vie: {
-          abre: string;
-          cierra: string;
-        }[];
-        sab: {
-          abre: string;
-          cierra: string;
-        }[];
-      };
-      /** @enum {string} */
-      estado: 'ACTIVO' | 'PAUSADO' | 'CERRADO';
-      abiertoAhora: boolean;
-      /** Format: date-time */
-      actualizadoEn: string;
-      distanciaKm?: number;
-      /** Format: date-time */
-      creadoEn: string;
-    };
-    CrearAcopioDto: {
-      /** Format: uuid */
-      entidadId: string;
-      nombre: string;
-      direccion: string;
-      municipio: string;
-      lat: number;
-      lng: number;
-      telefono?: string | null;
-      indicacionesAcceso?: string | null;
-      horario: {
-        dom: {
-          abre: string;
-          cierra: string;
-        }[];
-        lun: {
-          abre: string;
-          cierra: string;
-        }[];
-        mar: {
-          abre: string;
-          cierra: string;
-        }[];
-        mie: {
-          abre: string;
-          cierra: string;
-        }[];
-        jue: {
-          abre: string;
-          cierra: string;
-        }[];
-        vie: {
-          abre: string;
-          cierra: string;
-        }[];
-        sab: {
-          abre: string;
-          cierra: string;
-        }[];
-      };
-      /** @enum {string} */
-      estado?: 'ACTIVO' | 'PAUSADO' | 'CERRADO';
-    };
-    ActualizarAcopioDto: {
-      /** Format: uuid */
-      entidadId?: string;
-      nombre?: string;
-      direccion?: string;
-      municipio?: string;
-      lat?: number;
-      lng?: number;
-      telefono?: string | null;
-      indicacionesAcceso?: string | null;
-      horario?: {
-        dom: {
-          abre: string;
-          cierra: string;
-        }[];
-        lun: {
-          abre: string;
-          cierra: string;
-        }[];
-        mar: {
-          abre: string;
-          cierra: string;
-        }[];
-        mie: {
-          abre: string;
-          cierra: string;
-        }[];
-        jue: {
-          abre: string;
-          cierra: string;
-        }[];
-        vie: {
-          abre: string;
-          cierra: string;
-        }[];
-        sab: {
-          abre: string;
-          cierra: string;
-        }[];
-      };
-      /** @enum {string} */
-      estado?: 'ACTIVO' | 'PAUSADO' | 'CERRADO';
-    };
-    OperacionDto: {
-      /** @enum {string} */
-      estado?: 'ACTIVO' | 'PAUSADO';
-      horario?: {
-        dom: {
-          abre: string;
-          cierra: string;
-        }[];
-        lun: {
-          abre: string;
-          cierra: string;
-        }[];
-        mar: {
-          abre: string;
-          cierra: string;
-        }[];
-        mie: {
-          abre: string;
-          cierra: string;
-        }[];
-        jue: {
-          abre: string;
-          cierra: string;
-        }[];
-        vie: {
-          abre: string;
-          cierra: string;
-        }[];
-        sab: {
-          abre: string;
-          cierra: string;
-        }[];
-      };
-      indicacionesAcceso?: string | null;
-      telefono?: string | null;
-    };
-    ZonaDto: {
-      /** Format: uuid */
-      id: string;
-      /** Format: uuid */
-      emergenciaId: string;
-      nombre: string;
-      municipio: string;
-      lat: number;
-      lng: number;
-      poblacionEstimada: number;
-      poblacionFuente: string;
-      /** Format: date-time */
-      poblacionFecha: string;
-      /** @enum {string} */
-      estado: 'SIN_ATENDER' | 'EN_ATENCION' | 'CUBIERTA';
-      /** Format: date-time */
-      actualizadoEn: string;
-    };
-    CrearZonaDto: {
-      /** Format: uuid */
-      emergenciaId: string;
-      nombre: string;
-      municipio: string;
-      lat: number;
-      lng: number;
-      poblacionEstimada: number;
-      poblacionFuente: string;
-      /** Format: date */
-      poblacionFecha: string;
-      /** @enum {string} */
-      estado?: 'SIN_ATENDER' | 'EN_ATENCION' | 'CUBIERTA';
-    };
-    ActualizarZonaDto: {
-      nombre?: string;
-      municipio?: string;
-      lat?: number;
-      lng?: number;
-      poblacionEstimada?: number;
-      poblacionFuente?: string;
-      /** Format: date */
-      poblacionFecha?: string;
-      /** @enum {string} */
-      estado?: 'SIN_ATENDER' | 'EN_ATENCION' | 'CUBIERTA';
-    };
-    UbicacionDto: {
-      /** @enum {string} */
-      tipo: 'ACOPIO' | 'ZONA';
-      /** Format: uuid */
-      id: string;
-      nombre: string;
-      municipio: string;
-      /** @description Estado del acopio o de la zona */
-      estado: string;
-    };
-    ResultadoGeoDto: {
-      etiqueta: string;
-      lat: number;
-      lng: number;
-    };
-    NoRecibirDto: {
-      /** Format: uuid */
-      categoriaId: string;
-      categoria: string;
-      /** Format: date */
-      hasta: string | null;
-      /** Format: date-time */
-      marcadoEn: string;
-    };
-    AcopioNoRecibeDto: {
-      /** Format: uuid */
-      acopioId: string;
-      /** Format: date */
-      hasta: string | null;
-    };
-    MarcarDto: {
-      /**
-       * Format: date
-       * @description Fecha de reapertura; sin ella, hasta que se desmarque
-       */
-      hasta?: string | null;
-    };
-    SaludDto: {
-      /** @enum {string} */
-      estado: 'ok';
-      /** @enum {string} */
-      base: 'ok';
-    };
-  };
-  responses: never;
-  parameters: never;
-  requestBodies: never;
-  headers: never;
-  pathItems: never;
+    responses: never;
+    parameters: never;
+    requestBodies: never;
+    headers: never;
+    pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-  BitacoraController_buscar: {
-    parameters: {
-      query?: {
-        usuarioId?: string;
-        ubicacionId?: string;
-        accion?: string;
-        entidad?: string;
-        destacado?: string;
-        desde?: string;
-        hasta?: string;
-        pagina?: number;
-        porPagina?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['PaginaBitacoraDto'];
-        };
-      };
-    };
-  };
-  SesionController_iniciar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['IniciarSesionDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['SesionDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  SesionController_salir: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  SesionController_yo: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['YoDto'];
-        };
-      };
-    };
-  };
-  SesionController_jwks: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-    };
-  };
-  InvitacionesController_consultar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        token: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['InvitacionPublicaDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  InvitacionesController_canjear: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        token: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CanjearDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['CanjeDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  UsuariosController_listar: {
-    parameters: {
-      query?: {
-        rol?: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR' | 'DONADOR';
-        estado?: 'INVITADO' | 'ACTIVO' | 'SUSPENDIDO';
-        q?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UsuarioDto'][];
-        };
-      };
-    };
-  };
-  UsuariosController_crear: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CrearUsuarioDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UsuarioCreadoDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  UsuariosController_obtener: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UsuarioDto'];
-        };
-      };
-    };
-  };
-  UsuariosController_actualizar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ActualizarUsuarioDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UsuarioDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  UsuariosController_suspender: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UsuarioDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  UsuariosController_reactivar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UsuarioDto'];
-        };
-      };
-    };
-  };
-  UsuariosController_reinvitar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['EnlaceInvitacionDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  UsuariosController_revocarInvitacion: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['RevocadasDto'];
-        };
-      };
-    };
-  };
-  UsuariosController_restablecer: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['RestablecerDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['EnlaceInvitacionDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  UsuariosController_asignar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['AsignacionDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UsuarioDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  UsuariosController_desasignar: {
-    parameters: {
-      query?: {
-        confirmar?: string;
-      };
-      header?: never;
-      path: {
-        id: string;
-        tipo: string;
-        ubicacionId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UsuarioDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  CatalogoController_listarCategorias: {
-    parameters: {
-      query?: {
-        grupo?:
-          | 'ALIMENTOS'
-          | 'AGUA_Y_BEBIDAS'
-          | 'ASEO_PERSONAL'
-          | 'ASEO_DEL_HOGAR'
-          | 'SALUD'
-          | 'ROPA_Y_ABRIGO'
-          | 'BEBE'
-          | 'ADULTO_MAYOR'
-          | 'ANIMALES'
-          | 'HERRAMIENTAS';
-        incluirArchivadas?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['CategoriaDto'][];
-        };
-      };
-    };
-  };
-  CatalogoController_crearCategoria: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CrearCategoriaDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['CategoriaDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  CatalogoController_listarVigentes: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['CategoriaDto'][];
-        };
-      };
-    };
-  };
-  CatalogoController_buscar: {
-    parameters: {
-      query: {
-        q: string;
-        limite?: number;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ResultadoBusquedaDto'][];
-        };
-      };
-    };
-  };
-  CatalogoController_obtenerCategoria: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['CategoriaDto'];
-        };
-      };
-    };
-  };
-  CatalogoController_eliminarCategoria: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      /** @description Eliminada */
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  CatalogoController_actualizarCategoria: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ActualizarCategoriaDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['CategoriaDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  CatalogoController_archivar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['CategoriaDto'];
-        };
-      };
-    };
-  };
-  CatalogoController_reactivarCategoria: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['CategoriaDto'];
-        };
-      };
-    };
-  };
-  CatalogoController_canastaVigente: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['CanastaVigenteDto'][];
-        };
-      };
-    };
-  };
-  CatalogoController_historialCanasta: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['VersionCanastaRespuestaDto'][];
-        };
-      };
-    };
-  };
-  CatalogoController_agregarVersion: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['VersionCanastaDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['VersionCanastaRespuestaDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  CatalogoController_listarEmergencias: {
-    parameters: {
-      query?: {
-        estado?: 'ACTIVA' | 'EN_SEGUIMIENTO' | 'CERRADA';
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['EmergenciaDto'][];
-        };
-      };
-    };
-  };
-  CatalogoController_crearEmergencia: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CrearEmergenciaDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['EmergenciaDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  CatalogoController_actualizarEmergencia: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ActualizarEmergenciaDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['EmergenciaDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  CatalogoController_cerrarEmergencia: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CerrarEmergenciaDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['EmergenciaDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  EntidadesController_listar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['EntidadDto'][];
-        };
-      };
-    };
-  };
-  EntidadesController_crear: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CrearEntidadDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['EntidadDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  EntidadesController_actualizar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ActualizarEntidadDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['EntidadDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  AcopiosController_listarPublicos: {
-    parameters: {
-      query?: {
-        abiertoAhora?: string;
-        cerca?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AcopioPublicoDto'][];
-        };
-      };
-    };
-  };
-  AcopiosController_crear: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CrearAcopioDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AcopioDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  AcopiosController_listarGestion: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AcopioDto'][];
-        };
-      };
-    };
-  };
-  AcopiosController_obtenerPublico: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AcopioPublicoDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  AcopiosController_actualizar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ActualizarAcopioDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AcopioDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  AcopiosController_operar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['OperacionDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AcopioDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  ZonasController_listar: {
-    parameters: {
-      query?: {
-        emergencia?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ZonaDto'][];
-        };
-      };
-    };
-  };
-  ZonasController_crear: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['CrearZonaDto'];
-      };
-    };
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ZonaDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  ZonasController_actualizar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['ActualizarZonaDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ZonaDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  UbicacionesController_mias: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UbicacionDto'][];
-        };
-      };
-    };
-  };
-  UbicacionesController_buscar: {
-    parameters: {
-      query?: {
-        q?: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['UbicacionDto'][];
-        };
-      };
-    };
-  };
-  GeocodificacionController_buscar: {
-    parameters: {
-      query: {
-        q: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ResultadoGeoDto'][];
-        };
-      };
-      /** @description Nominatim no respondió */
-      503: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  NoRecibirController_listar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['NoRecibirDto'][];
-        };
-      };
-    };
-  };
-  NoRecibirController_porCategoria: {
-    parameters: {
-      query: {
-        categoria: string;
-      };
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['AcopioNoRecibeDto'][];
-        };
-      };
-    };
-  };
-  NoRecibirController_marcar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-        categoriaId: string;
-      };
-      cookie?: never;
-    };
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['MarcarDto'];
-      };
-    };
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['NoRecibirDto'];
-        };
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  NoRecibirController_desmarcar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path: {
-        id: string;
-        categoriaId: string;
-      };
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      204: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content?: never;
-      };
-      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-      default: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['ErrorDto'];
-        };
-      };
-    };
-  };
-  SaludController_revisar: {
-    parameters: {
-      query?: never;
-      header?: never;
-      path?: never;
-      cookie?: never;
-    };
-    requestBody?: never;
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown;
-        };
-        content: {
-          'application/json': components['schemas']['SaludDto'];
-        };
-      };
-    };
-  };
+    BitacoraController_buscar: {
+        parameters: {
+            query?: {
+                usuarioId?: string;
+                ubicacionId?: string;
+                accion?: string;
+                entidad?: string;
+                destacado?: string;
+                desde?: string;
+                hasta?: string;
+                pagina?: number;
+                porPagina?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginaBitacoraDto"];
+                };
+            };
+        };
+    };
+    SesionController_iniciar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IniciarSesionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SesionDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    SesionController_salir: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SesionController_yo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["YoDto"];
+                };
+            };
+        };
+    };
+    SesionController_jwks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    InvitacionesController_consultar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InvitacionPublicaDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    InvitacionesController_canjear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CanjearDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CanjeDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    UsuariosController_listar: {
+        parameters: {
+            query?: {
+                rol?: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
+                estado?: "INVITADO" | "ACTIVO" | "SUSPENDIDO";
+                q?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsuarioDto"][];
+                };
+            };
+        };
+    };
+    UsuariosController_crear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearUsuarioDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsuarioCreadoDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    UsuariosController_obtener: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsuarioDto"];
+                };
+            };
+        };
+    };
+    UsuariosController_actualizar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActualizarUsuarioDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsuarioDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    UsuariosController_suspender: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsuarioDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    UsuariosController_reactivar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsuarioDto"];
+                };
+            };
+        };
+    };
+    UsuariosController_reinvitar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EnlaceInvitacionDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    UsuariosController_revocarInvitacion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RevocadasDto"];
+                };
+            };
+        };
+    };
+    UsuariosController_restablecer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RestablecerDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EnlaceInvitacionDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    UsuariosController_asignar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AsignacionDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsuarioDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    UsuariosController_desasignar: {
+        parameters: {
+            query?: {
+                confirmar?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+                tipo: string;
+                ubicacionId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UsuarioDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CatalogoController_listarCategorias: {
+        parameters: {
+            query?: {
+                grupo?: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
+                incluirArchivadas?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoriaDto"][];
+                };
+            };
+        };
+    };
+    CatalogoController_crearCategoria: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearCategoriaDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoriaDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CatalogoController_listarVigentes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoriaDto"][];
+                };
+            };
+        };
+    };
+    CatalogoController_buscar: {
+        parameters: {
+            query: {
+                q: string;
+                limite?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResultadoBusquedaDto"][];
+                };
+            };
+        };
+    };
+    CatalogoController_obtenerCategoria: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoriaDto"];
+                };
+            };
+        };
+    };
+    CatalogoController_eliminarCategoria: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Eliminada */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CatalogoController_actualizarCategoria: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActualizarCategoriaDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoriaDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CatalogoController_archivar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoriaDto"];
+                };
+            };
+        };
+    };
+    CatalogoController_reactivarCategoria: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CategoriaDto"];
+                };
+            };
+        };
+    };
+    CatalogoController_canastaVigente: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CanastaVigenteDto"][];
+                };
+            };
+        };
+    };
+    CatalogoController_historialCanasta: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VersionCanastaRespuestaDto"][];
+                };
+            };
+        };
+    };
+    CatalogoController_agregarVersion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VersionCanastaDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VersionCanastaRespuestaDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CatalogoController_listarEmergencias: {
+        parameters: {
+            query?: {
+                estado?: "ACTIVA" | "EN_SEGUIMIENTO" | "CERRADA";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmergenciaDto"][];
+                };
+            };
+        };
+    };
+    CatalogoController_crearEmergencia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearEmergenciaDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmergenciaDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CatalogoController_actualizarEmergencia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActualizarEmergenciaDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmergenciaDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CatalogoController_cerrarEmergencia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CerrarEmergenciaDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EmergenciaDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CodigosBarrasController_listar: {
+        parameters: {
+            query?: {
+                revisado?: "true" | "false";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CodigoBarrasDto"][];
+                };
+            };
+        };
+    };
+    CodigosBarrasController_asociar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AsociarDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CodigoBarrasDto"];
+                };
+            };
+        };
+    };
+    CodigosBarrasController_obtener: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ean: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CodigoBarrasDto"];
+                };
+            };
+        };
+    };
+    CodigosBarrasController_editar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ean: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditarDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CodigoBarrasDto"];
+                };
+            };
+        };
+    };
+    EntidadesController_listar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntidadDto"][];
+                };
+            };
+        };
+    };
+    EntidadesController_crear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearEntidadDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntidadDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    EntidadesController_actualizar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActualizarEntidadDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntidadDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    AcopiosController_listarPublicos: {
+        parameters: {
+            query?: {
+                abiertoAhora?: string;
+                cerca?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AcopioPublicoDto"][];
+                };
+            };
+        };
+    };
+    AcopiosController_crear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearAcopioDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AcopioDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    AcopiosController_listarGestion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AcopioDto"][];
+                };
+            };
+        };
+    };
+    AcopiosController_obtenerPublico: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AcopioPublicoDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    AcopiosController_actualizar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActualizarAcopioDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AcopioDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    AcopiosController_operar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["OperacionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AcopioDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ZonasController_listar: {
+        parameters: {
+            query?: {
+                emergencia?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZonaDto"][];
+                };
+            };
+        };
+    };
+    ZonasController_crear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearZonaDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZonaDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ZonasController_actualizar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ActualizarZonaDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZonaDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    UbicacionesController_mias: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UbicacionDto"][];
+                };
+            };
+        };
+    };
+    UbicacionesController_buscar: {
+        parameters: {
+            query?: {
+                q?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UbicacionDto"][];
+                };
+            };
+        };
+    };
+    GeocodificacionController_buscar: {
+        parameters: {
+            query: {
+                q: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResultadoGeoDto"][];
+                };
+            };
+            /** @description Nominatim no respondió */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    NoRecibirController_listar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NoRecibirDto"][];
+                };
+            };
+        };
+    };
+    NoRecibirController_porCategoria: {
+        parameters: {
+            query: {
+                categoria: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AcopioNoRecibeDto"][];
+                };
+            };
+        };
+    };
+    NoRecibirController_marcar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                categoriaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["MarcarDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NoRecibirDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    NoRecibirController_desmarcar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                categoriaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    MovimientosController_entrada: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EntradaDto"];
+            };
+        };
+        responses: {
+            /** @description Reintento: el movimiento ya existía */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResultadoMovimientoDto"];
+                };
+            };
+            /** @description Movimiento nuevo */
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResultadoMovimientoDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    MovimientosController_salida: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SalidaDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResultadoMovimientoDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    MovimientosController_ajuste: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AjusteDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResultadoMovimientoDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ConsultasController_saldos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SaldoDto"][];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ConsultasController_historial: {
+        parameters: {
+            query: {
+                categoriaId: string;
+                cursor?: string;
+                limite?: number;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PaginaHistorialDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    UmbralesController_fijar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                categoriaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["FijarUmbralDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UmbralDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    UmbralesController_quitar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                categoriaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    SaludController_revisar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SaludDto"];
+                };
+            };
+        };
+    };
 }
