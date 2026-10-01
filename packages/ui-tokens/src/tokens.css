@@ -40,6 +40,9 @@
   --tertiary-fixed: #ffdcc3;
   --exito: #15803d;
   --exito-container: #f0fdf4;
+  /* «Sobre el máximo» del inventario (RF-INV-005), aprobado el 2026-10-01 */
+  --sobra: #6b21a8;
+  --sobra-container: #f3e8ff;
 
   --fuente: 'Inter Variable', 'Inter', system-ui, sans-serif;
 }

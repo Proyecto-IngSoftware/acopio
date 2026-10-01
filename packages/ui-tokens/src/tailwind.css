@@ -40,6 +40,8 @@
   --color-tertiary-fixed: var(--tertiary-fixed);
   --color-exito: var(--exito);
   --color-exito-container: var(--exito-container);
+  --color-sobra: var(--sobra);
+  --color-sobra-container: var(--sobra-container);
 
   --font-sans: var(--fuente);
 
