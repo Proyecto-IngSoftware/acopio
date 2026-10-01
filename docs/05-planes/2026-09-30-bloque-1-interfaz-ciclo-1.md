@@ -76,7 +76,7 @@ filtros, y se revisa en Chromium.
 | 2 Mapa | ✅ | `MapaConPin` con Leaflet en carga diferida y coordenadas a mano para teclado; `BuscadorDireccion`. La división del fragmento se confirma cuando C21 lo use |
 | 3 C15 | ✅ | La cantidad de acopios por entidad sale de `GET /acopios/gestion`; la API no la da |
 | 4 C21 | ✅ | `tramoActual` se sumó a `@acopio/shared` para «Cierra 12:00». Cerrar pide confirmación en una hoja. Leaflet sale en su propio fragmento (45 kB gzip); el fragmento principal ya pesa 189 kB gzip y se revisa en el cierre |
-| 5 C9 | ⬜ | |
+| 5 C9 | ✅ | El formulario va en una hoja con el mapa; el estado de la zona solo se elige al editar (al crear es «Sin atender») |
 | 6 C16 buscador | ⬜ | |
 | 7 Más | ⬜ | |
 | 8 Mi acopio y C7 | ⬜ | |

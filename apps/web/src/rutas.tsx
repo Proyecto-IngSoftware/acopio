@@ -7,6 +7,7 @@ import { Catalogo } from './consola/catalogo/Catalogo';
 import { Acopios } from './consola/red/Acopios';
 import { Entidades } from './consola/red/Entidades';
 import { FormularioAcopio } from './consola/red/FormularioAcopio';
+import { Zonas } from './consola/red/Zonas';
 import { DetalleUsuario } from './consola/usuarios/DetalleUsuario';
 import { InvitarPersona } from './consola/usuarios/InvitarPersona';
 import { Usuarios } from './consola/usuarios/Usuarios';
@@ -43,6 +44,7 @@ export function Rutas() {
             ['consola/acopios', <Acopios key="a" />],
             ['consola/acopios/nuevo', <FormularioAcopio key="an" />],
             ['consola/acopios/:id', <FormularioAcopio key="ae" />],
+            ['consola/zonas', <Zonas key="z" />],
           ] as const
         ).map(([ruta, pantalla]) => (
           <Route
