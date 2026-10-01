@@ -1,26 +1,50 @@
+import { lazy } from 'react';
 import { Route, Routes } from 'react-router';
-import { ActivarCuenta } from './acceso/ActivarCuenta';
-import { Entrar } from './acceso/Entrar';
 import { MarcoAcceso } from './portal/MarcoAcceso';
-import { Bitacora } from './consola/Bitacora';
-import { Catalogo } from './consola/catalogo/Catalogo';
-import { Acopios } from './consola/red/Acopios';
-import { Entidades } from './consola/red/Entidades';
-import { FormularioAcopio } from './consola/red/FormularioAcopio';
-import { MiAcopio } from './consola/red/MiAcopio';
-import { NoRecibir } from './consola/red/NoRecibir';
-import { Zonas } from './consola/red/Zonas';
-import { DetalleUsuario } from './consola/usuarios/DetalleUsuario';
-import { InvitarPersona } from './consola/usuarios/InvitarPersona';
-import { Usuarios } from './consola/usuarios/Usuarios';
 import { RequiereRol } from './consola/RequiereRol';
 import { MarcoPortal } from './portal/MarcoPortal';
 import { Mas } from './portal/Mas';
 import { NoEncontrada } from './portal/NoEncontrada';
-import { FichaAcopio } from './portal/ficha/FichaAcopio';
-import { Mapa } from './portal/mapa/Mapa';
 import { Portada } from './portal/Portada';
 import { Proximamente } from './portal/Proximamente';
+
+// La Portada carga sola; cada pantalla de la consola, del acceso y del mapa se descarga
+// al abrirla, para que el portal pese poco en 3G (RF-HOM-001)
+const ActivarCuenta = lazy(() =>
+  import('./acceso/ActivarCuenta').then((m) => ({ default: m.ActivarCuenta })),
+);
+const Entrar = lazy(() => import('./acceso/Entrar').then((m) => ({ default: m.Entrar })));
+const Bitacora = lazy(() => import('./consola/Bitacora').then((m) => ({ default: m.Bitacora })));
+const Catalogo = lazy(() =>
+  import('./consola/catalogo/Catalogo').then((m) => ({ default: m.Catalogo })),
+);
+const DetalleUsuario = lazy(() =>
+  import('./consola/usuarios/DetalleUsuario').then((m) => ({ default: m.DetalleUsuario })),
+);
+const InvitarPersona = lazy(() =>
+  import('./consola/usuarios/InvitarPersona').then((m) => ({ default: m.InvitarPersona })),
+);
+const Usuarios = lazy(() =>
+  import('./consola/usuarios/Usuarios').then((m) => ({ default: m.Usuarios })),
+);
+const Acopios = lazy(() => import('./consola/red/Acopios').then((m) => ({ default: m.Acopios })));
+const Entidades = lazy(() =>
+  import('./consola/red/Entidades').then((m) => ({ default: m.Entidades })),
+);
+const FormularioAcopio = lazy(() =>
+  import('./consola/red/FormularioAcopio').then((m) => ({ default: m.FormularioAcopio })),
+);
+const MiAcopio = lazy(() =>
+  import('./consola/red/MiAcopio').then((m) => ({ default: m.MiAcopio })),
+);
+const NoRecibir = lazy(() =>
+  import('./consola/red/NoRecibir').then((m) => ({ default: m.NoRecibir })),
+);
+const Zonas = lazy(() => import('./consola/red/Zonas').then((m) => ({ default: m.Zonas })));
+const FichaAcopio = lazy(() =>
+  import('./portal/ficha/FichaAcopio').then((m) => ({ default: m.FichaAcopio })),
+);
+const Mapa = lazy(() => import('./portal/mapa/Mapa').then((m) => ({ default: m.Mapa })));
 
 const SIN_CONSTRUIR = ['causas', 'voluntariado', 'proximamente'];
 

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react';
+import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useSearchParams } from 'react-router';
 import { useCategoriasVigentes } from '../../api/catalogo';
@@ -17,10 +17,10 @@ import { EstadoError } from '../../componentes/EstadoError';
 import { EstadoVacio } from '../../componentes/EstadoVacio';
 import { Icono } from '../../componentes/Icono';
 import { Segmentado } from '../../componentes/Segmentado';
+// Esta pantalla ya se descarga al abrirla (rutas.tsx); Leaflet viaja en su mismo fragmento
+// y así se ahorra una ida y vuelta en 3G (I-02)
+import MapaAcopios from './MapaAcopios';
 import { TarjetaAcopio, aperturaPublica, km } from './TarjetaAcopio';
-
-// Leaflet solo se descarga en esta pantalla (I-02)
-const MapaAcopios = lazy(() => import('./MapaAcopios'));
 
 const leerPunto = (texto: string | null): Punto | null => {
   const [lat, lng] = (texto ?? '').split(',').map(Number);
@@ -124,14 +124,12 @@ export function Mapa() {
       {acopios.data && vista === 'mapa' && visibles.length > 0 && (
         <>
           <div className="isolate h-[55vh] min-h-72 overflow-hidden rounded-xl border border-outline-variant">
-            <Suspense fallback={<Esqueleto etiqueta="Cargando el mapa" className="h-full" />}>
-              <MapaAcopios
-                acopios={visibles}
-                cerca={cerca}
-                elegido={elegido}
-                alElegir={fijarElegido}
-              />
-            </Suspense>
+            <MapaAcopios
+              acopios={visibles}
+              cerca={cerca}
+              elegido={elegido}
+              alElegir={fijarElegido}
+            />
           </div>
           {seleccionado && (
             <Elegido acopio={seleccionado} enlace={`/acopios/${seleccionado.id}${sufijo}`} />

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "NODE_ENV=production vite build",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "api:tipos": "openapi-typescript ../../docs/03-diseno/api/openapi.json -o src/api/esquema.d.ts"

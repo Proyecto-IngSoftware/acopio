@@ -53,6 +53,9 @@ export default function MapaLeaflet({ valor, alCambiar }: Props) {
         <Marker
           position={[valor.lat, valor.lng]}
           icon={PIN}
+          // Leaflet lo vuelve un botón; sin nombre, axe lo marca (aria-command-name)
+          title="Ubicación elegida. Arrástrala para ajustarla"
+          alt="Ubicación elegida"
           draggable
           eventHandlers={{
             dragend: (e) => {

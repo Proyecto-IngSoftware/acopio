@@ -1,4 +1,6 @@
+import { Suspense } from 'react';
 import { Outlet } from 'react-router';
+import { Esqueleto } from '../componentes/Esqueleto';
 import { useSesion } from '../sesion/Sesion';
 import { BarraNavegacion } from './BarraNavegacion';
 import { CabeceraAcceso } from './cabecera/CabeceraAcceso';
@@ -19,7 +21,10 @@ export function MarcoPortal() {
         <CabeceraPublica />
       )}
       <main className="mx-auto flex w-full max-w-md flex-1 flex-col pt-20 pb-20">
-        <Outlet />
+        {/* Las pantallas se descargan al abrirlas: el marco queda y solo el contenido espera */}
+        <Suspense fallback={<Esqueleto etiqueta="Cargando" className="h-48" />}>
+          <Outlet />
+        </Suspense>
       </main>
       <BarraNavegacion />
     </div>
