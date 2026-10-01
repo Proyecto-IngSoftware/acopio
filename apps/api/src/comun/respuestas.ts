@@ -338,3 +338,7 @@ export class FilaHistorialDto extends createZodDto(
 export class PaginaHistorialDto extends createZodDto(
   z.object({ filas: z.array(FilaHistorialDto.schema), siguiente: z.string().nullable() }),
 ) {}
+
+export class UmbralDto extends createZodDto(
+  z.object({ categoriaId: z.uuid(), minimo: z.number(), maximo: z.number(), actualizadoEn: fecha }),
+) {}
