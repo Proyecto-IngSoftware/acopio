@@ -1,6 +1,8 @@
+import { randomUUID } from 'node:crypto';
 import { Client } from 'pg';
 import { URL_APP_PRUEBAS } from '../../test/entorno-pruebas';
 import {
+  ACOPIO_A,
   ADMIN,
   ENTIDAD_PRUEBA,
   HORARIO_PRUEBA,
@@ -130,5 +132,116 @@ describe('concurrencia', () => {
     expect(r.status).toBe(409);
     const fila = await a.prisma.acopio.findUniqueOrThrow({ where: { id } });
     expect(fila.estado).toBe('CERRADO');
+  });
+
+  describe('saldo con registros simultáneos (RF-INV-011, la prueba más importante)', () => {
+    let op1: { token: string };
+    let op2: { token: string };
+    const como = (t: string) => ({ authorization: `Bearer ${t}` });
+    const nuevaCategoria = async () =>
+      (
+        await a.prisma.categoria.create({
+          data: { nombre: unico('Concurrencia '), grupo: 'HERRAMIENTAS', unidad_base: 'UNIDAD' },
+        })
+      ).id;
+    const sumaReal = async (categoriaId: string) => {
+      const filas = await a.prisma.movimiento.findMany({
+        where: { acopio_id: ACOPIO_A, categoria_id: categoriaId },
+        select: { cantidad: true, signo: true },
+      });
+      return filas.reduce((s, f) => s + Number(f.cantidad) * f.signo, 0);
+    };
+    const saldoGuardado = async (categoriaId: string) => {
+      const s = await a.prisma.saldo.findUnique({
+        where: { acopio_id_categoria_id: { acopio_id: ACOPIO_A, categoria_id: categoriaId } },
+      });
+      return s ? Number(s.cantidad) : 0;
+    };
+
+    beforeAll(async () => {
+      op1 = await crearUsuarioActivo(a, tokenAdmin, {
+        rol: 'OPERADOR',
+        asignaciones: [{ tipo: 'ACOPIO', ubicacionId: ACOPIO_A }],
+      });
+      op2 = await crearUsuarioActivo(a, tokenAdmin, {
+        rol: 'OPERADOR',
+        asignaciones: [{ tipo: 'ACOPIO', ubicacionId: ACOPIO_A }],
+      });
+    });
+
+    it('20 salidas simultáneas de 1 sobre un saldo de 12: pasan 12 y el saldo queda en 0', async () => {
+      const cat = await nuevaCategoria();
+      await a
+        .http()
+        .post(`/api/acopios/${ACOPIO_A}/entradas`)
+        .set(como(op1.token))
+        .send({ categoriaId: cat, cantidad: 12 })
+        .expect(201);
+
+      const respuestas = await simultaneas(20, (i) =>
+        a
+          .http()
+          .post(`/api/acopios/${ACOPIO_A}/salidas`)
+          .set(como(i % 2 ? op1.token : op2.token))
+          .send({ categoriaId: cat, cantidad: 1, motivoSalida: 'ENTREGA_FAMILIAS' }),
+      );
+
+      const estados = respuestas.map((r) => r.status);
+      expect(estados.filter((s) => s === 201)).toHaveLength(12);
+      expect(estados.filter((s) => s === 409)).toHaveLength(8);
+      for (const r of respuestas.filter((x) => x.status === 409)) {
+        expect(r.body.codigo).toBe('SALDO_INSUFICIENTE');
+      }
+      expect(await saldoGuardado(cat)).toBe(0);
+      expect(await sumaReal(cat)).toBe(0);
+    });
+
+    it('entradas y salidas cruzadas de dos operadores en dos categorías: saldo = suma de movimientos', async () => {
+      const [x, y] = [await nuevaCategoria(), await nuevaCategoria()];
+      for (const c of [x, y]) {
+        await a
+          .http()
+          .post(`/api/acopios/${ACOPIO_A}/entradas`)
+          .set(como(op1.token))
+          .send({ categoriaId: c, cantidad: 50 })
+          .expect(201);
+      }
+      await simultaneas(40, (i) => {
+        const categoriaId = i % 2 ? x : y;
+        const token = i % 3 ? op1.token : op2.token;
+        return i % 4 === 0
+          ? a
+              .http()
+              .post(`/api/acopios/${ACOPIO_A}/entradas`)
+              .set(como(token))
+              .send({ categoriaId, cantidad: 3 })
+          : a
+              .http()
+              .post(`/api/acopios/${ACOPIO_A}/salidas`)
+              .set(como(token))
+              .send({ categoriaId, cantidad: 2, motivoSalida: 'VENCIDO' });
+      });
+      for (const c of [x, y]) {
+        const guardado = await saldoGuardado(c);
+        expect(guardado).toBe(await sumaReal(c));
+        expect(guardado).toBeGreaterThanOrEqual(0);
+      }
+    });
+
+    it('el mismo id llega 5 veces a la vez: un solo movimiento y todas las respuestas exitosas', async () => {
+      const cat = await nuevaCategoria();
+      const id = randomUUID();
+      const respuestas = await simultaneas(5, () =>
+        a
+          .http()
+          .post(`/api/acopios/${ACOPIO_A}/entradas`)
+          .set(como(op1.token))
+          .send({ id, categoriaId: cat, cantidad: 4, origenOffline: true }),
+      );
+      expect(respuestas.every((r) => r.status === 200 || r.status === 201)).toBe(true);
+      expect(respuestas.filter((r) => r.status === 201)).toHaveLength(1);
+      expect(await a.prisma.movimiento.count({ where: { id } })).toBe(1);
+      expect(await saldoGuardado(cat)).toBe(4);
+    });
   });
 });
