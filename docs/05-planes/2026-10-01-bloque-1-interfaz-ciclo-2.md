@@ -37,10 +37,9 @@ pantallas hasta que Joseph apruebe la maqueta.
 
 ## Tareas
 
-1. **Maquetas en Stitch:** la matriz a 360 px (por ubicación) y a 1280 px (tabla), y la
-   hoja del selector. Se guardan en `docs/03-diseno/stitch/C16-usuarios/matriz/` y
-   `docs/03-diseno/stitch/_compartidos/selector-ubicacion/` con su captura, su HTML y la
-   maqueta. **Bloquea las tareas 3 a 5 hasta que Joseph apruebe.**
+1. **Maquetas:** la matriz a 360 px (por ubicación) y desde 768 px (tabla), y la hoja del
+   selector. Van en `docs/03-diseno/stitch/C16-usuarios/matriz/`. **Bloquea las tareas 3
+   a 5 hasta que Joseph apruebe.**
 2. **Cruce y CSV:** funciones puras `cruzarMatriz(usuarios, ubicaciones)` y
    `matrizCsv(filas)` con sus pruebas (cruce con nombres, filtros por rol, estado y
    ubicación, marca de restablecimiento y contenido del CSV).
@@ -65,7 +64,7 @@ RF-IDE-011 en cualquier ancho.
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 Maquetas | 🟡 | Generándose en Stitch |
+| 1 Maquetas | 🟡 | Stitch se cortó por tiempo dos veces sin dejar pantalla. La maqueta se armó con los tokens del tema y está publicada; falta que Joseph la apruebe |
 | 2 Cruce y CSV | ✅ | `consola/accesos/matriz.ts`. El CSV antepone una comilla simple a los campos que empiezan con `=`, `+`, `-` o `@`, para que Excel no los lea como fórmula |
 | 3 Selector | ⬜ | Espera la aprobación de la hoja |
 | 4 Matriz | ⬜ | Espera la aprobación de la matriz |

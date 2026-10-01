@@ -1,0 +1,241 @@
+<title>Matriz de acceso y selector</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap">
+<style>
+/* Tema «Acopio Field Command» de Stitch, tal cual. Tres teléfonos a 360 px y la tabla de escritorio debajo. */
+:root {
+  --surface: #faf8ff; --lowest: #ffffff; --low: #f2f3ff; --container: #eaedff; --high: #e2e7ff;
+  --on-surface: #131b2e; --variant: #3f4946; --outline: #707976; --outline-variant: #bfc9c5;
+  --primary: #003730; --primary-container: #085046; --primary-fixed: #b0efe1; --on-primary: #ffffff;
+  --tertiary-fixed: #ffdcc3; --tertiary-container: #6e3900;
+  --error-container: #ffdad6; --on-error-container: #93000a;
+  --exito: #15803d; --exito-container: #f0fdf4;
+  --lienzo: #dae2fd;
+  --sans: 'Inter', system-ui, sans-serif;
+  color-scheme: light;
+}
+body { background: var(--lienzo); color: var(--on-surface); font-family: var(--sans); font-size: 16px; }
+.pagina { padding: 24px 16px 48px; display: flex; flex-direction: column; gap: 32px; max-width: 1240px; margin: 0 auto; }
+.intro { max-width: 68ch; display: flex; flex-direction: column; gap: 8px; }
+.intro h1 { font-size: 1.625rem; line-height: 2.125rem; letter-spacing: -0.015em; margin: 0; text-wrap: balance; }
+.intro p { margin: 0; color: var(--variant); line-height: 1.5; }
+.ms { font-family: 'Material Symbols Outlined', sans-serif; font-size: 22px; line-height: 1; font-weight: normal; font-style: normal; display: inline-block; vertical-align: middle; }
+.telefonos { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.caso { display: flex; flex-direction: column; gap: 8px; width: 360px; max-width: 100%; }
+.caso > h2 { font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--variant); margin: 0; }
+.tel { position: relative; background: var(--surface); border: 1px solid var(--outline-variant); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+.cabecera { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--lowest); border-bottom: 1px solid var(--outline-variant); }
+.marca { display: flex; align-items: center; gap: 6px; font-weight: 700; color: var(--primary-container); }
+.marca .cuadro { width: 32px; height: 32px; border-radius: 6px; background: var(--primary-container); color: var(--on-primary); display: grid; place-items: center; }
+.marca small { font-size: .625rem; border: 1px solid var(--outline-variant); border-radius: 4px; padding: 0 4px; color: var(--variant); }
+.conmutador { margin-left: auto; min-width: 0; display: flex; align-items: center; gap: 4px; height: 44px; padding: 0 8px; border: 1px solid var(--outline-variant); border-radius: 8px; background: var(--lowest); font: 600 .875rem var(--sans); color: var(--on-surface); }
+.conmutador span.t { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 120px; }
+.avatar { width: 40px; height: 40px; border-radius: 999px; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; font-weight: 700; font-size: .875rem; flex: none; }
+.cabecera .avatar { margin-left: auto; }
+.cabecera .conmutador + .avatar { margin-left: 0; }
+.cuerpo { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+.volver { color: var(--primary-container); font-weight: 600; font-size: .875rem; display: flex; align-items: center; gap: 4px; }
+.titulo h3 { margin: 0; font-size: 1.625rem; line-height: 2.125rem; letter-spacing: -0.015em; }
+.titulo p { margin: 2px 0 0; color: var(--variant); font-size: .875rem; }
+.etiqueta { font-weight: 700; font-size: .875rem; margin-bottom: 4px; display: block; }
+.selector { display: flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 12px; border: 1.5px solid var(--outline); border-radius: 8px; background: var(--lowest); }
+.selector .t { flex: 1; min-width: 0; }
+.selector .t b { display: block; font-weight: 600; }
+.selector .t small { color: var(--variant); }
+.pildoras { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.pildora { flex: none; min-height: 40px; padding: 0 16px; border-radius: 999px; background: var(--container); color: var(--variant); font: 600 .875rem var(--sans); border: 0; }
+.pildora.on { background: var(--primary-container); color: var(--on-primary); }
+.resumen { background: var(--low); border-radius: 8px; padding: 12px; font-size: .875rem; line-height: 1.4; }
+.resumen b { font-size: 1rem; }
+.lista { display: flex; flex-direction: column; gap: 4px; list-style: none; margin: 0; padding: 0; }
+.persona { display: flex; gap: 12px; align-items: flex-start; padding: 12px; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 8px; }
+.ini { width: 44px; height: 44px; border-radius: 999px; background: var(--primary-fixed); color: var(--primary-container); font-weight: 700; font-size: .875rem; display: grid; place-items: center; flex: none; }
+.persona .d { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.persona .d b { font-size: 1.0625rem; }
+.persona .d small { color: var(--variant); font-size: .875rem; }
+.dist { display: inline-flex; align-items: center; gap: 4px; border-radius: 999px; padding: 2px 8px; font-size: .8125rem; font-weight: 600; width: fit-content; }
+.dist .ms { font-size: 16px; }
+.activo { background: var(--exito-container); color: var(--exito); }
+.invitado { background: var(--tertiary-fixed); color: var(--tertiary-container); }
+.suspendido { background: var(--error-container); color: var(--on-error-container); }
+.aviso { display: flex; align-items: center; gap: 4px; font-size: .8125rem; font-weight: 600; color: var(--tertiary-container); background: var(--tertiary-fixed); border-radius: 4px; padding: 4px 8px; width: fit-content; }
+.aviso .ms { font-size: 16px; }
+.btn2 { min-height: 56px; border: 1.5px solid var(--primary-container); color: var(--primary-container); background: var(--lowest); border-radius: 8px; font: 700 1rem var(--sans); display: flex; align-items: center; justify-content: center; gap: 8px; }
+.barra { display: grid; grid-template-columns: repeat(5, 1fr); background: var(--lowest); border-top: 1px solid var(--outline-variant); padding: 6px 0; }
+.barra div { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .6875rem; color: var(--variant); }
+.barra .on { color: var(--primary-container); font-weight: 700; }
+/* Hoja */
+.velo { position: absolute; inset: 0; background: rgb(15 23 42 / .65); display: flex; align-items: flex-end; }
+.hoja { width: 100%; background: var(--lowest); border-radius: 12px 12px 0 0; padding: 8px 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+.asa { width: 40px; height: 4px; border-radius: 2px; background: var(--outline-variant); margin: 0 auto; }
+.hoja h4 { margin: 0; font-size: 1.25rem; }
+.hoja p { margin: 0; color: var(--variant); font-size: .875rem; }
+.grupo { font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--variant); }
+.op { display: flex; align-items: center; gap: 12px; min-height: 56px; padding: 0 12px; border: 1px solid var(--outline-variant); border-radius: 8px; }
+.op.on { border: 2px solid var(--primary-container); background: var(--low); }
+.op .t { flex: 1; min-width: 0; }
+.op .t b { display: block; font-weight: 600; }
+.op .t small { color: var(--variant); font-size: .8125rem; }
+.op .ms.ok { color: var(--primary-container); }
+/* Más */
+.seccion { display: flex; flex-direction: column; gap: 4px; }
+.seccion h5 { margin: 0 0 4px; font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--variant); }
+.fila { display: flex; align-items: center; gap: 12px; padding: 12px; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 8px; }
+.fila .ico { width: 40px; height: 40px; border-radius: 8px; background: var(--primary-fixed); color: var(--primary-container); display: grid; place-items: center; flex: none; }
+.fila .t { flex: 1; min-width: 0; }
+.fila .t b { display: block; }
+.fila .t small { color: var(--variant); font-size: .875rem; }
+/* Tabla */
+.escritorio { display: flex; flex-direction: column; gap: 8px; }
+.escritorio > h2 { font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--variant); margin: 0; }
+.marco { background: var(--surface); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 24px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.filtros { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+.desliza { overflow-x: auto; border: 1px solid var(--outline-variant); border-radius: 8px; background: var(--lowest); }
+table { border-collapse: separate; border-spacing: 0; font-size: .875rem; min-width: 820px; width: 100%; }
+th, td { padding: 10px 12px; border-bottom: 1px solid var(--container); text-align: center; white-space: nowrap; }
+thead th { background: var(--low); font-weight: 600; vertical-align: bottom; }
+thead th small { display: block; font-weight: 400; color: var(--variant); font-size: .75rem; }
+th[scope=row], thead th:first-child { position: sticky; left: 0; background: var(--lowest); text-align: left; z-index: 1; border-right: 1px solid var(--outline-variant); }
+thead th:first-child { background: var(--low); }
+th[scope=row] b { display: block; }
+th[scope=row] small { color: var(--variant); font-weight: 400; }
+td .si { color: var(--primary-container); font-variation-settings: 'FILL' 1; }
+td .no { color: var(--outline-variant); }
+.grupo-col { border-left: 2px solid var(--outline-variant); }
+.notas { max-width: 72ch; display: flex; flex-direction: column; gap: 8px; }
+.notas h2 { font-size: 1.25rem; margin: 0; }
+.notas ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; line-height: 1.5; color: var(--variant); }
+.notas li b { color: var(--on-surface); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="pagina">
+  <header class="intro">
+    <h1>Bloque 1 · ciclo 2: matriz de acceso y selector de ubicación</h1>
+    <p>Maqueta para aprobar antes de escribir código. Usa el tema «Acopio Field Command», la cabecera con sesión y la barra inferior de los componentes compartidos. Stitch no terminó de generar estas pantallas el 2026-10-01, así que la maqueta se armó con sus tokens. Los nombres y las cifras son de ejemplo.</p>
+  </header>
+
+  <div class="telefonos">
+    <section class="caso" aria-labelledby="c1">
+      <h2 id="c1">Matriz, por ubicación (360 px)</h2>
+      <div class="tel">
+        <div class="cabecera">
+          <div class="marca"><span class="cuadro"><span class="ms">inventory_2</span></span>Acopio <small>CO</small></div>
+          <span class="avatar">DM</span>
+        </div>
+        <div class="cuerpo">
+          <span class="volver"><span class="ms">arrow_back</span>Usuarios y accesos</span>
+          <div class="titulo"><h3>Matriz de acceso</h3><p>Quién puede tocar cada ubicación</p></div>
+          <div>
+            <span class="etiqueta">Ubicación</span>
+            <div class="selector"><span class="ms">warehouse</span><span class="t"><b>Parroquia San José</b><small>Acopio · Bogotá</small></span><span class="ms">expand_more</span></div>
+          </div>
+          <div class="pildoras" role="group" aria-label="Rol"><button class="pildora on">Todos</button><button class="pildora">Operador</button><button class="pildora">Receptor</button><button class="pildora">Auditor</button></div>
+          <div class="pildoras" role="group" aria-label="Estado"><button class="pildora on">Todos</button><button class="pildora">Activos</button><button class="pildora">Invitados</button><button class="pildora">Suspendidos</button></div>
+          <div class="resumen"><b>3 personas</b> pueden tocar este acopio. Además, los 2 administradores pueden tocar todas las ubicaciones.</div>
+          <ul class="lista">
+            <li class="persona"><span class="ini">DM</span><span class="d"><b>Daniela Méndez</b><small>@dmendez · Operador</small><span class="dist activo"><span class="ms">check_circle</span>Activo</span></span></li>
+            <li class="persona"><span class="ini">JR</span><span class="d"><b>Jorge Rincón</b><small>@jrincon · Operador</small><span class="dist activo"><span class="ms">check_circle</span>Activo</span><span class="aviso"><span class="ms">lock_reset</span>Restablecimiento pendiente</span></span></li>
+            <li class="persona"><span class="ini">AP</span><span class="d"><b>Andrés Pinto</b><small>@apinto · Operador</small><span class="dist suspendido"><span class="ms">block</span>Suspendido</span></span></li>
+          </ul>
+          <button class="btn2"><span class="ms">download</span>Exportar CSV</button>
+        </div>
+        <nav class="barra"><div><span class="ms">home</span>Inicio</div><div><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div><span class="ms">groups</span>Voluntariado</div><div class="on"><span class="ms">menu</span>Más</div></nav>
+      </div>
+    </section>
+
+    <section class="caso" aria-labelledby="c2">
+      <h2 id="c2">Selector abierto (Operador con tres ubicaciones)</h2>
+      <div class="tel" style="min-height: 640px">
+        <div class="cabecera">
+          <div class="marca"><span class="cuadro"><span class="ms">inventory_2</span></span>Acopio</div>
+          <button class="conmutador" aria-haspopup="dialog"><span class="ms">warehouse</span><span class="t">Coliseo El Salitre</span><span class="ms">expand_more</span></button>
+          <span class="avatar">DM</span>
+        </div>
+        <div class="velo">
+          <div class="hoja" role="dialog" aria-label="Dónde estás operando">
+            <span class="asa"></span>
+            <h4>¿Dónde estás operando?</h4>
+            <p>Lo que registres queda en esta ubicación. Puedes cambiarla cuando quieras.</p>
+            <span class="grupo">Acopios</span>
+            <div class="op on"><span class="ms">warehouse</span><span class="t"><b>Coliseo El Salitre</b><small>Bogotá · Activo</small></span><span class="ms ok">check_circle</span></div>
+            <div class="op"><span class="ms">warehouse</span><span class="t"><b>Parroquia San José</b><small>Bogotá · Pausado</small></span></div>
+            <span class="grupo">Zonas</span>
+            <div class="op"><span class="ms">location_on</span><span class="t"><b>Vereda El Carmen</b><small>Mocoa · Sin atender</small></span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="caso" aria-labelledby="c3">
+      <h2 id="c3">«Más» del Operador, con la ubicación activa</h2>
+      <div class="tel">
+        <div class="cabecera">
+          <div class="marca"><span class="cuadro"><span class="ms">inventory_2</span></span>Acopio</div>
+          <button class="conmutador"><span class="ms">warehouse</span><span class="t">Coliseo El Salitre</span><span class="ms">expand_more</span></button>
+          <span class="avatar">DM</span>
+        </div>
+        <div class="cuerpo">
+          <div class="titulo"><h3>Más</h3></div>
+          <div class="seccion"><h5>Tu cuenta</h5>
+            <div class="fila"><span class="avatar">DM</span><span class="t"><b>Daniela Méndez</b><small>Operador · 3 ubicaciones</small></span></div>
+          </div>
+          <div class="seccion"><h5>Mi acopio</h5>
+            <div class="fila"><span class="ico"><span class="ms">inventory_2</span></span><span class="t"><b>Coliseo El Salitre</b><small>Estado, horario y lo que no recibe</small></span><span class="ms">chevron_right</span></div>
+          </div>
+          <div class="seccion"><h5>Auditor: herramientas</h5>
+            <div class="fila"><span class="ico"><span class="ms">grid_view</span></span><span class="t"><b>Matriz de acceso</b><small>Quién puede tocar cada ubicación</small></span><span class="ms">chevron_right</span></div>
+          </div>
+          <p style="margin:0;color:var(--variant);font-size:.8125rem">La última sección solo la ve el Auditor; aquí se muestra para revisar la fila.</p>
+        </div>
+        <nav class="barra"><div><span class="ms">home</span>Inicio</div><div><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div><span class="ms">groups</span>Voluntariado</div><div class="on"><span class="ms">menu</span>Más</div></nav>
+      </div>
+    </section>
+  </div>
+
+  <section class="escritorio" aria-labelledby="c4">
+    <h2 id="c4">Matriz, tabla desde 768 px</h2>
+    <div class="marco">
+      <div class="titulo"><h3>Matriz de acceso</h3><p>6 personas · 4 ubicaciones · los 2 administradores pueden tocar todas</p></div>
+      <div class="filtros">
+        <div class="pildoras"><button class="pildora on">Todos los roles</button><button class="pildora">Operador</button><button class="pildora">Receptor</button><button class="pildora">Auditor</button></div>
+        <div class="pildoras"><button class="pildora on">Todos</button><button class="pildora">Activos</button><button class="pildora">Invitados</button><button class="pildora">Suspendidos</button></div>
+        <button class="btn2" style="min-height:44px;padding:0 16px;margin-left:auto"><span class="ms">download</span>Exportar CSV</button>
+      </div>
+      <div class="desliza">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Persona</th>
+              <th scope="col">Coliseo El Salitre<small>Acopio · Bogotá</small></th>
+              <th scope="col">Parroquia San José<small>Acopio · Bogotá</small></th>
+              <th scope="col">Polideportivo Kennedy<small>Acopio · Bogotá</small></th>
+              <th scope="col" class="grupo-col">Vereda El Carmen<small>Zona · Mocoa</small></th>
+              <th scope="col">Estado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><th scope="row"><b>Andrés Pinto</b><small>Operador</small></th><td><span class="ms no" aria-label="No">remove</span></td><td><span class="ms si" aria-label="Sí">check_circle</span></td><td><span class="ms no" aria-label="No">remove</span></td><td class="grupo-col"><span class="ms no" aria-label="No">remove</span></td><td><span class="dist suspendido"><span class="ms">block</span>Suspendido</span></td></tr>
+            <tr><th scope="row"><b>Carolina Ruiz</b><small>Auditor</small></th><td><span class="ms no" aria-label="No">remove</span></td><td><span class="ms no" aria-label="No">remove</span></td><td><span class="ms no" aria-label="No">remove</span></td><td class="grupo-col"><span class="ms no" aria-label="No">remove</span></td><td><span class="dist activo"><span class="ms">check_circle</span>Activo</span></td></tr>
+            <tr><th scope="row"><b>Daniela Méndez</b><small>Operador</small></th><td><span class="ms si" aria-label="Sí">check_circle</span></td><td><span class="ms si" aria-label="Sí">check_circle</span></td><td><span class="ms no" aria-label="No">remove</span></td><td class="grupo-col"><span class="ms si" aria-label="Sí">check_circle</span></td><td><span class="dist activo"><span class="ms">check_circle</span>Activo</span></td></tr>
+            <tr><th scope="row"><b>Jorge Rincón</b><small>Operador</small></th><td><span class="ms no" aria-label="No">remove</span></td><td><span class="ms si" aria-label="Sí">check_circle</span></td><td><span class="ms si" aria-label="Sí">check_circle</span></td><td class="grupo-col"><span class="ms no" aria-label="No">remove</span></td><td><span class="dist activo"><span class="ms">check_circle</span>Activo</span> <span class="aviso" style="display:inline-flex"><span class="ms">lock_reset</span>Restablecimiento</span></td></tr>
+            <tr><th scope="row"><b>Luisa Cárdenas</b><small>Receptor</small></th><td><span class="ms no" aria-label="No">remove</span></td><td><span class="ms no" aria-label="No">remove</span></td><td><span class="ms no" aria-label="No">remove</span></td><td class="grupo-col"><span class="ms si" aria-label="Sí">check_circle</span></td><td><span class="dist invitado"><span class="ms">pending</span>Invitación pendiente</span></td></tr>
+            <tr><th scope="row"><b>Mateo Gil</b><small>Operador</small></th><td><span class="ms no" aria-label="No">remove</span></td><td><span class="ms no" aria-label="No">remove</span></td><td><span class="ms si" aria-label="Sí">check_circle</span></td><td class="grupo-col"><span class="ms no" aria-label="No">remove</span></td><td><span class="dist activo"><span class="ms">check_circle</span>Activo</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="notas" aria-labelledby="c5">
+    <h2 id="c5">Qué se aprueba</h2>
+    <ul>
+      <li><b>Matriz en su propia ruta, <code>/consola/accesos</code>.</b> Entran el Administrador, desde un botón en Usuarios y accesos, y el Auditor, desde «Más».</li>
+      <li><b>A 360 px se lee por ubicación.</b> Se elige una y aparece la lista de quién puede tocarla. Desde 768 px se ve la tabla, con la columna de personas fija al desplazar.</li>
+      <li><b>Los Administradores no van en filas.</b> Una línea dice cuántos son. Los Donadores no aparecen.</li>
+      <li><b>El CSV tiene una fila por persona y ubicación</b>, con <code>;</code> como separador para que Excel lo abra bien en Colombia.</li>
+      <li><b>El conmutador de la cabecera</b> solo aparece con dos ubicaciones o más. Abre una hoja con los acopios y las zonas asignados, y la elección queda guardada en el teléfono.</li>
+      <li><b>«Más» muestra «Mi acopio» solo para la ubicación activa</b>, ya no una fila por cada acopio asignado.</li>
+    </ul>
+  </section>
+</div>
