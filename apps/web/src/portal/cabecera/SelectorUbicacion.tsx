@@ -77,7 +77,7 @@ export function SelectorUbicacion() {
         className="flex h-11 min-w-0 items-center gap-1 rounded-lg border border-outline-variant bg-surface-container-lowest px-space-sm text-label-md text-on-surface"
       >
         <Icono nombre={iconoDe(activa)} className="text-[20px] text-primary-container" />
-        <span className="max-w-[9rem] truncate">{activa.nombre}</span>
+        <span className="min-w-0 truncate">{activa.nombre}</span>
         <Icono nombre="expand_more" className="text-[20px]" />
       </button>
       {abierto && (

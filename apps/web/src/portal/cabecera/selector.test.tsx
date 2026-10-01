@@ -70,6 +70,8 @@ it('la hoja agrupa acopios y zonas, y elegir cambia la ubicación activa', async
   pantalla();
   await userEvent.click(await conmutador());
   const hoja = screen.getByRole('dialog', { name: '¿Dónde estás operando?' });
+  // Fuera de la cabecera: su backdrop-blur encerraría la hoja en 80 px
+  expect(screen.getByRole('banner')).not.toContainElement(hoja);
   expect(within(hoja).getByRole('group', { name: 'Acopios' })).toHaveTextContent(
     'Parroquia San José',
   );
@@ -113,11 +115,17 @@ it('con una zona activa, «Más» no muestra «Mi acopio»', async () => {
   expect(screen.queryByRole('region', { name: 'Mi acopio' })).not.toBeInTheDocument();
 });
 
-it('el Administrador y el Auditor no tienen conmutador', async () => {
+it('el Administrador no tiene conmutador', async () => {
   conUbicaciones([SALITRE, SAN_JOSE]);
   pantalla('ADMIN');
   await screen.findByRole('region', { name: 'Tu cuenta' });
   expect(screen.queryByRole('button', { name: /^Ubicación activa/ })).not.toBeInTheDocument();
+});
+
+it('el Auditor con varias ubicaciones sí tiene conmutador', async () => {
+  conUbicaciones([SALITRE, SAN_JOSE]);
+  pantalla('AUDITOR');
+  expect(await conmutador()).toHaveTextContent('Coliseo El Salitre');
 });
 
 it('la hoja abierta no tiene violaciones graves', async () => {

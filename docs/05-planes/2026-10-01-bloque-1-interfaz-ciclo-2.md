@@ -2,7 +2,7 @@
 title: "Bloque 1 · Interfaz, ciclo 2: selector de ubicación y matriz de acceso · plan"
 type: plan
 tags: [plan, interfaz, bloque-1]
-estado: vigente
+estado: cerrado
 bloque: 1
 actualizado: 2026-10-01
 ---
@@ -27,7 +27,7 @@ pantallas hasta que Joseph apruebe la maqueta.
 | # | Decisión | Por qué |
 |---|---|---|
 | J-01 | El selector vive en un contexto `UbicacionActiva` dentro de `src/sesion/`. Lee `GET /ubicaciones/mias` y guarda la elección en `localStorage` con la llave `acopio.ubicacion.<id del usuario>`. Si lo guardado ya no está entre las asignaciones, toma la primera | RF-IDE-010 pide que la elección dure entre sesiones en el mismo dispositivo. Con la llave por usuario, un teléfono compartido no mezcla las elecciones de dos personas |
-| J-02 | El conmutador aparece solo con dos o más ubicaciones. El Administrador y el Auditor no lo tienen, porque su alcance es global | RF-IDE-010 y la regla de la cabecera en los componentes compartidos |
+| J-02 | El conmutador aparece solo con dos o más ubicaciones. El Administrador no lo tiene, porque su alcance es global. El Auditor sí, porque la API le exige al menos una ubicación asignada | RF-IDE-010 y la regla de la cabecera en los componentes compartidos |
 | J-03 | Al tocar el conmutador se abre una `Hoja` con las ubicaciones asignadas, agrupadas en acopios y zonas, y la activa marcada | Es el mismo patrón de las otras hojas de la consola y a 360 px no cabe un menú desplegable con nombres largos |
 | J-04 | «Más» deja de mostrar una fila por acopio asignado. Muestra «Mi acopio» solo para la ubicación activa, si es un acopio | Con el selector, la ubicación activa es la que manda en toda la interfaz |
 | J-05 | La matriz va en `/consola/accesos`, detrás de `RequiereRol` con Administrador y Auditor. El Administrador llega desde C16 y el Auditor desde «Más» | C16 es solo del Administrador en la web, y RF-IDE-011 también es del Auditor |
@@ -68,4 +68,4 @@ RF-IDE-011 en cualquier ancho.
 | 2 Cruce y CSV | ✅ | `consola/accesos/matriz.ts`. El CSV antepone una comilla simple a los campos que empiezan con `=`, `+`, `-` o `@`, para que Excel no los lea como fórmula |
 | 3 Selector | ✅ | `useUbicacionActiva` (en `sesion/`) guarda la elección con `useSyncExternalStore`, así la cabecera y «Más» cambian juntas. `scripts/iconos.mjs` no ve un ícono que sale de una variable; el del selector se escribió como `function iconoDe` para que lo encuentre |
 | 4 Matriz | ✅ | `/consola/accesos`. `MarcoPortal` deja esta ruta más ancha desde 768 px (lista `AMPLIAS`). El CSV sale con los filtros de rol y estado aplicados. `Pildora` pasó de C16 a `componentes/` |
-| 5 Cierre | ⬜ | |
+| 5 Cierre | ✅ | Recorrido con la API del Compose y Chromium a 360 × 640 y 1280 px, con un Operador de dos acopios, un Auditor y el Administrador. axe sin violaciones graves en la hoja, «Más», la matriz por ubicación y la tabla. Salieron tres fallas que se corrigieron: la hoja quedaba encerrada en la cabecera (ahora va en un portal), el nombre de la ubicación se cortaba en «Acopi…» (con conmutador, la marca queda solo con el logo en el teléfono) y los `sr-only` de la tabla ensanchaban la página a 1669 px (el contenedor ahora es `relative`). También apareció que una prueba sin `fetch` simulado le pegaba a la API del Compose; ahora toda petición sin simular falla |

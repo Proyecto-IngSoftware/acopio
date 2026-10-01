@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { UsuarioSesion } from '../../sesion/cliente-auth';
 import { iniciales, nombreRol } from '../../sesion/roles';
 import { useSesion } from '../../sesion/Sesion';
+import { useUbicacionActiva } from '../../sesion/ubicacion-activa';
 import { CabeceraBase } from './Marca';
 import { SelectorUbicacion } from './SelectorUbicacion';
 
@@ -9,6 +10,7 @@ import { SelectorUbicacion } from './SelectorUbicacion';
  *  menú de la cuenta. */
 export function CabeceraConSesion({ usuario }: { usuario: UsuarioSesion }) {
   const { salir } = useSesion();
+  const { ubicaciones } = useUbicacionActiva();
   const [abierto, fijarAbierto] = useState(false);
   const contenedor = useRef<HTMLDivElement>(null);
 
@@ -23,7 +25,7 @@ export function CabeceraConSesion({ usuario }: { usuario: UsuarioSesion }) {
   }, [abierto]);
 
   return (
-    <CabeceraBase>
+    <CabeceraBase compacta={ubicaciones.length >= 2}>
       <div className="flex min-w-0 items-center gap-space-xs">
         <SelectorUbicacion />
         <div

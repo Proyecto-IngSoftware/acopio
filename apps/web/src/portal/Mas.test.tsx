@@ -55,6 +55,7 @@ it('el Administrador ve su cuenta y sus herramientas, también las de la red', a
 });
 
 it('el Auditor ve la bitácora y la matriz de acceso', async () => {
+  responderSegun({ 'GET /api/ubicaciones/mias': [] });
   pantalla(persona('AUDITOR'));
   const admin = await screen.findByRole('region', { name: 'Administración' });
   expect(within(admin).getAllByRole('link')).toHaveLength(2);

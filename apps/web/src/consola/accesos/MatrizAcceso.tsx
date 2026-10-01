@@ -126,7 +126,11 @@ function PorUbicacion({
 function Tabla({ filas, columnas }: { filas: FilaMatriz[]; columnas: Ubicacion[] }) {
   return (
     <section aria-label="Tabla de acceso" className="hidden md:block">
-      <div className="overflow-x-auto rounded-xl border border-outline-variant bg-surface-container-lowest">
+      {/* Con foco, la tabla se desplaza con las flechas del teclado */}
+      <div
+        tabIndex={0}
+        className="relative overflow-x-auto rounded-xl border border-outline-variant bg-surface-container-lowest focus-visible:outline-2 focus-visible:outline-primary-container"
+      >
         <table className="w-full border-separate border-spacing-0 text-body-sm">
           <caption className="sr-only">Personas por ubicación</caption>
           <thead>

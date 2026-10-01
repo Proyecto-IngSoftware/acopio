@@ -331,3 +331,14 @@ Es idempotente y el seed real no cambia.
 | El buscador de ubicaciones de C16 entró en este ciclo (B-08) | Sin él, asignar un acopio o una zona pedía pegar un id |
 | La consola, el acceso y el mapa se cargan al abrirlos, y el build de la web fija `NODE_ENV=production` | En Fast 3G la Portada tardaba 3,0 s; ahora 2,6 s. El `.env` de la raíz trae `NODE_ENV=development` y Vite lo usaba en el build |
 | El pin arrastrable lleva título y texto alternativo, y los mapas llevan `isolate` | axe pedía nombre para el marcador, y Leaflet tapaba la cabecera y la barra inferior |
+
+**2026-10-01 · Interfaz, ciclo 2.** Construida según el [plan](../../05-planes/2026-10-01-bloque-1-interfaz-ciclo-2.md).
+
+| Qué | Por qué |
+|---|---|
+| La matriz de acceso va en su propia ruta, `/consola/accesos`, y no dentro de C16 | C16 es solo del Administrador en la web y la matriz también es del Auditor |
+| El Auditor tiene conmutador de ubicación cuando tiene dos o más | La API le exige al menos una ubicación asignada; el §6 solo dejaba sin selector al Administrador |
+| Los Administradores no ocupan filas en la matriz; una línea dice cuántos son | Marcados en todas las columnas no informan nada |
+| El CSV usa `;`, BOM y una fila por persona y ubicación | Así lo abre Excel en Colombia, con las tildes bien |
+| Con conmutador, la cabecera muestra solo el logo en un teléfono | A 360 px el nombre de la ubicación se cortaba en «Acopi…» |
+

@@ -14,6 +14,7 @@ actualizado: 2026-10-01
 | Pantalla de Stitch | Ninguna. La generación se cortó por tiempo dos veces el 2026-10-01 sin dejar pantalla |
 | Maqueta | [maqueta.html](maqueta.html), publicada en <https://claude.ai/artifact/SRgo8R1cQNii6EvSXAaYoP> |
 | Aprobación | Joseph la aprobó el 2026-10-01 |
+| Construida | [construida-360.png](construida-360.png), [construida-1280.png](construida-1280.png) y [construida-selector.png](construida-selector.png), en Chromium |
 
 La maqueta usa los tokens del tema de Stitch, la cabecera con sesión y la barra inferior de
 los [componentes compartidos](../../_compartidos/README.md). Tiene cuatro vistas: la matriz
@@ -25,3 +26,10 @@ Cubre RF-IDE-010 (selector) y RF-IDE-011 (matriz). Las decisiones de fondo está
 
 Si después se genera la pantalla en Stitch, se guardan aquí su captura y su HTML, y esta
 nota anota las diferencias con la maqueta.
+
+## Diferencias al construir
+
+- Con el conmutador, la cabecera muestra solo el logo en un teléfono; la palabra «Acopio» vuelve desde 640 px. Con la marca completa, el nombre de la ubicación se cortaba en «Acopi…».
+- El Auditor también tiene conmutador cuando tiene dos ubicaciones o más, porque la API le exige al menos una.
+- La tabla de escritorio se desplaza con el teclado al recibir foco (axe lo pedía).
+

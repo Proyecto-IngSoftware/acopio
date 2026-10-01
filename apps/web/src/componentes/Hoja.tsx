@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import type { ReactNode } from 'react';
 import { Icono } from './Icono';
 
@@ -9,7 +10,8 @@ interface Props {
 }
 
 /** Hoja inferior (sistema de diseño §6): se abre sobre el contenido, al alcance del
- *  pulgar. Se cierra con Escape, con el botón o tocando fuera. */
+ *  pulgar. Se cierra con Escape, con el botón o tocando fuera. Va en un portal sobre
+ *  `body`: dentro de la cabecera, su `backdrop-blur` la encerraría en sus 80 px. */
 export function Hoja({ titulo, alCerrar, children }: Props) {
   const id = useId();
   const cerrar = useRef<HTMLButtonElement>(null);
@@ -21,7 +23,7 @@ export function Hoja({ titulo, alCerrar, children }: Props) {
     return () => document.removeEventListener('keydown', tecla);
   }, [alCerrar]);
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-[60] flex items-end justify-center">
       <div
         className="absolute inset-0 bg-inverse-surface/60"
@@ -51,6 +53,7 @@ export function Hoja({ titulo, alCerrar, children }: Props) {
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

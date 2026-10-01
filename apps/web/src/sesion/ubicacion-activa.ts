@@ -22,7 +22,7 @@ function suscribir(oyente: () => void) {
 }
 
 export interface UbicacionActiva {
-  /** Las ubicaciones asignadas; vacío para el Administrador y el Auditor. */
+  /** Las ubicaciones asignadas; vacío para el Administrador y el Donador. */
   ubicaciones: Ubicacion[];
   activa: Ubicacion | null;
   elegir: (id: string) => void;
@@ -32,7 +32,8 @@ export interface UbicacionActiva {
  *  la API valida la ubicación en cada request. */
 export function useUbicacionActiva(): UbicacionActiva {
   const { usuario } = useSesion();
-  const conAsignaciones = usuario?.rol === 'OPERADOR' || usuario?.rol === 'RECEPTOR';
+  // El Administrador tiene alcance global; el Donador no tiene ubicaciones
+  const conAsignaciones = !!usuario && usuario.rol !== 'ADMIN' && usuario.rol !== 'DONADOR';
   const { data } = useUbicacionesMias(conAsignaciones);
   const clave = usuario ? llave(usuario.id) : null;
   const guardada = useSyncExternalStore(suscribir, () => (clave ? leer(clave) : null));

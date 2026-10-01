@@ -199,7 +199,7 @@ export const useGuardarZona = () =>
 
 // ── Ubicaciones ──
 
-/** Con `activo` en falso no consulta: el Administrador y el Auditor no tienen asignaciones. */
+/** Con `activo` en falso no consulta: el Administrador y el Donador no tienen asignaciones. */
 export function useUbicacionesMias(activo = true) {
   return useQuery<Ubicacion[], ErrorApi>({
     queryKey: ['ubicaciones', 'mias'],
