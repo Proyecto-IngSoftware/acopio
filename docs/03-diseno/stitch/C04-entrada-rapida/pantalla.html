@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Acopio CO - Entrada rápida</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-fixed": "#a1f0ef",
+            "surface-variant": "#e9e1dd",
+            "secondary": "#625e59",
+            "primary-container": "#0f6e6e",
+            "surface-tint": "#03696a",
+            "on-secondary-fixed-variant": "#4a4642",
+            "tertiary-container": "#316c6c",
+            "outline": "#6e7979",
+            "tertiary": "#125454",
+            "surface-bright": "#fff8f5",
+            "surface-container-lowest": "#ffffff",
+            "surface": "#fff8f5",
+            "on-surface": "#1e1b19",
+            "on-background": "#1e1b19",
+            "on-tertiary-fixed": "#002020",
+            "on-primary-fixed-variant": "#004f50",
+            "outline-variant": "#bec9c8",
+            "secondary-fixed": "#e9e1db",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed": "#1e1b18",
+            "surface-container-high": "#eee7e3",
+            "on-primary-fixed": "#002020",
+            "error-container": "#ffdad6",
+            "tertiary-fixed-dim": "#96d1d0",
+            "on-primary": "#ffffff",
+            "inverse-on-surface": "#f7efeb",
+            "on-primary-container": "#9eedec",
+            "surface-container-highest": "#e9e1dd",
+            "primary-fixed-dim": "#85d4d3",
+            "secondary-container": "#e9e1db",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "on-surface-variant": "#3e4948",
+            "on-secondary-container": "#68635f",
+            "surface-container-low": "#faf2ee",
+            "surface-container": "#f4ece8",
+            "on-error-container": "#93000a",
+            "background": "#fff8f5",
+            "on-secondary": "#ffffff",
+            "on-error": "#ffffff",
+            "inverse-surface": "#33302d",
+            "tertiary-fixed": "#b2eded",
+            "on-tertiary-container": "#afebea",
+            "inverse-primary": "#85d4d3",
+            "secondary-fixed-dim": "#ccc5c0",
+            "error": "#ba1a1a",
+            "surface-dim": "#e0d8d5",
+            "primary": "#005454"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {},
+          "fontFamily": {
+            "headline": [
+              "Inter"
+            ],
+            "display": [
+              "Inter"
+            ],
+            "body": [
+              "Inter"
+            ],
+            "label": [
+              "Inter"
+            ]
+          },
+          "fontSize": {}
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background-color: #FAFAF9;
+      color: #1C1917;
+    }
+    .tabular-numbers {
+      font-variant-numeric: tabular-nums;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex flex-col justify-between selection:bg-primary-fixed selection:text-primary pb-28">
+<!-- 1. Cabecera blanca con borde inferior -->
+<header class="flex justify-between items-center w-full px-4 h-14 bg-surface-container-lowest border-b border-surface-variant z-40 sticky top-0">
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-lg bg-[#0F6E6E] flex items-center justify-center text-white shadow-sm">
+<span class="material-symbols-outlined text-[20px]" data-icon="inventory_2">inventory_2</span>
+</div>
+<span class="font-headline text-lg font-bold text-primary">Acopio CO</span>
+</div>
+<div class="flex items-center gap-2">
+<!-- Selector de Ubicación -->
+<button class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-surface-variant bg-surface-container-lowest hover:bg-surface-container-low active:opacity-80 transition-opacity min-h-[44px]" type="button">
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="location_on">location_on</span>
+<span class="text-sm font-semibold text-on-surface">Coliseo El Salitre</span>
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="expand_more">expand_more</span>
+</button>
+<!-- Avatar DM (Daniela Méndez) -->
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center border border-surface-variant font-bold text-sm text-on-secondary-fixed cursor-pointer select-none">
+        DM
+      </div>
+</div>
+</header>
+<!-- Canvas Principal -->
+<main class="w-full max-w-md mx-auto px-4 pt-4 flex flex-col gap-4">
+<!-- 2. Título de página -->
+<div class="flex flex-col">
+<h1 class="font-headline text-[26px] font-bold text-on-surface leading-tight">Entrada rápida</h1>
+<p class="text-sm text-secondary font-medium">Coliseo El Salitre · Operación en bodega</p>
+</div>
+<!-- 3. Barra de búsqueda y escaneo rápido -->
+<div class="flex gap-2 items-center">
+<div class="relative flex-1">
+<div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-secondary">
+<span class="material-symbols-outlined text-[22px]" data-icon="search">search</span>
+</div>
+<input class="w-full h-12 pl-11 pr-3 rounded-xl border border-surface-variant bg-surface-container-lowest text-base font-medium text-on-surface placeholder:text-secondary focus:border-primary focus:ring-1 focus:ring-primary outline-none transition" placeholder="Busca o escanea: arroz, pañal, agua…" type="text" value="Arroz blanco"/>
+</div>
+<button class="h-12 px-3.5 bg-[#0F6E6E] text-white rounded-xl font-semibold text-sm flex items-center gap-1.5 active:opacity-90 active:scale-[0.98] transition-all min-w-[48px] justify-center shadow-sm" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="barcode_scanner">barcode_scanner</span>
+<span>Escanear</span>
+</button>
+</div>
+<!-- 4. Tarjeta de categoría seleccionada -->
+<section class="bg-surface-container-lowest border border-surface-variant rounded-xl p-4 flex flex-col gap-2.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<h2 class="text-lg font-bold text-on-surface leading-none">Arroz</h2>
+<span class="px-2 py-0.5 rounded text-xs font-semibold bg-[#E6F4F4] text-[#0A4F4F]">Perecedero</span>
+</div>
+<span class="px-2.5 py-1 rounded-md text-xs font-bold bg-surface-container text-on-surface-variant border border-surface-variant">
+          Unidad: kg
+        </span>
+</div>
+<div class="flex items-center gap-1.5 text-sm text-secondary">
+<span class="material-symbols-outlined text-[18px] text-[#0F6E6E]" data-icon="check_circle">check_circle</span>
+<span class="font-medium">Saldo actual en carpa: <strong class="text-on-surface tabular-numbers">120 kg</strong></span>
+</div>
+</section>
+<!-- 5. Visor de cantidad ingresada -->
+<div class="bg-surface-container-lowest border border-surface-variant rounded-xl py-4 px-6 flex flex-col items-center justify-center">
+<span class="text-xs font-bold text-secondary uppercase tracking-wider mb-1">Cantidad a ingresar</span>
+<div class="flex items-baseline justify-center gap-2">
+<span class="font-headline font-bold text-[52px] leading-none text-on-surface tabular-numbers" id="quantity-display">25</span>
+<span class="font-headline font-semibold text-2xl text-secondary">kg</span>
+</div>
+</div>
+<!-- 6. Teclado numérico táctil de 3x4 integrado (apto para guantes) -->
+<div class="grid grid-cols-3 gap-2.5 w-full select-none" id="numpad">
+<button class="key-btn h-14 bg-surface-container-lowest active:bg-surface-container-low border border-surface-variant rounded-xl text-2xl font-bold text-on-surface flex items-center justify-center active:scale-[0.98] transition shadow-xs" type="button">1</button>
+<button class="key-btn h-14 bg-surface-container-lowest active:bg-surface-container-low border border-surface-variant rounded-xl text-2xl font-bold text-on-surface flex items-center justify-center active:scale-[0.98] transition shadow-xs" type="button">2</button>
+<button class="key-btn h-14 bg-surface-container-lowest active:bg-surface-container-low border border-surface-variant rounded-xl text-2xl font-bold text-on-surface flex items-center justify-center active:scale-[0.98] transition shadow-xs" type="button">3</button>
+<button class="key-btn h-14 bg-surface-container-lowest active:bg-surface-container-low border border-surface-variant rounded-xl text-2xl font-bold text-on-surface flex items-center justify-center active:scale-[0.98] transition shadow-xs" type="button">4</button>
+<button class="key-btn h-14 bg-surface-container-lowest active:bg-surface-container-low border border-surface-variant rounded-xl text-2xl font-bold text-on-surface flex items-center justify-center active:scale-[0.98] transition shadow-xs" type="button">5</button>
+<button class="key-btn h-14 bg-surface-container-lowest active:bg-surface-container-low border border-surface-variant rounded-xl text-2xl font-bold text-on-surface flex items-center justify-center active:scale-[0.98] transition shadow-xs" type="button">6</button>
+<button class="key-btn h-14 bg-surface-container-lowest active:bg-surface-container-low border border-surface-variant rounded-xl text-2xl font-bold text-on-surface flex items-center justify-center active:scale-[0.98] transition shadow-xs" type="button">7</button>
+<button class="key-btn h-14 bg-surface-container-lowest active:bg-surface-container-low border border-surface-variant rounded-xl text-2xl font-bold text-on-surface flex items-center justify-center active:scale-[0.98] transition shadow-xs" type="button">8</button>
+<button class="key-btn h-14 bg-surface-container-lowest active:bg-surface-container-low border border-surface-variant rounded-xl text-2xl font-bold text-on-surface flex items-center justify-center active:scale-[0.98] transition shadow-xs" type="button">9</button>
+<button class="key-btn h-14 bg-surface-container-lowest active:bg-surface-container-low border border-surface-variant rounded-xl text-2xl font-bold text-on-surface flex items-center justify-center active:scale-[0.98] transition shadow-xs" type="button">,</button>
+<button class="key-btn h-14 bg-surface-container-lowest active:bg-surface-container-low border border-surface-variant rounded-xl text-2xl font-bold text-on-surface flex items-center justify-center active:scale-[0.98] transition shadow-xs" type="button">0</button>
+<button class="h-14 bg-surface-container active:bg-surface-container-high border border-surface-variant rounded-xl font-bold text-on-surface flex items-center justify-center active:scale-[0.98] transition shadow-xs" id="btn-backspace" type="button">
+<span class="material-symbols-outlined text-[26px]" data-icon="backspace">backspace</span>
+</button>
+</div>
+<!-- 7. Campo de fecha de vencimiento obligatoria -->
+<div class="bg-surface-container-lowest border border-surface-variant rounded-xl p-3 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#0F6E6E] text-[20px]" data-icon="event">event</span>
+<div class="flex flex-col">
+<span class="text-xs font-semibold text-secondary">Vence el (obligatorio)</span>
+<span class="text-base font-bold text-on-surface tabular-numbers">30/10/2026</span>
+</div>
+</div>
+<button class="px-3 py-1.5 bg-surface-container hover:bg-surface-container-high border border-surface-variant rounded-lg text-sm font-semibold text-on-surface flex items-center gap-1 active:opacity-80" type="button">
+<span>Cambiar</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="edit">edit</span>
+</button>
+</div>
+<!-- 8. Botón primario de confirmación -->
+<div class="pt-1">
+<button class="w-full h-14 bg-[#0F6E6E] hover:bg-[#0A4F4F] active:bg-[#0A4F4F] text-white font-bold text-lg rounded-xl flex items-center justify-center gap-2 active:scale-[0.99] transition shadow-md min-h-[56px]" id="btn-submit" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="check">check</span>
+<span id="btn-label">Registrar 25 kg</span>
+</button>
+</div>
+</main>
+<!-- 9. Barra de navegación inferior fija de 5 pestañas (BottomNavBar) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface-container-lowest border-t border-surface-variant pb-safe">
+<!-- Inicio (Activo en operaciones de acopio) -->
+<a class="flex flex-col items-center justify-center text-primary font-bold min-h-[48px] px-2" href="#">
+<span class="material-symbols-outlined text-[24px] fill-icon" data-icon="home" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label text-sm mt-0.5">Inicio</span>
+</a>
+<!-- Mapa -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-2 hover:text-primary" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="map">map</span>
+<span class="font-label text-sm mt-0.5">Mapa</span>
+</a>
+<!-- Causas -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-2 hover:text-primary" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="favorite">favorite</span>
+<span class="font-label text-sm mt-0.5">Causas</span>
+</a>
+<!-- Voluntariado -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-2 hover:text-primary" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="volunteer_activism">volunteer_activism</span>
+<span class="font-label text-sm mt-0.5">Voluntariado</span>
+</a>
+<!-- Más -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-2 hover:text-primary" href="#">
+<span class="material-symbols-outlined text-[24px]" data-icon="menu">menu</span>
+<span class="font-label text-sm mt-0.5">Más</span>
+</a>
+</nav>
+<!-- Script interactivo del teclado numérico para prueba táctil directa en terreno -->
+<script>
+    (function() {
+      let currentVal = "25";
+      const display = document.getElementById("quantity-display");
+      const btnLabel = document.getElementById("btn-label");
+      const keys = document.querySelectorAll(".key-btn");
+      const backspaceBtn = document.getElementById("btn-backspace");
+
+      function updateUI() {
+        const val = currentVal === "" ? "0" : currentVal;
+        display.innerText = val;
+        btnLabel.innerText = "Registrar " + val + " kg";
+      }
+
+      keys.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const char = btn.innerText.trim();
+          if (char === ",") {
+            if (!currentVal.includes(",") && currentVal.length > 0) {
+              currentVal += ",";
+            }
+          } else {
+            if (currentVal === "0") {
+              currentVal = char;
+            } else if (currentVal.length < 6) {
+              currentVal += char;
+            }
+          }
+          updateUI();
+        });
+      });
+
+      backspaceBtn.addEventListener("click", () => {
+        if (currentVal.length > 0) {
+          currentVal = currentVal.slice(0, -1);
+        }
+        updateUI();
+      });
+    })();
+  </script>
+</body></html>
