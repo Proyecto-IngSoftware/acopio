@@ -65,13 +65,18 @@ const DIA_INGLES: Record<string, Dia> = {
   Sat: 'sab',
 };
 
-/** ¿Está abierto en ese instante, en hora de Bogotá? Abre incluido, cierra excluido. */
-export function abiertoAhora(h: Horario, instante: Date): boolean {
+/** El tramo abierto en ese instante, en hora de Bogotá. Abre incluido, cierra excluido. */
+export function tramoActual(h: Horario, instante: Date): Tramo | undefined {
   const partes = Object.fromEntries(
     partesBogota.formatToParts(instante).map((p) => [p.type, p.value]),
   );
   const dia = DIA_INGLES[partes.weekday ?? ''];
-  if (!dia) return false;
+  if (!dia) return undefined;
   const ahora = Number(partes.hour) * 60 + Number(partes.minute);
-  return (h[dia] ?? []).some((t) => minutos(t.abre) <= ahora && ahora < minutos(t.cierra));
+  return (h[dia] ?? []).find((t) => minutos(t.abre) <= ahora && ahora < minutos(t.cierra));
+}
+
+/** ¿Está abierto en ese instante, en hora de Bogotá? */
+export function abiertoAhora(h: Horario, instante: Date): boolean {
+  return tramoActual(h, instante) !== undefined;
 }

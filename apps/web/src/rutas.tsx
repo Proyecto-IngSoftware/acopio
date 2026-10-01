@@ -4,7 +4,9 @@ import { Entrar } from './acceso/Entrar';
 import { MarcoAcceso } from './portal/MarcoAcceso';
 import { Bitacora } from './consola/Bitacora';
 import { Catalogo } from './consola/catalogo/Catalogo';
+import { Acopios } from './consola/red/Acopios';
 import { Entidades } from './consola/red/Entidades';
+import { FormularioAcopio } from './consola/red/FormularioAcopio';
 import { DetalleUsuario } from './consola/usuarios/DetalleUsuario';
 import { InvitarPersona } from './consola/usuarios/InvitarPersona';
 import { Usuarios } from './consola/usuarios/Usuarios';
@@ -38,6 +40,9 @@ export function Rutas() {
             ['consola/usuarios/invitar', <InvitarPersona key="i" />],
             ['consola/usuarios/:id', <DetalleUsuario key="d" />],
             ['consola/entidades', <Entidades key="e" />],
+            ['consola/acopios', <Acopios key="a" />],
+            ['consola/acopios/nuevo', <FormularioAcopio key="an" />],
+            ['consola/acopios/:id', <FormularioAcopio key="ae" />],
           ] as const
         ).map(([ruta, pantalla]) => (
           <Route

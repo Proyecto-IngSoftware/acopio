@@ -75,7 +75,7 @@ filtros, y se revisa en Chromium.
 | 1 Base | ✅ | La web lee `@acopio/shared` desde su código fuente (alias de Vite y `paths` de TypeScript), no desde `dist`: así la API y la web no compilan el paquete a la vez |
 | 2 Mapa | ✅ | `MapaConPin` con Leaflet en carga diferida y coordenadas a mano para teclado; `BuscadorDireccion`. La división del fragmento se confirma cuando C21 lo use |
 | 3 C15 | ✅ | La cantidad de acopios por entidad sale de `GET /acopios/gestion`; la API no la da |
-| 4 C21 | ⬜ | |
+| 4 C21 | ✅ | `tramoActual` se sumó a `@acopio/shared` para «Cierra 12:00». Cerrar pide confirmación en una hoja. Leaflet sale en su propio fragmento (45 kB gzip); el fragmento principal ya pesa 189 kB gzip y se revisa en el cierre |
 | 5 C9 | ⬜ | |
 | 6 C16 buscador | ⬜ | |
 | 7 Más | ⬜ | |

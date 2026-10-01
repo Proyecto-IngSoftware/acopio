@@ -1,4 +1,10 @@
-import { abiertoAhora, erroresHorario, HORARIO_VACIO, type Horario } from './horario.js';
+import {
+  abiertoAhora,
+  erroresHorario,
+  HORARIO_VACIO,
+  tramoActual,
+  type Horario,
+} from './horario.js';
 
 // 2026-10-05 es lunes. Bogotá está en UTC−5 todo el año
 const lunes = (horaUtc: string) => new Date(`2026-10-05T${horaUtc}:00Z`);
@@ -53,5 +59,16 @@ describe('erroresHorario', () => {
     ],
   ])('%j → %s', (tramos, mensaje) => {
     expect(erroresHorario({ ...HORARIO_VACIO, lun: tramos })).toEqual([mensaje]);
+  });
+});
+
+describe('tramoActual', () => {
+  it('devuelve el tramo abierto en ese instante, para decir a qué hora cierra', () => {
+    expect(tramoActual(horario, lunes('16:00'))).toEqual({ abre: '08:00', cierra: '12:00' });
+  });
+
+  it('entre tramos o en un día sin tramos no hay tramo actual', () => {
+    expect(tramoActual(horario, lunes('18:30'))).toBeUndefined();
+    expect(tramoActual(HORARIO_VACIO, lunes('16:00'))).toBeUndefined();
   });
 });
