@@ -55,6 +55,7 @@ model Usuario {
   invitaciones         Invitacion[]        @relation("invitado")
   invitaciones_creadas Invitacion[]        @relation("creada_por")
   bitacora             Bitacora[]
+  movimientos          Movimiento[]
 
   @@map("usuario")
 }
@@ -188,8 +189,12 @@ model Categoria {
   archivada   Boolean        @default(false)
   creado_en   DateTime       @default(now()) @db.Timestamptz
 
-  canasta    CanastaEstandar[]
-  no_recibir NoRecibir[]
+  canasta        CanastaEstandar[]
+  no_recibir     NoRecibir[]
+  movimientos    Movimiento[]
+  saldos         Saldo[]
+  umbrales       Umbral[]
+  codigos_barras CodigoBarras[]
 
   @@map("categoria")
 }
@@ -286,6 +291,9 @@ model Acopio {
   creado_en           DateTime     @default(now()) @db.Timestamptz
   actualizado_en      DateTime     @default(now()) @updatedAt @db.Timestamptz
   no_recibir          NoRecibir[]
+  movimientos         Movimiento[]
+  saldos              Saldo[]
+  umbrales            Umbral[]
 
   @@index([estado])
   @@map("acopio")
@@ -325,4 +333,86 @@ model NoRecibir {
   @@id([acopio_id, categoria_id])
   @@index([categoria_id])
   @@map("no_recibir")
+}
+
+enum TipoMovimiento {
+  ENTRADA
+  SALIDA
+  AJUSTE
+}
+
+enum MotivoSalida {
+  ENTREGA_FAMILIAS
+  TRASLADO
+  VENCIDO
+  OTRO
+}
+
+/// Append-only (ADR-0002): acopio_app solo SELECT e INSERT. Un error se corrige con un AJUSTE.
+/// El id puede venir del cliente: es la llave de idempotencia de la captura sin conexión.
+model Movimiento {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  acopio_id      String         @db.Uuid
+  acopio         Acopio         @relation(fields: [acopio_id], references: [id])
+  categoria_id   String         @db.Uuid
+  categoria      Categoria      @relation(fields: [categoria_id], references: [id])
+  tipo           TipoMovimiento
+  cantidad       Decimal        @db.Decimal(12, 3)
+  signo          Int            @db.SmallInt
+  motivo_salida  MotivoSalida?
+  nota           String?
+  motivo         String?
+  vence_en       DateTime?      @db.Date
+  usuario_id     String         @db.Uuid
+  usuario        Usuario        @relation(fields: [usuario_id], references: [id])
+  ocurrido_en    DateTime       @db.Timestamptz
+  registrado_en  DateTime       @default(now()) @db.Timestamptz
+  origen_offline Boolean        @default(false)
+
+  @@index([acopio_id, categoria_id, registrado_en])
+  @@index([registrado_en])
+  @@map("movimiento")
+}
+
+/// La mantiene el disparador movimiento_actualiza_saldo (ADR-0015). acopio_app solo SELECT.
+model Saldo {
+  acopio_id         String    @db.Uuid
+  acopio            Acopio    @relation(fields: [acopio_id], references: [id])
+  categoria_id      String    @db.Uuid
+  categoria         Categoria @relation(fields: [categoria_id], references: [id])
+  cantidad          Decimal   @db.Decimal(12, 3)
+  ultimo_movimiento DateTime  @db.Timestamptz
+
+  @@id([acopio_id, categoria_id])
+  @@map("saldo")
+}
+
+/// Sin fila, la categoría no tiene umbral en ese acopio (V-03).
+model Umbral {
+  acopio_id       String    @db.Uuid
+  acopio          Acopio    @relation(fields: [acopio_id], references: [id])
+  categoria_id    String    @db.Uuid
+  categoria       Categoria @relation(fields: [categoria_id], references: [id])
+  minimo          Decimal   @db.Decimal(12, 3)
+  maximo          Decimal   @db.Decimal(12, 3)
+  actualizado_por String    @db.Uuid
+  actualizado_en  DateTime  @default(now()) @db.Timestamptz
+
+  @@id([acopio_id, categoria_id])
+  @@map("umbral")
+}
+
+/// RF-CAT-004. Módulo catalogo. Un EAN que asocia un Operador queda sin revisar.
+model CodigoBarras {
+  ean          String    @id
+  categoria_id String    @db.Uuid
+  categoria    Categoria @relation(fields: [categoria_id], references: [id])
+  contenido    Decimal?  @db.Decimal(12, 3)
+  descripcion  String?
+  creado_por   String    @db.Uuid
+  creado_en    DateTime  @default(now()) @db.Timestamptz
+  revisado     Boolean   @default(false)
+
+  @@index([categoria_id])
+  @@map("codigo_barras")
 }

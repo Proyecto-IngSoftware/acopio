@@ -1,6 +1,13 @@
 import { Client } from 'pg';
 import { URL_APP_PRUEBAS, URL_DUENO_PRUEBAS } from '../../test/entorno-pruebas';
-import { ACOPIO_A, ADMIN, ZONA_A, crearAppPrueba, type AppPrueba } from '../../test/app-prueba';
+import {
+  ACOPIO_A,
+  ACOPIO_B,
+  ADMIN,
+  ZONA_A,
+  crearAppPrueba,
+  type AppPrueba,
+} from '../../test/app-prueba';
 import { PROVEEDOR_IDENTIDAD } from '../modulos/identidad/proveedor/proveedor-identidad';
 import { CANASTA, CATEGORIAS } from '../seed/datos-catalogo';
 import { sembrarDemo } from '../seed/demo';
@@ -66,6 +73,93 @@ describe('base de datos', () => {
       await expect(
         app.query(`UPDATE zona SET poblacion_estimada = -1 WHERE id = '${ZONA_A}'`),
       ).rejects.toThrow(/zona_poblacion_no_negativa/);
+    });
+  });
+
+  describe('inventario (Bloque 2)', () => {
+    let categoria: string;
+
+    beforeAll(async () => {
+      const c = await a.prisma.categoria.create({
+        data: {
+          nombre: `Base inventario ${Date.now()}`,
+          grupo: 'HERRAMIENTAS',
+          unidad_base: 'UNIDAD',
+        },
+      });
+      categoria = c.id;
+      const admin = await a.prisma.usuario.findFirstOrThrow({
+        where: { username: ADMIN.username },
+      });
+      // El usuario del movimiento: basta el administrador del seed
+      await app.query(`SELECT set_config('acopio.prueba_usuario', $1, false)`, [admin.id]);
+    });
+
+    const insertar = (tipo: string, cantidad: number, signo: number, extra = '') =>
+      app.query(
+        `INSERT INTO movimiento (id, acopio_id, categoria_id, tipo, cantidad, signo, usuario_id, ocurrido_en ${extra ? ', ' + extra.split('=')[0] : ''})
+         VALUES (gen_random_uuid(), $1, $2, $3, $4, $5, current_setting('acopio.prueba_usuario')::uuid, now() ${extra ? ', ' + extra.split('=')[1] : ''})`,
+        [ACOPIO_A, categoria, tipo, cantidad, signo],
+      );
+
+    it('una entrada crea la fila de saldo', async () => {
+      await insertar('ENTRADA', 5, 1);
+      const r = await app.query(
+        `SELECT cantidad FROM saldo WHERE acopio_id = $1 AND categoria_id = $2`,
+        [ACOPIO_A, categoria],
+      );
+      expect(Number(r.rows[0].cantidad)).toBe(5);
+    });
+
+    it('el saldo nunca queda negativo, aunque se salte la API', async () => {
+      await expect(insertar('SALIDA', 6, -1, `motivo_salida='VENCIDO'`)).rejects.toThrow(
+        /saldo_cantidad_no_negativa/,
+      );
+    });
+
+    it('acopio_app no puede modificar ni borrar movimientos', async () => {
+      await expect(app.query(`UPDATE movimiento SET cantidad = 1`)).rejects.toThrow(
+        /permission denied/,
+      );
+      await expect(app.query(`DELETE FROM movimiento`)).rejects.toThrow(/permission denied/);
+    });
+
+    it('acopio_app no puede escribir en saldo', async () => {
+      await expect(
+        app.query(`UPDATE saldo SET cantidad = 999 WHERE acopio_id = $1`, [ACOPIO_A]),
+      ).rejects.toThrow(/permission denied/);
+      await expect(
+        app.query(
+          `INSERT INTO saldo (acopio_id, categoria_id, cantidad, ultimo_movimiento) VALUES ($1, $2, 1, now())`,
+          [ACOPIO_B, categoria],
+        ),
+      ).rejects.toThrow(/permission denied/);
+    });
+
+    it('un ajuste sin motivo suficiente no entra', async () => {
+      await expect(insertar('AJUSTE', 1, 1, `motivo='corto'`)).rejects.toThrow(
+        /movimiento_ajuste_con_motivo/,
+      );
+    });
+
+    it('un ajuste sin motivo tampoco entra (un CHECK con NULL pasaría)', async () => {
+      await expect(insertar('AJUSTE', 1, 1)).rejects.toThrow(/movimiento_ajuste_con_motivo/);
+    });
+
+    it('una salida por «Otro» sin nota no entra', async () => {
+      await expect(insertar('SALIDA', 1, -1, `motivo_salida='OTRO'`)).rejects.toThrow(
+        /movimiento_nota_obligatoria/,
+      );
+    });
+
+    it('el umbral exige mínimo <= máximo', async () => {
+      await expect(
+        app.query(
+          `INSERT INTO umbral (acopio_id, categoria_id, minimo, maximo, actualizado_por)
+           VALUES ($1, $2, 10, 5, current_setting('acopio.prueba_usuario')::uuid)`,
+          [ACOPIO_A, categoria],
+        ),
+      ).rejects.toThrow(/umbral_rango/);
     });
   });
 
