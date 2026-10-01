@@ -65,14 +65,21 @@ const DIA_INGLES: Record<string, Dia> = {
   Sat: 'sab',
 };
 
+function partes(instante: Date) {
+  return Object.fromEntries(partesBogota.formatToParts(instante).map((p) => [p.type, p.value]));
+}
+
+/** El día de la semana en Bogotá, para resaltar «Hoy» en un horario. */
+export function diaEnBogota(instante: Date): Dia {
+  return DIA_INGLES[partes(instante).weekday ?? ''] ?? 'lun';
+}
+
 /** El tramo abierto en ese instante, en hora de Bogotá. Abre incluido, cierra excluido. */
 export function tramoActual(h: Horario, instante: Date): Tramo | undefined {
-  const partes = Object.fromEntries(
-    partesBogota.formatToParts(instante).map((p) => [p.type, p.value]),
-  );
-  const dia = DIA_INGLES[partes.weekday ?? ''];
+  const p = partes(instante);
+  const dia = DIA_INGLES[p.weekday ?? ''];
   if (!dia) return undefined;
-  const ahora = Number(partes.hour) * 60 + Number(partes.minute);
+  const ahora = Number(p.hour) * 60 + Number(p.minute);
   return (h[dia] ?? []).find((t) => minutos(t.abre) <= ahora && ahora < minutos(t.cierra));
 }
 

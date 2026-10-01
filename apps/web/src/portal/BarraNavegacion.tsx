@@ -11,8 +11,13 @@ const DESTINOS = [
 
 /** Barra fija al pie, al alcance del pulgar. */
 export function BarraNavegacion() {
-  // Las herramientas de la consola se abren desde «Más», así que «Más» queda marcado
-  const enConsola = useLocation().pathname.startsWith('/consola');
+  // La consola se abre desde «Más» y la ficha de un acopio desde «Mapa»: esas
+  // secciones quedan marcadas aunque la ruta no sea la suya
+  const ruta = useLocation().pathname;
+  const marcadaPor: Record<string, boolean> = {
+    '/mas': ruta.startsWith('/consola'),
+    '/mapa': ruta.startsWith('/acopios/'),
+  };
   const clases = (activo: boolean) =>
     `flex min-h-[48px] min-w-[48px] flex-col items-center justify-center gap-1 px-1 text-[0.65rem] font-bold transition-colors ${
       activo ? 'text-primary-container' : 'font-normal text-on-surface-variant'
@@ -24,7 +29,7 @@ export function BarraNavegacion() {
     >
       <ul className="mx-auto flex h-20 max-w-md items-center justify-around px-margin">
         {DESTINOS.map(({ a, texto, icono }) => {
-          const forzado = a === '/mas' && enConsola;
+          const forzado = marcadaPor[a] ?? false;
           return (
             <li key={a}>
               {forzado ? (

@@ -3,6 +3,7 @@ import {
   erroresHorario,
   HORARIO_VACIO,
   tramoActual,
+  diaEnBogota,
   type Horario,
 } from './horario.js';
 
@@ -70,5 +71,12 @@ describe('tramoActual', () => {
   it('entre tramos o en un día sin tramos no hay tramo actual', () => {
     expect(tramoActual(horario, lunes('18:30'))).toBeUndefined();
     expect(tramoActual(HORARIO_VACIO, lunes('16:00'))).toBeUndefined();
+  });
+});
+
+describe('diaEnBogota', () => {
+  it('usa el día de Bogotá: martes 03:30 UTC todavía es lunes', () => {
+    expect(diaEnBogota(new Date('2026-10-06T03:30:00Z'))).toBe('lun');
+    expect(diaEnBogota(new Date('2026-10-06T15:00:00Z'))).toBe('mar');
   });
 });

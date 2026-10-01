@@ -1,5 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { abiertoAhora, erroresHorario, type Horario } from '@acopio/shared';
+import {
+  abiertoAhora,
+  distanciaKm,
+  erroresHorario,
+  type Horario,
+  type Punto,
+} from '@acopio/shared';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import type { ClienteBd } from '../../comun/prisma/cliente-bd';
@@ -8,7 +14,6 @@ import type { Prisma } from '../../generado/prisma/client';
 import type { EstadoAcopio } from '../../generado/prisma/enums';
 import { BitacoraService } from '../auditoria/bitacora.service';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
-import { distanciaKm, type Punto } from './distancia';
 
 export interface DatosAcopio {
   entidadId: string;

@@ -20,6 +20,11 @@ it('marca la sección actual', () => {
   expect(screen.getByRole('link', { name: 'Mapa' })).toHaveAttribute('aria-current', 'page');
 });
 
+it('la ficha de un acopio deja marcado «Mapa»', () => {
+  render(envolver(<Rutas />, '/acopios/x1'));
+  expect(screen.getByRole('link', { name: 'Mapa' })).toHaveAttribute('aria-current', 'page');
+});
+
 it('la cabecera lleva a Entrar', async () => {
   render(envolver(<Rutas />));
   expect(await screen.findByRole('link', { name: 'Entrar' })).toHaveAttribute('href', '/entrar');

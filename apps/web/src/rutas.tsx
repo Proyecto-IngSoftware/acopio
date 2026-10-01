@@ -17,6 +17,7 @@ import { RequiereRol } from './consola/RequiereRol';
 import { MarcoPortal } from './portal/MarcoPortal';
 import { Mas } from './portal/Mas';
 import { NoEncontrada } from './portal/NoEncontrada';
+import { FichaAcopio } from './portal/ficha/FichaAcopio';
 import { Mapa } from './portal/mapa/Mapa';
 import { Portada } from './portal/Portada';
 import { Proximamente } from './portal/Proximamente';
@@ -31,6 +32,7 @@ export function Rutas() {
         <Route index element={<Portada />} />
         <Route path="mas" element={<Mas />} />
         <Route path="mapa" element={<Mapa />} />
+        <Route path="acopios/:id" element={<FichaAcopio />} />
         <Route
           path="consola/bitacora"
           element={
