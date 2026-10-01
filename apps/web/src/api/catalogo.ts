@@ -158,3 +158,16 @@ export function useCategoriasVigentes() {
       (await desenvolver(api.GET('/api/categorias/vigentes'))) as unknown as Categoria[],
   });
 }
+
+export type ResultadoBusqueda = S['ResultadoBusquedaDto'];
+
+/** C4: búsqueda tolerante a errores y tildes (RF-INV-001). No consulta con el campo vacío. */
+export function useBuscarCategorias(q: string) {
+  const texto = q.trim();
+  return useQuery<ResultadoBusqueda[], ErrorApi>({
+    queryKey: ['categorias', 'buscar', texto],
+    enabled: texto.length > 0,
+    queryFn: () =>
+      desenvolver(api.GET('/api/categorias/buscar', { params: { query: { q: texto } } })),
+  });
+}
