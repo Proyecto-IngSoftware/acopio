@@ -21,12 +21,10 @@ const valor = z
   .refine((n) => Math.abs(n * 1000 - Math.round(n * 1000)) < 1e-6, 'Máximo 3 decimales');
 
 class FijarUmbralDto extends createZodDto(
-  z
-    .object({ minimo: valor, maximo: valor })
-    .refine((u) => u.minimo <= u.maximo, {
-      message: 'El mínimo no puede ser mayor que el máximo',
-      path: ['minimo'],
-    }),
+  z.object({ minimo: valor, maximo: valor }).refine((u) => u.minimo <= u.maximo, {
+    message: 'El mínimo no puede ser mayor que el máximo',
+    path: ['minimo'],
+  }),
 ) {}
 
 /** C7 Umbrales y no recibir. */

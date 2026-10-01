@@ -342,3 +342,15 @@ export class PaginaHistorialDto extends createZodDto(
 export class UmbralDto extends createZodDto(
   z.object({ categoriaId: z.uuid(), minimo: z.number(), maximo: z.number(), actualizadoEn: fecha }),
 ) {}
+
+export class CodigoBarrasDto extends createZodDto(
+  z.object({
+    ean: z.string(),
+    categoriaId: z.uuid(),
+    categoria: z.string(),
+    unidad: z.enum(['LITRO', 'KILOGRAMO', 'UNIDAD']),
+    contenido: z.number().nullable().describe('Unidad base que trae una presentación'),
+    descripcion: z.string().nullable(),
+    revisado: z.boolean(),
+  }),
+) {}
