@@ -111,8 +111,17 @@ describe('base de datos', () => {
       expect(Number(r.rows[0].cantidad)).toBe(5);
     });
 
+    it('una salida que no deja el saldo negativo descuenta', async () => {
+      await insertar('SALIDA', 2, -1, `motivo_salida='VENCIDO'`);
+      const r = await app.query(
+        `SELECT cantidad FROM saldo WHERE acopio_id = $1 AND categoria_id = $2`,
+        [ACOPIO_A, categoria],
+      );
+      expect(Number(r.rows[0].cantidad)).toBe(3);
+    });
+
     it('el saldo nunca queda negativo, aunque se salte la API', async () => {
-      await expect(insertar('SALIDA', 6, -1, `motivo_salida='VENCIDO'`)).rejects.toThrow(
+      await expect(insertar('SALIDA', 4, -1, `motivo_salida='VENCIDO'`)).rejects.toThrow(
         /saldo_cantidad_no_negativa/,
       );
     });

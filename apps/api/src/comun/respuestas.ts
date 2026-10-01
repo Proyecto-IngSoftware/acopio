@@ -16,9 +16,14 @@ export class ErrorDto extends createZodDto(
     codigo: z.string().describe('Código estable para la interfaz, por ejemplo ULTIMO_ADMIN'),
     mensaje: z.string().describe('Mensaje en español, listo para mostrar'),
     detalles: z
-      .array(z.object({ campo: z.string(), mensaje: z.string() }))
+      .union([
+        z.array(z.object({ campo: z.string(), mensaje: z.string() })),
+        z.record(z.string(), z.unknown()),
+      ])
       .optional()
-      .describe('Solo en errores de validación: un mensaje por campo'),
+      .describe(
+        'En errores de validación, un mensaje por campo. En algunos errores de dominio, datos para la interfaz (SALDO_INSUFICIENTE trae { saldo })',
+      ),
   }),
 ) {}
 

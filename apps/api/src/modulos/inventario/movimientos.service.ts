@@ -168,6 +168,147 @@ export class MovimientosService {
     }
   }
 
+  /**
+   * Lee el saldo después de tomar un candado de la transacción por (acopio, categoría):
+   * dos salidas o ajustes de la misma categoría se ordenan. No usa FOR UPDATE porque
+   * exige permiso de UPDATE sobre saldo, que acopio_app no tiene (ADR-0015).
+   */
+  private async bloquearSaldo(
+    tx: ClienteBd,
+    acopioId: string,
+    categoriaId: string,
+  ): Promise<number> {
+    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${acopioId} || ':' || ${categoriaId}, 0))`;
+    return this.saldoDe(tx, acopioId, categoriaId);
+  }
+
+  async salida(
+    usuario: UsuarioAutenticado,
+    acopioId: string,
+    datos: {
+      categoriaId: string;
+      cantidad: number;
+      motivoSalida: 'ENTREGA_FAMILIAS' | 'TRASLADO' | 'VENCIDO' | 'OTRO';
+      nota: string | null;
+    },
+  ): Promise<ResultadoMovimiento> {
+    await this.exigirOperador(usuario, acopioId);
+    const nota = datos.nota?.trim() || null;
+    if ((datos.motivoSalida === 'TRASLADO' || datos.motivoSalida === 'OTRO') && !nota) {
+      throw new ErrorDominio(
+        'NOTA_OBLIGATORIA',
+        'Cuenta a quién va o por qué sale, en una nota corta',
+      );
+    }
+    return this.conSaldoInsuficiente(acopioId, datos.categoriaId, () =>
+      this.prisma.$transaction(async (tx) => {
+        const cat = await categoriaParaMovimiento(tx, datos.categoriaId);
+        exigirCantidad(datos.cantidad, cat.unidad_base);
+        const antes = await this.bloquearSaldo(tx, acopioId, datos.categoriaId);
+        if (datos.cantidad > antes + 1e-9) throw saldoInsuficiente(antes);
+        const fila = await tx.movimiento.create({
+          data: {
+            acopio_id: acopioId,
+            categoria_id: datos.categoriaId,
+            tipo: 'SALIDA',
+            signo: -1,
+            cantidad: datos.cantidad,
+            motivo_salida: datos.motivoSalida,
+            nota,
+            usuario_id: usuario.id,
+            ocurrido_en: new Date(),
+          },
+        });
+        const saldo = await this.saldoDe(tx, acopioId, datos.categoriaId);
+        await this.bitacora.registrar(tx, {
+          usuarioId: usuario.id,
+          accion: 'movimiento.salida',
+          entidad: 'movimiento',
+          entidadId: fila.id,
+          ubicacionId: acopioId,
+          antes: { categoria: cat.nombre, saldo: antes },
+          despues: {
+            categoria: cat.nombre,
+            cantidad: datos.cantidad,
+            motivo: datos.motivoSalida,
+            nota,
+            saldo,
+          },
+        });
+        return { movimiento: aMovimientoVista(fila), saldo, noRecibe: false };
+      }),
+    );
+  }
+
+  async ajuste(
+    usuario: UsuarioAutenticado,
+    acopioId: string,
+    datos: { categoriaId: string; cantidadContada: number; motivo: string },
+  ): Promise<ResultadoMovimiento> {
+    await this.exigirOperador(usuario, acopioId);
+    const motivo = datos.motivo.trim();
+    return this.conSaldoInsuficiente(acopioId, datos.categoriaId, () =>
+      this.prisma.$transaction(async (tx) => {
+        const cat = await categoriaParaMovimiento(tx, datos.categoriaId);
+        if (datos.cantidadContada > 0) exigirCantidad(datos.cantidadContada, cat.unidad_base);
+        const antes = await this.bloquearSaldo(tx, acopioId, datos.categoriaId);
+        const diferencia = Math.round((datos.cantidadContada - antes) * 1000) / 1000;
+        if (diferencia === 0) {
+          throw new ErrorDominio(
+            'SIN_DIFERENCIA',
+            'Lo contado coincide con el saldo; no hay nada que ajustar',
+          );
+        }
+        const fila = await tx.movimiento.create({
+          data: {
+            acopio_id: acopioId,
+            categoria_id: datos.categoriaId,
+            tipo: 'AJUSTE',
+            signo: diferencia > 0 ? 1 : -1,
+            cantidad: Math.abs(diferencia),
+            motivo,
+            usuario_id: usuario.id,
+            ocurrido_en: new Date(),
+          },
+        });
+        const saldo = await this.saldoDe(tx, acopioId, datos.categoriaId);
+        await this.bitacora.registrar(tx, {
+          usuarioId: usuario.id,
+          accion: 'movimiento.ajuste',
+          entidad: 'movimiento',
+          entidadId: fila.id,
+          ubicacionId: acopioId,
+          destacado: true,
+          antes: { categoria: cat.nombre, saldo: antes },
+          despues: {
+            categoria: cat.nombre,
+            contado: datos.cantidadContada,
+            diferencia,
+            motivo,
+            saldo,
+          },
+        });
+        return { movimiento: aMovimientoVista(fila), saldo, noRecibe: false };
+      }),
+    );
+  }
+
+  /** Si el CHECK de saldo salta pese al bloqueo, responde lo mismo que la validación. */
+  private async conSaldoInsuficiente<T>(
+    acopioId: string,
+    categoriaId: string,
+    hacer: () => Promise<T>,
+  ) {
+    try {
+      return await hacer();
+    } catch (e) {
+      if (/saldo_cantidad_no_negativa/.test(String((e as Error)?.message ?? ''))) {
+        throw saldoInsuficiente(await this.saldoDe(this.prisma, acopioId, categoriaId));
+      }
+      throw e;
+    }
+  }
+
   /** Un reintento con el mismo id: el original si coincide, 409 si no. */
   private async repetido(previo: Movimiento, acopioId: string, datos: DatosEntrada) {
     const igual =
@@ -190,3 +331,6 @@ export class MovimientosService {
     };
   }
 }
+
+const saldoInsuficiente = (saldo: number) =>
+  new ErrorDominio('SALDO_INSUFICIENTE', `No alcanza: hay ${saldo} disponibles`, 409, { saldo });

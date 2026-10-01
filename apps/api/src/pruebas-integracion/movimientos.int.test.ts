@@ -166,4 +166,182 @@ describe('movimientos', () => {
       expect(r.body.codigo).toBe('CATEGORIA_ARCHIVADA');
     });
   });
+
+  const salida = (datos: Record<string, unknown>, token = op.token) =>
+    a.http().post(`/api/acopios/${ACOPIO_A}/salidas`).set(como(token)).send(datos);
+  const ajuste = (datos: Record<string, unknown>) =>
+    a.http().post(`/api/acopios/${ACOPIO_A}/ajustes`).set(como(op.token)).send(datos);
+
+  describe('salidas', () => {
+    let agua: string;
+    beforeAll(async () => {
+      agua = (
+        await a.prisma.categoria.create({
+          data: { nombre: unico('Agua prueba '), grupo: 'AGUA_Y_BEBIDAS', unidad_base: 'LITRO' },
+        })
+      ).id;
+    });
+
+    it('la primera operación es una salida: 409 con saldo 0', async () => {
+      const r = await salida({
+        categoriaId: agua,
+        cantidad: 1,
+        motivoSalida: 'ENTREGA_FAMILIAS',
+      }).expect(409);
+      expect(r.body.codigo).toBe('SALDO_INSUFICIENTE');
+      expect(r.body.detalles).toEqual({ saldo: 0 });
+    });
+
+    it('descuenta y deja la bitácora', async () => {
+      await entrada({ categoriaId: agua, cantidad: 100 }).expect(201);
+      const r = await salida({
+        categoriaId: agua,
+        cantidad: 40,
+        motivoSalida: 'ENTREGA_FAMILIAS',
+      }).expect(201);
+      expect(r.body.saldo).toBe(60);
+      expect(r.body.movimiento).toMatchObject({
+        tipo: 'SALIDA',
+        signo: -1,
+        motivoSalida: 'ENTREGA_FAMILIAS',
+      });
+      expect(
+        await a.prisma.bitacora.findFirst({
+          where: { accion: 'movimiento.salida', entidad_id: r.body.movimiento.id },
+        }),
+      ).not.toBeNull();
+    });
+
+    it('más que el saldo: 409 con el saldo disponible, y no cambia nada', async () => {
+      const r = await salida({ categoriaId: agua, cantidad: 61, motivoSalida: 'VENCIDO' }).expect(
+        409,
+      );
+      expect(r.body.detalles).toEqual({ saldo: 60 });
+      const s = await a.prisma.saldo.findUniqueOrThrow({
+        where: { acopio_id_categoria_id: { acopio_id: ACOPIO_A, categoria_id: agua } },
+      });
+      expect(Number(s.cantidad)).toBe(60);
+    });
+
+    it('Traslado y Otro piden nota', async () => {
+      const r = await salida({ categoriaId: agua, cantidad: 1, motivoSalida: 'TRASLADO' }).expect(
+        422,
+      );
+      expect(r.body.codigo).toBe('NOTA_OBLIGATORIA');
+      await salida({ categoriaId: agua, cantidad: 1, motivoSalida: 'OTRO', nota: '  ' }).expect(
+        422,
+      );
+      await salida({
+        categoriaId: agua,
+        cantidad: 1,
+        motivoSalida: 'TRASLADO',
+        nota: 'A Cruz Roja Kennedy',
+      }).expect(201);
+    });
+
+    it('motivo desconocido: 400', async () => {
+      await salida({ categoriaId: agua, cantidad: 1, motivoSalida: 'REGALO' }).expect(400);
+    });
+  });
+
+  describe('ajustes', () => {
+    let jabon: string;
+    beforeAll(async () => {
+      jabon = (
+        await a.prisma.categoria.create({
+          data: { nombre: unico('Jabón prueba '), grupo: 'ASEO_PERSONAL', unidad_base: 'UNIDAD' },
+        })
+      ).id;
+    });
+
+    it('sin saldo y contando 0: 422 SIN_DIFERENCIA, sin movimiento', async () => {
+      const r = await ajuste({
+        categoriaId: jabon,
+        cantidadContada: 0,
+        motivo: 'Conteo de inicio de jornada',
+      }).expect(422);
+      expect(r.body.codigo).toBe('SIN_DIFERENCIA');
+      expect(await a.prisma.movimiento.count({ where: { categoria_id: jabon } })).toBe(0);
+    });
+
+    it('contar de más registra un ajuste al alza, destacado en la bitácora', async () => {
+      await entrada({ categoriaId: jabon, cantidad: 10 }).expect(201);
+      const r = await ajuste({
+        categoriaId: jabon,
+        cantidadContada: 12,
+        motivo: 'Aparecieron dos en otra caja',
+      }).expect(201);
+      expect(r.body.movimiento).toMatchObject({ tipo: 'AJUSTE', signo: 1, cantidad: 2 });
+      expect(r.body.saldo).toBe(12);
+      const b = await a.prisma.bitacora.findFirstOrThrow({
+        where: { accion: 'movimiento.ajuste', entidad_id: r.body.movimiento.id },
+      });
+      expect(b.destacado).toBe(true);
+    });
+
+    it('contar de menos registra un ajuste a la baja', async () => {
+      const r = await ajuste({
+        categoriaId: jabon,
+        cantidadContada: 9,
+        motivo: 'Tres se mojaron en la bodega',
+      }).expect(201);
+      expect(r.body.movimiento).toMatchObject({ signo: -1, cantidad: 3 });
+      expect(r.body.saldo).toBe(9);
+    });
+
+    it('motivo de menos de 10 caracteres: 400', async () => {
+      await ajuste({ categoriaId: jabon, cantidadContada: 1, motivo: 'corto' }).expect(400);
+    });
+
+    it('contada negativa o con decimales en una por unidad: 400 y 422', async () => {
+      await ajuste({
+        categoriaId: jabon,
+        cantidadContada: -1,
+        motivo: 'Conteo de inicio de jornada',
+      }).expect(400);
+      const r = await ajuste({
+        categoriaId: jabon,
+        cantidadContada: 1.5,
+        motivo: 'Conteo de inicio de jornada',
+      }).expect(422);
+      expect(r.body.codigo).toBe('CANTIDAD_ENTERA');
+    });
+  });
+
+  describe('acopio cerrado', () => {
+    it('no admite entradas, salidas ni ajustes: 409', async () => {
+      const cat = (
+        await a.prisma.categoria.create({
+          data: { nombre: unico('Cierre prueba '), grupo: 'HERRAMIENTAS', unidad_base: 'UNIDAD' },
+        })
+      ).id;
+      await a.prisma.acopio.update({ where: { id: ACOPIO_A }, data: { estado: 'CERRADO' } });
+      try {
+        const r = await entrada({ categoriaId: cat, cantidad: 1 }).expect(409);
+        expect(r.body.codigo).toBe('ACOPIO_CERRADO');
+        await salida({ categoriaId: cat, cantidad: 1, motivoSalida: 'VENCIDO' }).expect(409);
+        await ajuste({
+          categoriaId: cat,
+          cantidadContada: 1,
+          motivo: 'Conteo de cierre del acopio',
+        }).expect(409);
+      } finally {
+        await a.prisma.acopio.update({ where: { id: ACOPIO_A }, data: { estado: 'ACTIVO' } });
+      }
+    });
+
+    it('un acopio pausado sí registra', async () => {
+      const cat = (
+        await a.prisma.categoria.create({
+          data: { nombre: unico('Pausa prueba '), grupo: 'HERRAMIENTAS', unidad_base: 'UNIDAD' },
+        })
+      ).id;
+      await a.prisma.acopio.update({ where: { id: ACOPIO_A }, data: { estado: 'PAUSADO' } });
+      try {
+        await entrada({ categoriaId: cat, cantidad: 1 }).expect(201);
+      } finally {
+        await a.prisma.acopio.update({ where: { id: ACOPIO_A }, data: { estado: 'ACTIVO' } });
+      }
+    });
+  });
 });
