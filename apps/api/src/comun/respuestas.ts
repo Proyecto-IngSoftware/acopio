@@ -311,3 +311,30 @@ export class ResultadoMovimientoDto extends createZodDto(
     noRecibe: z.boolean().describe('La categoría está marcada «no recibir» en el acopio'),
   }),
 ) {}
+
+export class SaldoDto extends createZodDto(
+  z.object({
+    categoriaId: z.uuid(),
+    categoria: z.string(),
+    grupo: z.string(),
+    unidad: z.enum(['LITRO', 'KILOGRAMO', 'UNIDAD']),
+    perecedero: z.boolean(),
+    cantidad: z.number(),
+    umbral: z.object({ minimo: z.number(), maximo: z.number() }).nullable(),
+    semaforo: z.enum(['SIN_UMBRAL', 'BAJO', 'CERCA', 'EN_RANGO', 'SOBRE']),
+    ultimoMovimiento: fecha.nullable(),
+    vencimientos: z
+      .array(z.object({ venceEn: dia.nullable(), cantidad: z.number() }))
+      .describe(
+        'Estimado: supone que sale primero lo que vence antes (V-02). Vacío si no es perecedero',
+      ),
+  }),
+) {}
+
+export class FilaHistorialDto extends createZodDto(
+  MovimientoDto.schema.extend({ usuario: z.string(), saldoDespues: z.number() }),
+) {}
+
+export class PaginaHistorialDto extends createZodDto(
+  z.object({ filas: z.array(FilaHistorialDto.schema), siguiente: z.string().nullable() }),
+) {}
