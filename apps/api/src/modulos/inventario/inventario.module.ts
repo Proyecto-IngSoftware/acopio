@@ -1,10 +1,12 @@
 import { Module } from '@nestjs/common';
+import { MovimientosController } from './movimientos.controller';
+import { MovimientosService } from './movimientos.service';
 import { NoRecibirController } from './no-recibir.controller';
 import { NoRecibirService } from './no-recibir.service';
 
-/** Inventario. En el Bloque 1 solo «no recibir» (B-02); el resto llega en el Bloque 2. */
+/** Inventario: «no recibir» (Bloque 1) y movimientos, saldos y umbrales (Bloque 2). */
 @Module({
-  controllers: [NoRecibirController],
-  providers: [NoRecibirService],
+  controllers: [NoRecibirController, MovimientosController],
+  providers: [NoRecibirService, MovimientosService],
 })
 export class InventarioModule {}

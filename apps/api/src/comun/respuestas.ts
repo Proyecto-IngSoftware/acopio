@@ -278,3 +278,31 @@ export class NoRecibirDto extends createZodDto(
 export class AcopioNoRecibeDto extends createZodDto(
   z.object({ acopioId: z.uuid(), hasta: dia.nullable() }),
 ) {}
+
+const tipoMovimiento = z.enum(['ENTRADA', 'SALIDA', 'AJUSTE']);
+const motivoSalida = z.enum(['ENTREGA_FAMILIAS', 'TRASLADO', 'VENCIDO', 'OTRO']);
+
+export class MovimientoDto extends createZodDto(
+  z.object({
+    id: z.uuid(),
+    tipo: tipoMovimiento,
+    categoriaId: z.uuid(),
+    cantidad: z.number().describe('Siempre positiva; el signo lo da el tipo'),
+    signo: z.union([z.literal(1), z.literal(-1)]),
+    motivoSalida: motivoSalida.nullable(),
+    nota: z.string().nullable(),
+    motivo: z.string().nullable(),
+    venceEn: dia.nullable(),
+    ocurridoEn: fecha,
+    registradoEn: fecha,
+    origenOffline: z.boolean(),
+  }),
+) {}
+
+export class ResultadoMovimientoDto extends createZodDto(
+  z.object({
+    movimiento: MovimientoDto.schema,
+    saldo: z.number().describe('Saldo de la categoría en el acopio después del movimiento'),
+    noRecibe: z.boolean().describe('La categoría está marcada «no recibir» en el acopio'),
+  }),
+) {}
