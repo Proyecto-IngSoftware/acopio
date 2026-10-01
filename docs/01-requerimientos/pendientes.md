@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-01
 ---
 
 # Pendientes — bandeja de entrada
@@ -621,6 +621,18 @@ RF-RED-001, `modelo-datos.md` y el catálogo de pantallas quedaron al día el 20
 
 **Por qué:** ninguno rompe el recorrido de hoy, pero conviene cerrarlos antes de desplegar.
 **Estado:** ABIERTO.
+
+### P-035 · La pantalla P5 de Stitch todavía muestra el filtro viejo
+**Fecha:** 2026-10-01 · **Propuesto por:** Joseph
+**Qué:** Joseph aprobó el 2026-10-01 el filtro «¿Qué vas a llevar?» de P5. Oculta los
+acopios que no reciben la categoría elegida y dice cuántos ocultó. La pantalla de Stitch
+y su `pantalla.html` siguen con la píldora «No recibe: Ropa». Falta corregirla en Stitch,
+exportarla de nuevo y reemplazar la captura.
+**Por qué:** el diseño de Stitch es la referencia (ADR-0013). Mientras muestre el filtro
+viejo, quien lo tome como base puede volver a construir lo contrario de lo que pide
+RF-RED-002.
+**Estado:** ABIERTO, deuda importante. La diferencia ya quedó en la
+[nota de P5](../03-diseno/stitch/P05-mapa/README.md).
 
 ---
 

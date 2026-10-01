@@ -23,3 +23,7 @@ Aprobadas por Joseph el 2026-09-30:
 
 - La tarjeta del acopio elegido no lleva «Saturación crítica» ni «Excedente»; solo «No traigan: ropa».
 - El nombre del acopio y la entidad van en dos líneas.
+
+Aprobada por Joseph el 2026-10-01, después de construida:
+
+- El filtro de categorías es «¿Qué vas a llevar?». Oculta los acopios que no reciben esa categoría y dice cuántos ocultó. La pantalla de Stitch tenía «No recibe: Ropa» como filtro activo, que muestra lo contrario de lo que pide RF-RED-002. Stitch todavía no se ha corregido (P-035).
