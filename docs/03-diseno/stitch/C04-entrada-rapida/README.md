@@ -16,6 +16,7 @@ actualizado: 2026-10-01
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | Junto a C3 e Historial en <https://claude.ai/artifact/TADcLzYEYr8uKadgBpSpPC> ([maqueta.html](../C03-inventario/maqueta.html)) |
 | Aprobación | Joseph la aprobó el 2026-10-01, con las diferencias de abajo |
+| Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
 
 Stitch la generó con el sistema de diseño viejo del proyecto (teal `#0F6E6E`); en el
 código mandan los tokens de `packages/ui-tokens`.
@@ -35,3 +36,10 @@ Aprobadas por Joseph el 2026-10-01:
 - Si la categoría está marcada «no recibir», un aviso antes de registrar que deja seguir.
 - Tras registrar, la pantalla muestra el saldo resultante y queda lista para la siguiente
   entrada.
+
+## Al construir
+
+- A 360 × 640, con una categoría elegida, el botón «Registrar» queda debajo del teclado y
+  hay que desplazar un poco para tocarlo. Se revisa con el uso real antes de achicar las
+  teclas, que hoy miden 56 px.
+

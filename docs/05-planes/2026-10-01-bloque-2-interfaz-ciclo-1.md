@@ -2,7 +2,7 @@
 title: "Bloque 2 · Interfaz, ciclo 1: entrada rápida, inventario e historial · plan"
 type: plan
 tags: [plan, interfaz, bloque-2]
-estado: vigente
+estado: cerrado
 bloque: 2
 actualizado: 2026-10-01
 ---
@@ -57,9 +57,9 @@ Testing Library (`responderSegun`), `lint`, `typecheck`, `test`, colores y commi
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 Base | ⬜ | |
-| 2 C3 | ⬜ | |
-| 3 Historial | ⬜ | |
-| 4 C4 | ⬜ | |
-| 5 Navegación | ⬜ | |
-| 6 Cierre | ⬜ | |
+| 1 Base | ✅ | Token `sobra`, `EtiquetaSemaforo` y `src/api/inventario.ts`. `siguiente` del historial viene tipado como arreglo (P-031) y se convierte a mano |
+| 2 C3 | ✅ |  |
+| 3 Historial | ✅ | Los íconos por tipo salen de una `function iconoDe` para que `scripts/iconos.mjs` los encuentre |
+| 4 C4 | ✅ | La búsqueda usa `useBuscarCategorias`, nuevo en `api/catalogo.ts`, que no consulta con el campo vacío. El campo de cantidad crece con lo escrito para dejar la unidad pegada al número |
+| 5 Navegación | ✅ | El Auditor ya no ve en «Más» la fila de operación del acopio, que no puede abrir |
+| 6 Cierre | ✅ | Recorrido en el Compose con un Operador y un Auditor; axe sin violaciones graves en C4, C3 e Historial a 360 × 640; sin desplazamiento horizontal. Una entrada automatizada (escribir «agua», elegir, dos teclas y registrar) tarda 0,7 s en llegar al saldo resultante, así que el tiempo real lo pone la persona. Con categoría elegida, «Registrar» queda bajo el teclado y pide desplazar un poco |

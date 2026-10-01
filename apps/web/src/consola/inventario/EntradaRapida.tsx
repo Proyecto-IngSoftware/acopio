@@ -199,7 +199,9 @@ export function EntradaRapida() {
               value={cantidad}
               onChange={(e) => fijarCantidad(e.target.value.replace(/[^\d,]/g, ''))}
               placeholder="0"
-              className="w-40 bg-transparent text-center text-display-hero-mobile font-bold text-on-surface tabular-nums"
+              // Crece con lo escrito: la unidad queda pegada al número
+              style={{ width: `${Math.max(cantidad.length, 1) + 0.5}ch` }}
+              className="max-w-[60vw] bg-transparent text-center text-display-hero-mobile font-bold text-on-surface tabular-nums"
             />
             {categoria && (
               <span className="text-headline-sm text-on-surface-variant">
