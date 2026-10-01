@@ -215,6 +215,12 @@ describe('base de datos', () => {
     expect(acopios).toBe(4);
     const entidades = await a.prisma.entidad.count({ where: { nombre: { endsWith: '(prueba)' } } });
     expect(entidades).toBe(2);
+    // Inventario de ejemplo para C3, solo en el primer acopio y sin duplicarse
+    const primero = await a.prisma.acopio.findFirstOrThrow({
+      where: { nombre: { endsWith: '(prueba)' } },
+      orderBy: { nombre: 'asc' },
+    });
+    expect(await a.prisma.movimiento.count({ where: { acopio_id: primero.id } })).toBe(6);
   });
 
   it('el seed es idempotente: 39 categorías y 10 filas de canasta (T12)', async () => {

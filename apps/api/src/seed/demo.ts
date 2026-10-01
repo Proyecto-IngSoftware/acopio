@@ -84,7 +84,38 @@ export async function sembrarDemo(prisma: PrismaService) {
       },
     });
   }
+  await sembrarInventarioDemo(prisma, ACOPIOS[0]!.id);
   return { entidades: ENTIDADES.length, acopios: ACOPIOS.length };
+}
+
+/** Inventario de ejemplo para C3 en un acopio, solo si aún no tiene movimientos. */
+async function sembrarInventarioDemo(prisma: PrismaService, acopioId: string) {
+  if ((await prisma.movimiento.count({ where: { acopio_id: acopioId } })) > 0) return;
+  // El movimiento necesita un usuario: el primer administrador, el del seed real
+  const admin = await prisma.usuario.findFirst({
+    where: { rol: 'ADMIN' },
+    orderBy: { creado_en: 'asc' },
+  });
+  if (!admin) return;
+  const categorias = await prisma.categoria.findMany({
+    where: { archivada: false },
+    orderBy: { nombre: 'asc' },
+    take: 6,
+  });
+  for (const [i, c] of categorias.entries()) {
+    await prisma.movimiento.create({
+      data: {
+        acopio_id: acopioId,
+        categoria_id: c.id,
+        tipo: 'ENTRADA',
+        signo: 1,
+        cantidad: (i + 1) * 10,
+        vence_en: c.perecedero ? new Date(Date.UTC(2026, 11, 1 + i)) : null,
+        usuario_id: admin.id,
+        ocurrido_en: new Date(),
+      },
+    });
+  }
 }
 
 /** `bun run --filter @acopio/api seed:demo`. Corre como dueño de la base. */
