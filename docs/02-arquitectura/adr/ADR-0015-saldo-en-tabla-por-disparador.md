@@ -10,7 +10,7 @@ actualizado: 2026-10-01
 
 # ADR-0015 · El saldo vive en una tabla que mantiene un disparador
 
-**Fecha:** 2026-10-01 · **Estado:** aceptada · **Ajusta:** la estrategia de saldos de
+**Fecha:** 2026-10-01 · **Estado:** aceptada; precisada al construir el mismo día · **Ajusta:** la estrategia de saldos de
 [ADR-0002](ADR-0002-saldo-derivado.md) y de [modelo-datos.md](../modelo-datos.md#estrategia-de-saldos)
 
 ## Contexto
@@ -29,12 +29,17 @@ registrando a la vez, y una vista no puede impedirlo.
 `movimiento`.** El principio de ADR-0002 no cambia: los movimientos son la verdad y
 el saldo se deriva de ellos.
 
-- La función del disparador es `SECURITY DEFINER`, del dueño, y hace
-  `INSERT … ON CONFLICT DO UPDATE SET cantidad = saldo.cantidad + nuevo`.
+- La función del disparador es `SECURITY DEFINER`, del dueño. Primero actualiza la
+  fila de `(acopio, categoría)` y, solo si no existe, la inserta. Un `INSERT … ON
+  CONFLICT DO UPDATE` directo no sirve: PostgreSQL revisa el `CHECK` sobre la fila
+  propuesta, y la de una salida trae cantidad negativa aunque el saldo alcance.
 - `saldo.cantidad` tiene `CHECK (cantidad >= 0)`. Una salida que la dejaría negativa
   hace fallar la transacción entera.
 - La actualización bloquea solo la fila de `(acopio, categoría)`: los registros sobre
   la misma categoría se ordenan y los de categorías distintas no se estorban.
+- Antes de una salida o un ajuste, la API toma `pg_advisory_xact_lock` por `(acopio,
+  categoría)` y lee el saldo para responder 409 con el disponible. No usa `SELECT …
+  FOR UPDATE`, que pediría permiso de `UPDATE` sobre `saldo`.
 - `acopio_app` tiene solo `SELECT` sobre `saldo` y solo `SELECT` e `INSERT` sobre
   `movimiento`.
 - Una prueba de integración compara `saldo` con la suma real de los movimientos.
@@ -47,8 +52,9 @@ código.
 
 **Vista simple que suma al consultar, con candado en la API.** La API toma
 `pg_advisory_xact_lock` por `(acopio, categoría)`, suma y valida antes de insertar.
-Siempre es correcta, pero la regla del «no negativo» queda en la aplicación, y el
-modelo pide que lo expresable en el esquema vaya en el esquema.
+Siempre es correcta, pero la regla del «no negativo» queda solo en la aplicación, y el
+modelo pide que lo expresable en el esquema vaya en el esquema. La decisión usa el mismo
+candado, pero como primera barrera; la segunda es el `CHECK`.
 
 ## Consecuencias
 

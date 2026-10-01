@@ -59,7 +59,7 @@ Monorepo con workspaces de Bun:
 
 ### Módulos de la API
 
-Cada carpeta de `apps/api/src/modulos/` es un límite de dominio. Hoy existen `identidad`, `auditoria`, `catalogo`, `notificaciones`, `salud`, `acopios` e `inventario` (este, solo con «no recibir»); faltan `comprobantes`, `motor`, `turnos`, `almacenamiento` e `importacion`.
+Cada carpeta de `apps/api/src/modulos/` es un límite de dominio. Hoy existen `identidad`, `auditoria`, `catalogo`, `notificaciones`, `salud`, `acopios` e `inventario` (movimientos, saldos, umbrales y «no recibir»; los códigos de barras viven en `catalogo`); faltan `comprobantes`, `motor`, `turnos`, `almacenamiento` e `importacion`.
 
 Quién puede importar a quién está en la tabla «Dependencias permitidas» de `docs/02-arquitectura/vista-general.md`, y `apps/api/.dependency-cruiser.cjs` la hace cumplir. Un módulo nuevo se agrega a las dos. `comun/`, `config/` y `generado/` no son módulos y los usa cualquiera; los decoradores de autorización viven en `comun/autorizacion` para evitar un ciclo entre `identidad` y `auditoria`.
 
@@ -75,7 +75,7 @@ Quién puede importar a quién está en la tabla «Dependencias permitidas» de 
 - El correo siempre pasa por la cola `correo_saliente`. `NotificacionService.encolar` se llama dentro de la transacción de la operación y una tarea programada envía cada minuto.
 - `identidad` valida las ubicaciones de una asignación con el puerto `VerificadorUbicaciones` (token en `comun/ubicaciones`), que implementa `acopios`. Las pruebas de integración parten de una entidad, dos acopios (`ACOPIO_A`, `ACOPIO_B`), una emergencia y una zona (`ZONA_A`) con id fijo, creados en `crearAppPrueba`; Nominatim va siempre con el adaptador falso.
 - Las tareas programadas (`@Cron`) no se registran con `NODE_ENV=test`. Las pruebas llaman al método directamente.
-- El saldo de inventario se deriva de los movimientos, no se guarda (ADR-0002).
+- El saldo de inventario se deriva de los movimientos (ADR-0002). Lo guarda la tabla `saldo`, que mantiene un disparador sobre `movimiento` con `CHECK (cantidad >= 0)` (ADR-0015). `acopio_app` solo inserta y lee movimientos y solo lee `saldo`. Antes de una salida o un ajuste, la API toma `pg_advisory_xact_lock` por acopio y categoría: `SELECT … FOR UPDATE` pediría permiso de `UPDATE` sobre `saldo`.
 - El cliente de Prisma se genera en `apps/api/src/generado/` y no se versiona. Los scripts `typecheck`, `test` y `test:int` lo regeneran.
 - Los errores salen con un solo formato (`estado`, `codigo`, `mensaje`) desde `comun/errores`.
 - Si cambia un endpoint, se regenera el contrato con `openapi`, luego los tipos de la web con `api:tipos`, y se versionan los dos.

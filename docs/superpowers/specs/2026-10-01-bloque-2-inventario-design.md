@@ -121,7 +121,7 @@ saldo
 ```
 
 La mantiene el disparador `AFTER INSERT` sobre `movimiento` (función `SECURITY DEFINER`
-del dueño) con `INSERT … ON CONFLICT DO UPDATE SET cantidad = saldo.cantidad + nuevo`.
+del dueño): actualiza la fila y, si no existe, la inserta (§12).
 La actualización bloquea solo esa fila: dos registros sobre la misma categoría se
 ordenan y los de categorías distintas no se estorban. Si el resultado fuera negativo, el
 `CHECK` hace fallar la transacción entera. `acopio_app` tiene solo `SELECT` sobre
@@ -297,4 +297,14 @@ Si el tiempo no alcanza se recorta primero el ciclo 3 y después el escáner.
 
 ## 12. Cambios al construir
 
-_Se llena al construir._
+**2026-10-01 · API.** Construida según el [plan](../../05-planes/2026-10-01-bloque-2-api.md).
+
+| Qué | Por qué |
+|---|---|
+| El disparador actualiza la fila de `saldo` y solo la inserta si no existe | Con `INSERT … ON CONFLICT DO UPDATE`, PostgreSQL revisa el `CHECK` sobre la fila propuesta: toda salida fallaba aunque el saldo alcanzara. Va en una migración aparte porque la primera ya estaba aplicada |
+| Antes de una salida o un ajuste, la API toma `pg_advisory_xact_lock` por acopio y categoría | `SELECT … FOR UPDATE` pide permiso de `UPDATE` sobre `saldo`, y `acopio_app` no lo tiene a propósito. ADR-0015 quedó precisado |
+| Los `CHECK` de nota y motivo usan `coalesce` | `length(trim(NULL))` da NULL, y un `CHECK` que da NULL deja pasar la fila |
+| El Administrador y el Auditor leen saldos e historial de cualquier acopio; el Operador, los suyos | §1.7. `AlcanceService` limita al Auditor a sus asignaciones, así que las lecturas de inventario tienen su propia regla |
+| `SALDO_INSUFICIENTE` trae `detalles: { saldo }`, y `ErrorDto.detalles` admite un objeto además de la lista de campos | La interfaz muestra cuánto hay disponible sin otra consulta |
+| `seed:demo` deja 6 entradas en el primer acopio de prueba | Para ver C3 con datos en local |
+
