@@ -1,14 +1,14 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
-import { useCrearUsuario, type Asignacion, type RolInterno } from '../../api/usuarios';
+import type { Ubicacion } from '../../api/red';
+import { useCrearUsuario, type RolInterno } from '../../api/usuarios';
 import { Boton, EnlaceBoton } from '../../componentes/Boton';
-import { Campo, Selector } from '../../componentes/Campo';
+import { Campo } from '../../componentes/Campo';
 import { Icono } from '../../componentes/Icono';
 import { FormularioError } from '../catalogo/FormularioError';
 import { Encabezado } from '../Encabezado';
+import { BuscadorUbicaciones, UbicacionElegida } from './BuscadorUbicaciones';
 import { CompartirEnlace, ROLES } from './comun';
-
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 /** C16 Invitar persona (RF-IDE-001, 002). */
 export function InvitarPersona() {
@@ -17,28 +17,14 @@ export function InvitarPersona() {
   const [username, fijarUsername] = useState('');
   const [rol, fijarRol] = useState<RolInterno>('OPERADOR');
   const [correo, fijarCorreo] = useState('');
-  const [asignaciones, fijarAsignaciones] = useState<Asignacion[]>([]);
-  const [tipo, fijarTipo] = useState<Asignacion['tipo']>('ACOPIO');
-  const [ubicacion, fijarUbicacion] = useState('');
+  const [elegidas, fijarElegidas] = useState<Ubicacion[]>([]);
   const [aviso, fijarAviso] = useState<string | null>(null);
   const conAlcance = rol !== 'ADMIN';
-
-  function agregar() {
-    const id = ubicacion.trim();
-    if (!UUID.test(id)) {
-      fijarAviso('El identificador de la ubicación no es válido.');
-      return;
-    }
-    fijarAviso(null);
-    if (!asignaciones.some((a) => a.ubicacionId === id))
-      fijarAsignaciones([...asignaciones, { tipo, ubicacionId: id }]);
-    fijarUbicacion('');
-  }
 
   function enviar(e: FormEvent) {
     e.preventDefault();
     if (crear.isPending) return;
-    if (conAlcance && asignaciones.length === 0) {
+    if (conAlcance && elegidas.length === 0) {
       fijarAviso('Agrega al menos una ubicación: un operador, receptor o auditor la necesita.');
       return;
     }
@@ -48,7 +34,7 @@ export function InvitarPersona() {
       username: username.trim().toLowerCase(),
       rol,
       correo: correo.trim() || null,
-      asignaciones: conAlcance ? asignaciones : [],
+      asignaciones: conAlcance ? elegidas.map((u) => ({ tipo: u.tipo, ubicacionId: u.id })) : [],
     });
   }
 
@@ -145,48 +131,22 @@ export function InvitarPersona() {
             <legend className="pb-space-xs text-label-md text-on-surface">
               Ubicaciones asignadas
             </legend>
-            <p className="text-body-sm text-on-surface-variant">
-              La lista de acopios y zonas llega con el Bloque 1. Mientras tanto, pega el
-              identificador de la ubicación.
-            </p>
-            <Selector
-              id="inv-tipo"
-              etiqueta="Tipo"
-              value={tipo}
-              onChange={(e) => fijarTipo(e.target.value as Asignacion['tipo'])}
-            >
-              <option value="ACOPIO">Acopio</option>
-              <option value="ZONA">Zona</option>
-            </Selector>
-            <Campo
-              id="inv-ubicacion"
-              etiqueta="Identificador de la ubicación"
-              value={ubicacion}
-              onChange={(e) => fijarUbicacion(e.target.value)}
+            <BuscadorUbicaciones
+              excluir={elegidas.map((u) => u.id)}
+              alElegir={(u) => {
+                fijarElegidas([...elegidas, u]);
+                fijarAviso(null);
+              }}
             />
-            <Boton variante="secundario" onClick={agregar}>
-              <Icono nombre="add_location_alt" className="text-[18px]" />
-              Agregar ubicación
-            </Boton>
-            {asignaciones.length > 0 && (
+            {elegidas.length > 0 && (
               <ul className="flex flex-col gap-space-xs">
-                {asignaciones.map((a) => (
-                  <li
-                    key={a.ubicacionId}
-                    className="flex items-center gap-space-xs rounded-lg bg-surface-container-low p-space-sm text-body-sm"
-                  >
-                    <span className="min-w-0 flex-1 truncate">
-                      {a.tipo === 'ACOPIO' ? 'Acopio' : 'Zona'} · {a.ubicacionId}
-                    </span>
-                    <button
-                      type="button"
-                      aria-label={`Quitar ${a.ubicacionId}`}
-                      onClick={() => fijarAsignaciones(asignaciones.filter((x) => x !== a))}
-                      className="flex h-10 w-10 items-center justify-center rounded-lg text-on-surface-variant"
-                    >
-                      <Icono nombre="delete" className="text-[20px]" />
-                    </button>
-                  </li>
+                {elegidas.map((u) => (
+                  <UbicacionElegida
+                    key={u.id}
+                    tipo={u.tipo}
+                    nombre={u.nombre}
+                    alQuitar={() => fijarElegidas(elegidas.filter((x) => x !== u))}
+                  />
                 ))}
               </ul>
             )}

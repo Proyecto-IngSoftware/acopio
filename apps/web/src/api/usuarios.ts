@@ -74,3 +74,22 @@ export const useRestablecer = () =>
   );
 export const useReenviarInvitacion = () =>
   useCambio((id: string) => desenvolver(api.POST('/api/usuarios/{id}/invitacion', ruta(id))));
+export const useAsignar = () =>
+  useCambio(({ id, asignacion }: { id: string; asignacion: Asignacion }) =>
+    desenvolver(
+      api.POST('/api/usuarios/{id}/asignaciones', { ...ruta(id), body: asignacion as never }),
+    ),
+  );
+/** Con `confirmar`, la quita aunque la ubicación quede sin responsable (409 en la API). */
+export const useDesasignar = () =>
+  useCambio(
+    ({ id, asignacion, confirmar }: { id: string; asignacion: Asignacion; confirmar?: boolean }) =>
+      desenvolver(
+        api.DELETE('/api/usuarios/{id}/asignaciones/{tipo}/{ubicacionId}', {
+          params: {
+            path: { id, tipo: asignacion.tipo, ubicacionId: asignacion.ubicacionId },
+            query: (confirmar ? { confirmar: 'true' } : {}) as never,
+          },
+        }),
+      ),
+  );

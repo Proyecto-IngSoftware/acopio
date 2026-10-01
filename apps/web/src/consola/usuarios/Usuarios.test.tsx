@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes } from 'react-router';
 import { vi } from 'vitest';
@@ -101,6 +101,23 @@ describe('lista', () => {
   });
 });
 
+const UBICACIONES = [
+  {
+    tipo: 'ACOPIO',
+    id: '11111111-1111-4111-8111-111111111111',
+    nombre: 'Acopio Chapinero',
+    municipio: 'Bogotá',
+    estado: 'ACTIVO',
+  },
+  {
+    tipo: 'ZONA',
+    id: '33333333-3333-4333-8333-333333333333',
+    nombre: 'Vereda La Esperanza',
+    municipio: 'Chinchiná',
+    estado: 'SIN_ATENDER',
+  },
+];
+
 describe('detalle', () => {
   const abrir = (datos: Record<string, unknown> = {}) => {
     responderSegun({
@@ -110,15 +127,72 @@ describe('detalle', () => {
       'POST /api/usuarios/*/reactivar': usuario({ ...datos, estado: 'ACTIVO' }),
       'POST /api/usuarios/*/restablecer': ENLACE,
       'POST /api/usuarios/*/invitacion': ENLACE,
+      'GET /api/ubicaciones': UBICACIONES,
+      'POST /api/usuarios/*/asignaciones': usuario(datos),
+      'DELETE /api/usuarios/*/asignaciones/*/*': usuario(datos),
     });
     return render(rutas('/consola/usuarios/u1'));
   };
 
-  it('muestra los datos y la cantidad de ubicaciones', async () => {
+  it('muestra los datos y las ubicaciones por su nombre', async () => {
     abrir();
     expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent('Daniela Méndez');
     expect(screen.getByText('@d.mendez')).toBeInTheDocument();
-    expect(screen.getByText('1 ubicación asignada')).toBeInTheDocument();
+    expect(await screen.findByText('Acopio Chapinero')).toBeInTheDocument();
+  });
+
+  it('agrega una ubicación buscándola por nombre (B-08)', async () => {
+    abrir();
+    await userEvent.type(
+      await screen.findByRole('searchbox', { name: 'Buscar acopio o zona' }),
+      'vereda',
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: /Agregar Vereda La Esperanza/ }),
+    );
+    expect(await cuerpoDe('POST /api/usuarios/u1/asignaciones')).toEqual({
+      tipo: 'ZONA',
+      ubicacionId: '33333333-3333-4333-8333-333333333333',
+    });
+  });
+
+  it('si la ubicación quedaría sin responsable, pide confirmar antes de quitarla', async () => {
+    abrir();
+    const base = vi.mocked(globalThis.fetch).getMockImplementation()!;
+    vi.mocked(globalThis.fetch).mockImplementation((entrada, init) => {
+      const p = entrada as Request;
+      if (p.method === 'DELETE' && !new URL(p.url).search.includes('confirmar')) {
+        return Promise.resolve(
+          new Response(
+            JSON.stringify({
+              estado: 409,
+              codigo: 'UBICACION_SIN_RESPONSABLE',
+              mensaje: 'Acopio Chapinero quedaría sin nadie a cargo',
+            }),
+            { status: 409, headers: { 'content-type': 'application/json' } },
+          ),
+        );
+      }
+      return base(entrada, init);
+    });
+    await userEvent.click(await screen.findByRole('button', { name: 'Quitar Acopio Chapinero' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('quedaría sin nadie a cargo');
+    await userEvent.click(screen.getByRole('button', { name: 'Quitar de todas formas' }));
+    await waitFor(() =>
+      expect(peticiones()).toContain(
+        'DELETE /api/usuarios/u1/asignaciones/ACOPIO/11111111-1111-4111-8111-111111111111?confirmar=true',
+      ),
+    );
+  });
+
+  it('quita una ubicación', async () => {
+    abrir();
+    await userEvent.click(await screen.findByRole('button', { name: 'Quitar Acopio Chapinero' }));
+    await waitFor(() =>
+      expect(peticiones()).toContain(
+        'DELETE /api/usuarios/u1/asignaciones/ACOPIO/11111111-1111-4111-8111-111111111111',
+      ),
+    );
   });
 
   it('cambiar el rol manda solo el rol', async () => {
@@ -174,6 +248,7 @@ describe('invitar', () => {
   beforeEach(() =>
     responderSegun({
       'POST /api/usuarios': { usuario: usuario({ estado: 'INVITADO' }), invitacion: ENLACE },
+      'GET /api/ubicaciones': UBICACIONES,
     }),
   );
 
@@ -186,7 +261,9 @@ describe('invitar', () => {
 
   it('un Administrador se invita sin ubicaciones', async () => {
     await llenar('Administrador');
-    expect(screen.queryByLabelText('Identificador de la ubicación')).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('searchbox', { name: 'Buscar acopio o zona' }),
+    ).not.toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Crear e invitar' }));
     expect(await cuerpoDe('POST /api/usuarios')).toEqual({
       nombre: 'Daniela Méndez',
@@ -201,12 +278,10 @@ describe('invitar', () => {
     await llenar('Operador');
     await userEvent.click(screen.getByRole('button', { name: 'Crear e invitar' }));
     expect(screen.getByRole('alert')).toHaveTextContent('Agrega al menos una ubicación');
-    expect(peticiones()).toHaveLength(0);
-    await userEvent.type(
-      screen.getByLabelText('Identificador de la ubicación'),
-      '11111111-1111-4111-8111-111111111111',
-    );
-    await userEvent.click(screen.getByRole('button', { name: 'Agregar ubicación' }));
+    expect(peticiones().filter((p) => p.startsWith('POST'))).toHaveLength(0);
+    await userEvent.type(screen.getByRole('searchbox', { name: 'Buscar acopio o zona' }), 'chapi');
+    await userEvent.click(await screen.findByRole('button', { name: /Agregar Acopio Chapinero/ }));
+    expect(screen.getByRole('button', { name: 'Quitar Acopio Chapinero' })).toBeInTheDocument();
     await userEvent.type(screen.getByLabelText(/Correo/), 'd.mendez@correo.co');
     await userEvent.click(screen.getByRole('button', { name: 'Crear e invitar' }));
     expect(await cuerpoDe('POST /api/usuarios')).toMatchObject({

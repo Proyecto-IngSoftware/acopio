@@ -1,13 +1,17 @@
 import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
+import { useBuscarUbicaciones } from '../../api/red';
 import {
+  useAsignar,
   useCambiarRol,
+  useDesasignar,
   useReactivar,
   useReenviarInvitacion,
   useRestablecer,
   useSuspender,
   useUsuario,
+  type Asignacion,
   type RolInterno,
   type Usuario,
 } from '../../api/usuarios';
@@ -19,6 +23,7 @@ import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
 import { FormularioError } from '../catalogo/FormularioError';
 import { Encabezado } from '../Encabezado';
+import { BuscadorUbicaciones, UbicacionElegida } from './BuscadorUbicaciones';
 import { CompartirEnlace, DistintivoEstado, ROLES } from './comun';
 
 const fecha = (d: string) =>
@@ -60,13 +65,6 @@ export function DetalleUsuario() {
 }
 
 function Contenido({ u }: { u: Usuario }) {
-  const ubicaciones =
-    u.rol === 'ADMIN'
-      ? 'Todas las ubicaciones'
-      : u.asignaciones.length === 1
-        ? '1 ubicación asignada'
-        : `${u.asignaciones.length} ubicaciones asignadas`;
-
   return (
     <>
       <Encabezado titulo={u.nombre} volverA="/consola/usuarios" />
@@ -84,11 +82,10 @@ function Contenido({ u }: { u: Usuario }) {
       </div>
 
       <Seccion id="ubicaciones" titulo="Ubicaciones asignadas">
-        <p className="text-body-md text-on-surface">{ubicaciones}</p>
-        {u.rol !== 'ADMIN' && (
-          <p className="text-body-sm text-on-surface-variant">
-            Asignar y quitar ubicaciones por nombre llega con la lista de acopios (Bloque 1).
-          </p>
+        {u.rol === 'ADMIN' ? (
+          <p className="text-body-md text-on-surface">Todas las ubicaciones</p>
+        ) : (
+          <Ubicaciones u={u} />
         )}
       </Seccion>
 
@@ -265,5 +262,62 @@ function Restablecer({ u, alCerrar }: { u: Usuario; alCerrar: () => void }) {
         </form>
       )}
     </Hoja>
+  );
+}
+
+/** Asignar y quitar acopios y zonas por su nombre (RF-IDE-006, B-08). */
+function Ubicaciones({ u }: { u: Usuario }) {
+  const { data: todas } = useBuscarUbicaciones('');
+  const asignar = useAsignar();
+  const quitar = useDesasignar();
+  const [sinResponsable, fijarSinResponsable] = useState<Asignacion | null>(null);
+  const nombre = new Map((todas ?? []).map((t) => [t.id, t.nombre]));
+
+  function quitarUna(asignacion: Asignacion, confirmar = false) {
+    quitar.mutate(
+      { id: u.id, asignacion, confirmar },
+      {
+        onSuccess: () => fijarSinResponsable(null),
+        // La ubicación quedaría sin nadie a cargo: la API pide confirmarlo
+        onError: (e) => e.codigo === 'UBICACION_SIN_RESPONSABLE' && fijarSinResponsable(asignacion),
+      },
+    );
+  }
+
+  return (
+    <div className="flex flex-col gap-space-sm">
+      {u.asignaciones.length === 0 ? (
+        <p className="text-body-md text-on-surface-variant">Sin ubicaciones asignadas.</p>
+      ) : (
+        <ul className="flex flex-col gap-space-xs">
+          {u.asignaciones.map((a) => (
+            <UbicacionElegida
+              key={a.ubicacionId}
+              tipo={a.tipo}
+              nombre={nombre.get(a.ubicacionId) ?? 'Ubicación'}
+              alQuitar={() => quitarUna({ tipo: a.tipo, ubicacionId: a.ubicacionId })}
+            />
+          ))}
+        </ul>
+      )}
+      {sinResponsable ? (
+        <div className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-low p-space-sm">
+          <p role="alert" className="text-body-sm text-on-surface">
+            {quitar.error?.message}
+          </p>
+          <Boton variante="secundario" onClick={() => quitarUna(sinResponsable, true)}>
+            Quitar de todas formas
+          </Boton>
+        </div>
+      ) : (
+        <FormularioError mensaje={quitar.error?.message ?? asignar.error?.message} />
+      )}
+      <BuscadorUbicaciones
+        excluir={u.asignaciones.map((a) => a.ubicacionId)}
+        alElegir={(t) =>
+          asignar.mutate({ id: u.id, asignacion: { tipo: t.tipo, ubicacionId: t.id } })
+        }
+      />
+    </div>
   );
 }
