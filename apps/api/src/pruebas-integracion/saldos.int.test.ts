@@ -6,7 +6,7 @@ import {
   crearUsuarioActivo,
   iniciarSesion,
   unico,
-  ZONA_A,
+  EMERGENCIA_PRUEBA,
   type AppPrueba,
 } from '../../test/app-prueba';
 
@@ -32,9 +32,23 @@ describe('saldos e historial', () => {
       rol: 'AUDITOR',
       asignaciones: [{ tipo: 'ACOPIO', ubicacionId: ACOPIO_B }],
     });
+    // Una zona propia: si el Receptor quedara en ZONA_A, la suite de usuarios ya no lo
+    // vería como único responsable
+    const zona = await a.prisma.zona.create({
+      data: {
+        emergencia_id: EMERGENCIA_PRUEBA,
+        nombre: unico('Zona saldos '),
+        municipio: 'Mocoa',
+        lat: 1.15,
+        lng: -76.65,
+        poblacion_estimada: 100,
+        poblacion_fuente: 'Prueba',
+        poblacion_fecha: new Date('2026-09-01T00:00:00Z'),
+      },
+    });
     receptor = await crearUsuarioActivo(a, tokenAdmin, {
       rol: 'RECEPTOR',
-      asignaciones: [{ tipo: 'ZONA', ubicacionId: ZONA_A }],
+      asignaciones: [{ tipo: 'ZONA', ubicacionId: zona.id }],
     });
     arroz = (
       await a.prisma.categoria.create({
