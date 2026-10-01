@@ -368,6 +368,9 @@ model Movimiento {
   ocurrido_en    DateTime       @db.Timestamptz
   registrado_en  DateTime       @default(now()) @db.Timestamptz
   origen_offline Boolean        @default(false)
+  /// Orden en que entró a la base: ordena el historial y su saldo corriente. registrado_en
+  /// es la hora de inicio de la transacción y no siempre coincide con ese orden.
+  secuencia      BigInt         @unique @default(autoincrement())
 
   @@index([acopio_id, categoria_id, registrado_en])
   @@index([registrado_en])

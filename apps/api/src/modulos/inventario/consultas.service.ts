@@ -90,13 +90,12 @@ export class ConsultasService {
     >`
       SELECT * FROM (
         SELECT m.*, u.nombre AS usuario_nombre,
-               (SUM(m.cantidad * m.signo) OVER (ORDER BY m.registrado_en, m.id))::text AS saldo_despues
+               (SUM(m.cantidad * m.signo) OVER (ORDER BY m.secuencia))::text AS saldo_despues
         FROM movimiento m JOIN usuario u ON u.id = m.usuario_id
         WHERE m.acopio_id = ${acopioId}::uuid AND m.categoria_id = ${categoriaId}::uuid
       ) t
-      WHERE ${desde === null}
-         OR (t.registrado_en, t.id) < (${desde?.registradoEn ?? new Date(0)}::timestamptz, ${desde?.id ?? '00000000-0000-0000-0000-000000000000'}::uuid)
-      ORDER BY t.registrado_en DESC, t.id DESC
+      WHERE ${desde === null} OR t.secuencia < ${desde ?? 0n}
+      ORDER BY t.secuencia DESC
       LIMIT ${limite + 1}`;
     const pagina = filas.slice(0, limite);
     const ultima = pagina.at(-1);
@@ -106,19 +105,15 @@ export class ConsultasService {
         usuario: f.usuario_nombre,
         saldoDespues: Number(f.saldo_despues),
       })),
-      siguiente:
-        filas.length > limite && ultima
-          ? `${ultima.registrado_en.toISOString()}_${ultima.id}`
-          : null,
+      siguiente: filas.length > limite && ultima ? String(ultima.secuencia) : null,
     };
   }
 }
 
-function leerCursor(cursor: string) {
-  const [fecha, id] = cursor.split('_');
-  const registradoEn = new Date(fecha ?? '');
-  if (!id || Number.isNaN(registradoEn.getTime()) || !/^[0-9a-f-]{36}$/i.test(id)) {
+/** El cursor es la secuencia del último movimiento de la página anterior. */
+function leerCursor(cursor: string): bigint {
+  if (!/^\d{1,19}$/.test(cursor)) {
     throw new ErrorDominio('CURSOR_INVALIDO', 'El cursor de la página no es válido', 400);
   }
-  return { registradoEn, id };
+  return BigInt(cursor);
 }

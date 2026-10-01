@@ -178,4 +178,70 @@ describe('saldos e historial', () => {
       .set(como(op.token))
       .expect(400);
   });
+
+  it('el historial sigue el orden en que entraron los movimientos, no registrado_en', async () => {
+    const cat = (
+      await a.prisma.categoria.create({
+        data: { nombre: unico('Orden historial '), grupo: 'SALUD', unidad_base: 'UNIDAD' },
+      })
+    ).id;
+    const admin = await a.prisma.usuario.findFirstOrThrow({ where: { username: ADMIN.username } });
+    const base = new Date('2026-10-01T12:00:00.000Z').getTime();
+    const mov = (tipo: 'ENTRADA' | 'SALIDA', cantidad: number, segundo: number) =>
+      a.prisma.movimiento.create({
+        data: {
+          acopio_id: ACOPIO_A,
+          categoria_id: cat,
+          tipo,
+          signo: tipo === 'ENTRADA' ? 1 : -1,
+          cantidad,
+          motivo_salida: tipo === 'SALIDA' ? 'VENCIDO' : null,
+          usuario_id: admin.id,
+          ocurrido_en: new Date(base),
+          registrado_en: new Date(base + segundo * 1000),
+        },
+      });
+    // La salida abrió su transacción antes que la segunda entrada, pero se insertó después
+    await mov('ENTRADA', 10, 0);
+    await mov('ENTRADA', 5, 2);
+    await mov('SALIDA', 12, 1);
+    const r = await a
+      .http()
+      .get(`/api/acopios/${ACOPIO_A}/movimientos?categoriaId=${cat}`)
+      .set(como(op.token))
+      .expect(200);
+    const filas = r.body.filas as { tipo: string; saldoDespues: number }[];
+    expect(filas.map((f) => [f.tipo, f.saldoDespues])).toEqual([
+      ['SALIDA', 3],
+      ['ENTRADA', 15],
+      ['ENTRADA', 10],
+    ]);
+  });
+
+  it('el cursor no pierde movimientos del mismo milisegundo', async () => {
+    const cat = (
+      await a.prisma.categoria.create({
+        data: { nombre: unico('Cursor historial '), grupo: 'SALUD', unidad_base: 'UNIDAD' },
+      })
+    ).id;
+    const admin = await a.prisma.usuario.findFirstOrThrow({ where: { username: ADMIN.username } });
+    for (const micro of ['100', '400']) {
+      await a.prisma.$executeRawUnsafe(
+        `INSERT INTO movimiento (acopio_id, categoria_id, tipo, cantidad, signo, usuario_id, ocurrido_en, registrado_en)
+         VALUES ($1::uuid, $2::uuid, 'ENTRADA', 1, 1, $3::uuid, now(), '2026-10-01 12:00:00.123${micro}+00')`,
+        ACOPIO_A,
+        cat,
+        admin.id,
+      );
+    }
+    const vistos: number[] = [];
+    let cursor: string | null = null;
+    do {
+      const q: string = `/api/acopios/${ACOPIO_A}/movimientos?categoriaId=${cat}&limite=1${cursor ? `&cursor=${encodeURIComponent(cursor)}` : ''}`;
+      const r = await a.http().get(q).set(como(op.token)).expect(200);
+      vistos.push(...(r.body.filas as { saldoDespues: number }[]).map((f) => f.saldoDespues));
+      cursor = r.body.siguiente as string | null;
+    } while (cursor);
+    expect(vistos).toEqual([2, 1]);
+  });
 });

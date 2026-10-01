@@ -171,7 +171,7 @@ después; los ajustes van `destacado`.
 | `POST /acopios/:id/salidas` | Operador asignado | `{ categoriaId, cantidad, motivoSalida, nota? }`. Sin saldo suficiente: 409 `SALDO_INSUFICIENTE` con el saldo actual |
 | `POST /acopios/:id/ajustes` | Operador asignado | `{ categoriaId, cantidadContada, motivo }`. La diferencia se calcula con la fila de `saldo` bloqueada; si es cero, 422 `SIN_DIFERENCIA` |
 | `GET /acopios/:id/saldos` | Operador asignado, Administrador, Auditor | Por categoría: saldo, unidad, umbral, semáforo, último movimiento y vencimiento estimado. Incluye las categorías con umbral y saldo cero |
-| `GET /acopios/:id/movimientos?categoriaId=&cursor=` | Los mismos | Historial con el saldo corriente de cada fila |
+| `GET /acopios/:id/movimientos?categoriaId=&cursor=` | Los mismos | Historial con el saldo corriente de cada fila, en el orden en que entraron los movimientos (§12) |
 | `PUT /acopios/:id/umbrales/:categoriaId` | Operador asignado, Administrador | `{ minimo, maximo }` |
 | `DELETE /acopios/:id/umbrales/:categoriaId` | Operador asignado, Administrador | Quita el umbral |
 | `GET /codigos-barras/:ean` | Operador, Administrador | Categoría y contenido, o 404 |
@@ -307,4 +307,6 @@ Si el tiempo no alcanza se recorta primero el ciclo 3 y después el escáner.
 | El Administrador y el Auditor leen saldos e historial de cualquier acopio; el Operador, los suyos | §1.7. `AlcanceService` limita al Auditor a sus asignaciones, así que las lecturas de inventario tienen su propia regla |
 | `SALDO_INSUFICIENTE` trae `detalles: { saldo }`, y `ErrorDto.detalles` admite un objeto además de la lista de campos | La interfaz muestra cuánto hay disponible sin otra consulta |
 | `seed:demo` deja 6 entradas en el primer acopio de prueba | Para ver C3 con datos en local |
+| `movimiento.secuencia` (`bigserial`) ordena el historial, su saldo corriente y el cursor | `registrado_en` es la hora de inicio de la transacción: una salida que esperó el candado podía quedar antes de la entrada que gastó y mostrar un saldo negativo. Además, el cursor con milisegundos perdía filas del mismo milisegundo. Hallazgo de la revisión final |
+| Una entrada con un `id` repetido se busca justo después del control de alcance, antes de validar el acopio y la fecha, y compara la fecha de vencimiento tal como se guardó | Un reintento de la cola recibía 409 o 422 aunque el movimiento ya existiera (acopio cerrado entre los dos envíos, fecha al borde de los 7 días, o `venceEn` en una categoría no perecedera, que se descarta), y el Operador podía registrarlo dos veces. Hallazgo de la revisión final |
 

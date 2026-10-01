@@ -109,13 +109,15 @@ export class MovimientosService {
     acopioId: string,
     datos: DatosEntrada,
   ): Promise<{ resultado: ResultadoMovimiento; nuevo: boolean }> {
-    await this.exigirOperador(usuario, acopioId);
-    const ocurridoEn = exigirOcurridoEn(datos.ocurridoEn);
-
+    // Un reintento de la cola recibe el original aunque desde entonces se haya cerrado el
+    // acopio o la fecha haya salido de la ventana de 7 días: solo se exige el alcance
+    await this.alcance.exigir(usuario, 'ACOPIO', acopioId);
     if (datos.id) {
       const previo = await this.prisma.movimiento.findUnique({ where: { id: datos.id } });
       if (previo) return { resultado: await this.repetido(previo, acopioId, datos), nuevo: false };
     }
+    await this.acopios.exigirAbierto(acopioId);
+    const ocurridoEn = exigirOcurridoEn(datos.ocurridoEn);
 
     try {
       const resultado = await this.prisma.$transaction(async (tx) => {
@@ -309,6 +311,16 @@ export class MovimientosService {
     }
   }
 
+  /** La fecha que se guarda: en una categoría no perecedera se descarta. */
+  private async venceGuardado(datos: DatosEntrada): Promise<Date | null> {
+    if (!datos.venceEn) return null;
+    const cat = await this.prisma.categoria.findUnique({
+      where: { id: datos.categoriaId },
+      select: { perecedero: true },
+    });
+    return cat?.perecedero ? datos.venceEn : null;
+  }
+
   /** Un reintento con el mismo id: el original si coincide, 409 si no. */
   private async repetido(previo: Movimiento, acopioId: string, datos: DatosEntrada) {
     const igual =
@@ -316,7 +328,7 @@ export class MovimientosService {
       previo.acopio_id === acopioId &&
       previo.categoria_id === datos.categoriaId &&
       Number(previo.cantidad) === datos.cantidad &&
-      soloDia(previo.vence_en) === soloDia(datos.venceEn);
+      soloDia(previo.vence_en) === soloDia(await this.venceGuardado(datos));
     if (!igual) {
       throw new ErrorDominio(
         'MOVIMIENTO_DISTINTO',

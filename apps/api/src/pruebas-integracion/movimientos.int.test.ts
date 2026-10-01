@@ -103,6 +103,28 @@ describe('movimientos', () => {
       expect(await a.prisma.movimiento.count({ where: { id } })).toBe(1);
     });
 
+    it('reintento con venceEn en una categoría no perecedera: 200, no 409', async () => {
+      const id = randomUUID();
+      const datos = { id, categoriaId: panal, cantidad: 2, venceEn: '2026-12-01' };
+      await entrada(datos).expect(201);
+      const r = await entrada(datos).expect(200);
+      expect(r.body.movimiento.id).toBe(id);
+      expect(r.body.movimiento.venceEn).toBeNull();
+    });
+
+    it('reintento después de cerrar el acopio: 200 con el original', async () => {
+      const id = randomUUID();
+      const datos = { id, categoriaId: panal, cantidad: 1 };
+      await entrada(datos).expect(201);
+      await a.prisma.acopio.update({ where: { id: ACOPIO_A }, data: { estado: 'CERRADO' } });
+      try {
+        const r = await entrada(datos).expect(200);
+        expect(r.body.movimiento.id).toBe(id);
+      } finally {
+        await a.prisma.acopio.update({ where: { id: ACOPIO_A }, data: { estado: 'ACTIVO' } });
+      }
+    });
+
     it('el mismo id con otro contenido: 409', async () => {
       const id = randomUUID();
       await entrada({ id, categoriaId: panal, cantidad: 1 }).expect(201);
