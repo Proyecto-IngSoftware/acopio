@@ -199,9 +199,11 @@ export const useGuardarZona = () =>
 
 // ── Ubicaciones ──
 
-export function useUbicacionesMias() {
+/** Con `activo` en falso no consulta: el Administrador y el Auditor no tienen asignaciones. */
+export function useUbicacionesMias(activo = true) {
   return useQuery<Ubicacion[], ErrorApi>({
     queryKey: ['ubicaciones', 'mias'],
+    enabled: activo,
     queryFn: async () =>
       (await desenvolver(api.GET('/api/ubicaciones/mias'))) as unknown as Ubicacion[],
   });

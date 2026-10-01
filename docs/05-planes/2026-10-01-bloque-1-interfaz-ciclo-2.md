@@ -64,8 +64,8 @@ RF-IDE-011 en cualquier ancho.
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 Maquetas | 🟡 | Stitch se cortó por tiempo dos veces sin dejar pantalla. La maqueta se armó con los tokens del tema y está publicada; falta que Joseph la apruebe |
+| 1 Maquetas | ✅ | Stitch se cortó por tiempo dos veces sin dejar pantalla. La maqueta se armó con los tokens del tema y Joseph la aprobó el 2026-10-01 |
 | 2 Cruce y CSV | ✅ | `consola/accesos/matriz.ts`. El CSV antepone una comilla simple a los campos que empiezan con `=`, `+`, `-` o `@`, para que Excel no los lea como fórmula |
-| 3 Selector | ⬜ | Espera la aprobación de la hoja |
-| 4 Matriz | ⬜ | Espera la aprobación de la matriz |
+| 3 Selector | ✅ | `useUbicacionActiva` (en `sesion/`) guarda la elección con `useSyncExternalStore`, así la cabecera y «Más» cambian juntas. `scripts/iconos.mjs` no ve un ícono que sale de una variable; el del selector se escribió como `function iconoDe` para que lo encuentre |
+| 4 Matriz | ⬜ | |
 | 5 Cierre | ⬜ | |

@@ -2,7 +2,7 @@
 title: "C16 · Matriz de acceso y selector de ubicación · maqueta"
 type: diseno
 tags: [diseno, stitch, consola]
-estado: borrador
+estado: vigente
 actualizado: 2026-10-01
 ---
 
@@ -13,7 +13,7 @@ actualizado: 2026-10-01
 | Proyecto | ACOPIO DISEÑO (`10306891818878200068`), tema «Acopio Field Command» |
 | Pantalla de Stitch | Ninguna. La generación se cortó por tiempo dos veces el 2026-10-01 sin dejar pantalla |
 | Maqueta | [maqueta.html](maqueta.html), publicada en <https://claude.ai/artifact/SRgo8R1cQNii6EvSXAaYoP> |
-| Aprobación | Pendiente de Joseph |
+| Aprobación | Joseph la aprobó el 2026-10-01 |
 
 La maqueta usa los tokens del tema de Stitch, la cabecera con sesión y la barra inferior de
 los [componentes compartidos](../../_compartidos/README.md). Tiene cuatro vistas: la matriz

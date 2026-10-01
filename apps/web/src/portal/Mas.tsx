@@ -1,10 +1,10 @@
-import { useUbicacionesMias } from '../api/red';
 import { Boton } from '../componentes/Boton';
 import { Icono } from '../componentes/Icono';
 import { FilaMenu, SeccionMenu } from '../componentes/Menu';
 import type { Rol } from '../sesion/cliente-auth';
 import { iniciales, nombreRol } from '../sesion/roles';
 import { useSesion } from '../sesion/Sesion';
+import { useUbicacionActiva } from '../sesion/ubicacion-activa';
 import { AvisoSinDinero } from './bloques/AvisoSinDinero';
 
 interface Herramienta {
@@ -61,30 +61,33 @@ const HERRAMIENTAS: Herramienta[] = [
   },
 ];
 
-/** Una fila por acopio asignado, hasta que llegue el selector de la cabecera (ciclo 2). */
+/** El acopio donde opera la persona, si la ubicación activa es un acopio (J-04). */
 function MiAcopio() {
-  const { data } = useUbicacionesMias();
-  const acopios = (data ?? []).filter((u) => u.tipo === 'ACOPIO');
-  if (acopios.length === 0) return null;
+  const { activa } = useUbicacionActiva();
+  if (activa?.tipo !== 'ACOPIO') return null;
   return (
     <SeccionMenu id="mi-acopio" titulo="Mi acopio">
-      {acopios.map((a) => (
-        <FilaMenu
-          key={a.id}
-          a={`/consola/acopios/${a.id}/operacion`}
-          icono="inventory_2"
-          titulo={a.nombre}
-          descripcion="Estado, horario y lo que no recibe"
-        />
-      ))}
+      <FilaMenu
+        a={`/consola/acopios/${activa.id}/operacion`}
+        icono="inventory_2"
+        titulo={activa.nombre}
+        descripcion="Estado, horario y lo que no recibe"
+      />
     </SeccionMenu>
   );
+}
+
+function descripcionCuenta(rol: Rol, asignadas: number): string {
+  if (rol === 'ADMIN') return 'Administrador · todas las ubicaciones';
+  if (asignadas < 2) return nombreRol(rol);
+  return `${nombreRol(rol)} · ${asignadas} ubicaciones`;
 }
 
 /** «Más» para todos: con sesión suma la cuenta y las herramientas del rol (R-01).
  *  Diseño: docs/03-diseno/stitch/mas-con-sesion. */
 export function Mas() {
   const { usuario, salir } = useSesion();
+  const { ubicaciones } = useUbicacionActiva();
   const herramientas = usuario ? HERRAMIENTAS.filter((h) => h.roles.includes(usuario.rol)) : [];
 
   return (
@@ -96,11 +99,7 @@ export function Mas() {
           <FilaMenu
             icono="person"
             titulo={usuario.nombre}
-            descripcion={
-              usuario.rol === 'ADMIN'
-                ? 'Administrador · todas las ubicaciones'
-                : nombreRol(usuario.rol)
-            }
+            descripcion={descripcionCuenta(usuario.rol, ubicaciones.length)}
             distintivo={
               <span className="text-label-md font-bold">{iniciales(usuario.nombre)}</span>
             }
@@ -108,7 +107,7 @@ export function Mas() {
         </SeccionMenu>
       )}
 
-      {usuario?.rol === 'OPERADOR' && <MiAcopio />}
+      <MiAcopio />
 
       {herramientas.length > 0 && (
         <SeccionMenu id="administracion" titulo="Administración">

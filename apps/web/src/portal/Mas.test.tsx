@@ -61,7 +61,7 @@ it('el Auditor solo ve la bitácora', async () => {
   expect(within(admin).getByRole('link', { name: /Bitácora/ })).toBeInTheDocument();
 });
 
-it('un Operador ve una fila «Mi acopio» por cada acopio asignado', async () => {
+it('un Operador ve «Mi acopio» solo para la ubicación activa', async () => {
   responderSegun({
     'GET /api/ubicaciones/mias': [
       {
@@ -80,10 +80,7 @@ it('un Operador ve una fila «Mi acopio» por cada acopio asignado', async () =>
     'href',
     '/consola/acopios/x1/operacion',
   );
-  expect(within(mio).getByRole('link', { name: /Acopio Suba/ })).toHaveAttribute(
-    'href',
-    '/consola/acopios/x2/operacion',
-  );
+  expect(within(mio).getAllByRole('link')).toHaveLength(1);
   expect(screen.queryByRole('region', { name: 'Administración' })).not.toBeInTheDocument();
 });
 
