@@ -85,6 +85,22 @@ function MiAcopio() {
           descripcion="Registrar lo que llega"
         />
       )}
+      {operador && (
+        <FilaMenu
+          a={`${base}/salida`}
+          icono="output"
+          titulo="Salida"
+          descripcion="Registrar lo que sale y por qué"
+        />
+      )}
+      {operador && (
+        <FilaMenu
+          a={`${base}/conteo`}
+          icono="fact_check"
+          titulo="Conteo físico"
+          descripcion="Corregir el saldo después de contar"
+        />
+      )}
       {(operador || usuario.rol === 'AUDITOR') && (
         <FilaMenu
           a={`${base}/inventario`}

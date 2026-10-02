@@ -23,6 +23,12 @@ const Historial = lazy(() =>
 const EntradaRapida = lazy(() =>
   import('./consola/inventario/EntradaRapida').then((m) => ({ default: m.EntradaRapida })),
 );
+const Salida = lazy(() =>
+  import('./consola/inventario/Salida').then((m) => ({ default: m.Salida })),
+);
+const Conteo = lazy(() =>
+  import('./consola/inventario/Conteo').then((m) => ({ default: m.Conteo })),
+);
 const MatrizAcceso = lazy(() =>
   import('./consola/accesos/MatrizAcceso').then((m) => ({ default: m.MatrizAcceso })),
 );
@@ -89,14 +95,20 @@ export function Rutas() {
             element={<RequiereRol roles={['ADMIN', 'AUDITOR', 'OPERADOR']}>{pantalla}</RequiereRol>}
           />
         ))}
-        <Route
-          path="consola/acopios/:id/entrada"
-          element={
-            <RequiereRol roles={['OPERADOR']}>
-              <EntradaRapida />
-            </RequiereRol>
-          }
-        />
+        {(
+          [
+            ['consola/acopios/:id/entrada', <EntradaRapida key="ent" />],
+            ['consola/acopios/:id/salida', <Salida key="sal" />],
+            ['consola/acopios/:id/conteo', <Conteo key="con" />],
+          ] as const
+        ).map(([ruta, pantalla]) => (
+          // Solo el Operador asignado registra movimientos (V-04)
+          <Route
+            key={ruta}
+            path={ruta}
+            element={<RequiereRol roles={['OPERADOR']}>{pantalla}</RequiereRol>}
+          />
+        ))}
         <Route
           path="consola/accesos"
           element={

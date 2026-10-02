@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
-import { envolver, responderJson } from './pruebas/utilidades';
+import { clienteFalso, envolver, responderJson } from './pruebas/utilidades';
 import { violacionesGraves } from './pruebas/accesibilidad';
 import { Rutas } from './rutas';
 
@@ -43,6 +43,15 @@ it.each(['/causas', '/voluntariado', '/proximamente'])(
     expect(screen.getByRole('link', { name: 'Volver al inicio' })).toHaveAttribute('href', '/');
   },
 );
+
+it.each([
+  ['/consola/acopios/x1/salida', 'Registrar salida'],
+  ['/consola/acopios/x1/conteo', 'Conteo físico'],
+])('%s abre su pantalla para el Operador', async (ruta, titulo) => {
+  const operador = { id: 'o', username: 'o', nombre: 'Daniela', rol: 'OPERADOR' as const };
+  render(envolver(<Rutas />, ruta, clienteFalso(operador)));
+  expect(await screen.findByRole('heading', { level: 1, name: titulo })).toBeInTheDocument();
+});
 
 it('una ruta que no existe lo dice y ofrece volver', () => {
   render(envolver(<Rutas />, '/no-existe'));

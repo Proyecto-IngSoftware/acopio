@@ -93,7 +93,15 @@ it('un Operador ve «Mi acopio» solo para la ubicación activa', async () => {
     'href',
     '/consola/acopios/x1/inventario',
   );
-  expect(within(mio).getAllByRole('link')).toHaveLength(3);
+  expect(within(mio).getByRole('link', { name: /Salida/ })).toHaveAttribute(
+    'href',
+    '/consola/acopios/x1/salida',
+  );
+  expect(within(mio).getByRole('link', { name: /Conteo físico/ })).toHaveAttribute(
+    'href',
+    '/consola/acopios/x1/conteo',
+  );
+  expect(within(mio).getAllByRole('link')).toHaveLength(5);
   expect(screen.queryByRole('region', { name: 'Administración' })).not.toBeInTheDocument();
 });
 
