@@ -1169,6 +1169,23 @@ export interface components {
       contenido: number[];
       descripcion: string[];
       revisado: boolean;
+      /** @enum {string} */
+      grupo:
+        | 'ALIMENTOS'
+        | 'AGUA_Y_BEBIDAS'
+        | 'ASEO_PERSONAL'
+        | 'ASEO_DEL_HOGAR'
+        | 'SALUD'
+        | 'ROPA_Y_ABRIGO'
+        | 'BEBE'
+        | 'ADULTO_MAYOR'
+        | 'ANIMALES'
+        | 'HERRAMIENTAS';
+      perecedero: boolean;
+      /** @description Nombre de quien lo asoció */
+      creadoPor: string[];
+      /** Format: date-time */
+      creadoEn: string;
     };
     AsociarDto: {
       ean: string;

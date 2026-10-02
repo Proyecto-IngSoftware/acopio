@@ -352,5 +352,9 @@ export class CodigoBarrasDto extends createZodDto(
     contenido: z.number().nullable().describe('Unidad base que trae una presentación'),
     descripcion: z.string().nullable(),
     revisado: z.boolean(),
+    grupo,
+    perecedero: z.boolean(),
+    creadoPor: z.string().nullable().describe('Nombre de quien lo asoció'),
+    creadoEn: fecha,
   }),
 ) {}

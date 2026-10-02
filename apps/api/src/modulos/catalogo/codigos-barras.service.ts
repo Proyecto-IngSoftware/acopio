@@ -6,7 +6,9 @@ import { PrismaService } from '../../comun/prisma/prisma.service';
 import { BitacoraService } from '../auditoria/bitacora.service';
 
 const conCategoria = {
-  categoria: { select: { nombre: true, unidad_base: true, archivada: true } },
+  categoria: {
+    select: { nombre: true, unidad_base: true, archivada: true, grupo: true, perecedero: true },
+  },
 } as const;
 
 type Fila = {
@@ -15,7 +17,14 @@ type Fila = {
   contenido: { toString(): string } | null;
   descripcion: string | null;
   revisado: boolean;
-  categoria: { nombre: string; unidad_base: 'LITRO' | 'KILOGRAMO' | 'UNIDAD' };
+  creado_por: string;
+  creado_en: Date;
+  categoria: {
+    nombre: string;
+    unidad_base: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+    grupo: string;
+    perecedero: boolean;
+  };
 };
 
 const vista = (f: Fila) => ({
@@ -26,7 +35,24 @@ const vista = (f: Fila) => ({
   contenido: f.contenido === null ? null : Number(f.contenido),
   descripcion: f.descripcion,
   revisado: f.revisado,
+  grupo: f.categoria.grupo,
+  perecedero: f.categoria.perecedero,
+  creadoEn: f.creado_en,
 });
+
+type Lector = Pick<PrismaService, 'usuario'>;
+
+/** La vista con el nombre de quien asoció cada código (C18). Los nombres salen en una sola consulta. */
+async function conAutores(db: Lector, filas: Fila[]) {
+  const ids = [...new Set(filas.map((f) => f.creado_por))];
+  const nombres = new Map(
+    (
+      await db.usuario.findMany({ where: { id: { in: ids } }, select: { id: true, nombre: true } })
+    ).map((u) => [u.id, u.nombre]),
+  );
+  return filas.map((f) => ({ ...vista(f), creadoPor: nombres.get(f.creado_por) ?? null }));
+}
+const conAutor = async (db: Lector, f: Fila) => (await conAutores(db, [f]))[0]!;
 
 /** EAN → categoría (RF-CAT-004). Un EAN de un Operador queda sin revisar. */
 @Injectable()
@@ -44,7 +70,7 @@ export class CodigosBarrasService {
         'Este código no está asociado a ninguna categoría',
         404,
       );
-    return vista(f);
+    return conAutor(this.prisma, f);
   }
 
   listar(filtro: { revisado?: boolean }) {
@@ -54,7 +80,7 @@ export class CodigosBarrasService {
         include: conCategoria,
         orderBy: { creado_en: 'desc' },
       })
-      .then((filas) => filas.map(vista));
+      .then((filas) => conAutores(this.prisma, filas));
   }
 
   async asociar(
@@ -100,7 +126,7 @@ export class CodigosBarrasService {
           entidadId: datos.ean,
           despues: vista(f),
         });
-        return vista(f);
+        return conAutor(tx, f);
       });
     } catch (e) {
       if (esLlaveDuplicada(e)) {
@@ -160,7 +186,7 @@ export class CodigosBarrasService {
         antes: vista(antes),
         despues: vista(f),
       });
-      return vista(f);
+      return conAutor(tx, f);
     });
   }
 }

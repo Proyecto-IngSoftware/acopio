@@ -12,7 +12,7 @@ import {
 describe('códigos de barras', () => {
   let a: AppPrueba;
   let tokenAdmin: string;
-  let op: { token: string };
+  let op: { token: string; username: string };
   let auditor: { token: string };
   let agua: string;
   let otra: string;
@@ -58,6 +58,16 @@ describe('códigos de barras', () => {
     expect(r.body).toMatchObject({ ean, categoriaId: agua, contenido: 0.6, revisado: false });
     const g = await a.http().get(`/api/codigos-barras/${ean}`).set(como(op.token)).expect(200);
     expect(g.body).toMatchObject({ categoriaId: agua, unidad: 'LITRO', contenido: 0.6 });
+  });
+
+  it('trae lo que la web necesita para elegir la categoría y para revisarlo (C4, C18)', async () => {
+    const g = await a.http().get(`/api/codigos-barras/${ean}`).set(como(op.token)).expect(200);
+    expect(g.body).toMatchObject({
+      grupo: 'AGUA_Y_BEBIDAS',
+      perecedero: false,
+      creadoPor: `Persona ${op.username}`,
+    });
+    expect(Date.parse(g.body.creadoEn as string)).not.toBeNaN();
   });
 
   it('asociar otra vez el mismo EAN: 409, sin pisar la asociación', async () => {
