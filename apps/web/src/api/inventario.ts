@@ -70,3 +70,18 @@ export function useRegistrarSalida(acopioId: string) {
     },
   });
 }
+
+export type DatosAjuste = S['AjusteDto'];
+
+/** C6: registra un ajuste por conteo físico (RF-INV-004). La API calcula la diferencia. */
+export function useRegistrarAjuste(acopioId: string) {
+  const consultas = useQueryClient();
+  return useMutation<ResultadoMovimiento, ErrorApi, DatosAjuste>({
+    mutationFn: (datos) =>
+      desenvolver(api.POST('/api/acopios/{id}/ajustes', { ...ruta(acopioId), body: datos })),
+    onSettled: () => {
+      void consultas.invalidateQueries({ queryKey: ['saldos', acopioId] });
+      void consultas.invalidateQueries({ queryKey: ['historial', acopioId] });
+    },
+  });
+}
