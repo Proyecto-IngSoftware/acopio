@@ -96,6 +96,15 @@ describe('C4 Entrada rápida', () => {
     expect(elegida).toHaveTextContent('Saldo actual: 312 und.');
   });
 
+  it('en una categoría por unidades no ofrece la coma ni la acepta escrita', async () => {
+    pantalla();
+    await elegir('panal', /Pañal adulto/);
+    const teclado = screen.getByRole('group', { name: 'Teclado numérico' });
+    expect(within(teclado).queryByRole('button', { name: ',' })).not.toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText('Cantidad'), '2,5');
+    expect(screen.getByLabelText('Cantidad')).toHaveValue('25');
+  });
+
   it('registra con el teclado de la pantalla, muestra el saldo resultante y queda lista para otra', async () => {
     pantalla();
     await elegir('panal', /Pañal adulto/);

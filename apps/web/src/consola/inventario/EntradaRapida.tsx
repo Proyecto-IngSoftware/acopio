@@ -2,30 +2,17 @@ import { useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useParams } from 'react-router';
 import { formatearCantidad, SIMBOLO_UNIDAD } from '@acopio/shared';
-import { useBuscarCategorias, type ResultadoBusqueda } from '../../api/catalogo';
+import type { ResultadoBusqueda } from '../../api/catalogo';
 import { useRegistrarEntrada, useSaldos } from '../../api/inventario';
 import { useAcopio, useNoRecibir } from '../../api/red';
 import { Boton } from '../../componentes/Boton';
 import { Icono } from '../../componentes/Icono';
 import { Encabezado } from '../Encabezado';
+import { BuscadorCategoria } from './BuscadorCategoria';
+import { TarjetaSaldo } from './TarjetaSaldo';
+import { aNumero, TecladoCantidad, teclear } from './TecladoCantidad';
 
-const TECLAS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', ',', '0', 'Borrar'] as const;
 const hoy = () => new Date().toISOString().slice(0, 10);
-
-/** «12,5» → 12.5. Vacío o inválido → 0. */
-const aNumero = (texto: string) => {
-  const n = Number(texto.replace(',', '.'));
-  return Number.isFinite(n) ? n : 0;
-};
-
-/** Agrega una tecla a la cantidad: una sola coma y hasta 3 decimales. */
-function teclear(actual: string, tecla: (typeof TECLAS)[number]): string {
-  if (tecla === 'Borrar') return actual.slice(0, -1);
-  if (tecla === ',') return actual.includes(',') ? actual : `${actual || '0'},`;
-  const decimales = actual.split(',')[1];
-  if (decimales !== undefined && decimales.length >= 3) return actual;
-  return actual === '0' ? tecla : actual + tecla;
-}
 
 /** C4 Entrada rápida (RF-INV-001). Diseño: docs/03-diseno/stitch/C04-entrada-rapida. */
 export function EntradaRapida() {
@@ -38,11 +25,11 @@ export function EntradaRapida() {
   const [aviso, fijarAviso] = useState('');
   const busqueda = useRef<HTMLInputElement>(null);
   const { data: acopio } = useAcopio(acopioId);
-  const resultados = useBuscarCategorias(categoria ? '' : q);
   const saldos = useSaldos(acopioId);
   const noRecibir = useNoRecibir(acopioId);
   const registrar = useRegistrarEntrada(acopioId);
 
+  const decimales = categoria?.unidadBase !== 'UNIDAD';
   const n = aNumero(cantidad);
   const falta = categoria?.perecedero && !vence;
   const noSeRecibe = categoria && noRecibir.data?.some((x) => x.categoriaId === categoria.id);
@@ -114,68 +101,19 @@ export function EntradaRapida() {
 
       <form onSubmit={enviar} className="flex flex-col gap-space-md">
         {!categoria ? (
-          <div className="flex flex-col gap-space-xs">
-            <label className="relative">
-              <span className="sr-only">Categoría</span>
-              <Icono
-                nombre="search"
-                className="pointer-events-none absolute top-1/2 left-space-md -translate-y-1/2 text-[22px] text-on-surface-variant"
-              />
-              <input
-                ref={busqueda}
-                id="entrada-busqueda"
-                type="search"
-                aria-label="Categoría"
-                placeholder="Busca: arroz, pañal, agua…"
-                value={q}
-                onChange={(e) => fijarQ(e.target.value)}
-                className="min-h-[56px] w-full rounded-xl border-[1.5px] border-outline bg-surface-container-lowest pr-space-md pl-12 text-body-lg text-on-surface"
-              />
-            </label>
-            {(resultados.data ?? []).length > 0 && (
-              <ul aria-label="Resultados" className="flex flex-col gap-space-xs">
-                {resultados.data!.map((c) => (
-                  <li key={c.id}>
-                    <button
-                      type="button"
-                      onClick={() => elegir(c)}
-                      className="flex min-h-[48px] w-full items-center justify-between rounded-xl bg-surface-container-lowest px-space-md text-left shadow-sm"
-                    >
-                      <span className="font-bold text-on-surface">{c.nombre}</span>
-                      <Icono nombre="chevron_right" className="text-[20px] text-outline" />
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
+          <BuscadorCategoria
+            ref={busqueda}
+            id="entrada-busqueda"
+            q={q}
+            onQ={fijarQ}
+            onElegir={elegir}
+          />
         ) : (
-          <section
-            aria-label="Categoría elegida"
-            className="flex flex-col gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md"
-          >
-            <span className="flex flex-wrap items-center gap-space-xs">
-              <span className="text-headline-sm font-bold text-on-surface">{categoria.nombre}</span>
-              {categoria.perecedero && (
-                <span className="rounded-full bg-primary-fixed px-2 py-0.5 text-label-md text-primary-container">
-                  Perecedero
-                </span>
-              )}
-              <button
-                type="button"
-                onClick={() => fijarCategoria(null)}
-                className="ml-auto min-h-[44px] rounded-lg px-space-sm text-label-md text-primary-container"
-              >
-                Cambiar
-              </button>
-            </span>
-            <span className="text-body-md text-on-surface-variant">
-              Saldo actual:{' '}
-              <b className="text-on-surface">
-                {formatearCantidad(saldoActual, categoria.unidadBase)}
-              </b>
-            </span>
-          </section>
+          <TarjetaSaldo
+            categoria={categoria}
+            saldo={saldoActual}
+            onCambiar={() => fijarCategoria(null)}
+          />
         )}
 
         {noSeRecibe && (
@@ -197,7 +135,9 @@ export function EntradaRapida() {
               inputMode="decimal"
               autoComplete="off"
               value={cantidad}
-              onChange={(e) => fijarCantidad(e.target.value.replace(/[^\d,]/g, ''))}
+              onChange={(e) =>
+                fijarCantidad(e.target.value.replace(decimales ? /[^\d,]/g : /\D/g, ''))
+              }
               placeholder="0"
               // Crece con lo escrito: la unidad queda pegada al número
               style={{ width: `${Math.max(cantidad.length, 1) + 0.5}ch` }}
@@ -211,21 +151,10 @@ export function EntradaRapida() {
           </span>
         </label>
 
-        <div role="group" aria-label="Teclado numérico" className="grid grid-cols-3 gap-space-xs">
-          {TECLAS.map((t) => (
-            <button
-              key={t}
-              type="button"
-              aria-label={t}
-              onClick={() => fijarCantidad((c) => teclear(c, t))}
-              className={`flex min-h-[56px] items-center justify-center rounded-xl border border-outline-variant text-headline-sm font-bold text-on-surface ${
-                t === 'Borrar' ? 'bg-surface-container' : 'bg-surface-container-lowest'
-              }`}
-            >
-              {t === 'Borrar' ? <Icono nombre="backspace" className="text-[24px]" /> : t}
-            </button>
-          ))}
-        </div>
+        <TecladoCantidad
+          decimales={decimales}
+          onTecla={(t) => fijarCantidad((c) => teclear(c, t, decimales))}
+        />
 
         {categoria?.perecedero && (
           <div className="flex flex-col gap-space-xs">
