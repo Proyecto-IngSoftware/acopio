@@ -14,7 +14,7 @@ actualizado: 2026-10-02
 | Pantalla | `2a7aa28834e34019ad1743728694eb83` («C18 Códigos de barras - Consola Acopio»), con el tema «Acopio · sistema de diseño» (`assets/3694704229522762996`) |
 | Exportada | 2026-10-02 |
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
-| Maqueta | Pendiente |
+| Maqueta | En la [maqueta de C7](../C07-umbrales/maqueta.html), publicada en <https://claude.ai/artifact/K8XcgLGe2sZ4LREuUSyy15> |
 | Aprobación | Pendiente |
 
 Stitch la entregó a 1280 px de ancho aunque se pidió móvil; el contenido ocupa la
