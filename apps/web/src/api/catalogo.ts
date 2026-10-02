@@ -171,3 +171,33 @@ export function useBuscarCategorias(q: string) {
       desenvolver(api.GET('/api/categorias/buscar', { params: { query: { q: texto } } })),
   });
 }
+
+export type CodigoBarras = Omit<S['CodigoBarrasDto'], 'contenido' | 'creadoPor'> & {
+  // El contrato tipa los campos nullable como arreglos (P-031)
+  contenido: number | null;
+  creadoPor: string | null;
+};
+
+/** Escáner: la categoría de un código, o un ErrorApi 404 `EAN_DESCONOCIDO` (RF-INV-002). */
+export const consultarCodigo = async (ean: string) =>
+  (await desenvolver(
+    api.GET('/api/codigos-barras/{ean}', { params: { path: { ean } } }),
+  )) as unknown as CodigoBarras;
+
+export interface DatosAsociar {
+  ean: string;
+  categoriaId: string;
+  contenido?: number;
+}
+
+/** Escáner: asocia un código nuevo a una categoría; el de un Operador queda sin revisar (RF-CAT-004). */
+export function useAsociarCodigo() {
+  const consultas = useQueryClient();
+  return useMutation<CodigoBarras, ErrorApi, DatosAsociar>({
+    mutationFn: async (datos) =>
+      (await desenvolver(
+        api.POST('/api/codigos-barras', { body: datos }),
+      )) as unknown as CodigoBarras,
+    onSuccess: () => void consultas.invalidateQueries({ queryKey: ['codigos-barras'] }),
+  });
+}

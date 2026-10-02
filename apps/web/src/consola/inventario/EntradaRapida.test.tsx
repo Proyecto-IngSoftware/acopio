@@ -6,6 +6,27 @@ import { clienteFalso, cuerpoDe, envolver, responderSegun } from '../../pruebas/
 import { ACOPIO, SALDOS } from './datos-prueba';
 import { EntradaRapida } from './EntradaRapida';
 
+// La cámara «lee» este código apenas se abre (ver Escaner.test.tsx)
+vi.mock('./camara', () => ({
+  abrirCamara: async (_video: unknown, alLeer: (codigo: string) => void) => {
+    setTimeout(() => alLeer('7702001045231'), 0);
+    return () => {};
+  },
+}));
+const BOTELLA = {
+  ean: '7702001045231',
+  categoriaId: 'c1',
+  categoria: 'Agua potable',
+  unidad: 'LITRO',
+  contenido: 0.6,
+  descripcion: null,
+  revisado: true,
+  grupo: 'AGUA_Y_BEBIDAS',
+  perecedero: false,
+  creadoPor: 'Jorge Rincón',
+  creadoEn: '2026-10-02T12:00:00.000Z',
+};
+
 const OPERADOR = {
   id: 'o',
   username: 'd.mendez',
@@ -103,6 +124,37 @@ describe('C4 Entrada rápida', () => {
     expect(within(teclado).queryByRole('button', { name: ',' })).not.toBeInTheDocument();
     await userEvent.type(screen.getByLabelText('Cantidad'), '2,5');
     expect(screen.getByLabelText('Cantidad')).toHaveValue('25');
+  });
+
+  it('con un código que trae contenido cuenta presentaciones y registra el total', async () => {
+    pantalla({
+      'GET /api/codigos-barras/7702001045231': BOTELLA,
+      'POST /api/acopios/x1/entradas': resultado(7.2, 47.2),
+    });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const elegida = await screen.findByRole('region', { name: 'Categoría elegida' });
+    expect(elegida).toHaveTextContent('Agua potable');
+    expect(elegida).toHaveTextContent('Leído: 7702001045231 · cada una trae 0,6 L');
+    await teclear('1', '2');
+    expect(screen.getByText('12 × 0,6 L = 7,2 L')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Registrar 7,2 L' }));
+    await screen.findByText(/Agua potable: 47,2 L/);
+    expect(await cuerpoDe('POST /api/acopios/x1/entradas')).toMatchObject({
+      categoriaId: 'c1',
+      cantidad: 7.2,
+    });
+  });
+
+  it('«Escribir en litros» vuelve a la cantidad en la unidad base', async () => {
+    pantalla({ 'GET /api/codigos-barras/7702001045231': BOTELLA });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    await screen.findByRole('region', { name: 'Categoría elegida' });
+    await teclear('3');
+    await userEvent.click(screen.getByRole('button', { name: 'Escribir en litros' }));
+    expect(screen.queryByText(/× 0,6 L/)).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Cantidad')).toHaveValue('');
+    await teclear('5');
+    expect(screen.getByRole('button', { name: 'Registrar 5 L' })).toBeEnabled();
   });
 
   it('registra con el teclado de la pantalla, muestra el saldo resultante y queda lista para otra', async () => {

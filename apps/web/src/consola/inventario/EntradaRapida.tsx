@@ -1,18 +1,19 @@
 import { useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useParams } from 'react-router';
-import { formatearCantidad, SIMBOLO_UNIDAD } from '@acopio/shared';
+import { formatearCantidad, formatearNumero, SIMBOLO_UNIDAD } from '@acopio/shared';
 import type { ResultadoBusqueda } from '../../api/catalogo';
 import { useRegistrarEntrada, useSaldos } from '../../api/inventario';
 import { useAcopio, useNoRecibir } from '../../api/red';
 import { Boton } from '../../componentes/Boton';
 import { Icono } from '../../componentes/Icono';
 import { Encabezado } from '../Encabezado';
-import { BuscadorCategoria } from './BuscadorCategoria';
+import { BuscadorCategoria, type Leido } from './BuscadorCategoria';
 import { TarjetaSaldo } from './TarjetaSaldo';
 import { aNumero, TecladoCantidad, teclear } from './TecladoCantidad';
 
 const hoy = () => new Date().toISOString().slice(0, 10);
+const EN_LA_UNIDAD = { LITRO: 'litros', KILOGRAMO: 'kilos', UNIDAD: 'unidades' } as const;
 
 /** C4 Entrada rápida (RF-INV-001). Diseño: docs/03-diseno/stitch/C04-entrada-rapida. */
 export function EntradaRapida() {
@@ -23,20 +24,26 @@ export function EntradaRapida() {
   const [cantidad, fijarCantidad] = useState('');
   const [vence, fijarVence] = useState('');
   const [aviso, fijarAviso] = useState('');
+  // Un código con contenido hace contar presentaciones: 12 × 0,6 L = 7,2 L
+  const [leido, fijarLeido] = useState<Leido | null>(null);
   const busqueda = useRef<HTMLInputElement>(null);
   const { data: acopio } = useAcopio(acopioId);
   const saldos = useSaldos(acopioId);
   const noRecibir = useNoRecibir(acopioId);
   const registrar = useRegistrarEntrada(acopioId);
 
-  const decimales = categoria?.unidadBase !== 'UNIDAD';
-  const n = aNumero(cantidad);
+  const porPresentacion = leido?.contenido ?? null;
+  const decimales = !porPresentacion && categoria?.unidadBase !== 'UNIDAD';
+  const tecleado = aNumero(cantidad);
+  const n = porPresentacion ? Math.round(tecleado * porPresentacion * 1000) / 1000 : tecleado;
   const falta = categoria?.perecedero && !vence;
   const noSeRecibe = categoria && noRecibir.data?.some((x) => x.categoriaId === categoria.id);
   const saldoActual = saldos.data?.find((s) => s.categoriaId === categoria?.id)?.cantidad ?? 0;
 
-  const elegir = (c: ResultadoBusqueda) => {
+  const elegir = (c: ResultadoBusqueda, l?: Leido) => {
     fijarCategoria(c);
+    fijarLeido(l ?? null);
+    fijarCantidad('');
     fijarAviso('');
     registrar.reset();
   };
@@ -57,6 +64,7 @@ export function EntradaRapida() {
         onSuccess: (r) => {
           fijarAviso(`${elegida.nombre}: ${formatearCantidad(r.saldo, elegida.unidadBase)}`);
           fijarCategoria(null);
+          fijarLeido(null);
           fijarQ('');
           fijarCantidad('');
           fijarVence('');
@@ -112,8 +120,20 @@ export function EntradaRapida() {
           <TarjetaSaldo
             categoria={categoria}
             saldo={saldoActual}
-            onCambiar={() => fijarCategoria(null)}
-          />
+            onCambiar={() => {
+              fijarCategoria(null);
+              fijarLeido(null);
+            }}
+          >
+            {leido && (
+              <span className="flex items-center gap-space-xs text-body-sm text-on-surface-variant">
+                <Icono nombre="barcode" className="text-[18px]" />
+                Leído: {leido.ean}
+                {leido.contenido !== null &&
+                  ` · cada una trae ${formatearCantidad(leido.contenido, categoria.unidadBase)}`}
+              </span>
+            )}
+          </TarjetaSaldo>
         )}
 
         {noSeRecibe && (
@@ -127,7 +147,9 @@ export function EntradaRapida() {
         )}
 
         <label className="flex flex-col items-center gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md">
-          <span className="text-label-caps text-on-surface-variant uppercase">Cantidad</span>
+          <span className="text-label-caps text-on-surface-variant uppercase">
+            {porPresentacion ? 'Presentaciones' : 'Cantidad'}
+          </span>
           <span className="flex items-baseline gap-space-xs">
             <input
               id="entrada-cantidad"
@@ -143,13 +165,33 @@ export function EntradaRapida() {
               style={{ width: `${Math.max(cantidad.length, 1) + 0.5}ch` }}
               className="max-w-[60vw] bg-transparent text-center text-display-hero-mobile font-bold text-on-surface tabular-nums"
             />
-            {categoria && (
+            {categoria && !porPresentacion && (
               <span className="text-headline-sm text-on-surface-variant">
                 {SIMBOLO_UNIDAD[categoria.unidadBase]}
               </span>
             )}
           </span>
         </label>
+
+        {categoria && porPresentacion && (
+          <div className="flex flex-col gap-1 rounded-xl border border-outline-variant bg-surface-container-low p-space-sm tabular-nums">
+            {tecleado > 0 && (
+              <b className="text-body-lg text-on-surface">
+                {`${formatearNumero(tecleado)} × ${formatearCantidad(porPresentacion, categoria.unidadBase)} = ${formatearCantidad(n, categoria.unidadBase)}`}
+              </b>
+            )}
+            <button
+              type="button"
+              onClick={() => {
+                fijarLeido(null);
+                fijarCantidad('');
+              }}
+              className="min-h-[44px] w-fit text-label-md text-primary-container"
+            >
+              Escribir en {EN_LA_UNIDAD[categoria.unidadBase]}
+            </button>
+          </div>
+        )}
 
         <TecladoCantidad
           decimales={decimales}
