@@ -2,7 +2,7 @@
 title: "Bloque 2 · Interfaz, ciclo 2: salida, conteo, umbrales y escáner · plan"
 type: plan
 tags: [plan, interfaz, bloque-2]
-estado: aprobado
+estado: cerrado
 bloque: 2
 actualizado: 2026-10-02
 ---
@@ -97,7 +97,7 @@ Cada caso lleva su prueba en la tarea que construye la pantalla.
 | 3 C6 | ✅ | Un 422 `SIN_DIFERENCIA` dice que otra persona registró antes y vuelve a pedir el saldo |
 | 4 Navegación | ✅ | |
 | 5 Diseños pendientes | ✅ | Maqueta publicada con los umbrales de C7, el escáner, el código nuevo y C18. Stitch cortó por tiempo las tres primeras, así que se armaron con los tokens del tema, como C3. Joseph la aprobó el 2026-10-02 |
-| 6 Umbrales en C7 | 🟡 | Listos `useFijarUmbral`, `useQuitarUmbral` y `errorUmbral`, con pruebas. La pantalla espera la maqueta |
-| 7 Escáner | ⬜ | |
-| 8 C18 | ⬜ | |
-| 9 Cierre | ⬜ | |
+| 6 Umbrales en C7 | ✅ | C7 pasa a llamarse «Umbrales y no recibir»; el enlace de «Mi acopio» y el del formulario de C21 cambiaron de nombre |
+| 7 Escáner | ✅ | La API suma `grupo`, `perecedero`, `creadoPor` y `creadoEn` al código de barras. `@zxing/browser` quedó en un fragmento aparte de 477 KB que se descarga al tocar «Escanear» |
+| 8 C18 | ✅ | La pestaña pide la lista completa y filtra «Sin revisar» en la web |
+| 9 Cierre | ✅ | Recorrido en el Compose con un Operador nuevo y el Administrador: salida, ajuste, umbral (C3 mostró el semáforo nuevo), cámara y revisión de un código. axe en Chromium a 360 × 640 sin violaciones graves y sin desplazamiento horizontal en C5, C6, C7, la cámara y C18. El recorrido encontró tres defectos que las pruebas no ven y quedaron arreglados: contraste de «Sin umbral», texto oscuro en la cámara y el foco que tapaba la unidad. La cámara del recorrido fue la falsa de Chromium, así que leer un código real queda para probar en un teléfono |

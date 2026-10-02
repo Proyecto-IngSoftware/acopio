@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-01
+actualizado: 2026-10-02
 ---
 
 # Pendientes — bandeja de entrada
@@ -648,6 +648,16 @@ RF-RED-002.
 
 **Estado:** RESUELTO → [especificación del Bloque 2](../superpowers/specs/2026-10-01-bloque-2-inventario-design.md#3-decisiones).
 RF-INV-010 sigue abierto para un bloque posterior.
+
+### P-037 · Probar el escáner con un teléfono y un código real
+**Fecha:** 2026-10-02 · **Propuesto por:** Joseph
+**Qué:** leer un EAN impreso con la cámara trasera de un teléfono, en C4, C5 y C6.
+**Por qué:** el recorrido del cierre del ciclo 2 usó la cámara falsa de Chromium: la vista
+abre y se cierra bien, pero ninguna prueba leyó un código de verdad. Falta ver cuánto tarda
+`@zxing/browser` en reconocerlo, si enfoca a la distancia de una caja y cómo se porta con
+poca luz.
+**Estado:** ABIERTO. Se hace cuando la web se pueda abrir desde un teléfono (HTTPS o la red
+local con permiso de cámara).
 
 ---
 

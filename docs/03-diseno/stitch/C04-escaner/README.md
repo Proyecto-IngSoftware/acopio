@@ -14,6 +14,7 @@ actualizado: 2026-10-02
 | Pantallas de Stitch | Ninguna. «C4 Escáner» y «C4 Código nuevo» se cortaron por tiempo el 2026-10-02 y no aparecieron en el proyecto |
 | Maqueta | En la [maqueta de C7](../C07-umbrales/maqueta.html), publicada en <https://claude.ai/artifact/K8XcgLGe2sZ4LREuUSyy15> |
 | Aprobación | Joseph la aprobó el 2026-10-02 |
+| Construida | [construida.png](construida.png), con la cámara falsa de Chromium a 360 × 640 |
 
 El botón «Escanear» está en el buscador de categoría que comparten C4, C5 y C6.
 

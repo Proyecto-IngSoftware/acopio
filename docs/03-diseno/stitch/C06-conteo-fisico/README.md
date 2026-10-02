@@ -16,6 +16,7 @@ actualizado: 2026-10-02
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | Junto a C5 en <https://claude.ai/artifact/GuEoCx3sSNuoVo9HCGUYNW> ([maqueta.html](../C05-salida/maqueta.html)) |
 | Aprobación | Joseph la aprobó el 2026-10-02, con las diferencias de abajo |
+| Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
 
 La generación se cortó por tiempo en la herramienta; la pantalla quedó en el proyecto y
 Joseph pasó su identificador.

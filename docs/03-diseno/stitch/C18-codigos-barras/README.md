@@ -16,6 +16,7 @@ actualizado: 2026-10-02
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | En la [maqueta de C7](../C07-umbrales/maqueta.html), publicada en <https://claude.ai/artifact/K8XcgLGe2sZ4LREuUSyy15> |
 | Aprobación | Joseph la aprobó el 2026-10-02, con las diferencias de abajo |
+| Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
 
 Stitch la entregó a 1280 px de ancho aunque se pidió móvil; el contenido ocupa la
 columna central.

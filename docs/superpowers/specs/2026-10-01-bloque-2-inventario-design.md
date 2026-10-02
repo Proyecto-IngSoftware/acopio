@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-2]
 estado: vigente
 bloque: 2
-actualizado: 2026-10-01
+actualizado: 2026-10-02
 ---
 
 # Bloque 2 · Inventario · especificación
@@ -320,3 +320,15 @@ Si el tiempo no alcanza se recorta primero el ciclo 3 y después el escáner.
 | C4 manda un `id` generado en el navegador en cada entrada | Un doble toque no duplica, y la cola sin conexión del ciclo 3 usa el mismo mecanismo |
 | En «Más», «Mi acopio» muestra Entrada rápida e Inventario según el rol; el Administrador llega a C3 desde el formulario del acopio | Las herramientas cuelgan de la ubicación activa; el Auditor ya no ve la fila de operación, que no puede abrir |
 
+**2026-10-02 · Interfaz, ciclo 2.** Construida según el
+[plan](../../05-planes/2026-10-02-bloque-2-interfaz-ciclo-2.md).
+
+| Qué | Por qué |
+|---|---|
+| `GET /codigos-barras` y `GET /codigos-barras/:ean` traen `grupo`, `perecedero`, `creadoPor` (nombre) y `creadoEn` | C4 necesita saber si la categoría leída es perecedera para pedir el vencimiento, y la pestaña de C18 aprobada muestra quién asoció cada código y cuándo. El nombre sale de una consulta a `usuario`, porque `codigo_barras.creado_por` no tiene relación en Prisma |
+| C7 se llama «Umbrales y no recibir». Cada fila muestra su umbral y abre una hoja para fijarlo o quitarlo | Decisión de Joseph al aprobar la maqueta: el umbral vive junto al «no recibir» de la misma categoría |
+| El escáner está en el buscador que comparten C4, C5 y C6, pero solo C4 cuenta presentaciones | En una salida o un conteo se cuenta lo que hay, no lo que llegó empacado |
+| C4, C5 y C6 no ofrecen la coma en categorías por unidades | La API responde 422 a un decimal en `UNIDAD` |
+| La salida y el ajuste no llevan `id` del navegador: el botón queda inactivo mientras la petición está en curso | `SalidaDto` y `AjusteDto` no reciben `id`, y las salidas no se capturan sin conexión (V-07) |
+| `ErrorApi` de la web conserva los `detalles` del error | Para leer el saldo que trae un 409 `SALDO_INSUFICIENTE` |
+| Token `inverse-on-surface` en `packages/ui-tokens`, con el valor del tema de Stitch | La vista de la cámara usa texto claro sobre fondo oscuro y el token no se había traído |

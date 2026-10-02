@@ -14,6 +14,7 @@ actualizado: 2026-10-02
 | Pantalla de Stitch | Ninguna. La generación del 2026-10-02 se cortó por tiempo y no apareció en el proyecto |
 | Maqueta | [maqueta.html](maqueta.html), publicada en <https://claude.ai/artifact/K8XcgLGe2sZ4LREuUSyy15>, junto al escáner y a C18 |
 | Aprobación | Joseph la aprobó el 2026-10-02 |
+| Construida | [construida.png](construida.png) y [construida-hoja.png](construida-hoja.png), en Chromium a 360 × 640 |
 
 La maqueta usa los tokens del tema, la cabecera con sesión y la barra inferior de los
 [componentes compartidos](../_compartidos/README.md). Parte del
