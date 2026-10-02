@@ -55,3 +55,18 @@ export function useRegistrarEntrada(acopioId: string) {
     },
   });
 }
+
+export type DatosSalida = S['SalidaDto'];
+
+/** C5: registra una salida (RF-INV-003). Con o sin éxito, vuelve a pedir los saldos: un 409 trae uno nuevo. */
+export function useRegistrarSalida(acopioId: string) {
+  const consultas = useQueryClient();
+  return useMutation<ResultadoMovimiento, ErrorApi, DatosSalida>({
+    mutationFn: (datos) =>
+      desenvolver(api.POST('/api/acopios/{id}/salidas', { ...ruta(acopioId), body: datos })),
+    onSettled: () => {
+      void consultas.invalidateQueries({ queryKey: ['saldos', acopioId] });
+      void consultas.invalidateQueries({ queryKey: ['historial', acopioId] });
+    },
+  });
+}

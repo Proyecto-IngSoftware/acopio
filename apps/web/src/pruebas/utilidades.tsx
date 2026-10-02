@@ -17,6 +17,13 @@ export function responderJson(cuerpo: unknown, estado = 200): void {
   );
 }
 
+const ESTADO = Symbol('estado');
+
+/** Para `responderSegun`: responde ese cuerpo con otro estado HTTP, por ejemplo un 409. */
+export function conEstado(estado: number, cuerpo: unknown) {
+  return { [ESTADO]: estado, cuerpo };
+}
+
 /** Responde según método y ruta: { 'GET /api/canasta': [...], 'POST /api/categorias': {...} }.
  *  La clave puede terminar en una ruta con parámetros escritos como `*`. Lo que no está
  *  en el mapa responde 404. */
@@ -33,15 +40,25 @@ export function responderSegun(mapa: Record<string, unknown>): void {
     return Promise.resolve(
       new Response(
         JSON.stringify(
-          regla ? regla.cuerpo : { estado: 404, codigo: 'NO_ENCONTRADO', mensaje: 'No existe' },
+          !regla
+            ? { estado: 404, codigo: 'NO_ENCONTRADO', mensaje: 'No existe' }
+            : estadoDe(regla.cuerpo)
+              ? (regla.cuerpo as { cuerpo: unknown }).cuerpo
+              : regla.cuerpo,
         ),
         {
-          status: regla ? 200 : 404,
+          status: !regla ? 404 : (estadoDe(regla.cuerpo) ?? 200),
           headers: { 'content-type': 'application/json' },
         },
       ),
     );
   });
+}
+
+function estadoDe(cuerpo: unknown): number | undefined {
+  return typeof cuerpo === 'object' && cuerpo !== null && ESTADO in cuerpo
+    ? (cuerpo as { [ESTADO]: number })[ESTADO]
+    : undefined;
 }
 
 /** Peticiones hechas a fetch en esta prueba, como «MÉTODO /ruta?consulta». */

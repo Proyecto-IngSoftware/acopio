@@ -1,12 +1,14 @@
 import createClient from 'openapi-fetch';
 import type { paths } from './esquema';
 
-/** Error de la API con su forma { estado, codigo, mensaje }, o de red (estado 0). */
+/** Error de la API con su forma { estado, codigo, mensaje, detalles? }, o de red (estado 0). */
 export class ErrorApi extends Error {
   constructor(
     readonly estado: number,
     readonly codigo: string,
     mensaje: string,
+    /** Datos para la interfaz en algunos errores; SALDO_INSUFICIENTE trae { saldo } */
+    readonly detalles?: unknown,
   ) {
     super(mensaje);
     this.name = 'ErrorApi';
@@ -52,10 +54,11 @@ export async function desenvolver<T>(
     throw new ErrorApi(0, 'SIN_RED', SIN_RED);
   }
   if (r.data !== undefined && r.response.ok) return r.data;
-  const e = (r.error ?? {}) as { codigo?: string; mensaje?: string };
+  const e = (r.error ?? {}) as { codigo?: string; mensaje?: string; detalles?: unknown };
   throw new ErrorApi(
     r.response.status,
     e.codigo ?? 'ERROR',
     e.mensaje ?? 'Algo falló al consultar Acopio. Intenta de nuevo.',
+    e.detalles,
   );
 }
