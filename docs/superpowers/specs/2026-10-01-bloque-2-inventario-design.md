@@ -332,3 +332,5 @@ Si el tiempo no alcanza se recorta primero el ciclo 3 y después el escáner.
 | La salida y el ajuste no llevan `id` del navegador: el botón queda inactivo mientras la petición está en curso | `SalidaDto` y `AjusteDto` no reciben `id`, y las salidas no se capturan sin conexión (V-07) |
 | `ErrorApi` de la web conserva los `detalles` del error | Para leer el saldo que trae un 409 `SALDO_INSUFICIENTE` |
 | Token `inverse-on-surface` en `packages/ui-tokens`, con el valor del tema de Stitch | La vista de la cámara usa texto claro sobre fondo oscuro y el token no se había traído |
+| En una categoría por unidades, el contenido de un código va entero: la API responde 422 `CONTENIDO_FRACCIONARIO` al asociarlo o al editarlo, y la web avisa antes | Hallazgo de la revisión final: con «2,5 und» por paquete, C4 calculaba 7,5 und y la entrada fallaba recién al registrarla |
+| El punto escrito cuenta como coma en todos los campos de cantidad, y las consultas no reintentan un 4xx | Hallazgos de la revisión final: «2.5» se volvía 25, y un 403 al leer los saldos se reintentaba y dejaba C5 y C6 mostrando un saldo de 0 |

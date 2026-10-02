@@ -659,6 +659,22 @@ poca luz.
 **Estado:** ABIERTO. Se hace cuando la web se pueda abrir desde un teléfono (HTTPS o la red
 local con permiso de cámara).
 
+### P-038 · Menores de la revisión final del ciclo 2 del Bloque 2
+**Fecha:** 2026-10-02 · **Propuesto por:** Joseph
+**Qué:** lo que la revisión del ciclo 2 encontró y no se arregló en la misma pasada.
+
+| Qué | Dónde |
+|---|---|
+| Elegir otra categoría en C4 no limpia la fecha de vencimiento: la de un perecedero pasa al siguiente | `EntradaRapida.tsx`, `elegir` |
+| La nota de una salida no tiene `maxLength` 280 en el campo; la API la limita y responde 400 | `Salida.tsx` |
+| Dos escaneos seguidos pueden elegir dos veces: no hay un estado «buscando» que bloquee «Escanear» | `BuscadorCategoria.tsx` |
+| Si otra persona asoció el código mientras tanto, el 409 en «Código nuevo» no ofrece salida; convendría volver a consultarlo | `Escaner.tsx` |
+| `GET /codigos-barras/:ean` le muestra al Operador quién asoció el código y hace una consulta más por escaneo | `codigos-barras.service.ts`, `obtener` |
+| Guardar sin cambios en C18 manda un `PATCH` vacío y deja una fila en la bitácora | `PestanaCodigos.tsx` |
+| C4 pide teclado decimal también en categorías por unidades; C5 y C6 piden el numérico | `EntradaRapida.tsx` |
+
+**Estado:** ABIERTO. Ninguno rompe un flujo; se toman cuando se vuelva a tocar el archivo.
+
 ---
 
 ## Resueltos
