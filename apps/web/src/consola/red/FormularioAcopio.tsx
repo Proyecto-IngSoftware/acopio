@@ -260,9 +260,9 @@ function Formulario({ acopio, entidades }: { acopio: Acopio | null; entidades: E
         <>
           <ul className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest">
             <FilaMenu
-              icono="block"
-              titulo="No recibir"
-              descripcion="Categorías que este acopio hoy no recibe"
+              icono="tune"
+              titulo="Umbrales y no recibir"
+              descripcion="Mínimo y máximo, y lo que hoy no recibe"
               a={`/consola/acopios/${acopio.id}/no-recibir`}
             />
             <FilaMenu

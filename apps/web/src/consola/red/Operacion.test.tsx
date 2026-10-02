@@ -5,6 +5,7 @@ import { violacionesGraves } from '../../pruebas/accesibilidad';
 import { acopioDePrueba } from '../../pruebas/datos-red';
 import {
   clienteFalso,
+  conEstado,
   cuerpoDe,
   envolver,
   peticiones,
@@ -48,6 +49,27 @@ const RESPUESTAS = {
     cat('c2', 'Ropa usada', 'ROPA_Y_ABRIGO'),
     cat('c3', 'Colchonetas', 'ROPA_Y_ABRIGO'),
   ],
+  'GET /api/acopios/*/saldos': [
+    {
+      categoriaId: 'c1',
+      categoria: 'Arroz',
+      grupo: 'ALIMENTOS',
+      unidad: 'UNIDAD',
+      perecedero: false,
+      cantidad: 120,
+      umbral: { minimo: 100, maximo: 400 },
+      semaforo: 'CERCA',
+      ultimoMovimiento: null,
+      vencimientos: [],
+    },
+  ],
+  'PUT /api/acopios/*/umbrales/*': {
+    categoriaId: 'c3',
+    minimo: 10,
+    maximo: 50,
+    actualizadoEn: '2026-10-02T15:00:00.000Z',
+  },
+  'DELETE /api/acopios/*/umbrales/*': {},
   'PUT /api/acopios/*/no-recibir/*': {},
   'DELETE /api/acopios/*/no-recibir/*': {},
 };
@@ -72,10 +94,9 @@ describe('Mi acopio', () => {
     expect(screen.getByText(/habla con el Administrador/)).toBeInTheDocument();
     expect(screen.getByRole('radio', { name: 'Activo' })).toBeChecked();
     expect(screen.getByLabelText('Teléfono')).toHaveValue('3001234567');
-    expect(await screen.findByRole('link', { name: /No recibir · 1 categoría/ })).toHaveAttribute(
-      'href',
-      '/consola/acopios/x1/no-recibir',
-    );
+    expect(
+      await screen.findByRole('link', { name: /Umbrales y no recibir.*No recibe 1 categoría/ }),
+    ).toHaveAttribute('href', '/consola/acopios/x1/no-recibir');
   });
 
   it('pausar y guardar manda solo lo operativo', async () => {
@@ -145,5 +166,86 @@ describe('C7 No recibir', () => {
     const { container } = app('/consola/acopios/x1/no-recibir');
     await screen.findByRole('switch', { name: 'Arroz' });
     expect(await violacionesGraves(container)).toEqual([]);
+  });
+});
+
+describe('C7 Umbrales', () => {
+  const fila = (nombre: string) => screen.findByRole('button', { name: new RegExp(`^${nombre}`) });
+  const hoja = () => screen.getByRole('dialog');
+
+  it('se llama «Umbrales y no recibir» y cada fila dice su umbral', async () => {
+    responderSegun(RESPUESTAS);
+    app('/consola/acopios/x1/no-recibir');
+    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(
+      'Umbrales y no recibir',
+    );
+    expect(await fila('Arroz')).toHaveTextContent('Mín. 100 · Máx. 400 und.');
+    expect(await fila('Colchonetas')).toHaveTextContent('Sin umbral');
+  });
+
+  it('tocar la fila abre la hoja y guarda mínimo y máximo', async () => {
+    responderSegun(RESPUESTAS);
+    app('/consola/acopios/x1/no-recibir');
+    await userEvent.click(await fila('Colchonetas'));
+    expect(hoja()).toHaveAccessibleName('Umbral de Colchonetas');
+    await userEvent.type(within(hoja()).getByLabelText('Mínimo'), '10');
+    await userEvent.type(within(hoja()).getByLabelText('Máximo'), '50');
+    await userEvent.click(within(hoja()).getByRole('button', { name: 'Guardar umbral' }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+    expect(await cuerpoDe('PUT /api/acopios/x1/umbrales/c3')).toEqual({ minimo: 10, maximo: 50 });
+  });
+
+  it('con el mínimo sobre el máximo avisa y no deja guardar', async () => {
+    responderSegun(RESPUESTAS);
+    app('/consola/acopios/x1/no-recibir');
+    await userEvent.click(await fila('Colchonetas'));
+    await userEvent.type(within(hoja()).getByLabelText('Mínimo'), '60');
+    await userEvent.type(within(hoja()).getByLabelText('Máximo'), '50');
+    expect(within(hoja()).getByRole('alert')).toHaveTextContent(
+      'El mínimo no puede ser mayor que el máximo.',
+    );
+    expect(within(hoja()).getByRole('button', { name: 'Guardar umbral' })).toBeDisabled();
+  });
+
+  it('abre con el umbral actual y «Quitar umbral» lo borra', async () => {
+    responderSegun(RESPUESTAS);
+    app('/consola/acopios/x1/no-recibir');
+    await userEvent.click(await fila('Arroz'));
+    expect(within(hoja()).getByLabelText('Mínimo')).toHaveValue('100');
+    expect(within(hoja()).getByLabelText('Máximo')).toHaveValue('400');
+    await userEvent.click(within(hoja()).getByRole('button', { name: 'Quitar umbral' }));
+    await waitFor(() => expect(peticiones()).toContain('DELETE /api/acopios/x1/umbrales/c1'));
+    await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+
+  it('sin umbral no ofrece quitarlo', async () => {
+    responderSegun(RESPUESTAS);
+    app('/consola/acopios/x1/no-recibir');
+    await userEvent.click(await fila('Colchonetas'));
+    expect(within(hoja()).queryByRole('button', { name: 'Quitar umbral' })).not.toBeInTheDocument();
+  });
+
+  it('si la API rechaza el umbral, la hoja muestra el mensaje y sigue abierta', async () => {
+    responderSegun({
+      ...RESPUESTAS,
+      'PUT /api/acopios/*/umbrales/*': conEstado(403, {
+        estado: 403,
+        codigo: 'PROHIBIDO',
+        mensaje: 'No tienes acceso a este acopio',
+      }),
+    });
+    app('/consola/acopios/x1/no-recibir');
+    await userEvent.click(await fila('Colchonetas'));
+    await userEvent.type(within(hoja()).getByLabelText('Mínimo'), '10');
+    await userEvent.type(within(hoja()).getByLabelText('Máximo'), '50');
+    await userEvent.click(within(hoja()).getByRole('button', { name: 'Guardar umbral' }));
+    expect(await within(hoja()).findByText('No tienes acceso a este acopio')).toBeInTheDocument();
+  });
+
+  it('la hoja no tiene violaciones graves de accesibilidad', async () => {
+    responderSegun(RESPUESTAS);
+    app('/consola/acopios/x1/no-recibir');
+    await userEvent.click(await fila('Arroz'));
+    expect(await violacionesGraves(document.body)).toEqual([]);
   });
 });

@@ -168,7 +168,7 @@ describe('C21 formulario', () => {
     responderSegun(RESPUESTAS);
     app('/consola/acopios/x1');
     expect(await screen.findByLabelText('Nombre del acopio')).toHaveValue('Acopio Chapinero');
-    expect(screen.getByRole('link', { name: /No recibir/ })).toHaveAttribute(
+    expect(screen.getByRole('link', { name: /Umbrales y no recibir/ })).toHaveAttribute(
       'href',
       '/consola/acopios/x1/no-recibir',
     );

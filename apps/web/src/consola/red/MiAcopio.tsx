@@ -135,9 +135,9 @@ function Contenido({ acopio }: { acopio: Acopio }) {
 
       <ul className="overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest">
         <FilaMenu
-          icono="block"
-          titulo={`No recibir · ${n === 1 ? '1 categoría' : `${n} categorías`}`}
-          descripcion="Lo que hoy no reciben"
+          icono="tune"
+          titulo="Umbrales y no recibir"
+          descripcion={`No recibe ${n === 1 ? '1 categoría' : `${n} categorías`}`}
           a={`/consola/acopios/${acopio.id}/no-recibir`}
         />
       </ul>
