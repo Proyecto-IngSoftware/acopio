@@ -85,3 +85,35 @@ export function useRegistrarAjuste(acopioId: string) {
     },
   });
 }
+
+export type Umbral = S['UmbralDto'];
+export type DatosUmbral = S['FijarUmbralDto'] & { categoriaId: string };
+
+/** C7: fija mínimo y máximo de una categoría en el acopio (RF-INV-007). C3 lo lee de los saldos. */
+export function useFijarUmbral(acopioId: string) {
+  const consultas = useQueryClient();
+  return useMutation<Umbral, ErrorApi, DatosUmbral>({
+    mutationFn: ({ categoriaId, minimo, maximo }) =>
+      desenvolver(
+        api.PUT('/api/acopios/{id}/umbrales/{categoriaId}', {
+          params: { path: { id: acopioId, categoriaId } },
+          body: { minimo, maximo },
+        }),
+      ),
+    onSuccess: () => void consultas.invalidateQueries({ queryKey: ['saldos', acopioId] }),
+  });
+}
+
+/** C7: quita el umbral; la categoría vuelve a «Sin umbral» (V-03). */
+export function useQuitarUmbral(acopioId: string) {
+  const consultas = useQueryClient();
+  return useMutation<unknown, ErrorApi, string>({
+    mutationFn: (categoriaId) =>
+      desenvolver(
+        api.DELETE('/api/acopios/{id}/umbrales/{categoriaId}', {
+          params: { path: { id: acopioId, categoriaId } },
+        }),
+      ),
+    onSuccess: () => void consultas.invalidateQueries({ queryKey: ['saldos', acopioId] }),
+  });
+}
