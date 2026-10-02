@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>C18 Códigos de barras - Consola Acopio</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#0F6E6E',
+              dark: '#0A4F4F',
+              light: '#E6F4F4',
+              surface: '#F0F9F9'
+            },
+            admin: {
+              DEFAULT: '#085046',
+              dark: '#003730',
+              container: '#b0efe1'
+            },
+            stone: {
+              50: '#FAFAF9',
+              100: '#F5F5F4',
+              200: '#E7E5E4',
+              300: '#D6D3D1',
+              400: '#A8A29E',
+              500: '#78716C',
+              600: '#57534E',
+              700: '#44403C',
+              800: '#292524',
+              900: '#1C1917',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-1 {
+      font-variation-settings: 'FILL' 1;
+    }
+    .font-tabular {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.04em;
+    }
+    /* Hide scrollbar for clean horizontal tabs */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="bg-stone-50 text-stone-900 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-brand-light selection:text-brand-dark">
+
+  <!-- Mobile Container (390px centered) -->
+  <div class="w-full max-w-md mx-auto flex-1 flex flex-col min-h-screen bg-stone-50 shadow-sm relative">
+
+    <!-- 1. Cabecera con sesión compartida (Administrador Joseph Quintero) -->
+    <header class="w-full bg-stone-50 px-4 py-3 flex items-center justify-between border-b border-stone-200 sticky top-0 z-30">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-lg bg-admin flex items-center justify-center text-white shrink-0 shadow-sm">
+          <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-[19px] font-bold tracking-tight text-stone-900">Acopio</span>
+          <span class="bg-[#b0efe1] text-admin font-bold text-[11px] leading-tight px-1.5 py-0.5 rounded tracking-wide">CO</span>
+        </div>
+      </div>
+      <button aria-label="Perfil Joseph Quintero" class="w-9 h-9 rounded-full bg-admin-dark flex items-center justify-center text-white font-bold text-[13px] shrink-0 shadow-sm active:scale-95 transition-transform" type="button">
+        JQ
+      </button>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 pb-24">
+
+      <!-- 2. Subcabecera: Volver y Título -->
+      <div class="px-4 pt-4 pb-2">
+        <button type="button" class="inline-flex items-center gap-1 text-stone-600 hover:text-stone-900 text-[15px] font-medium py-1 -ml-1 transition-colors min-h-[44px]">
+          <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+          <span>Volver</span>
+        </button>
+        <div class="flex items-baseline justify-between mt-1">
+          <h1 class="text-[26px] font-bold text-stone-900 tracking-tight leading-tight">Catálogo</h1>
+          <span class="text-[13px] font-medium text-stone-500">Módulo central C18</span>
+        </div>
+      </div>
+
+      <!-- 3. Pestañas segmentadas desplazables (Categorías · Canasta · Emergencias · Códigos de barras) -->
+      <div class="px-4 mt-2">
+        <nav aria-label="Pestañas del catálogo" class="flex gap-2 overflow-x-auto no-scrollbar py-1 -mx-4 px-4 border-b border-stone-200">
+          <button type="button" class="whitespace-nowrap px-3.5 py-2 text-[14px] font-medium text-stone-600 hover:text-stone-900 rounded-lg hover:bg-stone-100 transition-colors shrink-0">
+            Categorías
+          </button>
+          <button type="button" class="whitespace-nowrap px-3.5 py-2 text-[14px] font-medium text-stone-600 hover:text-stone-900 rounded-lg hover:bg-stone-100 transition-colors shrink-0">
+            Canasta
+          </button>
+          <button type="button" class="whitespace-nowrap px-3.5 py-2 text-[14px] font-medium text-stone-600 hover:text-stone-900 rounded-lg hover:bg-stone-100 transition-colors shrink-0">
+            Emergencias
+          </button>
+          <button type="button" aria-current="page" class="whitespace-nowrap px-3.5 py-2 text-[14px] font-bold text-brand bg-brand-light rounded-lg border-b-2 border-brand shrink-0">
+            Códigos de barras
+          </button>
+        </nav>
+      </div>
+
+      <!-- 4. Filtro segmentado: «Sin revisar (4)» · «Todos» + Resumen contextual -->
+      <div class="px-4 mt-4 space-y-3">
+        <div class="p-1 bg-stone-200/80 rounded-xl flex gap-1">
+          <button type="button" class="flex-1 min-h-[40px] py-1.5 px-3 bg-white text-stone-900 rounded-lg text-[14px] font-semibold shadow-sm flex items-center justify-center gap-1.5 transition-all">
+            <span>Sin revisar</span>
+            <span class="inline-flex items-center justify-center px-2 py-0.5 text-[11px] font-bold rounded-full bg-brand text-white leading-none">4</span>
+          </button>
+          <button type="button" class="flex-1 min-h-[40px] py-1.5 px-3 text-stone-600 hover:text-stone-900 rounded-lg text-[14px] font-medium flex items-center justify-center gap-1.5 transition-all">
+            <span>Todos</span>
+            <span class="inline-flex items-center justify-center px-1.5 py-0.5 text-[11px] font-medium rounded-full bg-stone-300 text-stone-700 leading-none">38</span>
+          </button>
+        </div>
+
+        <div class="flex items-center justify-between text-[13px] text-stone-500 px-0.5">
+          <span>Asociaciones hechas en terreno</span>
+          <span class="inline-flex items-center gap-1">
+            <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+            Pendientes de validación
+          </span>
+        </div>
+      </div>
+
+      <!-- 5. Lista de tarjetas de códigos de barras -->
+      <div class="px-4 mt-3 space-y-3.5">
+
+        <!-- TARJETA 1: Sin revisar (Arroz · kg con paquetes de 0,5 kg) -->
+        <article class="bg-white rounded-xl border border-stone-200 p-4 shadow-sm hover:border-stone-300 transition-colors">
+          <!-- Top Row: Barcode + Badge -->
+          <div class="flex items-start justify-between gap-2 pb-2.5 border-b border-stone-100">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[22px] text-brand shrink-0">barcode_scanner</span>
+              <span class="font-tabular font-bold text-[17px] tracking-wide text-stone-900">7702001234567</span>
+            </div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[12px] font-medium bg-stone-100 text-stone-600 border border-stone-200 shrink-0">
+              <span class="w-1.5 h-1.5 rounded-full bg-stone-400"></span>
+              Sin revisar
+            </span>
+          </div>
+
+          <!-- Body Info: Categoría asignada y detalle de paquete -->
+          <div class="py-3 space-y-1.5">
+            <div class="flex items-baseline justify-between">
+              <span class="text-[12px] uppercase font-bold tracking-wider text-stone-500">Categoría asignada</span>
+              <span class="text-[12px] text-stone-500 font-medium">Alimentos no perecederos</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="text-[17px] font-bold text-stone-900 flex items-center gap-2">
+                <span>Arroz</span>
+                <span class="text-stone-400 font-normal">·</span>
+                <span class="text-brand-dark font-semibold">kg</span>
+              </div>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[12px] font-medium bg-stone-100 text-stone-700">
+                Cada paquete trae 0,5 kg
+              </span>
+            </div>
+            <div class="flex items-center gap-1.5 text-[13px] text-stone-500 pt-1">
+              <span class="material-symbols-outlined text-[16px] text-stone-400">person</span>
+              <span>Asociado por <strong class="text-stone-700 font-semibold">Daniela Méndez</strong> · hace 2 h</span>
+            </div>
+          </div>
+
+          <!-- Actions Buttons -->
+          <div class="pt-2 flex items-center gap-2">
+            <button type="button" class="flex-1 min-h-[48px] px-3 py-2 bg-stone-100 hover:bg-stone-200 active:bg-stone-300 text-stone-800 text-[15px] font-semibold rounded-lg border border-stone-200 transition-colors flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+              <span>Cambiar</span>
+            </button>
+            <button type="button" class="flex-1 min-h-[48px] px-3 py-2 bg-brand hover:bg-brand-dark active:opacity-90 text-white text-[15px] font-semibold rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">check_circle</span>
+              <span>Marcar revisado</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- TARJETA 2: Sin revisar (Agua potable · L con presentación de 0,6 L) -->
+        <article class="bg-white rounded-xl border border-stone-200 p-4 shadow-sm hover:border-stone-300 transition-colors">
+          <div class="flex items-start justify-between gap-2 pb-2.5 border-b border-stone-100">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[22px] text-brand shrink-0">barcode_scanner</span>
+              <span class="font-tabular font-bold text-[17px] tracking-wide text-stone-900">7702001045231</span>
+            </div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[12px] font-medium bg-stone-100 text-stone-600 border border-stone-200 shrink-0">
+              <span class="w-1.5 h-1.5 rounded-full bg-stone-400"></span>
+              Sin revisar
+            </span>
+          </div>
+
+          <div class="py-3 space-y-1.5">
+            <div class="flex items-baseline justify-between">
+              <span class="text-[12px] uppercase font-bold tracking-wider text-stone-500">Categoría asignada</span>
+              <span class="text-[12px] text-stone-500 font-medium">Agua y bebidas</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="text-[17px] font-bold text-stone-900 flex items-center gap-2">
+                <span>Agua potable</span>
+                <span class="text-stone-400 font-normal">·</span>
+                <span class="text-brand-dark font-semibold">Litros (L)</span>
+              </div>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[12px] font-medium bg-stone-100 text-stone-700">
+                Cada paquete trae 0,6 L
+              </span>
+            </div>
+            <div class="flex items-center gap-1.5 text-[13px] text-stone-500 pt-1">
+              <span class="material-symbols-outlined text-[16px] text-stone-400">person</span>
+              <span>Asociado por <strong class="text-stone-700 font-semibold">Jorge Rincón</strong> · hace 3 h</span>
+            </div>
+          </div>
+
+          <div class="pt-2 flex items-center gap-2">
+            <button type="button" class="flex-1 min-h-[48px] px-3 py-2 bg-stone-100 hover:bg-stone-200 active:bg-stone-300 text-stone-800 text-[15px] font-semibold rounded-lg border border-stone-200 transition-colors flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+              <span>Cambiar</span>
+            </button>
+            <button type="button" class="flex-1 min-h-[48px] px-3 py-2 bg-brand hover:bg-brand-dark active:opacity-90 text-white text-[15px] font-semibold rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">check_circle</span>
+              <span>Marcar revisado</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- TARJETA 3: Sin revisar (Pañales de adulto · unidad - Sin contenido adicional) -->
+        <article class="bg-white rounded-xl border border-stone-200 p-4 shadow-sm hover:border-stone-300 transition-colors">
+          <div class="flex items-start justify-between gap-2 pb-2.5 border-b border-stone-100">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[22px] text-brand shrink-0">barcode_scanner</span>
+              <span class="font-tabular font-bold text-[17px] tracking-wide text-stone-900">7702008765432</span>
+            </div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[12px] font-medium bg-stone-100 text-stone-600 border border-stone-200 shrink-0">
+              <span class="w-1.5 h-1.5 rounded-full bg-stone-400"></span>
+              Sin revisar
+            </span>
+          </div>
+
+          <div class="py-3 space-y-1.5">
+            <div class="flex items-baseline justify-between">
+              <span class="text-[12px] uppercase font-bold tracking-wider text-stone-500">Categoría asignada</span>
+              <span class="text-[12px] text-stone-500 font-medium">Aseo y cuidado</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="text-[17px] font-bold text-stone-900 flex items-center gap-2">
+                <span>Pañal adulto</span>
+                <span class="text-stone-400 font-normal">·</span>
+                <span class="text-brand-dark font-semibold">unidades</span>
+              </div>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[12px] font-medium bg-stone-100 text-stone-500 italic">
+                Sin contenido
+              </span>
+            </div>
+            <div class="flex items-center gap-1.5 text-[13px] text-stone-500 pt-1">
+              <span class="material-symbols-outlined text-[16px] text-stone-400">person</span>
+              <span>Asociado por <strong class="text-stone-700 font-semibold">Daniela Méndez</strong> · ayer 16:40</span>
+            </div>
+          </div>
+
+          <div class="pt-2 flex items-center gap-2">
+            <button type="button" class="flex-1 min-h-[48px] px-3 py-2 bg-stone-100 hover:bg-stone-200 active:bg-stone-300 text-stone-800 text-[15px] font-semibold rounded-lg border border-stone-200 transition-colors flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+              <span>Cambiar</span>
+            </button>
+            <button type="button" class="flex-1 min-h-[48px] px-3 py-2 bg-brand hover:bg-brand-dark active:opacity-90 text-white text-[15px] font-semibold rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">check_circle</span>
+              <span>Marcar revisado</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- TARJETA 4: Sin revisar (Lentejas · kg con paquete de 1,0 kg) -->
+        <article class="bg-white rounded-xl border border-stone-200 p-4 shadow-sm hover:border-stone-300 transition-colors">
+          <div class="flex items-start justify-between gap-2 pb-2.5 border-b border-stone-100">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[22px] text-brand shrink-0">barcode_scanner</span>
+              <span class="font-tabular font-bold text-[17px] tracking-wide text-stone-900">7702004519803</span>
+            </div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[12px] font-medium bg-stone-100 text-stone-600 border border-stone-200 shrink-0">
+              <span class="w-1.5 h-1.5 rounded-full bg-stone-400"></span>
+              Sin revisar
+            </span>
+          </div>
+
+          <div class="py-3 space-y-1.5">
+            <div class="flex items-baseline justify-between">
+              <span class="text-[12px] uppercase font-bold tracking-wider text-stone-500">Categoría asignada</span>
+              <span class="text-[12px] text-stone-500 font-medium">Alimentos no perecederos</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="text-[17px] font-bold text-stone-900 flex items-center gap-2">
+                <span>Lentejas</span>
+                <span class="text-stone-400 font-normal">·</span>
+                <span class="text-brand-dark font-semibold">kg</span>
+              </div>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[12px] font-medium bg-stone-100 text-stone-700">
+                Cada paquete trae 1 kg
+              </span>
+            </div>
+            <div class="flex items-center gap-1.5 text-[13px] text-stone-500 pt-1">
+              <span class="material-symbols-outlined text-[16px] text-stone-400">person</span>
+              <span>Asociado por <strong class="text-stone-700 font-semibold">Luis Gómez</strong> · ayer 11:15</span>
+            </div>
+          </div>
+
+          <div class="pt-2 flex items-center gap-2">
+            <button type="button" class="flex-1 min-h-[48px] px-3 py-2 bg-stone-100 hover:bg-stone-200 active:bg-stone-300 text-stone-800 text-[15px] font-semibold rounded-lg border border-stone-200 transition-colors flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+              <span>Cambiar</span>
+            </button>
+            <button type="button" class="flex-1 min-h-[48px] px-3 py-2 bg-brand hover:bg-brand-dark active:opacity-90 text-white text-[15px] font-semibold rounded-lg shadow-sm transition-all flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">check_circle</span>
+              <span>Marcar revisado</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- TARJETA 5: Ya revisada (Atún en lata - Solo botón "Cambiar" y etiqueta verde "Revisado") -->
+        <article class="bg-white rounded-xl border border-stone-200/90 p-4 shadow-sm opacity-95">
+          <div class="flex items-start justify-between gap-2 pb-2.5 border-b border-stone-100">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-[22px] text-emerald-700 shrink-0">check_box</span>
+              <span class="font-tabular font-bold text-[17px] tracking-wide text-stone-900">7702009841205</span>
+            </div>
+            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[12px] font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 shrink-0">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-600"></span>
+              Revisado
+            </span>
+          </div>
+
+          <div class="py-3 space-y-1.5">
+            <div class="flex items-baseline justify-between">
+              <span class="text-[12px] uppercase font-bold tracking-wider text-stone-500">Categoría asignada</span>
+              <span class="text-[12px] text-stone-500 font-medium">Alimentos no perecederos</span>
+            </div>
+            <div class="flex items-center justify-between">
+              <div class="text-[17px] font-bold text-stone-900 flex items-center gap-2">
+                <span>Atún y sardinas</span>
+                <span class="text-stone-400 font-normal">·</span>
+                <span class="text-brand-dark font-semibold">latas</span>
+              </div>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[12px] font-medium bg-stone-100 text-stone-500 italic">
+                Sin contenido
+              </span>
+            </div>
+            <div class="flex items-center gap-1.5 text-[13px] text-stone-500 pt-1">
+              <span class="material-symbols-outlined text-[16px] text-stone-400">verified</span>
+              <span>Validado por <strong class="text-stone-700 font-semibold">Joseph Quintero</strong> · 28 sep</span>
+            </div>
+          </div>
+
+          <!-- Solo acción: Cambiar -->
+          <div class="pt-2">
+            <button type="button" class="w-full min-h-[48px] px-3 py-2 bg-stone-100 hover:bg-stone-200 active:bg-stone-300 text-stone-800 text-[15px] font-semibold rounded-lg border border-stone-200 transition-colors flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[18px]">edit</span>
+              <span>Cambiar categoría</span>
+            </button>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- Nota de auditoría al pie de la lista -->
+      <div class="px-4 mt-6">
+        <div class="p-3.5 bg-stone-100 rounded-xl border border-stone-200 flex items-start gap-2.5 text-stone-600">
+          <span class="material-symbols-outlined text-[20px] text-stone-500 shrink-0 mt-0.5">verified_user</span>
+          <p class="text-[13px] leading-relaxed">
+            Al marcar un código como revisado, queda certificado para el escáner rápido de todos los acopios sin volver a solicitar confirmación al operador.
+          </p>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- 6. Barra de navegación inferior fija (5 pestañas, «Más» ACTIVA) -->
+    <nav aria-label="Navegación principal" class="fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-stone-200 px-2 py-1 shadow-[0_-2px_10px_rgba(0,0,0,0.04)] max-w-md mx-auto">
+      <div class="grid grid-cols-5 items-center">
+        <!-- 1. Inicio -->
+        <a href="#" class="flex flex-col items-center justify-center min-h-[52px] py-1 text-stone-500 hover:text-stone-900 transition-colors">
+          <span class="material-symbols-outlined text-[24px]">home</span>
+          <span class="text-[11px] font-medium tracking-[0.015em] mt-0.5">Inicio</span>
+        </a>
+        <!-- 2. Mapa -->
+        <a href="#" class="flex flex-col items-center justify-center min-h-[52px] py-1 text-stone-500 hover:text-stone-900 transition-colors">
+          <span class="material-symbols-outlined text-[24px]">map</span>
+          <span class="text-[11px] font-medium tracking-[0.015em] mt-0.5">Mapa</span>
+        </a>
+        <!-- 3. Causas -->
+        <a href="#" class="flex flex-col items-center justify-center min-h-[52px] py-1 text-stone-500 hover:text-stone-900 transition-colors">
+          <span class="material-symbols-outlined text-[24px]">volunteer_activism</span>
+          <span class="text-[11px] font-medium tracking-[0.015em] mt-0.5">Causas</span>
+        </a>
+        <!-- 4. Voluntariado -->
+        <a href="#" class="flex flex-col items-center justify-center min-h-[52px] py-1 text-stone-500 hover:text-stone-900 transition-colors">
+          <span class="material-symbols-outlined text-[24px]">groups</span>
+          <span class="text-[11px] font-medium tracking-[0.015em] mt-0.5">Voluntariado</span>
+        </a>
+        <!-- 5. Más (ACTIVO) -->
+        <a href="#" class="flex flex-col items-center justify-center min-h-[52px] py-1 text-brand font-semibold relative">
+          <div class="w-12 h-7 bg-[#b0efe1] text-admin-dark rounded-full flex items-center justify-center mb-0.5 transition-colors">
+            <span class="material-symbols-outlined text-[22px] fill-1">more_horiz</span>
+          </div>
+          <span class="text-[11px] font-bold tracking-[0.015em] text-admin-dark">Más</span>
+        </a>
+      </div>
+    </nav>
+
+  </div>
+
+</body>
+</html>

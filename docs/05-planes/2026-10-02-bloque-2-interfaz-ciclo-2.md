@@ -92,11 +92,11 @@ Cada caso lleva su prueba en la tarea que construye la pantalla.
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 Piezas compartidas | ⬜ | |
-| 2 C5 | ⬜ | |
-| 3 C6 | ⬜ | |
-| 4 Navegación | ⬜ | |
-| 5 Diseños pendientes | ⬜ | |
+| 1 Piezas compartidas | ✅ | El teclado de C4 tampoco ofrece la coma en categorías por unidades. Los ganchos de salida y ajuste entraron con C5 y C6 |
+| 2 C5 | ✅ | `ErrorApi` guarda los `detalles` del error para leer el saldo del 409 |
+| 3 C6 | ✅ | Un 422 `SIN_DIFERENCIA` dice que otra persona registró antes y vuelve a pedir el saldo |
+| 4 Navegación | ✅ | |
+| 5 Diseños pendientes | 🟡 | C18 exportada. Umbrales en C7, cámara del escáner y código nuevo se cortaron por tiempo en Stitch; falta encontrarlas en el lienzo, la maqueta y la aprobación |
 | 6 Umbrales en C7 | ⬜ | |
 | 7 Escáner | ⬜ | |
 | 8 C18 | ⬜ | |
