@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>C6 Conteo físico - Consola Acopio</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              teal: '#0F6E6E',
+              'teal-dark': '#085046',
+              'teal-light': '#E6F4F2',
+              'teal-subtle': '#F0FAF8'
+            },
+            amber: {
+              50: '#FFFBEB',
+              100: '#FEF3C7',
+              200: '#FDE68A',
+              800: '#92400E',
+              900: '#78350F'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+<style data-purpose="custom-utilities">
+    /* Optimización táctil para dispositivos móviles */
+    body {
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    input, textarea {
+      user-select: text;
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-900 antialiased flex justify-center min-h-screen">
+<!-- BEGIN: MobileDeviceContainer -->
+<!-- Contenedor adaptado a estándar móvil (390px responsivo) con borde sutil para desktop view -->
+<div class="w-full max-w-[420px] bg-white min-h-screen flex flex-col shadow-xl border-x border-gray-200 pb-20 relative">
+<!-- BEGIN: TopBar -->
+<!-- Cabecera institucional con marca Acopio, selector de sede y badge OP -->
+<header class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white sticky top-0 z-30">
+<!-- Logotipo y Distintivo de País -->
+<div class="flex items-center gap-1.5" data-purpose="brand-logo">
+<div class="w-8 h-8 rounded-lg bg-[#0F6E6E] flex items-center justify-center text-white shadow-sm">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24">
+<rect height="14" rx="2" ry="2" width="20" x="2" y="7"></rect>
+<path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+</svg>
+</div>
+<span class="font-bold text-gray-900 text-base tracking-tight">Acopio</span>
+<span class="text-[11px] font-bold bg-[#E6F4F2] text-[#0F6E6E] px-1.5 py-0.5 rounded tracking-wide uppercase">CO</span>
+</div>
+<!-- Selector de Ubicación Territorial -->
+<div class="flex items-center gap-1 text-xs font-medium text-gray-700 bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-full px-2.5 py-1 cursor-pointer transition">
+<svg class="w-3.5 h-3.5 text-[#0F6E6E]" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+<circle cx="12" cy="10" r="3"></circle>
+</svg>
+<span class="truncate max-w-[130px]">Parroquia San J...</span>
+<svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M6 9l6 6 6-6"></path>
+</svg>
+</div>
+<!-- Avatar de Operador -->
+<div class="w-7 h-7 rounded-full bg-gray-200 border border-gray-300 flex items-center justify-center text-[11px] font-bold text-gray-700 shadow-inner">
+        OP
+      </div>
+</header>
+<!-- END: TopBar -->
+<!-- Contenido Scrollable Principal -->
+<main class="flex-1 px-4 pt-4 pb-28">
+<!-- BEGIN: NavigationBreadcrumb -->
+<!-- Enlace táctil de retorno y título del proceso de auditoría física -->
+<section class="mb-4" data-purpose="section-header">
+<a class="inline-flex items-center text-sm font-medium text-[#0F6E6E] hover:underline mb-2 py-1" href="#">
+<svg class="w-4 h-4 mr-1 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Volver a inventario
+        </a>
+<h1 class="text-2xl font-extrabold text-gray-900 tracking-tight">Conteo físico</h1>
+<p class="text-xs text-gray-600 mt-1 leading-relaxed">
+          Cuenta lo que hay y escribe el total. El sistema calcula la diferencia.
+        </p>
+</section>
+<!-- END: NavigationBreadcrumb -->
+<!-- BEGIN: SearchAndScanner -->
+<!-- Barra de búsqueda rápida e integración con escaneo de código de barras -->
+<section class="flex gap-2 mb-4" data-purpose="search-and-scanner-bar">
+<div class="relative flex-1">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</span>
+<input class="w-full pl-9 pr-3 py-2 text-sm bg-white border border-gray-300 rounded-lg text-gray-900 font-medium focus:ring-2 focus:ring-[#0F6E6E] focus:border-transparent outline-none h-11" placeholder="Buscar insumo o categoría" type="text" value="Pañal adulto"/>
+</div>
+<button class="flex items-center justify-center gap-1.5 px-3.5 bg-[#0F6E6E] hover:bg-[#085046] active:scale-95 text-white text-xs font-semibold rounded-lg shadow transition h-11" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span>Escanear</span>
+</button>
+</section>
+<!-- END: SearchAndScanner -->
+<!-- BEGIN: ItemSummaryCard -->
+<!-- Tarjeta informativa del insumo en proceso de auditoría física -->
+<section class="border border-gray-200 rounded-xl p-3.5 bg-white shadow-xs mb-4" data-purpose="item-status-card">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-base font-bold text-gray-900">Pañal adulto</span>
+<span class="text-[11px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-medium">unidades</span>
+</div>
+<div class="text-xs text-gray-600 mt-1 flex items-center gap-1.5 flex-wrap">
+<span>En el sistema: <strong class="text-gray-900 font-semibold">120 und</strong></span>
+<span class="w-1 h-1 rounded-full bg-gray-400"></span>
+<span class="inline-flex items-center gap-1 text-gray-500">
+<svg class="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10" stroke-width="2"></circle>
+<path d="M12 6v6l4 2" stroke-linecap="round" stroke-width="2"></path>
+</svg>
+                Último movimiento hace 3 h
+              </span>
+</div>
+</div>
+<span class="bg-[#E6F4F2] text-[#0F6E6E] text-[11px] font-semibold px-2 py-0.5 rounded-md border border-[#0F6E6E]/20">
+            Auditando
+          </span>
+</div>
+</section>
+<!-- END: ItemSummaryCard -->
+<!-- BEGIN: DisplayCountValue -->
+<!-- Visualizador numérico principal de conteo -->
+<section class="border border-gray-200 rounded-xl p-4 bg-white text-center shadow-xs mb-3" data-purpose="count-display">
+<p class="text-[11px] font-bold text-gray-500 tracking-wider uppercase">CANTIDAD CONTADA</p>
+<div class="flex items-baseline justify-center gap-1.5 mt-0.5">
+<span class="text-4xl font-extrabold text-gray-900 tracking-tight" id="counted-number">112</span>
+<span class="text-base font-bold text-gray-500">und</span>
+</div>
+</section>
+<!-- END: DisplayCountValue -->
+<!-- BEGIN: TouchNumericKeypad -->
+<!-- Teclado en pantalla optimizado para campo y guantes (alto mínimo de 48px por botón) -->
+<section class="grid grid-cols-3 gap-2 mb-4" data-purpose="onscreen-keypad">
+<button class="h-12 bg-white border border-gray-200 hover:bg-gray-50 active:bg-gray-100 rounded-xl font-bold text-xl text-gray-800 shadow-sm flex items-center justify-center" type="button">1</button>
+<button class="h-12 bg-white border border-gray-200 hover:bg-gray-50 active:bg-gray-100 rounded-xl font-bold text-xl text-gray-800 shadow-sm flex items-center justify-center" type="button">2</button>
+<button class="h-12 bg-white border border-gray-200 hover:bg-gray-50 active:bg-gray-100 rounded-xl font-bold text-xl text-gray-800 shadow-sm flex items-center justify-center" type="button">3</button>
+<button class="h-12 bg-white border border-gray-200 hover:bg-gray-50 active:bg-gray-100 rounded-xl font-bold text-xl text-gray-800 shadow-sm flex items-center justify-center" type="button">4</button>
+<button class="h-12 bg-white border border-gray-200 hover:bg-gray-50 active:bg-gray-100 rounded-xl font-bold text-xl text-gray-800 shadow-sm flex items-center justify-center" type="button">5</button>
+<button class="h-12 bg-white border border-gray-200 hover:bg-gray-50 active:bg-gray-100 rounded-xl font-bold text-xl text-gray-800 shadow-sm flex items-center justify-center" type="button">6</button>
+<button class="h-12 bg-white border border-gray-200 hover:bg-gray-50 active:bg-gray-100 rounded-xl font-bold text-xl text-gray-800 shadow-sm flex items-center justify-center" type="button">7</button>
+<button class="h-12 bg-white border border-gray-200 hover:bg-gray-50 active:bg-gray-100 rounded-xl font-bold text-xl text-gray-800 shadow-sm flex items-center justify-center" type="button">8</button>
+<button class="h-12 bg-white border border-gray-200 hover:bg-gray-50 active:bg-gray-100 rounded-xl font-bold text-xl text-gray-800 shadow-sm flex items-center justify-center" type="button">9</button>
+<!-- Celda vacía/espaciador según pantalla C6 -->
+<div class="h-12 rounded-xl"></div>
+<button class="h-12 bg-white border border-gray-200 hover:bg-gray-50 active:bg-gray-100 rounded-xl font-bold text-xl text-gray-800 shadow-sm flex items-center justify-center" type="button">0</button>
+<button aria-label="Borrar dígito" class="h-12 bg-white border border-gray-200 hover:bg-gray-50 active:bg-gray-100 rounded-xl font-bold text-xl text-gray-700 shadow-sm flex items-center justify-center" type="button">
+<svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 4H8l-7 8 7 8h13a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2z"></path>
+<line x1="18" x2="12" y1="9" y2="15"></line>
+<line x1="12" x2="18" y1="9" y2="15"></line>
+</svg>
+</button>
+</section>
+<!-- END: TouchNumericKeypad -->
+<!-- BEGIN: DifferenceAlertBox -->
+<!-- Franja de alerta/cálculo automático de diferencia en tono ámbar -->
+<section class="bg-amber-50 border border-amber-200 rounded-xl p-3.5 mb-4" data-purpose="difference-calculation-alert">
+<div class="flex items-start gap-2.5">
+<div class="p-1 rounded-md bg-amber-100 text-amber-800 mt-0.5">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24">
+<polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+<polyline points="17 18 23 18 23 12"></polyline>
+</svg>
+</div>
+<div>
+<div class="text-sm font-bold text-amber-900 leading-tight">Diferencia −8 und</div>
+<div class="text-xs text-amber-800 font-medium mt-0.5">
+              El saldo pasará de <span class="font-bold">120</span> a <span class="font-bold">112</span>
+</div>
+</div>
+</div>
+</section>
+<!-- END: DifferenceAlertBox -->
+<!-- BEGIN: AdjustmentReasonField -->
+<!-- Campo obligatorio de justificación con contador de caracteres según RN-03 -->
+<section class="mb-4" data-purpose="reason-input-group">
+<div class="flex items-center justify-between mb-1.5">
+<label class="text-xs font-bold text-gray-900" for="adjustment-reason">
+            Motivo del ajuste <span class="text-red-500">*</span>
+</label>
+<span class="text-[10px] text-gray-500 font-medium">Obligatorio (mín. 10 caracteres)</span>
+</div>
+<textarea class="w-full text-xs text-gray-800 border border-gray-300 rounded-lg p-2.5 focus:ring-2 focus:ring-[#0F6E6E] focus:border-transparent outline-none resize-none leading-relaxed placeholder-gray-400" id="adjustment-reason" placeholder="Ej: Paquetes rotos por humedad en la estiba 3" rows="2">Paquetes rotos por humedad en la estiba 3</textarea>
+<div class="flex justify-between items-center text-[11px] text-gray-500 mt-1 px-0.5">
+<span>Obligatorio según regla RN-03</span>
+<span class="font-medium text-[#0F6E6E]">41 caracteres ingresados</span>
+</div>
+</section>
+<!-- END: AdjustmentReasonField -->
+<!-- BEGIN: AuditNoteCard -->
+<!-- Mensaje de trazabilidad e integridad de auditoría -->
+<section class="bg-gray-50 border border-gray-200 rounded-xl p-3 flex items-start gap-2.5 mb-2" data-purpose="audit-disclaimer">
+<svg class="w-4 h-4 text-gray-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+<path d="m9 12 2 2 4-4"></path>
+</svg>
+<p class="text-[11px] text-gray-600 leading-snug">
+          Los ajustes no se borran ni se editan. Quedan en el historial y en la bitácora con tu nombre.
+        </p>
+</section>
+<!-- END: AuditNoteCard -->
+</main>
+<!-- BEGIN: FixedFooterActions -->
+<!-- Contenedor fijo flotante que aloja el botón de acción principal y la barra de navegación -->
+<div class="fixed bottom-0 left-0 right-0 max-w-[420px] mx-auto bg-white/95 backdrop-blur-md border-t border-gray-200 z-40">
+<!-- Botón de Acción Principal -->
+<div class="px-4 pt-2.5 pb-2">
+<button class="w-full h-12 bg-[#0F6E6E] hover:bg-[#085046] active:scale-[0.99] text-white font-bold rounded-xl shadow flex items-center justify-center gap-2 transition" data-purpose="submit-adjustment-btn" type="button">
+<svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"></polyline>
+</svg>
+<span class="text-sm font-semibold tracking-wide">Registrar ajuste</span>
+</button>
+</div>
+<!-- BEGIN: BottomNavigationBar -->
+<!-- Barra inferior táctil de 5 accesos con pestaña "Más" en estado activo -->
+<nav class="flex items-center justify-around px-2 pt-1 pb-2 border-t border-gray-100" data-purpose="bottom-nav">
+<!-- Pestaña Inicio -->
+<a class="flex flex-col items-center justify-center py-1 px-2 text-gray-500 hover:text-gray-900 group" href="#">
+<svg class="w-5 h-5 text-gray-400 group-hover:text-gray-700" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] font-medium text-gray-500 mt-1">Inicio</span>
+</a>
+<!-- Pestaña Mapa -->
+<a class="flex flex-col items-center justify-center py-1 px-2 text-gray-500 hover:text-gray-900 group" href="#">
+<svg class="w-5 h-5 text-gray-400 group-hover:text-gray-700" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></polygon>
+<line stroke-width="2" x1="8" x2="8" y1="2" y2="18"></line>
+<line stroke-width="2" x1="16" x2="16" y1="6" y2="22"></line>
+</svg>
+<span class="text-[10px] font-medium text-gray-500 mt-1">Mapa</span>
+</a>
+<!-- Pestaña Causas -->
+<a class="flex flex-col items-center justify-center py-1 px-2 text-gray-500 hover:text-gray-900 group" href="#">
+<svg class="w-5 h-5 text-gray-400 group-hover:text-gray-700" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] font-medium text-gray-500 mt-1">Causas</span>
+</a>
+<!-- Pestaña Voluntariado -->
+<a class="flex flex-col items-center justify-center py-1 px-2 text-gray-500 hover:text-gray-900 group" href="#">
+<svg class="w-5 h-5 text-gray-400 group-hover:text-gray-700" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+<span class="text-[10px] font-medium text-gray-500 mt-1">Voluntariado</span>
+</a>
+<!-- Pestaña Más (ACTIVA con píldora teal institucional) -->
+<a class="flex flex-col items-center justify-center py-0.5 px-3" href="#">
+<div class="bg-[#E6F4F2] text-[#0F6E6E] px-3.5 py-1 rounded-full flex items-center justify-center">
+<svg class="w-5 h-5 text-[#0F6E6E]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<circle cx="12" cy="12" fill="currentColor" r="1.5"></circle>
+<circle cx="19" cy="12" fill="currentColor" r="1.5"></circle>
+<circle cx="5" cy="12" fill="currentColor" r="1.5"></circle>
+</svg>
+</div>
+<span class="text-[10px] font-bold text-[#0F6E6E] mt-0.5">Más</span>
+</a>
+</nav>
+<!-- END: BottomNavigationBar -->
+</div>
+<!-- END: FixedFooterActions -->
+</div>
+<!-- END: MobileDeviceContainer -->
+</body></html>
