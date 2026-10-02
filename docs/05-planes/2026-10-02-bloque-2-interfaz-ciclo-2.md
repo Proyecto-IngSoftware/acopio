@@ -96,8 +96,8 @@ Cada caso lleva su prueba en la tarea que construye la pantalla.
 | 2 C5 | ✅ | `ErrorApi` guarda los `detalles` del error para leer el saldo del 409 |
 | 3 C6 | ✅ | Un 422 `SIN_DIFERENCIA` dice que otra persona registró antes y vuelve a pedir el saldo |
 | 4 Navegación | ✅ | |
-| 5 Diseños pendientes | 🟡 | C18 exportada. Umbrales en C7, cámara del escáner y código nuevo se cortaron por tiempo en Stitch; falta encontrarlas en el lienzo, la maqueta y la aprobación |
-| 6 Umbrales en C7 | ⬜ | |
+| 5 Diseños pendientes | 🟡 | Maqueta publicada con los umbrales de C7, el escáner, el código nuevo y C18. Stitch cortó por tiempo las tres primeras, así que se armaron con los tokens del tema, como C3. Falta la aprobación de Joseph |
+| 6 Umbrales en C7 | 🟡 | Listos `useFijarUmbral`, `useQuitarUmbral` y `errorUmbral`, con pruebas. La pantalla espera la maqueta |
 | 7 Escáner | ⬜ | |
 | 8 C18 | ⬜ | |
 | 9 Cierre | ⬜ | |
