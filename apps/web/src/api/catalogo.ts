@@ -201,3 +201,30 @@ export function useAsociarCodigo() {
     onSuccess: () => void consultas.invalidateQueries({ queryKey: ['codigos-barras'] }),
   });
 }
+
+/** C18: todos los códigos aprendidos, del más nuevo al más viejo (RF-CAT-004). */
+export function useCodigos() {
+  return useQuery<CodigoBarras[], ErrorApi>({
+    queryKey: ['codigos-barras'],
+    queryFn: async () =>
+      (await desenvolver(api.GET('/api/codigos-barras', {}))) as unknown as CodigoBarras[],
+  });
+}
+
+export interface CambiosCodigo {
+  categoriaId?: string;
+  contenido?: number | null;
+  revisado?: boolean;
+}
+
+/** C18: el Administrador cambia la categoría o el contenido de un código, o lo marca revisado. */
+export function useEditarCodigo() {
+  const consultas = useQueryClient();
+  return useMutation<CodigoBarras, ErrorApi, { ean: string; cambios: CambiosCodigo }>({
+    mutationFn: async ({ ean, cambios }) =>
+      (await desenvolver(
+        api.PATCH('/api/codigos-barras/{ean}', { params: { path: { ean } }, body: cambios }),
+      )) as unknown as CodigoBarras,
+    onSuccess: () => void consultas.invalidateQueries({ queryKey: ['codigos-barras'] }),
+  });
+}
