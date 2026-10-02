@@ -164,7 +164,7 @@ function HojaCambiar({ codigo, alCerrar }: { codigo: CodigoBarras; alCerrar: () 
         >
           Cada presentación trae (opcional)
         </label>
-        <span className="flex items-baseline gap-space-xs rounded-xl border-[1.5px] border-outline px-space-sm">
+        <span className="con-unidad flex items-baseline gap-space-xs rounded-xl border-[1.5px] border-outline px-space-sm">
           <input
             id="codigo-cambiar-contenido"
             inputMode="decimal"

@@ -169,7 +169,7 @@ export function HojaCodigoNuevo({
         <label htmlFor="codigo-contenido" className="text-label-md font-bold text-on-surface">
           Cada presentación trae (opcional)
         </label>
-        <span className="flex items-baseline gap-space-xs rounded-xl border-[1.5px] border-outline px-space-sm">
+        <span className="con-unidad flex items-baseline gap-space-xs rounded-xl border-[1.5px] border-outline px-space-sm">
           <input
             id="codigo-contenido"
             inputMode="decimal"

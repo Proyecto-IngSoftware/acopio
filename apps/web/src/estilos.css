@@ -25,6 +25,15 @@ body {
   outline-offset: 2px;
 }
 
+/* Campo con la unidad pegada: el foco rodea el campo y la unidad, y no tapa la unidad */
+.con-unidad:focus-within {
+  outline: 3px solid var(--surface-tint);
+  outline-offset: 2px;
+}
+.con-unidad :focus-visible {
+  outline: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;

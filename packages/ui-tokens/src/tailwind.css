@@ -26,6 +26,7 @@
   --color-outline: var(--outline);
   --color-outline-variant: var(--outline-variant);
   --color-inverse-surface: var(--inverse-surface);
+  --color-inverse-on-surface: var(--inverse-on-surface);
 
   --color-secondary: var(--secondary);
   --color-secondary-container: var(--secondary-container);

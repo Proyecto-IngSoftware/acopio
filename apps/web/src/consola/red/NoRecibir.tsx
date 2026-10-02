@@ -154,9 +154,7 @@ function Fila({
           className="flex min-h-[48px] min-w-0 flex-1 flex-col items-start text-left"
         >
           <span className="text-body-lg text-on-surface">{nombre}</span>
-          <span
-            className={`flex items-center gap-1 text-body-sm tabular-nums ${umbral ? 'text-on-surface-variant' : 'text-outline'}`}
-          >
+          <span className="flex items-center gap-1 text-body-sm text-on-surface-variant tabular-nums">
             {umbral && <Icono nombre="tune" className="text-[16px]" />}
             {umbral
               ? `Mín. ${formatearNumero(umbral.minimo)} · Máx. ${formatearCantidad(umbral.maximo, unidad)}`
@@ -240,7 +238,7 @@ function HojaUmbral({
       <label htmlFor={id} className="text-label-md font-bold text-on-surface">
         {etiqueta}
       </label>
-      <span className="flex items-baseline gap-space-xs rounded-xl border-[1.5px] border-outline bg-surface-container-lowest px-space-sm">
+      <span className="con-unidad flex items-baseline gap-space-xs rounded-xl border-[1.5px] border-outline bg-surface-container-lowest px-space-sm">
         <input
           id={id}
           inputMode={categoria.unidadBase === 'UNIDAD' ? 'numeric' : 'decimal'}
