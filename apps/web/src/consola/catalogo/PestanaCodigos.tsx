@@ -15,6 +15,8 @@ import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
 import { Segmentado } from '../../componentes/Segmentado';
 import { haceCuanto } from '../../formato';
+import { leerContenido } from '../inventario/contenido';
+import { limpiarCantidad } from '../inventario/TecladoCantidad';
 import { FormularioError } from './FormularioError';
 
 type Filtro = 'sin-revisar' | 'todos';
@@ -100,12 +102,6 @@ export function PestanaCodigos() {
 }
 
 const escribir = (n: number | null) => (n === null ? '' : String(n).replace('.', ','));
-/** «0,5» → 0.5; vacío → null, que quita el contenido. */
-const leer = (texto: string) => {
-  const n = Number(texto.replace(',', '.'));
-  return texto.trim() === '' || !Number.isFinite(n) ? null : n;
-};
-
 /** Cambiar la categoría o el contenido de un código. Guardar no lo marca revisado. */
 function HojaCambiar({ codigo, alCerrar }: { codigo: CodigoBarras; alCerrar: () => void }) {
   const [buscando, fijarBuscando] = useState(false);
@@ -115,7 +111,8 @@ function HojaCambiar({ codigo, alCerrar }: { codigo: CodigoBarras; alCerrar: () 
   const resultados = useBuscarCategorias(buscando ? q : '');
   const editar = useEditarCodigo();
   const unidad = categoria?.unidadBase ?? codigo.unidad;
-  const nuevoContenido = leer(contenido);
+  const contenidoLeido = leerContenido(contenido, unidad);
+  const nuevoContenido = contenidoLeido.valor;
 
   return (
     <Hoja titulo={`Código ${codigo.ean}`} alCerrar={alCerrar}>
@@ -170,16 +167,25 @@ function HojaCambiar({ codigo, alCerrar }: { codigo: CodigoBarras; alCerrar: () 
             inputMode="decimal"
             autoComplete="off"
             value={contenido}
-            onChange={(e) => fijarContenido(e.target.value.replace(/[^\d,]/g, ''))}
+            onChange={(e) => fijarContenido(limpiarCantidad(e.target.value))}
             className="min-h-[48px] w-full min-w-0 bg-transparent text-body-lg text-on-surface tabular-nums"
           />
           <span className="text-body-md text-on-surface-variant">{SIMBOLO_UNIDAD[unidad]}</span>
         </span>
       </div>
+      {contenidoLeido.error && (
+        <p
+          role="alert"
+          className="flex gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
+        >
+          <Icono nombre="error" className="text-[20px]" />
+          {contenidoLeido.error}
+        </p>
+      )}
       <FormularioError mensaje={editar.error?.message} />
       <Boton
         className="min-h-[56px] w-full"
-        disabled={editar.isPending || buscando}
+        disabled={editar.isPending || buscando || Boolean(contenidoLeido.error)}
         onClick={() =>
           editar.mutate(
             {

@@ -10,7 +10,7 @@ import { Icono } from '../../componentes/Icono';
 import { Encabezado } from '../Encabezado';
 import { BuscadorCategoria, type Leido } from './BuscadorCategoria';
 import { TarjetaSaldo } from './TarjetaSaldo';
-import { aNumero, TecladoCantidad, teclear } from './TecladoCantidad';
+import { aNumero, limpiarCantidad, TecladoCantidad, teclear } from './TecladoCantidad';
 
 const hoy = () => new Date().toISOString().slice(0, 10);
 const EN_LA_UNIDAD = { LITRO: 'litros', KILOGRAMO: 'kilos', UNIDAD: 'unidades' } as const;
@@ -35,6 +35,8 @@ export function EntradaRapida() {
   const porPresentacion = leido?.contenido ?? null;
   const decimales = !porPresentacion && categoria?.unidadBase !== 'UNIDAD';
   const tecleado = aNumero(cantidad);
+  // Escrita con el teclado del equipo, la coma puede llegar donde no van decimales
+  const fraccion = Boolean(categoria) && !decimales && cantidad.includes(',');
   const n = porPresentacion ? Math.round(tecleado * porPresentacion * 1000) / 1000 : tecleado;
   const falta = categoria?.perecedero && !vence;
   const noSeRecibe = categoria && noRecibir.data?.some((x) => x.categoriaId === categoria.id);
@@ -50,7 +52,7 @@ export function EntradaRapida() {
 
   const enviar = (e: FormEvent) => {
     e.preventDefault();
-    if (!categoria || n <= 0 || falta) return;
+    if (!categoria || n <= 0 || falta || fraccion) return;
     const elegida = categoria;
     registrar.mutate(
       {
@@ -157,9 +159,7 @@ export function EntradaRapida() {
               inputMode="decimal"
               autoComplete="off"
               value={cantidad}
-              onChange={(e) =>
-                fijarCantidad(e.target.value.replace(decimales ? /[^\d,]/g : /\D/g, ''))
-              }
+              onChange={(e) => fijarCantidad(limpiarCantidad(e.target.value))}
               placeholder="0"
               // Crece con lo escrito: la unidad queda pegada al número
               style={{ width: `${Math.max(cantidad.length, 1) + 0.5}ch` }}
@@ -198,6 +198,18 @@ export function EntradaRapida() {
           onTecla={(t) => fijarCantidad((c) => teclear(c, t, decimales))}
         />
 
+        {fraccion && (
+          <p
+            role="alert"
+            className="flex gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
+          >
+            <Icono nombre="error" className="text-[20px]" />
+            {porPresentacion
+              ? 'Las presentaciones se cuentan enteras.'
+              : 'En unidades, la cantidad va sin decimales.'}
+          </p>
+        )}
+
         {categoria?.perecedero && (
           <div className="flex flex-col gap-space-xs">
             <label htmlFor="entrada-vence" className="text-label-md font-bold text-on-surface">
@@ -229,7 +241,7 @@ export function EntradaRapida() {
         <Boton
           type="submit"
           className="min-h-[56px] w-full text-body-lg"
-          disabled={!categoria || n <= 0 || !!falta || registrar.isPending}
+          disabled={!categoria || n <= 0 || !!falta || fraccion || registrar.isPending}
         >
           <Icono nombre="check" className="text-[22px]" />
           {categoria && n > 0

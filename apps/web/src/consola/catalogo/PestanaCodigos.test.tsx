@@ -45,6 +45,14 @@ const CODIGOS = [
 ];
 const BUSQUEDA = [
   {
+    id: 'c5',
+    nombre: 'Colchoneta',
+    grupo: 'ROPA_Y_ABRIGO',
+    unidadBase: 'UNIDAD',
+    perecedero: false,
+    puntaje: 0.8,
+  },
+  {
     id: 'c3',
     nombre: 'Agua potable',
     grupo: 'AGUA_Y_BEBIDAS',
@@ -118,6 +126,37 @@ describe('C18 Códigos de barras', () => {
       contenido: null,
     });
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
+  });
+
+  it('pasar a una categoría por unidades con un contenido con decimales no deja guardar', async () => {
+    pantalla();
+    const arroz = await tarjeta('7702001234567');
+    await userEvent.click(within(arroz).getByRole('button', { name: 'Cambiar' }));
+    const hoja = screen.getByRole('dialog', { name: 'Código 7702001234567' });
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Otra categoría' }));
+    await userEvent.type(within(hoja).getByRole('searchbox', { name: 'Categoría' }), 'colch');
+    await userEvent.click(await within(hoja).findByRole('button', { name: /Colchoneta/ }));
+    expect(within(hoja).getByRole('alert')).toHaveTextContent(
+      'En unidades, el contenido va sin decimales.',
+    );
+    expect(within(hoja).getByRole('button', { name: 'Guardar' })).toBeDisabled();
+  });
+
+  it('un contenido mal escrito no borra el que había', async () => {
+    pantalla();
+    const arroz = await tarjeta('7702001234567');
+    await userEvent.click(within(arroz).getByRole('button', { name: 'Cambiar' }));
+    const hoja = screen.getByRole('dialog', { name: 'Código 7702001234567' });
+    const campo = within(hoja).getByLabelText(/Cada presentación trae/);
+    await userEvent.clear(campo);
+    await userEvent.type(campo, '1,2,3');
+    expect(campo).toHaveValue('1,23');
+    await userEvent.clear(campo);
+    await userEvent.type(campo, '0');
+    expect(within(hoja).getByRole('alert')).toHaveTextContent(
+      'El contenido tiene que ser mayor que cero.',
+    );
+    expect(within(hoja).getByRole('button', { name: 'Guardar' })).toBeDisabled();
   });
 
   it('sin códigos por revisar lo dice', async () => {

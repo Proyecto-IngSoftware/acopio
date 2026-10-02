@@ -16,6 +16,7 @@ describe('códigos de barras', () => {
   let auditor: { token: string };
   let agua: string;
   let otra: string;
+  let panal: string;
   const como = (t: string) => ({ authorization: `Bearer ${t}` });
   const ean = '7702001043220';
 
@@ -38,6 +39,11 @@ describe('códigos de barras', () => {
     otra = (
       await a.prisma.categoria.create({
         data: { nombre: unico('Otra EAN '), grupo: 'AGUA_Y_BEBIDAS', unidad_base: 'LITRO' },
+      })
+    ).id;
+    panal = (
+      await a.prisma.categoria.create({
+        data: { nombre: unico('Pañal EAN '), grupo: 'ADULTO_MAYOR', unidad_base: 'UNIDAD' },
       })
     ).id;
   });
@@ -128,6 +134,35 @@ describe('códigos de barras', () => {
     }
     const g = await a.http().get(`/api/codigos-barras/${ean}`).set(como(op.token)).expect(200);
     expect(g.body.categoriaId).toBe(agua);
+  });
+
+  it('en una categoría por unidades el contenido va entero: 422 al asociar y al editar', async () => {
+    const r = await a
+      .http()
+      .post('/api/codigos-barras')
+      .set(como(op.token))
+      .send({ ean: '7702001099991', categoriaId: panal, contenido: 2.5 })
+      .expect(422);
+    expect(r.body.codigo).toBe('CONTENIDO_FRACCIONARIO');
+    await a
+      .http()
+      .post('/api/codigos-barras')
+      .set(como(op.token))
+      .send({ ean: '7702001099992', categoriaId: otra, contenido: 0.6 })
+      .expect(201);
+    const m = await a
+      .http()
+      .patch('/api/codigos-barras/7702001099992')
+      .set(como(tokenAdmin))
+      .send({ categoriaId: panal })
+      .expect(422);
+    expect(m.body.codigo).toBe('CONTENIDO_FRACCIONARIO');
+    await a
+      .http()
+      .patch('/api/codigos-barras/7702001099992')
+      .set(como(tokenAdmin))
+      .send({ categoriaId: panal, contenido: 12 })
+      .expect(200);
   });
 
   it('el Administrador lista los sin revisar y los revisa', async () => {

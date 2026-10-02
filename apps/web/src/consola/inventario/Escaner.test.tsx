@@ -127,6 +127,30 @@ describe('Escáner', () => {
     });
   });
 
+  it('en una categoría por unidades el contenido va sin decimales', async () => {
+    leera('7702001234567');
+    pantalla({
+      'GET /api/categorias/buscar': [
+        { ...ARROZ, id: 'c4', nombre: 'Pañal adulto', unidadBase: 'UNIDAD', perecedero: false },
+      ],
+      'GET /api/codigos-barras/7702001234567': conEstado(404, {
+        estado: 404,
+        codigo: 'EAN_DESCONOCIDO',
+        mensaje: 'Este código no está asociado a ninguna categoría',
+      }),
+    });
+    await escanear();
+    const hoja = await screen.findByRole('dialog', { name: 'Código nuevo' });
+    await userEvent.type(within(hoja).getByRole('searchbox', { name: 'Categoría' }), 'panal');
+    await userEvent.click(await within(hoja).findByRole('button', { name: /Pañal adulto/ }));
+    await userEvent.type(within(hoja).getByLabelText(/Cada presentación trae/), '2.5');
+    expect(within(hoja).getByLabelText(/Cada presentación trae/)).toHaveValue('2,5');
+    expect(within(hoja).getByRole('alert')).toHaveTextContent(
+      'En unidades, el contenido va sin decimales.',
+    );
+    expect(within(hoja).getByRole('button', { name: 'Asociar y seguir' })).toBeDisabled();
+  });
+
   it('«Ahora no» cierra la hoja sin asociar', async () => {
     leera('7702001234567');
     const { elegida } = pantalla({

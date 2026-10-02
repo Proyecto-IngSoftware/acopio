@@ -9,6 +9,16 @@ export const aNumero = (texto: string) => {
   return Number.isFinite(n) ? n : 0;
 };
 
+/** Lo escrito con el teclado del equipo: el punto cuenta como coma, una sola coma, hasta 3
+ *  decimales y solo cifras. Así «2.5» no se vuelve 25. */
+export function limpiarCantidad(texto: string): string {
+  const [entera = '', ...resto] = texto
+    .replace(/\./g, ',')
+    .replace(/[^\d,]/g, '')
+    .split(',');
+  return resto.length ? `${entera},${resto.join('').slice(0, 3)}` : entera;
+}
+
 /** Agrega una tecla a la cantidad: una sola coma y hasta 3 decimales. Sin decimales, la coma no cuenta. */
 export function teclear(actual: string, tecla: Tecla, decimales = true): string {
   if (tecla === 'Borrar') return actual.slice(0, -1);

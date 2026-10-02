@@ -52,6 +52,16 @@ async function conAutores(db: Lector, filas: Fila[]) {
   );
   return filas.map((f) => ({ ...vista(f), creadoPor: nombres.get(f.creado_por) ?? null }));
 }
+/** En una categoría por unidades, una presentación trae un número entero de unidades. */
+function exigirContenidoEntero(unidad: string, contenido: number | null) {
+  if (unidad === 'UNIDAD' && contenido !== null && !Number.isInteger(contenido))
+    throw new ErrorDominio(
+      'CONTENIDO_FRACCIONARIO',
+      'En una categoría por unidades, el contenido va sin decimales',
+      422,
+    );
+}
+
 const conAutor = async (db: Lector, f: Fila) => (await conAutores(db, [f]))[0]!;
 
 /** EAN → categoría (RF-CAT-004). Un EAN de un Operador queda sin revisar. */
@@ -99,6 +109,7 @@ export class CodigosBarrasService {
         'La categoría no existe o está archivada',
         404,
       );
+    exigirContenidoEntero(cat.unidad_base, datos.contenido);
     if (await this.prisma.codigoBarras.findUnique({ where: { ean: datos.ean } })) {
       throw new ErrorDominio(
         'EAN_YA_ASOCIADO',
@@ -150,8 +161,10 @@ export class CodigosBarrasService {
       revisado?: boolean;
     },
   ) {
+    let unidadNueva: string | undefined;
     if (cambios.categoriaId) {
       const cat = await this.prisma.categoria.findUnique({ where: { id: cambios.categoriaId } });
+      unidadNueva = cat?.unidad_base;
       if (!cat || cat.archivada) {
         throw new ErrorDominio(
           'CATEGORIA_NO_ENCONTRADA',
@@ -168,6 +181,15 @@ export class CodigosBarrasService {
           'Este código no está asociado a ninguna categoría',
           404,
         );
+      // La regla mira cómo queda el código: la categoría y el contenido nuevos o los de antes
+      exigirContenidoEntero(
+        unidadNueva ?? antes.categoria.unidad_base,
+        cambios.contenido !== undefined
+          ? cambios.contenido
+          : antes.contenido === null
+            ? null
+            : Number(antes.contenido),
+      );
       const f = await tx.codigoBarras.update({
         where: { ean },
         data: {

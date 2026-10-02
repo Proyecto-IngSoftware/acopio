@@ -21,6 +21,7 @@ import { useSesion } from '../../sesion/Sesion';
 import { Encabezado } from '../Encabezado';
 import { FormularioError } from '../catalogo/FormularioError';
 import { Buscador } from './Buscador';
+import { limpiarCantidad } from '../inventario/TecladoCantidad';
 import { errorUmbral } from './umbral';
 
 type Umbral = { minimo: number; maximo: number };
@@ -244,7 +245,7 @@ function HojaUmbral({
           inputMode={categoria.unidadBase === 'UNIDAD' ? 'numeric' : 'decimal'}
           autoComplete="off"
           value={valor}
-          onChange={(e) => cambiar(e.target.value.replace(/[^\d,]/g, ''))}
+          onChange={(e) => cambiar(limpiarCantidad(e.target.value))}
           aria-invalid={Boolean(error)}
           aria-describedby={error ? 'umbral-error' : undefined}
           className="min-h-[56px] w-full min-w-0 bg-transparent text-headline-sm font-bold text-on-surface tabular-nums"

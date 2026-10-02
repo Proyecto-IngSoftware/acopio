@@ -76,7 +76,7 @@ const pantalla = (extra: Record<string, unknown> = {}) => {
 };
 
 const elegir = async (texto: string, nombre: RegExp) => {
-  await userEvent.type(screen.getByRole('searchbox', { name: 'Categoría' }), texto);
+  await userEvent.type(await screen.findByRole('searchbox', { name: 'Categoría' }), texto);
   await userEvent.click(await screen.findByRole('button', { name: nombre }));
 };
 const teclear = async (...teclas: string[]) => {
@@ -147,6 +147,17 @@ describe('C6 Conteo físico', () => {
     expect(screen.getByLabelText('Cantidad')).toHaveValue('');
   });
 
+  it('en unidades, un conteo con decimales avisa y no se registra', async () => {
+    pantalla();
+    await elegir('panal', /Pañal adulto/);
+    await userEvent.type(screen.getByLabelText('Cantidad'), '2.5');
+    await userEvent.type(motivo(), 'Paquetes rotos por humedad');
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'En unidades, la cantidad va sin decimales.',
+    );
+    expect(registrar()).toBeDisabled();
+  });
+
   it('acepta un conteo de cero', async () => {
     pantalla();
     await elegir('panal', /Pañal adulto/);
@@ -202,6 +213,20 @@ describe('C6 Conteo físico', () => {
     await userEvent.type(motivo(), 'Paquetes rotos por humedad');
     await userEvent.click(registrar());
     expect(await screen.findByText('No tienes acceso a este acopio')).toBeInTheDocument();
+  });
+
+  it('si no puede leer los saldos muestra el error de la API y no el formulario', async () => {
+    pantalla({
+      'GET /api/acopios/x1/saldos': conEstado(403, {
+        estado: 403,
+        codigo: 'PROHIBIDO',
+        mensaje: 'No puedes consultar el inventario de este acopio',
+      }),
+    });
+    expect(
+      await screen.findByText('No puedes consultar el inventario de este acopio'),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole('searchbox', { name: 'Categoría' })).not.toBeInTheDocument();
   });
 
   it('no tiene violaciones graves de accesibilidad', async () => {

@@ -7,6 +7,8 @@ import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
 import { FormularioError } from '../catalogo/FormularioError';
 import { abrirCamara } from './camara';
+import { leerContenido } from './contenido';
+import { limpiarCantidad } from './TecladoCantidad';
 
 /** La cámara a pantalla completa (RF-INV-002). Entrega el primer código que lee. Si el
  *  navegador niega el permiso o no hay cámara, avisa con `alFallar`. */
@@ -96,12 +98,6 @@ export function VistaCamara({
   );
 }
 
-/** «12,5» → 12.5; vacío o inválido → null. */
-const leer = (texto: string) => {
-  const n = Number(texto.replace(',', '.'));
-  return texto.trim() === '' || !Number.isFinite(n) || n <= 0 ? null : n;
-};
-
 /** Código que Acopio no conoce: se asocia a una categoría, con lo que trae cada presentación
  *  si se sabe, y queda sin revisar para el Administrador (RF-CAT-004). */
 export function HojaCodigoNuevo({
@@ -118,7 +114,8 @@ export function HojaCodigoNuevo({
   const [contenido, fijarContenido] = useState('');
   const resultados = useBuscarCategorias(categoria ? '' : q);
   const asociar = useAsociarCodigo();
-  const cantidad = leer(contenido);
+  const contenidoLeido = leerContenido(contenido, categoria?.unidadBase);
+  const cantidad = contenidoLeido.valor;
 
   return (
     <Hoja titulo="Código nuevo" alCerrar={alCerrar}>
@@ -175,7 +172,7 @@ export function HojaCodigoNuevo({
             inputMode="decimal"
             autoComplete="off"
             value={contenido}
-            onChange={(e) => fijarContenido(e.target.value.replace(/[^\d,]/g, ''))}
+            onChange={(e) => fijarContenido(limpiarCantidad(e.target.value))}
             className="min-h-[48px] w-full min-w-0 bg-transparent text-body-lg text-on-surface tabular-nums"
           />
           {categoria && (
@@ -188,10 +185,19 @@ export function HojaCodigoNuevo({
           Si lo llenas, la entrada cuenta presentaciones. Un administrador lo revisará.
         </span>
       </div>
+      {contenidoLeido.error && (
+        <p
+          role="alert"
+          className="flex gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
+        >
+          <Icono nombre="error" className="text-[20px]" />
+          {contenidoLeido.error}
+        </p>
+      )}
       <FormularioError mensaje={asociar.error?.message} />
       <Boton
         className="min-h-[56px] w-full"
-        disabled={!categoria || asociar.isPending}
+        disabled={!categoria || Boolean(contenidoLeido.error) || asociar.isPending}
         onClick={() =>
           categoria &&
           asociar.mutate(

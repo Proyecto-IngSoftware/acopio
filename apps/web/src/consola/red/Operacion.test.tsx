@@ -207,6 +207,18 @@ describe('C7 Umbrales', () => {
     expect(within(hoja()).getByRole('button', { name: 'Guardar umbral' })).toBeDisabled();
   });
 
+  it('el punto cuenta como coma y en unidades los decimales dan error', async () => {
+    responderSegun(RESPUESTAS);
+    app('/consola/acopios/x1/no-recibir');
+    await userEvent.click(await fila('Colchonetas'));
+    await userEvent.type(within(hoja()).getByLabelText('Mínimo'), '1.5');
+    await userEvent.type(within(hoja()).getByLabelText('Máximo'), '10');
+    expect(within(hoja()).getByLabelText('Mínimo')).toHaveValue('1,5');
+    expect(within(hoja()).getByRole('alert')).toHaveTextContent(
+      'En unidades, el mínimo y el máximo van sin decimales.',
+    );
+  });
+
   it('abre con el umbral actual y «Quitar umbral» lo borra', async () => {
     responderSegun(RESPUESTAS);
     app('/consola/acopios/x1/no-recibir');

@@ -15,6 +15,13 @@ export class ErrorApi extends Error {
   }
 }
 
+/** Las consultas reintentan una vez sin red o ante un error del servidor. Un 4xx no cambia
+ *  al repetirlo: un 403 reintentado solo demora el mensaje. */
+export function reintentarConsulta(fallos: number, error: unknown): boolean {
+  if (fallos >= 1) return false;
+  return !(error instanceof ErrorApi) || error.estado === 0 || error.estado >= 500;
+}
+
 const SIN_RED = 'No pudimos conectar con Acopio. Revisa tu conexión.';
 
 export const api = createClient<paths>({

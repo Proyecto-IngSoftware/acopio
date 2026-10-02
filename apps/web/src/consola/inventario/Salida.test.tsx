@@ -76,7 +76,7 @@ const pantalla = (extra: Record<string, unknown> = {}) => {
 };
 
 const elegir = async (texto: string, nombre: RegExp) => {
-  await userEvent.type(screen.getByRole('searchbox', { name: 'Categoría' }), texto);
+  await userEvent.type(await screen.findByRole('searchbox', { name: 'Categoría' }), texto);
   await userEvent.click(await screen.findByRole('button', { name: nombre }));
 };
 const teclear = async (...teclas: string[]) => {
@@ -95,6 +95,13 @@ describe('C5 Salida', () => {
     const primero = screen.getByRole('region', { name: 'Sale primero' });
     expect(primero).toHaveTextContent('40 kg vencen el 12 de octubre');
     expect(primero).toHaveTextContent('80 kg vencen el 30 de octubre');
+  });
+
+  it('el punto escrito con el teclado del equipo cuenta como coma', async () => {
+    pantalla();
+    await elegir('arroz', /Arroz/);
+    await userEvent.type(screen.getByLabelText('Cantidad'), '2.5');
+    expect(screen.getByText('Quedan 117,5 kg')).toBeInTheDocument();
   });
 
   it('sin fechas de vencimiento no muestra «Sale primero»', async () => {
@@ -197,6 +204,20 @@ describe('C5 Salida', () => {
     await userEvent.click(registrar());
     expect(await screen.findByText('No tienes acceso a este acopio')).toBeInTheDocument();
     expect(peticiones().filter((p) => p.startsWith('POST')).length).toBe(1);
+  });
+
+  it('si no puede leer los saldos muestra el error de la API y no el formulario', async () => {
+    pantalla({
+      'GET /api/acopios/x1/saldos': conEstado(403, {
+        estado: 403,
+        codigo: 'PROHIBIDO',
+        mensaje: 'No puedes consultar el inventario de este acopio',
+      }),
+    });
+    expect(
+      await screen.findByText('No puedes consultar el inventario de este acopio'),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole('searchbox', { name: 'Categoría' })).not.toBeInTheDocument();
   });
 
   it('no tiene violaciones graves de accesibilidad', async () => {

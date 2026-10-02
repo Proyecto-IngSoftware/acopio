@@ -117,13 +117,25 @@ describe('C4 Entrada rápida', () => {
     expect(elegida).toHaveTextContent('Saldo actual: 312 und.');
   });
 
-  it('en una categoría por unidades no ofrece la coma ni la acepta escrita', async () => {
+  it('en una categoría por unidades no ofrece la coma y una cantidad con decimales no se registra', async () => {
     pantalla();
     await elegir('panal', /Pañal adulto/);
     const teclado = screen.getByRole('group', { name: 'Teclado numérico' });
     expect(within(teclado).queryByRole('button', { name: ',' })).not.toBeInTheDocument();
     await userEvent.type(screen.getByLabelText('Cantidad'), '2,5');
-    expect(screen.getByLabelText('Cantidad')).toHaveValue('25');
+    expect(screen.getByLabelText('Cantidad')).toHaveValue('2,5');
+    expect(screen.getByRole('alert')).toHaveTextContent(
+      'En unidades, la cantidad va sin decimales.',
+    );
+    expect(screen.getByRole('button', { name: /Registrar/ })).toBeDisabled();
+  });
+
+  it('el punto escrito con el teclado del equipo cuenta como coma', async () => {
+    pantalla();
+    await elegir('arroz', /Arroz/);
+    await userEvent.type(screen.getByLabelText('Cantidad'), '2.5');
+    expect(screen.getByLabelText('Cantidad')).toHaveValue('2,5');
+    expect(screen.getByRole('button', { name: /Registrar 2,5 kg/ })).toBeInTheDocument();
   });
 
   it('con un código que trae contenido cuenta presentaciones y registra el total', async () => {

@@ -5,7 +5,7 @@ import { envolver, responderSegun } from '../../pruebas/utilidades';
 import type { ResultadoBusqueda } from '../../api/catalogo';
 import { BuscadorCategoria } from './BuscadorCategoria';
 import { TarjetaSaldo } from './TarjetaSaldo';
-import { aNumero, TecladoCantidad, teclear } from './TecladoCantidad';
+import { aNumero, limpiarCantidad, TecladoCantidad, teclear } from './TecladoCantidad';
 
 const ARROZ: ResultadoBusqueda = {
   id: 'c2',
@@ -87,4 +87,19 @@ it('la tarjeta muestra la categoría, el saldo con su unidad y deja cambiarla', 
   expect(tarjeta).toHaveTextContent('extra');
   await userEvent.click(screen.getByRole('button', { name: 'Cambiar' }));
   expect(cambiar).toHaveBeenCalled();
+});
+
+describe('limpiarCantidad', () => {
+  it('toma el punto como coma decimal', () => {
+    expect(limpiarCantidad('2.5')).toBe('2,5');
+  });
+
+  it('deja una sola coma y hasta tres decimales', () => {
+    expect(limpiarCantidad('1,2,3')).toBe('1,23');
+    expect(limpiarCantidad('1,23456')).toBe('1,234');
+  });
+
+  it('quita lo que no es número', () => {
+    expect(limpiarCantidad('12 kg')).toBe('12');
+  });
 });
