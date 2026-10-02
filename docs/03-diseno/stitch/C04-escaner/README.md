@@ -2,7 +2,7 @@
 title: "C4 · Escáner y código nuevo · maqueta"
 type: diseno
 tags: [diseno, stitch, consola, inventario]
-estado: borrador
+estado: vigente
 actualizado: 2026-10-02
 ---
 
@@ -13,7 +13,7 @@ actualizado: 2026-10-02
 | Proyecto | ACOPIO DISEÑO (`10306891818878200068`) |
 | Pantallas de Stitch | Ninguna. «C4 Escáner» y «C4 Código nuevo» se cortaron por tiempo el 2026-10-02 y no aparecieron en el proyecto |
 | Maqueta | En la [maqueta de C7](../C07-umbrales/maqueta.html), publicada en <https://claude.ai/artifact/K8XcgLGe2sZ4LREuUSyy15> |
-| Aprobación | Pendiente |
+| Aprobación | Joseph la aprobó el 2026-10-02 |
 
 El botón «Escanear» está en el buscador de categoría que comparten C4, C5 y C6.
 

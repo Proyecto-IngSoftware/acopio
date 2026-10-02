@@ -2,7 +2,7 @@
 title: "C18 · Códigos de barras · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, catalogo]
-estado: borrador
+estado: vigente
 actualizado: 2026-10-02
 ---
 
@@ -15,7 +15,7 @@ actualizado: 2026-10-02
 | Exportada | 2026-10-02 |
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | En la [maqueta de C7](../C07-umbrales/maqueta.html), publicada en <https://claude.ai/artifact/K8XcgLGe2sZ4LREuUSyy15> |
-| Aprobación | Pendiente |
+| Aprobación | Joseph la aprobó el 2026-10-02, con las diferencias de abajo |
 
 Stitch la entregó a 1280 px de ancho aunque se pidió móvil; el contenido ocupa la
 columna central.
@@ -27,9 +27,9 @@ La cuarta pestaña de C18, para el Administrador. Arriba, el filtro «Sin revisa
 presentación si lo hay, quién lo asoció y cuándo, y los botones «Cambiar» y «Marcar
 revisado». Las revisadas solo ofrecen «Cambiar».
 
-## Diferencias propuestas
+## Diferencias
 
-Para revisar con Joseph antes de la maqueta:
+Aprobadas por Joseph el 2026-10-02:
 
 - Sin el subtítulo «Módulo central» ni la línea «Asociaciones hechas en terreno ·
   Pendientes de validación».

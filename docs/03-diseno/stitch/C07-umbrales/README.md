@@ -2,7 +2,7 @@
 title: "C7 · Umbrales y no recibir · maqueta"
 type: diseno
 tags: [diseno, stitch, consola, inventario]
-estado: borrador
+estado: vigente
 actualizado: 2026-10-02
 ---
 
@@ -13,7 +13,7 @@ actualizado: 2026-10-02
 | Proyecto | ACOPIO DISEÑO (`10306891818878200068`) |
 | Pantalla de Stitch | Ninguna. La generación del 2026-10-02 se cortó por tiempo y no apareció en el proyecto |
 | Maqueta | [maqueta.html](maqueta.html), publicada en <https://claude.ai/artifact/K8XcgLGe2sZ4LREuUSyy15>, junto al escáner y a C18 |
-| Aprobación | Pendiente |
+| Aprobación | Joseph la aprobó el 2026-10-02 |
 
 La maqueta usa los tokens del tema, la cabecera con sesión y la barra inferior de los
 [componentes compartidos](../_compartidos/README.md). Parte del
