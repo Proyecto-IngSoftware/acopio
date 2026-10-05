@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#FAFAF9]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>Pendientes de sincronizar - Consola Acopio</title>
+<!-- Inter Google Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed": "#e9e1db",
+            "on-primary-container": "#9eedec",
+            "background": "#FAFAF9",
+            "on-secondary-container": "#68635f",
+            "on-error-container": "#93000a",
+            "inverse-surface": "#33302d",
+            "tertiary-container": "#316c6c",
+            "primary-container": "#0f6e6e",
+            "surface": "#FAFAF9",
+            "inverse-on-surface": "#f7efeb",
+            "surface-container": "#F5F5F4",
+            "surface-container-highest": "#E7E5E4",
+            "tertiary": "#125454",
+            "on-tertiary-fixed": "#002020",
+            "surface-container-low": "#FAFAF9",
+            "on-secondary-fixed-variant": "#4a4642",
+            "on-primary-fixed": "#002020",
+            "primary-fixed-dim": "#85d4d3",
+            "on-error": "#ffffff",
+            "tertiary-fixed-dim": "#96d1d0",
+            "primary": "#0F6E6E",
+            "secondary-fixed-dim": "#ccc5c0",
+            "secondary": "#57534E",
+            "on-surface": "#1C1917",
+            "surface-container-high": "#eee7e3",
+            "tertiary-fixed": "#b2eded",
+            "surface-bright": "#FAFAF9",
+            "secondary-container": "#e9e1db",
+            "surface-variant": "#E7E5E4",
+            "outline-variant": "#E7E5E4",
+            "outline": "#57534E",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "on-secondary": "#ffffff",
+            "inverse-primary": "#85d4d3",
+            "on-secondary-fixed": "#1e1b18",
+            "on-background": "#1C1917",
+            "error": "#DC2626",
+            "surface-tint": "#0F6E6E",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-container": "#afebea",
+            "on-primary-fixed-variant": "#004f50",
+            "on-surface-variant": "#57534E",
+            "primary-fixed": "#a1f0ef",
+            "surface-dim": "#E7E5E4",
+            "surface-container-lowest": "#FFFFFF",
+            "on-primary": "#ffffff",
+            "error-container": "#ffdad6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.75rem", // 12px conforming to Acopio brand guidelines
+            "xl": "0.875rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter", "sans-serif"],
+            "display": ["Inter", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Inter", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background-color: #FAFAF9;
+      color: #1C1917;
+    }
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+    .tabular-numbers {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex justify-center min-h-screen bg-[#FAFAF9] text-[#1C1917]">
+<!-- Mobile Simulator Wrap (390px width typical modern smartphone) -->
+<div class="w-full max-w-[390px] min-h-screen bg-[#FAFAF9] flex flex-col relative pb-28">
+<!-- 1. TopAppBar (Shared Component logic from JSON with Acopio Identity) -->
+<header class="sticky top-0 z-40 bg-[#FFFFFF] border-b border-[#E7E5E4] px-4 h-14 flex items-center justify-between">
+<!-- Left: Institutional Brand Block -->
+<div class="flex items-center gap-2">
+<div aria-hidden="true" class="w-8 h-8 rounded-lg bg-[#0F6E6E] flex items-center justify-center text-white">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="font-headline text-[17px] font-bold tracking-tight text-[#0F6E6E]">Acopio</span>
+<span class="bg-[#E6F4F4] text-[#0A4F4F] text-[12px] font-bold px-1.5 py-0.5 rounded">CO</span>
+</div>
+</div>
+<!-- Right Action Items: Pill Status & Operator Avatar -->
+<div class="flex items-center gap-2">
+<!-- Offline soft warning indicator pill -->
+<div class="flex items-center gap-1.5 bg-[#FEF3C7] text-[#92400E] px-2.5 py-1 rounded-full text-[13px] font-medium border border-[#FDE68A]">
+<span class="material-symbols-outlined text-[16px] leading-none" data-icon="cloud_off">cloud_off</span>
+<span class="tabular-numbers">3 pendientes</span>
+</div>
+<!-- Avatar OC (Operador Chapinero) -->
+<button aria-label="Perfil Operador Chapinero" class="w-9 h-9 rounded-full bg-[#E7E5E4] flex items-center justify-center text-[#1C1917] font-semibold text-[13px] border border-[#D6D3D1] active:opacity-80 transition-opacity" type="button">
+          OC
+        </button>
+</div>
+</header>
+<!-- 2. Header and Navigation Context -->
+<main class="flex-1 px-4 pt-3 space-y-4">
+<!-- Back button (min 48px touch target) -->
+<div>
+<button class="inline-flex items-center gap-1 text-[#57534E] active:text-[#1C1917] min-h-[48px] -ml-2 px-2 text-[15px] font-medium transition-colors focus:outline-none" onclick="history.back()" type="button">
+<span class="material-symbols-outlined text-[22px]" data-icon="arrow_back">arrow_back</span>
+<span>Volver</span>
+</button>
+</div>
+<!-- Title & Context -->
+<div class="-mt-1">
+<h1 class="text-[24px] font-bold text-[#1C1917] tracking-tight leading-tight">Sin sincronizar</h1>
+<p class="text-[15px] text-[#57534E] font-normal mt-0.5">Acopio Chapinero</p>
+</div>
+<!-- 3. Network Status Banner -->
+<section aria-live="polite" class="bg-[#F5F5F4] border border-[#E7E5E4] rounded-lg p-3.5 space-y-3">
+<div class="flex items-start gap-3">
+<div aria-hidden="true" class="w-8 h-8 rounded-full bg-[#E7E5E4] flex items-center justify-center shrink-0 mt-0.5 text-[#57534E]">
+<span class="material-symbols-outlined text-[20px]" data-icon="wifi_off">wifi_off</span>
+</div>
+<div class="flex-1">
+<p class="text-[15px] text-[#1C1917] font-medium leading-snug">
+              Sin conexión. Se envían solas al volver la señal.
+            </p>
+<p class="text-[14px] text-[#57534E] mt-0.5">
+              Los registros están guardados en este dispositivo.
+            </p>
+</div>
+</div>
+<!-- Action Row: Disabled sync button needing connection -->
+<button aria-disabled="true" class="w-full h-12 bg-[#E7E5E4] text-[#A8A29E] font-medium rounded-lg text-[15px] flex items-center justify-center gap-2 cursor-not-allowed select-none transition-none" disabled="" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="sync">sync</span>
+<span>Enviar ahora</span>
+</button>
+</section>
+<!-- 4. Section: Por enviar (2) -->
+<section aria-labelledby="heading-por-enviar" class="space-y-2.5 pt-1">
+<div class="flex items-center justify-between">
+<h2 class="text-[14px] font-bold text-[#57534E] tracking-normal" id="heading-por-enviar">
+            Por enviar (2)
+          </h2>
+<span class="text-[13px] text-[#57534E]">Guardadas localmente</span>
+</div>
+<div class="space-y-2">
+<!-- Item 1: Arroz -->
+<article class="bg-[#FFFFFF] border border-[#E7E5E4] rounded-lg p-3.5 flex items-center justify-between gap-3 shadow-none">
+<div class="flex items-center gap-3 min-w-0">
+<div aria-hidden="true" class="w-10 h-10 rounded-lg bg-[#E6F4F4] text-[#0F6E6E] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]" data-icon="schedule">schedule</span>
+</div>
+<div class="truncate">
+<p class="text-[16px] font-bold text-[#1C1917] leading-tight truncate">
+                  Arroz · <span class="tabular-numbers">12 kg</span>
+</p>
+<p class="text-[14px] text-[#57534E] mt-1 tabular-numbers">
+                  Registrada hoy a las 10:42
+                </p>
+</div>
+</div>
+<!-- Soft status pill -->
+<span class="shrink-0 bg-[#F5F5F4] text-[#57534E] border border-[#E7E5E4] text-[13px] font-medium px-2.5 py-1 rounded">
+              En teléfono
+            </span>
+</article>
+<!-- Item 2: Agua potable -->
+<article class="bg-[#FFFFFF] border border-[#E7E5E4] rounded-lg p-3.5 flex items-center justify-between gap-3 shadow-none">
+<div class="flex items-center gap-3 min-w-0">
+<div aria-hidden="true" class="w-10 h-10 rounded-lg bg-[#E6F4F4] text-[#0F6E6E] flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[22px]" data-icon="schedule">schedule</span>
+</div>
+<div class="truncate">
+<p class="text-[16px] font-bold text-[#1C1917] leading-tight truncate">
+                  Agua potable · <span class="tabular-numbers">24 L</span>
+</p>
+<p class="text-[14px] text-[#57534E] mt-1 tabular-numbers">
+                  Registrada hoy a las 10:45
+                </p>
+</div>
+</div>
+<!-- Soft status pill -->
+<span class="shrink-0 bg-[#F5F5F4] text-[#57534E] border border-[#E7E5E4] text-[13px] font-medium px-2.5 py-1 rounded">
+              En teléfono
+            </span>
+</article>
+</div>
+</section>
+<!-- 5. Section: Rechazadas (1) -->
+<section aria-labelledby="heading-rechazadas" class="space-y-2.5 pt-2">
+<div class="flex items-center justify-between">
+<h2 class="text-[14px] font-bold text-[#B45309] tracking-normal" id="heading-rechazadas">
+            Rechazadas (1)
+          </h2>
+<span class="text-[13px] text-[#B45309]">Requiere revisión</span>
+</div>
+<!-- Warning Card for Rejected Queue Record -->
+<article class="bg-[#FFFDF7] border border-[#FCD34D] rounded-lg p-4 space-y-3">
+<!-- Title & Context -->
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-[#D97706] text-[24px] shrink-0 mt-0.5" data-icon="warning">warning</span>
+<div class="flex-1 min-w-0">
+<h3 class="text-[16px] font-bold text-[#1C1917] leading-snug">
+                Aceite · <span class="tabular-numbers">5 L</span>
+</h3>
+<p class="text-[14px] text-[#57534E] tabular-numbers mt-0.5">
+                Registrada el 26 sep, 9:10
+              </p>
+</div>
+</div>
+<!-- Reason text -->
+<div class="bg-[#FEF3C7] rounded p-2.5 border border-[#FDE68A]">
+<p class="text-[14px] text-[#92400E] leading-relaxed">
+              La fecha es de hace más de 7 días. Corrige la fecha o descártala.
+            </p>
+</div>
+<!-- Actions Row: 48px touch targets -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="min-h-[48px] px-3 bg-[#FFFFFF] border border-[#D6D3D1] hover:bg-[#F5F5F4] text-[#1C1917] text-[15px] font-semibold rounded-lg flex items-center justify-center active:bg-[#E7E5E4] transition-colors focus:outline-none focus:ring-2 focus:ring-[#0F6E6E]" type="button">
+              Corregir
+            </button>
+<button class="min-h-[48px] px-3 bg-transparent hover:bg-[#FEE2E2] text-[#DC2626] text-[15px] font-semibold rounded-lg flex items-center justify-center active:opacity-80 transition-colors focus:outline-none" type="button">
+              Descartar
+            </button>
+</div>
+</article>
+</section>
+</main>
+<!-- 6. BottomNavBar (From Shared Components JSON with 'Más' ACTIVE) -->
+<nav aria-label="Navegación principal" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface-container-lowest border-t border-surface-variant pb-safe">
+<div class="w-full max-w-[390px] mx-auto flex justify-around items-center">
+<!-- Destino 1: Inicio -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] flex-1 hover:text-primary active:opacity-80 transition-opacity" href="#inicio">
+<span class="material-symbols-outlined text-[24px]" data-icon="home">home</span>
+<span class="font-label text-[12px] leading-tight mt-0.5">Inicio</span>
+</a>
+<!-- Destino 2: Mapa -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] flex-1 hover:text-primary active:opacity-80 transition-opacity" href="#mapa">
+<span class="material-symbols-outlined text-[24px]" data-icon="map">map</span>
+<span class="font-label text-[12px] leading-tight mt-0.5">Mapa</span>
+</a>
+<!-- Destino 3: Causas -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] flex-1 hover:text-primary active:opacity-80 transition-opacity" href="#causas">
+<span class="material-symbols-outlined text-[24px]" data-icon="favorite">favorite</span>
+<span class="font-label text-[12px] leading-tight mt-0.5">Causas</span>
+</a>
+<!-- Destino 4: Voluntariado -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] flex-1 hover:text-primary active:opacity-80 transition-opacity" href="#voluntariado">
+<span class="material-symbols-outlined text-[24px]" data-icon="volunteer_activism">volunteer_activism</span>
+<span class="font-label text-[12px] leading-tight mt-0.5">Voluntariado</span>
+</a>
+<!-- Destino 5: Más (ACTIVO según pauta de la pantalla de ajustes/consola) -->
+<a aria-current="page" class="flex flex-col items-center justify-center text-primary font-bold min-h-[48px] flex-1 hover:text-primary active:opacity-80 transition-opacity" href="#mas">
+<div class="relative">
+<span class="material-symbols-outlined text-[24px]" data-icon="menu">menu</span>
+<!-- Tiny indicator dot for sync alert -->
+<span class="absolute -top-0.5 -right-1 w-2 h-2 rounded-full bg-[#D97706] ring-2 ring-white"></span>
+</div>
+<span class="font-label text-[12px] leading-tight mt-0.5 text-primary">Más</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>
