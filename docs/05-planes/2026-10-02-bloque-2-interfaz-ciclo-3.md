@@ -104,7 +104,7 @@ todo pasa. Si la tarea toca la API, también `depcruise` y `test:int`.
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 Diseños | ⬜ | |
+| 1 Diseños | ✅ | Stitch generó la lista de pendientes y cortó por tiempo las otras tres pantallas, que se armaron con los tokens del tema en la [maqueta](../03-diseno/stitch/C04-sin-conexion/README.md). Joseph la aprobó el 2026-10-05 |
 | 2 Datos locales | ⬜ | |
 | 3 Cola | ⬜ | |
 | 4 Sesión sin red | ⬜ | |

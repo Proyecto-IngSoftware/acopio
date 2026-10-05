@@ -2,7 +2,7 @@
 title: "C4 · Sin sincronizar · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, inventario, offline]
-estado: borrador
+estado: vigente
 actualizado: 2026-10-05
 ---
 
@@ -15,7 +15,7 @@ actualizado: 2026-10-05
 | Exportada | 2026-10-05 |
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | En la [maqueta de la captura sin conexión](../C04-sin-conexion/maqueta.html), publicada en <https://claude.ai/artifact/Tqpy5wb9smKWyDaBQ1gTfS> |
-| Aprobación | Pendiente de Joseph |
+| Aprobación | Joseph la aprobó el 2026-10-05, con las diferencias de abajo |
 
 ## Qué muestra
 

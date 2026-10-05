@@ -2,7 +2,7 @@
 title: "C4 · Captura sin conexión · maqueta"
 type: diseno
 tags: [diseno, stitch, consola, inventario, offline]
-estado: borrador
+estado: vigente
 actualizado: 2026-10-05
 ---
 
@@ -13,7 +13,7 @@ actualizado: 2026-10-05
 | Proyecto | ACOPIO DISEÑO (`10306891818878200068`) |
 | Pantallas de Stitch | Solo [«Pendientes de sincronizar»](../C04-pendientes/README.md). «C4 sin conexión», «C5 sin red y versión nueva» y «Salir con pendientes» se cortaron por tiempo el 2026-10-05 y no aparecieron en el proyecto |
 | Maqueta | [maqueta.html](maqueta.html), publicada en <https://claude.ai/artifact/Tqpy5wb9smKWyDaBQ1gTfS> |
-| Aprobación | Pendiente de Joseph |
+| Aprobación | Joseph la aprobó el 2026-10-05 |
 
 Las tres pantallas que Stitch cortó se armaron con los tokens del tema en la maqueta, como
 C3 y los umbrales del ciclo 2. La maqueta reúne las seis vistas del ciclo 3:
