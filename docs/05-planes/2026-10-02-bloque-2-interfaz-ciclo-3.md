@@ -105,7 +105,7 @@ todo pasa. Si la tarea toca la API, también `depcruise` y `test:int`.
 | Tarea | Estado | Qué falta |
 |---|---|---|
 | 1 Diseños | ✅ | Stitch generó la lista de pendientes y cortó por tiempo las otras tres pantallas, que se armaron con los tokens del tema en la [maqueta](../03-diseno/stitch/C04-sin-conexion/README.md). Joseph la aprobó el 2026-10-05 |
-| 2 Datos locales | ⬜ | |
+| 2 Datos locales | ✅ | `src/sin-conexion/datos-locales.ts`, con `idb`. C4 guarda la copia cada vez que abre con red (`useCopiaLocal`) y `consultarCodigo` guarda cada código que la API reconoce. Si el navegador no deja usar IndexedDB, guardar no hace nada y leer vuelve vacío, así que con red nada cambia |
 | 3 Cola | ⬜ | |
 | 4 Sesión sin red | ⬜ | |
 | 5 C4 sin conexión | ⬜ | |

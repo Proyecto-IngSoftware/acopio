@@ -1,8 +1,9 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes } from 'react-router';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
 import { clienteFalso, cuerpoDe, envolver, responderSegun } from '../../pruebas/utilidades';
+import { leerCategorias, leerNoRecibir, leerSaldos } from '../../sin-conexion/datos-locales';
 import { ACOPIO, SALDOS } from './datos-prueba';
 import { EntradaRapida } from './EntradaRapida';
 
@@ -102,6 +103,19 @@ const teclear = async (...teclas: string[]) => {
 };
 
 describe('C4 Entrada rápida', () => {
+  it('al abrir con red guarda la copia local para capturar sin conexión', async () => {
+    const vigentes = [{ id: 'c2', nombre: 'Arroz' }];
+    const noRecibe = [{ categoriaId: 'c9', hasta: null }];
+    pantalla({
+      'GET /api/categorias/vigentes': vigentes,
+      'GET /api/acopios/x1/no-recibir': noRecibe,
+    });
+
+    await waitFor(async () => expect((await leerSaldos('x1'))?.saldos).toEqual(SALDOS));
+    await waitFor(async () => expect(await leerNoRecibir('x1')).toEqual(noRecibe));
+    await waitFor(async () => expect(await leerCategorias()).toEqual(vigentes));
+  });
+
   it('arriba ofrece «Recibir por folio», que llega con los comprobantes', async () => {
     pantalla();
     const folio = await screen.findByRole('region', { name: 'Recibir por folio' });

@@ -7,6 +7,7 @@ import { useRegistrarEntrada, useSaldos } from '../../api/inventario';
 import { useAcopio, useNoRecibir } from '../../api/red';
 import { Boton } from '../../componentes/Boton';
 import { Icono } from '../../componentes/Icono';
+import { useCopiaLocal } from '../../sin-conexion/useCopiaLocal';
 import { Encabezado } from '../Encabezado';
 import { BuscadorCategoria, type Leido } from './BuscadorCategoria';
 import { TarjetaSaldo } from './TarjetaSaldo';
@@ -31,6 +32,7 @@ export function EntradaRapida() {
   const saldos = useSaldos(acopioId);
   const noRecibir = useNoRecibir(acopioId);
   const registrar = useRegistrarEntrada(acopioId);
+  useCopiaLocal(acopioId);
 
   const porPresentacion = leido?.contenido ?? null;
   const decimales = !porPresentacion && categoria?.unidadBase !== 'UNIDAD';

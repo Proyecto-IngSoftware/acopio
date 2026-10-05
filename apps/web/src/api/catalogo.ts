@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { guardarCodigoVisto } from '../sin-conexion/datos-locales';
 import { api, desenvolver, type ErrorApi } from './cliente';
 import type { components } from './esquema';
 
@@ -179,10 +180,14 @@ export type CodigoBarras = Omit<S['CodigoBarrasDto'], 'contenido' | 'creadoPor'>
 };
 
 /** Escáner: la categoría de un código, o un ErrorApi 404 `EAN_DESCONOCIDO` (RF-INV-002). */
-export const consultarCodigo = async (ean: string) =>
-  (await desenvolver(
+export async function consultarCodigo(ean: string) {
+  const codigo = (await desenvolver(
     api.GET('/api/codigos-barras/{ean}', { params: { path: { ean } } }),
   )) as unknown as CodigoBarras;
+  // Sin red, el escáner reconoce los códigos que ya vio este teléfono (O-08)
+  await guardarCodigoVisto(codigo);
+  return codigo;
+}
 
 export interface DatosAsociar {
   ean: string;
