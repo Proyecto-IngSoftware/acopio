@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-02
+actualizado: 2026-10-05
 ---
 
 # Pendientes — bandeja de entrada
@@ -674,6 +674,16 @@ local con permiso de cámara).
 | C4 pide teclado decimal también en categorías por unidades; C5 y C6 piden el numérico | `EntradaRapida.tsx` |
 
 **Estado:** ABIERTO. Ninguno rompe un flujo; se toman cuando se vuelva a tocar el archivo.
+
+### P-039 · Los íconos se ven como texto mientras baja su fuente
+**Fecha:** 2026-10-05 · **Propuesto por:** Joseph
+**Qué:** en la primera carga, durante unos 400 ms, Material Symbols todavía no llega y cada
+ícono se dibuja con su nombre (`chevron_right`). En la portada, a 360 px, eso lleva el ancho
+a 401 px y hay desplazamiento horizontal hasta que la fuente carga.
+**Por qué:** lo encontró el recorrido de humo del 2026-10-05. Las revisiones de los cierres
+anteriores medían el ancho después de cargar la fuente, así que no lo veían. Se podría fijar
+el ancho de los íconos en `1em` con `overflow: hidden`, o precargar la fuente.
+**Estado:** ABIERTO.
 
 ---
 

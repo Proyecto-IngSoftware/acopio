@@ -2,9 +2,9 @@
 title: "Bloque 2 · Interfaz, ciclo 3: captura sin conexión · plan"
 type: plan
 tags: [plan, interfaz, bloque-2]
-estado: borrador
+estado: aprobado
 bloque: 2
-actualizado: 2026-10-02
+actualizado: 2026-10-05
 ---
 
 # Bloque 2 · Interfaz, ciclo 3: captura sin conexión · plan
@@ -20,8 +20,8 @@ la hora en que ocurrieron y la hora en que llegaron».
 service worker con `vite-plugin-pwa`; [ADR-0005](../02-arquitectura/adr/ADR-0005-offline-solo-movimientos.md),
 que sin red solo se capturan movimientos.
 
-Borrador escrito al cerrar el ciclo 2, para retomar en la sesión siguiente. Se aprueba
-antes de empezar la tarea 1.
+Aprobado por Joseph el 2026-10-05, con O-01 a O-09 sin cambios y tres agregados (O-10 a
+O-12).
 
 ## Lo que ya existe
 
@@ -34,9 +34,9 @@ antes de empezar la tarea 1.
 - `GET /categorias/vigentes` es público y sirve para la copia local de categorías.
   `GET /acopios/:id/no-recibir` y `GET /acopios/:id/saldos` ya los usa C4.
 
-## Decisiones para aprobar
+## Decisiones
 
-| # | Decisión propuesta | Por qué |
+| # | Decisión | Por qué |
 |---|---|---|
 | O-01 | La cola y los datos locales van en IndexedDB con `idb` (envoltorio pequeño de promesas); las pruebas usan `fake-indexeddb` | §8 de la especificación pide `fake-indexeddb` |
 | O-02 | La cola es por usuario y guarda el cuerpo completo de cada entrada con su `id` y su `ocurridoEn` | Si otra persona entra en el mismo teléfono no envía lo ajeno |
@@ -47,6 +47,9 @@ antes de empezar la tarea 1.
 | O-07 | El saldo sin red es el último conocido más lo pendiente, marcado «estimado» | §6 |
 | O-08 | Sin red, el escáner solo reconoce códigos ya vistos en el teléfono y no aprende nuevos | §6 y P-037 |
 | O-09 | Salida, conteo y umbrales siguen pidiendo red; sin ella muestran un aviso | V-07: una salida sin red podría dejar un saldo negativo |
+| O-10 | Dentro de la tarea 5 se arreglan dos menores de P-038 en `EntradaRapida.tsx`: elegir otra categoría limpia la fecha de vencimiento, y C4 pide el teclado numérico en las categorías por unidades | P-038 los deja para cuando se vuelva a tocar el archivo, y la tarea 5 lo reescribe |
+| O-11 | El script de Playwright del recorrido de cierre se versiona en `apps/web/recorridos/` | El del ciclo 2 quedó fuera del repositorio y no se puede repetir |
+| O-12 | «Salir» con entradas sin enviar avisa cuántas son antes de cerrar la sesión. Al salir se borra el usuario recordado; la cola se conserva y se envía cuando esa persona vuelva a entrar | O-05 recuerda al último usuario y no fija qué pasa con su cola al salir |
 
 ## Tareas
 
@@ -59,14 +62,15 @@ antes de empezar la tarea 1.
 3. **Cola:** guardar, listar, enviar en orden, reintento con espera creciente, 401, 429,
    rechazo con motivo e idempotencia. Pruebas con `fake-indexeddb` y `responderSegun`.
 4. **Sesión sin red:** recordar el último usuario sin token y dejar entrar a C4 sin red.
+   «Salir» con pendientes (O-12).
 5. **C4 sin conexión:** registrar en la cola, saldo estimado, búsqueda local, escáner con
-   códigos vistos, aviso en C5, C6 y C7.
+   códigos vistos, aviso en C5, C6 y C7. Los dos menores de P-038 (O-10).
 6. **Pastilla y pendientes:** «N sin sincronizar» en la cabecera mientras haya pendientes;
    pantalla de pendientes y rechazados.
 7. **Service worker:** `vite-plugin-pwa` con `registerType: 'prompt'`, `index.html` para
    cualquier navegación, sin guardar respuestas de `/api`, aviso de versión nueva. Revisar
    que el build siga pasando el CI y que el Compose sirva el service worker.
-8. **Cierre:** recorrido en el Compose con Playwright y la red cortada
+8. **Cierre:** recorrido en el Compose con Playwright (script en `apps/web/recorridos/`, O-11) y la red cortada
    (`context.setOffline(true)`): tres entradas, «3 sin sincronizar», volver la red, envío
    solo y el Historial con las dos horas. axe a 360 × 640, capturas, documentación y
    estado de este plan.
@@ -89,15 +93,11 @@ todo pasa. Si la tarea toca la API, también `depcruise` y `test:int`.
 
 ## Para retomar
 
-1. `git status` y `gh run list --limit 3`: `main` quedó limpio y en verde con el commit
-   que agregó este plan.
-2. Leer este plan, aprobar o ajustar las decisiones O-01 a O-09 y pasarlo a `aprobado`.
-3. Empezar por la tarea 1: los diseños.
-4. Para las pruebas de integración se levanta el PostgreSQL aparte que indica CLAUDE.md
-   (`acopio-pg-pruebas` en el puerto 5439). El recorrido del cierre del ciclo 2 usó un
-   script de Playwright fuera del repositorio; si se quiere repetir, conviene versionarlo
-   (por ejemplo en `apps/web/recorridos/`).
-5. Pendientes del bloque que siguen abiertos: P-037 (escáner en un teléfono real) y P-038
+1. `git status` y `gh run list --limit 3`.
+2. La tabla de estado de abajo dice qué tarea sigue.
+3. Para las pruebas de integración se levanta el PostgreSQL aparte que indica CLAUDE.md
+   (`acopio-pg-pruebas` en el puerto 5439).
+4. Pendientes del bloque que siguen abiertos: P-037 (escáner en un teléfono real) y P-038
    (menores de la revisión del ciclo 2).
 
 ## Estado
