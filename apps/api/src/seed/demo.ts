@@ -4,6 +4,7 @@ import { config } from 'dotenv';
 import { HORARIO_VACIO, type Horario } from '@acopio/shared';
 import { PrismaService } from '../comun/prisma/prisma.service';
 import { leerEntorno } from '../config/entorno';
+import { ProveedorLocal } from '../modulos/identidad/proveedor/proveedor-local';
 import type { Prisma } from '../generado/prisma/client';
 
 const semana: Horario = {
@@ -88,6 +89,200 @@ export async function sembrarDemo(prisma: PrismaService) {
   return { entidades: ENTIDADES.length, acopios: ACOPIOS.length };
 }
 
+const EMERGENCIA_DEMO = 'd0000000-0000-4000-8000-000000000021';
+const ZONA_DEMO = 'd0000000-0000-4000-8000-000000000031';
+
+/** Una cuenta por rol para recorrer la consola. Todas con la misma contraseña. */
+const USUARIOS_DEMO = [
+  { username: 'operador1', nombre: 'Operadora Chapinero (prueba)', rol: 'OPERADOR', acopio: 0 },
+  { username: 'operador2', nombre: 'Operador Kennedy (prueba)', rol: 'OPERADOR', acopio: 1 },
+  { username: 'auditor1', nombre: 'Auditora (prueba)', rol: 'AUDITOR', acopio: 0 },
+  { username: 'receptor1', nombre: 'Receptor Mocoa (prueba)', rol: 'RECEPTOR', acopio: null },
+] as const;
+
+export const CONTRASENA_DEMO = 'demo-acopio-2026';
+
+/**
+ * Usuarios por rol, una emergencia con zona y un inventario que muestra cada estado del
+ * semáforo, una salida, un ajuste, una entrada sin conexión, «no recibir» y códigos de
+ * barras. Solo con el proveedor local: con Supabase las cuentas viven fuera de la base.
+ */
+export async function sembrarEscenariosDemo(prisma: PrismaService, proveedor: ProveedorLocal) {
+  const admin = await prisma.usuario.findFirst({
+    where: { rol: 'ADMIN' },
+    orderBy: { creado_en: 'asc' },
+  });
+  if (!admin) throw new Error('Falta el administrador: corre antes `seed`.');
+
+  await prisma.emergencia.upsert({
+    where: { id: EMERGENCIA_DEMO },
+    update: {},
+    create: {
+      id: EMERGENCIA_DEMO,
+      nombre: 'Inundaciones Putumayo (prueba)',
+      tipo: 'Inundación',
+      inicio: new Date('2026-09-20T00:00:00Z'),
+      destacada_hasta: new Date('2026-12-31T00:00:00Z'),
+    },
+  });
+  await prisma.zona.upsert({
+    where: { id: ZONA_DEMO },
+    update: {},
+    create: {
+      id: ZONA_DEMO,
+      emergencia_id: EMERGENCIA_DEMO,
+      nombre: 'Barrio San Agustín (prueba)',
+      municipio: 'Mocoa',
+      lat: 1.1515,
+      lng: -76.6476,
+      poblacion_estimada: 1200,
+      poblacion_fuente: 'Dato ficticio de la demo',
+      poblacion_fecha: new Date('2026-09-25T00:00:00Z'),
+    },
+  });
+
+  const ids: Record<string, string> = {};
+  for (const u of USUARIOS_DEMO) {
+    const existente = await prisma.usuario.findUnique({ where: { username: u.username } });
+    if (existente) {
+      ids[u.username] = existente.id;
+      continue;
+    }
+    const correo = `${u.username}@demo.acopio.local`;
+    const { uid } = await proveedor.crearUsuario(correo, CONTRASENA_DEMO);
+    const creado = await prisma.usuario.create({
+      data: {
+        username: u.username,
+        nombre: u.nombre,
+        correo,
+        rol: u.rol,
+        estado: 'ACTIVO',
+        supabase_uid: uid,
+        tokens_validos_desde: new Date(),
+        asignaciones: {
+          create: {
+            ubicacion_tipo: u.acopio === null ? 'ZONA' : 'ACOPIO',
+            ubicacion_id: u.acopio === null ? ZONA_DEMO : ACOPIOS[u.acopio]!.id,
+            asignado_por: admin.id,
+          },
+        },
+      },
+    });
+    ids[u.username] = creado.id;
+  }
+
+  await sembrarCasosInventario(prisma, ids.operador1!, ids.operador2!);
+  return USUARIOS_DEMO.map((u) => u.username);
+}
+
+/** Solo la primera vez: se reconoce por los umbrales del acopio de Chapinero. */
+async function sembrarCasosInventario(prisma: PrismaService, operador1: string, operador2: string) {
+  const chapinero = ACOPIOS[0]!.id;
+  if ((await prisma.umbral.count({ where: { acopio_id: chapinero } })) > 0) return;
+
+  // Las mismas seis categorías de sembrarInventarioDemo, con saldos 10, 20, … 60
+  const c = await prisma.categoria.findMany({
+    where: { archivada: false },
+    orderBy: { nombre: 'asc' },
+    take: 8,
+  });
+  if (c.length < 8) return;
+  const hace = (horas: number) => new Date(Date.now() - horas * 3_600_000);
+  const base = { acopio_id: chapinero, usuario_id: operador1 };
+
+  await prisma.movimiento.create({
+    data: {
+      ...base,
+      categoria_id: c[1]!.id,
+      tipo: 'SALIDA',
+      signo: -1,
+      cantidad: 5,
+      motivo_salida: 'ENTREGA_FAMILIAS',
+      ocurrido_en: hace(1),
+    },
+  });
+  await prisma.movimiento.create({
+    data: {
+      ...base,
+      categoria_id: c[3]!.id,
+      tipo: 'AJUSTE',
+      signo: -1,
+      cantidad: 4,
+      motivo: 'Conteo físico: faltaban 4 en el estante',
+      ocurrido_en: hace(2),
+    },
+  });
+  // Llegó sin conexión: el Historial la muestra con sus dos horas
+  await prisma.movimiento.create({
+    data: {
+      ...base,
+      categoria_id: c[4]!.id,
+      tipo: 'ENTRADA',
+      signo: 1,
+      cantidad: 8,
+      ocurrido_en: hace(3),
+      origen_offline: true,
+    },
+  });
+
+  // Saldos 10, 15, 30, 36, 58 y 60: bajo, cerca, en rango, sobre, sin umbral y sin umbral
+  const umbrales: [number, number, number][] = [
+    [0, 20, 100],
+    [1, 12, 60],
+    [2, 10, 50],
+    [3, 5, 20],
+  ];
+  for (const [i, minimo, maximo] of umbrales) {
+    await prisma.umbral.create({
+      data: {
+        acopio_id: chapinero,
+        categoria_id: c[i]!.id,
+        minimo,
+        maximo,
+        actualizado_por: operador1,
+      },
+    });
+  }
+  await prisma.noRecibir.create({
+    data: { acopio_id: chapinero, categoria_id: c[6]!.id, marcado_por: operador1 },
+  });
+
+  // EAN-13 con dígito de control válido: uno revisado y otro por revisar en C18
+  await prisma.codigoBarras.createMany({
+    data: [
+      {
+        ean: '4006381333931',
+        categoria_id: c[2]!.id,
+        contenido: 1,
+        descripcion: 'Presentación de prueba',
+        creado_por: operador1,
+        revisado: true,
+      },
+      { ean: '7501031311309', categoria_id: c[5]!.id, creado_por: operador1 },
+    ],
+    skipDuplicates: true,
+  });
+
+  for (const [i, cantidad] of [
+    [0, 25],
+    [2, 40],
+    [7, 12],
+  ] as const) {
+    await prisma.movimiento.create({
+      data: {
+        acopio_id: ACOPIOS[1]!.id,
+        categoria_id: c[i]!.id,
+        tipo: 'ENTRADA',
+        signo: 1,
+        cantidad,
+        vence_en: c[i]!.perecedero ? new Date(Date.UTC(2026, 11, 15)) : null,
+        usuario_id: operador2,
+        ocurrido_en: hace(5),
+      },
+    });
+  }
+}
+
 /** Inventario de ejemplo para C3 en un acopio, solo si aún no tiene movimientos. */
 async function sembrarInventarioDemo(prisma: PrismaService, acopioId: string) {
   if ((await prisma.movimiento.count({ where: { acopio_id: acopioId } })) > 0) return;
@@ -124,8 +319,15 @@ if (require.main === module) {
   const entorno = leerEntorno({ ...process.env, DATABASE_URL: process.env.DATABASE_URL_OWNER });
   const prisma = new PrismaService(entorno);
   sembrarDemo(prisma)
-    .then((r) =>
-      console.log(`Demo lista: ${r.entidades} entidades y ${r.acopios} acopios de prueba.`),
-    )
+    .then(async (r) => {
+      console.log(`Demo lista: ${r.entidades} entidades y ${r.acopios} acopios de prueba.`);
+      if (entorno.AUTH_PROVEEDOR !== 'local') return;
+      const usuarios = await sembrarEscenariosDemo(prisma, new ProveedorLocal(prisma, entorno));
+      console.log(`Usuarios de prueba (contraseña ${CONTRASENA_DEMO}): ${usuarios.join(', ')}.`);
+    })
+    .catch((error: unknown) => {
+      console.error(error instanceof Error ? error.message : error);
+      process.exitCode = 1;
+    })
     .finally(() => prisma.$disconnect());
 }

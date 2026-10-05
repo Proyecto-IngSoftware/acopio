@@ -18,7 +18,7 @@ bun run servicios:todo                    # además construye y levanta la api e
 bun run almacenamiento:iniciar            # la primera vez: llave y bucket de Garage
 bun run --filter @acopio/api db:migrar
 bun run --filter @acopio/api seed         # idempotente
-bun run --filter @acopio/api seed:demo    # acopios ficticios para ver el mapa en local
+bun run --filter @acopio/api seed:demo    # acopios, usuarios por rol (contraseña demo-acopio-2026) e inventario de prueba
 bun run --filter @acopio/api start:dev    # API con recarga en localhost:3000/api
 bun run --filter @acopio/web dev          # web en localhost:5173
 
