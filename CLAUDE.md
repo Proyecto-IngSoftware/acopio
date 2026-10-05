@@ -129,3 +129,5 @@ Al terminar una sesión, dejar el estado escrito donde el equipo lo lee:
 - Comentar en el issue lo que se probó y lo que falta. Si una casilla solo depende de otro integrante, no bloquea el cierre: se cierra y el comentario dice qué quedó sin hacer y dónde quedó anotado.
 
 Un cambio se da por hecho cuando pasan `lint`, `typecheck`, `depcruise`, `test`, `test:int` y `scripts/revisar-colores.sh`. Si toca el Compose o el Dockerfile, además se levanta con `bun run servicios:todo`.
+
+Si las verificaciones y el commit van en un mismo comando, el commit y el push se encadenan con `&&` (y `set -o pipefail` si la salida pasa por `|`). Con `;` o en otra línea corren aunque una prueba falle, como pasó el 2026-10-02. El hook `~/.claude/hooks/commit-tras-verificar.sh` rechaza esos comandos.
