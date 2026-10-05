@@ -1,26 +1,14 @@
-import { openDB, type DBSchema } from 'idb';
 import type { Categoria, CodigoBarras } from '../api/catalogo';
 import type { Saldo } from '../api/inventario';
 import type { NoRecibe } from '../api/red';
+import { abrir, type SaldosGuardados } from './base-local';
+
+export type { SaldosGuardados } from './base-local';
 
 /**
  * Copia local para capturar entradas sin red (§6 de la especificación del Bloque 2, O-01).
  * Se guarda cada vez que C4 abre con red y se lee cuando no la hay.
- */
-interface EsquemaLocal extends DBSchema {
-  categorias: { key: 'vigentes'; value: Categoria[] };
-  noRecibir: { key: string; value: NoRecibe[] };
-  saldos: { key: string; value: SaldosGuardados };
-  codigos: { key: string; value: CodigoBarras };
-}
-
-export interface SaldosGuardados {
-  saldos: Saldo[];
-  /** Cuándo se copiaron: C4 sin red lo muestra como «último saldo conocido». */
-  guardadoEn: string;
-}
-
-/**
+ *
  * La copia es una ayuda: si el navegador no deja usar IndexedDB (navegación privada,
  * almacenamiento bloqueado), guardar no hace nada y leer vuelve vacío. Con red, nada cambia.
  */
@@ -31,16 +19,6 @@ async function seguro<T>(accion: () => Promise<T>, siFalla: T): Promise<T> {
     return siFalla;
   }
 }
-
-const abrir = () =>
-  openDB<EsquemaLocal>('acopio-local', 1, {
-    upgrade(base) {
-      base.createObjectStore('categorias');
-      base.createObjectStore('noRecibir');
-      base.createObjectStore('saldos');
-      base.createObjectStore('codigos');
-    },
-  });
 
 export async function guardarCategorias(categorias: Categoria[]) {
   await seguro(async () => {
