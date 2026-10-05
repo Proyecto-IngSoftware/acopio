@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
+import { ThrottlerException } from '@nestjs/throttler';
 import type { Response } from 'express';
 import { ZodValidationException } from 'nestjs-zod';
 import { ErrorDominio } from './error-dominio';
@@ -54,6 +55,14 @@ export class FiltroErrores implements ExceptionFilter {
         mensaje: 'Hay datos inválidos en la solicitud',
         // Un mensaje por campo, para mostrarlo junto a cada entrada del formulario
         detalles: zod.issues.map((i) => ({ campo: i.path.join('.'), mensaje: i.message })),
+      };
+    }
+    // El mensaje de ThrottlerException viene en inglés y la pantalla de acceso lo muestra
+    if (error instanceof ThrottlerException) {
+      return {
+        estado: HttpStatus.TOO_MANY_REQUESTS,
+        codigo: 'DEMASIADOS_INTENTOS',
+        mensaje: 'Demasiados intentos. Espera un minuto.',
       };
     }
     if (error instanceof HttpException) {

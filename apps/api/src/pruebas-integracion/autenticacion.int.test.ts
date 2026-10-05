@@ -152,5 +152,7 @@ describe('límite de intentos por IP (RNF-08)', () => {
       .send({ usuario: 'admin', contrasena: 'equivocada' });
     expect(r.status).toBe(429);
     expect(r.body.codigo).toBe('DEMASIADOS_INTENTOS');
+    // Entrar.tsx muestra este mensaje tal cual
+    expect(r.body.mensaje).toBe('Demasiados intentos. Espera un minuto.');
   });
 });
