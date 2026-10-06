@@ -15,6 +15,7 @@ import { CatalogoModule } from './modulos/catalogo/catalogo.module';
 import { AutenticacionGuard } from './modulos/identidad/autenticacion/autenticacion.guard';
 import { IdentidadModule } from './modulos/identidad/identidad.module';
 import { InventarioModule } from './modulos/inventario/inventario.module';
+import { AlmacenamientoModule } from './modulos/almacenamiento/almacenamiento.module';
 import { NotificacionesModule } from './modulos/notificaciones/notificaciones.module';
 import { SaludModule } from './modulos/salud/salud.module';
 
@@ -30,6 +31,7 @@ import { SaludModule } from './modulos/salud/salud.module';
     // Límite general por IP; los endpoints sensibles ponen uno más estricto
     ThrottlerModule.forRoot([{ ttl: 60_000, limit: 300 }]),
     AuditoriaModule,
+    AlmacenamientoModule,
     NotificacionesModule,
     IdentidadModule,
     CatalogoModule,

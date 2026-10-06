@@ -8,6 +8,8 @@ import { PrismaService } from '../src/comun/prisma/prisma.service';
 import { configurarApp } from '../src/configurar-app';
 import { leerEntorno } from '../src/config/entorno';
 import { GEOCODIFICADOR, GeocodificadorFalso } from '../src/modulos/acopios/geocodificacion';
+import { ALMACEN } from '../src/modulos/almacenamiento/almacen';
+import { AlmacenMemoria } from '../src/modulos/almacenamiento/almacen-memoria';
 import {
   PROVEEDOR_IDENTIDAD,
   type ProveedorIdentidad,
@@ -29,6 +31,8 @@ export interface AppPrueba {
   cerrar: () => Promise<void>;
 }
 
+export const almacenPrueba = new AlmacenMemoria();
+
 /** Levanta la API completa contra la base de pruebas, con el seed aplicado. */
 export async function crearAppPrueba(
   opciones: { limiteDeIntentos?: boolean } = {},
@@ -37,6 +41,7 @@ export async function crearAppPrueba(
   let constructor = Test.createTestingModule({ imports: [AppModule] });
   // CI no sale a internet: Nominatim siempre con el adaptador falso
   constructor = constructor.overrideProvider(GEOCODIFICADOR).useValue(new GeocodificadorFalso());
+  constructor = constructor.overrideProvider(ALMACEN).useValue(almacenPrueba);
   if (!opciones.limiteDeIntentos) {
     constructor = constructor
       .overrideProvider(LimiteIntentosGuard)
