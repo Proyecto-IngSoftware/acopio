@@ -29,6 +29,9 @@ const Salida = lazy(() =>
 const Conteo = lazy(() =>
   import('./consola/inventario/Conteo').then((m) => ({ default: m.Conteo })),
 );
+const SinSincronizar = lazy(() =>
+  import('./consola/SinSincronizar').then((m) => ({ default: m.SinSincronizar })),
+);
 const MatrizAcceso = lazy(() =>
   import('./consola/accesos/MatrizAcceso').then((m) => ({ default: m.MatrizAcceso })),
 );
@@ -100,6 +103,8 @@ export function Rutas() {
             ['consola/acopios/:id/entrada', <EntradaRapida key="ent" />],
             ['consola/acopios/:id/salida', <Salida key="sal" />],
             ['consola/acopios/:id/conteo', <Conteo key="con" />],
+            // Las entradas guardadas sin red: solo las captura el Operador (ADR-0005)
+            ['consola/sin-sincronizar', <SinSincronizar key="sin" />],
           ] as const
         ).map(([ruta, pantalla]) => (
           // Solo el Operador asignado registra movimientos (V-04)

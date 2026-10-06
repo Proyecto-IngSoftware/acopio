@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { UsuarioSesion } from '../../sesion/cliente-auth';
 import { iniciales, nombreRol } from '../../sesion/roles';
 import { useSalida } from '../../sesion/useSalida';
+import { PastillaCola } from '../../sin-conexion/PastillaCola';
 import { useUbicacionActiva } from '../../sesion/ubicacion-activa';
 import { CabeceraBase } from './Marca';
 import { SelectorUbicacion } from './SelectorUbicacion';
@@ -28,6 +29,7 @@ export function CabeceraConSesion({ usuario }: { usuario: UsuarioSesion }) {
     <CabeceraBase compacta={ubicaciones.length >= 2}>
       <div className="flex min-w-0 items-center gap-space-xs">
         <SelectorUbicacion />
+        <PastillaCola />
         <div
           ref={contenedor}
           className="relative shrink-0"

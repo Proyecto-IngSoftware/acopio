@@ -63,3 +63,14 @@ it('el marco no tiene violaciones graves de accesibilidad', async () => {
   const { container } = render(envolver(<Rutas />, '/mapa'));
   expect(await violacionesGraves(container)).toEqual([]);
 });
+
+it('/consola/sin-sincronizar abre la lista de entradas guardadas en el teléfono', async () => {
+  const operadora = {
+    id: 'u1',
+    username: 'd.mendez',
+    nombre: 'Daniela Méndez',
+    rol: 'OPERADOR' as const,
+  };
+  render(envolver(<Rutas />, '/consola/sin-sincronizar', clienteFalso(operadora)));
+  expect(await screen.findByRole('heading', { name: 'Sin sincronizar' })).toBeInTheDocument();
+});

@@ -66,19 +66,26 @@ const enCurso = new Map<string, Promise<ResultadoEnvio>>();
  * Un 401 detiene el envío; sin red, un 429 o un 5xx lo dejan para reintentar; cualquier
  * otro 4xx marca esa entrada como rechazada y sigue con la siguiente (O-04).
  */
-export function enviarCola(usuarioId: string): Promise<ResultadoEnvio> {
+export function enviarCola(
+  usuarioId: string,
+  alAvanzar?: (hechas: number, total: number) => void,
+): Promise<ResultadoEnvio> {
   // Dos llamadas seguidas (el evento online y la vuelta a C4) comparten el mismo envío
   const previo = enCurso.get(usuarioId);
   if (previo) return previo;
-  const envio = enviar(usuarioId).finally(() => enCurso.delete(usuarioId));
+  const envio = enviar(usuarioId, alAvanzar).finally(() => enCurso.delete(usuarioId));
   enCurso.set(usuarioId, envio);
   return envio;
 }
 
-async function enviar(usuarioId: string): Promise<ResultadoEnvio> {
+async function enviar(
+  usuarioId: string,
+  alAvanzar?: (hechas: number, total: number) => void,
+): Promise<ResultadoEnvio> {
   let enviadas = 0;
-  for (const fila of await listarCola(usuarioId)) {
-    if (fila.estado !== 'pendiente') continue;
+  const pendientes = (await listarCola(usuarioId)).filter((f) => f.estado === 'pendiente');
+  for (const [i, fila] of pendientes.entries()) {
+    alAvanzar?.(i, pendientes.length);
     try {
       await desenvolver(
         api.POST('/api/acopios/{id}/entradas', {

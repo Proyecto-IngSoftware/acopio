@@ -1,9 +1,33 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useSyncExternalStore } from 'react';
 import { useSesion } from '../sesion/Sesion';
 import { enviarCola, esperaReintento, type ResultadoEnvio } from './cola';
 
 const PEDIDO = 'acopio:enviar-cola';
+
+/** Avance del envío en curso, para la pastilla de la cabecera; null si no se envía nada. */
+export interface AvanceEnvio {
+  hechas: number;
+  total: number;
+}
+
+let avance: AvanceEnvio | null = null;
+const oyentes = new Set<() => void>();
+
+export function publicarEnvio(nuevo: AvanceEnvio | null) {
+  avance = nuevo;
+  oyentes.forEach((o) => o());
+}
+
+export function useAvanceEnvio(): AvanceEnvio | null {
+  return useSyncExternalStore(
+    (o) => {
+      oyentes.add(o);
+      return () => oyentes.delete(o);
+    },
+    () => avance,
+  );
+}
 
 /** Una pantalla pide enviar la cola ya (C4 al abrir, O-03). */
 export function pedirEnvio() {
@@ -32,11 +56,15 @@ export function Sincronizador({
 
     const enviar = async () => {
       clearTimeout(reloj);
-      const r: ResultadoEnvio = await enviarCola(usuarioId).catch(() => ({
+      const r: ResultadoEnvio = await enviarCola(usuarioId, (hechas, total) =>
+        publicarEnvio({ hechas, total }),
+      ).catch(() => ({
         estado: 'reintentar' as const,
         enviadas: 0,
       }));
+      publicarEnvio(null);
       if (!vigente) return;
+      void consultas.invalidateQueries({ queryKey: ['cola'] });
       if (r.enviadas > 0) {
         void consultas.invalidateQueries({ queryKey: ['saldos'] });
         void consultas.invalidateQueries({ queryKey: ['historial'] });

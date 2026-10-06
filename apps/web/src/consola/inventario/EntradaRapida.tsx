@@ -9,10 +9,11 @@ import { useAcopio, useNoRecibir } from '../../api/red';
 import { Boton } from '../../componentes/Boton';
 import { Icono } from '../../componentes/Icono';
 import { useSesion } from '../../sesion/Sesion';
-import { encolar, listarCola } from '../../sin-conexion/cola';
+import { encolar } from '../../sin-conexion/cola';
 import { leerNoRecibir, leerSaldos } from '../../sin-conexion/datos-locales';
 import { useEnLinea } from '../../sin-conexion/en-linea';
 import { pedirEnvio } from '../../sin-conexion/Sincronizador';
+import { useCola } from '../../sin-conexion/useCola';
 import { useCopiaLocal } from '../../sin-conexion/useCopiaLocal';
 import { Encabezado } from '../Encabezado';
 import { BuscadorCategoria, type Leido } from './BuscadorCategoria';
@@ -60,12 +61,7 @@ export function EntradaRapida() {
     ...local('no-recibir', () => leerNoRecibir(acopioId)),
     queryFn: () => leerNoRecibir(acopioId),
   });
-  const cola = useQuery({
-    queryKey: ['cola', usuario?.id],
-    queryFn: () => listarCola(usuario!.id),
-    enabled: !!usuario,
-    networkMode: 'always',
-  });
+  const cola = useCola(usuario?.id);
   const [errorLocal, fijarErrorLocal] = useState('');
 
   // Lo que quedó de antes sale apenas se abre C4 con red (O-03)
