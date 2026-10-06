@@ -128,7 +128,11 @@ proyecto con Dokploy; servidor y dominio quedan cubiertos. Falta solo aprovision
 después.
 **Por qué:** son datos personales. La Ley 1581 exige finalidad y temporalidad
 declaradas en la política de privacidad, y P11 no se puede escribir sin esto.
-**Estado:** ABIERTO
+**Estado:** RESUELTO el 2026-10-05 → [especificación del Bloque 3](../superpowers/specs/2026-10-05-bloque-3-custodia-design.md#3-decisiones), C-02.
+La foto de una factura se guarda 12 meses desde que su comprobante se cierra
+(conciliado, rechazado o cancelado); una tarea diaria la borra de Garage con su
+miniatura y lo registra en la bitácora. El comprobante y sus líneas se conservan. Va en
+la política de privacidad (P12).
 
 ### P-007 · Herramienta de gestión de trabajo
 **Fecha:** 2026-09-11 · **Propuesto por:** equipo
