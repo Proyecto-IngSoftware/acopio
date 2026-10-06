@@ -34,6 +34,8 @@ actualizado: 2026-10-06
 | [0013](adr/ADR-0013-estetica-desde-stitch.md) | La estética sale del diseño de Stitch |
 | [0014](adr/ADR-0014-sesion-en-cookie.md) | La sesión viaja en una cookie HttpOnly |
 | [0015](adr/ADR-0015-saldo-en-tabla-por-disparador.md) | El saldo vive en una tabla que mantiene un disparador |
+| [0016](adr/ADR-0016-service-worker-con-vite-plugin-pwa.md) | La captura sin conexión usa un service worker de vite-plugin-pwa |
+| [0017](adr/ADR-0017-factura-servida-por-la-api.md) | La API sirve la foto de la factura y Garage no se expone |
 
 ## La decisión de la que cuelga todo lo demás
 

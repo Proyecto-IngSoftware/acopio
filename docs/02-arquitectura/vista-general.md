@@ -86,13 +86,13 @@ once módulos —ocho de dominio y tres transversales— y sus tareas programada
 servidor SMTP para el correo, Nominatim para buscar direcciones y RedAcopio para
 importar puntos referenciados. Supabase usa el mismo servidor SMTP para sus correos.
 
-**El almacenamiento nunca se expone.** Todo archivo pasa por la API, que entrega URLs
-firmadas de cinco minutos. Es Garage, compatible con S3
+**El almacenamiento nunca se expone.** Es Garage, compatible con S3
 ([ADR-0012](adr/ADR-0012-almacenamiento-garage.md)); la API le habla por la API de
-S3, así que cambiar de servidor es configuración. Esas URL las abre el navegador, así
-que tienen que apuntar a un host que el navegador alcance: en desarrollo la API firma
-con `S3_URL_PUBLICA` (`http://localhost:3900`). Cómo se expone esa lectura en
-producción sin abrir el resto de Garage sigue abierto en P-041 (#26).
+S3, así que cambiar de servidor es configuración. Todo archivo pasa por la API: la
+foto de la factura la entrega la propia API, que revisa el permiso y lee el objeto de
+Garage ([ADR-0017](adr/ADR-0017-factura-servida-por-la-api.md)). Hasta que ese cambio
+entre (#26), la API devuelve URL firmadas de cinco minutos, y en desarrollo las firma
+con `S3_URL_PUBLICA` (`http://localhost:3900`) para que el navegador las abra.
 
 **Lo que corre hoy.** Mientras el desarrollo es local (P-032), todo se levanta con
 Docker Compose: `db`, `storage` (Garage), `mailpit` para ver los correos y la `api`.

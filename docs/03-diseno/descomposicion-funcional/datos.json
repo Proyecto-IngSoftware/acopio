@@ -347,6 +347,13 @@
        [
         "MOT-011"
        ]
+      ],
+      [
+       "Ajustar la población de una zona",
+       "U",
+       [
+        "MOT-012"
+       ]
       ]
      ]
     ],
@@ -697,7 +704,8 @@
   "MOT-008": "Gestionar remisiones",
   "MOT-009": "Confirmar recepción en zona",
   "MOT-010": "Evaluar el motor",
-  "MOT-011": "Reportar necesidad de zona"
+  "MOT-011": "Reportar necesidad de zona",
+  "MOT-012": "Ajustar la población de una zona"
  },
  "FUERA": {
   "IDE-005": "Regla de seguridad: se cumple en cada funcionalidad, no es una acción",
@@ -708,8 +716,8 @@
  "totales": {
   "modulos": 6,
   "submodulos": 20,
-  "funcionalidades": 67,
-  "rf": 75,
-  "dentro": 71
+  "funcionalidades": 68,
+  "rf": 76,
+  "dentro": 72
  }
 }

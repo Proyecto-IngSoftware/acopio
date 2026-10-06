@@ -64,11 +64,15 @@ registro en [#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20).
 la alcaldía, o carga manual del administrador.
 **Por qué:** es el otro factor del cálculo de necesidad. Y su antigüedad importa:
 la población de una zona cambia con los desplazamientos.
-**Estado:** ABIERTO — bloquea el Bloque 4
+**Estado:** RESUELTO el 2026-10-06 → RF-MOT-012
 **Avance 2026-09-11:** las proyecciones de población del DANE 2020-2035 se usan
 **solo como referencia**, según decisión del equipo. Falta decidir quién puede
 ajustar el valor. `zona.poblacion_fuente` y `zona.poblacion_fecha` ya existen en el
 modelo.
+**Resuelto el 2026-10-06:** Joseph lo pasó a requerimiento de las zonas afectadas,
+[RF-MOT-012](funcionales/motor.md#rf-mot-012--ajustar-la-población-de-una-zona), para
+afinarlo ahí. La propuesta inicial: el Administrador ajusta el número desde C9, con
+fuente y fecha obligatorias y con registro en la bitácora.
 
 ### P-003 · Catálogo inicial de categorías
 **Fecha:** 2026-08-20 · **Propuesto por:** equipo
@@ -722,7 +726,11 @@ una URL firmada se bajó con curl desde el anfitrión, sin `--connect-to`: 200 e
 choca con «El almacenamiento nunca se expone» de [vista-general](../02-arquitectura/vista-general.md).
 Hay que decidir entre exponer solo la ruta de lectura de Garage o un proxy en la API, y
 registrarlo en un ADR.
-**Estado:** ABIERTO (solo producción).
+**Resuelto el 2026-10-06:** Joseph eligió que la API entregue la imagen. Garage no se
+publica en ningún entorno ([ADR-0017](../02-arquitectura/adr/ADR-0017-factura-servida-por-la-api.md)).
+El cambio de código va en [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26),
+antes del primer despliegue.
+**Estado:** RESUELTO el 2026-10-06 (decisión; falta el código).
 
 ### P-042 · Correo de contacto para los datos personales
 **Fecha:** 2026-10-06 · **Propuesto por:** Joseph

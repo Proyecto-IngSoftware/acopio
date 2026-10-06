@@ -43,7 +43,7 @@ const RF = {
   'MOT-003': 'Calcular déficit y cobertura', 'MOT-004': 'Calcular superávit de un acopio',
   'MOT-005': 'Generar sugerencias', 'MOT-006': 'Presentar el ranking', 'MOT-007': 'Aprobar o descartar una sugerencia',
   'MOT-008': 'Gestionar remisiones', 'MOT-009': 'Confirmar recepción en zona', 'MOT-010': 'Evaluar el motor',
-  'MOT-011': 'Reportar necesidad de zona',
+  'MOT-011': 'Reportar necesidad de zona', 'MOT-012': 'Ajustar la población de una zona',
 };
 
 // RF que no son funcionalidades que alguien use: reglas o propiedades del sistema.
@@ -144,6 +144,7 @@ const MODULOS = [
       ['Zonas afectadas', [
         ['Registrar zona afectada', 'CU', ['MOT-001', 'RED-004']],
         ['Reportar necesidad de zona', 'C', ['MOT-011']],
+        ['Ajustar la población de una zona', 'U', ['MOT-012']],
       ]],
       ['Cálculo', [
         ['Calcular necesidad de una zona', 'R', ['MOT-002']],

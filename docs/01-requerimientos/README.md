@@ -12,7 +12,7 @@ La carpeta que más se mueve. Se revisa **cada semana**.
 
 | Nota | Qué guarda |
 |---|---|
-| [funcionales/](funcionales/) | 75 requerimientos `RF` vigentes, un archivo por módulo (más RF-CMP-001, descartado) |
+| [funcionales/](funcionales/) | 76 requerimientos `RF` vigentes, un archivo por módulo (más RF-CMP-001, descartado) |
 | [no-funcionales.md](no-funcionales.md) | 13 `RNF`, cada uno con su forma de verificación |
 | [historias/](historias/) | Historias de usuario, complemento de los `RF` |
 | [pendientes.md](pendientes.md) | **Bandeja de entrada.** Todo lo nuevo aterriza aquí |

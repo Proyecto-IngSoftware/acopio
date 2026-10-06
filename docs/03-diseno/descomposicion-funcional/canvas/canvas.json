@@ -46,7 +46,7 @@
       "x": 1400,
       "y": 2805,
       "w": 1320,
-      "h": 1007
+      "h": 1068
     },
     {
       "file": "Administracion.dc.html",
@@ -62,7 +62,7 @@
       "x": 4200,
       "y": 0,
       "w": 1320,
-      "h": 3949
+      "h": 3998
     }
   ],
   "annotations": [
@@ -71,7 +71,7 @@
       "x": 0,
       "y": -260,
       "w": 760,
-      "text": "Descomposición funcional del Avance 3. Derivada de los 75 RF activos y las historias semilla; la agrupación en seis módulos sigue P-010. El Avance 2 (épicas) no existe, ver P-012.\n\nCuatro RF quedan fuera del diagrama porque son reglas del sistema, no acciones: IDE-005, INV-011, CMP-002 y TUR-006. Están al final de la trazabilidad.\n\nColores: teal de marca por nivel. El semáforo queda reservado (ADR-0006), por eso las letras CRUD van en neutro.\n\nPara el Word: exportar cada artboard como PNG. Fuente de verdad: build.mjs en docs/03-diseno/descomposicion-funcional/."
+      "text": "Descomposición funcional del Avance 3. Derivada de los 76 RF activos y las historias semilla; la agrupación en seis módulos sigue P-010. El Avance 2 (épicas) no existe, ver P-012.\n\nCuatro RF quedan fuera del diagrama porque son reglas del sistema, no acciones: IDE-005, INV-011, CMP-002 y TUR-006. Están al final de la trazabilidad.\n\nColores: teal de marca por nivel. El semáforo queda reservado (ADR-0006), por eso las letras CRUD van en neutro.\n\nPara el Word: exportar cada artboard como PNG. Fuente de verdad: build.mjs en docs/03-diseno/descomposicion-funcional/."
     }
   ],
   "launch": {

@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: motor
 bloque: 4
-actualizado: 2026-09-12
+actualizado: 2026-10-06
 ---
 
 # RF-MOT · Zonas y motor de emparejamiento
@@ -26,6 +26,29 @@ Principio: **el sistema recomienda, la persona decide y responde.**
 - [ ] Estado: `SIN_ATENDER`, `EN_ATENCION`, `CUBIERTA`
 - [ ] Fecha de la estimación de población, visible junto al número
 - [ ] Aparece en el mapa interno con su color de criticidad
+
+### RF-MOT-012 · Ajustar la población de una zona
+**Actor:** Administrador · **Prioridad:** DEBE
+**Depende de:** RF-MOT-001 · **Origen:** [P-002](../pendientes.md)
+
+La población estimada es el otro factor de [RF-MOT-002](#rf-mot-002--calcular-necesidad-de-una-zona).
+Cambia con los desplazamientos, así que el número tiene que poder corregirse sin perder
+de dónde salió cada valor. C9 Zonas afectadas ya permite editarlo desde el Bloque 1;
+este requerimiento fija las reglas.
+
+**Criterios de aceptación:**
+- [ ] El valor de partida es la proyección de población del DANE 2020-2035 para el
+      municipio, como referencia ([I-005](../../00-contexto/investigaciones.md))
+- [ ] Solo el Administrador cambia el número, desde C9
+- [ ] Cambiar el número exige una fuente y una fecha de estimación nuevas: no se
+      guarda un número nuevo con la fuente del anterior
+- [ ] La bitácora guarda el valor de antes y el de después, con quién lo cambió
+- [ ] La zona muestra el número junto a su fuente y su fecha, en el mapa interno y en
+      la ficha (RNF-04)
+- [ ] El cálculo de necesidad usa siempre el valor vigente
+
+**Por afinar:** si el Receptor de la zona puede proponer un número que el
+Administrador acepta o descarta.
 
 ### RF-MOT-002 · Calcular necesidad de una zona
 **Actor:** Sistema · **Prioridad:** DEBE

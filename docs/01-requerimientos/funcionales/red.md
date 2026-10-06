@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: red
 bloque: 1
-actualizado: 2026-09-30
+actualizado: 2026-10-06
 ---
 
 # RF-RED · Acopios, zonas, entidades y causas
@@ -75,7 +75,8 @@ Administrador.
 ### RF-RED-004 · Gestionar zonas afectadas
 **Actor:** Administrador · **Prioridad:** DEBE
 
-Ver [motor.md](motor.md#rf-mot-001).
+Ver [RF-MOT-001](motor.md#rf-mot-001--registrar-zona-afectada) y, para corregir la
+población, [RF-MOT-012](motor.md#rf-mot-012--ajustar-la-población-de-una-zona).
 
 ### RF-RED-005 · Gestionar entidades
 **Actor:** Administrador · **Prioridad:** DEBE
