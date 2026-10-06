@@ -19,6 +19,8 @@ interface EstadoSesion {
   cargando: boolean;
   entrar(usuario: string, contrasena: string): Promise<void>;
   entrarDonador(correo: string, contrasena: string): Promise<void>;
+  /** Pide el correo de confirmación del registro del Donador; no abre sesión. */
+  registrarDonador(nombre: string, correo: string): Promise<void>;
   /** Confirma el correo del registro del Donador y abre su sesión. */
   confirmar(token: string, contrasena: string, nombre?: string): Promise<void>;
   salir(): Promise<void>;
@@ -95,6 +97,11 @@ export function SesionProveedor({
     [cliente],
   );
 
+  const registrarDonador = useCallback(
+    (nombre: string, correo: string) => cliente.registrarDonador(nombre, correo),
+    [cliente],
+  );
+
   const confirmar = useCallback(
     async (token: string, contrasena: string, nombre?: string) => {
       const u = await cliente.confirmarCorreo(token, contrasena, nombre);
@@ -111,8 +118,8 @@ export function SesionProveedor({
   }, [cliente]);
 
   const valor = useMemo(
-    () => ({ usuario, cargando, entrar, entrarDonador, confirmar, salir }),
-    [usuario, cargando, entrar, entrarDonador, confirmar, salir],
+    () => ({ usuario, cargando, entrar, entrarDonador, registrarDonador, confirmar, salir }),
+    [usuario, cargando, entrar, entrarDonador, registrarDonador, confirmar, salir],
   );
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>;
 }

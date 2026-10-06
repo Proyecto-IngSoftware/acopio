@@ -84,7 +84,7 @@ describe('rutas del Donador', () => {
   };
 
   it.each([
-    ['/donador', 'Mi cuenta'],
+    ['/donador', 'Tu cuenta de Donador'],
     ['/donador/confirmar/abc', 'Confirma tu correo'],
     ['/seguimiento', 'Seguimiento'],
     ['/seguimiento/ACO-2026-7KQ4M', 'Seguimiento'],
@@ -104,7 +104,9 @@ describe('rutas del Donador', () => {
 
   it('/donar sin sesión lleva a /donador', async () => {
     render(envolver(<Rutas />, '/donar'));
-    expect(await screen.findByRole('heading', { level: 1, name: 'Mi cuenta' })).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Tu cuenta de Donador' }),
+    ).toBeInTheDocument();
   });
 
   it('/consola/bitacora con un Donador cae en el rechazo de RequiereRol', async () => {
