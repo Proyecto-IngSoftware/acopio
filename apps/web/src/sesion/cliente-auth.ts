@@ -17,6 +17,13 @@ export interface ClienteAuth {
   cerrarSesion(): Promise<void>;
   /** El usuario de la cookie actual, o null si no hay sesión. */
   usuarioActual(): Promise<UsuarioSesion | null>;
+  /** Pide el correo de confirmación del registro del Donador. */
+  registrarDonador(nombre: string, correo: string): Promise<void>;
+  /** Datos del enlace de confirmación, o null si no sirve (404). */
+  validarEnlace(token: string): Promise<{ nombre: string; correo: string } | null>;
+  /** Confirma el correo, fija la contraseña y abre la sesión. */
+  confirmarCorreo(token: string, contrasena: string, nombre?: string): Promise<UsuarioSesion>;
+  iniciarSesionDonador(correo: string, contrasena: string): Promise<UsuarioSesion>;
 }
 
 // El contrato tipa username como string[] por cómo nestjs-zod exporta los campos
@@ -49,5 +56,35 @@ export const clienteAuthLocal: ClienteAuth = {
       if (e instanceof ErrorApi && e.estado === 401) return null;
       throw e;
     }
+  },
+
+  async registrarDonador(nombre, correo) {
+    await desenvolver(api.POST('/api/auth/registro', { body: { nombre, correo } }));
+  },
+
+  async validarEnlace(token) {
+    try {
+      const r = await desenvolver(
+        api.GET('/api/auth/registro/confirmar/{token}', { params: { path: { token } } }),
+      );
+      return { nombre: r.nombre, correo: r.correo };
+    } catch (e) {
+      if (e instanceof ErrorApi && e.estado === 404) return null;
+      throw e;
+    }
+  },
+
+  async confirmarCorreo(token, contrasena, nombre) {
+    const sesion = await desenvolver(
+      api.POST('/api/auth/registro/confirmar', { body: { token, contrasena, nombre } }),
+    );
+    return soloUsuario(sesion.usuario as unknown as UsuarioSesion);
+  },
+
+  async iniciarSesionDonador(correo, contrasena) {
+    const sesion = await desenvolver(
+      api.POST('/api/auth/donador/sesion', { body: { correo, contrasena } }),
+    );
+    return soloUsuario(sesion.usuario as unknown as UsuarioSesion);
   },
 };

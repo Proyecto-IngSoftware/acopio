@@ -98,3 +98,45 @@ describe('sesión sin red (O-05)', () => {
     expect(await screen.findByText('Entrada rápida')).toBeInTheDocument();
   });
 });
+
+describe('sesión del Donador', () => {
+  const donador = { id: 'u9', username: null, nombre: 'Ana Pérez', rol: 'DONADOR' as const };
+
+  function Botones() {
+    const { usuario, entrarDonador, confirmar } = useSesion();
+    return (
+      <>
+        <p>{usuario ? `Sesión de ${usuario.nombre}` : 'Sin sesión'}</p>
+        <button onClick={() => void entrarDonador('ana@correo.co', 'una frase larga')}>
+          Entrar donador
+        </button>
+        <button onClick={() => void confirmar('tok', 'una frase larga', 'Ana')}>Confirmar</button>
+      </>
+    );
+  }
+
+  it('entrarDonador deja al usuario en la sesión y lo recuerda', async () => {
+    const cliente = clienteFalso();
+    cliente.iniciarSesionDonador.mockResolvedValue(donador);
+    render(envolver(<Botones />, '/', cliente));
+    await screen.findByText('Sin sesión');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Entrar donador' }));
+
+    await screen.findByText('Sesión de Ana Pérez');
+    expect(cliente.iniciarSesionDonador).toHaveBeenCalledWith('ana@correo.co', 'una frase larga');
+    expect(leerRecordado()).toEqual(donador);
+  });
+
+  it('confirmar abre la sesión con el usuario devuelto', async () => {
+    const cliente = clienteFalso();
+    cliente.confirmarCorreo.mockResolvedValue(donador);
+    render(envolver(<Botones />, '/', cliente));
+    await screen.findByText('Sin sesión');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Confirmar' }));
+
+    await screen.findByText('Sesión de Ana Pérez');
+    expect(cliente.confirmarCorreo).toHaveBeenCalledWith('tok', 'una frase larga', 'Ana');
+  });
+});

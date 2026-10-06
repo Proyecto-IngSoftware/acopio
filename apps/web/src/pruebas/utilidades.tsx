@@ -89,11 +89,19 @@ export function clienteFalso(usuario: UsuarioSesion | null = null): ClienteAuth 
   iniciarSesion: ReturnType<typeof vi.fn>;
   cerrarSesion: ReturnType<typeof vi.fn>;
   usuarioActual: ReturnType<typeof vi.fn>;
+  registrarDonador: ReturnType<typeof vi.fn>;
+  validarEnlace: ReturnType<typeof vi.fn>;
+  confirmarCorreo: ReturnType<typeof vi.fn>;
+  iniciarSesionDonador: ReturnType<typeof vi.fn>;
 } {
   return {
     usuarioActual: vi.fn(() => Promise.resolve(usuario)),
     iniciarSesion: vi.fn(() => Promise.resolve(usuario!)),
     cerrarSesion: vi.fn(() => Promise.resolve()),
+    registrarDonador: vi.fn(() => Promise.resolve()),
+    validarEnlace: vi.fn(() => Promise.resolve(null)),
+    confirmarCorreo: vi.fn(() => Promise.resolve(usuario!)),
+    iniciarSesionDonador: vi.fn(() => Promise.resolve(usuario!)),
   };
 }
 
