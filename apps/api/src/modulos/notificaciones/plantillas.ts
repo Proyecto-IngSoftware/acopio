@@ -26,6 +26,18 @@ function redactar(asunto: string, texto: string): CorreoRedactado {
 }
 
 export const plantillas = {
+  confirmarDonador: ((d: { nombre: string; enlace: string; venceEn: Date }) =>
+    redactar(
+      'Confirma tu correo en Acopio',
+      `Hola, ${d.nombre}.\n\nConfirma tu correo para empezar a preparar donaciones:\n${d.enlace}\n\nEl enlace vence el ${fecha(d.venceEn)}. Si no creaste una cuenta en Acopio, ignora este correo.`,
+    )) satisfies Plantilla<never>,
+
+  cuentaExistente: ((d: { enlaceEntrar: string }) =>
+    redactar(
+      'Ya tienes una cuenta en Acopio',
+      `Alguien intentó crear una cuenta de Donador con este correo, que ya tiene una cuenta.\n\nSi fuiste tú, entra aquí:\n${d.enlaceEntrar}\n\nSi no fuiste tú, no tienes que hacer nada.`,
+    )) satisfies Plantilla<never>,
+
   invitacion: ((d: { nombre: string; username: string; enlace: string; venceEn: Date }) =>
     redactar(
       'Tu acceso a Acopio',

@@ -6,8 +6,17 @@ import type { JSONWebKeySet } from 'jose';
  * sabe cuál está activo.
  */
 export interface ProveedorIdentidad {
-  /** Crea la credencial y devuelve su identificador, que será el `sub` del token. */
-  crearUsuario(correo: string, contrasena: string): Promise<{ uid: string }>;
+  /**
+   * Crea la credencial y devuelve su identificador, que será el `sub` del token. Las
+   * cuentas internas nacen confirmadas (la invitación prueba el correo); el Donador no.
+   */
+  crearUsuario(
+    correo: string,
+    contrasena: string,
+    opciones?: { confirmado?: boolean },
+  ): Promise<{ uid: string }>;
+  /** Marca el correo como confirmado: desde ahí puede iniciar sesión. */
+  confirmarCorreo(uid: string): Promise<void>;
   cambiarContrasena(uid: string, contrasena: string): Promise<void>;
   /** Devuelve null si el correo o la contraseña no coinciden. */
   iniciarSesion(correo: string, contrasena: string): Promise<SesionEmitida | null>;

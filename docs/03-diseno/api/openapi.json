@@ -227,6 +227,129 @@
         ]
       }
     },
+    "/api/auth/registro": {
+      "post": {
+        "operationId": "DonadorController_registrar",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegistroDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MensajeDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "donador"
+        ]
+      }
+    },
+    "/api/auth/registro/confirmar": {
+      "post": {
+        "operationId": "DonadorController_confirmar",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmarDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MensajeDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "donador"
+        ]
+      }
+    },
+    "/api/auth/donador/sesion": {
+      "post": {
+        "operationId": "DonadorController_iniciar",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SesionDonadorDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SesionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "donador"
+        ]
+      }
+    },
     "/api/invitaciones/{token}": {
       "get": {
         "operationId": "InvitacionesController_consultar",
@@ -3265,6 +3388,75 @@
           "rol",
           "alcanceGlobal",
           "asignaciones"
+        ]
+      },
+      "RegistroDto": {
+        "type": "object",
+        "properties": {
+          "correo": {
+            "type": "string",
+            "maxLength": 254,
+            "format": "email",
+            "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "contrasena": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 256
+          },
+          "nombre": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "correo",
+          "contrasena",
+          "nombre"
+        ]
+      },
+      "MensajeDto": {
+        "type": "object",
+        "properties": {
+          "mensaje": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "mensaje"
+        ]
+      },
+      "ConfirmarDto": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "SesionDonadorDto": {
+        "type": "object",
+        "properties": {
+          "correo": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 254
+          },
+          "contrasena": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "correo",
+          "contrasena"
         ]
       },
       "InvitacionPublicaDto": {

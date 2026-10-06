@@ -34,6 +34,8 @@ export class SesionDto extends createZodDto(
   }),
 ) {}
 
+export class MensajeDto extends createZodDto(z.object({ mensaje: z.string() })) {}
+
 export class YoDto extends createZodDto(
   z.object({
     id: z.uuid(),

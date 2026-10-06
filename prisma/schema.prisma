@@ -54,6 +54,7 @@ model Usuario {
   asignaciones_hechas  UsuarioAsignacion[] @relation("asignado_por")
   invitaciones         Invitacion[]        @relation("invitado")
   invitaciones_creadas Invitacion[]        @relation("creada_por")
+  verificaciones       VerificacionCorreo[]
   bitacora             Bitacora[]
   movimientos          Movimiento[]
 
@@ -418,4 +419,18 @@ model CodigoBarras {
 
   @@index([categoria_id])
   @@map("codigo_barras")
+}
+
+/// Confirmación del correo de un Donador (RF-IDE-013, C-03). Solo se guarda el hash.
+model VerificacionCorreo {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  usuario_id String    @db.Uuid
+  usuario    Usuario   @relation(fields: [usuario_id], references: [id])
+  token_hash Bytes     @unique
+  vence_en   DateTime  @db.Timestamptz
+  usado_en   DateTime? @db.Timestamptz
+  creado_en  DateTime  @default(now()) @db.Timestamptz
+
+  @@index([usuario_id])
+  @@map("verificacion_correo")
 }

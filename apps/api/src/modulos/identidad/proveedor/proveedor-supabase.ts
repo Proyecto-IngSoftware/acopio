@@ -24,14 +24,23 @@ export class ProveedorSupabase implements ProveedorIdentidad {
     return this.clienteAdmin;
   }
 
-  async crearUsuario(correo: string, contrasena: string): Promise<{ uid: string }> {
+  async crearUsuario(
+    correo: string,
+    contrasena: string,
+    opciones?: { confirmado?: boolean },
+  ): Promise<{ uid: string }> {
     const { data, error } = await this.admin.auth.admin.createUser({
       email: correo,
       password: contrasena,
-      email_confirm: true,
+      email_confirm: opciones?.confirmado !== false,
     });
     if (error || !data.user) throw error ?? new Error('Supabase no devolvió el usuario');
     return { uid: data.user.id };
+  }
+
+  async confirmarCorreo(uid: string): Promise<void> {
+    const { error } = await this.admin.auth.admin.updateUserById(uid, { email_confirm: true });
+    if (error) throw error;
   }
 
   async cambiarContrasena(uid: string, contrasena: string): Promise<void> {

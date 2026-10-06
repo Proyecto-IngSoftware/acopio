@@ -30,16 +30,27 @@ export class ProveedorLocal implements ProveedorIdentidad {
     return this.llaves;
   }
 
-  async crearUsuario(correo: string, contrasena: string): Promise<{ uid: string }> {
+  async crearUsuario(
+    correo: string,
+    contrasena: string,
+    opciones: { confirmado?: boolean } = {},
+  ): Promise<{ uid: string }> {
     const identidad = await this.prisma.identidadLocal.create({
       data: {
         correo,
         password_hash: await bcrypt.hash(contrasena, COSTO_BCRYPT),
         // Las cuentas internas nacen confirmadas: la invitación prueba el correo
-        correo_confirmado_en: new Date(),
+        correo_confirmado_en: opciones.confirmado === false ? null : new Date(),
       },
     });
     return { uid: identidad.id };
+  }
+
+  async confirmarCorreo(uid: string): Promise<void> {
+    await this.prisma.identidadLocal.update({
+      where: { id: uid },
+      data: { correo_confirmado_en: new Date() },
+    });
   }
 
   async cambiarContrasena(uid: string, contrasena: string): Promise<void> {

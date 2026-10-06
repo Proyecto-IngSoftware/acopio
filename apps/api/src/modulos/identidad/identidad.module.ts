@@ -3,6 +3,8 @@ import { ENTORNO, type Entorno } from '../../config/entorno';
 import { AlcanceService } from './autenticacion/alcance.service';
 import { AutenticacionGuard } from './autenticacion/autenticacion.guard';
 import { VerificadorToken } from './autenticacion/verificador-token';
+import { DonadorController } from './donador/donador.controller';
+import { DonadorService } from './donador/donador.service';
 import { InvitacionesController } from './invitaciones/invitaciones.controller';
 import { InvitacionesService } from './invitaciones/invitaciones.service';
 import { PROVEEDOR_IDENTIDAD } from './proveedor/proveedor-identidad';
@@ -16,7 +18,7 @@ import { UsuariosService } from './usuarios/usuarios.service';
 /** Autenticación, autorización, usuarios e invitaciones. Todos los módulos dependen de él. */
 @Global()
 @Module({
-  controllers: [SesionController, InvitacionesController, UsuariosController],
+  controllers: [SesionController, DonadorController, InvitacionesController, UsuariosController],
   providers: [
     ProveedorLocal,
     ProveedorSupabase,
@@ -29,6 +31,7 @@ import { UsuariosService } from './usuarios/usuarios.service';
     VerificadorToken,
     AlcanceService,
     SesionService,
+    DonadorService,
     InvitacionesService,
     UsuariosService,
     AutenticacionGuard,
