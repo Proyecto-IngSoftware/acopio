@@ -23,6 +23,16 @@ const esquema = z
     CORREO_REMITENTE: z.string().min(1),
     // Geocodificación de direcciones (RF-RED-002)
     NOMINATIM_URL: z.url().default('https://nominatim.openstreetmap.org'),
+    // Custodia (Bloque 3, C-10)
+    PREPARADA_VIGENCIA_DIAS: z.coerce.number().int().positive().default(7),
+    PREPARADAS_MAXIMO: z.coerce.number().int().positive().default(5),
+    FACTURA_RETENCION_MESES: z.coerce.number().int().positive().default(12),
+    // Almacenamiento de objetos (ADR-0012)
+    S3_ENDPOINT: z.url(),
+    S3_REGION: z.string().min(1),
+    S3_BUCKET: z.string().min(1),
+    S3_ACCESS_KEY: z.string().min(1),
+    S3_SECRET_KEY: z.string().min(1),
   })
   // P-025: el login local nunca llega a producción
   .refine((e) => !(e.NODE_ENV === 'production' && e.AUTH_PROVEEDOR === 'local'), {

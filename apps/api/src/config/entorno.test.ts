@@ -9,6 +9,11 @@ const valido = {
   SMTP_HOST: 'localhost',
   SMTP_PORT: '1025',
   CORREO_REMITENTE: 'Acopio <no-responder@acopio.local>',
+  S3_ENDPOINT: 'http://localhost:3900',
+  S3_REGION: 'garage',
+  S3_BUCKET: 'comprobantes',
+  S3_ACCESS_KEY: 'GK0',
+  S3_SECRET_KEY: '0',
 };
 
 describe('leerEntorno', () => {

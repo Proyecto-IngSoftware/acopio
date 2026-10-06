@@ -57,6 +57,7 @@ model Usuario {
   verificaciones       VerificacionCorreo[]
   bitacora             Bitacora[]
   movimientos          Movimiento[]
+  donaciones           Comprobante[] @relation("donaciones")
 
   @@map("usuario")
 }
@@ -196,6 +197,7 @@ model Categoria {
   saldos         Saldo[]
   umbrales       Umbral[]
   codigos_barras CodigoBarras[]
+  lineas_comprobante LineaComprobante[]
 
   @@map("categoria")
 }
@@ -295,6 +297,7 @@ model Acopio {
   movimientos         Movimiento[]
   saldos              Saldo[]
   umbrales            Umbral[]
+  comprobantes        Comprobante[]
 
   @@index([estado])
   @@map("acopio")
@@ -372,6 +375,7 @@ model Movimiento {
   /// Orden en que entró a la base: ordena el historial y su saldo corriente. registrado_en
   /// es la hora de inicio de la transacción y no siempre coincide con ese orden.
   secuencia      BigInt         @unique @default(autoincrement())
+  vinculo        ComprobanteMovimiento?
 
   @@index([acopio_id, categoria_id, registrado_en])
   @@index([registrado_en])
@@ -433,4 +437,85 @@ model VerificacionCorreo {
 
   @@index([usuario_id])
   @@map("verificacion_correo")
+}
+
+enum EstadoComprobante {
+  PREPARADO
+  PENDIENTE
+  CONCILIADO
+  RECHAZADO
+  CANCELADO
+}
+
+enum MotivoRechazo {
+  DUPLICADO
+  NO_CUADRA_MOVIMIENTOS
+  DIFERENCIA_SIN_EXPLICAR
+  OTRO
+}
+
+enum OrigenVinculo {
+  RECEPCION
+  AUDITOR
+}
+
+/// Una donación preparada por un Donador (RF-CMP-001B). Vale cuando se concilia.
+model Comprobante {
+  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  folio              String            @unique
+  donador_id         String            @db.Uuid
+  donador            Usuario           @relation("donaciones", fields: [donador_id], references: [id])
+  acopio_id          String            @db.Uuid
+  acopio             Acopio            @relation(fields: [acopio_id], references: [id])
+  estado             EstadoComprobante @default(PREPARADO)
+  creado_en          DateTime          @default(now()) @db.Timestamptz
+  recibido_por       String?           @db.Uuid
+  recibido_en        DateTime?         @db.Timestamptz
+  verificado_por     String?           @db.Uuid
+  verificado_en      DateTime?         @db.Timestamptz
+  motivo_rechazo     MotivoRechazo?
+  nota_rechazo       String?
+  cerrado_en         DateTime?         @db.Timestamptz
+  factura_key        String?
+  miniatura_key      String?
+  factura_tipo       String?
+  factura_bytes      Int?
+  factura_borrada_en DateTime?         @db.Timestamptz
+  lineas             LineaComprobante[]
+  vinculos           ComprobanteMovimiento[]
+
+  @@index([estado, acopio_id, creado_en])
+  @@index([donador_id, estado])
+  @@map("comprobante")
+}
+
+model LineaComprobante {
+  id                  String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  comprobante_id      String      @db.Uuid
+  comprobante         Comprobante @relation(fields: [comprobante_id], references: [id])
+  categoria_id        String      @db.Uuid
+  categoria           Categoria   @relation(fields: [categoria_id], references: [id])
+  ean                 String?
+  contenido_unitario  Decimal     @db.Decimal(12, 3)
+  cantidad_declarada  Decimal     @db.Decimal(12, 3)
+  cantidad_confirmada Decimal?    @db.Decimal(12, 3)
+  vence_en            DateTime?   @db.Date
+  motivo_diferencia   String?
+
+  @@index([comprobante_id])
+  @@map("linea_comprobante")
+}
+
+/// Solo inserción (C-05): une una donación con sus ENTRADA, al recibir o al vincular.
+model ComprobanteMovimiento {
+  comprobante_id String        @db.Uuid
+  comprobante    Comprobante   @relation(fields: [comprobante_id], references: [id])
+  movimiento_id  String        @unique @db.Uuid
+  movimiento     Movimiento    @relation(fields: [movimiento_id], references: [id])
+  origen         OrigenVinculo
+  vinculado_por  String        @db.Uuid
+  vinculado_en   DateTime      @default(now()) @db.Timestamptz
+
+  @@id([comprobante_id, movimiento_id])
+  @@map("comprobante_movimiento")
 }

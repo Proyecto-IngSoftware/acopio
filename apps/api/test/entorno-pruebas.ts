@@ -35,5 +35,10 @@ export function entornoPruebas(): Record<string, string> {
     SMTP_HOST: '127.0.0.1',
     SMTP_PORT: '9',
     CORREO_REMITENTE: 'Acopio <no-responder@acopio.local>',
+    S3_ENDPOINT: 'http://localhost:3900',
+    S3_REGION: 'garage',
+    S3_BUCKET: 'pruebas',
+    S3_ACCESS_KEY: 'GK0',
+    S3_SECRET_KEY: '0',
   };
 }

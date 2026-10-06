@@ -172,6 +172,33 @@ describe('base de datos', () => {
     });
   });
 
+  describe('custodia (Bloque 3)', () => {
+    it('acopio_app no cambia ni borra vínculos de donaciones', async () => {
+      await expect(
+        app.query(`UPDATE comprobante_movimiento SET origen = 'AUDITOR'`),
+      ).rejects.toThrow(/permission denied/);
+      await expect(app.query(`DELETE FROM comprobante_movimiento`)).rejects.toThrow(
+        /permission denied/,
+      );
+    });
+
+    it('acopio_app no borra comprobantes', async () => {
+      await expect(app.query(`DELETE FROM comprobante`)).rejects.toThrow(/permission denied/);
+    });
+
+    it('un folio fuera de formato no entra', async () => {
+      const admin = await a.prisma.usuario.findFirstOrThrow({
+        where: { username: ADMIN.username },
+      });
+      await expect(
+        app.query(
+          `INSERT INTO comprobante (folio, donador_id, acopio_id) VALUES ('ACO-2026-0OI1L', $1, $2)`,
+          [admin.id, ACOPIO_A],
+        ),
+      ).rejects.toThrow(/comprobante_folio_formato/);
+    });
+  });
+
   describe('restricciones CHECK', () => {
     const dueno = new Client({ connectionString: URL_DUENO_PRUEBAS });
     beforeAll(() => dueno.connect());
