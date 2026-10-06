@@ -3691,8 +3691,8 @@ export interface operations {
     };
     DonacionesController_listar: {
         parameters: {
-            query: {
-                estado: string;
+            query?: {
+                estado?: "PREPARADO" | "PENDIENTE" | "CONCILIADO" | "RECHAZADO" | "CANCELADO";
             };
             header?: never;
             path?: never;

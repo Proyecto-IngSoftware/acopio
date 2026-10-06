@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { abiertoAhora, distanciaKm, type Horario } from '@acopio/shared';
+import type { EstadoComprobante } from '../../generado/prisma/client';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { esLlaveDuplicada } from '../../comun/prisma/errores';
@@ -97,6 +98,10 @@ export class DonacionesService {
     const contenido = codigo?.contenido ? Number(codigo.contenido) : 1;
     // Sin contenido, la cantidad va en la unidad base: en UNIDAD, entera
     if (contenido === 1) exigirCantidad(l.cantidad, cat.unidad_base);
+    // Con un código conocido la cantidad cuenta presentaciones: enteras
+    if (codigo && !Number.isInteger(l.cantidad)) {
+      throw new ErrorDominio('CANTIDAD_ENTERA', 'Las presentaciones se cuentan enteras');
+    }
     return {
       categoria_id: l.categoriaId,
       ean: codigo ? l.ean : null,
@@ -106,9 +111,9 @@ export class DonacionesService {
     };
   }
 
-  async listar(usuario: UsuarioAutenticado, estado?: string) {
+  async listar(usuario: UsuarioAutenticado, estado?: EstadoComprobante) {
     const filas = await this.prisma.comprobante.findMany({
-      where: { donador_id: usuario.id, ...(estado ? { estado: estado as never } : {}) },
+      where: { donador_id: usuario.id, ...(estado ? { estado } : {}) },
       include: CON_LINEAS,
       orderBy: { creado_en: 'desc' },
     });
@@ -121,11 +126,18 @@ export class DonacionesService {
     if (c.donador_id !== usuario.id) await buscarPorFolio(this.prisma, '');
     if (c.estado !== 'PREPARADO') throw estadoInvalido(c.estado, 'cancelar');
     const hecho = await this.prisma.$transaction(async (tx) => {
-      const actualizado = await tx.comprobante.update({
-        where: { id: c.id },
+      // El estado se vuelve a exigir en el UPDATE: un Operador pudo recibir el folio en medio
+      const { count } = await tx.comprobante.updateMany({
+        where: { id: c.id, estado: 'PREPARADO' },
         data: { estado: 'CANCELADO', cerrado_en: new Date() },
-        include: CON_LINEAS,
       });
+      if (count === 0) {
+        const actual = await tx.comprobante.findUniqueOrThrow({
+          where: { id: c.id },
+          select: { estado: true },
+        });
+        throw estadoInvalido(actual.estado, 'cancelar');
+      }
       await this.bitacora.registrar(tx, {
         usuarioId: usuario.id,
         accion: 'comprobante.cancelado',
@@ -135,7 +147,7 @@ export class DonacionesService {
         antes: { estado: c.estado },
         despues: { estado: 'CANCELADO' },
       });
-      return actualizado;
+      return tx.comprobante.findUniqueOrThrow({ where: { id: c.id }, include: CON_LINEAS });
     });
     return aComprobanteVista(hecho);
   }

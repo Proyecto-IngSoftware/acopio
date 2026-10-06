@@ -56,6 +56,12 @@ class SugerenciasDto extends createZodDto(
   }),
 ) {}
 
+class ListarDonacionesDto extends createZodDto(
+  z.object({
+    estado: z.enum(['PREPARADO', 'PENDIENTE', 'CONCILIADO', 'RECHAZADO', 'CANCELADO']).optional(),
+  }),
+) {}
+
 const errores = { status: 'default' as const, type: ErrorDto, description: 'Error' };
 
 /** P9 y P13: el Donador prepara, consulta y cancela sus donaciones. */
@@ -75,11 +81,8 @@ export class DonacionesController {
 
   @Get()
   @ApiOkResponse({ type: [ComprobanteDto] })
-  listar(
-    @UsuarioActual() u: UsuarioAutenticado,
-    @Query('estado') estado?: 'PREPARADO' | 'PENDIENTE' | 'CONCILIADO' | 'RECHAZADO' | 'CANCELADO',
-  ) {
-    return this.donaciones.listar(u, estado);
+  listar(@UsuarioActual() u: UsuarioAutenticado, @Query() consulta: ListarDonacionesDto) {
+    return this.donaciones.listar(u, consulta.estado);
   }
 
   @Post(':folio/cancelar')

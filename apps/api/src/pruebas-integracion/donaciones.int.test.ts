@@ -113,6 +113,67 @@ describe('preparar una donación (RF-CMP-001B)', () => {
     await como(otro.token).post(`/api/donaciones/${creada.body.folio}/cancelar`).expect(409);
   });
 
+  it('dos cancelaciones simultáneas dan 200 y 409 y una sola entrada en la bitácora', async () => {
+    const otro = await crearDonador(a);
+    const c = await como(otro.token)
+      .post('/api/donaciones', {
+        acopioId: ACOPIO_A,
+        lineas: [{ categoriaId: arroz, cantidad: 1 }],
+      })
+      .expect(201);
+    const rs = await Promise.all([
+      como(otro.token).post(`/api/donaciones/${c.body.folio}/cancelar`),
+      como(otro.token).post(`/api/donaciones/${c.body.folio}/cancelar`),
+    ]);
+    expect(rs.map((r) => r.status).sort()).toEqual([200, 409]);
+    const eventos = await a.prisma.bitacora.count({
+      where: { accion: 'comprobante.cancelado', usuario_id: otro.id },
+    });
+    expect(eventos).toBe(1);
+  });
+
+  it('no cancela una donación que ya dejó de estar preparada', async () => {
+    const otro = await crearDonador(a);
+    const c = await como(otro.token)
+      .post('/api/donaciones', {
+        acopioId: ACOPIO_A,
+        lineas: [{ categoriaId: arroz, cantidad: 1 }],
+      })
+      .expect(201);
+    await a.prisma.comprobante.update({
+      where: { folio: c.body.folio },
+      data: { estado: 'PENDIENTE' },
+    });
+    await como(otro.token).post(`/api/donaciones/${c.body.folio}/cancelar`).expect(409);
+    const fila = await a.prisma.comprobante.findUniqueOrThrow({ where: { folio: c.body.folio } });
+    expect(fila.estado).toBe('PENDIENTE');
+  });
+
+  it('valida el filtro de estado al listar', async () => {
+    const otro = await crearDonador(a);
+    await como(otro.token)
+      .post('/api/donaciones', {
+        acopioId: ACOPIO_A,
+        lineas: [{ categoriaId: arroz, cantidad: 1 }],
+      })
+      .expect(201);
+    await como(otro.token).get('/api/donaciones?estado=XYZ').expect(400);
+    const prep = await como(otro.token).get('/api/donaciones?estado=PREPARADO').expect(200);
+    expect(prep.body).toHaveLength(1);
+    const canc = await como(otro.token).get('/api/donaciones?estado=CANCELADO').expect(200);
+    expect(canc.body).toHaveLength(0);
+  });
+
+  it('con un código conocido la cantidad de presentaciones es entera', async () => {
+    const r = await como(donador.token)
+      .post('/api/donaciones', {
+        acopioId: ACOPIO_A,
+        lineas: [{ categoriaId: agua, ean: '7702001045231', cantidad: 12.5 }],
+      })
+      .expect(422);
+    expect(r.body.codigo).toBe('CANTIDAD_ENTERA');
+  });
+
   it('sugiere dónde entregar y avisa qué no recibe cada acopio', async () => {
     await a.prisma.noRecibir.create({
       data: { acopio_id: ACOPIO_A, categoria_id: agua, marcado_por: donador.id },
