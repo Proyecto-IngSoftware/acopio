@@ -92,12 +92,39 @@ export async function sembrarDemo(prisma: PrismaService) {
 const EMERGENCIA_DEMO = 'd0000000-0000-4000-8000-000000000021';
 const ZONA_DEMO = 'd0000000-0000-4000-8000-000000000031';
 
-/** Una cuenta por rol para recorrer la consola. Todas con la misma contraseña. */
+/**
+ * Una cuenta por rol para recorrer la consola, cada una con el correo de maqueta de un
+ * integrante del equipo (P-042). Todas con la misma contraseña.
+ */
 const USUARIOS_DEMO = [
-  { username: 'operador1', nombre: 'Operadora Chapinero (prueba)', rol: 'OPERADOR', acopio: 0 },
-  { username: 'operador2', nombre: 'Operador Kennedy (prueba)', rol: 'OPERADOR', acopio: 1 },
-  { username: 'auditor1', nombre: 'Auditora (prueba)', rol: 'AUDITOR', acopio: 0 },
-  { username: 'receptor1', nombre: 'Receptor Mocoa (prueba)', rol: 'RECEPTOR', acopio: null },
+  {
+    username: 'operador1',
+    nombre: 'Joseph · Operador Chapinero (prueba)',
+    correo: 'joseph@acopio.co',
+    rol: 'OPERADOR',
+    acopio: 0,
+  },
+  {
+    username: 'operador2',
+    nombre: 'Brayan · Operador Kennedy (prueba)',
+    correo: 'brayan@acopio.co',
+    rol: 'OPERADOR',
+    acopio: 1,
+  },
+  {
+    username: 'auditor1',
+    nombre: 'Michael · Auditor (prueba)',
+    correo: 'michael@acopio.co',
+    rol: 'AUDITOR',
+    acopio: 0,
+  },
+  {
+    username: 'receptor1',
+    nombre: 'Alejandra · Receptora Mocoa (prueba)',
+    correo: 'alejandra@acopio.co',
+    rol: 'RECEPTOR',
+    acopio: null,
+  },
 ] as const;
 
 export const CONTRASENA_DEMO = 'demo-acopio-2026';
@@ -148,7 +175,7 @@ export async function sembrarEscenariosDemo(prisma: PrismaService, proveedor: Pr
       ids[u.username] = existente.id;
       continue;
     }
-    const correo = `${u.username}@demo.acopio.local`;
+    const correo = u.correo;
     const { uid } = await proveedor.crearUsuario(correo, CONTRASENA_DEMO);
     const creado = await prisma.usuario.create({
       data: {

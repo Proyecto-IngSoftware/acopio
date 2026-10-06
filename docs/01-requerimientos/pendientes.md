@@ -731,7 +731,13 @@ borrar los datos (Ley 1581 de 2012). El proyecto todavía no tiene uno. El dise�
 traía `privacidad@acopio.co`, que no existe.
 **Por qué:** salió al aprobar la maqueta del ciclo 1 del Bloque 3. Mientras no haya correo, la
 web lo lee de una sola constante y P12 muestra el texto sin dirección.
-**Estado:** ABIERTO.
+**Resuelto el 2026-10-06:** Joseph decidió usar correos y datos de maqueta. P12 muestra
+`contact@acopio.co` (`apps/web/src/portal/contacto.ts`). El primer administrador del seed es
+`admin@acopio.co` (`SEED_ADMIN_CORREO` en `.env.example`). Las cuentas por rol de `seed:demo`
+llevan el correo de un integrante: `joseph@acopio.co` (operador1), `brayan@acopio.co`
+(operador2), `michael@acopio.co` (auditor1) y `alejandra@acopio.co` (receptor1). Ninguno es un
+buzón real. Si el proyecto llega a tener uno, se cambia la constante y la variable.
+**Estado:** RESUELTO el 2026-10-06.
 
 ---
 
