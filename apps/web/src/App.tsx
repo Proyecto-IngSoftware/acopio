@@ -6,6 +6,7 @@ import { SubirAlNavegar } from './componentes/SubirAlNavegar';
 import { filtroDelMapa } from './portal/mapa/filtro';
 import { Rutas } from './rutas';
 import { SesionProveedor } from './sesion/Sesion';
+import { AvisoVersion } from './sin-conexion/AvisoVersion';
 import { Sincronizador } from './sin-conexion/Sincronizador';
 
 const consultas = new QueryClient({
@@ -27,6 +28,7 @@ export function App() {
           <SubirAlNavegar />
           <Sincronizador />
           <Rutas />
+          <AvisoVersion />
         </SesionProveedor>
       </BrowserRouter>
     </QueryClientProvider>

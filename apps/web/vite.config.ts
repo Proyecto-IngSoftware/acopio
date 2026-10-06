@@ -3,6 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath } from 'node:url';
 import { defineConfig, type Plugin } from 'vite';
+import { VitePWA } from 'vite-plugin-pwa';
 
 // Pantallas que se descargan al abrirlas pero que suelen ser la primera visita, por un
 // enlace compartido. Si la dirección coincide, el HTML pide sus archivos desde el
@@ -51,7 +52,40 @@ function precargarPantallas(): Plugin {
 }
 
 export default defineConfig({
-  plugins: [react(), tailwindcss(), precargarPantallas()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    precargarPantallas(),
+    // Service worker para abrir sin red (ADR-0016): guarda el build y responde index.html a
+    // cualquier navegación. Nunca guarda respuestas de /api; la cola sincroniza desde la página
+    VitePWA({
+      registerType: 'prompt',
+      injectRegister: false,
+      manifest: false,
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [/^\/api\//],
+        runtimeCaching: [
+          // Los íconos de Material Symbols vienen de Google Fonts: sin esto, sin red no se ven
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/,
+            handler: 'StaleWhileRevalidate',
+            options: { cacheName: 'fuentes-css' },
+          },
+          {
+            urlPattern: /^https:\/\/fonts\.gstatic\.com\/.*/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'fuentes',
+              expiration: { maxEntries: 20, maxAgeSeconds: 60 * 60 * 24 * 365 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
+      },
+    }),
+  ],
   // Las reglas compartidas se compilan desde su código fuente: la web no depende del dist
   resolve: {
     alias: {
@@ -66,6 +100,12 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     // Mismo origen que la API, como en producción detrás de Traefik (ADR-0014)
+    proxy: { '/api': 'http://localhost:3000' },
+  },
+  // El build con el service worker, para probar la captura sin conexión (cierre del ciclo 3)
+  preview: {
+    port: 4173,
+    strictPort: true,
     proxy: { '/api': 'http://localhost:3000' },
   },
   test: {
