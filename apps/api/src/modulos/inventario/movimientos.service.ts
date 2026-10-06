@@ -107,6 +107,61 @@ export class MovimientosService {
     return lista.some((x) => x.categoriaId === categoriaId);
   }
 
+  /**
+   * Una ENTRADA dentro de la transacción de quien llama. La recepción de una donación crea
+   * varias y sus vínculos de una vez (Bloque 3). Quien llama exige antes el alcance y el
+   * acopio abierto; aquí se validan la categoría, la cantidad y el vencimiento.
+   */
+  async entradaEnTransaccion(
+    tx: ClienteBd,
+    usuario: UsuarioAutenticado,
+    acopioId: string,
+    datos: {
+      id?: string;
+      categoriaId: string;
+      cantidad: number;
+      venceEn: Date | null;
+      ocurridoEn: Date;
+      origenOffline: boolean;
+    },
+  ): Promise<{ fila: Movimiento; saldo: number }> {
+    const cat = await categoriaParaMovimiento(tx, datos.categoriaId);
+    exigirCantidad(datos.cantidad, cat.unidad_base);
+    if (cat.perecedero && !datos.venceEn) {
+      throw new ErrorDominio(
+        'VENCIMIENTO_OBLIGATORIO',
+        'Esta categoría es perecedera: indica la fecha de vencimiento',
+      );
+    }
+    // El candado deja el antes y el después de la bitácora sin entradas ajenas en medio
+    const antes = await this.bloquearSaldo(tx, acopioId, datos.categoriaId);
+    const fila = await tx.movimiento.create({
+      data: {
+        id: datos.id,
+        acopio_id: acopioId,
+        categoria_id: datos.categoriaId,
+        tipo: 'ENTRADA',
+        signo: 1,
+        cantidad: datos.cantidad,
+        vence_en: cat.perecedero ? datos.venceEn : null,
+        usuario_id: usuario.id,
+        ocurrido_en: datos.ocurridoEn,
+        origen_offline: datos.origenOffline,
+      },
+    });
+    const saldo = await this.saldoDe(tx, acopioId, datos.categoriaId);
+    await this.bitacora.registrar(tx, {
+      usuarioId: usuario.id,
+      accion: 'movimiento.entrada',
+      entidad: 'movimiento',
+      entidadId: fila.id,
+      ubicacionId: acopioId,
+      antes: { categoria: cat.nombre, saldo: antes },
+      despues: { categoria: cat.nombre, cantidad: datos.cantidad, saldo },
+    });
+    return { fila, saldo };
+  }
+
   async entrada(
     usuario: UsuarioAutenticado,
     acopioId: string,
@@ -124,39 +179,9 @@ export class MovimientosService {
 
     try {
       const resultado = await this.prisma.$transaction(async (tx) => {
-        const cat = await categoriaParaMovimiento(tx, datos.categoriaId);
-        exigirCantidad(datos.cantidad, cat.unidad_base);
-        if (cat.perecedero && !datos.venceEn) {
-          throw new ErrorDominio(
-            'VENCIMIENTO_OBLIGATORIO',
-            'Esta categoría es perecedera: indica la fecha de vencimiento',
-          );
-        }
-        // El candado deja el antes y el después de la bitácora sin entradas ajenas en medio
-        const antes = await this.bloquearSaldo(tx, acopioId, datos.categoriaId);
-        const fila = await tx.movimiento.create({
-          data: {
-            id: datos.id,
-            acopio_id: acopioId,
-            categoria_id: datos.categoriaId,
-            tipo: 'ENTRADA',
-            signo: 1,
-            cantidad: datos.cantidad,
-            vence_en: cat.perecedero ? datos.venceEn : null,
-            usuario_id: usuario.id,
-            ocurrido_en: ocurridoEn,
-            origen_offline: datos.origenOffline,
-          },
-        });
-        const saldo = await this.saldoDe(tx, acopioId, datos.categoriaId);
-        await this.bitacora.registrar(tx, {
-          usuarioId: usuario.id,
-          accion: 'movimiento.entrada',
-          entidad: 'movimiento',
-          entidadId: fila.id,
-          ubicacionId: acopioId,
-          antes: { categoria: cat.nombre, saldo: antes },
-          despues: { categoria: cat.nombre, cantidad: datos.cantidad, saldo },
+        const { fila, saldo } = await this.entradaEnTransaccion(tx, usuario, acopioId, {
+          ...datos,
+          ocurridoEn,
         });
         return { movimiento: aMovimientoVista(fila), saldo };
       }, TRANSACCION);

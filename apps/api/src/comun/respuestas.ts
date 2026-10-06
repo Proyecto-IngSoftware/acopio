@@ -390,6 +390,15 @@ export class ComprobanteDto extends createZodDto(
   }),
 ) {}
 
+export class RecepcionDto extends createZodDto(
+  z.object({
+    comprobante: ComprobanteDto.schema,
+    noRecibe: z
+      .array(z.uuid())
+      .describe('Categorías de la donación marcadas «no recibir» en el acopio'),
+  }),
+) {}
+
 export class UrlFacturaDto extends createZodDto(
   z.object({
     url: z.string().describe('URL firmada de la foto'),

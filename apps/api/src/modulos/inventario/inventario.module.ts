@@ -17,5 +17,6 @@ import { UmbralesService } from './umbrales.service';
     UmbralesController,
   ],
   providers: [NoRecibirService, MovimientosService, ConsultasService, UmbralesService],
+  exports: [MovimientosService],
 })
 export class InventarioModule {}

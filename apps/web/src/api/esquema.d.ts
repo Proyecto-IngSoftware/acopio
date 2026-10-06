@@ -923,6 +923,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/comprobantes/{folio}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ComprobantesController_consultar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/comprobantes/{folio}/recepcion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ComprobantesController_recibir"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/salud": {
         parameters: {
             query?: never;
@@ -1863,6 +1895,60 @@ export interface components {
              * @description Cuándo dejan de servir las URL
              */
             venceEn: string;
+        };
+        RecibirDto: {
+            /** Format: uuid */
+            acopioId: string;
+            lineas: {
+                /** Format: uuid */
+                lineaId: string;
+                cantidadConfirmada: number;
+                /** Format: date */
+                venceEn?: string;
+                motivoDiferencia?: string;
+            }[];
+        };
+        RecepcionDto: {
+            comprobante: {
+                /** @description ACO-AAAA-XXXXX */
+                folio: string;
+                /** @enum {string} */
+                estado: "PREPARADO" | "PENDIENTE" | "CONCILIADO" | "RECHAZADO" | "CANCELADO";
+                acopio: {
+                    /** Format: uuid */
+                    id: string;
+                    nombre: string;
+                };
+                /** Format: date-time */
+                creadoEn: string;
+                /** Format: date-time */
+                recibidoEn: string | null;
+                /** Format: date-time */
+                verificadoEn: string | null;
+                motivoRechazo: string | null;
+                notaRechazo: string | null;
+                tieneFactura: boolean;
+                lineas: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    categoriaId: string;
+                    categoria: string;
+                    /** @enum {string} */
+                    unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
+                    perecedero: boolean;
+                    ean: string | null;
+                    /** @description Unidad base por presentación; 1 si no hay código */
+                    contenidoUnitario: number;
+                    cantidadDeclarada: number;
+                    cantidadConfirmada: number | null;
+                    /** Format: date */
+                    venceEn: string | null;
+                    motivoDiferencia: string | null;
+                }[];
+            };
+            /** @description Categorías de la donación marcadas «no recibir» en el acopio */
+            noRecibe: string[];
         };
         SaludDto: {
             /** @enum {string} */
@@ -3915,6 +4001,70 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UrlFacturaDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ComprobantesController_consultar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folio: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComprobanteDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ComprobantesController_recibir: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folio: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RecibirDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecepcionDto"];
                 };
             };
             /** @description Error */
