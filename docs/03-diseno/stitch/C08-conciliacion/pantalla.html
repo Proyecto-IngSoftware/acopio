@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acopio CO - Conciliación de folio</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-container": "#0f6e6e",
+            "surface-bright": "#fff8f5",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "on-tertiary-fixed": "#002020",
+            "secondary-fixed": "#e9e1db",
+            "secondary-container": "#e9e1db",
+            "inverse-primary": "#85d4d3",
+            "tertiary-fixed-dim": "#96d1d0",
+            "secondary-fixed-dim": "#ccc5c0",
+            "on-primary-fixed": "#002020",
+            "on-primary": "#ffffff",
+            "surface-container-highest": "#e9e1dd",
+            "surface-dim": "#e0d8d5",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed": "#1e1b18",
+            "outline": "#e7e5e4",
+            "on-error": "#ffffff",
+            "error": "#DC2626",
+            "outline-variant": "#e7e5e4",
+            "on-surface": "#1c1917",
+            "inverse-on-surface": "#f7efeb",
+            "on-tertiary": "#ffffff",
+            "on-background": "#1c1917",
+            "on-primary-fixed-variant": "#004f50",
+            "surface-variant": "#e7e5e4",
+            "background": "#fafaf9",
+            "tertiary-fixed": "#b2eded",
+            "primary-fixed-dim": "#85d4d3",
+            "on-secondary-container": "#57534e",
+            "on-error-container": "#93000a",
+            "on-primary-container": "#9eedec",
+            "surface-container": "#f5f5f4",
+            "on-secondary": "#ffffff",
+            "inverse-surface": "#33302d",
+            "secondary": "#57534e",
+            "surface-container-low": "#fafaf9",
+            "tertiary-container": "#316c6c",
+            "on-secondary-fixed-variant": "#4a4642",
+            "primary": "#0F6E6E",
+            "error-container": "#ffdad6",
+            "primary-fixed": "#a1f0ef",
+            "on-surface-variant": "#57534e",
+            "surface-container-high": "#eee7e3",
+            "surface": "#ffffff",
+            "on-tertiary-container": "#afebea",
+            "tertiary": "#0A4F4F",
+            "surface-tint": "#0F6E6E"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.75rem",
+            xl: "1rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased pb-28 min-h-full flex flex-col">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-4 h-14 bg-surface-container-lowest border-b border-surface-variant z-40 sticky top-0">
+<div class="flex items-center gap-3">
+<button class="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-surface-container active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<span class="font-headline text-base font-bold text-on-surface">Acopio CO</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-sm">
+        JQ
+      </div>
+</div>
+</header>
+<!-- Main Content Container -->
+<main class="flex-1 px-4 py-6 max-w-xl mx-auto w-full flex flex-col gap-6">
+<!-- Breadcrumb / Volver a Comprobantes -->
+<div>
+<a class="inline-flex items-center gap-2 text-sm text-secondary hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-sm">chevron_left</span>
+<span>Volver a Comprobantes / Módulo de auditoría</span>
+</a>
+</div>
+<!-- Tarjeta de cabecera del Folio -->
+<section class="bg-surface border border-outline rounded-xl p-5 shadow-none flex flex-col gap-4">
+<div class="flex flex-wrap items-start justify-between gap-3">
+<div>
+<span class="text-xs text-secondary font-medium block mb-1">Folio único de recepción</span>
+<h1 class="text-xl font-bold text-on-surface tracking-tight">K7M-4QX</h1>
+</div>
+<!-- Píldora de estado Pendiente (Ámbar reservado para inventario, pero aquí usaremos amber-800 con precaución o tono neutro/ámbar permitido) -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 text-amber-800 border border-amber-200 text-xs font-semibold">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">schedule</span>
+<span>Pendiente</span>
+</div>
+</div>
+<div class="text-sm text-secondary flex flex-col gap-1 border-t border-outline pt-3">
+<div class="font-semibold text-on-surface">Acopio Chapinero</div>
+<div>Preparada el 3 oct · Recibida el 4 oct por Joseph</div>
+</div>
+<!-- Tarjeta de factura adjunta -->
+<div class="bg-surface-container-low border border-outline rounded-lg p-3 flex items-center justify-between gap-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-highest flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">description</span>
+</div>
+<div>
+<div class="text-sm font-semibold text-on-surface">Recibo comercial supermercado</div>
+<div class="text-xs text-secondary">1.4 MB</div>
+</div>
+</div>
+<button class="px-3 py-2 rounded-[10px] border border-outline text-sm font-semibold text-primary hover:bg-surface transition-colors">
+          Ver factura
+        </button>
+</div>
+</section>
+<!-- Sección "Por categoría" -->
+<section class="flex flex-col gap-4">
+<h2 class="text-base font-bold text-on-surface">Por categoría</h2>
+<!-- Item 1: Agua potable -->
+<div class="bg-surface border border-outline rounded-xl p-4 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">water_drop</span>
+<span class="font-semibold text-on-surface text-base">Agua potable</span>
+</div>
+<!-- Estado Bien (Verde) -->
+<div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-semibold border border-green-200">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Coincide</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 bg-surface-container-low p-3 rounded-lg text-center">
+<div>
+<span class="text-xs text-secondary block">Declarado</span>
+<span class="text-sm font-bold text-on-surface">12 L</span>
+</div>
+<div class="border-x border-outline">
+<span class="text-xs text-secondary block">Confirmado</span>
+<span class="text-sm font-bold text-on-surface">12 L</span>
+</div>
+<div>
+<span class="text-xs text-secondary block">Entradas</span>
+<span class="text-sm font-bold text-on-surface">12 L</span>
+</div>
+</div>
+</div>
+<!-- Item 2: Arroz -->
+<div class="bg-surface border border-outline rounded-xl p-4 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">grain</span>
+<span class="font-semibold text-on-surface text-base">Arroz</span>
+</div>
+<!-- Estado Poco (Ámbar) -->
+<div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-amber-50 text-amber-800 text-xs font-semibold border border-amber-200">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span>Poco -1 kg</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 bg-surface-container-low p-3 rounded-lg text-center">
+<div>
+<span class="text-xs text-secondary block">Declarado</span>
+<span class="text-sm font-bold text-on-surface">5 kg</span>
+</div>
+<div class="border-x border-outline">
+<span class="text-xs text-secondary block">Confirmado</span>
+<span class="text-sm font-bold text-amber-700">4 kg</span>
+</div>
+<div>
+<span class="text-xs text-secondary block">Entradas</span>
+<span class="text-sm font-bold text-on-surface">4 kg</span>
+</div>
+</div>
+<div class="bg-amber-50/50 border border-amber-200/60 rounded-lg p-3 text-xs text-amber-900 flex items-start gap-2">
+<span class="material-symbols-outlined text-amber-700 text-base shrink-0">info</span>
+<div><strong class="font-semibold">Diferencia:</strong> Un paquete roto. Registrado por voluntario en la mesa de pesaje.</div>
+</div>
+</div>
+<!-- Item 3: Leche en polvo -->
+<div class="bg-surface border border-outline rounded-xl p-4 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">countertops</span>
+<span class="font-semibold text-on-surface text-base">Leche en polvo</span>
+</div>
+<!-- Estado Bien (Verde) -->
+<div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-green-50 text-green-700 text-xs font-semibold border border-green-200">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>Completo</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 bg-surface-container-low p-3 rounded-lg text-center">
+<div>
+<span class="text-xs text-secondary block">Declarado</span>
+<span class="text-sm font-bold text-on-surface">2 kg</span>
+</div>
+<div class="border-x border-outline">
+<span class="text-xs text-secondary block">Confirmado</span>
+<span class="text-sm font-bold text-on-surface">2 kg</span>
+</div>
+<div>
+<span class="text-xs text-secondary block">Entradas</span>
+<span class="text-sm font-bold text-on-surface">2 kg</span>
+</div>
+</div>
+</div>
+<!-- Item 4: Pañales -->
+<div class="bg-surface border border-outline rounded-xl p-4 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">child_care</span>
+<span class="font-semibold text-on-surface text-base">Pañales</span>
+</div>
+<!-- Estado Escaso (Rojo) -->
+<div class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-50 text-red-700 text-xs font-semibold border border-red-200">
+<span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">error</span>
+<span>No llegó</span>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-2 bg-surface-container-low p-3 rounded-lg text-center">
+<div>
+<span class="text-xs text-secondary block">Declarado</span>
+<span class="text-sm font-bold text-on-surface">30 u</span>
+</div>
+<div class="border-x border-outline">
+<span class="text-xs text-secondary block">Confirmado</span>
+<span class="text-sm font-bold text-red-600">0 u</span>
+</div>
+<div>
+<span class="text-xs text-secondary block">Entradas</span>
+<span class="text-sm font-bold text-red-600">0 u</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Sección "Entradas vinculadas (3)" -->
+<section class="flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h2 class="text-base font-bold text-on-surface">Entradas vinculadas (3)</h2>
+<button class="px-3 py-1.5 rounded-[10px] border border-outline text-xs font-semibold text-primary hover:bg-surface transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">link</span>
+<span>Vincular entradas</span>
+</button>
+</div>
+<div class="bg-surface border border-outline rounded-xl p-4 flex flex-col gap-3">
+<div class="flex items-center justify-between py-2 border-b border-outline last:border-none last:pb-0">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">inventory_2</span>
+<span class="text-sm font-medium text-on-surface">Inventario en bodega: Agua</span>
+</div>
+<span class="text-sm font-bold text-on-surface">12 L</span>
+</div>
+<div class="flex items-center justify-between py-2 border-b border-outline last:border-none last:pb-0">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">inventory_2</span>
+<span class="text-sm font-medium text-on-surface">Inventario en bodega: Arroz</span>
+</div>
+<span class="text-sm font-bold text-on-surface">4 kg</span>
+</div>
+<div class="flex items-center justify-between py-2 border-b border-outline last:border-none last:pb-0">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">inventory_2</span>
+<span class="text-sm font-medium text-on-surface">Inventario en bodega: Leche</span>
+</div>
+<span class="text-sm font-bold text-on-surface">2 kg</span>
+</div>
+</div>
+</section>
+<!-- Botones de acción principales de ancho completo -->
+<section class="flex flex-col gap-3 pt-2">
+<button class="w-full h-14 bg-primary text-on-primary rounded-[10px] font-bold text-base flex items-center justify-center gap-2 hover:bg-primary/90 active:opacity-90 transition-opacity shadow-sm">
+<span class="material-symbols-outlined">done_all</span>
+<span>Conciliar donación</span>
+</button>
+<button class="w-full h-12 bg-surface border border-outline text-error rounded-[10px] font-semibold text-sm flex items-center justify-center gap-2 hover:bg-error-container/20 active:opacity-90 transition-colors">
+<span class="material-symbols-outlined">close</span>
+<span>Rechazar comprobante</span>
+</button>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface-container-lowest border-t border-surface-variant pb-safe">
+<!-- Inicio -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">home</span>
+<span class="font-label text-xs mt-0.5">Inicio</span>
+</a>
+<!-- Mapa -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">map</span>
+<span class="font-label text-xs mt-0.5">Mapa</span>
+</a>
+<!-- Causas -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">favorite</span>
+<span class="font-label text-xs mt-0.5">Causas</span>
+</a>
+<!-- Voluntariado -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">volunteer_activism</span>
+<span class="font-label text-xs mt-0.5">Voluntariado</span>
+</a>
+<!-- Más (Active) -->
+<a class="flex flex-col items-center justify-center text-primary font-bold min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">menu</span>
+<span class="font-label text-xs mt-0.5">Más</span>
+</a>
+</nav>
+</body></html>

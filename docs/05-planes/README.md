@@ -45,7 +45,7 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 | 1 · Red, interfaz ciclo 1 | [aprobada](../superpowers/specs/2026-09-30-bloque-1-red-design.md) | [aprobado](2026-09-30-bloque-1-interfaz-ciclo-1.md) | ✅ red y mapa construidos |
 | 1 · Red, interfaz ciclo 2 | [aprobada](../superpowers/specs/2026-09-30-bloque-1-red-design.md) | [aprobado](2026-10-01-bloque-1-interfaz-ciclo-2.md) | ✅ selector de la cabecera y matriz de acceso construidos |
 | 2 · Inventario | [aprobada](../superpowers/specs/2026-10-01-bloque-2-inventario-design.md) | [API](2026-10-01-bloque-2-api.md), [interfaz ciclo 1](2026-10-01-bloque-2-interfaz-ciclo-1.md), [interfaz ciclo 2](2026-10-02-bloque-2-interfaz-ciclo-2.md), [interfaz ciclo 3](2026-10-02-bloque-2-interfaz-ciclo-3.md) | ✅ cerrado el 2026-10-05: API e interfaz (ciclos 1 a 3). El escáner en un teléfono real queda en P-037 |
-| 3 · Custodia | [aprobada](../superpowers/specs/2026-10-05-bloque-3-custodia-design.md) | [API](2026-10-05-bloque-3-api.md) · [interfaz, ciclo 1](2026-10-06-bloque-3-interfaz-ciclo-1.md); el ciclo 2, pendiente | 🟡 API hecha el 2026-10-05; ciclo 1 (el Donador) construido el 2026-10-06, con su recorrido en `apps/web/recorridos/donador.mjs`. Falta el ciclo 2: [#34](https://github.com/Proyecto-IngSoftware/acopio/issues/34) |
+| 3 · Custodia | [aprobada](../superpowers/specs/2026-10-05-bloque-3-custodia-design.md) | [API](2026-10-05-bloque-3-api.md) · [interfaz, ciclo 1](2026-10-06-bloque-3-interfaz-ciclo-1.md) · [interfaz, ciclo 2](2026-10-06-bloque-3-interfaz-ciclo-2.md) | 🟡 API hecha el 2026-10-05; ciclo 1 (el Donador) construido el 2026-10-06, con su recorrido en `apps/web/recorridos/donador.mjs`. Ciclo 2 (la consola) con diseños aprobados y plan, en construcción: [#34](https://github.com/Proyecto-IngSoftware/acopio/issues/34) |
 | 4 · Motor | pendiente | pendiente | ⬜ [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35) |
 | 5 · Turnos | pendiente | pendiente | ⬜ [#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36) |
 | 6 · Extras | pendiente | pendiente | ⬜ [#37](https://github.com/Proyecto-IngSoftware/acopio/issues/37) |
@@ -53,8 +53,8 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 ## Lo que sigue
 
 1. **Bloque 3, ciclo 2** ([#34](https://github.com/Proyecto-IngSoftware/acopio/issues/34)):
-   Recibir por folio, la bandeja C8 y la conciliación en la consola. La API ya está;
-   faltan los diseños en Stitch, la maqueta aprobada y su plan.
+   Recibir por folio, la bandeja C8 y la conciliación en la consola. Diseños aprobados y
+   [plan](2026-10-06-bloque-3-interfaz-ciclo-2.md) listos; falta construirlo.
 2. **Bloque 4** ([#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)): ya no
    lo bloquea nada. La canasta v2 tiene fuente (P-001) y la población de las zonas se
    ajusta según RF-MOT-012 (P-002).

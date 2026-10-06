@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Comprobantes - Acopio CO</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-high": "#eee7e3",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "on-secondary-fixed": "#1e1b18",
+            "secondary-fixed-dim": "#ccc5c0",
+            "on-primary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "surface": "#fff8f5",
+            "surface-container-low": "#faf2ee",
+            "on-secondary-container": "#68635f",
+            "inverse-primary": "#85d4d3",
+            "tertiary": "#125454",
+            "surface-container-highest": "#e9e1dd",
+            "on-tertiary-fixed": "#002020",
+            "surface-dim": "#e0d8d5",
+            "on-primary-container": "#9eedec",
+            "on-secondary": "#ffffff",
+            "secondary-container": "#e9e1db",
+            "primary": "#005454",
+            "inverse-surface": "#33302d",
+            "background": "#fff8f5",
+            "on-primary-fixed-variant": "#004f50",
+            "surface-variant": "#e9e1dd",
+            "surface-tint": "#03696a",
+            "on-surface-variant": "#3e4948",
+            "surface-container": "#f4ece8",
+            "secondary": "#625e59",
+            "outline-variant": "#bec9c8",
+            "on-tertiary": "#ffffff",
+            "on-error-container": "#93000a",
+            "surface-bright": "#fff8f5",
+            "inverse-on-surface": "#f7efeb",
+            "primary-fixed-dim": "#85d4d3",
+            "on-surface": "#1e1b19",
+            "on-background": "#1e1b19",
+            "secondary-fixed": "#e9e1db",
+            "on-tertiary-container": "#afebea",
+            "error": "#ba1a1a",
+            "tertiary-fixed-dim": "#96d1d0",
+            "outline": "#6e7979",
+            "on-secondary-fixed-variant": "#4a4642",
+            "primary-container": "#0f6e6e",
+            "primary-fixed": "#a1f0ef",
+            "on-primary-fixed": "#002020",
+            "tertiary-fixed": "#b2eded",
+            "tertiary-container": "#316c6c",
+            "on-error": "#ffffff",
+            "error-container": "#ffdad6"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body antialiased h-full flex flex-col selection:bg-primary-container selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-4 h-14 bg-surface-container-lowest dark:bg-surface-container-lowest border-b border-surface-variant dark:border-outline-variant z-40 fixed top-0 left-0">
+<div class="flex items-center gap-3">
+<button class="p-2 -ml-2 rounded-lg hover:bg-surface-container-low active:opacity-80 transition-opacity duration-150 text-on-surface">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<span class="font-headline text-lg font-bold text-primary dark:text-primary-fixed">Acopio CO</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-medium px-2.5 py-1 bg-surface-container rounded-lg text-on-surface-variant border border-outline-variant">Rol Auditor</span>
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-on-primary font-bold text-sm">
+        AD
+      </div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-md mx-auto pt-20 pb-24 px-4 flex flex-col gap-4 overflow-y-auto">
+<!-- Title Section -->
+<div class="flex flex-col gap-1">
+<h1 class="text-2xl font-bold font-headline text-on-surface">Comprobantes</h1>
+<p class="text-sm text-secondary">Revisión y conciliación logística de suministros</p>
+</div>
+<!-- Segmented Tabs -->
+<div class="flex bg-surface-container p-1 rounded-xl gap-1 border border-outline-variant">
+<button class="flex-1 py-2 px-3 rounded-lg bg-surface-container-lowest text-primary font-bold text-sm shadow-sm flex items-center justify-center gap-1.5">
+        Pendientes <span class="bg-primary-container text-on-primary text-xs px-1.5 py-0.5 rounded-full">8</span>
+</button>
+<button class="flex-1 py-2 px-3 rounded-lg text-secondary font-medium text-sm hover:text-on-surface flex items-center justify-center gap-1.5">
+        Conciliados
+      </button>
+<button class="flex-1 py-2 px-3 rounded-lg text-secondary font-medium text-sm hover:text-on-surface flex items-center justify-center gap-1.5">
+        Rechazados
+      </button>
+</div>
+<!-- Horizontal Venue Filters -->
+<div class="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
+<button class="px-3.5 py-1.5 rounded-xl bg-primary text-on-primary text-sm font-medium whitespace-nowrap shadow-sm">
+        Todos (8)
+      </button>
+<button class="px-3.5 py-1.5 rounded-xl bg-surface-container-lowest text-on-surface border border-outline-variant text-sm font-medium whitespace-nowrap hover:bg-surface-container-low">
+        Chapinero (5)
+      </button>
+<button class="px-3.5 py-1.5 rounded-xl bg-surface-container-lowest text-on-surface border border-outline-variant text-sm font-medium whitespace-nowrap hover:bg-surface-container-low">
+        Kennedy (2)
+      </button>
+<button class="px-3.5 py-1.5 rounded-xl bg-surface-container-lowest text-on-surface border border-outline-variant text-sm font-medium whitespace-nowrap hover:bg-surface-container-low">
+        Mocoa (1)
+      </button>
+</div>
+<!-- Sorter -->
+<div class="flex justify-between items-center text-sm text-secondary pt-1">
+<span>Mostrando 4 de 8 comprobantes</span>
+<div class="flex items-center gap-1 font-medium text-on-surface bg-surface-container-low px-2.5 py-1 rounded-lg border border-outline-variant cursor-pointer">
+<span class="text-xs">Más antiguos primero</span>
+<span class="material-symbols-outlined text-base">sort</span>
+</div>
+</div>
+<!-- Cards List -->
+<div class="flex flex-col gap-3">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col gap-3 shadow-sm hover:border-primary transition-colors">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-bold text-base text-on-surface font-mono">K7M-4QX</span>
+<span class="text-xs text-secondary">Acopio Chapinero</span>
+</div>
+<span class="text-xs text-secondary">hace 3 días</span>
+</div>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs font-medium border border-outline-variant">
+<span class="material-symbols-outlined text-sm">receipt</span> Con factura
+          </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-error-container text-on-error-container text-xs font-medium">
+<span class="material-symbols-outlined text-sm">difference</span> Con diferencia
+          </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs font-medium border border-outline-variant">
+<span class="material-symbols-outlined text-sm">category</span> 4 categorías
+          </span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col gap-3 shadow-sm hover:border-primary transition-colors">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-bold text-base text-on-surface font-mono">P2R-9TD</span>
+<span class="text-xs text-secondary">Acopio Chapinero</span>
+</div>
+<span class="text-xs text-secondary">hace 2 días</span>
+</div>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs font-medium border border-outline-variant">
+<span class="material-symbols-outlined text-sm">no_photography</span> Sin foto
+          </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs font-medium border border-outline-variant">
+<span class="material-symbols-outlined text-sm">category</span> 2 categorías
+          </span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col gap-3 shadow-sm hover:border-primary transition-colors">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-bold text-base text-on-surface font-mono">HX4-7NB</span>
+<span class="text-xs text-secondary">Acopio Kennedy</span>
+</div>
+<span class="text-xs text-secondary">hace 1 día</span>
+</div>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs font-medium border border-outline-variant">
+<span class="material-symbols-outlined text-sm">receipt</span> Con factura
+          </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs font-medium border border-outline-variant">
+<span class="material-symbols-outlined text-sm">category</span> 6 categorías
+          </span>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex flex-col gap-3 shadow-sm hover:border-primary transition-colors">
+<div class="flex justify-between items-start">
+<div class="flex flex-col">
+<span class="font-bold text-base text-on-surface font-mono">Z9C-3KW</span>
+<span class="text-xs text-secondary">Acopio Mocoa</span>
+</div>
+<span class="text-xs text-secondary">hace 5 horas</span>
+</div>
+<div class="flex flex-wrap gap-2 pt-1">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs font-medium border border-outline-variant">
+<span class="material-symbols-outlined text-sm">no_photography</span> Sin foto
+          </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-error-container text-on-error-container text-xs font-medium">
+<span class="material-symbols-outlined text-sm">difference</span> Con diferencia
+          </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface-container text-on-surface-variant text-xs font-medium border border-outline-variant">
+<span class="material-symbols-outlined text-sm">category</span> 1 categoría
+          </span>
+</div>
+</div>
+</div>
+<!-- Bottom Info Card -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-4 flex gap-3 items-start mt-2">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">info</span>
+<div class="flex flex-col gap-1">
+<span class="text-xs font-bold text-on-surface">Criterio de auditoría activo</span>
+<p class="text-xs text-secondary leading-relaxed">
+          Los comprobantes con diferencias en inventario o sin soporte fotográfico están sujetos a verificación obligatoria según normativa RN-03 &amp; RNF-08.
+        </p>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-surface-variant dark:border-outline-variant pb-safe">
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 hover:text-primary dark:hover:text-primary-fixed active:opacity-80 transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined text-2xl">home</span>
+<span class="text-xs font-normal mt-0.5">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 hover:text-primary dark:hover:text-primary-fixed active:opacity-80 transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined text-2xl">map</span>
+<span class="text-xs font-normal mt-0.5">Mapa</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 hover:text-primary dark:hover:text-primary-fixed active:opacity-80 transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined text-2xl">favorite</span>
+<span class="text-xs font-normal mt-0.5">Causas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 hover:text-primary dark:hover:text-primary-fixed active:opacity-80 transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined text-2xl">volunteer_activism</span>
+<span class="text-xs font-normal mt-0.5">Voluntariado</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold min-h-[48px] px-3 hover:text-primary dark:hover:text-primary-fixed active:opacity-80 transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">menu</span>
+<span class="text-xs font-bold mt-0.5">Más</span>
+</a>
+</nav>
+</body></html>
