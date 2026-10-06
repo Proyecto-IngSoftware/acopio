@@ -9,7 +9,7 @@ import { Reflector } from '@nestjs/core';
 import type { Request } from 'express';
 import { PrismaService } from '../../../comun/prisma/prisma.service';
 import type { Rol } from '../../../generado/prisma/enums';
-import { CLAVE_PUBLICO, CLAVE_ROLES } from '../../../comun/autorizacion/decoradores';
+import { CLAVE_DONADOR, CLAVE_PUBLICO, CLAVE_ROLES } from '../../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../../comun/autorizacion/usuario-autenticado';
 import { COOKIE_SESION, leerCookie } from '../../../comun/cookie-sesion';
 import { VerificadorToken } from './verificador-token';
@@ -66,6 +66,15 @@ export class AutenticacionGuard implements CanActivate {
     }
 
     const roles = this.reflector.getAllAndOverride<Rol[] | undefined>(CLAVE_ROLES, objetivos);
+    // La consola no es del Donador: solo entra donde el endpoint lo nombra (Bloque 3).
+    // Va antes de la revisión de roles para que responda siempre el mismo mensaje.
+    if (
+      usuario.rol === 'DONADOR' &&
+      !roles?.includes('DONADOR') &&
+      !this.reflector.getAllAndOverride<boolean>(CLAVE_DONADOR, objetivos)
+    ) {
+      throw new ForbiddenException('Esta sección es de la consola');
+    }
     if (roles && !roles.includes(usuario.rol)) {
       throw new ForbiddenException('Tu rol no permite esta acción');
     }

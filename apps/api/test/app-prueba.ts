@@ -189,3 +189,23 @@ export async function crearUsuarioActivo(
     token: await iniciarSesion(a, username, contrasena),
   };
 }
+
+/** Un Donador activo y confirmado, creado sin pasar por el registro. */
+export async function crearDonador(a: AppPrueba) {
+  const proveedor = a.app.get<ProveedorIdentidad>(PROVEEDOR_IDENTIDAD);
+  const correo = `${unico('donador')}@correo.test`;
+  const contrasena = 'una frase larga para donar';
+  const { uid } = await proveedor.crearUsuario(correo, contrasena);
+  const usuario = await a.prisma.usuario.create({
+    data: {
+      nombre: `Donador ${correo}`,
+      correo,
+      rol: 'DONADOR',
+      estado: 'ACTIVO',
+      supabase_uid: uid,
+      tokens_validos_desde: new Date(Date.now() - 5000),
+    },
+  });
+  const sesion = await proveedor.iniciarSesion(correo, contrasena);
+  return { id: usuario.id, correo, contrasena, token: sesion!.accessToken };
+}

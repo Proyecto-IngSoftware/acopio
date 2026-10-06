@@ -5,7 +5,7 @@ import { Throttle } from '@nestjs/throttler';
 import { ErrorDto, SesionDto, YoDto } from '../../../comun/respuestas';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
-import { Publico, UsuarioActual } from '../../../comun/autorizacion/decoradores';
+import { Publico, TambienDonador, UsuarioActual } from '../../../comun/autorizacion/decoradores';
 import { COOKIE_SESION, opcionesCookie } from '../../../comun/cookie-sesion';
 import { ENTORNO, type Entorno } from '../../../config/entorno';
 import type { UsuarioAutenticado } from '../../../comun/autorizacion/usuario-autenticado';
@@ -58,6 +58,7 @@ export class SesionController {
   /** El usuario de la sesión y sus ubicaciones. */
   @ApiBearerAuth()
   @Get('yo')
+  @TambienDonador()
   @ApiOkResponse({ type: YoDto })
   yo(@UsuarioActual() usuario: UsuarioAutenticado) {
     return this.sesion.yo(usuario.id);

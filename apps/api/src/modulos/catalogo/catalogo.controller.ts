@@ -29,7 +29,12 @@ import {
 } from '../../comun/respuestas';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
-import { Publico, Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
+import {
+  Publico,
+  Roles,
+  TambienDonador,
+  UsuarioActual,
+} from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { CanastaService } from './canasta.service';
 import { CategoriasService } from './categorias.service';
@@ -139,6 +144,7 @@ export class CatalogoController {
 
   /** Búsqueda por palabra clave para la entrada rápida (RF-CAT-002). */
   @Get('categorias/buscar')
+  @TambienDonador()
   @ApiOkResponse({ type: ResultadoBusquedaDto, isArray: true })
   buscar(@Query() datos: BuscarDto) {
     return this.categorias.buscar(datos.q, datos.limite);
