@@ -6,6 +6,7 @@ import { SubirAlNavegar } from './componentes/SubirAlNavegar';
 import { filtroDelMapa } from './portal/mapa/filtro';
 import { Rutas } from './rutas';
 import { SesionProveedor } from './sesion/Sesion';
+import { Sincronizador } from './sin-conexion/Sincronizador';
 
 const consultas = new QueryClient({
   defaultOptions: { queries: { staleTime: 60_000, retry: reintentarConsulta } },
@@ -24,6 +25,7 @@ export function App() {
       <BrowserRouter>
         <SesionProveedor>
           <SubirAlNavegar />
+          <Sincronizador />
           <Rutas />
         </SesionProveedor>
       </BrowserRouter>
