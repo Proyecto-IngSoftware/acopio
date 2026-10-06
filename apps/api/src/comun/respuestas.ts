@@ -477,3 +477,25 @@ export class CodigoDonadorDto extends createZodDto(
     contenido: z.number().nullable(),
   }),
 ) {}
+
+export class SeguimientoDto extends createZodDto(
+  z.object({
+    folio: z.string(),
+    estado: z.string().describe('Etiqueta para mostrar, por ejemplo «Recibida en el acopio»'),
+    pasos: z.array(
+      z.object({
+        paso: z.enum(['PREPARADA', 'RECIBIDA', 'CONCILIADA']),
+        en: fecha.nullable(),
+        acopio: z.string().optional().describe('Nombre del acopio, desde que se recibe'),
+      }),
+    ),
+    lineas: z.array(
+      z.object({
+        categoria: z.string(),
+        unidad: z.string(),
+        cantidad: z.number().describe('Lo declarado si aún no se recibe; lo confirmado después'),
+        confirmada: z.boolean(),
+      }),
+    ),
+  }),
+) {}

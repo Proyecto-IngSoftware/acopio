@@ -3831,6 +3831,48 @@
         ]
       }
     },
+    "/api/seguimiento/{folio}": {
+      "get": {
+        "operationId": "SeguimientoController_consultar",
+        "parameters": [
+          {
+            "name": "folio",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SeguimientoDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "summary": "Recorrido de una donación por folio, sin datos del Donador. No exige sesión",
+        "tags": [
+          "seguimiento"
+        ]
+      }
+    },
     "/api/salud": {
       "get": {
         "operationId": "SaludController_revisar",
@@ -8413,6 +8455,81 @@
         "required": [
           "comprobante",
           "noRecibe"
+        ]
+      },
+      "SeguimientoDto": {
+        "type": "object",
+        "properties": {
+          "folio": {
+            "type": "string"
+          },
+          "estado": {
+            "type": "string",
+            "description": "Etiqueta para mostrar, por ejemplo «Recibida en el acopio»"
+          },
+          "pasos": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "paso": {
+                  "type": "string",
+                  "enum": [
+                    "PREPARADA",
+                    "RECIBIDA",
+                    "CONCILIADA"
+                  ]
+                },
+                "en": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "acopio": {
+                  "description": "Nombre del acopio, desde que se recibe",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "paso",
+                "en"
+              ]
+            }
+          },
+          "lineas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "categoria": {
+                  "type": "string"
+                },
+                "unidad": {
+                  "type": "string"
+                },
+                "cantidad": {
+                  "type": "number",
+                  "description": "Lo declarado si aún no se recibe; lo confirmado después"
+                },
+                "confirmada": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "categoria",
+                "unidad",
+                "cantidad",
+                "confirmada"
+              ]
+            }
+          }
+        },
+        "required": [
+          "folio",
+          "estado",
+          "pasos",
+          "lineas"
         ]
       },
       "SaludDto": {

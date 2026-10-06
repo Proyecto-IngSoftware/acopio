@@ -1067,6 +1067,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/seguimiento/{folio}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Recorrido de una donación por folio, sin datos del Donador. No exige sesión */
+        get: operations["SeguimientoController_consultar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/salud": {
         parameters: {
             query?: never;
@@ -2187,6 +2204,26 @@ export interface components {
             };
             /** @description Categorías de la donación marcadas «no recibir» en el acopio */
             noRecibe: string[];
+        };
+        SeguimientoDto: {
+            folio: string;
+            /** @description Etiqueta para mostrar, por ejemplo «Recibida en el acopio» */
+            estado: string;
+            pasos: {
+                /** @enum {string} */
+                paso: "PREPARADA" | "RECIBIDA" | "CONCILIADA";
+                /** Format: date-time */
+                en: string | null;
+                /** @description Nombre del acopio, desde que se recibe */
+                acopio?: string;
+            }[];
+            lineas: {
+                categoria: string;
+                unidad: string;
+                /** @description Lo declarado si aún no se recibe; lo confirmado después */
+                cantidad: number;
+                confirmada: boolean;
+            }[];
         };
         SaludDto: {
             /** @enum {string} */
@@ -4517,6 +4554,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RecepcionDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    SeguimientoController_consultar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folio: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SeguimientoDto"];
                 };
             };
             /** @description Error */
