@@ -16,6 +16,7 @@ actualizado: 2026-10-06
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | En la [maqueta del ciclo 1](../P13-mi-cuenta/maqueta.html) |
 | Aprobación | Joseph la aprobó el 2026-10-06 |
+| Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
 
 ## Qué muestra
 
@@ -25,6 +26,7 @@ en unidad base. Un folio mal escrito y uno que no existe muestran el mismo mensa
 
 ## Diferencias
 
+- Los pasos pendientes no se atenúan con opacidad: el texto no llegaba al contraste mínimo.
 - El estado va en neutro; Stitch lo puso en morado.
 - Sin «Trazabilidad ciudadana» encima del título, sin el paso de despacho y sin los
   subtítulos de categoría: la API no los tiene.

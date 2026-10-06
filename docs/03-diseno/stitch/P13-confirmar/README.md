@@ -16,6 +16,7 @@ actualizado: 2026-10-06
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | En la [maqueta del ciclo 1](../P13-mi-cuenta/maqueta.html) |
 | Aprobación | Joseph la aprobó el 2026-10-06 |
+| Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
 
 ## Qué muestra
 

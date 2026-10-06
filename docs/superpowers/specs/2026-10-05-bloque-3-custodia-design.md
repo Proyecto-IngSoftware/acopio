@@ -372,3 +372,13 @@ Cada etapa tiene su plan, escrito al empezarla.
 | Los HEIC no se probaron con una imagen real de iPhone | Se decodifican o dan 415; la prueba con un teléfono queda para la interfaz |
 | P-040, 2026-10-06: el registro pide nombre y correo y deja al Donador `INVITADO`, sin credencial. La contraseña se elige en `POST /auth/registro/confirmar`, que crea la credencial, activa la cuenta e inicia la sesión. Se agrega `GET /auth/registro/confirmar/:token`. Se quitaron el 403 `CORREO_SIN_CONFIRMAR`, `confirmarCorreo` y la variante `sinConfirmar` del puerto | Con la contraseña fijada en el registro, quien registraba un correo ajeno dejaba la contraseña de la cuenta que la dueña activaba. Ahora la credencial nace al confirmar. Cierra [P-040](../../01-requerimientos/pendientes.md) |
 | Un Donador `INVITADO` cuyo correo ya tiene credencial no puede confirmar. Solo pasa con datos del flujo anterior o si el proceso se cae entre crear la credencial y la transacción; en desarrollo se borra la identidad a mano | `crearUsuario` choca por correo duplicado y la confirmación responde 404 |
+
+**2026-10-06 · Interfaz, ciclo 1 (el Donador).** Construida según el [plan](../../05-planes/2026-10-06-bloque-3-interfaz-ciclo-1.md).
+
+| Qué | Por qué |
+|---|---|
+| P9 pide la ubicación con un botón «Usar mi ubicación», no al abrir el paso 2 | El navegador solo debe preguntar cuando el Donador lo decide |
+| Las sugerencias dicen si el acopio está abierto ahora, pero no la hora de cierre | La API no devuelve la hora de cierre |
+| El paso 3 se reabre desde «Ver folio» de «Mis donaciones» con `/donar?folio=` | Así el folio y su QR se ven otra vez sin preparar otra donación |
+| En P10 los pasos pendientes ya no van con `opacity-60` | El texto atenuado quedaba en 3,16:1 de contraste y axe lo marcó en el recorrido |
+

@@ -16,6 +16,7 @@ actualizado: 2026-10-06
 | Archivos | [captura-sin-sesion.png](captura-sin-sesion.png) · [pantalla-sin-sesion.html](pantalla-sin-sesion.html) · [captura-con-sesion.png](captura-con-sesion.png) · [pantalla-con-sesion.html](pantalla-con-sesion.html) |
 | Maqueta | [maqueta.html](maqueta.html), publicada en <https://claude.ai/artifact/QUu3kH8bmgNnLTFDHKfNCy>. Reúne las once vistas del ciclo 1 |
 | Aprobación | Joseph la aprobó el 2026-10-06 |
+| Construida | [construida-sin-sesion.png](construida-sin-sesion.png) y [construida.png](construida.png) (con sesión), en Chromium a 360 × 640 |
 
 Las capturas son el HTML de Stitch abierto a 390 px de ancho. Stitch entregó varias pantallas
 en formato de escritorio aunque se pidieron para teléfono.

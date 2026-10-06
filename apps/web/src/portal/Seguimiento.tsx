@@ -51,10 +51,7 @@ function Resultado({ folio }: { folio: string }) {
               ? `${NOMBRE_PASO.RECIBIDA} en ${p.acopio}`
               : NOMBRE_PASO[p.paso];
           return (
-            <li
-              key={p.paso}
-              className={`flex items-center gap-space-sm ${hecho ? '' : 'opacity-60'}`}
-            >
+            <li key={p.paso} className="flex items-center gap-space-sm">
               <span
                 className={`flex size-8 shrink-0 items-center justify-center rounded-full ${hecho ? 'bg-primary-container text-on-primary' : 'border border-outline-variant text-on-surface-variant'}`}
               >

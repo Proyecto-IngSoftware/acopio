@@ -56,12 +56,13 @@ describe('Seguimiento', () => {
     expect(screen.getByText('No mostramos quién donó.')).toBeInTheDocument();
   });
 
-  it('un paso pendiente aparece atenuado y sin fecha', async () => {
+  it('un paso pendiente sale sin fecha y con el círculo vacío', async () => {
     responderSegun({ 'GET /api/seguimiento/*': seguimiento });
     pantalla('/seguimiento/ACO-2026-7KQ4M');
     const pendiente = (await screen.findByText('Conciliada')).closest('li')!;
     expect(pendiente).toHaveTextContent('Pendiente');
-    expect(pendiente).toHaveClass('opacity-60');
+    // Sin opacity: atenuar el texto lo dejaba bajo el contraste mínimo (axe)
+    expect(pendiente).not.toHaveClass('opacity-60');
     expect(pendiente.textContent).not.toMatch(/\d{1,2}:\d{2}/);
   });
 

@@ -16,6 +16,7 @@ actualizado: 2026-10-06
 | Archivos | [captura-paso-1.png](captura-paso-1.png) · [pantalla-paso-1.html](pantalla-paso-1.html) · [captura-paso-2.png](captura-paso-2.png) · [pantalla-paso-2.html](pantalla-paso-2.html) |
 | Maqueta | En la [maqueta del ciclo 1](../P13-mi-cuenta/maqueta.html) |
 | Aprobación | Joseph la aprobó el 2026-10-06 |
+| Construida | [construida-paso-1.png](construida-paso-1.png) · [construida-paso-2.png](construida-paso-2.png) · [construida-paso-3.png](construida-paso-3.png), en Chromium a 360 × 640 |
 
 ## Qué muestra
 

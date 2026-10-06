@@ -38,15 +38,15 @@ y las notas de [P13](../03-diseno/stitch/P13-mi-cuenta/README.md),
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 Cliente de la API y sesión del Donador | ⬜ | |
-| 2 Rutas, cabecera y «Más» para el Donador | ⬜ | |
-| 3 P13 sin sesión: crear cuenta y entrar | ⬜ | |
-| 4 Confirmar correo | ⬜ | |
-| 5 P13 con sesión: mis donaciones | ⬜ | |
-| 6 P9 paso 1: qué llevas | ⬜ | |
-| 7 P9 pasos 2 y 3: dónde entregar y tu folio | ⬜ | |
-| 8 P10 seguimiento y P12 privacidad | ⬜ | |
-| 9 Recorrido, precargas y cierre | ⬜ | |
+| 1 Cliente de la API y sesión del Donador | ✅ `c2ab83e` | |
+| 2 Rutas, cabecera y «Más» para el Donador | ✅ `f491d5c` | |
+| 3 P13 sin sesión: crear cuenta y entrar | ✅ `8457ba7..293f688` | |
+| 4 Confirmar correo | ✅ `ab69f43` | |
+| 5 P13 con sesión: mis donaciones | ✅ `376ebf6` | |
+| 6 P9 paso 1: qué llevas | ✅ `8de99b5` | |
+| 7 P9 pasos 2 y 3: dónde entregar y tu folio | ✅ `97e3252..6c7352e` | |
+| 8 P10 seguimiento y P12 privacidad | ✅ `17df559` | |
+| 9 Recorrido, precargas y cierre | ✅ cierre del ciclo | |
 
 ## Restricciones globales
 

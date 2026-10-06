@@ -16,6 +16,7 @@ actualizado: 2026-10-06
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | En la [maqueta del ciclo 1](../P13-mi-cuenta/maqueta.html) |
 | Aprobación | Joseph la aprobó el 2026-10-06 |
+| Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
 
 ## Qué muestra
 
@@ -25,6 +26,7 @@ Ley 1581 de 2012 y quién responde. Se enlaza desde el registro y desde la foto 
 
 ## Diferencias
 
+- No tiene flecha de volver, porque el marco del portal no la trae.
 - Secciones con subtítulo y párrafo, sin una tarjeta para cada una.
 - Sin la píldora «Protección de datos personales» encima del título.
 - El aviso de que Acopio no recibe dinero queda en una línea al pie.
