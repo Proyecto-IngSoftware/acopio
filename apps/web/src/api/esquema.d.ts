@@ -891,6 +891,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/donaciones/{folio}/factura": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["FacturasController_subir"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/comprobantes/{folio}/factura": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["FacturasController_url"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/salud": {
         parameters: {
             query?: never;
@@ -1820,6 +1852,17 @@ export interface components {
             grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
             perecedero: boolean;
             contenido: number[];
+        };
+        UrlFacturaDto: {
+            /** @description URL firmada de la foto */
+            url: string;
+            /** @description URL firmada de la miniatura */
+            miniaturaUrl: string;
+            /**
+             * Format: date-time
+             * @description Cuándo dejan de servir las URL
+             */
+            venceEn: string;
         };
         SaludDto: {
             /** @enum {string} */
@@ -3812,6 +3855,66 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CodigoDonadorDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    FacturasController_subir: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folio: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComprobanteDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    FacturasController_url: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folio: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UrlFacturaDto"];
                 };
             };
             /** @description Error */

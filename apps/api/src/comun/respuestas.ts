@@ -390,6 +390,14 @@ export class ComprobanteDto extends createZodDto(
   }),
 ) {}
 
+export class UrlFacturaDto extends createZodDto(
+  z.object({
+    url: z.string().describe('URL firmada de la foto'),
+    miniaturaUrl: z.string().describe('URL firmada de la miniatura'),
+    venceEn: fecha.describe('Cuándo dejan de servir las URL'),
+  }),
+) {}
+
 export class SugerenciaEntregaDto extends createZodDto(
   z.object({
     acopioId: z.uuid(),
