@@ -268,6 +268,46 @@
         ]
       }
     },
+    "/api/auth/registro/confirmar/{token}": {
+      "get": {
+        "operationId": "DonadorController_validarEnlace",
+        "parameters": [
+          {
+            "name": "token",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnlaceDonadorDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "donador"
+        ]
+      }
+    },
     "/api/auth/registro/confirmar": {
       "post": {
         "operationId": "DonadorController_confirmar",
@@ -288,7 +328,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/MensajeDto"
+                  "$ref": "#/components/schemas/SesionDto"
                 }
               }
             }
@@ -4239,11 +4279,6 @@
             "format": "email",
             "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
           },
-          "contrasena": {
-            "type": "string",
-            "minLength": 12,
-            "maxLength": 256
-          },
           "nombre": {
             "type": "string",
             "minLength": 2,
@@ -4252,9 +4287,9 @@
         },
         "required": [
           "correo",
-          "contrasena",
           "nombre"
-        ]
+        ],
+        "additionalProperties": false
       },
       "MensajeDto": {
         "type": "object",
@@ -4267,6 +4302,21 @@
           "mensaje"
         ]
       },
+      "EnlaceDonadorDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string"
+          },
+          "correo": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "nombre",
+          "correo"
+        ]
+      },
       "ConfirmarDto": {
         "type": "object",
         "properties": {
@@ -4274,10 +4324,21 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 200
+          },
+          "contrasena": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 256
+          },
+          "nombre": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 120
           }
         },
         "required": [
-          "token"
+          "token",
+          "contrasena"
         ]
       },
       "SesionDonadorDto": {

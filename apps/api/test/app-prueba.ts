@@ -216,6 +216,6 @@ export async function crearDonador(a: AppPrueba) {
     id: usuario.id,
     correo,
     contrasena,
-    token: (sesion as { accessToken: string }).accessToken,
+    token: sesion!.accessToken,
   };
 }

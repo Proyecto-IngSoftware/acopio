@@ -181,9 +181,10 @@ un adaptador en memoria, como Nominatim.
 
 | Método y ruta | Quién | Qué |
 |---|---|---|
-| `POST /auth/registro` | Público, 5 por minuto por IP | Correo, contraseña (reglas de RF-IDE-003) y nombre. Crea la identidad sin confirmar y la fila `usuario` con rol `DONADOR` y estado `ACTIVO`, y encola el correo. Responde siempre lo mismo (C-09) |
-| `POST /auth/registro/confirmar` | Público | Token del enlace. Marca el correo como confirmado |
-| `POST /auth/donador/sesion` | Público, 5 por minuto por IP | Correo y contraseña. Deja la cookie `acopio_sesion`. Sin confirmar: 403 `CORREO_SIN_CONFIRMAR` |
+| `POST /auth/registro` | Público, 5 por minuto por IP | Nombre y correo. Crea la fila `usuario` con rol `DONADOR` y estado `INVITADO`, sin credencial, y encola el enlace. Responde siempre lo mismo (C-09) |
+| `GET /auth/registro/confirmar/:token` | Público, 10 por minuto por IP | Dice si el enlace sirve: nombre y correo, o 404 `ENLACE_INVALIDO` |
+| `POST /auth/registro/confirmar` | Público, 10 por minuto por IP | Token, contraseña (reglas de RF-IDE-003) y nombre opcional. Crea la credencial, activa la cuenta y deja la cookie `acopio_sesion` |
+| `POST /auth/donador/sesion` | Público, 5 por minuto por IP | Correo y contraseña. Deja la cookie `acopio_sesion`. Una cuenta sin confirmar no tiene credencial y da 401 |
 
 `POST /auth/sesion` sigue rechazando a un Donador: la consola es para los roles internos.
 
@@ -238,7 +239,6 @@ mal escrito.
 | 422 `VENCIMIENTO_REQUERIDO` | Una línea perecedera confirmada sin fecha |
 | 422 `MOVIMIENTO_NO_VINCULABLE` | No es una `ENTRADA`, ya tiene donación, o las entradas son de acopios distintos |
 | 415 `TIPO_NO_ADMITIDO` · 413 `ARCHIVO_GRANDE` | Factura |
-| 403 `CORREO_SIN_CONFIRMAR` | Ingreso del Donador antes de confirmar |
 
 ### Bitácora y correo
 
@@ -263,8 +263,8 @@ Se llega desde «Más», sección «Tu donación», cuyas filas hoy llevan a «P
 
 | Pantalla | Qué hace |
 |---|---|
-| P13 Mi cuenta de Donador (`/donador`) | Sin sesión: «Crear cuenta» (nombre, correo, contraseña de 12 caracteres) y «Entrar» con correo. Con sesión: historial con estado y antigüedad, filtro por estado, enlace al seguimiento de cada una y «Cancelar» en las preparadas |
-| Confirmar correo (`/donador/confirmar/:token`) | Activa la cuenta y ofrece entrar |
+| P13 Mi cuenta de Donador (`/donador`) | Sin sesión: «Crear cuenta» (nombre y correo) y «Entrar» con correo. Con sesión: historial con estado y antigüedad, filtro por estado, enlace al seguimiento de cada una y «Cancelar» en las preparadas |
+| Confirmar correo (`/donador/confirmar/:token`) | Pide la contraseña de 12 caracteres, activa la cuenta y entra |
 | P9 Preparar mi donación (`/donar`) | Lista con el buscador y el escáner de C4: escanear el mismo producto suma a su línea, un código con contenido cuenta presentaciones, un código desconocido se busca por nombre sin aprenderse, vencimiento opcional. Luego la sugerencia de dónde entregar, la foto de factura opcional con el aviso de los 12 meses, y el folio grande con su QR. Con 5 preparadas lo explica antes de empezar |
 | P10 Seguir mi donación (`/seguimiento/:folio`) | Pública. Línea de tiempo y lo donado por categoría. La consulta de folio de la Portada lleva aquí |
 | P12 Privacidad (`/privacidad`) | Finalidad de las facturas y el plazo de 12 meses (Ley 1581). Se enlaza desde el registro y desde la foto de factura |
@@ -302,7 +302,7 @@ Cada etapa tiene su plan, escrito al empezarla.
 | Folio | Unitaria: formato, alfabeto sin ambiguos y reintento cuando choca |
 | Sugerencias | Unitaria: orden por cobertura, horario y distancia; sin ubicación |
 | Imagen | Unitaria con imágenes de prueba: EXIF y GPS borrados, tipo real (un PDF renombrado a `.jpg` se rechaza), tamaños |
-| Donador | Integración: registro, confirmación, ingreso; correo sin confirmar; correo de una cuenta interna; respuesta igual en todos los casos |
+| Donador | Integración: registro, confirmación con contraseña, ingreso; cuenta pendiente; correo de una cuenta interna; respuesta igual en todos los casos |
 | Preparar | Integración: límite de 5, cancelar, vencimiento a los 7 días por la tarea |
 | Recepción | Integración: entradas en unidad base y vínculos en una transacción; nada queda a medias si falla; dos Operadores a la vez sobre el mismo folio (uno recibe 409); reasignación de acopio en la bitácora; perecedera sin fecha |
 | Conciliación | Integración: conciliar sin vínculos; vincular entradas de otro acopio o ya vinculadas; rechazo con correo en la cola; revertir |
@@ -354,8 +354,8 @@ Cada etapa tiene su plan, escrito al empezarla.
 |---|---|
 | El sufijo del folio usa un alfabeto de 32 caracteres (32⁵ ≈ 33,5 millones por año), no 31⁵ como dice el §10 | El alfabeto sin I, O, 0 ni 1 queda en 32 símbolos. El `CHECK` del folio lo refleja |
 | El guard comprueba al Donador antes que los roles: un único 403 «Esta sección es de la consola» | Así el Donador recibe el mismo mensaje en cualquier ruta de la consola, sin depender de qué roles admita |
-| El ingreso del Donador da 403 `CORREO_SIN_CONFIRMAR` solo si la contraseña es correcta; con una mala, 401 genérico | Si el 403 saliera siempre, cualquiera sabría qué correos están registrados |
-| Si falla la transacción del registro, se borra la credencial con `ProveedorIdentidad.eliminarUsuario`; un registro duplicado en carrera responde el mismo 202 | Sin eso quedaba una credencial sin usuario, y la carrera dejaba ver un error distinto |
+| El ingreso del Donador da 403 `CORREO_SIN_CONFIRMAR` solo si la contraseña es correcta; con una mala, 401 genérico | Si el 403 saliera siempre, cualquiera sabría qué correos están registrados. Reemplazado el 2026-10-06 por la fila de P-040 |
+| (Reemplazado por P-040) Si falla la transacción del registro, se borra la credencial con `ProveedorIdentidad.eliminarUsuario`; un registro duplicado en carrera responde el mismo 202 | Sin eso quedaba una credencial sin usuario, y la carrera dejaba ver un error distinto |
 | Una imagen que no se puede decodificar (truncada, HEIC sin soporte) da 415 `TIPO_NO_ADMITIDO` | `sharp` lanza un error propio y daba 500 |
 | Cancelar, recibir, vincular, conciliar, rechazar y subir factura cambian el estado con `updateMany` condicionado al estado leído | Dos peticiones a la vez no pisan una transición ya hecha. La recepción no usa advisory lock de folio y recorre las líneas ordenadas por categoría, para tomar los candados de inventario siempre en el mismo orden y evitar interbloqueos |
 | Vincular exige alcance sobre el acopio del comprobante y sobre el de las entradas | Un Auditor con alcance sobre un solo acopio no debe poder tocar entradas de otro |
@@ -370,4 +370,4 @@ Cada etapa tiene su plan, escrito al empezarla.
 | Revisión final: la foto de más de 8 MB da 413 `ARCHIVO_GRANDE` y un campo de subida con otro nombre da 400 en español; `sharp` limita la entrada a 50 millones de píxeles | multer respondía en inglés y con otro código |
 | Revisión final: migración `20261006120000_bloque_3_fk_usuarios` con llaves foráneas a `usuario` para `recibido_por`, `verificado_por` y `vinculado_por` (RESTRICT) | Estaban en el §4 y faltaban |
 | Los HEIC no se probaron con una imagen real de iPhone | Se decodifican o dan 415; la prueba con un teléfono queda para la interfaz |
-| Queda abierto que alguien registre el correo de otra persona con su propia contraseña | [P-040](../../01-requerimientos/pendientes.md) |
+| P-040, 2026-10-06: el registro pide nombre y correo y deja al Donador `INVITADO`, sin credencial. La contraseña se elige en `POST /auth/registro/confirmar`, que crea la credencial, activa la cuenta e inicia la sesión. Se agrega `GET /auth/registro/confirmar/:token`. Se quitaron el 403 `CORREO_SIN_CONFIRMAR`, `confirmarCorreo` y la variante `sinConfirmar` del puerto | Con la contraseña fijada en el registro, quien registraba un correo ajeno dejaba la contraseña de la cuenta que la dueña activaba. Ahora la credencial nace al confirmar. Cierra [P-040](../../01-requerimientos/pendientes.md) |

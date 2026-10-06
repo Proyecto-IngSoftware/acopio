@@ -19,8 +19,8 @@ const ENLACE_INVALIDO = () =>
   );
 
 /**
- * Cuenta del Donador (RF-IDE-013, C-03): se registra por la API, confirma su correo con
- * un enlace que llega por la cola, y entra con correo. Es la única cuenta que no crea
+ * Cuenta del Donador (RF-IDE-013, C-03): se registra por la API con nombre y correo, y
+ * con el enlace que llega por la cola confirma el correo y elige su contraseña. Es la única cuenta que no crea
  * un administrador.
  */
 @Injectable()
@@ -33,24 +33,31 @@ export class DonadorService {
     @Inject(ENTORNO) private readonly entorno: Entorno,
   ) {}
 
-  /** Responde siempre lo mismo (C-09): nadie averigua qué correos tienen cuenta. */
-  async registrar(datos: { correo: string; contrasena: string; nombre: string }) {
+  /**
+   * Responde siempre lo mismo (C-09): nadie averigua qué correos tienen cuenta. No pide
+   * contraseña: la elige quien recibe el enlace, al confirmar (P-040).
+   */
+  async registrar(datos: { correo: string; nombre: string }) {
     const correo = datos.correo.trim().toLowerCase();
-    const rechazo = motivoRechazo(datos.contrasena, [correo, datos.nombre]);
-    if (rechazo) throw new ErrorDominio('CONTRASENA_DEBIL', rechazo, 422);
-
     const existente = await this.prisma.usuario.findUnique({
       where: { correo },
-      select: { id: true, rol: true, nombre: true },
+      select: { id: true, rol: true, estado: true, nombre: true },
     });
-    if (existente) {
-      const pendiente =
-        existente.rol === 'DONADOR' &&
-        (await this.prisma.verificacionCorreo.findFirst({
-          where: { usuario_id: existente.id, usado_en: null },
-        }));
+    try {
       await this.prisma.$transaction(async (tx) => {
-        if (pendiente) {
+        if (!existente) {
+          const usuario = await tx.usuario.create({
+            data: { nombre: datos.nombre.trim(), correo, rol: 'DONADOR', estado: 'INVITADO' },
+          });
+          await this.bitacora.registrar(tx, {
+            usuarioId: usuario.id,
+            accion: 'donador.registrado',
+            entidad: 'usuario',
+            entidadId: usuario.id,
+            despues: { correo },
+          });
+          await this.emitirEnlace(tx, usuario.id, usuario.nombre, correo);
+        } else if (existente.rol === 'DONADOR' && existente.estado === 'INVITADO') {
           await this.emitirEnlace(tx, existente.id, existente.nombre, correo);
         } else {
           await this.correo.encolar(
@@ -60,50 +67,11 @@ export class DonadorService {
           );
         }
       });
-      return;
-    }
-
-    let uid: string;
-    try {
-      ({ uid } = await this.proveedor.crearUsuario(correo, datos.contrasena, {
-        confirmado: false,
-      }));
     } catch (error) {
       // Carrera: otro registro del mismo correo ganó. Se responde igual (C-09).
-      const codigo = (error as { code?: string }).code;
-      if (codigo === 'P2002' || codigo === 'email_exists') return;
+      if ((error as { code?: string }).code === 'P2002') return;
       throw error;
     }
-    try {
-      await this.crearCuenta(uid, correo, datos.nombre);
-    } catch (error) {
-      // Sin esto queda una credencial huérfana y el correo no se puede volver a registrar
-      await this.proveedor.eliminarUsuario(uid).catch(() => undefined);
-      throw error;
-    }
-  }
-
-  private async crearCuenta(uid: string, correo: string, nombre: string) {
-    await this.prisma.$transaction(async (tx) => {
-      const usuario = await tx.usuario.create({
-        data: {
-          nombre: nombre.trim(),
-          correo,
-          rol: 'DONADOR',
-          estado: 'ACTIVO',
-          supabase_uid: uid,
-          tokens_validos_desde: new Date(),
-        },
-      });
-      await this.bitacora.registrar(tx, {
-        usuarioId: usuario.id,
-        accion: 'donador.registrado',
-        entidad: 'usuario',
-        entidadId: usuario.id,
-        despues: { correo },
-      });
-      await this.emitirEnlace(tx, usuario.id, usuario.nombre, correo);
-    });
   }
 
   private async emitirEnlace(
@@ -128,28 +96,82 @@ export class DonadorService {
     );
   }
 
-  async confirmar(token: string) {
+  /** Datos del enlace para pintar el formulario antes de pedir la contraseña. */
+  async validarEnlace(token: string) {
+    const fila = await this.enlaceVigente(token);
+    return { nombre: fila.usuario.nombre, correo: fila.usuario.correo! };
+  }
+
+  private async enlaceVigente(token: string) {
     const fila = await this.prisma.verificacionCorreo.findUnique({
       where: { token_hash: hashToken(token) },
-      include: { usuario: { select: { id: true, supabase_uid: true } } },
+      include: { usuario: { select: { id: true, nombre: true, correo: true, estado: true } } },
     });
-    if (!fila || fila.usado_en || fila.vence_en < new Date() || !fila.usuario.supabase_uid) {
+    if (
+      !fila ||
+      fila.usado_en ||
+      fila.vence_en < new Date() ||
+      fila.usuario.estado !== 'INVITADO'
+    ) {
       throw ENLACE_INVALIDO();
     }
-    await this.proveedor.confirmarCorreo(fila.usuario.supabase_uid);
-    await this.prisma.$transaction(async (tx) => {
-      // Un enlace confirma la cuenta: los demás pendientes del mismo usuario se cierran
-      await tx.verificacionCorreo.updateMany({
-        where: { usuario_id: fila.usuario_id, usado_en: null },
-        data: { usado_en: new Date() },
+    return fila;
+  }
+
+  /** El Donador elige su contraseña con el enlace: se crea la credencial y entra (P-040). */
+  async confirmar(token: string, contrasena: string, nombre?: string) {
+    const fila = await this.enlaceVigente(token);
+    const correo = fila.usuario.correo!;
+    const nombreFinal = nombre?.trim() || fila.usuario.nombre;
+    const rechazo = motivoRechazo(contrasena, [correo, nombreFinal]);
+    if (rechazo) throw new ErrorDominio('CONTRASENA_DEBIL', rechazo, 422);
+
+    let uid: string;
+    try {
+      ({ uid } = await this.proveedor.crearUsuario(correo, contrasena));
+    } catch (error) {
+      // Carrera: otra confirmación del mismo correo ganó; aquí no hay nada que compensar
+      const codigo = (error as { code?: string }).code;
+      if (codigo === 'P2002' || codigo === 'email_exists') throw ENLACE_INVALIDO();
+      throw error;
+    }
+    try {
+      await this.prisma.$transaction(async (tx) => {
+        // Gana quien cierre primero el enlace; el otro falla y compensa
+        const gastado = await tx.verificacionCorreo.updateMany({
+          where: { id: fila.id, usado_en: null },
+          data: { usado_en: new Date() },
+        });
+        if (gastado.count === 0) throw ENLACE_INVALIDO();
+        // Un enlace confirma la cuenta: los demás pendientes del mismo usuario se cierran
+        await tx.verificacionCorreo.updateMany({
+          where: { usuario_id: fila.usuario_id, usado_en: null },
+          data: { usado_en: new Date() },
+        });
+        await tx.usuario.update({
+          where: { id: fila.usuario_id },
+          data: {
+            supabase_uid: uid,
+            estado: 'ACTIVO',
+            tokens_validos_desde: new Date(),
+            nombre: nombreFinal,
+          },
+        });
+        await this.bitacora.registrar(tx, {
+          usuarioId: fila.usuario_id,
+          accion: 'donador.confirmado',
+          entidad: 'usuario',
+          entidadId: fila.usuario_id,
+          antes: { estado: 'INVITADO' },
+          despues: { estado: 'ACTIVO' },
+        });
       });
-      await this.bitacora.registrar(tx, {
-        usuarioId: fila.usuario_id,
-        accion: 'donador.correo_confirmado',
-        entidad: 'usuario',
-        entidadId: fila.usuario_id,
-      });
-    });
+    } catch (error) {
+      // Sin esto queda una credencial huérfana y el correo no se puede volver a confirmar
+      await this.proveedor.eliminarUsuario(uid).catch(() => undefined);
+      throw error;
+    }
+    return this.iniciarSesion(correo, contrasena);
   }
 
   async iniciarSesion(correoCrudo: string, contrasena: string) {
@@ -164,13 +186,6 @@ export class DonadorService {
     }
     const sesion = await this.proveedor.iniciarSesion(correo, contrasena);
     if (!sesion) throw CREDENCIALES_INVALIDAS();
-    if ('sinConfirmar' in sesion) {
-      throw new ErrorDominio(
-        'CORREO_SIN_CONFIRMAR',
-        'Confirma tu correo con el enlace que te enviamos antes de entrar',
-        403,
-      );
-    }
     return {
       accessToken: sesion.accessToken,
       expiraEn: sesion.expiraEn,

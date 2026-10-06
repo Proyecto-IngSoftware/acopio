@@ -183,9 +183,7 @@ const DONADOR_DEMO = { correo: 'donador1@demo.acopio.local', nombre: 'Donadora (
 async function sembrarDonadorDemo(prisma: PrismaService, proveedor: ProveedorLocal) {
   const existente = await prisma.usuario.findUnique({ where: { correo: DONADOR_DEMO.correo } });
   if (existente) return existente.id;
-  const { uid } = await proveedor.crearUsuario(DONADOR_DEMO.correo, CONTRASENA_DEMO, {
-    confirmado: true,
-  });
+  const { uid } = await proveedor.crearUsuario(DONADOR_DEMO.correo, CONTRASENA_DEMO);
   const creado = await prisma.usuario.create({
     data: {
       nombre: DONADOR_DEMO.nombre,

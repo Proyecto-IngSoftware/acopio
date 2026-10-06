@@ -30,27 +30,16 @@ export class ProveedorLocal implements ProveedorIdentidad {
     return this.llaves;
   }
 
-  async crearUsuario(
-    correo: string,
-    contrasena: string,
-    opciones: { confirmado?: boolean } = {},
-  ): Promise<{ uid: string }> {
+  async crearUsuario(correo: string, contrasena: string): Promise<{ uid: string }> {
     const identidad = await this.prisma.identidadLocal.create({
       data: {
         correo,
         password_hash: await bcrypt.hash(contrasena, COSTO_BCRYPT),
-        // Las cuentas internas nacen confirmadas: la invitación prueba el correo
-        correo_confirmado_en: opciones.confirmado === false ? null : new Date(),
+        // Nace confirmada: la invitación o el enlace del Donador ya probaron el correo
+        correo_confirmado_en: new Date(),
       },
     });
     return { uid: identidad.id };
-  }
-
-  async confirmarCorreo(uid: string): Promise<void> {
-    await this.prisma.identidadLocal.update({
-      where: { id: uid },
-      data: { correo_confirmado_en: new Date() },
-    });
   }
 
   async cambiarContrasena(uid: string, contrasena: string): Promise<void> {
@@ -64,16 +53,12 @@ export class ProveedorLocal implements ProveedorIdentidad {
     await this.prisma.identidadLocal.deleteMany({ where: { id: uid } });
   }
 
-  async iniciarSesion(
-    correo: string,
-    contrasena: string,
-  ): Promise<SesionEmitida | { sinConfirmar: true } | null> {
+  async iniciarSesion(correo: string, contrasena: string): Promise<SesionEmitida | null> {
     const identidad = await this.prisma.identidadLocal.findUnique({ where: { correo } });
     // Se compara igual aunque no exista, para no revelar por tiempo si el correo existe
     const hash = identidad?.password_hash ?? HASH_SENUELO;
     const coincide = await bcrypt.compare(contrasena, hash);
     if (!identidad || !coincide) return null;
-    if (!identidad.correo_confirmado_en) return { sinConfirmar: true };
 
     const { privada, publica } = await this.obtenerLlaves();
     const expiraEn = new Date(Date.now() + VIGENCIA_HORAS * 3600 * 1000);

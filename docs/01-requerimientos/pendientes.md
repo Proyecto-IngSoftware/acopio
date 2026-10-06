@@ -700,7 +700,10 @@ uniforme (RF-IDE-013) oculta qué correos existen, pero no cierra este caso.
 **Por qué:** lo vio la revisión del Bloque 3. Una mitigación posible es que la contraseña
 se defina al confirmar: el registro solo recibe correo y nombre, y el enlace lleva a un
 formulario donde la dueña elige su contraseña.
-**Estado:** ABIERTO.
+**Resuelto el 2026-10-06:** el registro pide solo nombre y correo y deja al Donador `INVITADO`,
+sin credencial. La contraseña se elige al confirmar con el enlace, y esa confirmación inicia la
+sesión. Quien registra un correo ajeno no fija ninguna contraseña.
+**Estado:** RESUELTO el 2026-10-06 → [RF-IDE-013](funcionales/identidad.md#rf-ide-013--auto-registro-de-donador).
 
 ### P-041 · Las URL firmadas de la factura traen el host interno de Garage
 **Fecha:** 2026-10-05 · **Propuesto por:** Joseph

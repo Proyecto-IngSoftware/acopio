@@ -100,6 +100,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/auth/registro/confirmar/{token}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["DonadorController_validarEnlace"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/auth/registro/confirmar": {
         parameters: {
             query?: never;
@@ -1181,14 +1197,19 @@ export interface components {
         RegistroDto: {
             /** Format: email */
             correo: string;
-            contrasena: string;
             nombre: string;
         };
         MensajeDto: {
             mensaje: string;
         };
+        EnlaceDonadorDto: {
+            nombre: string;
+            correo: string;
+        };
         ConfirmarDto: {
             token: string;
+            contrasena: string;
+            nombre?: string;
         };
         SesionDonadorDto: {
             correo: string;
@@ -2386,6 +2407,36 @@ export interface operations {
             };
         };
     };
+    DonadorController_validarEnlace: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                token: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EnlaceDonadorDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
     DonadorController_confirmar: {
         parameters: {
             query?: never;
@@ -2404,7 +2455,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["MensajeDto"];
+                    "application/json": components["schemas"]["SesionDto"];
                 };
             };
             /** @description Error */

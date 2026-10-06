@@ -7,27 +7,15 @@ import type { JSONWebKeySet } from 'jose';
  */
 export interface ProveedorIdentidad {
   /**
-   * Crea la credencial y devuelve su identificador, que será el `sub` del token. Las
-   * cuentas internas nacen confirmadas (la invitación prueba el correo); el Donador no.
+   * Crea la credencial y devuelve su identificador, que será el `sub` del token. Nace
+   * confirmada: la invitación y el enlace del Donador prueban el correo antes de crearla.
    */
-  crearUsuario(
-    correo: string,
-    contrasena: string,
-    opciones?: { confirmado?: boolean },
-  ): Promise<{ uid: string }>;
-  /** Marca el correo como confirmado: desde ahí puede iniciar sesión. */
-  confirmarCorreo(uid: string): Promise<void>;
+  crearUsuario(correo: string, contrasena: string): Promise<{ uid: string }>;
   cambiarContrasena(uid: string, contrasena: string): Promise<void>;
   /** Borra la credencial: compensa un alta cuyo resto no se pudo guardar. */
   eliminarUsuario(uid: string): Promise<void>;
-  /**
-   * Devuelve null si el correo o la contraseña no coinciden. `sinConfirmar` solo sale
-   * cuando la contraseña es correcta, para no revelar qué correos tienen cuenta.
-   */
-  iniciarSesion(
-    correo: string,
-    contrasena: string,
-  ): Promise<SesionEmitida | { sinConfirmar: true } | null>;
+  /** Devuelve null si el correo o la contraseña no coinciden. */
+  iniciarSesion(correo: string, contrasena: string): Promise<SesionEmitida | null>;
   /** Llaves públicas para verificar los tokens. Con Supabase, las del proyecto. */
   jwks(): Promise<JSONWebKeySet>;
 }

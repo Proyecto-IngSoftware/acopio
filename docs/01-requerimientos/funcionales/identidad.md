@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: identidad
 bloque: 0
-actualizado: 2026-10-05
+actualizado: 2026-10-06
 ---
 
 # RF-IDE · Identidad y accesos
@@ -176,21 +176,23 @@ crear usuarios» de RF-IDE-001 — nadie más está creando la cuenta de otro, c
 quien crea la suya.
 
 **Criterios de aceptación:**
-- [ ] Formulario público: correo, contraseña, nombre a mostrar
+- [ ] Formulario público: correo y nombre a mostrar. La contraseña se elige al confirmar el correo (P-040)
 - [ ] **2026-10-05 · el registro pasa por la API (C-03, C-09).** `POST
-      /api/auth/registro` crea la credencial en el proveedor de identidad y la fila de
-      `usuario` con `rol = DONADOR`, fijado en el servidor. Si la transacción falla, se
-      borra la credencial. El navegador no habla con Supabase
+      /api/auth/registro` crea la fila de `usuario` con `rol = DONADOR` y estado
+      `INVITADO`, fijado en el servidor, y no crea credencial. El navegador no habla con
+      Supabase
 - [ ] El correo se confirma antes del primer ingreso. El enlace sale por la cola
-      `correo_saliente`, trae un token de un solo uso con vigencia limitada y se canjea
-      en `POST /api/auth/registro/confirmar`
+      `correo_saliente` y trae un token de un solo uso con vigencia limitada.
+      `GET /api/auth/registro/confirmar/:token` dice si sirve y devuelve nombre y correo.
+      `POST /api/auth/registro/confirmar` recibe el token y la contraseña, crea la
+      credencial, activa la cuenta e inicia la sesión. Si la transacción falla, se borra
+      la credencial
 - [ ] El registro responde 202 con el mismo mensaje se haya creado la cuenta, ya
       existiera o la haya ganado otra petición en paralelo; a una cuenta existente le
       llega un correo que lo dice. Así nadie descubre qué correos están registrados
 - [ ] `POST /api/auth/donador/sesion` entra con correo y contraseña. Una cuenta sin
-      confirmar da 403 `CORREO_SIN_CONFIRMAR` solo si la contraseña es correcta; con una
-      contraseña mala da el 401 genérico
-- [ ] Nace en estado `ACTIVO` de una vez: no hay invitación que canjear
+      confirmar no tiene credencial y da el 401 genérico
+- [ ] Nace `INVITADO` y pasa a `ACTIVO` al confirmar el correo
 - [ ] Un correo que ya usa una cuenta interna no puede registrarse como Donador
 - [ ] El Administrador puede suspender a un Donador (RF-IDE-007), igual que a
       cualquier otra cuenta
