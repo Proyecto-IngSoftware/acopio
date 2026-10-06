@@ -235,6 +235,16 @@ export function Preparar() {
   return (
     <section className="flex flex-col gap-space-md px-margin py-space-lg">
       <h1 className="text-headline-lg-mobile text-on-surface">Preparar donación</h1>
+      {paso === 2 && (
+        <button
+          type="button"
+          aria-label="Volver"
+          onClick={() => enviar({ tipo: 'paso', paso: 1 })}
+          className="flex h-12 w-12 items-center justify-center self-start rounded-full text-on-surface"
+        >
+          <Icono nombre="arrow_back" className="text-[24px]" />
+        </button>
+      )}
       <BarraPasos paso={paso} />
       {cuerpo}
     </section>

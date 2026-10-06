@@ -117,7 +117,30 @@ describe('P9, paso 2: dónde entregar', () => {
     });
   });
 
-  it('con ubicación del navegador la manda a las sugerencias', async () => {
+  it('«Usar mi ubicación» pide la ubicación y repite la consulta con lat y lng', async () => {
+    const pedir = vi.fn((ok: (p: unknown) => void) =>
+      ok({ coords: { latitude: 4.6, longitude: -74.1 } }),
+    );
+    Object.defineProperty(navigator, 'geolocation', {
+      configurable: true,
+      value: { getCurrentPosition: pedir },
+    });
+    responderSegun(base());
+    await alPasoDos();
+    await screen.findByRole('radio', { name: /Parroquia San José/ });
+    expect(pedir).not.toHaveBeenCalled();
+    await userEvent.click(screen.getByRole('button', { name: 'Usar mi ubicación' }));
+    await waitFor(async () =>
+      expect(await cuerpoDe('POST /api/donaciones/sugerencias')).toEqual({
+        lineas: [{ categoriaId: 'c2' }],
+        lat: 4.6,
+        lng: -74.1,
+      }),
+    );
+    expect(screen.queryByRole('status', { name: /Buscando/ })).not.toBeInTheDocument();
+  });
+
+  it('la elección del usuario se mantiene cuando la lista se reordena', async () => {
     Object.defineProperty(navigator, 'geolocation', {
       configurable: true,
       value: {
@@ -127,14 +150,35 @@ describe('P9, paso 2: dónde entregar', () => {
     });
     responderSegun(base());
     await alPasoDos();
-    await screen.findByRole('radio', { name: /Parroquia San José/ });
-    await waitFor(async () =>
-      expect(await cuerpoDe('POST /api/donaciones/sugerencias')).toEqual({
-        lineas: [{ categoriaId: 'c2' }],
-        lat: 4.6,
-        lng: -74.1,
-      }),
+    await userEvent.click(await screen.findByRole('radio', { name: /Acopio Norte/ }));
+    responderSegun(base({ 'POST /api/donaciones/sugerencias': [...SUGERENCIAS].reverse() }));
+    await userEvent.click(screen.getByRole('button', { name: 'Usar mi ubicación' }));
+    await waitFor(() =>
+      expect(screen.getAllByRole('radio')[0]).toHaveAccessibleName(/Acopio Norte/),
     );
+    expect(screen.getByRole('radio', { name: /Acopio Norte/ })).toBeChecked();
+  });
+
+  it('con la ubicación denegada avisa y deja elegir de la lista', async () => {
+    Object.defineProperty(navigator, 'geolocation', {
+      configurable: true,
+      value: { getCurrentPosition: (_ok: unknown, no: () => void) => no() },
+    });
+    responderSegun(base());
+    await alPasoDos();
+    await screen.findByRole('radio', { name: /Parroquia San José/ });
+    await userEvent.click(screen.getByRole('button', { name: 'Usar mi ubicación' }));
+    expect(await screen.findByText(/No pudimos usar tu ubicación/)).toBeInTheDocument();
+    expect(screen.getByRole('radio', { name: /Parroquia San José/ })).toBeChecked();
+  });
+
+  it('«Volver» regresa al paso 1 y conserva las líneas', async () => {
+    responderSegun(base());
+    await alPasoDos();
+    await screen.findByRole('radio', { name: /Parroquia San José/ });
+    await userEvent.click(screen.getByRole('button', { name: 'Volver' }));
+    expect(screen.getByRole('listitem', { name: 'Arroz' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Volver' })).not.toBeInTheDocument();
   });
 
   it('elegir otro acopio y preparar manda el cuerpo esperado y abre el folio con QR', async () => {
@@ -251,6 +295,38 @@ describe('P9, paso 2: dónde entregar', () => {
     expect(await screen.findByText('ACO-2026-7KQ4M')).toBeInTheDocument();
     expect(
       await screen.findByText(/No pudimos subir la factura: La foto pesa demasiado/),
+    ).toBeInTheDocument();
+    responderSegun(
+      base({
+        'POST /api/donaciones/*/factura': { ...CREADA, tieneFactura: true },
+      }),
+    );
+    await userEvent.click(screen.getByRole('button', { name: 'Intentar otra vez' }));
+    expect(await screen.findByText('Factura adjunta')).toBeInTheDocument();
+  });
+
+  it('si la factura es de un tipo no admitido (415), el folio se muestra y se puede intentar otra vez', async () => {
+    URL.createObjectURL = vi.fn(() => 'blob:mini');
+    URL.revokeObjectURL = vi.fn();
+    responderSegun(
+      base({
+        'POST /api/donaciones': CREADA,
+        'POST /api/donaciones/*/factura': conEstado(415, {
+          estado: 415,
+          codigo: 'TIPO_NO_ADMITIDO',
+          mensaje: 'Solo se admiten fotos',
+        }),
+      }),
+    );
+    await alPasoDos();
+    await userEvent.upload(
+      await screen.findByLabelText('Tomar o subir foto'),
+      new File(['x'], 'f.jpg', { type: 'image/jpeg' }),
+    );
+    await userEvent.click(await preparar());
+    expect(await screen.findByText('ACO-2026-7KQ4M')).toBeInTheDocument();
+    expect(
+      await screen.findByText(/No pudimos subir la factura: Solo se admiten fotos/),
     ).toBeInTheDocument();
     responderSegun(
       base({

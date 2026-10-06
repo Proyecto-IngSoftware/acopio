@@ -50,17 +50,21 @@ interface Props {
 export function PasoEntrega({ lineas, acopioId, factura, alElegir, alFactura, alCrear }: Props) {
   const [ubicacion, fijarUbicacion] = useState<Punto | undefined>();
   const [error, fijarError] = useState<{ codigo: string; mensaje: string } | null>(null);
+  const [avisoUbicacion, fijarAvisoUbicacion] = useState<string | null>(null);
   const [enviando, fijarEnviando] = useState(false);
   const preparar = usePrepararDonacion();
 
-  // Sin ubicación también funciona: solo cambia el orden y trae la distancia
-  useEffect(() => {
-    if (!navigator.geolocation) return;
+  function usarUbicacion() {
+    fijarAvisoUbicacion(null);
+    if (!navigator.geolocation) {
+      fijarAvisoUbicacion('Tu navegador no comparte la ubicación.');
+      return;
+    }
     navigator.geolocation.getCurrentPosition(
       (p) => fijarUbicacion({ lat: p.coords.latitude, lng: p.coords.longitude }),
-      () => undefined,
+      () => fijarAvisoUbicacion('No pudimos usar tu ubicación. Elige un acopio de la lista.'),
     );
-  }, []);
+  }
 
   const sugerencias = useSugerencias(
     lineas.map((l) => ({ categoriaId: l.categoriaId })),
@@ -175,6 +179,15 @@ export function PasoEntrega({ lineas, acopioId, factura, alElegir, alFactura, al
         <p className="text-body-md text-on-surface-variant">
           Primero los acopios que reciben más de lo que llevas y están abiertos.
         </p>
+        <Boton variante="secundario" className="self-start" onClick={usarUbicacion}>
+          <Icono nombre="my_location" className="text-[20px]" />
+          Usar mi ubicación
+        </Boton>
+        {avisoUbicacion && (
+          <p role="status" className="text-body-sm text-on-surface-variant">
+            {avisoUbicacion}
+          </p>
+        )}
       </div>
       {cuerpo}
       <Link
