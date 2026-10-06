@@ -74,3 +74,41 @@ it('/consola/sin-sincronizar abre la lista de entradas guardadas en el teléfono
   render(envolver(<Rutas />, '/consola/sin-sincronizar', clienteFalso(operadora)));
   expect(await screen.findByRole('heading', { name: 'Sin sincronizar' })).toBeInTheDocument();
 });
+
+describe('rutas del Donador', () => {
+  const donador = {
+    id: 'd1',
+    username: 'ana@correo.co',
+    nombre: 'Ana Ruiz',
+    rol: 'DONADOR' as const,
+  };
+
+  it.each([
+    ['/donador', 'Mi cuenta'],
+    ['/donador/confirmar/abc', 'Confirma tu correo'],
+    ['/seguimiento', 'Seguimiento'],
+    ['/seguimiento/ACO-2026-7KQ4M', 'Seguimiento'],
+    ['/privacidad', 'Privacidad'],
+  ])('%s carga su pantalla dentro del portal', async (ruta, titulo) => {
+    render(envolver(<Rutas />, ruta));
+    expect(await screen.findByRole('heading', { level: 1, name: titulo })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Secciones' })).toBeInTheDocument();
+  });
+
+  it('/donar con un Donador en sesión carga Preparar', async () => {
+    render(envolver(<Rutas />, '/donar', clienteFalso(donador)));
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Preparar donación' }),
+    ).toBeInTheDocument();
+  });
+
+  it('/donar sin sesión lleva a /donador', async () => {
+    render(envolver(<Rutas />, '/donar'));
+    expect(await screen.findByRole('heading', { level: 1, name: 'Mi cuenta' })).toBeInTheDocument();
+  });
+
+  it('/consola/bitacora con un Donador cae en el rechazo de RequiereRol', async () => {
+    render(envolver(<Rutas />, '/consola/bitacora', clienteFalso(donador)));
+    expect(await screen.findByRole('heading', { name: 'No tienes acceso' })).toBeInTheDocument();
+  });
+});

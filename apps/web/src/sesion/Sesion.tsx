@@ -66,11 +66,13 @@ export function SesionProveedor({
   useEffect(
     () =>
       alPerderSesion(() => {
-        if (!usuarioActual.current) return;
+        const perdido = usuarioActual.current;
+        if (!perdido) return;
         usuarioActual.current = null;
         olvidarUsuario();
         fijarUsuario(null);
-        navegar('/entrar');
+        // Un Donador vuelve a su cuenta; la consola tiene su propia pantalla de entrada
+        navegar(perdido.rol === 'DONADOR' ? '/donador' : '/entrar');
       }),
     [navegar],
   );

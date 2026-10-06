@@ -5,6 +5,7 @@ import { useSesion } from '../sesion/Sesion';
 import { BarraNavegacion } from './BarraNavegacion';
 import { CabeceraAcceso } from './cabecera/CabeceraAcceso';
 import { CabeceraConSesion } from './cabecera/CabeceraConSesion';
+import { CabeceraDonador } from './cabecera/CabeceraDonador';
 import { CabeceraPublica } from './cabecera/CabeceraPublica';
 
 // Pantallas que en escritorio usan más que el ancho de un teléfono (J-06)
@@ -19,6 +20,8 @@ export function MarcoPortal() {
       {/* Mientras se sabe si hay sesión, solo la marca: evita mostrar «Entrar» de más */}
       {cargando ? (
         <CabeceraAcceso />
+      ) : usuario?.rol === 'DONADOR' ? (
+        <CabeceraDonador usuario={usuario} />
       ) : usuario ? (
         <CabeceraConSesion usuario={usuario} />
       ) : (

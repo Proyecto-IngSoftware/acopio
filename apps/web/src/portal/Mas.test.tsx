@@ -24,6 +24,24 @@ it('sin sesión muestra las secciones públicas y nada de la consola', async () 
   expect(screen.queryByRole('button', { name: 'Cerrar sesión' })).not.toBeInTheDocument();
 });
 
+it('un Donador ve sus tres filas de «Tu donación» y ninguna herramienta de la consola', async () => {
+  pantalla({ id: 'd1', username: 'ana@correo.co', nombre: 'Ana Ruiz', rol: 'DONADOR' });
+  const donacion = await screen.findByRole('region', { name: 'Tu donación' });
+  expect(within(donacion).getByRole('link', { name: /Preparar donación/ })).toHaveAttribute(
+    'href',
+    '/donar',
+  );
+  expect(
+    within(donacion).getByRole('link', { name: /Rastrear donación por folio/ }),
+  ).toHaveAttribute('href', '/seguimiento');
+  expect(within(donacion).getByRole('link', { name: /Mi cuenta de Donador/ })).toHaveAttribute(
+    'href',
+    '/donador',
+  );
+  expect(screen.queryByRole('region', { name: 'Administración' })).not.toBeInTheDocument();
+  expect(screen.queryByRole('region', { name: 'Mi acopio' })).not.toBeInTheDocument();
+});
+
 it('el Administrador ve su cuenta y sus herramientas, también las de la red', async () => {
   pantalla(persona('ADMIN'));
   const cuenta = await screen.findByRole('region', { name: 'Tu cuenta' });

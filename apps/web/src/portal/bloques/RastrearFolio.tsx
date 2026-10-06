@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router';
 import { Icono } from '../../componentes/Icono';
 
-/** Buscador de folio de Stitch. Sin el módulo de comprobantes, solo avisa que no está
- *  disponible: no simula un resultado. */
+/** Buscador de folio de Stitch: lleva al seguimiento público del folio. */
 export function RastrearFolio() {
-  const [aviso, fijarAviso] = useState(false);
+  const [folio, fijarFolio] = useState('');
+  const navegar = useNavigate();
   return (
     <section
       aria-labelledby="rastrear-folio"
@@ -20,14 +21,17 @@ export function RastrearFolio() {
         className="flex items-center gap-space-xs pt-space-xs"
         onSubmit={(e) => {
           e.preventDefault();
-          fijarAviso(true);
+          const limpio = folio.trim().toUpperCase();
+          if (limpio) navegar(`/seguimiento/${encodeURIComponent(limpio)}`);
         }}
       >
         <input
           id="folio"
           type="text"
           maxLength={16}
-          placeholder="ACO-F-0142"
+          placeholder="ACO-2026-7KQ4M"
+          value={folio}
+          onChange={(e) => fijarFolio(e.target.value)}
           aria-label="Número de folio"
           className="min-h-[44px] min-w-0 flex-1 rounded-xl bg-surface-container-low px-space-md text-label-md text-on-surface placeholder:text-outline focus:bg-surface-container-lowest"
         />
@@ -39,14 +43,6 @@ export function RastrearFolio() {
           Consultar
         </button>
       </form>
-      {aviso && (
-        <p
-          role="status"
-          className="rounded-lg bg-surface-container p-space-sm text-body-sm text-on-surface-variant"
-        >
-          El rastreo por folio todavía no está disponible.
-        </p>
-      )}
     </section>
   );
 }

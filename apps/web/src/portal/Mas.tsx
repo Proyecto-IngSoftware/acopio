@@ -171,19 +171,19 @@ export function Mas() {
 
       <SeccionMenu id="tu-donacion" titulo="Tu donación">
         <FilaMenu
-          a="/proximamente"
+          a="/donar"
           icono="qr_code_scanner"
           titulo="Preparar donación"
           descripcion="Escanea productos y genera tu folio"
         />
         <FilaMenu
-          a="/proximamente"
+          a="/seguimiento"
           icono="pin"
           titulo="Rastrear donación por folio"
           descripcion="Consulta el recorrido con tu código"
         />
         <FilaMenu
-          a="/proximamente"
+          a="/donador"
           icono="badge"
           titulo="Mi cuenta de Donador"
           descripcion="Tus folios activos e historial"

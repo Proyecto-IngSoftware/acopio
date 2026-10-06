@@ -79,9 +79,30 @@ it('Escape cierra el menú', async () => {
   expect(screen.queryByRole('menu')).not.toBeInTheDocument();
 });
 
+const ANA = { id: 'd1', username: 'ana@correo.co', nombre: 'Ana Ruiz', rol: 'DONADOR' as const };
+
+it('con un Donador la cabecera muestra su nombre y Salir, sin selector de ubicación', async () => {
+  const cliente = clienteFalso(ANA);
+  render(envolver(<Rutas />, '/', cliente));
+  expect(await screen.findByText('Ana Ruiz')).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /Ubicación activa/ })).not.toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /Cuenta de/ })).not.toBeInTheDocument();
+  await userEvent.click(screen.getByRole('button', { name: 'Salir' }));
+  await waitFor(() => expect(cliente.cerrarSesion).toHaveBeenCalledTimes(1));
+});
+
+it('un 401 con un Donador en sesión lo lleva a /donador y no a /entrar', async () => {
+  render(envolver(<Destinos />, '/', clienteFalso(ANA)));
+  await screen.findByText('inicio');
+  responderJson({ estado: 401, codigo: 'NO_AUTENTICADO', mensaje: 'x' }, 401);
+  await api.GET('/api/auth/yo');
+  expect(await screen.findByText('cuenta del donador')).toBeInTheDocument();
+});
+
 const Destinos = () => (
   <Routes>
     <Route path="/" element={<p>inicio</p>} />
+    <Route path="/donador" element={<p>cuenta del donador</p>} />
     <Route path="/entrar" element={<p>pantalla de entrar</p>} />
   </Routes>
 );

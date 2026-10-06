@@ -1,3 +1,4 @@
+import { Route, Routes } from 'react-router';
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
@@ -94,17 +95,24 @@ describe('con emergencias', () => {
     expect(screen.getByRole('tabpanel')).toHaveTextContent(/qué ya sobra/);
   });
 
-  it('el formulario de folio avisa que aún no está disponible y no consulta la API', async () => {
+  it('el formulario de folio lleva al seguimiento de ese folio', async () => {
     responderJson(DOS);
-    render(envolver(<Portada />));
+    render(
+      envolver(
+        <Routes>
+          <Route path="/" element={<Portada />} />
+          <Route path="/seguimiento/:folio" element={<p>seguimiento de un folio</p>} />
+        </Routes>,
+      ),
+    );
     await screen.findByRole('heading', { level: 1 });
-    const llamadas = vi.mocked(globalThis.fetch).mock.calls.length;
-    await userEvent.type(screen.getByLabelText('Número de folio'), 'ACO-F-0142');
+    expect(screen.getByLabelText('Número de folio')).toHaveAttribute(
+      'placeholder',
+      'ACO-2026-7KQ4M',
+    );
+    await userEvent.type(screen.getByLabelText('Número de folio'), 'ACO-2026-7KQ4M');
     await userEvent.click(screen.getByRole('button', { name: 'Consultar' }));
-    expect(
-      screen.getByText('El rastreo por folio todavía no está disponible.'),
-    ).toBeInTheDocument();
-    expect(vi.mocked(globalThis.fetch).mock.calls.length).toBe(llamadas);
+    expect(await screen.findByText('seguimiento de un folio')).toBeInTheDocument();
   });
 
   it('no tiene violaciones graves de accesibilidad', async () => {

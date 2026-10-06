@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 import { Route, Routes } from 'react-router';
 import { MarcoAcceso } from './portal/MarcoAcceso';
+import { RequiereDonador } from './donador/RequiereDonador';
 import { RequiereRol } from './consola/RequiereRol';
 import { MarcoPortal } from './portal/MarcoPortal';
 import { Mas } from './portal/Mas';
@@ -65,6 +66,15 @@ const Zonas = lazy(() => import('./consola/red/Zonas').then((m) => ({ default: m
 const FichaAcopio = lazy(() =>
   import('./portal/ficha/FichaAcopio').then((m) => ({ default: m.FichaAcopio })),
 );
+const MiCuenta = lazy(() => import('./donador/MiCuenta').then((m) => ({ default: m.MiCuenta })));
+const Confirmar = lazy(() => import('./donador/Confirmar').then((m) => ({ default: m.Confirmar })));
+const Preparar = lazy(() => import('./donador/Preparar').then((m) => ({ default: m.Preparar })));
+const Seguimiento = lazy(() =>
+  import('./portal/Seguimiento').then((m) => ({ default: m.Seguimiento })),
+);
+const Privacidad = lazy(() =>
+  import('./portal/Privacidad').then((m) => ({ default: m.Privacidad })),
+);
 const Mapa = lazy(() => import('./portal/mapa/Mapa').then((m) => ({ default: m.Mapa })));
 
 const SIN_CONSTRUIR = ['causas', 'voluntariado', 'proximamente'];
@@ -78,6 +88,19 @@ export function Rutas() {
         <Route path="mas" element={<Mas />} />
         <Route path="mapa" element={<Mapa />} />
         <Route path="acopios/:id" element={<FichaAcopio />} />
+        <Route path="donador" element={<MiCuenta />} />
+        <Route path="donador/confirmar/:token" element={<Confirmar />} />
+        <Route
+          path="donar"
+          element={
+            <RequiereDonador>
+              <Preparar />
+            </RequiereDonador>
+          }
+        />
+        <Route path="seguimiento" element={<Seguimiento />} />
+        <Route path="seguimiento/:folio" element={<Seguimiento />} />
+        <Route path="privacidad" element={<Privacidad />} />
         <Route
           path="consola/bitacora"
           element={
