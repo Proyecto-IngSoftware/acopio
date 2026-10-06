@@ -1,12 +1,16 @@
 import { useReducer, useState } from 'react';
+import { Link, useSearchParams } from 'react-router';
 import { formatearCantidad, SIMBOLO_UNIDAD, formatearNumero } from '@acopio/shared';
 import type { ResultadoBusqueda } from '../api/catalogo';
-import { consultarCodigoDonador, useMisDonaciones } from '../api/donaciones';
+import { consultarCodigoDonador, useMisDonaciones, type Donacion } from '../api/donaciones';
 import { Boton, EnlaceBoton } from '../componentes/Boton';
 import { EstadoError } from '../componentes/EstadoError';
 import { Esqueleto } from '../componentes/Esqueleto';
 import { Icono } from '../componentes/Icono';
 import { BuscadorCategoria, type ResolverCodigo } from '../consola/inventario/BuscadorCategoria';
+import { BarraPasos } from './BarraPasos';
+import { PasoEntrega } from './PasoEntrega';
+import { PasoFolio } from './PasoFolio';
 import { cantidadBase, estadoInicial, reducir, type Linea } from './preparacion';
 
 /** Lo máximo de donaciones preparadas a la vez (RF-DON). */
@@ -116,11 +120,13 @@ function LineaDonacion({
 }
 
 /** P9: preparar una donación en tres pasos con estado local; recargar empieza de nuevo.
- *  Este es el paso 1, qué llevas. Diseño: docs/03-diseno/stitch/P09-preparar. */
+ *  Pasos 2 y 3 en PasoEntrega y PasoFolio. Diseño: docs/03-diseno/stitch/P09-preparar. */
 export function Preparar() {
   const [estado, enviar] = useReducer(reducir, estadoInicial);
   const [q, fijarQ] = useState('');
   const preparadas = useMisDonaciones('PREPARADO');
+  const folioPedido = useSearchParams()[0].get('folio');
+  const [creada, fijarCreada] = useState<{ donacion: Donacion; fallo: string | null } | null>(null);
 
   const elegir = (c: ResultadoBusqueda, leido?: { ean: string; contenido: number | null }) => {
     enviar({ tipo: 'agregar', categoria: c, leido });
@@ -128,7 +134,50 @@ export function Preparar() {
   };
 
   let cuerpo;
-  if (preparadas.isPending) {
+  let paso = estado.paso;
+  if (creada) {
+    paso = 3;
+    cuerpo = (
+      <PasoFolio donacion={creada.donacion} archivo={estado.factura} falloInicial={creada.fallo} />
+    );
+  } else if (folioPedido) {
+    paso = 3;
+    const abierta = preparadas.data?.find((d) => d.folio === folioPedido);
+    if (preparadas.isPending) {
+      cuerpo = <Esqueleto etiqueta="Cargando" className="h-32" />;
+    } else if (preparadas.isError) {
+      cuerpo = (
+        <EstadoError
+          mensaje="No pudimos cargar tu donación."
+          alReintentar={() => void preparadas.refetch()}
+        />
+      );
+    } else if (abierta) {
+      cuerpo = <PasoFolio donacion={abierta} />;
+    } else {
+      cuerpo = (
+        <div className="flex flex-col gap-space-sm">
+          <p role="status" className="text-body-lg text-on-surface">
+            No encontramos esa donación entre tus preparadas.
+          </p>
+          <Link to="/donador" className="font-label-md text-label-md text-primary underline">
+            Mis donaciones
+          </Link>
+        </div>
+      );
+    }
+  } else if (estado.paso === 2) {
+    cuerpo = (
+      <PasoEntrega
+        lineas={estado.lineas}
+        acopioId={estado.acopioId}
+        factura={estado.factura}
+        alElegir={(acopioId) => enviar({ tipo: 'acopio', acopioId })}
+        alFactura={(factura) => enviar({ tipo: 'factura', factura })}
+        alCrear={(donacion, fallo) => fijarCreada({ donacion, fallo })}
+      />
+    );
+  } else if (preparadas.isPending) {
     cuerpo = <Esqueleto etiqueta="Cargando" className="h-32" />;
   } else if (preparadas.isError) {
     cuerpo = (
@@ -186,9 +235,7 @@ export function Preparar() {
   return (
     <section className="flex flex-col gap-space-md px-margin py-space-lg">
       <h1 className="text-headline-lg-mobile text-on-surface">Preparar donación</h1>
-      <p className="text-label-md text-on-surface-variant">
-        Paso {estado.paso} de 3 · {['Qué llevas', 'Dónde entregar', 'Tu folio'][estado.paso - 1]}
-      </p>
+      <BarraPasos paso={paso} />
       {cuerpo}
     </section>
   );

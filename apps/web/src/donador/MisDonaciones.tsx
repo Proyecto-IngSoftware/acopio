@@ -27,7 +27,7 @@ const FILTROS: { valor: Filtro; texto: string }[] = [
 ];
 
 /** Lo que lleva la donación en unidad base: lo confirmado si ya se recibió, si no lo declarado. */
-function resumen(d: Donacion): string {
+export function resumen(d: Donacion): string {
   return d.lineas
     .map(
       (l) =>
