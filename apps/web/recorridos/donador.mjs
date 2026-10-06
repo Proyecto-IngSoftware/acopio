@@ -21,11 +21,13 @@ const axe = createRequire(import.meta.url).resolve('axe-core/axe.min.js');
 
 const CORREO = `donador-${Date.now()}@demo.acopio.local`;
 const CONTRASENA = 'recorrido-donador-2026';
-// PNG de 1 × 1: basta para que la API lo decodifique y lo guarde
-const FOTO = Buffer.from(
-  'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR4nGP4z8DwHwAFAAH/q842iQAAAABJRU5ErkJggg==',
-  'base64',
-);
+// JPEG válido generado con el sharp de la API: la API decodifica la foto y rechaza lo corrupto
+const sharp = createRequire(new URL('../../api/package.json', import.meta.url))('sharp');
+const FOTO = await sharp({
+  create: { width: 64, height: 64, channels: 3, background: { r: 200, g: 180, b: 120 } },
+})
+  .jpeg()
+  .toBuffer();
 
 let bien = 0;
 let cerrar = async () => {};
@@ -84,6 +86,8 @@ const ctx = await b.newContext({ viewport: { width: 360, height: 640 }, deviceSc
 const p = await ctx.newPage();
 cerrar = async () => {
   await b.close();
+  console.log(`\nErrores de la página: ${errores.length}`);
+  for (const e of errores.slice(0, 10)) console.log('  ', e.slice(0, 200));
   console.log(`Resultado: ${bien} bien, ${mal} mal`);
   process.exit(1);
 };
@@ -130,8 +134,8 @@ await paso('elegir el primer acopio y adjuntar una foto', async () => {
   await primero.waitFor();
   await primero.check();
   await p.locator('input[type=file]').setInputFiles({
-    name: 'factura.png',
-    mimeType: 'image/png',
+    name: 'factura.jpg',
+    mimeType: 'image/jpeg',
     buffer: FOTO,
   });
   await revisar(p, 'P9 paso 2', 'P09-preparar/construida-paso-2.png');
@@ -141,6 +145,10 @@ let folio = '';
 await paso('ver el folio', async () => {
   await p.getByRole('button', { name: 'Preparar y ver mi folio' }).click();
   await p.getByRole('heading', { name: 'Tu donación está preparada' }).waitFor();
+  await p.getByText('Factura adjunta').waitFor({ timeout: 15_000 });
+  if (await p.getByText(/No pudimos subir la factura/).count()) {
+    throw new Error('la API rechazó la foto de la factura');
+  }
   folio =
     (await p
       .getByText(/^[A-Z]{2,4}-\d{4}-[A-Z0-9]{5}$/)

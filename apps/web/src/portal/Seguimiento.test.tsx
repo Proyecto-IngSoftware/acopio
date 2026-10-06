@@ -63,6 +63,9 @@ describe('Seguimiento', () => {
     expect(pendiente).toHaveTextContent('Pendiente');
     // Sin opacity: atenuar el texto lo dejaba bajo el contraste mínimo (axe)
     expect(pendiente).not.toHaveClass('opacity-60');
+    // El círculo sin relleno (borde) en lugar del círculo lleno de los pasos hechos
+    expect(pendiente.querySelector('span.border-outline-variant')).not.toBeNull();
+    expect(pendiente.querySelector('span.bg-primary-container')).toBeNull();
     expect(pendiente.textContent).not.toMatch(/\d{1,2}:\d{2}/);
   });
 
