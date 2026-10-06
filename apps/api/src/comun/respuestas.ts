@@ -360,3 +360,56 @@ export class CodigoBarrasDto extends createZodDto(
     creadoEn: fecha,
   }),
 ) {}
+
+export class ComprobanteDto extends createZodDto(
+  z.object({
+    folio: z.string().describe('ACO-AAAA-XXXXX'),
+    estado: z.enum(['PREPARADO', 'PENDIENTE', 'CONCILIADO', 'RECHAZADO', 'CANCELADO']),
+    acopio: z.object({ id: z.uuid(), nombre: z.string() }),
+    creadoEn: fecha,
+    recibidoEn: fecha.nullable(),
+    verificadoEn: fecha.nullable(),
+    motivoRechazo: z.string().nullable(),
+    notaRechazo: z.string().nullable(),
+    tieneFactura: z.boolean(),
+    lineas: z.array(
+      z.object({
+        id: z.uuid(),
+        categoriaId: z.uuid(),
+        categoria: z.string(),
+        unidad: z.enum(['LITRO', 'KILOGRAMO', 'UNIDAD']),
+        perecedero: z.boolean(),
+        ean: z.string().nullable(),
+        contenidoUnitario: z.number().describe('Unidad base por presentación; 1 si no hay código'),
+        cantidadDeclarada: z.number(),
+        cantidadConfirmada: z.number().nullable(),
+        venceEn: dia.nullable(),
+        motivoDiferencia: z.string().nullable(),
+      }),
+    ),
+  }),
+) {}
+
+export class SugerenciaEntregaDto extends createZodDto(
+  z.object({
+    acopioId: z.uuid(),
+    nombre: z.string(),
+    direccion: z.string(),
+    abiertoAhora: z.boolean(),
+    distanciaKm: z.number().nullable(),
+    noRecibe: z.array(z.uuid()).describe('Categorías de la donación que este acopio no recibe'),
+    lineasAceptadas: z.number().int(),
+  }),
+) {}
+
+export class CodigoDonadorDto extends createZodDto(
+  z.object({
+    ean: z.string(),
+    categoriaId: z.uuid(),
+    categoria: z.string(),
+    unidad: z.enum(['LITRO', 'KILOGRAMO', 'UNIDAD']),
+    grupo,
+    perecedero: z.boolean(),
+    contenido: z.number().nullable(),
+  }),
+) {}

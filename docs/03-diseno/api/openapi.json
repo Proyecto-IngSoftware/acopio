@@ -3052,6 +3052,217 @@
         ]
       }
     },
+    "/api/donaciones": {
+      "post": {
+        "operationId": "DonacionesController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearDonacionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComprobanteDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "donaciones"
+        ]
+      },
+      "get": {
+        "operationId": "DonacionesController_listar",
+        "parameters": [
+          {
+            "name": "estado",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ComprobanteDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "donaciones"
+        ]
+      }
+    },
+    "/api/donaciones/{folio}/cancelar": {
+      "post": {
+        "operationId": "DonacionesController_cancelar",
+        "parameters": [
+          {
+            "name": "folio",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComprobanteDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "donaciones"
+        ]
+      }
+    },
+    "/api/donaciones/sugerencias": {
+      "post": {
+        "operationId": "DonacionesController_sugerir",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SugerenciasDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SugerenciaEntregaDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "donaciones"
+        ]
+      }
+    },
+    "/api/donaciones/codigos/{ean}": {
+      "get": {
+        "operationId": "DonacionesController_codigo",
+        "parameters": [
+          {
+            "name": "ean",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodigoDonadorDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "donaciones"
+        ]
+      }
+    },
     "/api/salud": {
       "get": {
         "operationId": "SaludController_revisar",
@@ -6528,6 +6739,350 @@
           "minimo",
           "maximo",
           "actualizadoEn"
+        ]
+      },
+      "CrearDonacionDto": {
+        "type": "object",
+        "properties": {
+          "acopioId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "lineas": {
+            "minItems": 1,
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "ean": {
+                  "type": "string",
+                  "pattern": "^\\d{8}$|^\\d{12,14}$"
+                },
+                "cantidad": {
+                  "type": "number",
+                  "exclusiveMaximum": true,
+                  "maximum": 1000000000
+                },
+                "venceEn": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                }
+              },
+              "required": [
+                "categoriaId",
+                "cantidad"
+              ]
+            }
+          }
+        },
+        "required": [
+          "acopioId",
+          "lineas"
+        ]
+      },
+      "ComprobanteDto": {
+        "type": "object",
+        "properties": {
+          "folio": {
+            "type": "string",
+            "description": "ACO-AAAA-XXXXX"
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "PREPARADO",
+              "PENDIENTE",
+              "CONCILIADO",
+              "RECHAZADO",
+              "CANCELADO"
+            ]
+          },
+          "acopio": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "nombre": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "nombre"
+            ]
+          },
+          "creadoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "recibidoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+            "nullable": true
+          },
+          "verificadoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+            "nullable": true
+          },
+          "motivoRechazo": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notaRechazo": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tieneFactura": {
+            "type": "boolean"
+          },
+          "lineas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "categoria": {
+                  "type": "string"
+                },
+                "unidad": {
+                  "type": "string",
+                  "enum": [
+                    "LITRO",
+                    "KILOGRAMO",
+                    "UNIDAD"
+                  ]
+                },
+                "perecedero": {
+                  "type": "boolean"
+                },
+                "ean": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "contenidoUnitario": {
+                  "type": "number",
+                  "description": "Unidad base por presentación; 1 si no hay código"
+                },
+                "cantidadDeclarada": {
+                  "type": "number"
+                },
+                "cantidadConfirmada": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "venceEn": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                  "nullable": true
+                },
+                "motivoDiferencia": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "categoriaId",
+                "categoria",
+                "unidad",
+                "perecedero",
+                "ean",
+                "contenidoUnitario",
+                "cantidadDeclarada",
+                "cantidadConfirmada",
+                "venceEn",
+                "motivoDiferencia"
+              ]
+            }
+          }
+        },
+        "required": [
+          "folio",
+          "estado",
+          "acopio",
+          "creadoEn",
+          "recibidoEn",
+          "verificadoEn",
+          "motivoRechazo",
+          "notaRechazo",
+          "tieneFactura",
+          "lineas"
+        ]
+      },
+      "SugerenciasDto": {
+        "type": "object",
+        "properties": {
+          "lineas": {
+            "minItems": 1,
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                }
+              },
+              "required": [
+                "categoriaId"
+              ]
+            }
+          },
+          "lat": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "lng": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 180
+          }
+        },
+        "required": [
+          "lineas"
+        ]
+      },
+      "SugerenciaEntregaDto": {
+        "type": "object",
+        "properties": {
+          "acopioId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "direccion": {
+            "type": "string"
+          },
+          "abiertoAhora": {
+            "type": "boolean"
+          },
+          "distanciaKm": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "noRecibe": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            },
+            "description": "Categorías de la donación que este acopio no recibe"
+          },
+          "lineasAceptadas": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "acopioId",
+          "nombre",
+          "direccion",
+          "abiertoAhora",
+          "distanciaKm",
+          "noRecibe",
+          "lineasAceptadas"
+        ]
+      },
+      "CodigoDonadorDto": {
+        "type": "object",
+        "properties": {
+          "ean": {
+            "type": "string"
+          },
+          "categoriaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "categoria": {
+            "type": "string"
+          },
+          "unidad": {
+            "type": "string",
+            "enum": [
+              "LITRO",
+              "KILOGRAMO",
+              "UNIDAD"
+            ]
+          },
+          "grupo": {
+            "type": "string",
+            "enum": [
+              "ALIMENTOS",
+              "AGUA_Y_BEBIDAS",
+              "ASEO_PERSONAL",
+              "ASEO_DEL_HOGAR",
+              "SALUD",
+              "ROPA_Y_ABRIGO",
+              "BEBE",
+              "ADULTO_MAYOR",
+              "ANIMALES",
+              "HERRAMIENTAS"
+            ]
+          },
+          "perecedero": {
+            "type": "boolean"
+          },
+          "contenido": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          }
+        },
+        "required": [
+          "ean",
+          "categoriaId",
+          "categoria",
+          "unidad",
+          "grupo",
+          "perecedero",
+          "contenido"
         ]
       },
       "SaludDto": {

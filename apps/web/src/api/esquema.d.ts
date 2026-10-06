@@ -827,6 +827,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/donaciones": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["DonacionesController_listar"];
+        put?: never;
+        post: operations["DonacionesController_crear"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/donaciones/{folio}/cancelar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["DonacionesController_cancelar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/donaciones/sugerencias": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["DonacionesController_sugerir"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/donaciones/codigos/{ean}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["DonacionesController_codigo"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/salud": {
         parameters: {
             query?: never;
@@ -1675,6 +1739,87 @@ export interface components {
             maximo: number;
             /** Format: date-time */
             actualizadoEn: string;
+        };
+        CrearDonacionDto: {
+            /** Format: uuid */
+            acopioId: string;
+            lineas: {
+                /** Format: uuid */
+                categoriaId: string;
+                ean?: string;
+                cantidad: number;
+                /** Format: date */
+                venceEn?: string;
+            }[];
+        };
+        ComprobanteDto: {
+            /** @description ACO-AAAA-XXXXX */
+            folio: string;
+            /** @enum {string} */
+            estado: "PREPARADO" | "PENDIENTE" | "CONCILIADO" | "RECHAZADO" | "CANCELADO";
+            acopio: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+            };
+            /** Format: date-time */
+            creadoEn: string;
+            /** Format: date-time */
+            recibidoEn: string | null;
+            /** Format: date-time */
+            verificadoEn: string | null;
+            motivoRechazo: string[];
+            notaRechazo: string[];
+            tieneFactura: boolean;
+            lineas: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
+                /** @enum {string} */
+                unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
+                perecedero: boolean;
+                ean: string | null;
+                /** @description Unidad base por presentación; 1 si no hay código */
+                contenidoUnitario: number;
+                cantidadDeclarada: number;
+                cantidadConfirmada: number | null;
+                /** Format: date */
+                venceEn: string | null;
+                motivoDiferencia: string | null;
+            }[];
+        };
+        SugerenciasDto: {
+            lineas: {
+                /** Format: uuid */
+                categoriaId: string;
+            }[];
+            lat?: number;
+            lng?: number;
+        };
+        SugerenciaEntregaDto: {
+            /** Format: uuid */
+            acopioId: string;
+            nombre: string;
+            direccion: string;
+            abiertoAhora: boolean;
+            distanciaKm: number[];
+            /** @description Categorías de la donación que este acopio no recibe */
+            noRecibe: string[];
+            lineasAceptadas: number;
+        };
+        CodigoDonadorDto: {
+            ean: string;
+            /** Format: uuid */
+            categoriaId: string;
+            categoria: string;
+            /** @enum {string} */
+            unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
+            /** @enum {string} */
+            grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
+            perecedero: boolean;
+            contenido: number[];
         };
         SaludDto: {
             /** @enum {string} */
@@ -3534,6 +3679,142 @@ export interface operations {
                 content?: never;
             };
             /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    DonacionesController_listar: {
+        parameters: {
+            query: {
+                estado: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComprobanteDto"][];
+                };
+            };
+        };
+    };
+    DonacionesController_crear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearDonacionDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComprobanteDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    DonacionesController_cancelar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folio: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComprobanteDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    DonacionesController_sugerir: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SugerenciasDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SugerenciaEntregaDto"][];
+                };
+            };
+        };
+    };
+    DonacionesController_codigo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ean: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CodigoDonadorDto"];
+                };
+            };
+            /** @description Error */
             default: {
                 headers: {
                     [name: string]: unknown;
