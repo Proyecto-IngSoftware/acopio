@@ -48,6 +48,13 @@ y las notas de [P13](../03-diseno/stitch/P13-mi-cuenta/README.md),
 | 8 P10 seguimiento y P12 privacidad | ✅ `17df559` | |
 | 9 Recorrido, precargas y cierre | ✅ cierre del ciclo | |
 
+La revisión final del ciclo (`b1994ab`) dejó cinco arreglos:
+- la caché de consultas se vacía al cambiar de cuenta, para que en un teléfono prestado nadie vea los folios de otro;
+- una factura rechazada deja elegir otra foto;
+- confirmar el correo sin red ofrece reintentar en vez de decir que el enlace venció;
+- el campo de folio de P10 sigue a la URL;
+- al cambiar de paso en P9 el foco va al paso nuevo.
+
 ## Restricciones globales
 
 - La maqueta aprobada manda en la estética, con sus diferencias. Sin colores hexadecimales en
