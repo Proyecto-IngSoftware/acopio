@@ -3360,6 +3360,377 @@
         ]
       }
     },
+    "/api/comprobantes": {
+      "get": {
+        "operationId": "ComprobantesController_bandeja",
+        "parameters": [
+          {
+            "name": "estado",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDIENTE",
+                "CONCILIADO",
+                "RECHAZADO"
+              ]
+            }
+          },
+          {
+            "name": "acopioId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "desde",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "hasta",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BandejaRespuestaDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "comprobantes"
+        ]
+      }
+    },
+    "/api/comprobantes/{folio}/conciliacion": {
+      "get": {
+        "operationId": "ComprobantesController_detalle",
+        "parameters": [
+          {
+            "name": "folio",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConciliacionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "comprobantes"
+        ]
+      }
+    },
+    "/api/comprobantes/{folio}/entradas-vinculables": {
+      "get": {
+        "operationId": "ComprobantesController_vinculables",
+        "parameters": [
+          {
+            "name": "folio",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "acopioId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EntradaVinculableDto"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "comprobantes"
+        ]
+      }
+    },
+    "/api/comprobantes/{folio}/vinculos": {
+      "post": {
+        "operationId": "ComprobantesController_vincular",
+        "parameters": [
+          {
+            "name": "folio",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VincularDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComprobanteDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "comprobantes"
+        ]
+      }
+    },
+    "/api/comprobantes/{folio}/conciliar": {
+      "post": {
+        "operationId": "ComprobantesController_conciliar",
+        "parameters": [
+          {
+            "name": "folio",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComprobanteDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "comprobantes"
+        ]
+      }
+    },
+    "/api/comprobantes/{folio}/rechazar": {
+      "post": {
+        "operationId": "ComprobantesController_rechazar",
+        "parameters": [
+          {
+            "name": "folio",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RechazarDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComprobanteDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "comprobantes"
+        ]
+      }
+    },
+    "/api/comprobantes/{folio}/revertir-rechazo": {
+      "post": {
+        "operationId": "ComprobantesController_revertir",
+        "parameters": [
+          {
+            "name": "folio",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComprobanteDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "comprobantes"
+        ]
+      }
+    },
     "/api/comprobantes/{folio}": {
       "get": {
         "operationId": "ComprobantesController_consultar",
@@ -7304,6 +7675,522 @@
           "url",
           "miniaturaUrl",
           "venceEn"
+        ]
+      },
+      "BandejaRespuestaDto": {
+        "type": "object",
+        "properties": {
+          "comprobantes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "folio": {
+                  "type": "string",
+                  "description": "ACO-AAAA-XXXXX"
+                },
+                "estado": {
+                  "type": "string",
+                  "enum": [
+                    "PREPARADO",
+                    "PENDIENTE",
+                    "CONCILIADO",
+                    "RECHAZADO",
+                    "CANCELADO"
+                  ]
+                },
+                "acopio": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "nombre": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "nombre"
+                  ]
+                },
+                "creadoEn": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "recibidoEn": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "verificadoEn": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                  "nullable": true
+                },
+                "motivoRechazo": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "notaRechazo": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "tieneFactura": {
+                  "type": "boolean"
+                },
+                "lineas": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      "categoriaId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                      },
+                      "categoria": {
+                        "type": "string"
+                      },
+                      "unidad": {
+                        "type": "string",
+                        "enum": [
+                          "LITRO",
+                          "KILOGRAMO",
+                          "UNIDAD"
+                        ]
+                      },
+                      "perecedero": {
+                        "type": "boolean"
+                      },
+                      "ean": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "contenidoUnitario": {
+                        "type": "number",
+                        "description": "Unidad base por presentación; 1 si no hay código"
+                      },
+                      "cantidadDeclarada": {
+                        "type": "number"
+                      },
+                      "cantidadConfirmada": {
+                        "type": [
+                          "number",
+                          "null"
+                        ]
+                      },
+                      "venceEn": {
+                        "type": "string",
+                        "format": "date",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                        "nullable": true
+                      },
+                      "motivoDiferencia": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "categoriaId",
+                      "categoria",
+                      "unidad",
+                      "perecedero",
+                      "ean",
+                      "contenidoUnitario",
+                      "cantidadDeclarada",
+                      "cantidadConfirmada",
+                      "venceEn",
+                      "motivoDiferencia"
+                    ]
+                  }
+                },
+                "conDiferencia": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "folio",
+                "estado",
+                "acopio",
+                "creadoEn",
+                "recibidoEn",
+                "verificadoEn",
+                "motivoRechazo",
+                "notaRechazo",
+                "tieneFactura",
+                "lineas",
+                "conDiferencia"
+              ]
+            }
+          },
+          "porAcopio": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "acopioId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "nombre": {
+                  "type": "string"
+                },
+                "pendientes": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "acopioId",
+                "nombre",
+                "pendientes"
+              ]
+            }
+          }
+        },
+        "required": [
+          "comprobantes",
+          "porAcopio"
+        ]
+      },
+      "ConciliacionDto": {
+        "type": "object",
+        "properties": {
+          "folio": {
+            "type": "string",
+            "description": "ACO-AAAA-XXXXX"
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "PREPARADO",
+              "PENDIENTE",
+              "CONCILIADO",
+              "RECHAZADO",
+              "CANCELADO"
+            ]
+          },
+          "acopio": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "nombre": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "id",
+              "nombre"
+            ]
+          },
+          "creadoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "recibidoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+            "nullable": true
+          },
+          "verificadoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+            "nullable": true
+          },
+          "motivoRechazo": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notaRechazo": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "tieneFactura": {
+            "type": "boolean"
+          },
+          "lineas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "categoria": {
+                  "type": "string"
+                },
+                "unidad": {
+                  "type": "string",
+                  "enum": [
+                    "LITRO",
+                    "KILOGRAMO",
+                    "UNIDAD"
+                  ]
+                },
+                "perecedero": {
+                  "type": "boolean"
+                },
+                "ean": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "contenidoUnitario": {
+                  "type": "number",
+                  "description": "Unidad base por presentación; 1 si no hay código"
+                },
+                "cantidadDeclarada": {
+                  "type": "number"
+                },
+                "cantidadConfirmada": {
+                  "type": [
+                    "number",
+                    "null"
+                  ]
+                },
+                "venceEn": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                  "nullable": true
+                },
+                "motivoDiferencia": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "categoriaId",
+                "categoria",
+                "unidad",
+                "perecedero",
+                "ean",
+                "contenidoUnitario",
+                "cantidadDeclarada",
+                "cantidadConfirmada",
+                "venceEn",
+                "motivoDiferencia"
+              ]
+            }
+          },
+          "conDiferencia": {
+            "type": "boolean"
+          },
+          "entradas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "movimientoId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "cantidad": {
+                  "type": "number"
+                },
+                "ocurridoEn": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+                },
+                "origen": {
+                  "type": "string",
+                  "enum": [
+                    "RECEPCION",
+                    "AUDITOR"
+                  ]
+                }
+              },
+              "required": [
+                "movimientoId",
+                "categoriaId",
+                "cantidad",
+                "ocurridoEn",
+                "origen"
+              ]
+            }
+          },
+          "resumen": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "categoria": {
+                  "type": "string"
+                },
+                "unidad": {
+                  "type": "string"
+                },
+                "confirmado": {
+                  "type": "number"
+                },
+                "entradas": {
+                  "type": "number"
+                },
+                "cuadra": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "categoriaId",
+                "categoria",
+                "unidad",
+                "confirmado",
+                "entradas",
+                "cuadra"
+              ]
+            }
+          }
+        },
+        "required": [
+          "folio",
+          "estado",
+          "acopio",
+          "creadoEn",
+          "recibidoEn",
+          "verificadoEn",
+          "motivoRechazo",
+          "notaRechazo",
+          "tieneFactura",
+          "lineas",
+          "conDiferencia",
+          "entradas",
+          "resumen"
+        ]
+      },
+      "EntradaVinculableDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "categoriaId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "categoria": {
+            "type": "string"
+          },
+          "unidad": {
+            "type": "string"
+          },
+          "cantidad": {
+            "type": "number"
+          },
+          "ocurridoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "origenOffline": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "categoriaId",
+          "categoria",
+          "unidad",
+          "cantidad",
+          "ocurridoEn",
+          "origenOffline"
+        ]
+      },
+      "VincularDto": {
+        "type": "object",
+        "properties": {
+          "movimientoIds": {
+            "minItems": 1,
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+            }
+          }
+        },
+        "required": [
+          "movimientoIds"
+        ]
+      },
+      "RechazarDto": {
+        "type": "object",
+        "properties": {
+          "motivo": {
+            "type": "string",
+            "enum": [
+              "DUPLICADO",
+              "NO_CUADRA_MOVIMIENTOS",
+              "DIFERENCIA_SIN_EXPLICAR",
+              "OTRO"
+            ]
+          },
+          "nota": {
+            "type": "string",
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "motivo"
         ]
       },
       "RecibirDto": {

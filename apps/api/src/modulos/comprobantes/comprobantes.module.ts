@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { InventarioModule } from '../inventario/inventario.module';
 import { ComprobantesController } from './comprobantes.controller';
+import { ConciliacionService } from './conciliacion.service';
 import { DonacionesController } from './donaciones.controller';
 import { DonacionesService } from './donaciones.service';
 import { FacturasController } from './facturas.controller';
@@ -11,6 +12,6 @@ import { RecepcionService } from './recepcion.service';
 @Module({
   imports: [InventarioModule],
   controllers: [DonacionesController, FacturasController, ComprobantesController],
-  providers: [DonacionesService, FacturasService, RecepcionService],
+  providers: [DonacionesService, FacturasService, RecepcionService, ConciliacionService],
 })
 export class ComprobantesModule {}

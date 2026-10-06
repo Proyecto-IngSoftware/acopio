@@ -72,6 +72,12 @@ export const plantillas = {
       'Se retiró una ubicación de tu acceso en Acopio',
       `Hola, ${d.nombre}.\n\nYa no tienes asignada ${d.ubicacion}. Si crees que es un error, avisa a un administrador.`,
     )) satisfies Plantilla<never>,
+
+  rechazoDonacion: ((d: { nombre: string; folio: string; motivo: string; nota: string | null }) =>
+    redactar(
+      `Tu donación ${d.folio} no se pudo conciliar`,
+      `Hola, ${d.nombre}.\n\nEl equipo del acopio revisó tu donación ${d.folio} y no la pudo conciliar.\n\nMotivo: ${d.motivo}${d.nota ? `. ${d.nota}` : ''}\n\nLo que llegó sigue en el acopio. Si crees que es un error, responde a este correo.`,
+    )) satisfies Plantilla<never>,
 };
 
 function fecha(d: Date): string {

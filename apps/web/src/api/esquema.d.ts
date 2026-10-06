@@ -923,6 +923,118 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/comprobantes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ComprobantesController_bandeja"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/comprobantes/{folio}/conciliacion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ComprobantesController_detalle"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/comprobantes/{folio}/entradas-vinculables": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ComprobantesController_vinculables"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/comprobantes/{folio}/vinculos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ComprobantesController_vincular"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/comprobantes/{folio}/conciliar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ComprobantesController_conciliar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/comprobantes/{folio}/rechazar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ComprobantesController_rechazar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/comprobantes/{folio}/revertir-rechazo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ComprobantesController_revertir"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/comprobantes/{folio}": {
         parameters: {
             query?: never;
@@ -1895,6 +2007,132 @@ export interface components {
              * @description Cuándo dejan de servir las URL
              */
             venceEn: string;
+        };
+        BandejaRespuestaDto: {
+            comprobantes: {
+                /** @description ACO-AAAA-XXXXX */
+                folio: string;
+                /** @enum {string} */
+                estado: "PREPARADO" | "PENDIENTE" | "CONCILIADO" | "RECHAZADO" | "CANCELADO";
+                acopio: {
+                    /** Format: uuid */
+                    id: string;
+                    nombre: string;
+                };
+                /** Format: date-time */
+                creadoEn: string;
+                /** Format: date-time */
+                recibidoEn: string | null;
+                /** Format: date-time */
+                verificadoEn: string | null;
+                motivoRechazo: string | null;
+                notaRechazo: string | null;
+                tieneFactura: boolean;
+                lineas: {
+                    /** Format: uuid */
+                    id: string;
+                    /** Format: uuid */
+                    categoriaId: string;
+                    categoria: string;
+                    /** @enum {string} */
+                    unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
+                    perecedero: boolean;
+                    ean: string | null;
+                    /** @description Unidad base por presentación; 1 si no hay código */
+                    contenidoUnitario: number;
+                    cantidadDeclarada: number;
+                    cantidadConfirmada: number | null;
+                    /** Format: date */
+                    venceEn: string | null;
+                    motivoDiferencia: string | null;
+                }[];
+                conDiferencia: boolean;
+            }[];
+            porAcopio: {
+                /** Format: uuid */
+                acopioId: string;
+                nombre: string;
+                pendientes: number;
+            }[];
+        };
+        ConciliacionDto: {
+            /** @description ACO-AAAA-XXXXX */
+            folio: string;
+            /** @enum {string} */
+            estado: "PREPARADO" | "PENDIENTE" | "CONCILIADO" | "RECHAZADO" | "CANCELADO";
+            acopio: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+            };
+            /** Format: date-time */
+            creadoEn: string;
+            /** Format: date-time */
+            recibidoEn: string | null;
+            /** Format: date-time */
+            verificadoEn: string | null;
+            motivoRechazo: string[];
+            notaRechazo: string[];
+            tieneFactura: boolean;
+            lineas: {
+                /** Format: uuid */
+                id: string;
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
+                /** @enum {string} */
+                unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
+                perecedero: boolean;
+                ean: string | null;
+                /** @description Unidad base por presentación; 1 si no hay código */
+                contenidoUnitario: number;
+                cantidadDeclarada: number;
+                cantidadConfirmada: number | null;
+                /** Format: date */
+                venceEn: string | null;
+                motivoDiferencia: string | null;
+            }[];
+            conDiferencia: boolean;
+            entradas: {
+                /** Format: uuid */
+                movimientoId: string;
+                /** Format: uuid */
+                categoriaId: string;
+                cantidad: number;
+                /** Format: date-time */
+                ocurridoEn: string;
+                /** @enum {string} */
+                origen: "RECEPCION" | "AUDITOR";
+            }[];
+            resumen: {
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
+                unidad: string;
+                confirmado: number;
+                entradas: number;
+                cuadra: boolean;
+            }[];
+        };
+        EntradaVinculableDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            categoriaId: string;
+            categoria: string;
+            unidad: string;
+            cantidad: number;
+            /** Format: date-time */
+            ocurridoEn: string;
+            origenOffline: boolean;
+        };
+        VincularDto: {
+            movimientoIds: string[];
+        };
+        RechazarDto: {
+            /** @enum {string} */
+            motivo: "DUPLICADO" | "NO_CUADRA_MOVIMIENTOS" | "DIFERENCIA_SIN_EXPLICAR" | "OTRO";
+            nota?: string;
         };
         RecibirDto: {
             /** Format: uuid */
@@ -4001,6 +4239,220 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["UrlFacturaDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ComprobantesController_bandeja: {
+        parameters: {
+            query?: {
+                estado?: "PENDIENTE" | "CONCILIADO" | "RECHAZADO";
+                acopioId?: string;
+                desde?: string;
+                hasta?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BandejaRespuestaDto"];
+                };
+            };
+        };
+    };
+    ComprobantesController_detalle: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folio: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConciliacionDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ComprobantesController_vinculables: {
+        parameters: {
+            query: {
+                acopioId: string;
+            };
+            header?: never;
+            path: {
+                folio: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntradaVinculableDto"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ComprobantesController_vincular: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folio: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VincularDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComprobanteDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ComprobantesController_conciliar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folio: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComprobanteDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ComprobantesController_rechazar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folio: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RechazarDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComprobanteDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ComprobantesController_revertir: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                folio: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ComprobanteDto"];
                 };
             };
             /** @description Error */

@@ -390,6 +390,53 @@ export class ComprobanteDto extends createZodDto(
   }),
 ) {}
 
+const esquemaBandeja = ComprobanteDto.schema.extend({ conDiferencia: z.boolean() });
+
+export class BandejaRespuestaDto extends createZodDto(
+  z.object({
+    comprobantes: z.array(esquemaBandeja),
+    porAcopio: z.array(
+      z.object({ acopioId: z.uuid(), nombre: z.string(), pendientes: z.number().int() }),
+    ),
+  }),
+) {}
+
+export class ConciliacionDto extends createZodDto(
+  esquemaBandeja.extend({
+    entradas: z.array(
+      z.object({
+        movimientoId: z.uuid(),
+        categoriaId: z.uuid(),
+        cantidad: z.number(),
+        ocurridoEn: fecha,
+        origen: z.enum(['RECEPCION', 'AUDITOR']),
+      }),
+    ),
+    resumen: z.array(
+      z.object({
+        categoriaId: z.uuid(),
+        categoria: z.string(),
+        unidad: z.string(),
+        confirmado: z.number(),
+        entradas: z.number(),
+        cuadra: z.boolean(),
+      }),
+    ),
+  }),
+) {}
+
+export class EntradaVinculableDto extends createZodDto(
+  z.object({
+    id: z.uuid(),
+    categoriaId: z.uuid(),
+    categoria: z.string(),
+    unidad: z.string(),
+    cantidad: z.number(),
+    ocurridoEn: fecha,
+    origenOffline: z.boolean(),
+  }),
+) {}
+
 export class RecepcionDto extends createZodDto(
   z.object({
     comprobante: ComprobanteDto.schema,
