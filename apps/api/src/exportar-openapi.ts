@@ -23,6 +23,11 @@ async function exportar(): Promise<void> {
     SMTP_HOST: 'localhost',
     SMTP_PORT: '1025',
     CORREO_REMITENTE: 'Acopio <no-responder@acopio.local>',
+    S3_ENDPOINT: 'http://localhost:3900',
+    S3_REGION: 'garage',
+    S3_BUCKET: 'comprobantes',
+    S3_ACCESS_KEY: 'sin-llave',
+    S3_SECRET_KEY: 'sin-secreto',
   });
   const app = await NestFactory.create(AppModule, { logger: false, abortOnError: false });
   configurarApp(app, leerEntorno());

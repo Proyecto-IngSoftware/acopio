@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: comprobantes
 bloque: 3
-actualizado: 2026-09-12
+actualizado: 2026-10-05
 ---
 
 # RF-CMP · Comprobantes y cadena de custodia
@@ -102,8 +102,10 @@ donación preparada entre al inventario con su folio (P-018).
 **Criterios de aceptación:**
 - [ ] El Operador busca el folio o escanea el QR del Donador
 - [ ] Ve la lista declarada: categoría y cantidad por línea
-- [ ] Confirma cada línea con un toque si coincide, o ajusta la cantidad con un
-      gesto de deslizar si no coincide — sin abrir un formulario aparte
+- [ ] Confirma cada línea con un toque si coincide, o ajusta la cantidad con los
+      botones − y + si no coincide, sin abrir un formulario aparte. **2026-10-05 · C-07:**
+      se cambió el gesto de deslizar por − y +, que se descubren solos y sirven con
+      lector de pantalla
 - [ ] Una línea que no llegó se ajusta a cero; no genera movimiento
 - [ ] Si la categoría es perecedera y la línea no trae vencimiento, lo pide antes
       de dar esa línea por confirmada — igual que RF-INV-001
@@ -144,7 +146,15 @@ donación preparada entre al inventario con su folio (P-018).
       con expiración corta
 - [ ] Miniaturas generadas con `sharp` en la API
 - [ ] Se valida el tipo real del archivo, no la extensión
-- [ ] Se elimina metadata EXIF, incluida la geolocalización del teléfono
+- [ ] Se elimina metadata EXIF, incluida la geolocalización del teléfono. **2026-10-05
+      · C-02, C-08:** la API reencoda la foto a WebP, que no conserva EXIF, y genera la
+      miniatura
+- [ ] Cada comprobante tiene una sola factura; subir otra reemplaza la anterior. Una
+      imagen que no se puede decodificar (truncada, HEIC sin soporte) da 415
+      `TIPO_NO_ADMITIDO`
+- [ ] La URL firmada de la foto y de la miniatura dura 5 minutos
+- [ ] La factura se conserva 12 meses desde el cierre del comprobante y después una
+      tarea programada borra los objetos
 - [ ] **Las facturas contienen nombre, cédula y dirección: jamás se exponen en
       superficie pública**
 
@@ -173,9 +183,11 @@ donación preparada entre al inventario con su folio (P-018).
       adicional, no como el dato que se concilia
 - [ ] La comparación contra movimientos es por categoría: suma de lo confirmado,
       en unidad base, frente a suma de las `ENTRADA` del comprobante
-- [ ] También se puede vincular un comprobante a entradas ya registradas, o crear
-      el movimiento faltante desde ahí mismo — el caso de un folio entregado sin
-      señal (RF-CMP-001C), que se busca por folio porque sigue `PREPARADO`
+- [ ] También se puede vincular un comprobante a entradas ya registradas, el caso de
+      un folio entregado sin señal (RF-CMP-001C), que se busca por folio porque sigue
+      `PREPARADO`. **2026-10-05 · C-06:** el Auditor vincula y no crea movimientos; si
+      falta una entrada, la registra el Operador. Vincular exige alcance sobre el acopio
+      del comprobante y sobre el de las entradas, y deja el comprobante en `PENDIENTE`
 - [ ] Al aprobar, el estado pasa a `CONCILIADO` y queda registrado quién y cuándo
 - [ ] Un comprobante `CONCILIADO` exige al menos un `movimiento_id`
 

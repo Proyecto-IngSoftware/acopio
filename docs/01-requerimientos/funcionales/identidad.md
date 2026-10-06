@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: identidad
 bloque: 0
-actualizado: 2026-09-28
+actualizado: 2026-10-05
 ---
 
 # RF-IDE · Identidad y accesos
@@ -177,15 +177,19 @@ quien crea la suya.
 
 **Criterios de aceptación:**
 - [ ] Formulario público: correo, contraseña, nombre a mostrar
-- [ ] Dos pasos, no una transacción —Supabase y nuestra base son sistemas
-      distintos—: el navegador crea el usuario con `signUp` público —no con la
-      Admin API—, y con el token resultante llama a un endpoint del backend que
-      crea la fila en `public.usuario` con `rol = DONADOR`, fijado en el servidor
-- [ ] Ese endpoint es la única excepción a RF-IDE-005: acepta un token válido sin
-      fila en `public.usuario`, y solo para crearla. Es idempotente — si el segundo
-      paso falló, se completa en el siguiente inicio de sesión
-- [ ] El correo se confirma antes del primer ingreso, con la confirmación propia
-      de Supabase
+- [ ] **2026-10-05 · el registro pasa por la API (C-03, C-09).** `POST
+      /api/auth/registro` crea la credencial en el proveedor de identidad y la fila de
+      `usuario` con `rol = DONADOR`, fijado en el servidor. Si la transacción falla, se
+      borra la credencial. El navegador no habla con Supabase
+- [ ] El correo se confirma antes del primer ingreso. El enlace sale por la cola
+      `correo_saliente`, trae un token de un solo uso con vigencia limitada y se canjea
+      en `POST /api/auth/registro/confirmar`
+- [ ] El registro responde 202 con el mismo mensaje se haya creado la cuenta, ya
+      existiera o la haya ganado otra petición en paralelo; a una cuenta existente le
+      llega un correo que lo dice. Así nadie descubre qué correos están registrados
+- [ ] `POST /api/auth/donador/sesion` entra con correo y contraseña. Una cuenta sin
+      confirmar da 403 `CORREO_SIN_CONFIRMAR` solo si la contraseña es correcta; con una
+      contraseña mala da el 401 genérico
 - [ ] Nace en estado `ACTIVO` de una vez: no hay invitación que canjear
 - [ ] Un correo que ya usa una cuenta interna no puede registrarse como Donador
 - [ ] El Administrador puede suspender a un Donador (RF-IDE-007), igual que a

@@ -3,7 +3,7 @@ title: "Modelo de datos"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-01
+actualizado: 2026-10-05
 ---
 
 # Modelo de datos
@@ -166,7 +166,6 @@ movimiento
   usuario_id        fk
   ocurrido_en       timestamptz     cuándo pasó en el mundo real
   registrado_en     timestamptz     cuándo llegó al sistema
-  comprobante_id    fk?
   remision_id       fk?
   vence_en          date?
   motivo            text?           obligatorio si tipo = AJUSTE
@@ -202,8 +201,8 @@ INSERT` sobre `movimiento` y tiene `CHECK (cantidad >= 0)`. `movimiento` y `umbr
 llevan `acopio_id` con llave foránea en lugar de `ubicacion_tipo` + `ubicacion_id`; las
 zonas sumarán `zona_id` cuando tengan movimientos. `movimiento.tipo` nace sin
 `RECEPCION`, gana `motivo_salida` (`ENTREGA_FAMILIAS | TRASLADO | VENCIDO | OTRO`) y
-`nota`, y `vence_en` solo se acepta en entradas. `comprobante_id` y `remision_id` llegan
-en sus bloques. Detalle en la [especificación del Bloque 2](../superpowers/specs/2026-10-01-bloque-2-inventario-design.md#4-datos).
+`nota`, y `vence_en` solo se acepta en entradas. `remision_id` llega en su bloque. El vínculo
+con un comprobante no vive en `movimiento`: lo guarda `comprobante_movimiento` (ver Custodia). Detalle en la [especificación del Bloque 2](../superpowers/specs/2026-10-01-bloque-2-inventario-design.md#4-datos).
 
 ```
 umbral
@@ -235,6 +234,15 @@ comprobante
   motivo_rechazo · verificado_por · verificado_en · creado_en
   CHECK (estado <> 'RECHAZADO' OR motivo_rechazo IS NOT NULL)
 
+  **2026-10-05 · Bloque 3.** `comprobante` guarda `recibido_por`, `recibido_en`,
+  `nota_rechazo` y `cerrado_en`. La factura, una por comprobante, ocupa
+  `factura_key`, `miniatura_key`, `factura_tipo` y `factura_bytes`; `archivos jsonb` ya
+  no existe. Pasados 12 meses de `cerrado_en`, una tarea borra los dos objetos y anota
+  `factura_borrada_en`. El folio cumple un `CHECK` con su formato (`ACO-AAAA-` y cinco
+  caracteres de un alfabeto de 32, sin I, O, 0 ni 1). `motivo_rechazo` es un enum
+  (`DUPLICADO`, `NO_CUADRA_MOVIMIENTOS`, `DIFERENCIA_SIN_EXPLICAR`, `OTRO`) y `OTRO` exige
+  `nota_rechazo`.
+
 linea_comprobante
   id · comprobante_id · categoria_id
   ean text? fk                    null si se buscó por palabra clave
@@ -251,6 +259,19 @@ linea_comprobante
   un folio sin cuenta detrás es un código que se olvida y no tiene dónde
   recuperarse. Una entrada sin donación preparada sigue siendo posible — el
   Operador la registra como `movimiento` normal, sin comprobante ni folio.
+
+comprobante_movimiento
+  comprobante_id fk · movimiento_id fk UNIQUE
+  origen RECEPCION | AUDITOR · vinculado_por · vinculado_en
+  PK (comprobante_id, movimiento_id)
+
+  Un movimiento pertenece a lo sumo a un comprobante. `RECEPCION` lo escribe el
+  Operador al recibir el folio; `AUDITOR` lo escribe quien vincula entradas sueltas.
+
+verificacion_correo
+  id · usuario_id fk · token_hash bytea UNIQUE
+  vence_en · usado_en? · creado_en
+  Guarda el hash del token, nunca el token. Lo crea el registro del Donador (RF-IDE-013).
 
 remision
   id · acopio_origen_id
@@ -279,6 +300,11 @@ remision_comprobante
   remision_id · comprobante_id · vinculado_por · vinculado_en
   PK (remision_id, comprobante_id)
 ```
+
+**Permisos de `acopio_app` (2026-10-05).** `comprobante` y `linea_comprobante`: leer,
+insertar y actualizar, sin `DELETE` ni `TRUNCATE`; un comprobante se cancela o se rechaza,
+no se borra. `comprobante_movimiento`: solo leer e insertar. `verificacion_correo`: leer,
+insertar y actualizar (para marcar `usado_en`), sin `DELETE` ni `TRUNCATE`.
 
 Los archivos guardan **claves del objeto en el almacenamiento (Garage), nunca URLs**. Las URLs son firmadas y de
 vida corta; almacenarlas sería guardar algo ya vencido.

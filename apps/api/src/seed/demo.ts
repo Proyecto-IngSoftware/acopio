@@ -172,7 +172,116 @@ export async function sembrarEscenariosDemo(prisma: PrismaService, proveedor: Pr
   }
 
   await sembrarCasosInventario(prisma, ids.operador1!, ids.operador2!);
-  return USUARIOS_DEMO.map((u) => u.username);
+  const donador = await sembrarDonadorDemo(prisma, proveedor);
+  await sembrarDonacionesDemo(prisma, donador, ids.operador1!);
+  return [...USUARIOS_DEMO.map((u) => u.username), DONADOR_DEMO.correo];
+}
+
+const DONADOR_DEMO = { correo: 'donador1@demo.acopio.local', nombre: 'Donadora (prueba)' };
+
+/** El Donador entra con correo (C-04): no tiene username. Queda confirmado. */
+async function sembrarDonadorDemo(prisma: PrismaService, proveedor: ProveedorLocal) {
+  const existente = await prisma.usuario.findUnique({ where: { correo: DONADOR_DEMO.correo } });
+  if (existente) return existente.id;
+  const { uid } = await proveedor.crearUsuario(DONADOR_DEMO.correo, CONTRASENA_DEMO, {
+    confirmado: true,
+  });
+  const creado = await prisma.usuario.create({
+    data: {
+      nombre: DONADOR_DEMO.nombre,
+      correo: DONADOR_DEMO.correo,
+      rol: 'DONADOR',
+      estado: 'ACTIVO',
+      supabase_uid: uid,
+      tokens_validos_desde: new Date(),
+    },
+  });
+  return creado.id;
+}
+
+/**
+ * Una donación preparada, una recibida con diferencia (8 de 10) para la bandeja C8 y una
+ * preparada que llegó sin red, con su entrada suelta para vincular. Folios fijos para
+ * buscarlos a mano; solo la primera vez.
+ */
+async function sembrarDonacionesDemo(prisma: PrismaService, donadorId: string, operador1: string) {
+  if (await prisma.comprobante.findUnique({ where: { folio: 'ACO-2026-DEMA2' } })) return;
+  const chapinero = ACOPIOS[0]!.id;
+  const cat = await prisma.categoria.findFirst({
+    where: { archivada: false, perecedero: false, unidad_base: 'UNIDAD' },
+    orderBy: { nombre: 'asc' },
+  });
+  if (!cat) return;
+  const hace = (horas: number) => new Date(Date.now() - horas * 3_600_000);
+  const linea = { categoria_id: cat.id, contenido_unitario: 1, cantidad_declarada: 10 };
+
+  await prisma.comprobante.create({
+    data: {
+      folio: 'ACO-2026-DEMA2',
+      donador_id: donadorId,
+      acopio_id: chapinero,
+      lineas: { create: [linea] },
+    },
+  });
+
+  const recibida = await prisma.comprobante.create({
+    data: {
+      folio: 'ACO-2026-DEMA3',
+      donador_id: donadorId,
+      acopio_id: chapinero,
+      estado: 'PENDIENTE',
+      creado_en: hace(30),
+      recibido_por: operador1,
+      recibido_en: hace(6),
+      lineas: {
+        create: [
+          { ...linea, cantidad_confirmada: 8, motivo_diferencia: 'Dos cajas llegaron rotas' },
+        ],
+      },
+    },
+  });
+  const entrada = await prisma.movimiento.create({
+    data: {
+      acopio_id: chapinero,
+      categoria_id: cat.id,
+      tipo: 'ENTRADA',
+      signo: 1,
+      cantidad: 8,
+      usuario_id: operador1,
+      ocurrido_en: hace(6),
+    },
+  });
+  await prisma.comprobanteMovimiento.create({
+    data: {
+      comprobante_id: recibida.id,
+      movimiento_id: entrada.id,
+      origen: 'RECEPCION',
+      vinculado_por: operador1,
+    },
+  });
+
+  await prisma.comprobante.create({
+    data: {
+      folio: 'ACO-2026-DEMA4',
+      donador_id: donadorId,
+      acopio_id: chapinero,
+      creado_en: hace(48),
+      lineas: { create: [{ ...linea, cantidad_declarada: 6 }] },
+    },
+  });
+  // La entregaron sin red: el Operador la registró como entrada suelta y la vincula el Auditor
+  await prisma.movimiento.create({
+    data: {
+      acopio_id: chapinero,
+      categoria_id: cat.id,
+      tipo: 'ENTRADA',
+      signo: 1,
+      cantidad: 6,
+      usuario_id: operador1,
+      ocurrido_en: hace(20),
+      origen_offline: true,
+    },
+  });
 }
 
 /** Solo la primera vez: se reconoce por los umbrales del acopio de Chapinero. */

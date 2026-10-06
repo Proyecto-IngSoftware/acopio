@@ -3,7 +3,7 @@ title: "Vista general de arquitectura"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-05
 ---
 
 # Vista general de arquitectura
@@ -154,6 +154,12 @@ valida las ubicaciones de una asignación por el puerto `VerificadorUbicaciones`
 token vive en `comun/ubicaciones` y lo implementa `acopios`, que es global solo para
 entregarlo. Es el mismo patrón de `ProveedorIdentidad`: ninguno de los dos módulos
 importa al otro.
+
+**2026-10-05 · Bloque 3.** Nacen `comprobantes` y `almacenamiento`, con las dependencias
+de la tabla de arriba, que son las mismas de `.dependency-cruiser.cjs`. `almacenamiento`
+envuelve un cliente S3 contra Garage (`AlmacenS3`) y un `AlmacenMemoria` para las
+pruebas. `comprobantes` guarda el vínculo con los movimientos en
+`comprobante_movimiento`, así que `inventario` no sabe nada de comprobantes.
 
 ## Tareas programadas
 

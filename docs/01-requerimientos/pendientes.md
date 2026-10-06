@@ -691,6 +691,27 @@ anteriores medían el ancho después de cargar la fuente, así que no lo veían.
 el ancho de los íconos en `1em` con `overflow: hidden`, o precargar la fuente.
 **Estado:** ABIERTO.
 
+### P-040 · Un tercero puede registrar el correo de otra persona
+**Fecha:** 2026-10-05 · **Propuesto por:** Joseph
+**Qué:** el registro del Donador fija la contraseña antes de confirmar el correo. Alguien
+puede registrar el correo de otra persona con una contraseña suya, y cuando la dueña
+confirme con el enlace, la cuenta queda activa con esa contraseña ajena. La respuesta
+uniforme (RF-IDE-013) oculta qué correos existen, pero no cierra este caso.
+**Por qué:** lo vio la revisión del Bloque 3. Una mitigación posible es que la contraseña
+se defina al confirmar: el registro solo recibe correo y nombre, y el enlace lleva a un
+formulario donde la dueña elige su contraseña.
+**Estado:** ABIERTO.
+
+### P-041 · Las URL firmadas de la factura traen el host interno de Garage
+**Fecha:** 2026-10-05 · **Propuesto por:** Joseph
+**Qué:** la API firma las URL con `S3_ENDPOINT`, que en el Compose es `http://storage:3900`.
+Un navegador no resuelve ese nombre. El recorrido con curl tuvo que redirigir el host con
+`--connect-to`. Hace falta un endpoint público de Garage (por ejemplo `S3_URL_PUBLICA`) para
+firmar las URL que ve el navegador, o un proxy en la API.
+**Por qué:** lo encontró el recorrido de cierre del Bloque 3. Las pruebas usan
+`AlmacenMemoria` y no lo ven. Se resuelve antes de que la interfaz muestre la factura.
+**Estado:** ABIERTO.
+
 ---
 
 ## Resueltos

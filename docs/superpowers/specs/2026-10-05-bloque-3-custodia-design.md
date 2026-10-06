@@ -348,4 +348,21 @@ Cada etapa tiene su plan, escrito al empezarla.
 
 ## 12. Cambios al construir
 
-Se llena al construir, como en los bloques anteriores.
+**2026-10-05 · API.** Construida según el [plan](../../05-planes/2026-10-05-bloque-3-api.md).
+
+| Qué | Por qué |
+|---|---|
+| El sufijo del folio usa un alfabeto de 32 caracteres (32⁵ ≈ 33,5 millones por año), no 31⁵ como dice el §10 | El alfabeto sin I, O, 0 ni 1 queda en 32 símbolos. El `CHECK` del folio lo refleja |
+| El guard comprueba al Donador antes que los roles: un único 403 «Esta sección es de la consola» | Así el Donador recibe el mismo mensaje en cualquier ruta de la consola, sin depender de qué roles admita |
+| El ingreso del Donador da 403 `CORREO_SIN_CONFIRMAR` solo si la contraseña es correcta; con una mala, 401 genérico | Si el 403 saliera siempre, cualquiera sabría qué correos están registrados |
+| Si falla la transacción del registro, se borra la credencial con `ProveedorIdentidad.eliminarUsuario`; un registro duplicado en carrera responde el mismo 202 | Sin eso quedaba una credencial sin usuario, y la carrera dejaba ver un error distinto |
+| Una imagen que no se puede decodificar (truncada, HEIC sin soporte) da 415 `TIPO_NO_ADMITIDO` | `sharp` lanza un error propio y daba 500 |
+| Cancelar, recibir, vincular, conciliar, rechazar y subir factura cambian el estado con `updateMany` condicionado al estado leído | Dos peticiones a la vez no pisan una transición ya hecha. La recepción no usa advisory lock de folio y recorre las líneas ordenadas por categoría, para tomar los candados de inventario siempre en el mismo orden y evitar interbloqueos |
+| Vincular exige alcance sobre el acopio del comprobante y sobre el de las entradas | Un Auditor con alcance sobre un solo acopio no debe poder tocar entradas de otro |
+| El seguimiento público oculta las líneas confirmadas en 0 | Una línea que no llegó no se muestra como parte de la donación |
+| Con un EAN conocido la cantidad debe ser entera (422 `CANTIDAD_ENTERA`) | La cantidad cuenta presentaciones, y 2,5 botellas no existen |
+| `exportar-openapi.ts` ahora pone valores de relleno para las variables `S3_*` | Sin ellas el script no arrancaba, porque el entorno exige el almacenamiento |
+| El recorrido con curl pasó con Garage real: registro, confirmación por Mailpit, factura, WebP sin `Artist` ni GPS en la foto y la miniatura, recepción, conciliación, seguimiento sin correo y vínculo de `ACO-2026-DEMA4` | Las pruebas usan `AlmacenMemoria`; esto comprueba el adaptador S3 |
+| Las URL firmadas llevan el host interno de Garage (`storage:3900`); el recorrido las bajó con `curl --connect-to` | Un navegador no las abre. Queda en [P-041](../../01-requerimientos/pendientes.md) |
+| Los HEIC no se probaron con una imagen real de iPhone | Se decodifican o dan 415; la prueba con un teléfono queda para la interfaz |
+| Queda abierto que alguien registre el correo de otra persona con su propia contraseña | [P-040](../../01-requerimientos/pendientes.md) |
