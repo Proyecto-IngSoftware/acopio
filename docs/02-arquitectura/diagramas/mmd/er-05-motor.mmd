@@ -6,10 +6,9 @@ erDiagram
     CATEGORIA ||--o{ SUGERENCIA : refiere
     USUARIO |o--o{ SUGERENCIA : decide
     SUGERENCIA |o--o| REMISION : genera
-
+    REMISION ||--o{ LINEA_REMISION : detalla
     ZONA ||--o{ REPORTE_NECESIDAD : reporta
     CATEGORIA ||--o{ REPORTE_NECESIDAD : refiere
-    USUARIO ||--o{ REPORTE_NECESIDAD : "registra · Receptor"
 
     EMERGENCIA {
         uuid id PK "clúster Raíz y catálogo"
@@ -26,25 +25,30 @@ erDiagram
     USUARIO {
         uuid id PK "clúster Identidad"
     }
-    REMISION {
-        uuid id PK "clúster Custodia"
-    }
     SUGERENCIA {
         uuid id PK
-        uuid emergencia_id FK
         uuid acopio_id FK
         uuid zona_id FK
         uuid categoria_id FK
-        uuid decidida_por FK
         numeric puntaje
         text estado
+    }
+    REMISION {
+        uuid id PK
+        uuid acopio_origen_id FK
+        uuid zona_destino_id FK "null = despacho general"
+        text qr_token UK
+        text estado
+    }
+    LINEA_REMISION {
+        uuid id PK
+        uuid remision_id FK
+        uuid categoria_id FK
+        numeric cantidad_planeada
     }
     REPORTE_NECESIDAD {
         uuid id PK
         uuid zona_id FK
         uuid categoria_id FK
-        uuid reportado_por FK
         text nota
-        bool resuelta
-        timestamptz reportado_en
     }

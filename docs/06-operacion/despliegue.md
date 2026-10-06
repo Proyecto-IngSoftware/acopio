@@ -3,7 +3,7 @@ title: "Despliegue"
 type: operacion
 tags: [operacion]
 estado: vigente
-actualizado: 2026-09-28
+actualizado: 2026-10-06
 ---
 
 # Despliegue
@@ -44,8 +44,12 @@ recibe `DATABASE_URL` con `acopio_app`; las migraciones, `DATABASE_URL_OWNER`.
 ```
 
 **El almacenamiento no se expone jamás.** Todo archivo pasa por la API, que valida
-permisos y entrega URLs firmadas de expiración corta. Garage escucha solo en la red
+permisos y entrega URLs firmadas de cinco minutos. Garage escucha solo en la red
 interna de Docker; el puerto 3900 se publica únicamente en el perfil de desarrollo.
+Esas URL las abre el navegador, así que tienen que apuntar a un host que el navegador
+alcance: en desarrollo la API firma con `S3_URL_PUBLICA=http://localhost:3900`. Cómo
+se da esa lectura en producción sin exponer el resto de Garage sigue abierto en P-041
+([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)).
 
 ## Variables de entorno
 
@@ -72,6 +76,12 @@ S3_REGION=garage
 S3_BUCKET=comprobantes
 S3_ACCESS_KEY=              # GK + 24 hexadecimales: echo GK$(openssl rand -hex 12)
 S3_SECRET_KEY=              # openssl rand -hex 32
+S3_URL_PUBLICA=             # host con el que se firman las URL que abre el navegador (P-041)
+
+# Custodia (Bloque 3), con sus valores por defecto
+PREPARADA_VIGENCIA_DIAS=7
+PREPARADAS_MAXIMO=5
+FACTURA_RETENCION_MESES=12
 
 # Correo
 SMTP_HOST=

@@ -1,12 +1,12 @@
 {
- "introMd": "Todas las entidades están en el alcance del semestre: cada una responde a un `RF`\nexistente. `saldo` no aparece — es una vista materializada, no una tabla con llaves\npropias; se deriva de `movimiento` como explica el principio rector arriba.\n\n**Un diagrama por clúster, no uno solo.** Con 24 entidades y unas 40 relaciones, un\nsolo `erDiagram` de Mermaid es ilegible — la herramienta no tiene forma de acomodar\nmanualmente un diagrama tan grande. Se divide en los mismos siete grupos que ya\norganizan la sección [Tablas](#tablas) de arriba. Cuando una entidad aparece en un\nclúster solo como referencia de otro, se dibuja **liviana** — solo su llave primaria,\ncon una nota de dónde está completa — para no repetir atributos.\n\nAtributos abreviados a lo principal — PK, FK y los campos que gobiernan una regla de\nnegocio. La lista completa de columnas está en [Tablas](#tablas).",
+ "introMd": "Actualizado el 2026-10-06 con el esquema construido hasta el Bloque 3\n(`prisma/schema.prisma`). Las tablas que todavía no existen se dibujan con la nota\n«Bloque N», el bloque que las construye: `causa` (Bloque 6), `remision`,\n`linea_remision`, `remision_comprobante`, `sugerencia`, `reporte_necesidad` y\n`configuracion_motor` (Bloque 4), y `jornada` y `reserva` (Bloque 5).\n\n**Un diagrama por clúster.** Con más de 25 entidades, un solo `erDiagram` de Mermaid\nno se puede leer, así que se divide en los grupos de la sección [Tablas](#tablas).\nCuando una entidad aparece en un clúster solo como referencia de otro, se dibuja\nliviana: su llave primaria y una nota de dónde está completa.\n\nLos atributos van abreviados a lo principal: PK, FK y los campos que gobiernan una\nregla de negocio. La lista completa de columnas está en [Tablas](#tablas).",
  "clusters": [
   {
    "titulo": "Raíz y catálogo",
    "pngs": [
     "er-01-raiz-y-catalogo.png"
    ],
-   "md": "`emergencia` es la raíz de las zonas afectadas. Se dibuja aquí completa pero suelta:\nno tiene relaciones dentro de este clúster — salen hacia Red (`zona` y, opcional,\n`causa`) y Motor (`sugerencia`), donde aparece como referencia liviana que apunta de\nvuelta a esta caja. Desde el 2026-09-14 pueden estar activas varias, y acopios,\nentidades y movimientos no dependen de ella\n([ADR-0010](adr/ADR-0010-varias-emergencias-activas.md)). `configuracion_motor`\nguarda los pesos del motor, globales para todas las emergencias. El catálogo (`categoria`, `canasta_estandar`,\n`codigo_barras`) es independiente de la emergencia: una categoría sirve para\ncualquiera."
+   "md": "`emergencia` es la raíz de las zonas afectadas. Pueden estar activas varias, y\nacopios, entidades y movimientos no dependen de ella\n([ADR-0010](adr/ADR-0010-varias-emergencias-activas.md)). El catálogo (`categoria`,\n`canasta_estandar`, `codigo_barras`) sirve para cualquier emergencia."
   },
   {
    "titulo": "Red",
@@ -21,28 +21,28 @@
     "er-03a-existencias-el-nucleo.png",
     "er-03b-existencias-el-nucleo.png"
    ],
-   "md": "El clúster más importante: es donde vive el saldo derivado de movimientos\ninmutables ([ADR-0002](adr/ADR-0002-saldo-derivado.md)). Se dibuja en dos diagramas\n—movimientos y umbrales— porque en uno solo las relaciones se cruzaban hasta volverlo\nilegible (2026-09-14).\n\n\n\n\n\n**Por qué `movimiento` y `umbral` no tienen una FK real hacia su ubicación.** Según\nel valor de `ubicacion_tipo`, `ubicacion_id` apunta a `acopio.id` o a `zona.id`.\nPostgreSQL no puede expresar una FK condicional con una sola columna, así que el\ndiagrama dibuja las dos relaciones posibles — la regla que obliga a que solo una\nexista vive en la capa de aplicación, no en el esquema. Es la misma limitación\nhonesta que ya admitía [ADR-0002](adr/ADR-0002-saldo-derivado.md): lo que se puede\nexpresar en el esquema va en el esquema, y esto no se puede. Mismo caso en\n`usuario_asignacion`, clúster Identidad."
+   "md": "El saldo se deriva de movimientos inmutables\n([ADR-0002](adr/ADR-0002-saldo-derivado.md)) y lo guarda la tabla `saldo`, que mantiene\nun disparador sobre `movimiento` ([ADR-0015](adr/ADR-0015-saldo-en-tabla-por-disparador.md)).\nHoy los movimientos, saldos y umbrales son de un acopio, con llave foránea real; las\nzonas sumarán su propia columna cuando tengan movimientos (Bloque 4). Se dibuja en dos\ndiagramas: los movimientos con su saldo, y lo que el Operador fija por categoría."
   },
   {
    "titulo": "Custodia",
    "pngs": [
     "er-04-custodia.png"
    ],
-   "md": ""
+   "md": "Una donación preparada por un Donador es un `comprobante` con sus líneas. Al recibirla\nse crean las entradas, y `comprobante_movimiento` une cada entrada con su donación: un\nmovimiento pertenece a lo sumo a una. La tabla solo admite inserción. Las remisiones\nllegan con el motor (Bloque 4)."
   },
   {
    "titulo": "Motor",
    "pngs": [
     "er-05-motor.png"
    ],
-   "md": "Es el aporte original del proyecto ([spec §7](../superpowers/specs/2026-08-20-acopio-design.md))."
+   "md": "Se construye en el Bloque 4. Es el aporte original del proyecto\n([spec §7](../superpowers/specs/2026-08-20-acopio-design.md))."
   },
   {
    "titulo": "Turnos",
    "pngs": [
     "er-06-turnos.png"
    ],
-   "md": ""
+   "md": "Se construye en el Bloque 5."
   },
   {
    "titulo": "Identidad",
@@ -50,12 +50,19 @@
     "er-07-identidad.png"
    ],
    "md": ""
+  },
+  {
+   "titulo": "Notificaciones",
+   "pngs": [
+    "er-08-notificaciones.png"
+   ],
+   "md": "`correo_saliente` no tiene llaves foráneas: guarda el destinatario como texto. Cada\nservicio lo encola dentro de la transacción de la operación, y una tarea programada\nenvía cada minuto."
   }
  ],
  "notas": [
   {
    "titulo": "Roles secundarios de usuario no dibujados",
-   "md": "Varias tablas referencian a `usuario` más de una vez con roles distintos —\n`entidad.verificada_por`, `comprobante.verificado_por`, `sugerencia.decidida_por`,\n`invitacion.creada_por`, `usuario_asignacion.asignado_por`,\n`remision_comprobante.vinculado_por`—. Cada clúster dibuja solo\nsu relación principal con `usuario` para no saturar el diagrama; las demás quedan\ndocumentadas en la lista de columnas de cada tabla, en [Tablas](#tablas).\n\n**Restricciones de integridad:** las mismas que ya aplican al modelo completo — ver\nla tabla de [Invariantes](#invariantes) más abajo. No se duplican aquí."
+   "md": "Varias tablas referencian a `usuario` más de una vez con roles distintos:\n`comprobante.recibido_por`, `comprobante.verificado_por`,\n`comprobante_movimiento.vinculado_por`, `umbral.actualizado_por`,\n`invitacion.creada_por` y `usuario_asignacion.asignado_por`, y más adelante\n`sugerencia.decidida_por`. Cada clúster dibuja solo su relación principal con\n`usuario`; las demás están en la lista de columnas de cada tabla, en [Tablas](#tablas).\n\n**Restricciones de integridad:** ver la tabla de [Invariantes](#invariantes)."
   }
  ],
  "invariantes": [
@@ -65,7 +72,7 @@
   ],
   [
    "El saldo nunca queda negativo",
-   "Transacción con bloqueo de fila"
+   "`CHECK` en `saldo` y candado por acopio y categoría antes de una salida o un ajuste"
   ],
   [
    "`umbral.minimo <= umbral.maximo`",
@@ -113,11 +120,27 @@
   ],
   [
    "Solo un comprobante `PREPARADO` se puede recibir en el acopio",
-   "Transacción con bloqueo de fila"
+   "`UPDATE` condicionado al estado `PREPARADO`"
   ],
   [
-   "`RECHAZADO` exige motivo",
+   "`RECHAZADO` exige motivo; `OTRO` exige nota",
    "`CHECK`"
+  ],
+  [
+   "Un movimiento pertenece a lo sumo a un comprobante",
+   "`UNIQUE (movimiento_id)` en `comprobante_movimiento`"
+  ],
+  [
+   "`comprobante_movimiento` no admite `UPDATE` ni `DELETE`",
+   "Permisos de base de datos"
+  ],
+  [
+   "El folio sigue el formato `ACO-AAAA-XXXXX`",
+   "`CHECK`"
+  ],
+  [
+   "Un cambio de estado de un comprobante no pisa otro concurrente",
+   "`UPDATE` condicionado al estado leído"
   ],
   [
    "Línea de comprobante: declarado > 0, confirmado ≥ 0",
@@ -176,7 +199,7 @@
    "titulo": "Contenedores",
    "bajada": "Qué corre dentro del VPS, cómo se enrutan las peticiones y qué módulos tiene la API.",
    "png": "arquitectura-02-contenedores.png",
-   "md": "**Cómo leer el diagrama.** El navegador descarga la SPA desde `web` y habla con\nla API por HTTPS a través de Traefik; solo va directo a Supabase para iniciar\nsesión y a OpenStreetMap por los mosaicos del mapa. La API es un único proceso con\nonce módulos —ocho de dominio y tres transversales— y sus tareas programadas; es la\núnica pieza que toca la base de datos, los archivos y los servicios externos: el\nservidor SMTP para el correo, Nominatim para buscar direcciones y RedAcopio para\nimportar puntos referenciados. Supabase usa el mismo servidor SMTP para sus correos.\n\n**El almacenamiento nunca se expone.** Todo archivo pasa por la API, que entrega URLs\nfirmadas de expiración corta. Es Garage, compatible con S3\n([ADR-0012](adr/ADR-0012-almacenamiento-garage.md)); la API le habla por la API de\nS3, así que cambiar de servidor es configuración.\n\n**El `proxy: nginx` de antes lo reemplaza Traefik.** Dokploy lo trae incluido:\nmismas reglas de enrutamiento (`/` a `web`, `/api` y `/files` a `api`), y encima\nresuelve el certificado HTTPS sin configurarlo a mano. Detalle completo en\n[despliegue.md](../06-operacion/despliegue.md#producción--vps-con-dokploy)."
+   "md": "**Cómo leer el diagrama.** El navegador descarga la SPA desde `web` y habla con\nla API por HTTPS a través de Traefik; solo va directo a Supabase para iniciar\nsesión y a OpenStreetMap por los mosaicos del mapa. La API es un único proceso con\nonce módulos —ocho de dominio y tres transversales— y sus tareas programadas; es la\núnica pieza que toca la base de datos, los archivos y los servicios externos: el\nservidor SMTP para el correo, Nominatim para buscar direcciones y RedAcopio para\nimportar puntos referenciados. Supabase usa el mismo servidor SMTP para sus correos.\n\n**El almacenamiento nunca se expone.** Todo archivo pasa por la API, que entrega URLs\nfirmadas de cinco minutos. Es Garage, compatible con S3\n([ADR-0012](adr/ADR-0012-almacenamiento-garage.md)); la API le habla por la API de\nS3, así que cambiar de servidor es configuración. Esas URL las abre el navegador, así\nque tienen que apuntar a un host que el navegador alcance: en desarrollo la API firma\ncon `S3_URL_PUBLICA` (`http://localhost:3900`). Cómo se expone esa lectura en\nproducción sin abrir el resto de Garage sigue abierto en P-041 (#26).\n\n**Lo que corre hoy.** Mientras el desarrollo es local (P-032), todo se levanta con\nDocker Compose: `db`, `storage` (Garage), `mailpit` para ver los correos y la `api`.\nLa web corre con Vite y todavía no tiene servicio en el Compose. El inicio de sesión\nusa el adaptador `local` de `ProveedorIdentidad` (P-025); Supabase Auth entra con el\nprimer despliegue.\n\n**El `proxy: nginx` de antes lo reemplaza Traefik.** Dokploy lo trae incluido:\nmismas reglas de enrutamiento (`/` a `web`, `/api` y `/files` a `api`), y encima\nresuelve el certificado HTTPS sin configurarlo a mano. Detalle completo en\n[despliegue.md](../06-operacion/despliegue.md#producción--vps-con-dokploy)."
   }
  ]
 }

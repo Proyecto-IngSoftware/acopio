@@ -3,7 +3,7 @@ title: "Guía de la bóveda en Obsidian"
 type: moc
 tags: [moc, obsidian]
 estado: vigente
-actualizado: 2026-08-20
+actualizado: 2026-10-06
 ---
 
 # Guía de la bóveda en Obsidian
@@ -72,7 +72,7 @@ actualizado: 2026-08-20
 | `arquitectura` | Vista general, modelo de datos |
 | `adr` | Decisiones de arquitectura |
 | `diseno` | Sistema de diseño, flujos |
-| `prompt` | Prompts de pantalla para Lovable |
+| `prompt` | Prompts de video o de generación (por ejemplo, el video de la donación) |
 | `spec` | Especificaciones formales |
 | `operacion` | Despliegue, runbook |
 | `entrega` | Entregables de la asignatura |
@@ -115,7 +115,7 @@ README.md                    ← portada
 ├─ 02-arquitectura/README.md
 │  └─ adr/README.md
 ├─ 03-diseno/README.md
-│  └─ prompts-lovable/README.md
+│  └─ stitch/README.md
 ├─ 05-planes/README.md
 ├─ 06-operacion/README.md
 ├─ entregas/README.md
@@ -149,8 +149,7 @@ Bases requiere Obsidian 1.9 o superior. No hay plugins de comunidad instalados.
 ## Plantillas
 
 En [plantillas/](plantillas/): [ADR](plantillas/plantilla-adr.md) ·
-[requerimiento](plantillas/plantilla-requerimiento.md) ·
-[prompt de pantalla](plantillas/plantilla-prompt-pantalla.md).
+[requerimiento](plantillas/plantilla-requerimiento.md).
 
 > **Ajustes → Plantillas → Carpeta de plantillas:** `plantillas`. Después se insertan
 > con la paleta de comandos.

@@ -3,13 +3,18 @@ title: "Acopio — portada"
 type: moc
 tags: [moc, indice]
 estado: vigente
-actualizado: 2026-09-11
+actualizado: 2026-10-06
 ---
 
 # Acopio
 
 Plataforma de coordinación logística para respuesta a desastres.
-Proyecto de **Ingeniería de Software I** · ETITC · Sprint 0.
+Proyecto de **Ingeniería de Software I** · ETITC.
+
+**Estado al 2026-10-06:** construidos los Bloques 0 a 2 y la API y el portal del Donador del
+Bloque 3. Lo que sigue está en [05-planes/](05-planes/README.md) y en los
+[issues del repositorio](https://github.com/Proyecto-IngSoftware/acopio/issues), que son el
+plan de trabajo: el próximo es el ciclo 2 del Bloque 3 (#34).
 
 > **Esta carpeta es la bóveda de Obsidian.** Ábrela con *Abrir carpeta como bóveda*.
 > Convenciones en [GUIA-OBSIDIAN.md](GUIA-OBSIDIAN.md).
@@ -34,7 +39,8 @@ Proyecto de **Ingeniería de Software I** · ETITC · Sprint 0.
 | Saber qué está y qué no está en alcance | [Fuera de alcance](00-contexto/fuera-de-alcance.md) |
 | Consultar un término | [Glosario](00-contexto/glosario.md) |
 | Saber por qué se decidió algo | [ADR](02-arquitectura/adr/README.md) |
-| Construir interfaz | [Sistema de diseño](03-diseno/sistema-diseno.md) · [Contrato de la API](03-diseno/api/README.md) |
+| Construir interfaz | [Diseños de Stitch](03-diseno/stitch/README.md) · [Contrato de la API](03-diseno/api/README.md) |
+| Saber qué se construyó y qué sigue | [Planes](05-planes/README.md) · [Issues](https://github.com/Proyecto-IngSoftware/acopio/issues) |
 | Desplegar o arreglar algo roto | [Runbook](06-operacion/runbook.md) |
 
 ---
@@ -46,13 +52,13 @@ Proyecto de **Ingeniería de Software I** · ETITC · Sprint 0.
 | [00-contexto/](00-contexto/README.md) | Problema, actores, glosario, fuera de alcance | Rara vez. Es el suelo |
 | [01-requerimientos/](01-requerimientos/README.md) | RF por módulo, RNF, historias, pendientes | Cada semana |
 | [02-arquitectura/](02-arquitectura/README.md) | Vista general, modelo de datos, ADR | Al decidir algo caro de revertir |
-| [03-diseno/](03-diseno/README.md) | Sistema de diseño, flujos, prompts de pantalla | Al construir interfaz |
+| [03-diseno/](03-diseno/README.md) | Diseños de Stitch por pantalla, sistema de diseño, flujos, contrato de la API | Al construir interfaz |
 | [superpowers/specs/](superpowers/specs/README.md) | Especificaciones formales por bloque | Al iniciar un bloque |
 | [05-planes/](05-planes/README.md) | Planes de implementación | Al iniciar un bloque |
 | [06-operacion/](06-operacion/README.md) | Despliegue, runbook | Al desplegar, y cuando algo falla |
 | [entregas/](entregas/README.md) | Entregables de la asignatura | En cada avance de proyecto |
 | [99-futuro/](99-futuro/backlog.md) | Aplazado, recuperable | Al recortar algo |
-| [plantillas/](plantillas/plantilla-adr.md) | Plantillas de ADR, requerimiento y prompt | Al crear una nota nueva |
+| [plantillas/](plantillas/plantilla-adr.md) | Plantillas de ADR y de requerimiento | Al crear una nota nueva |
 | [tableros/](tableros/tablero-notas.base) | Vistas Bases sobre las propiedades | Para consultar de un vistazo |
 
 ---
@@ -75,8 +81,9 @@ Una decisión por archivo, con contexto, alternativas y consecuencias. **Las ace
 no se editan.** Es lo que se sustenta ante el jurado cuando pregunten *«¿por qué
 Supabase solo para autenticación?»*.
 
-### [Prompts de pantalla](03-diseno/prompts-lovable/README.md)
-Un archivo por pantalla, listo para pegar en Lovable.
+### [Diseños de Stitch](03-diseno/stitch/README.md)
+Una carpeta por pantalla con la captura, la maqueta aprobada por Joseph y sus
+diferencias. No se escribe código de una pantalla sin su maqueta aprobada.
 
 ---
 
@@ -125,13 +132,16 @@ carpeta de documentos obsoletos.
 
 ## Estructura del repositorio
 
-La bóveda es solo `docs/`. El repositorio completo será:
+La bóveda es solo `docs/`. El repositorio completo:
 
 ```
-apps/api          NestJS · dominio y API REST
-apps/web          React + Vite · front generado con Lovable
-packages/shared   reglas puras compartidas
-infra             docker-compose, nginx
-prisma            esquema y migraciones
-docs              esta bóveda  ← hoy es lo único que existe
+apps/api            NestJS 11 · Prisma 7.10 · dominio y API REST
+apps/web            React · Vite · TanStack Query · Tailwind 4 · pantallas diseñadas en Stitch
+packages/shared     funciones puras compartidas (formato, unidades, horarios)
+packages/ui-tokens  los tokens del tema de Stitch, el único lugar con colores
+infra               docker-compose (base de producción y desarrollo), Garage
+prisma              esquema y migraciones
+docs                esta bóveda
 ```
+
+Comandos y reglas de trabajo en el `CLAUDE.md` de la raíz.

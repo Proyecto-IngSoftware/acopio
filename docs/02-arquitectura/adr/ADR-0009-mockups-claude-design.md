@@ -76,5 +76,6 @@ pantalla dibujada que sobre código a medio hacer.
   de aplicar, pero los demás se mantienen: recuperación de contraseña, verificación
   de correo y rotación de sesiones siguen siendo trabajo conocido y sin aporte
   académico
-- La carpeta [prompts-lovable/](../../03-diseno/prompts-lovable/README.md) queda como
-  referencia del contenido de cada pantalla, no como herramienta de generación
+- La carpeta `prompts-lovable/` queda como referencia del contenido de cada pantalla,
+  no como herramienta de generación. *(Se borró el 2026-10-06; los diseños viven en
+  [03-diseno/stitch/](../../03-diseno/stitch/README.md).)*

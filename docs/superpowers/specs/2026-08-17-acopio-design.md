@@ -128,7 +128,7 @@ Ver `docs/00-contexto/fuera-de-alcance.md`. Resumen:
 | Backend | NestJS + TypeScript | Módulos con límites explícitos e inyección de dependencias |
 | ORM | Prisma | Migraciones versionadas, tipos generados |
 | Base de datos | PostgreSQL 16 | Transacciones reales, obligatorias para inventario |
-| Frontend | React + Vite + TypeScript + Tailwind + shadcn/ui | Salida de Lovable |
+| Frontend | React + Vite + TypeScript + Tailwind | Pantallas diseñadas en Google Stitch (ADR-0011) |
 | Mapa | Leaflet + OpenStreetMap | Sin API key ni tarjeta de crédito |
 | Geo | Columnas `lat`/`lng` + Haversine | PostGIS agrega fricción sin beneficio a esta escala |
 | Archivos | MinIO, buckets privados | Compatible con S3 si migra a nube |
@@ -142,7 +142,7 @@ Ver `docs/00-contexto/fuera-de-alcance.md`. Resumen:
 acopio/
 ├─ apps/
 │  ├─ api/     NestJS · un módulo por límite de dominio
-│  └─ web/     front de Lovable
+│  └─ web/     SPA con Vite
 ├─ packages/
 │  ├─ shared/     tipos y reglas puras: unidades, déficit, semáforo
 │  └─ ui-tokens/  tokens de diseño, fuente única de verdad del color

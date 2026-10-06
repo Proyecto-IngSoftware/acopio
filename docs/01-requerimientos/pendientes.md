@@ -406,8 +406,10 @@ cada regeneración.
 **Estado:** RESUELTO → [ADR-0009](../02-arquitectura/adr/ADR-0009-mockups-claude-design.md),
 que reemplaza a ADR-0004. Confirmado en la tabla de decisión de ADR-0008 el
 2026-09-14; la revisión de Brayan, responsable de UI/UX, sigue en
-[#7](https://github.com/Proyecto-IngSoftware/acopio/issues/7). Quedan 15 archivos de la bóveda que aún mencionan Lovable; se
-barren después de la entrega.
+[#7](https://github.com/Proyecto-IngSoftware/acopio/issues/7). **2026-10-06:** se barrieron las menciones a Lovable de la documentación vigente y se
+borraron `prompts-lovable/` y su plantilla. Quedan en los ADR 0001, 0004, 0009 y 0011 y en
+los avances entregados, que son registros históricos. Desde ADR-0011 la interfaz se
+diseña en Google Stitch.
 
 ### P-022 · Importar automáticamente los acopios de RedAcopio Bogotá
 **Fecha:** 2026-09-14 · **Propuesto por:** Joseph
@@ -455,14 +457,14 @@ sigue atendiendo igual. Cerrarla es manual.
 caso de la Cruz Roja que planteó el equipo—, y quien entrega no decide a cuál va su
 donación. Además, el diseño de la portada ya asumía varias. Bajar la prioridad solo en
 la vitrina evita que el reparto siga a la visibilidad en vez de a la necesidad.
-**Pendiente:** una fuente sobre la operación multiemergencia de la Cruz Roja. Las dos
-revisadas el 2026-09-14 no la sostienen, pero el protocolo de la ANDI sí respalda que
-el acopio destina las donaciones a donde se necesitan
+**Fuente (2026-10-06):** el protocolo de la ANDI de 2019, que respalda que el acopio
+destina las donaciones a donde se necesitan. Joseph decidió usarlo y no buscar otra
+fuente; la parte multiemergencia queda como deducción del equipo
 ([I-005](../00-contexto/investigaciones.md#i-005--un-centro-de-acopio-atiende-varias-emergencias-a-la-vez)).
 **Estado:** RESUELTO → [ADR-0010](../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md),
 `RF-CAT-005` (reescrito), `RF-CAT-006`, `RF-MOT-001/002/005`, `RF-HOM-001`,
 [modelo-datos.md](../02-arquitectura/modelo-datos.md), nota en `ADR-0008`, `B-08`
-promovido, corrección en P-019. Faltan los diagramas ER regenerados.
+promovido, corrección en P-019. Los diagramas ER se regeneraron el 2026-10-06.
 
 ### P-025 · Login local mientras el desarrollo sea local
 **Fecha:** 2026-09-28 · **Propuesto por:** Joseph

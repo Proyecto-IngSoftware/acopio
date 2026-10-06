@@ -3,7 +3,7 @@ title: "Modelo de datos"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-05
+actualizado: 2026-10-06
 ---
 
 # Modelo de datos
@@ -18,7 +18,7 @@ PostgreSQL 16 · Prisma. Nombres en español, iguales a los del
 **El saldo no se guarda. Se deriva de movimientos inmutables.**
 
 ```
-Movimiento  →  append-only  →  Saldo (vista materializada)
+Movimiento  →  solo inserción  →  Saldo (tabla que mantiene un disparador)
 ```
 
 Tres propiedades que se obtienen gratis:
@@ -32,29 +32,29 @@ Tres propiedades que se obtienen gratis:
 
 ## Diagrama
 
+Lo construido hasta el Bloque 3. Entre corchetes, lo que llega en un bloque posterior.
+
 ```
-Emergencia ─┬─ Acopio ──┬─ Movimiento ──┬── Comprobante ── LineaComprobante
-            │           │               └── Remision ──┬── LineaRemision
-            │           ├─ Umbral                      └── RemisionComprobante
-            │           └─ Jornada ── Reserva
-            │
-            ├─ Zona ────┬─ Movimiento
-            │           ├─ Umbral
-            │           └─ ReporteNecesidad
-            │
-            ├─ Entidad ─── Causa
-            │
-            └─ Sugerencia (Acopio → Zona)
+Emergencia ─┬─ Zona ───── [ReporteNecesidad · Bloque 4]
+            └─ [Sugerencia (Acopio → Zona) · Bloque 4]
+
+Entidad ────── Acopio ──┬─ Movimiento ──── ComprobanteMovimiento ── Comprobante ── LineaComprobante
+                        ├─ Saldo (por disparador)
+                        ├─ Umbral
+                        ├─ NoRecibir
+                        ├─ [Remision ── LineaRemision · Bloque 4]
+                        └─ [Jornada ── Reserva · Bloque 5]
 
 Categoria ──┬─ CanastaEstandar
             ├─ CodigoBarras
-            ├─ Movimiento
-            └─ Umbral
+            └─ Movimiento · Saldo · Umbral · NoRecibir · LineaComprobante
 
 Usuario ────┬─ UsuarioAsignacion → (Acopio | Zona)
-            ├─ Invitacion
+            ├─ Invitacion · VerificacionCorreo · IdentidadLocal (solo local)
             ├─ Bitacora
             └─ Comprobante (como Donador)
+
+CorreoSaliente   cola de correos, sin llaves foráneas
 ```
 
 ---
@@ -156,25 +156,23 @@ que reimportar actualice en vez de duplicar. Ver
 
 ```
 movimiento
-  id                uuid pk
-  ubicacion_tipo    ACOPIO | ZONA
-  ubicacion_id      uuid
+  id                uuid pk         lo genera el cliente: la cola sin red no duplica
+  acopio_id         fk
   categoria_id      fk
+  tipo              ENTRADA | SALIDA | AJUSTE
   cantidad          numeric(12,3)   siempre > 0
-  signo             smallint        +1 | -1
-  tipo              ENTRADA | SALIDA | AJUSTE | RECEPCION
+  signo             smallint        +1 | -1; ENTRADA suma y SALIDA resta
+  motivo_salida     ENTREGA_FAMILIAS | TRASLADO | VENCIDO | OTRO   solo en SALIDA
+  nota              text?           obligatoria si el motivo es TRASLADO u OTRO
+  motivo            text?           obligatorio si tipo = AJUSTE (10 caracteres o más)
+  vence_en          date?           solo en ENTRADA; obligatoria si es perecedera
   usuario_id        fk
   ocurrido_en       timestamptz     cuándo pasó en el mundo real
   registrado_en     timestamptz     cuándo llegó al sistema
-  remision_id       fk?
-  vence_en          date?
-  motivo            text?           obligatorio si tipo = AJUSTE
   origen_offline    bool
+  secuencia         bigint UNIQUE   orden de llegada; ordena el historial
 
-  CHECK (cantidad > 0)
-  CHECK (tipo <> 'AJUSTE' OR length(motivo) >= 10)
-  índices: (ubicacion_tipo, ubicacion_id, categoria_id)
-           (registrado_en)
+  índices: (acopio_id, categoria_id, registrado_en) · (registrado_en)
 ```
 
 **Sin `UPDATE` ni `DELETE`.** No basta con no escribirlos en el código: se revoca
@@ -186,11 +184,10 @@ movimiento capturado sin señal a las 3:14 pm y sincronizado a las 6:02 pm conse
 ambas marcas y la interfaz lo distingue.
 
 ```
-saldo   VISTA MATERIALIZADA
-  ubicacion_tipo · ubicacion_id · categoria_id
-  cantidad          = Σ (cantidad × signo)
+saldo   TABLA que mantiene un disparador AFTER INSERT sobre movimiento
+  acopio_id · categoria_id        PK
+  cantidad          = Σ (cantidad × signo)     CHECK (cantidad >= 0)
   ultimo_movimiento = max(registrado_en)
-  UNIQUE (ubicacion_tipo, ubicacion_id, categoria_id)
 ```
 
 `ultimo_movimiento` es lo que alimenta la antigüedad visible exigida por RNF-04.
@@ -206,11 +203,15 @@ con un comprobante no vive en `movimiento`: lo guarda `comprobante_movimiento` (
 
 ```
 umbral
-  ubicacion_tipo · ubicacion_id · categoria_id
+  acopio_id · categoria_id        PK
   minimo numeric · maximo numeric
-  no_recibir bool · no_recibir_hasta date?
-  CHECK (minimo <= maximo)
-  PK (ubicacion_tipo, ubicacion_id, categoria_id)
+  actualizado_por fk · actualizado_en
+  CHECK (minimo >= 0 AND minimo <= maximo)
+
+no_recibir
+  acopio_id · categoria_id        PK
+  hasta date?                     vencida deja de contar
+  marcado_por fk · marcado_en
 ```
 
 **2026-09-30 · Bloque 1 (B-06).** «No recibir» salió de `umbral` a su propia tabla,
@@ -467,7 +468,7 @@ Cada uno se hace cumplir donde no se pueda evadir.
 | Invariante | Dónde |
 |---|---|
 | `movimiento` no admite `UPDATE` ni `DELETE` | Permisos de base de datos |
-| El saldo nunca queda negativo | Transacción con bloqueo de fila |
+| El saldo nunca queda negativo | `CHECK` en `saldo` y candado por acopio y categoría antes de una salida o un ajuste |
 | `umbral.minimo <= umbral.maximo` | `CHECK` |
 | `AJUSTE` exige motivo de 10 caracteres o más | `CHECK` |
 | Una reserva solo existe si hay cupo libre | Transacción con bloqueo sobre la jornada |
@@ -479,8 +480,12 @@ Cada uno se hace cumplir donde no se pueda evadir.
 | Un usuario interno tiene `username`; un Donador, correo real | `CHECK` |
 | Un Donador no tiene filas en `usuario_asignacion` | Transacción |
 | `comprobante.donador_id` apunta a un usuario con rol `DONADOR` | Transacción |
-| Solo un comprobante `PREPARADO` se puede recibir en el acopio | Transacción con bloqueo de fila |
-| `RECHAZADO` exige motivo | `CHECK` |
+| Solo un comprobante `PREPARADO` se puede recibir en el acopio | `UPDATE` condicionado al estado `PREPARADO` |
+| `RECHAZADO` exige motivo; `OTRO` exige nota | `CHECK` |
+| Un movimiento pertenece a lo sumo a un comprobante | `UNIQUE (movimiento_id)` en `comprobante_movimiento` |
+| `comprobante_movimiento` no admite `UPDATE` ni `DELETE` | Permisos de base de datos |
+| El folio sigue el formato `ACO-AAAA-XXXXX` | `CHECK` |
+| Un cambio de estado de un comprobante no pisa otro concurrente | `UPDATE` condicionado al estado leído |
 | Línea de comprobante: declarado > 0, confirmado ≥ 0 | `CHECK` |
 | Una remisión `RECIBIDA` tiene zona — un despacho general la toma al recibirse | `CHECK` |
 | Una causa archivada tiene fecha de archivado | `CHECK` |
@@ -500,83 +505,81 @@ vive en el código de la aplicación se rompe el día que alguien escribe un scr
 
 ## Estrategia de saldos
 
-**2026-10-01 · reemplazado por [ADR-0015](adr/ADR-0015-saldo-en-tabla-por-disparador.md).** PostgreSQL no refresca una vista materializada por fila; el saldo vive en una tabla que mantiene el disparador.
-
-~~Vista materializada refrescada por disparador `AFTER INSERT` sobre `movimiento`, con refresco selectivo de la fila `(ubicacion, categoria)` afectada.~~
-
-Si el volumen lo justifica, se sustituye por una tabla `saldo` mantenida por el
-mismo disparador, con reconciliación programada contra la suma real. Se mide antes
-de complicar.
-
----
+`saldo` es una tabla que mantiene un disparador `AFTER INSERT` sobre `movimiento`
+([ADR-0015](adr/ADR-0015-saldo-en-tabla-por-disparador.md)). PostgreSQL no refresca una
+vista materializada por fila, así que la vista materializada que proponía la primera
+versión de este modelo nunca se construyó. `acopio_app` solo lee `saldo`; si una salida
+dejara la cantidad negativa, el `CHECK` aborta la transacción. Antes de una salida o un
+ajuste, la API toma `pg_advisory_xact_lock` por acopio y categoría para que dos
+operaciones simultáneas se ordenen.
 
 ---
 
-## Diagrama entidad-relación (Avance 3)
+## Diagrama entidad-relación
 
-Todas las entidades están en el alcance del semestre: cada una responde a un `RF`
-existente. `saldo` no aparece — es una vista materializada, no una tabla con llaves
-propias; se deriva de `movimiento` como explica el principio rector arriba.
+Actualizado el 2026-10-06 con el esquema construido hasta el Bloque 3
+(`prisma/schema.prisma`). Las tablas que todavía no existen se dibujan con la nota
+«Bloque N», el bloque que las construye: `causa` (Bloque 6), `remision`,
+`linea_remision`, `remision_comprobante`, `sugerencia`, `reporte_necesidad` y
+`configuracion_motor` (Bloque 4), y `jornada` y `reserva` (Bloque 5).
 
-**Un diagrama por clúster, no uno solo.** Con 24 entidades y unas 40 relaciones, un
-solo `erDiagram` de Mermaid es ilegible — la herramienta no tiene forma de acomodar
-manualmente un diagrama tan grande. Se divide en los mismos siete grupos que ya
-organizan la sección [Tablas](#tablas) de arriba. Cuando una entidad aparece en un
-clúster solo como referencia de otro, se dibuja **liviana** — solo su llave primaria,
-con una nota de dónde está completa — para no repetir atributos.
+**Un diagrama por clúster.** Con más de 25 entidades, un solo `erDiagram` de Mermaid
+no se puede leer, así que se divide en los grupos de la sección [Tablas](#tablas).
+Cuando una entidad aparece en un clúster solo como referencia de otro, se dibuja
+liviana: su llave primaria y una nota de dónde está completa.
 
-Atributos abreviados a lo principal — PK, FK y los campos que gobiernan una regla de
-negocio. La lista completa de columnas está en [Tablas](#tablas).
+Los atributos van abreviados a lo principal: PK, FK y los campos que gobiernan una
+regla de negocio. La lista completa de columnas está en [Tablas](#tablas).
 
 ### Raíz y catálogo
 
-`emergencia` es la raíz de las zonas afectadas. Se dibuja aquí completa pero suelta:
-no tiene relaciones dentro de este clúster — salen hacia Red (`zona` y, opcional,
-`causa`) y Motor (`sugerencia`), donde aparece como referencia liviana que apunta de
-vuelta a esta caja. Desde el 2026-09-14 pueden estar activas varias, y acopios,
-entidades y movimientos no dependen de ella
-([ADR-0010](adr/ADR-0010-varias-emergencias-activas.md)). `configuracion_motor`
-guarda los pesos del motor, globales para todas las emergencias. El catálogo (`categoria`, `canasta_estandar`,
-`codigo_barras`) es independiente de la emergencia: una categoría sirve para
-cualquiera.
+`emergencia` es la raíz de las zonas afectadas. Pueden estar activas varias, y
+acopios, entidades y movimientos no dependen de ella
+([ADR-0010](adr/ADR-0010-varias-emergencias-activas.md)). El catálogo (`categoria`,
+`canasta_estandar`, `codigo_barras`) sirve para cualquier emergencia.
 
 ```mermaid
 erDiagram
     CATEGORIA ||--o{ CANASTA_ESTANDAR : define
     CATEGORIA ||--o{ CODIGO_BARRAS : identifica
+    USUARIO ||--o{ CODIGO_BARRAS : asocia
 
+    USUARIO {
+        uuid id PK "clúster Identidad"
+    }
     EMERGENCIA {
         uuid id PK
         text nombre
         text estado "ACTIVA | EN_SEGUIMIENTO | CERRADA"
         date destacada_hasta "al pasarla, EN_SEGUIMIENTO"
         int horizonte_dias
+        timestamptz cerrada_en "obligatoria si CERRADA"
     }
     CONFIGURACION_MOTOR {
-        smallint id PK "fila única"
+        smallint id PK "Bloque 4 · fila única"
         jsonb pesos "globales · suman 1"
-        numeric cantidad_minima
-        uuid actualizado_por FK "usuario · clúster Identidad"
     }
     CATEGORIA {
         uuid id PK
-        text nombre
-        text unidad_base
+        text nombre UK
+        text grupo
+        text unidad_base "LITRO | KILOGRAMO | UNIDAD"
         bool perecedero
+        bool archivada
     }
     CANASTA_ESTANDAR {
         uuid id PK
         uuid categoria_id FK
         numeric cantidad_persona_dia
         text fuente
-        date vigente_desde
+        date vigente_desde "UK con categoria_id"
     }
     CODIGO_BARRAS {
         text ean PK
         uuid categoria_id FK
-        uuid creado_por FK "usuario · clúster Identidad"
+        numeric contenido "opcional, en unidad base"
+        uuid creado_por FK
         bool revisado
-        numeric contenido "opcional"
     }
 ```
 
@@ -585,71 +588,64 @@ erDiagram
 ```mermaid
 erDiagram
     EMERGENCIA ||--o{ ZONA : contiene
-    EMERGENCIA |o--o{ CAUSA : "enfoca · opcional"
-    ENTIDAD ||--o{ CAUSA : publica
     ENTIDAD ||--o{ ACOPIO : administra
-    USUARIO |o--o{ ENTIDAD : verifica
+    ENTIDAD ||--o{ CAUSA : "publica · Bloque 6"
+    EMERGENCIA |o--o{ CAUSA : "enfoca · opcional"
 
     EMERGENCIA {
         uuid id PK "clúster Raíz y catálogo"
     }
-    USUARIO {
-        uuid id PK "clúster Identidad"
-    }
     ENTIDAD {
         uuid id PK
-        uuid verificada_por FK
-        text nombre
-        text verificacion
-        date vence_en "6 meses · al vencer archiva sus causas"
-    }
-    CAUSA {
-        uuid id PK
-        uuid entidad_id FK
-        uuid emergencia_id FK "opcional"
-        text titulo
-        bool publicada
-        bool archivada
-        date vigente_hasta "opcional"
+        text nombre UK
+        text tipo
+        text verificacion "SIN_VERIFICAR | VERIFICADA | RECHAZADA"
     }
     ACOPIO {
         uuid id PK
-        uuid entidad_id FK "null solo si REFERENCIADO"
+        uuid entidad_id FK
         text nombre
-        text estado
-        text tipo "OPERADO | REFERENCIADO"
-        text fuente_id "UK junto con fuente"
+        text municipio
+        numeric lat
+        numeric lng
+        jsonb horario
+        text estado "ACTIVO | PAUSADO | CERRADO"
     }
     ZONA {
         uuid id PK
         uuid emergencia_id FK
         text nombre
         int poblacion_estimada
+        text poblacion_fuente
         text estado
+    }
+    CAUSA {
+        uuid id PK "Bloque 6"
+        uuid entidad_id FK
+        uuid emergencia_id FK "opcional"
     }
 ```
 
 ### Existencias — el núcleo
 
-El clúster más importante: es donde vive el saldo derivado de movimientos
-inmutables ([ADR-0002](adr/ADR-0002-saldo-derivado.md)). Se dibuja en dos diagramas
-—movimientos y umbrales— porque en uno solo las relaciones se cruzaban hasta volverlo
-ilegible (2026-09-14).
+El saldo se deriva de movimientos inmutables
+([ADR-0002](adr/ADR-0002-saldo-derivado.md)) y lo guarda la tabla `saldo`, que mantiene
+un disparador sobre `movimiento` ([ADR-0015](adr/ADR-0015-saldo-en-tabla-por-disparador.md)).
+Hoy los movimientos, saldos y umbrales son de un acopio, con llave foránea real; las
+zonas sumarán su propia columna cuando tengan movimientos (Bloque 4). Se dibuja en dos
+diagramas: los movimientos con su saldo, y lo que el Operador fija por categoría.
 
 ```mermaid
 erDiagram
     direction LR
-    ACOPIO ||--o{ MOVIMIENTO : "ubicacion_tipo=ACOPIO"
-    ZONA   ||--o{ MOVIMIENTO : "ubicacion_tipo=ZONA"
+    ACOPIO ||--o{ MOVIMIENTO : registra
     CATEGORIA ||--o{ MOVIMIENTO : clasifica
-    USUARIO ||--o{ MOVIMIENTO : registra
-    COMPROBANTE |o--o{ MOVIMIENTO : concilia
-    REMISION    |o--o{ MOVIMIENTO : origina
+    USUARIO ||--o{ MOVIMIENTO : captura
+    ACOPIO ||--o{ SALDO : tiene
+    CATEGORIA ||--o{ SALDO : suma
+    MOVIMIENTO }o--|| SALDO : "actualiza por disparador"
 
     ACOPIO {
-        uuid id PK "clúster Red"
-    }
-    ZONA {
         uuid id PK "clúster Red"
     }
     CATEGORIA {
@@ -658,143 +654,134 @@ erDiagram
     USUARIO {
         uuid id PK "clúster Identidad"
     }
-    COMPROBANTE {
-        uuid id PK "clúster Custodia"
-    }
-    REMISION {
-        uuid id PK "clúster Custodia"
-    }
     MOVIMIENTO {
-        uuid id PK
-        text ubicacion_tipo
-        uuid ubicacion_id "sin FK real"
+        uuid id PK "id del cliente: la cola sin red no duplica"
+        uuid acopio_id FK
         uuid categoria_id FK
         uuid usuario_id FK
-        uuid comprobante_id FK
-        uuid remision_id FK
-        numeric cantidad
+        text tipo "ENTRADA | SALIDA | AJUSTE"
+        numeric cantidad "> 0"
         smallint signo
-        text tipo
+        text motivo_salida "solo SALIDA"
+        text motivo "AJUSTE: 10 caracteres o más"
+        date vence_en "solo ENTRADA perecedera"
         timestamptz ocurrido_en
         timestamptz registrado_en
-        date vence_en "obligatoria si es perecedera"
-        text motivo "obligatorio si AJUSTE"
+        bool origen_offline
+        bigint secuencia UK
+    }
+    SALDO {
+        uuid acopio_id PK,FK
+        uuid categoria_id PK,FK
+        numeric cantidad ">= 0"
+        timestamptz ultimo_movimiento
     }
 ```
 
 ```mermaid
 erDiagram
-    ACOPIO ||--o{ UMBRAL : "ubicacion_tipo=ACOPIO"
-    ZONA   ||--o{ UMBRAL : "ubicacion_tipo=ZONA"
+    ACOPIO ||--o{ UMBRAL : fija
     CATEGORIA ||--o{ UMBRAL : limita
+    ACOPIO ||--o{ NO_RECIBIR : marca
+    CATEGORIA ||--o{ NO_RECIBIR : excluye
+    USUARIO ||--o{ NO_RECIBIR : "marcado_por"
 
     ACOPIO {
-        uuid id PK "clúster Red"
-    }
-    ZONA {
         uuid id PK "clúster Red"
     }
     CATEGORIA {
         uuid id PK "clúster Raíz y catálogo"
     }
+    USUARIO {
+        uuid id PK "clúster Identidad"
+    }
     UMBRAL {
-        text ubicacion_tipo PK
-        uuid ubicacion_id PK "sin FK real"
+        uuid acopio_id PK,FK
         uuid categoria_id PK,FK
-        numeric minimo
+        numeric minimo "<= maximo"
         numeric maximo
-        bool no_recibir
+        uuid actualizado_por FK
+    }
+    NO_RECIBIR {
+        uuid acopio_id PK,FK
+        uuid categoria_id PK,FK
+        date hasta "opcional; vencida deja de contar"
+        uuid marcado_por FK
     }
 ```
-
-**Por qué `movimiento` y `umbral` no tienen una FK real hacia su ubicación.** Según
-el valor de `ubicacion_tipo`, `ubicacion_id` apunta a `acopio.id` o a `zona.id`.
-PostgreSQL no puede expresar una FK condicional con una sola columna, así que el
-diagrama dibuja las dos relaciones posibles — la regla que obliga a que solo una
-exista vive en la capa de aplicación, no en el esquema. Es la misma limitación
-honesta que ya admitía [ADR-0002](adr/ADR-0002-saldo-derivado.md): lo que se puede
-expresar en el esquema va en el esquema, y esto no se puede. Mismo caso en
-`usuario_asignacion`, clúster Identidad.
 
 ### Custodia
 
+Una donación preparada por un Donador es un `comprobante` con sus líneas. Al recibirla
+se crean las entradas, y `comprobante_movimiento` une cada entrada con su donación: un
+movimiento pertenece a lo sumo a una. La tabla solo admite inserción. Las remisiones
+llegan con el motor (Bloque 4).
+
 ```mermaid
 erDiagram
-    ACOPIO ||--o{ COMPROBANTE : recibe
-    USUARIO |o--o{ COMPROBANTE : verifica
     USUARIO ||--o{ COMPROBANTE : "prepara · Donador"
+    ACOPIO ||--o{ COMPROBANTE : recibe
     COMPROBANTE ||--o{ LINEA_COMPROBANTE : detalla
     CATEGORIA ||--o{ LINEA_COMPROBANTE : especifica
-    CODIGO_BARRAS |o--o{ LINEA_COMPROBANTE : "escaneada como"
-    ACOPIO ||--o{ REMISION : despacha
-    ZONA   |o--o{ REMISION : recibe
-    SUGERENCIA |o--o| REMISION : genera
-    REMISION ||--o{ LINEA_REMISION : detalla
-    CATEGORIA ||--o{ LINEA_REMISION : especifica
+    COMPROBANTE ||--o{ COMPROBANTE_MOVIMIENTO : vincula
+    MOVIMIENTO ||--o| COMPROBANTE_MOVIMIENTO : "pertenece a"
+    ACOPIO ||--o{ REMISION : "despacha · Bloque 4"
     REMISION ||--o{ REMISION_COMPROBANTE : lleva
     COMPROBANTE ||--o{ REMISION_COMPROBANTE : "viaja en"
 
-    ACOPIO {
-        uuid id PK "clúster Red"
+    USUARIO {
+        uuid id PK "clúster Identidad"
     }
-    ZONA {
+    ACOPIO {
         uuid id PK "clúster Red"
     }
     CATEGORIA {
         uuid id PK "clúster Raíz y catálogo"
     }
-    USUARIO {
-        uuid id PK "clúster Identidad"
-    }
-    SUGERENCIA {
-        uuid id PK "clúster Motor"
-    }
-    CODIGO_BARRAS {
-        text ean PK "clúster Raíz y catálogo"
+    MOVIMIENTO {
+        uuid id PK "clúster Existencias"
     }
     COMPROBANTE {
         uuid id PK
-        uuid acopio_id FK
-        uuid verificado_por FK
+        text folio UK "ACO-AAAA-XXXXX, no secuencial"
         uuid donador_id FK
-        text folio UK "no secuencial"
-        text estado "PREPARADO → PENDIENTE → CONCILIADO"
+        uuid acopio_id FK "se reasigna si llega a otro"
+        text estado "PREPARADO PENDIENTE CONCILIADO RECHAZADO CANCELADO"
+        uuid recibido_por FK
+        uuid verificado_por FK
+        text motivo_rechazo "OTRO exige nota"
+        timestamptz cerrado_en
+        text factura_key "Garage · se borra a los 12 meses"
     }
     LINEA_COMPROBANTE {
         uuid id PK
         uuid comprobante_id FK
         uuid categoria_id FK
-        text ean FK
+        text ean "opcional"
         numeric contenido_unitario "a unidad base"
-        numeric cantidad_declarada
-        numeric cantidad_confirmada
-        date vence_en "obligatoria si es perecedera"
+        numeric cantidad_declarada "> 0"
+        numeric cantidad_confirmada ">= 0"
+        date vence_en
+    }
+    COMPROBANTE_MOVIMIENTO {
+        uuid comprobante_id PK,FK
+        uuid movimiento_id PK,FK "UK"
+        text origen "RECEPCION | AUDITOR"
+        uuid vinculado_por FK
     }
     REMISION {
-        uuid id PK
-        uuid acopio_origen_id FK
-        uuid zona_destino_id FK "null = despacho general"
-        uuid sugerencia_id FK
-        text qr_token UK
-        text estado
-    }
-    LINEA_REMISION {
-        uuid id PK
-        uuid remision_id FK
-        uuid categoria_id FK
-        numeric cantidad_planeada
-        numeric cantidad_recibida
+        uuid id PK "Bloque 4"
     }
     REMISION_COMPROBANTE {
-        uuid remision_id PK,FK
+        uuid remision_id PK,FK "Bloque 4"
         uuid comprobante_id PK,FK
-        uuid vinculado_por FK
     }
 ```
 
 ### Motor
 
-Es el aporte original del proyecto ([spec §7](../superpowers/specs/2026-08-20-acopio-design.md)).
+Se construye en el Bloque 4. Es el aporte original del proyecto
+([spec §7](../superpowers/specs/2026-08-20-acopio-design.md)).
 
 ```mermaid
 erDiagram
@@ -804,10 +791,9 @@ erDiagram
     CATEGORIA ||--o{ SUGERENCIA : refiere
     USUARIO |o--o{ SUGERENCIA : decide
     SUGERENCIA |o--o| REMISION : genera
-
+    REMISION ||--o{ LINEA_REMISION : detalla
     ZONA ||--o{ REPORTE_NECESIDAD : reporta
     CATEGORIA ||--o{ REPORTE_NECESIDAD : refiere
-    USUARIO ||--o{ REPORTE_NECESIDAD : "registra · Receptor"
 
     EMERGENCIA {
         uuid id PK "clúster Raíz y catálogo"
@@ -824,31 +810,38 @@ erDiagram
     USUARIO {
         uuid id PK "clúster Identidad"
     }
-    REMISION {
-        uuid id PK "clúster Custodia"
-    }
     SUGERENCIA {
         uuid id PK
-        uuid emergencia_id FK
         uuid acopio_id FK
         uuid zona_id FK
         uuid categoria_id FK
-        uuid decidida_por FK
         numeric puntaje
         text estado
+    }
+    REMISION {
+        uuid id PK
+        uuid acopio_origen_id FK
+        uuid zona_destino_id FK "null = despacho general"
+        text qr_token UK
+        text estado
+    }
+    LINEA_REMISION {
+        uuid id PK
+        uuid remision_id FK
+        uuid categoria_id FK
+        numeric cantidad_planeada
     }
     REPORTE_NECESIDAD {
         uuid id PK
         uuid zona_id FK
         uuid categoria_id FK
-        uuid reportado_por FK
         text nota
-        bool resuelta
-        timestamptz reportado_en
     }
 ```
 
 ### Turnos
+
+Se construye en el Bloque 5.
 
 ```mermaid
 erDiagram
@@ -864,7 +857,6 @@ erDiagram
         timestamptz inicio
         timestamptz fin
         int cupo_maximo
-        int cupos_ajuste_manual
         text estado
     }
     RESERVA {
@@ -884,6 +876,7 @@ erDiagram
     ACOPIO  ||--o{ USUARIO_ASIGNACION : "ubicacion_tipo=ACOPIO"
     ZONA    ||--o{ USUARIO_ASIGNACION : "ubicacion_tipo=ZONA"
     USUARIO ||--o{ INVITACION : recibe
+    USUARIO ||--o{ VERIFICACION_CORREO : "confirma · Donador"
     USUARIO ||--o{ BITACORA : genera
     USUARIO |o--o| IDENTIDAD_LOCAL : "supabase_uid = id, solo local"
 
@@ -897,9 +890,10 @@ erDiagram
         uuid id PK
         citext username UK "null solo si DONADOR"
         citext correo UK "obligatorio si DONADOR"
-        uuid supabase_uid UK
-        text rol
-        text estado
+        uuid supabase_uid UK "null mientras el Donador no confirma"
+        text rol "ADMIN OPERADOR AUDITOR RECEPTOR DONADOR"
+        text estado "INVITADO | ACTIVO | SUSPENDIDO"
+        timestamptz tokens_validos_desde
     }
     USUARIO_ASIGNACION {
         uuid usuario_id PK,FK
@@ -910,16 +904,24 @@ erDiagram
     INVITACION {
         uuid id PK
         uuid usuario_id FK
-        uuid creada_por FK
-        bytea token_hash
+        bytea token_hash UK
         timestamptz expira_en
+        bool es_restablecimiento
+    }
+    VERIFICACION_CORREO {
+        uuid id PK
+        uuid usuario_id FK
+        bytea token_hash UK
+        timestamptz vence_en "48 horas"
+        timestamptz usado_en
     }
     BITACORA {
         uuid id PK
-        uuid usuario_id FK
+        uuid usuario_id FK "null en tareas del sistema"
         text accion
         text entidad "sin FK real, audita cualquier tabla"
-        uuid entidad_id "sin FK real"
+        uuid entidad_id
+        bool destacado
     }
     IDENTIDAD_LOCAL {
         uuid id PK "sin FK real, como Supabase"
@@ -928,14 +930,32 @@ erDiagram
     }
 ```
 
+### Notificaciones
+
+`correo_saliente` no tiene llaves foráneas: guarda el destinatario como texto. Cada
+servicio lo encola dentro de la transacción de la operación, y una tarea programada
+envía cada minuto.
+
+```mermaid
+erDiagram
+    CORREO_SALIENTE {
+        uuid id PK
+        citext destinatario
+        text asunto
+        text estado "PENDIENTE | ENVIADO | FALLIDO"
+        int intentos
+        timestamptz enviar_despues_de
+        timestamptz enviado_en "obligatoria si ENVIADO"
+    }
+```
+
 ### Roles secundarios de `usuario` no dibujados
 
-Varias tablas referencian a `usuario` más de una vez con roles distintos —
-`entidad.verificada_por`, `comprobante.verificado_por`, `sugerencia.decidida_por`,
-`invitacion.creada_por`, `usuario_asignacion.asignado_por`,
-`remision_comprobante.vinculado_por`—. Cada clúster dibuja solo
-su relación principal con `usuario` para no saturar el diagrama; las demás quedan
-documentadas en la lista de columnas de cada tabla, en [Tablas](#tablas).
+Varias tablas referencian a `usuario` más de una vez con roles distintos:
+`comprobante.recibido_por`, `comprobante.verificado_por`,
+`comprobante_movimiento.vinculado_por`, `umbral.actualizado_por`,
+`invitacion.creada_por` y `usuario_asignacion.asignado_por`, y más adelante
+`sugerencia.decidida_por`. Cada clúster dibuja solo su relación principal con
+`usuario`; las demás están en la lista de columnas de cada tabla, en [Tablas](#tablas).
 
-**Restricciones de integridad:** las mismas que ya aplican al modelo completo — ver
-la tabla de [Invariantes](#invariantes) más abajo. No se duplican aquí.
+**Restricciones de integridad:** ver la tabla de [Invariantes](#invariantes).

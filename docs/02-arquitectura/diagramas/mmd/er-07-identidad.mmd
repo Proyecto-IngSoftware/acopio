@@ -4,6 +4,7 @@ erDiagram
     ACOPIO  ||--o{ USUARIO_ASIGNACION : "ubicacion_tipo=ACOPIO"
     ZONA    ||--o{ USUARIO_ASIGNACION : "ubicacion_tipo=ZONA"
     USUARIO ||--o{ INVITACION : recibe
+    USUARIO ||--o{ VERIFICACION_CORREO : "confirma · Donador"
     USUARIO ||--o{ BITACORA : genera
     USUARIO |o--o| IDENTIDAD_LOCAL : "supabase_uid = id, solo local"
 
@@ -17,9 +18,10 @@ erDiagram
         uuid id PK
         citext username UK "null solo si DONADOR"
         citext correo UK "obligatorio si DONADOR"
-        uuid supabase_uid UK
-        text rol
-        text estado
+        uuid supabase_uid UK "null mientras el Donador no confirma"
+        text rol "ADMIN OPERADOR AUDITOR RECEPTOR DONADOR"
+        text estado "INVITADO | ACTIVO | SUSPENDIDO"
+        timestamptz tokens_validos_desde
     }
     USUARIO_ASIGNACION {
         uuid usuario_id PK,FK
@@ -30,16 +32,24 @@ erDiagram
     INVITACION {
         uuid id PK
         uuid usuario_id FK
-        uuid creada_por FK
-        bytea token_hash
+        bytea token_hash UK
         timestamptz expira_en
+        bool es_restablecimiento
+    }
+    VERIFICACION_CORREO {
+        uuid id PK
+        uuid usuario_id FK
+        bytea token_hash UK
+        timestamptz vence_en "48 horas"
+        timestamptz usado_en
     }
     BITACORA {
         uuid id PK
-        uuid usuario_id FK
+        uuid usuario_id FK "null en tareas del sistema"
         text accion
         text entidad "sin FK real, audita cualquier tabla"
-        uuid entidad_id "sin FK real"
+        uuid entidad_id
+        bool destacado
     }
     IDENTIDAD_LOCAL {
         uuid id PK "sin FK real, como Supabase"

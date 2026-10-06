@@ -1,17 +1,14 @@
 %%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Segoe UI, Arial, sans-serif","fontSize":"15px","primaryColor":"#E6F4F4","primaryTextColor":"#1C1917","primaryBorderColor":"#0F6E6E","secondaryColor":"#C7E8E8","tertiaryColor":"#FAFAF9","lineColor":"#57534E","textColor":"#1C1917","mainBkg":"#E6F4F4","nodeBorder":"#0F6E6E","clusterBkg":"#F5F5F4","clusterBorder":"#A8A29E","edgeLabelBackground":"#FFFFFF","attributeBackgroundColorOdd":"#FFFFFF","attributeBackgroundColorEven":"#F5F5F4"},"er":{"useMaxWidth":false},"flowchart":{"useMaxWidth":false,"htmlLabels":true,"curve":"basis"}}}%%
 erDiagram
     direction LR
-    ACOPIO ||--o{ MOVIMIENTO : "ubicacion_tipo=ACOPIO"
-    ZONA   ||--o{ MOVIMIENTO : "ubicacion_tipo=ZONA"
+    ACOPIO ||--o{ MOVIMIENTO : registra
     CATEGORIA ||--o{ MOVIMIENTO : clasifica
-    USUARIO ||--o{ MOVIMIENTO : registra
-    COMPROBANTE |o--o{ MOVIMIENTO : concilia
-    REMISION    |o--o{ MOVIMIENTO : origina
+    USUARIO ||--o{ MOVIMIENTO : captura
+    ACOPIO ||--o{ SALDO : tiene
+    CATEGORIA ||--o{ SALDO : suma
+    MOVIMIENTO }o--|| SALDO : "actualiza por disparador"
 
     ACOPIO {
-        uuid id PK "clúster Red"
-    }
-    ZONA {
         uuid id PK "clúster Red"
     }
     CATEGORIA {
@@ -20,25 +17,25 @@ erDiagram
     USUARIO {
         uuid id PK "clúster Identidad"
     }
-    COMPROBANTE {
-        uuid id PK "clúster Custodia"
-    }
-    REMISION {
-        uuid id PK "clúster Custodia"
-    }
     MOVIMIENTO {
-        uuid id PK
-        text ubicacion_tipo
-        uuid ubicacion_id "sin FK real"
+        uuid id PK "id del cliente: la cola sin red no duplica"
+        uuid acopio_id FK
         uuid categoria_id FK
         uuid usuario_id FK
-        uuid comprobante_id FK
-        uuid remision_id FK
-        numeric cantidad
+        text tipo "ENTRADA | SALIDA | AJUSTE"
+        numeric cantidad "> 0"
         smallint signo
-        text tipo
+        text motivo_salida "solo SALIDA"
+        text motivo "AJUSTE: 10 caracteres o más"
+        date vence_en "solo ENTRADA perecedera"
         timestamptz ocurrido_en
         timestamptz registrado_en
-        date vence_en "obligatoria si es perecedera"
-        text motivo "obligatorio si AJUSTE"
+        bool origen_offline
+        bigint secuencia UK
+    }
+    SALDO {
+        uuid acopio_id PK,FK
+        uuid categoria_id PK,FK
+        numeric cantidad ">= 0"
+        timestamptz ultimo_movimiento
     }

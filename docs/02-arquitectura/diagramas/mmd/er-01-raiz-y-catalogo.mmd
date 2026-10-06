@@ -2,37 +2,42 @@
 erDiagram
     CATEGORIA ||--o{ CANASTA_ESTANDAR : define
     CATEGORIA ||--o{ CODIGO_BARRAS : identifica
+    USUARIO ||--o{ CODIGO_BARRAS : asocia
 
+    USUARIO {
+        uuid id PK "clúster Identidad"
+    }
     EMERGENCIA {
         uuid id PK
         text nombre
         text estado "ACTIVA | EN_SEGUIMIENTO | CERRADA"
         date destacada_hasta "al pasarla, EN_SEGUIMIENTO"
         int horizonte_dias
+        timestamptz cerrada_en "obligatoria si CERRADA"
     }
     CONFIGURACION_MOTOR {
-        smallint id PK "fila única"
+        smallint id PK "Bloque 4 · fila única"
         jsonb pesos "globales · suman 1"
-        numeric cantidad_minima
-        uuid actualizado_por FK "usuario · clúster Identidad"
     }
     CATEGORIA {
         uuid id PK
-        text nombre
-        text unidad_base
+        text nombre UK
+        text grupo
+        text unidad_base "LITRO | KILOGRAMO | UNIDAD"
         bool perecedero
+        bool archivada
     }
     CANASTA_ESTANDAR {
         uuid id PK
         uuid categoria_id FK
         numeric cantidad_persona_dia
         text fuente
-        date vigente_desde
+        date vigente_desde "UK con categoria_id"
     }
     CODIGO_BARRAS {
         text ean PK
         uuid categoria_id FK
-        uuid creado_por FK "usuario · clúster Identidad"
+        numeric contenido "opcional, en unidad base"
+        uuid creado_por FK
         bool revisado
-        numeric contenido "opcional"
     }

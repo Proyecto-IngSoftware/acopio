@@ -3,7 +3,7 @@ title: "Vista general de arquitectura"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-05
+actualizado: 2026-10-06
 ---
 
 # Vista general de arquitectura
@@ -57,8 +57,8 @@ flowchart TB
         Web["web<br/>nginx + build de Vite"]
 
         subgraph API["api · NestJS · monolito modular"]
-            Dominio["Módulos de dominio<br/>identidad · catalogo · acopios · inventario<br/>comprobantes · motor · turnos · importacion"]
-            Transversales["Módulos transversales<br/>auditoria · notificaciones · almacenamiento"]
+            Dominio["Módulos de dominio<br/>identidad · catalogo · acopios · inventario · comprobantes<br/>pendientes: motor · turnos · importacion"]
+            Transversales["Módulos transversales<br/>auditoria · notificaciones · almacenamiento · salud"]
             Tareas["Tareas programadas<br/>@nestjs/schedule"]
         end
 
@@ -87,9 +87,18 @@ servidor SMTP para el correo, Nominatim para buscar direcciones y RedAcopio para
 importar puntos referenciados. Supabase usa el mismo servidor SMTP para sus correos.
 
 **El almacenamiento nunca se expone.** Todo archivo pasa por la API, que entrega URLs
-firmadas de expiración corta. Es Garage, compatible con S3
+firmadas de cinco minutos. Es Garage, compatible con S3
 ([ADR-0012](adr/ADR-0012-almacenamiento-garage.md)); la API le habla por la API de
-S3, así que cambiar de servidor es configuración.
+S3, así que cambiar de servidor es configuración. Esas URL las abre el navegador, así
+que tienen que apuntar a un host que el navegador alcance: en desarrollo la API firma
+con `S3_URL_PUBLICA` (`http://localhost:3900`). Cómo se expone esa lectura en
+producción sin abrir el resto de Garage sigue abierto en P-041 (#26).
+
+**Lo que corre hoy.** Mientras el desarrollo es local (P-032), todo se levanta con
+Docker Compose: `db`, `storage` (Garage), `mailpit` para ver los correos y la `api`.
+La web corre con Vite y todavía no tiene servicio en el Compose. El inicio de sesión
+usa el adaptador `local` de `ProveedorIdentidad` (P-025); Supabase Auth entra con el
+primer despliegue.
 
 **El `proxy: nginx` de antes lo reemplaza Traefik.** Dokploy lo trae incluido:
 mismas reglas de enrutamiento (`/` a `web`, `/api` y `/files` a `api`), y encima
@@ -102,16 +111,20 @@ Un módulo NestJS por límite de dominio. Sin dependencias circulares; cuando do
 módulos necesitan hablarse, lo hacen por una interfaz declarada, no importando
 clases internas.
 
+Construidos al 2026-10-06: `identidad`, `auditoria`, `catalogo`, `notificaciones`,
+`salud`, `acopios`, `inventario`, `comprobantes` y `almacenamiento`. Faltan `motor`
+(Bloque 4), `turnos` (Bloque 5) e `importacion`.
+
 | Módulo | Responsabilidad | Expone |
 |---|---|---|
 | `identidad` | Usuarios, invitaciones, auto-registro de Donador, roles, asignaciones, guard | `AuthGuard`, `ScopeGuard`, `UsuarioService` |
 | `catalogo` | Categorías, unidades, canasta, códigos de barras, emergencias | `CategoriaService`, `CanastaService` |
 | `acopios` | Acopios operados y referenciados, zonas, entidades, causas y su archivado. Búsqueda por dirección con Nominatim y caché | `UbicacionService` |
 | `inventario` | Movimientos, saldos, umbrales, no recibir | `MovimientoService`, `SaldoService` |
-| `comprobantes` | Preparación por escaneo, sugerencia de acopio, recepción, conciliación, folios | `ComprobanteService` |
+| `comprobantes` | Donaciones preparadas con folio, sugerencia de acopio, factura, recepción por folio, conciliación, seguimiento público y tareas de vencimiento y retención | `DonacionesService`, `RecepcionService`, `ConciliacionService` |
 | `motor` | Déficit, superávit, sugerencias, remisiones y despacho general, vínculo folio–remisión, necesidad reportada | `MotorService`, `RemisionService` |
 | `turnos` | Jornadas, reservas, cupos | `JornadaService` |
-| `auditoria` | Bitácora | `BitacoraService`, interceptor global |
+| `auditoria` | Bitácora. Cada servicio la escribe en la misma transacción que el cambio; no hay interceptor | `BitacoraService` |
 | `notificaciones` | Correo por SMTP: invitaciones, reservas, avisos de folio y de acopio cerrado. Envío con reintentos | `NotificacionService` |
 | `almacenamiento` | Archivos en Garage, por la API de S3: facturas, evidencias de remisión, documentos de verificación, logotipos. URLs firmadas | `AlmacenamientoService` |
 | `importacion` | Puntos referenciados desde fuentes externas, un adaptador por fuente ([RF-RED-011](../01-requerimientos/funcionales/red.md#rf-red-011--importar-acopios-de-una-fuente-externa)) | `ImportadorService` |

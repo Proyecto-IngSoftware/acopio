@@ -3,7 +3,7 @@ title: "Especificaciones — índice"
 type: moc
 tags: [moc, spec]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-06
 ---
 
 # Especificaciones — índice
@@ -17,12 +17,12 @@ construcción.
 | [2026-09-28 · Bloque 0 · Cimientos](2026-09-28-bloque-0-cimientos-design.md) | Monorepo, Docker, Prisma, identidad, catálogo | Aprobada |
 | [2026-09-30 · Interfaz · Ciclo 1](2026-09-30-interfaz-ciclo-1-portada-design.md) | Flujo con Stitch, `apps/web`, tokens, componentes base y la Portada | Aprobada |
 | [2026-09-30 · Interfaz · Ciclo 2](2026-09-30-interfaz-ciclo-2-acceso-design.md) | Sesión en cookie, C01 Entrar y Activar cuenta, cabeceras compartidas | Aprobada |
-| Bloque 1 · Red | Acopios, zonas, entidades, mapa, home | ⬜ pendiente |
-| Bloque 2 · Inventario | Movimientos, saldos, umbrales, entrada rápida | ⬜ pendiente |
-| Bloque 3 · Custodia | Comprobantes, conciliación, folios | ⬜ pendiente |
+| [2026-09-30 · Bloque 1 · Red](2026-09-30-bloque-1-red-design.md) | Acopios, zonas, entidades, mapa, home | Aprobada · construido |
+| [2026-10-01 · Bloque 2 · Inventario](2026-10-01-bloque-2-inventario-design.md) | Movimientos, saldos, umbrales, entrada rápida, captura sin conexión | Aprobada · construido |
+| [2026-10-05 · Bloque 3 · Custodia](2026-10-05-bloque-3-custodia-design.md) | Donador, comprobantes con folio, factura en Garage, recepción, conciliación, seguimiento | Aprobada · API e interfaz del Donador construidas; falta la consola (#34) |
 | Bloque 4 · Motor | Déficit, sugerencias, remisiones | ⬜ pendiente |
 | Bloque 5 · Turnos | Jornadas, reservas, aforo | ⬜ pendiente |
-| Bloque 6 · Extras | Offline, bitácora, transparencia | ⬜ pendiente |
+| Bloque 6 · Extras | Bitácora enriquecida, transparencia, publicaciones | ⬜ pendiente |
 
 ## Cadena de trabajo
 

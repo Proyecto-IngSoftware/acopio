@@ -1,23 +1,11 @@
 %%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Segoe UI, Arial, sans-serif","fontSize":"15px","primaryColor":"#E6F4F4","primaryTextColor":"#1C1917","primaryBorderColor":"#0F6E6E","secondaryColor":"#C7E8E8","tertiaryColor":"#FAFAF9","lineColor":"#57534E","textColor":"#1C1917","mainBkg":"#E6F4F4","nodeBorder":"#0F6E6E","clusterBkg":"#F5F5F4","clusterBorder":"#A8A29E","edgeLabelBackground":"#FFFFFF","attributeBackgroundColorOdd":"#FFFFFF","attributeBackgroundColorEven":"#F5F5F4"},"er":{"useMaxWidth":false},"flowchart":{"useMaxWidth":false,"htmlLabels":true,"curve":"basis"}}}%%
 erDiagram
-    ACOPIO ||--o{ JORNADA : abre
-    JORNADA ||--o{ RESERVA : recibe
-
-    ACOPIO {
-        uuid id PK "clúster Red"
-    }
-    JORNADA {
+    CORREO_SALIENTE {
         uuid id PK
-        uuid acopio_id FK
-        timestamptz inicio
-        timestamptz fin
-        int cupo_maximo
-        text estado
-    }
-    RESERVA {
-        uuid id PK
-        uuid jornada_id FK
-        text correo
-        text codigo UK
-        text estado
+        citext destinatario
+        text asunto
+        text estado "PENDIENTE | ENVIADO | FALLIDO"
+        int intentos
+        timestamptz enviar_despues_de
+        timestamptz enviado_en "obligatoria si ENVIADO"
     }

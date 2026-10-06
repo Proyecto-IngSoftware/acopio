@@ -9,8 +9,8 @@ flowchart TB
         Web["web<br/>nginx + build de Vite"]
 
         subgraph API["api · NestJS · monolito modular"]
-            Dominio["Módulos de dominio<br/>identidad · catalogo · acopios · inventario<br/>comprobantes · motor · turnos · importacion"]
-            Transversales["Módulos transversales<br/>auditoria · notificaciones · almacenamiento"]
+            Dominio["Módulos de dominio<br/>identidad · catalogo · acopios · inventario · comprobantes<br/>pendientes: motor · turnos · importacion"]
+            Transversales["Módulos transversales<br/>auditoria · notificaciones · almacenamiento · salud"]
             Tareas["Tareas programadas<br/>@nestjs/schedule"]
         end
 

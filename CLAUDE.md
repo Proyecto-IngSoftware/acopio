@@ -18,7 +18,7 @@ bun run servicios:todo                    # además construye y levanta la api e
 bun run almacenamiento:iniciar            # la primera vez: llave y bucket de Garage
 bun run --filter @acopio/api db:migrar
 bun run --filter @acopio/api seed         # idempotente
-bun run --filter @acopio/api seed:demo    # acopios, usuarios por rol (contraseña demo-acopio-2026) e inventario de prueba
+bun run --filter @acopio/api seed:demo    # acopios, usuarios por rol y donador1@demo.acopio.local (contraseña demo-acopio-2026), inventario y donaciones de prueba
 bun run --filter @acopio/api start:dev    # API con recarga en localhost:3000/api
 bun run --filter @acopio/web dev          # web en localhost:5173
 
@@ -59,7 +59,7 @@ Monorepo con workspaces de Bun:
 
 ### Módulos de la API
 
-Cada carpeta de `apps/api/src/modulos/` es un límite de dominio. Hoy existen `identidad`, `auditoria`, `catalogo`, `notificaciones`, `salud`, `acopios` e `inventario` (movimientos, saldos, umbrales y «no recibir»; los códigos de barras viven en `catalogo`); faltan `comprobantes`, `motor`, `turnos`, `almacenamiento` e `importacion`.
+Cada carpeta de `apps/api/src/modulos/` es un límite de dominio. Hoy existen `identidad`, `auditoria`, `catalogo`, `notificaciones`, `salud`, `acopios`, `inventario` (movimientos, saldos, umbrales y «no recibir»; los códigos de barras viven en `catalogo`), `comprobantes` (donaciones con folio, recepción, conciliación y seguimiento) y `almacenamiento` (Garage por S3, hoja del grafo); faltan `motor`, `turnos` e `importacion`.
 
 Quién puede importar a quién está en la tabla «Dependencias permitidas» de `docs/02-arquitectura/vista-general.md`, y `apps/api/.dependency-cruiser.cjs` la hace cumplir. Un módulo nuevo se agrega a las dos. `comun/`, `config/` y `generado/` no son módulos y los usa cualquiera; los decoradores de autorización viven en `comun/autorizacion` para evitar un ciclo entre `identidad` y `auditoria`.
 
@@ -118,7 +118,7 @@ Hoy el único que trabaja en el repositorio es Joseph. La documentación reparte
 Para retomar entre sesiones, leer en este orden:
 
 1. `git status`, la rama actual y `gh pr list`, para ver si quedó trabajo sin subir o sin fusionar.
-2. El plan vigente en `docs/05-planes/`. Su tabla de estado dice qué tarea está hecha y qué le falta.
+2. El plan vigente en `docs/05-planes/`. Su tabla de estado dice qué tarea está hecha y qué le falta. Los issues abiertos son el plan de trabajo: uno por bloque o ciclo pendiente (etiquetas `bloque-N`) y uno por pendiente técnico (`deuda`).
 3. `docs/01-requerimientos/pendientes.md`, sección «Abiertos», y `gh issue list`.
 4. `gh run list --limit 5`, para confirmar que `main` está en verde antes de empezar algo nuevo.
 

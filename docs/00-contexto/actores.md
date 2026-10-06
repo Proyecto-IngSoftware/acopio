@@ -3,7 +3,7 @@ title: "Actores"
 type: contexto
 tags: [contexto]
 estado: vigente
-actualizado: 2026-09-12
+actualizado: 2026-10-06
 ---
 
 # Actores
@@ -75,6 +75,11 @@ una iglesia que recaudó en especie y necesita demostrar en qué se usó.
   escaneadas, no como sustituto.
 - **Alcance:** ninguno fijo — elige a qué acopio entregar en cada donación, y
   puede terminar entregando en otro con el mismo folio.
+- **Cómo entra (construido en el Bloque 3):** crea la cuenta con nombre y correo; el
+  enlace del correo le pide elegir la contraseña y abre la sesión (P-040). Entra con
+  correo y contraseña desde «Mi cuenta de Donador» (P13), no por la consola. Puede
+  tener hasta cinco donaciones preparadas a la vez, y cada una vence a los siete días
+  si no la entrega.
 
 ---
 

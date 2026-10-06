@@ -3,7 +3,7 @@ title: "Requerimientos — índice"
 type: moc
 tags: [moc, requerimientos]
 estado: vigente
-actualizado: 2026-09-28
+actualizado: 2026-10-06
 ---
 
 # Requerimientos — índice
@@ -12,7 +12,7 @@ La carpeta que más se mueve. Se revisa **cada semana**.
 
 | Nota | Qué guarda |
 |---|---|
-| [funcionales/](funcionales/) | 60 requerimientos `RF` numerados, un archivo por módulo |
+| [funcionales/](funcionales/) | 75 requerimientos `RF` vigentes, un archivo por módulo (más RF-CMP-001, descartado) |
 | [no-funcionales.md](no-funcionales.md) | 13 `RNF`, cada uno con su forma de verificación |
 | [historias/](historias/) | Historias de usuario, complemento de los `RF` |
 | [pendientes.md](pendientes.md) | **Bandeja de entrada.** Todo lo nuevo aterriza aquí |

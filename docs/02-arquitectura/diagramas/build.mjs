@@ -65,7 +65,7 @@ const TEMA = {
 const conTema = (codigo) => `%%{init: ${JSON.stringify(TEMA)}}%%\n${codigo}`;
 
 // ── Modelo de datos ───────────────────────────────────────────────────────
-const er = seccion(modelo, '## Diagrama entidad-relación (Avance 3)');
+const er = seccion(modelo, '## Diagrama entidad-relación');
 const partes = er.split(/\n### /);
 const introER = prosa(partes[0]);
 const clusters = [];

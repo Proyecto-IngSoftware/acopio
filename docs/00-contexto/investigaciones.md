@@ -3,7 +3,7 @@ title: "Investigaciones — evidencia de decisiones de diseño"
 type: contexto
 tags: [contexto]
 estado: vigente
-actualizado: 2026-09-28
+actualizado: 2026-10-06
 ---
 
 # Investigaciones — evidencia de decisiones de diseño
@@ -240,6 +240,12 @@ los acopios durante la respuesta ni las emergencias simultáneas.
   manifiesto se parece a conciliar lo declarado contra lo confirmado (RF-08); rechazar
   sin almacenar se parece a «no recibir» (RF-06); y la prioridad por plazo es candidata
   para la urgencia del reporte de necesidad (RF-13), por evaluar.
+
+**Decisión del 2026-10-06:** Joseph decidió citar el protocolo de la ANDI como la fuente
+de ADR-0010 y no buscar otra. El protocolo no habla de varias emergencias a la vez; lo
+que sí dice (el acopio no recibe donaciones marcadas por quien las entrega y las dirige
+a donde las pide quien coordina) es la base de la que el equipo deduce que un acopio
+no pertenece a una emergencia. Esa deducción queda escrita como tal en ADR-0010.
 
 ---
 

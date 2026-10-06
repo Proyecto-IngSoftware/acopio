@@ -5,7 +5,7 @@ tags: [arquitectura, adr]
 estado: vigente
 adr: 10
 decision: aceptada
-actualizado: 2026-09-14
+actualizado: 2026-10-06
 ---
 
 # ADR-0010 · Varias emergencias activas; el acopio no pertenece a ninguna
@@ -39,6 +39,10 @@ Dos hechos cambiaron el cuadro el 2026-09-14:
    coordina a partir de la evaluación de necesidades— sí la respalda el protocolo de
    la ANDI de 2019
    ([I-005](../../00-contexto/investigaciones.md#i-005--un-centro-de-acopio-atiende-varias-emergencias-a-la-vez)).*
+
+   *2026-10-06: el equipo adopta el protocolo de la ANDI como la fuente de esta
+   decisión y no buscará otra. La parte multiemergencia queda como deducción del
+   equipo a partir de lo que el protocolo sí dice.*
 
 Además, una emergencia vieja puede seguir teniendo zonas con déficit real mientras la
 atención pública se va a la nueva. El sistema no debe amplificar ese sesgo: es el
