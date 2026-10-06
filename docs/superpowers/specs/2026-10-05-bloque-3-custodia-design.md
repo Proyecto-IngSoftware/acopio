@@ -2,7 +2,7 @@
 title: "Bloque 3 · Custodia · especificación"
 type: spec
 tags: [spec, bloque-3]
-estado: borrador
+estado: vigente
 bloque: 3
 actualizado: 2026-10-05
 ---
@@ -10,7 +10,7 @@ actualizado: 2026-10-05
 # Bloque 3 · Custodia · especificación
 
 **Fecha:** 2026-10-05
-**Estado:** escrita el 2026-10-05 a partir del diseño acordado con Joseph; falta su revisión
+**Estado:** aprobada por Joseph el 2026-10-05
 **Deriva de:** [especificación general](2026-08-20-acopio-design.md) §13,
 [RF-CMP](../../01-requerimientos/funcionales/comprobantes.md),
 [RF-IDE-013](../../01-requerimientos/funcionales/identidad.md#rf-ide-013--auto-registro-de-donador),
