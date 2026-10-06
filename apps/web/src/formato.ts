@@ -16,3 +16,16 @@ export function haceCuanto(fecha: string, ahora = new Date()): string {
   const dias = Math.floor(horas / 24);
   return dias === 1 ? 'hace 1 día' : `hace ${dias} días`;
 }
+
+/** «3 oct, 9:12 a. m.», en hora de Colombia sin importar la zona del navegador. */
+export function fechaHora(fecha: string): string {
+  const texto = new Date(fecha).toLocaleString('es-CO', {
+    timeZone: 'America/Bogota',
+    day: 'numeric',
+    month: 'short',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
+  return texto.replace(' de ', ' ');
+}
