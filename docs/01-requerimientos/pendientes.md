@@ -722,6 +722,15 @@ Hay que decidir entre exponer solo la ruta de lectura de Garage o un proxy en la
 registrarlo en un ADR.
 **Estado:** ABIERTO (solo producción).
 
+### P-042 · Correo de contacto para los datos personales
+**Fecha:** 2026-10-06 · **Propuesto por:** Joseph
+**Qué:** P12 (Privacidad) tiene que decir a qué correo escribir para conocer, actualizar o
+borrar los datos (Ley 1581 de 2012). El proyecto todavía no tiene uno. El diseño de Stitch
+traía `privacidad@acopio.co`, que no existe.
+**Por qué:** salió al aprobar la maqueta del ciclo 1 del Bloque 3. Mientras no haya correo, la
+web lo lee de una sola constante y P12 muestra el texto sin dirección.
+**Estado:** ABIERTO.
+
 ---
 
 ## Resueltos

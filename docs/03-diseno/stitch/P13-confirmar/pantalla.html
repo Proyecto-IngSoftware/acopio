@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>Confirmar correo del Donador - Acopio</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#0F6E6E',
+              dark: '#0A4F4F',
+              light: '#E6F5F5',
+              hover: '#0c5c5c'
+            },
+            surface: {
+              page: '#FAFAF9',
+              card: '#FFFFFF',
+              muted: '#F5F5F4',
+              border: '#E7E5E4'
+            },
+            ink: {
+              primary: '#1C1917',
+              secondary: '#57534E',
+              tertiary: '#78716C'
+            },
+            error: {
+              DEFAULT: '#DC2626',
+              bg: '#FEF2F2',
+              border: '#FECACA'
+            },
+            success: {
+              DEFAULT: '#16A34A',
+              bg: '#F0FDF4',
+              border: '#BBF7D0'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif']
+          },
+          borderRadius: {
+            'card': '12px',
+            'btn': '10px'
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+</head>
+<body class="bg-surface-page text-ink-primary font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-brand-light selection:text-brand-dark">
+
+  <!-- Mobile Viewport Container (~390px, max-w-md) -->
+  <div class="w-full max-w-md mx-auto min-h-screen bg-surface-page flex flex-col">
+
+    <!-- 1. Cabecera del portal con logo institucional -->
+    <header class="w-full bg-white border-b border-surface-border px-4 py-3 flex items-center justify-between sticky top-0 z-30">
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-lg bg-brand flex items-center justify-center text-white shrink-0">
+          <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <span class="text-[19px] font-bold tracking-tight text-ink-primary">Acopio</span>
+          <span class="bg-brand-light text-brand-dark font-bold text-[11px] leading-tight px-1.5 py-0.5 rounded border border-brand/20">CO</span>
+        </div>
+      </div>
+      <span class="text-[13px] font-medium text-ink-secondary bg-surface-muted px-2.5 py-1 rounded-full border border-surface-border">
+        Portal Donador
+      </span>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 px-4 pt-6 pb-12 space-y-7">
+
+      <!-- ============================================== -->
+      <!-- ESTADO 1: Formulario principal de confirmación -->
+      <!-- ============================================== -->
+      <section class="space-y-5">
+        
+        <!-- Bloque de éxito / Correo verificado -->
+        <div class="flex items-start gap-3.5 bg-success-bg border border-success-border rounded-card p-4">
+          <div class="w-10 h-10 rounded-full bg-success/15 flex items-center justify-center text-success shrink-0 mt-0.5">
+            <span class="material-symbols-outlined text-[24px]">mark_email_read</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1.5 text-success font-semibold text-[14px]">
+              <span class="material-symbols-outlined text-[16px]">check_circle</span>
+              <span>Correo verificado</span>
+            </div>
+            <p class="text-[15px] text-ink-primary font-medium mt-0.5 break-all">
+              ana@correo.co
+            </p>
+          </div>
+        </div>
+
+        <!-- Encabezado de la acción -->
+        <div class="space-y-1.5">
+          <h1 class="text-[26px] font-bold text-ink-primary tracking-tight leading-tight">
+            Elige tu contraseña
+          </h1>
+          <p class="text-[16px] text-ink-secondary leading-snug">
+            Confirmaste el correo <strong class="font-semibold text-ink-primary">ana@correo.co</strong>. Ahora elige la contraseña con la que vas a entrar.
+          </p>
+        </div>
+
+        <!-- Formulario en tarjeta blanca -->
+        <form class="bg-white border border-surface-border rounded-card p-5 space-y-4 shadow-none" onsubmit="event.preventDefault();">
+          
+          <!-- Campo 1: Nombre (editable) -->
+          <div class="space-y-1.5">
+            <label for="nombre" class="block text-[15px] font-semibold text-ink-primary">
+              Nombre completo
+            </label>
+            <div class="relative">
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                value="Ana Rodríguez"
+                class="w-full h-12 px-3.5 bg-white border border-surface-border rounded-btn text-[16px] text-ink-primary font-normal focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors"
+                placeholder="Tu nombre completo"
+                required
+              />
+            </div>
+          </div>
+
+          <!-- Campo 2: Contraseña con toggle mostrar/ocultar -->
+          <div class="space-y-1.5">
+            <label for="password" class="block text-[15px] font-semibold text-ink-primary">
+              Contraseña nueva
+            </label>
+            <div class="relative">
+              <input
+                id="password"
+                name="password"
+                type="password"
+                class="w-full h-12 pl-3.5 pr-12 bg-white border border-surface-border rounded-btn text-[16px] text-ink-primary font-normal focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors placeholder:text-ink-tertiary"
+                placeholder="Escribe tu contraseña"
+                required
+              />
+              <button
+                type="button"
+                id="togglePass1"
+                onclick="
+                  const input = document.getElementById('password');
+                  const icon = this.querySelector('.material-symbols-outlined');
+                  if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.textContent = 'visibility_off';
+                  } else {
+                    input.type = 'password';
+                    icon.textContent = 'visibility';
+                  }
+                "
+                aria-label="Mostrar u ocultar contraseña"
+                class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-ink-secondary hover:text-ink-primary active:scale-95 transition-colors"
+              >
+                <span class="material-symbols-outlined text-[20px]">visibility</span>
+              </button>
+            </div>
+            <!-- Ayuda obligatoria -->
+            <p class="text-[14px] text-ink-secondary flex items-start gap-1.5 pt-0.5 leading-tight">
+              <span class="material-symbols-outlined text-[17px] text-brand shrink-0 mt-0.5">info</span>
+              <span>Mínimo 12 caracteres. Evita tu nombre o tu correo.</span>
+            </p>
+          </div>
+
+          <!-- Campo 3: Repetir contraseña -->
+          <div class="space-y-1.5">
+            <label for="repeat_password" class="block text-[15px] font-semibold text-ink-primary">
+              Repite la contraseña
+            </label>
+            <div class="relative">
+              <input
+                id="repeat_password"
+                name="repeat_password"
+                type="password"
+                class="w-full h-12 pl-3.5 pr-12 bg-white border border-surface-border rounded-btn text-[16px] text-ink-primary font-normal focus:outline-none focus:ring-2 focus:ring-brand focus:border-brand transition-colors placeholder:text-ink-tertiary"
+                placeholder="Vuelve a escribir la contraseña"
+                required
+              />
+              <button
+                type="button"
+                onclick="
+                  const input = document.getElementById('repeat_password');
+                  const icon = this.querySelector('.material-symbols-outlined');
+                  if (input.type === 'password') {
+                    input.type = 'text';
+                    icon.textContent = 'visibility_off';
+                  } else {
+                    input.type = 'password';
+                    icon.textContent = 'visibility';
+                  }
+                "
+                aria-label="Mostrar u ocultar confirmación de contraseña"
+                class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 flex items-center justify-center text-ink-secondary hover:text-ink-primary active:scale-95 transition-colors"
+              >
+                <span class="material-symbols-outlined text-[20px]">visibility</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Botón primario de ancho completo -->
+          <div class="pt-2">
+            <button
+              type="submit"
+              class="w-full min-h-[48px] h-12 bg-brand hover:bg-brand-hover active:bg-brand-dark text-white font-semibold text-[16px] rounded-btn flex items-center justify-center gap-2 transition-colors shadow-none cursor-pointer"
+            >
+              <span>Guardar y entrar</span>
+              <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+            </button>
+          </div>
+
+          <!-- Enlace legal en pequeño -->
+          <div class="text-center pt-1">
+            <a
+              href="#"
+              class="inline-flex items-center gap-1.5 text-[13px] text-ink-secondary hover:text-brand hover:underline font-medium py-1"
+            >
+              <span class="material-symbols-outlined text-[16px]">shield</span>
+              <span>Cómo usamos tus datos</span>
+            </a>
+          </div>
+
+        </form>
+      </section>
+
+      <!-- Divisor sutil informativo para mostrar el estado alternativo -->
+      <div class="relative py-2 flex items-center justify-center">
+        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-surface-border"></div></div>
+        <span class="relative bg-surface-page px-3 text-[12px] font-semibold uppercase tracking-wider text-ink-tertiary">
+          Segundo estado: caso de enlace no disponible
+        </span>
+      </div>
+
+      <!-- ============================================== -->
+      <!-- ESTADO 2: Tarjeta de error / Enlace vencido -->
+      <!-- ============================================== -->
+      <section class="space-y-2">
+        <div class="bg-white border-2 border-error/40 rounded-card p-5 space-y-4">
+          
+          <div class="flex items-start gap-3.5">
+            <div class="w-10 h-10 rounded-full bg-error-bg border border-error-border flex items-center justify-center text-error shrink-0">
+              <span class="material-symbols-outlined text-[22px]">link_off</span>
+            </div>
+            <div class="space-y-1">
+              <h2 class="text-[17px] font-bold text-ink-primary leading-tight">
+                Enlace no válido o caducado
+              </h2>
+              <p class="text-[15px] text-ink-secondary leading-snug">
+                Este enlace ya no sirve: venció o ya se usó. Regístrate otra vez para recibir uno nuevo.
+              </p>
+            </div>
+          </div>
+
+          <div class="bg-surface-muted rounded-btn p-3 text-[13px] text-ink-secondary flex items-center gap-2">
+            <span class="material-symbols-outlined text-[18px] text-ink-tertiary">timer</span>
+            <span>Los enlaces de confirmación caducan tras 24 horas por seguridad.</span>
+          </div>
+
+          <!-- Botón de acción para el error -->
+          <a
+            href="#"
+            class="w-full min-h-[48px] h-12 bg-white border-2 border-brand text-brand hover:bg-brand-light active:bg-brand/10 font-semibold text-[16px] rounded-btn flex items-center justify-center gap-2 transition-colors cursor-pointer"
+          >
+            <span class="material-symbols-outlined text-[20px]">person_add</span>
+            <span>Ir a crear cuenta</span>
+          </a>
+
+        </div>
+      </section>
+
+      <!-- Pie legal y regulatorio (sin barra inferior) -->
+      <footer class="pt-4 text-center space-y-2 border-t border-surface-border">
+        <p class="text-[12px] text-ink-tertiary leading-relaxed">
+          Plataforma oficial de coordinación y logística comunitaria · Acopio CO.<br/>
+          Protección de datos conforme a la Ley 1581 de 2012 de la República de Colombia.
+        </p>
+      </footer>
+
+    </main>
+
+  </div>
+
+</body>
+</html>

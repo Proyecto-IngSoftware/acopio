@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>P12 · Privacidad - Cómo usamos tus datos - Acopio</title>
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin=""/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <!-- Material Symbols Outlined -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <!-- Tailwind CSS v3 -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#0F6E6E',
+              dark: '#0A4F4F',
+              light: '#E6F3F3',
+              border: '#B3D7D7'
+            },
+            surface: {
+              bg: '#FAFAF9',
+              card: '#FFFFFF',
+              border: '#E7E5E4'
+            },
+            ink: {
+              primary: '#1C1917',
+              secondary: '#57534E',
+              muted: '#78716C'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-smoothing: antialiased;
+    }
+  </style>
+</head>
+<body class="bg-surface-bg text-ink-primary font-sans antialiased min-h-full flex flex-col justify-between">
+  <!-- Mobile Container -->
+  <div class="w-full max-w-md mx-auto min-h-screen flex flex-col bg-surface-bg border-x border-surface-border shadow-sm">
+    
+    <!-- 1. Cabecera del portal con botón atrás -->
+    <header class="sticky top-0 z-20 bg-white border-b border-surface-border px-4 h-14 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="#" aria-label="Volver" class="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-ink-primary hover:bg-[#F5F5F4] active:bg-surface-border transition-colors">
+          <span class="material-symbols-outlined text-[24px]">arrow_back</span>
+        </a>
+        <div class="flex items-center gap-2">
+          <div class="w-7 h-7 rounded-[6px] bg-brand flex items-center justify-center text-white shrink-0">
+            <span class="material-symbols-outlined text-[18px]">inventory_2</span>
+          </div>
+          <span class="font-bold text-[18px] tracking-tight text-ink-primary">Acopio</span>
+          <span class="bg-brand-light text-brand text-[11px] font-bold px-1.5 py-0.5 rounded">CO</span>
+        </div>
+      </div>
+      <span class="text-[13px] font-medium text-ink-muted">P12 · Privacidad</span>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="flex-1 px-4 py-6 space-y-6">
+      
+      <!-- Título y Encabezado -->
+      <section class="space-y-2">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-brand-light text-brand text-[13px] font-semibold">
+          <span class="material-symbols-outlined text-[16px]">verified_user</span>
+          <span>Protección de datos personales</span>
+        </div>
+        <h1 class="text-[26px] font-bold text-ink-primary tracking-tight leading-tight">
+          Cómo usamos tus datos
+        </h1>
+        <p class="text-[16px] text-ink-secondary leading-relaxed">
+          En Acopio la transparencia es con las ayudas, no con tu información privada. Te explicamos de forma directa qué guardamos y para qué.
+        </p>
+      </section>
+
+      <!-- Bloques de secciones requeridas -->
+      <div class="space-y-4">
+        
+        <!-- 1. Qué guardamos -->
+        <article class="bg-surface-card rounded-[12px] border border-surface-border p-4 space-y-2">
+          <div class="flex items-center gap-2.5 text-brand">
+            <span class="material-symbols-outlined text-[22px]">inventory</span>
+            <h2 class="text-[17px] font-bold text-ink-primary">Qué guardamos</h2>
+          </div>
+          <p class="text-[16px] text-ink-secondary leading-relaxed">
+            Nombre y correo de tu cuenta de Donador, los productos que preparas para entregar y, si decides subirla, la foto de la factura o comprobante de compra.
+          </p>
+        </article>
+
+        <!-- 2. Para qué -->
+        <article class="bg-surface-card rounded-[12px] border border-surface-border p-4 space-y-2">
+          <div class="flex items-center gap-2.5 text-brand">
+            <span class="material-symbols-outlined text-[22px]">fact_check</span>
+            <h2 class="text-[17px] font-bold text-ink-primary">Para qué</h2>
+          </div>
+          <p class="text-[16px] text-ink-secondary leading-relaxed">
+            Para conciliar tu donación con lo que entró físicamente al acopio. Nadie más ve tu nombre ni tu factura. El seguimiento público por folio solo muestra los insumos y su recorrido, nunca quién donó.
+          </p>
+        </article>
+
+        <!-- 3. La foto de la factura -->
+        <article class="bg-surface-card rounded-[12px] border border-surface-border p-4 space-y-2">
+          <div class="flex items-center gap-2.5 text-brand">
+            <span class="material-symbols-outlined text-[22px]">photo_camera</span>
+            <h2 class="text-[17px] font-bold text-ink-primary">La foto de la factura</h2>
+          </div>
+          <p class="text-[16px] text-ink-secondary leading-relaxed">
+            La guardamos sin datos de ubicación (metadatos GPS eliminados) y la borramos automáticamente 12 meses después de cerrar la donación.
+          </p>
+        </article>
+
+        <!-- 4. Tus derechos -->
+        <article class="bg-surface-card rounded-[12px] border border-surface-border p-4 space-y-3">
+          <div class="flex items-center gap-2.5 text-brand">
+            <span class="material-symbols-outlined text-[22px]">gavel</span>
+            <h2 class="text-[17px] font-bold text-ink-primary">Tus derechos</h2>
+          </div>
+          <p class="text-[16px] text-ink-secondary leading-relaxed">
+            Tienes derecho a conocer, actualizar y suprimir tus datos en cualquier momento según la Ley 1581 de 2012 de la República de Colombia.
+          </p>
+          <div class="pt-1">
+            <a href="mailto:privacidad@acopio.co" class="inline-flex items-center gap-2 text-brand font-semibold text-[16px] hover:underline">
+              <span class="material-symbols-outlined text-[20px]">mail</span>
+              <span>Escribe a privacidad@acopio.co</span>
+            </a>
+          </div>
+        </article>
+
+        <!-- 5. Quién responde -->
+        <article class="bg-surface-card rounded-[12px] border border-surface-border p-4 space-y-2">
+          <div class="flex items-center gap-2.5 text-brand">
+            <span class="material-symbols-outlined text-[22px]">apartment</span>
+            <h2 class="text-[17px] font-bold text-ink-primary">Quién responde</h2>
+          </div>
+          <p class="text-[16px] text-ink-secondary leading-relaxed">
+            Equipo Acopio, Escuela Tecnológica Instituto Técnico Central (ETITC).
+          </p>
+        </article>
+
+      </div>
+
+      <!-- Tarjeta destacada: Acopio no recibe dinero -->
+      <section class="bg-white rounded-[12px] border-2 border-ink-primary p-4 space-y-1.5">
+        <div class="flex items-center gap-2 text-ink-primary">
+          <span class="material-symbols-outlined text-[20px]">shield</span>
+          <span class="text-[16px] font-bold">Acopio no recibe dinero</span>
+        </div>
+        <p class="text-[15px] text-ink-secondary leading-normal">
+          Esta plataforma comunitaria no maneja transacciones bancarias ni pasarelas de pago. Todas las donaciones monetarias se realizan directamente en los canales oficiales de las entidades verificadas.
+        </p>
+      </section>
+
+      <!-- Fecha de actualización -->
+      <div class="text-center pt-2 pb-4">
+        <p class="text-[14px] text-ink-muted font-medium">
+          Actualizado: octubre de 2026
+        </p>
+      </div>
+
+    </main>
+
+    <!-- Barra de navegación inferior: Inicio, Mapa, Más (como solicitada) -->
+    <nav aria-label="Navegación principal" class="sticky bottom-0 z-30 w-full bg-white border-t border-surface-border px-4 py-1.5">
+      <div class="grid grid-cols-3 items-center">
+        <!-- 1. Inicio -->
+        <a href="#" class="flex flex-col items-center justify-center min-h-[48px] py-1 text-ink-secondary hover:text-ink-primary transition-colors">
+          <span class="material-symbols-outlined text-[24px]">home</span>
+          <span class="text-[12px] font-medium mt-0.5">Inicio</span>
+        </a>
+        <!-- 2. Mapa -->
+        <a href="#" class="flex flex-col items-center justify-center min-h-[48px] py-1 text-ink-secondary hover:text-ink-primary transition-colors">
+          <span class="material-symbols-outlined text-[24px]">map</span>
+          <span class="text-[12px] font-medium mt-0.5">Mapa</span>
+        </a>
+        <!-- 3. Más (activo en esta sección legal) -->
+        <a href="#" class="flex flex-col items-center justify-center min-h-[48px] py-1 text-brand font-semibold">
+          <div class="w-12 h-7 bg-brand-light text-brand rounded-full flex items-center justify-center mb-0.5">
+            <span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">more_horiz</span>
+          </div>
+          <span class="text-[12px] font-bold text-brand">Más</span>
+        </a>
+      </div>
+    </nav>
+
+  </div>
+</body>
+</html>

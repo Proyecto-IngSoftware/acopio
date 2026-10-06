@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-surface" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Preparar donación · Acopio</title>
+<!-- Inter Google Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration with Design System Tokens -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "tertiary-fixed": "#b2eded",
+            "secondary-fixed": "#e9e1db",
+            "on-error": "#ffffff",
+            "secondary-container": "#e9e1db",
+            "secondary": "#625e59",
+            "on-primary-container": "#9eedec",
+            "on-error-container": "#93000a",
+            "on-primary-fixed": "#002020",
+            "inverse-primary": "#85d4d3",
+            "secondary-fixed-dim": "#ccc5c0",
+            "inverse-surface": "#33302d",
+            "surface-container": "#f4ece8",
+            "surface-bright": "#fff8f5",
+            "on-tertiary-fixed": "#002020",
+            "on-primary": "#ffffff",
+            "on-secondary-fixed": "#1e1b18",
+            "on-secondary-fixed-variant": "#4a4642",
+            "primary-fixed-dim": "#85d4d3",
+            "surface": "#fafaf9",
+            "on-tertiary": "#ffffff",
+            "on-primary-fixed-variant": "#004f50",
+            "tertiary-container": "#316c6c",
+            "on-tertiary-container": "#afebea",
+            "on-surface": "#1c1917",
+            "error-container": "#ffdad6",
+            "surface-container-lowest": "#ffffff",
+            "on-surface-variant": "#57534e",
+            "surface-container-high": "#eee7e3",
+            "on-secondary": "#ffffff",
+            "primary-container": "#0f6e6e",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "primary-fixed": "#a1f0ef",
+            "surface-tint": "#03696a",
+            "surface-dim": "#e0d8d5",
+            "surface-container-highest": "#e7e5e4",
+            "outline-variant": "#e7e5e4",
+            "outline": "#6e7979",
+            "on-background": "#1c1917",
+            "surface-container-low": "#faf2ee",
+            "on-secondary-container": "#68635f",
+            "background": "#fafaf9",
+            "inverse-on-surface": "#f7efeb",
+            "tertiary-fixed-dim": "#96d1d0",
+            "tertiary": "#0a4f4f",
+            "error": "#dc2626",
+            "primary": "#0f6e6e"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.625rem", // 10px para botones
+            "xl": "0.75rem",  // 12px para tarjetas
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Tabular nums rule */
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body antialiased min-h-full flex flex-col justify-between selection:bg-tertiary-fixed selection:text-on-primary-fixed">
+<!-- Mobile Viewport Shell (Task Focused Flow: Step 2 of 3) -->
+<div class="w-full max-w-md mx-auto min-h-screen flex flex-col bg-background relative pb-28">
+<!-- Header Compacto y Accesible -->
+<header class="sticky top-0 z-40 bg-surface-container-lowest border-b border-outline-variant px-4 py-2.5">
+<div class="flex items-center justify-between min-h-[48px]">
+<!-- Botón Atrás (48px tap target) -->
+<button aria-label="Volver al paso anterior" class="w-12 h-12 -ml-2 flex items-center justify-center rounded-lg text-on-surface hover:bg-surface-container-highest/40 active:opacity-80 transition-colors" type="button">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<!-- Título Central -->
+<div class="text-center flex-1">
+<h2 class="font-headline font-bold text-[17px] text-on-surface leading-tight">Preparar donación</h2>
+</div>
+<!-- Indicador de Paso (Píldora) -->
+<div class="w-12 flex justify-end">
+<span class="text-[13px] font-semibold text-primary bg-tertiary-fixed/40 px-2 py-0.5 rounded-full whitespace-nowrap">
+            Paso 2 de 3
+          </span>
+</div>
+</div>
+<!-- Barra de Pasos Visual (3 Pasos) -->
+<div class="pt-2 pb-1 grid grid-cols-3 gap-2">
+<!-- Paso 1: Completado -->
+<div class="flex flex-col gap-1">
+<div class="h-1.5 w-full bg-primary rounded-full"></div>
+<div class="flex items-center gap-1 text-[13px] font-medium text-primary">
+<span class="material-symbols-outlined text-[14px] fill" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span>1 Qué llevas</span>
+</div>
+</div>
+<!-- Paso 2: Activo -->
+<div class="flex flex-col gap-1">
+<div class="h-1.5 w-full bg-primary rounded-full"></div>
+<div class="text-[13px] font-bold text-primary truncate">
+            2 Dónde entregar
+          </div>
+</div>
+<!-- Paso 3: Pendiente -->
+<div class="flex flex-col gap-1">
+<div class="h-1.5 w-full bg-outline-variant rounded-full"></div>
+<div class="text-[13px] font-medium text-secondary truncate">
+            3 Tu folio
+          </div>
+</div>
+</div>
+</header>
+<!-- Contenido Principal -->
+<main class="flex-1 px-4 pt-5 pb-6">
+<!-- Título de Pantalla y Contexto -->
+<section class="mb-5">
+<h1 class="font-headline font-bold text-[24px] tracking-tight text-on-surface mb-1">
+          ¿Dónde la entregas?
+        </h1>
+<p class="text-[16px] text-on-surface-variant leading-snug">
+          Primero los acopios que reciben más de lo que llevas y están abiertos
+        </p>
+</section>
+<!-- Lista de Acopios Seleccionables (Tarjetas Radio) -->
+<fieldset aria-label="Selecciona un punto de acopio" class="space-y-3 mb-5">
+<legend class="sr-only">Selecciona un punto de acopio para entregar tu donación</legend>
+<!-- Tarjeta 1: SELECCIONADA -->
+<label class="block relative bg-surface-container-lowest rounded-xl border-2 border-primary p-4 cursor-pointer transition-all bg-[#0F6E6E]/[0.03]">
+<input checked="" class="sr-only peer" name="acopio_seleccionado" type="radio" value="san_jose"/>
+<div class="flex items-start gap-3">
+<!-- Custom Radio Button UI -->
+<div class="mt-0.5 w-6 h-6 rounded-full border-2 border-primary flex items-center justify-center bg-surface-container-lowest shrink-0">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+</div>
+<!-- Información del Acopio -->
+<div class="flex-1">
+<div class="flex items-baseline justify-between gap-2">
+<span class="font-headline font-bold text-[18px] text-on-surface leading-tight">
+                  Parroquia San José
+                </span>
+<span class="text-[16px] font-semibold text-on-surface whitespace-nowrap tabular-nums">
+                  A 1,2 km
+                </span>
+</div>
+<p class="text-[15px] text-on-surface-variant mb-2.5">
+                Chapinero · Bogotá
+              </p>
+<!-- Píldoras de Estado y Capacidad -->
+<div class="flex flex-wrap gap-2 text-[14px]">
+<!-- Horario (Verde reservado estado bien/abierto directo) -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 text-[#16A34A] font-medium border border-emerald-200/60">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Abierto ahora · cierra 6:00 p. m.</span>
+</div>
+<!-- Insumos que recibe -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-highest/60 text-on-surface font-medium border border-outline-variant">
+<span class="material-symbols-outlined text-[16px] text-primary">check</span>
+<span>Recibe 3 de 3 de tus productos</span>
+</div>
+</div>
+</div>
+</div>
+</label>
+<!-- Tarjeta 2: NO SELECCIONADA -->
+<label class="block relative bg-surface-container-lowest rounded-xl border border-outline-variant p-4 cursor-pointer hover:border-secondary transition-all">
+<input class="sr-only peer" name="acopio_seleccionado" type="radio" value="el_salitre"/>
+<div class="flex items-start gap-3">
+<!-- Custom Radio Button UI -->
+<div class="mt-0.5 w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center bg-surface-container-lowest shrink-0 peer-checked:border-primary">
+<div class="w-3 h-3 rounded-full bg-transparent peer-checked:bg-primary"></div>
+</div>
+<div class="flex-1">
+<div class="flex items-baseline justify-between gap-2">
+<span class="font-headline font-bold text-[18px] text-on-surface leading-tight">
+                  Coliseo El Salitre
+                </span>
+<span class="text-[16px] font-semibold text-on-surface-variant whitespace-nowrap tabular-nums">
+                  A 3,4 km
+                </span>
+</div>
+<p class="text-[15px] text-on-surface-variant mb-2.5">
+                Teusaquillo · Bogotá
+              </p>
+<!-- Píldoras de Estado -->
+<div class="flex flex-wrap gap-2 text-[14px]">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-highest/60 text-on-surface font-medium border border-outline-variant">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Abierto ahora · cierra 8:00 p. m.</span>
+</div>
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-highest/60 text-on-surface font-medium border border-outline-variant">
+<span class="material-symbols-outlined text-[16px] text-primary">check</span>
+<span>Recibe 3 de 3 de tus productos</span>
+</div>
+</div>
+</div>
+</div>
+</label>
+<!-- Tarjeta 3: NO SELECCIONADA (Capacidad Parcial) -->
+<label class="block relative bg-surface-container-lowest rounded-xl border border-outline-variant p-4 cursor-pointer hover:border-secondary transition-all">
+<input class="sr-only peer" name="acopio_seleccionado" type="radio" value="corferias"/>
+<div class="flex items-start gap-3">
+<!-- Custom Radio Button UI -->
+<div class="mt-0.5 w-6 h-6 rounded-full border-2 border-outline-variant flex items-center justify-center bg-surface-container-lowest shrink-0 peer-checked:border-primary">
+<div class="w-3 h-3 rounded-full bg-transparent peer-checked:bg-primary"></div>
+</div>
+<div class="flex-1">
+<div class="flex items-baseline justify-between gap-2">
+<span class="font-headline font-bold text-[18px] text-on-surface leading-tight">
+                  Acopio Norte - Corferias
+                </span>
+<span class="text-[16px] font-semibold text-on-surface-variant whitespace-nowrap tabular-nums">
+                  A 4,1 km
+                </span>
+</div>
+<p class="text-[15px] text-on-surface-variant mb-2.5">
+                Corferias · Bogotá
+              </p>
+<div class="flex flex-wrap gap-2 text-[14px]">
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-surface-container-highest/60 text-on-surface font-medium border border-outline-variant">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Abierto ahora · 24 horas</span>
+</div>
+<!-- Aviso de capacidad moderada / parcial sin estridencia -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-amber-50 text-[#D97706] font-medium border border-amber-200">
+<span class="material-symbols-outlined text-[16px] fill" style="font-variation-settings: 'FILL' 1;">info</span>
+<span>Recibe 2 de 3 · no está recibiendo Agua</span>
+</div>
+</div>
+</div>
+</div>
+</label>
+</fieldset>
+<!-- Enlace / Botón Secundario: Ver Mapa Completo -->
+<div class="text-center mb-6">
+<button class="inline-flex items-center justify-center gap-2 min-h-[48px] px-4 text-[16px] font-semibold text-primary hover:bg-tertiary-fixed/30 rounded-lg transition-colors active:opacity-80" type="button">
+<span class="material-symbols-outlined text-[20px]">map</span>
+<span>Ver todos en el mapa</span>
+</button>
+</div>
+<!-- Sección: Foto de la factura (Opcional) -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-4">
+<div class="flex items-center justify-between mb-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">receipt_long</span>
+<h3 class="font-headline font-bold text-[17px] text-on-surface">Foto de la factura</h3>
+</div>
+<span class="text-[14px] font-medium text-secondary">Opcional</span>
+</div>
+<p class="text-[15px] text-on-surface-variant leading-normal mb-3">
+          Si compraste víveres o insumos hoy, subir la factura ayuda a verificar cantidades rápidamente.
+        </p>
+<!-- Botón para Tomar o Subir Foto (Min 48px touch target) -->
+<button class="w-full min-h-[48px] py-2.5 px-4 bg-surface rounded-lg border border-outline-variant font-semibold text-[16px] text-on-surface flex items-center justify-center gap-2 hover:bg-surface-container-highest transition-colors active:opacity-80" type="button">
+<span class="material-symbols-outlined text-[20px]">photo_camera</span>
+<span>Tomar o subir foto</span>
+</button>
+<!-- Legal Disclaimer Directo -->
+<p class="mt-3 text-[13px] text-secondary leading-tight">
+          La guardamos 12 meses solo para conciliar tu donación · <a class="underline hover:text-on-surface transition-colors" href="#privacidad">Cómo usamos tus datos</a>
+</p>
+</section>
+</main>
+<!-- Barra Inferior Fija (Sticky Footer) Conforme al Sistema -->
+<div class="fixed bottom-0 left-0 right-0 z-50 bg-surface-container-lowest border-t border-outline-variant px-4 py-3 pb-safe shadow-[0_-2px_6px_rgba(0,0,0,0.04)]">
+<div class="max-w-md mx-auto">
+<!-- Botón Primario: 56px de alto, Inter 700 / Semibold, color #0F6E6E -->
+<button class="w-full h-14 min-h-[56px] px-6 bg-primary hover:bg-[#0A4F4F] active:bg-[#0A4F4F] text-on-primary rounded-lg font-bold text-[16px] flex items-center justify-center gap-2 transition-colors active:opacity-90" type="button">
+<span>Preparar y ver mi folio</span>
+<span class="material-symbols-outlined text-[22px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Vanilla Interaction for Radio Cards -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const cardLabels = document.querySelectorAll('label[class*="border-"]');
+      const radioInputs = document.querySelectorAll('input[name="acopio_seleccionado"]');
+
+      radioInputs.forEach(input => {
+        input.addEventListener('change', () => {
+          cardLabels.forEach(label => {
+            const hasChecked = label.querySelector('input:checked');
+            const radioCircle = label.querySelector('.w-6 > div');
+            const radioOuter = label.querySelector('.w-6');
+
+            if (hasChecked) {
+              label.classList.add('border-primary', 'border-2', 'bg-[#0F6E6E]/[0.03]');
+              label.classList.remove('border-outline-variant', 'border');
+              if (radioOuter) {
+                radioOuter.classList.add('border-primary');
+                radioOuter.classList.remove('border-outline-variant');
+              }
+              if (radioCircle) {
+                radioCircle.classList.add('bg-primary');
+                radioCircle.classList.remove('bg-transparent');
+              }
+            } else {
+              label.classList.remove('border-primary', 'border-2', 'bg-[#0F6E6E]/[0.03]');
+              label.classList.add('border-outline-variant', 'border');
+              if (radioOuter) {
+                radioOuter.classList.remove('border-primary');
+                radioOuter.classList.add('border-outline-variant');
+              }
+              if (radioCircle) {
+                radioCircle.classList.remove('bg-primary');
+                radioCircle.classList.add('bg-transparent');
+              }
+            }
+          });
+        });
+      });
+    });
+  </script>
+</body></html>

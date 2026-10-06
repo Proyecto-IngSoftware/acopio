@@ -1,0 +1,361 @@
+<title>Portal del Donador</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap">
+<style>
+/* Tema «Acopio Field Command», el de packages/ui-tokens. Teléfonos a 360 px sobre el lienzo; un solo tema, claro, como la app. */
+:root {
+  --surface: #faf8ff; --lowest: #ffffff; --low: #f2f3ff; --container: #eaedff; --high: #e2e7ff;
+  --on-surface: #131b2e; --variant: #3f4946; --outline: #707976; --outline-variant: #bfc9c5;
+  --primary: #003730; --primary-container: #085046; --primary-fixed: #b0efe1; --on-primary: #ffffff;
+  --error: #ba1a1a; --error-container: #ffdad6; --on-error-container: #93000a;
+  --lienzo: #dae2fd;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+body { background: var(--lienzo); color: var(--on-surface); font-family: var(--sans); font-size: 16px; }
+.pagina { padding-block: 24px 48px; padding-inline: 16px; display: flex; flex-direction: column; gap: 32px; max-width: 1560px; margin: 0 auto; }
+.intro { max-width: 68ch; display: flex; flex-direction: column; gap: 8px; }
+.intro h1 { font-size: 1.625rem; line-height: 2.125rem; margin: 0; text-wrap: balance; }
+.intro p { margin: 0; color: var(--variant); line-height: 1.5; }
+.ms { font-family: 'Material Symbols Outlined', sans-serif; font-size: 22px; line-height: 1; font-weight: normal; display: inline-block; vertical-align: middle; width: 1em; overflow: hidden; }
+.telefonos { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.caso { display: flex; flex-direction: column; gap: 8px; width: 360px; max-width: 100%; min-width: 0; }
+.caso > h2 { font-size: .9375rem; font-weight: 700; color: var(--on-surface); margin: 0; }
+.caso > p { margin: 0; font-size: .875rem; color: var(--variant); line-height: 1.4; }
+.tel { background: var(--surface); border: 1px solid var(--outline-variant); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+.cabecera { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--lowest); border-bottom: 1px solid var(--outline-variant); min-height: 60px; box-sizing: border-box; }
+.logo { width: 40px; height: 40px; border-radius: 10px; background: var(--primary-container); color: var(--on-primary); display: grid; place-items: center; flex: none; }
+.marca { font-weight: 700; font-size: 1.125rem; }
+.cabecera .der { margin-left: auto; display: flex; align-items: center; gap: 8px; }
+.atras { width: 40px; height: 40px; display: grid; place-items: center; flex: none; }
+.avatar { width: 36px; height: 36px; border-radius: 999px; background: var(--primary); color: var(--on-primary); display: grid; place-items: center; font-weight: 700; font-size: .8125rem; flex: none; }
+.cuerpo { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+.titulo h3 { margin: 0; font-size: 1.5rem; line-height: 2rem; }
+.titulo p { margin: 4px 0 0; color: var(--variant); font-size: .9375rem; line-height: 1.45; }
+.pasos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; padding: 8px 16px 10px; background: var(--lowest); border-bottom: 1px solid var(--outline-variant); }
+.pasos div { display: flex; flex-direction: column; gap: 4px; font-size: .75rem; color: var(--variant); }
+.pasos div::before { content: ''; height: 4px; border-radius: 4px; background: var(--outline-variant); }
+.pasos .hecho::before, .pasos .on::before { background: var(--primary-container); }
+.pasos .on { color: var(--primary-container); font-weight: 700; }
+.pestanas { display: grid; grid-template-columns: 1fr 1fr; background: var(--container); border-radius: 10px; padding: 4px; }
+.pestanas span { min-height: 44px; display: grid; place-items: center; border-radius: 8px; font-weight: 600; color: var(--variant); }
+.pestanas .on { background: var(--lowest); color: var(--primary-container); border: 1px solid var(--outline-variant); }
+.campo-r { display: flex; flex-direction: column; gap: 6px; }
+.campo-r > span.r { font-size: .875rem; font-weight: 700; }
+.input { min-height: 52px; display: flex; align-items: center; gap: 8px; padding: 0 12px; background: var(--lowest); border: 1.5px solid var(--outline); border-radius: 8px; color: var(--on-surface); }
+.input.ph { color: var(--outline); }
+.input .ms { color: var(--variant); margin-left: auto; }
+.ayuda { font-size: .8125rem; color: var(--variant); line-height: 1.4; }
+.aviso { display: flex; gap: 10px; padding: 12px; border-radius: 10px; font-size: .9375rem; line-height: 1.4; background: var(--low); border: 1px solid var(--outline-variant); }
+.aviso .ms { flex: none; color: var(--variant); }
+.aviso.mal { background: var(--error-container); color: var(--on-error-container); border: 0; }
+.aviso.mal .ms { color: var(--on-error-container); }
+.enlace { color: var(--primary-container); font-weight: 600; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; }
+.fab { min-height: 56px; border-radius: 10px; background: var(--primary-container); color: var(--on-primary); font: 700 1rem var(--sans); display: flex; align-items: center; justify-content: center; gap: 8px; border: 0; width: 100%; }
+.btn2 { min-height: 48px; border: 1.5px solid var(--primary-container); color: var(--primary-container); background: var(--lowest); border-radius: 10px; font: 700 .9375rem var(--sans); display: flex; align-items: center; justify-content: center; gap: 6px; padding: 0 14px; }
+.textobtn { min-height: 48px; color: var(--primary-container); font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0 12px; }
+.textobtn.peligro { color: var(--error); }
+.centro { text-align: center; color: var(--variant); font-size: .9375rem; }
+.chips { display: flex; gap: 8px; overflow: hidden; }
+.chips span { min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--outline-variant); background: var(--lowest); display: grid; place-items: center; font-weight: 600; font-size: .875rem; white-space: nowrap; }
+.chips .on { background: var(--primary-container); color: var(--on-primary); border-color: var(--primary-container); }
+.tarjeta { padding: 14px; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 12px; display: flex; flex-direction: column; gap: 10px; }
+.tarjeta.sel { border: 2px solid var(--primary-container); }
+.fila { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.folio { font-family: var(--mono); font-weight: 700; font-size: 1.125rem; letter-spacing: .02em; }
+.estado { margin-left: auto; font-size: .8125rem; font-weight: 600; padding: 4px 10px; border-radius: 999px; background: var(--container); color: var(--on-surface); }
+.meta { color: var(--variant); font-size: .875rem; display: flex; align-items: center; gap: 6px; }
+.meta .ms { font-size: 18px; }
+.resumen { font-size: 1rem; font-variant-numeric: tabular-nums; }
+.acciones { display: flex; gap: 8px; flex-wrap: wrap; }
+.acciones > * { flex: 1; }
+.linea { padding: 14px; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 12px; display: flex; flex-direction: column; gap: 10px; }
+.linea .nombre { font-size: 1.125rem; font-weight: 700; }
+.linea .sub { color: var(--variant); font-size: .875rem; }
+.linea .sub code { font-family: var(--mono); }
+.cuenta { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.stepper { display: flex; align-items: center; border: 1px solid var(--outline-variant); border-radius: 10px; overflow: hidden; }
+.stepper span { min-width: 48px; min-height: 48px; display: grid; place-items: center; font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.stepper span.n { min-width: 56px; border-inline: 1px solid var(--outline-variant); }
+.base { color: var(--variant); font-size: .9375rem; font-variant-numeric: tabular-nums; }
+.base b { color: var(--on-surface); }
+.radio { width: 22px; height: 22px; border-radius: 999px; border: 2px solid var(--outline); flex: none; display: grid; place-items: center; }
+.radio.on { border-color: var(--primary-container); }
+.radio.on::after { content: ''; width: 10px; height: 10px; border-radius: 999px; background: var(--primary-container); }
+.acopio { display: flex; gap: 12px; align-items: flex-start; }
+.acopio .d { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px; }
+.acopio .d b { font-size: 1.0625rem; }
+.km { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.qr { width: 180px; height: 180px; align-self: center; display: grid; grid-template-columns: repeat(9, 1fr); gap: 2px; padding: 10px; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 12px; }
+.qr i { background: var(--on-surface); border-radius: 1px; }
+.qr i.b { background: transparent; }
+.folio-grande { font-family: var(--mono); font-weight: 700; font-size: 1.75rem; text-align: center; letter-spacing: .03em; }
+.tiempo { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.tiempo li { display: flex; gap: 12px; position: relative; padding-bottom: 16px; }
+.tiempo li:not(:last-child)::before { content: ''; position: absolute; left: 11px; top: 26px; bottom: 0; width: 2px; background: var(--outline-variant); }
+.tiempo .p { width: 24px; height: 24px; border-radius: 999px; background: var(--primary-container); color: var(--on-primary); display: grid; place-items: center; flex: none; }
+.tiempo .p .ms { font-size: 16px; }
+.tiempo .pend .p { background: var(--lowest); border: 2px solid var(--outline-variant); }
+.tiempo .pend { color: var(--outline); }
+.tiempo b { display: block; }
+.tiempo small { color: var(--variant); font-size: .875rem; }
+.tabla { border: 1px solid var(--outline-variant); border-radius: 12px; overflow: hidden; background: var(--lowest); }
+.tabla div { display: flex; justify-content: space-between; padding: 12px 14px; border-top: 1px solid var(--outline-variant); font-variant-numeric: tabular-nums; }
+.tabla div:first-child { border-top: 0; }
+.tabla b { font-weight: 700; }
+.seccion { display: flex; flex-direction: column; gap: 6px; }
+.seccion h4 { margin: 0; font-size: 1.0625rem; }
+.seccion p { margin: 0; color: var(--variant); line-height: 1.5; }
+.barra { display: grid; grid-template-columns: repeat(5, 1fr); background: var(--lowest); border-top: 1px solid var(--outline-variant); padding: 6px 0; }
+.barra div { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .6875rem; color: var(--variant); }
+.barra .on { color: var(--primary-container); font-weight: 700; }
+.foto { display: flex; align-items: center; gap: 10px; }
+.foto .mini { width: 48px; height: 48px; border-radius: 8px; background: var(--container); border: 1px solid var(--outline-variant); display: grid; place-items: center; color: var(--variant); flex: none; }
+.notas { max-width: 76ch; display: flex; flex-direction: column; gap: 8px; }
+.notas h2 { font-size: 1.25rem; margin: 0; }
+.notas ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; line-height: 1.5; color: var(--variant); }
+.notas li b { color: var(--on-surface); }
+</style>
+
+<div class="pagina">
+  <header class="intro">
+    <h1>Bloque 3 · interfaz, ciclo 1: el Donador</h1>
+    <p>Siete vistas salen de las pantallas que generó Stitch, con las diferencias de abajo aplicadas y llevadas a los tokens de la app. «Entrar» y «Tu folio» se armaron con los mismos tokens porque Stitch se cortó por tiempo al generar el folio y la pestaña «Entrar» es el mismo formulario. Los nombres, folios y cifras son de ejemplo.</p>
+  </header>
+
+  <div class="telefonos">
+    <!-- P13 crear cuenta -->
+    <section class="caso">
+      <h2>P13 · Crear cuenta</h2>
+      <p>Sin sesión. Solo nombre y correo: la contraseña se elige al confirmar (P-040).</p>
+      <div class="tel">
+        <div class="cabecera"><span class="atras"><span class="ms">arrow_back</span></span><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span></div>
+        <div class="cuerpo">
+          <div class="titulo"><h3>Tu cuenta de Donador</h3><p>Prepara tu donación antes de llevarla y síguela con su folio.</p></div>
+          <div class="pestanas"><span class="on">Crear cuenta</span><span>Entrar</span></div>
+          <label class="campo-r"><span class="r">Nombre</span><span class="input ph">Ej. Camila Morales</span></label>
+          <label class="campo-r"><span class="r">Correo</span><span class="input ph">nombre@correo.co</span></label>
+          <div class="aviso"><span class="ms">mark_email_unread</span><span>Te enviamos un enlace para confirmar el correo. Ahí eliges tu contraseña.</span></div>
+          <span class="enlace"><span class="ms">shield</span>Cómo usamos tus datos</span>
+          <button class="fab">Crear cuenta</button>
+        </div>
+        <div class="barra"><div><span class="ms">home</span>Inicio</div><div><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div><span class="ms">groups</span>Voluntariado</div><div class="on"><span class="ms">more_horiz</span>Más</div></div>
+      </div>
+    </section>
+
+    <!-- P13 registro enviado + entrar -->
+    <section class="caso">
+      <h2>P13 · Entrar</h2>
+      <p>Misma pantalla, pestaña «Entrar». Arriba, el mensaje que queda tras crear la cuenta; es igual exista o no el correo.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="atras"><span class="ms">arrow_back</span></span><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span></div>
+        <div class="cuerpo">
+          <div class="aviso"><span class="ms">mail</span><span>Te enviamos un correo para confirmar tu cuenta. Revisa también la carpeta de spam.</span></div>
+          <div class="pestanas"><span>Crear cuenta</span><span class="on">Entrar</span></div>
+          <label class="campo-r"><span class="r">Correo</span><span class="input">ana@correo.co</span></label>
+          <label class="campo-r"><span class="r">Contraseña</span><span class="input ph">••••••••••••<span class="ms">visibility</span></span></label>
+          <button class="fab">Entrar</button>
+          <p class="ayuda">Si acabas de crear la cuenta, primero abre el enlace del correo y elige tu contraseña.</p>
+        </div>
+        <div class="barra"><div><span class="ms">home</span>Inicio</div><div><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div><span class="ms">groups</span>Voluntariado</div><div class="on"><span class="ms">more_horiz</span>Más</div></div>
+      </div>
+    </section>
+
+    <!-- Confirmar -->
+    <section class="caso">
+      <h2>Confirmar correo · elegir contraseña</h2>
+      <p>Desde el enlace del correo. Guarda y entra de una vez.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span></div>
+        <div class="cuerpo">
+          <div class="titulo"><h3>Elige tu contraseña</h3><p>Confirmaste el correo <b>ana@correo.co</b>. Ahora elige la contraseña con la que vas a entrar.</p></div>
+          <label class="campo-r"><span class="r">Nombre</span><span class="input">Ana Rodríguez</span></label>
+          <label class="campo-r"><span class="r">Contraseña</span><span class="input ph">Mínimo 12 caracteres<span class="ms">visibility</span></span><span class="ayuda">Evita tu nombre o tu correo.</span></label>
+          <label class="campo-r"><span class="r">Repite la contraseña</span><span class="input ph">Escríbela otra vez<span class="ms">visibility</span></span></label>
+          <button class="fab">Guardar y entrar</button>
+          <span class="enlace" style="align-self:center"><span class="ms">shield</span>Cómo usamos tus datos</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="caso">
+      <h2>Confirmar correo · enlace vencido</h2>
+      <p>El enlace no existe, ya se usó o pasaron sus 48 horas.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span></div>
+        <div class="cuerpo">
+          <div class="aviso mal"><span class="ms">link_off</span><span>Este enlace ya no sirve: venció o ya se usó. Crea la cuenta otra vez para recibir uno nuevo.</span></div>
+          <button class="btn2">Ir a crear cuenta</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- P13 con sesión -->
+    <section class="caso">
+      <h2>P13 · Mis donaciones</h2>
+      <p>Con sesión. «Ver folio» y «Cancelar» solo en las preparadas; «Seguir» en todas.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span><span class="der"><span class="avatar">AR</span><span class="textobtn">Salir</span></span></div>
+        <div class="cuerpo">
+          <div class="titulo"><h3>Mis donaciones</h3></div>
+          <button class="fab"><span class="ms">add</span>Preparar una donación</button>
+          <div class="aviso"><span class="ms">schedule</span><span>Una donación preparada vence a los 7 días si no la entregas.</span></div>
+          <div class="chips"><span class="on">Todas</span><span>Preparadas</span><span>Recibidas</span><span>Conciliadas</span></div>
+          <div class="tarjeta">
+            <div class="fila"><span class="folio">ACO-2026-7KQ4M</span><span class="estado">Preparada</span></div>
+            <span class="meta"><span class="ms">location_on</span>Parroquia San José · hace 2 horas</span>
+            <span class="resumen">Arroz 10 kg · Agua 7,2 L · Atún 12 u</span>
+            <div class="acciones"><span class="btn2"><span class="ms">qr_code_2</span>Ver folio</span><span class="btn2">Seguir</span></div>
+            <span class="textobtn peligro">Cancelar donación</span>
+          </div>
+          <div class="tarjeta">
+            <div class="fila"><span class="folio">ACO-2026-9BL2X</span><span class="estado">Recibida en el acopio</span></div>
+            <span class="meta"><span class="ms">location_on</span>Coliseo El Salitre · hace 2 días</span>
+            <span class="resumen">Agua 24 L · Pañales 48 u</span>
+            <span class="btn2">Seguir</span>
+          </div>
+        </div>
+        <div class="barra"><div><span class="ms">home</span>Inicio</div><div><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div><span class="ms">groups</span>Voluntariado</div><div class="on"><span class="ms">more_horiz</span>Más</div></div>
+      </div>
+    </section>
+
+    <!-- P9 paso 1 -->
+    <section class="caso">
+      <h2>P9 · 1 Qué llevas</h2>
+      <p>Buscador y escáner de C4. El vencimiento aparece solo en perecederas. Con 5 preparadas se avisa antes de empezar.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="atras"><span class="ms">arrow_back</span></span><span class="marca">Preparar donación</span></div>
+        <div class="pasos"><div class="on">1 Qué llevas</div><div>2 Dónde entregar</div><div>3 Tu folio</div></div>
+        <div class="cuerpo">
+          <div class="fila" style="flex-wrap:nowrap"><span class="input ph" style="flex:1;min-width:0"><span class="ms" style="margin:0">search</span>Busca un producto</span><button class="fab" style="width:auto;padding:0 14px;min-height:52px"><span class="ms">barcode_scanner</span>Escanear</button></div>
+          <div class="linea">
+            <div class="fila"><span class="nombre">Agua potable</span><span class="ms" style="margin-left:auto;color:var(--variant)">delete</span></div>
+            <span class="sub">Botella 600 ml · <code>7702001045231</code></span>
+            <div class="cuenta"><div class="stepper"><span>−</span><span class="n">12</span><span>+</span></div><span class="base">= <b>7,2 L</b></span></div>
+          </div>
+          <div class="linea">
+            <div class="fila"><span class="nombre">Leche en polvo</span><span class="ms" style="margin-left:auto;color:var(--variant)">delete</span></div>
+            <span class="sub">Código no reconocido: la buscaste por nombre</span>
+            <div class="cuenta"><div class="stepper"><span>−</span><span class="n">3</span><span>+</span></div><span class="base">kg</span></div>
+            <label class="campo-r"><span class="r">Vence (opcional)</span><span class="input">20/11/2026<span class="ms">calendar_today</span></span></label>
+          </div>
+          <button class="fab">Siguiente: dónde entregar</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- P9 paso 2 -->
+    <section class="caso">
+      <h2>P9 · 2 Dónde entregar</h2>
+      <p>Sugerencias de la API: cobertura, abierto ahora y distancia. Lo que un acopio no recibe va en neutro.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="atras"><span class="ms">arrow_back</span></span><span class="marca">Preparar donación</span></div>
+        <div class="pasos"><div class="hecho">1 Qué llevas</div><div class="on">2 Dónde entregar</div><div>3 Tu folio</div></div>
+        <div class="cuerpo">
+          <div class="titulo"><h3>¿Dónde la entregas?</h3><p>Primero los acopios que reciben más de lo que llevas y están abiertos.</p></div>
+          <div class="tarjeta sel"><div class="acopio"><span class="radio on"></span><div class="d"><b>Parroquia San José</b><span class="meta">Chapinero · abierto, cierra 6:00 p. m.</span><span class="meta">Recibe 2 de 2 productos</span></div><span class="km">1,2 km</span></div></div>
+          <div class="tarjeta"><div class="acopio"><span class="radio"></span><div class="d"><b>Acopio Norte</b><span class="meta">Usaquén · abierto, cierra 8:00 p. m.</span><span class="meta"><span class="ms">block</span>No está recibiendo Agua potable</span></div><span class="km">4,1 km</span></div></div>
+          <span class="enlace"><span class="ms">map</span>Ver todos en el mapa</span>
+          <div class="seccion"><h4>Foto de la factura (opcional)</h4>
+            <span class="btn2"><span class="ms">photo_camera</span>Tomar o subir foto</span>
+            <p class="ayuda">La guardamos 12 meses, sin datos de ubicación, solo para conciliar tu donación. <span class="enlace" style="min-height:0">Cómo usamos tus datos</span></p></div>
+          <button class="fab">Preparar y ver mi folio</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- P9 paso 3 -->
+    <section class="caso">
+      <h2>P9 · 3 Tu folio</h2>
+      <p>Armada con los tokens: Stitch se cortó por tiempo. QR en SVG con la librería qrcode.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="marca">Preparar donación</span></div>
+        <div class="pasos"><div class="hecho">1 Qué llevas</div><div class="hecho">2 Dónde entregar</div><div class="on">3 Tu folio</div></div>
+        <div class="cuerpo">
+          <div class="titulo"><h3>Tu donación está preparada</h3></div>
+          <div class="qr" aria-label="Código QR del folio"><i></i><i></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i><i></i><i></i><i></i><i class="b"></i><i></i><i></i><i class="b"></i><i></i><i></i><i class="b"></i><i></i><i></i><i></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i><i></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i><i></i><i class="b"></i><i></i><i></i><i class="b"></i><i></i><i></i><i></i><i class="b"></i><i></i><i class="b"></i><i></i><i></i><i></i><i></i><i class="b"></i><i></i><i></i><i class="b"></i><i class="b"></i><i></i><i class="b"></i><i></i><i></i><i></i><i class="b"></i><i></i><i></i><i class="b"></i><i></i><i></i></div>
+          <span class="folio-grande">ACO-2026-7KQ4M</span>
+          <span class="btn2" style="align-self:center"><span class="ms">content_copy</span>Copiar folio</span>
+          <div class="aviso"><span class="ms">info</span><span>Muestra este folio en el acopio. Vence en 7 días si no la entregas.</span></div>
+          <div class="tarjeta"><b>Parroquia San José</b><span class="meta">Chapinero · hoy de 8:00 a. m. a 6:00 p. m.</span><span class="resumen">Agua 7,2 L · Leche en polvo 3 kg</span><span class="enlace">Ver ficha y cómo llegar</span></div>
+          <div class="foto"><span class="mini"><span class="ms">receipt_long</span></span><span>Factura adjunta</span></div>
+          <button class="fab">Ver mis donaciones</button>
+          <button class="btn2">Seguir esta donación</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- P10 -->
+    <section class="caso">
+      <h2>P10 · Seguir una donación</h2>
+      <p>Pública. La Portada lleva aquí con el folio. Nunca muestra quién donó.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span></div>
+        <div class="cuerpo">
+          <div class="titulo"><h3>Seguir una donación</h3></div>
+          <div class="fila" style="flex-wrap:nowrap"><span class="input" style="flex:1;min-width:0;font-family:var(--mono)">ACO-2026-7KQ4M</span><button class="fab" style="width:auto;padding:0 16px;min-height:52px">Buscar</button></div>
+          <div class="tarjeta">
+            <div class="fila"><span class="folio">ACO-2026-7KQ4M</span><span class="estado">Conciliada, en el acopio</span></div>
+            <ul class="tiempo">
+              <li><span class="p"><span class="ms">check</span></span><div><b>Preparada</b><small>3 oct, 9:12 a. m.</small></div></li>
+              <li><span class="p"><span class="ms">check</span></span><div><b>Recibida en Parroquia San José</b><small>4 oct, 10:40 a. m.</small></div></li>
+              <li><span class="p"><span class="ms">check</span></span><div><b>Conciliada</b><small>4 oct, 4:05 p. m.</small></div></li>
+            </ul>
+            <div class="seccion"><h4>Lo que entró al acopio</h4></div>
+            <div class="tabla"><div><span>Arroz</span><b>10 kg</b></div><div><span>Agua potable</span><b>7,2 L</b></div><div><span>Atún en lata</span><b>12 unidades</b></div></div>
+            <p class="ayuda">No mostramos quién donó.</p>
+          </div>
+        </div>
+        <div class="barra"><div class="on"><span class="ms">home</span>Inicio</div><div><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div><span class="ms">groups</span>Voluntariado</div><div><span class="ms">more_horiz</span>Más</div></div>
+      </div>
+    </section>
+
+    <section class="caso">
+      <h2>P10 · Folio no encontrado</h2>
+      <p>El mismo mensaje para un folio mal escrito y para uno que no existe.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span></div>
+        <div class="cuerpo">
+          <div class="titulo"><h3>Seguir una donación</h3></div>
+          <div class="fila" style="flex-wrap:nowrap"><span class="input" style="flex:1;min-width:0;font-family:var(--mono)">ACO-2026-ZZZZZ</span><button class="fab" style="width:auto;padding:0 16px;min-height:52px">Buscar</button></div>
+          <div class="aviso"><span class="ms">search_off</span><span>No encontramos ese folio. Revisa que esté bien escrito: se ve como ACO-2026-7KQ4M.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- P12 -->
+    <section class="caso">
+      <h2>P12 · Privacidad</h2>
+      <p>Se enlaza desde el registro y desde la foto de factura.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="atras"><span class="ms">arrow_back</span></span><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span></div>
+        <div class="cuerpo">
+          <div class="titulo"><h3>Cómo usamos tus datos</h3></div>
+          <div class="seccion"><h4>Qué guardamos</h4><p>El nombre y el correo de tu cuenta de Donador, lo que preparas y, si la subes, la foto de la factura.</p></div>
+          <div class="seccion"><h4>Para qué</h4><p>Para conciliar tu donación con lo que entró al acopio. Solo el equipo que la revisa ve tu nombre y la factura. El seguimiento público no muestra quién donó.</p></div>
+          <div class="seccion"><h4>La foto de la factura</h4><p>La guardamos sin datos de ubicación y la borramos 12 meses después de cerrar la donación.</p></div>
+          <div class="seccion"><h4>Tus derechos</h4><p>Puedes conocer, actualizar y pedir que borremos tus datos (Ley 1581 de 2012). Escríbenos a <b>[correo de contacto]</b>.</p></div>
+          <div class="seccion"><h4>Quién responde</h4><p>El equipo de Acopio, proyecto de la ETITC.</p></div>
+          <p class="ayuda">Acopio no recibe dinero. Actualizado en octubre de 2026.</p>
+        </div>
+        <div class="barra"><div><span class="ms">home</span>Inicio</div><div><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div><span class="ms">groups</span>Voluntariado</div><div class="on"><span class="ms">more_horiz</span>Más</div></div>
+      </div>
+    </section>
+  </div>
+
+  <section class="notas">
+    <h2>Diferencias con Stitch</h2>
+    <ul>
+      <li><b>Colores.</b> Pasé «Correo verificado» de verde a neutro, «no está recibiendo Agua» de ámbar a neutro con ícono, y el estado «Conciliada» de morado a neutro. El verde, el ámbar y el morado son del semáforo.</li>
+      <li><b>Sin flechas al final de los botones</b> y sin rótulos encima de los títulos («Trazabilidad ciudadana», «Protección de datos personales»), ni etiquetas en mayúsculas («INSUMOS DECLARADOS»).</li>
+      <li><b>Sin texto inventado.</b> Quité «Regla RN-05», «verificada en báscula», «cotejada por Auditor», «auditada y conforme», los subtítulos de categoría y los consejos de folio: la API no los tiene. «Seguir entrega» y «Seguir auditoría» quedan en «Seguir».</li>
+      <li><b>Barra de cinco destinos</b> (Inicio, Mapa, Causas, Voluntariado, Más), como la del portal. Stitch dibujó tres.</li>
+      <li><b>«Cancelar donación»</b> va aparte y en rojo, como acción destructiva, no junto a «Ver folio». Pide confirmación.</li>
+      <li><b>El vencimiento</b> aparece solo en las líneas perecederas. Stitch lo puso en todas.</li>
+      <li><b>«Escanear desde la cámara»</b> en P10 queda fuera: el escaneo de QR es de la consola (ciclo 2).</li>
+      <li><b>El enlace de confirmación dura 48 horas</b>, no 24 como dijo Stitch.</li>
+      <li><b>Falta el correo de contacto de privacidad.</b> Stitch inventó privacidad@acopio.co; hay que poner uno real.</li>
+    </ul>
+  </section>
+</div>

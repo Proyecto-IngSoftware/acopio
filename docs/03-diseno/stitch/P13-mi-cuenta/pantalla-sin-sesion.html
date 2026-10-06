@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>P13 · Mi cuenta de Donador - Acopio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              teal: '#0F6E6E',
+              'teal-dark': '#0A4F4F',
+              'teal-light': '#E6F3F3',
+              'teal-hover': '#0B5757',
+            },
+            neutral: {
+              bg: '#FAFAF9',
+              card: '#FFFFFF',
+              border: '#E7E5E4',
+              'border-subtle': '#F5F5F4',
+              text: '#1C1917',
+              muted: '#57534E',
+              subtle: '#78716C',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          borderRadius: {
+            'card': '12px',
+            'btn': '10px',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+  </style>
+</head>
+<body class="bg-neutral-bg text-neutral-text font-sans antialiased min-h-full flex flex-col justify-between selection:bg-brand-teal selection:text-white">
+  <!-- Mobile Container (Max 420px for robust single-handed view) -->
+  <div class="w-full max-w-md mx-auto flex-1 flex flex-col min-h-screen bg-neutral-bg">
+
+    <!-- Top Navigation Header -->
+    <header class="w-full bg-white border-b border-neutral-border px-4 py-3 sticky top-0 z-30 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="#" aria-label="Volver" class="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-neutral-text hover:bg-neutral-100 active:bg-neutral-200 transition-colors">
+          <span class="material-symbols-outlined text-[24px]">arrow_back</span>
+        </a>
+        <!-- Logo Acopio -->
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-[8px] bg-brand-teal flex items-center justify-center text-white shrink-0">
+            <span class="material-symbols-outlined text-[20px]">inventory_2</span>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-[18px] font-bold tracking-tight text-neutral-text">Acopio</span>
+            <span class="bg-[#CCECE8] text-brand-teal-dark font-bold text-[10px] leading-tight px-1.5 py-0.5 rounded tracking-wide">CO</span>
+          </div>
+        </div>
+      </div>
+      <div class="text-[13px] font-medium text-neutral-muted">
+        Portal
+      </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="flex-1 px-4 pt-5 pb-8 flex flex-col">
+      <!-- Page Title & Short Description -->
+      <div class="mb-5">
+        <h1 class="text-[24px] font-bold text-neutral-text tracking-tight leading-tight mb-2">
+          Tu cuenta de Donador
+        </h1>
+        <p class="text-[16px] text-neutral-muted leading-relaxed">
+          Prepara tu donación antes de llevarla y síguela con su folio.
+        </p>
+      </div>
+
+      <!-- Segmented Control / Tabs: Crear cuenta & Entrar -->
+      <div class="bg-[#F5F5F4] p-1 rounded-btn border border-neutral-border flex items-center mb-6" role="tablist" aria-label="Acceso a Donador">
+        <button type="button" role="tab" aria-selected="true" class="flex-1 py-2.5 px-3 rounded-[8px] bg-white text-brand-teal font-semibold text-[15px] shadow-sm transition-all text-center">
+          Crear cuenta
+        </button>
+        <button type="button" role="tab" aria-selected="false" class="flex-1 py-2.5 px-3 rounded-[8px] text-neutral-muted hover:text-neutral-text font-medium text-[15px] transition-all text-center">
+          Entrar
+        </button>
+      </div>
+
+      <!-- Main Form Card (White card, 1px border, 12px radius, no shadow) -->
+      <div class="bg-white rounded-card border border-neutral-border p-5 mb-5 flex flex-col gap-4">
+        
+        <!-- Field: Nombre -->
+        <div class="flex flex-col gap-1.5">
+          <label for="nombre" class="text-[15px] font-semibold text-neutral-text">
+            Nombre completo
+          </label>
+          <div class="relative">
+            <input 
+              type="text" 
+              id="nombre" 
+              name="nombre" 
+              placeholder="Ej. Camila Morales" 
+              autocomplete="name"
+              class="w-full h-12 px-3.5 bg-white border border-neutral-border rounded-[8px] text-[16px] text-neutral-text placeholder:text-neutral-subtle focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal transition-all"
+            >
+          </div>
+        </div>
+
+        <!-- Field: Correo electrónico -->
+        <div class="flex flex-col gap-1.5">
+          <label for="correo" class="text-[15px] font-semibold text-neutral-text">
+            Correo electrónico
+          </label>
+          <div class="relative">
+            <input 
+              type="email" 
+              id="correo" 
+              name="correo" 
+              placeholder="nombre@ejemplo.com" 
+              autocomplete="email"
+              class="w-full h-12 px-3.5 bg-white border border-neutral-border rounded-[8px] text-[16px] text-neutral-text placeholder:text-neutral-subtle focus:outline-none focus:border-brand-teal focus:ring-1 focus:ring-brand-teal transition-all"
+            >
+          </div>
+        </div>
+
+        <!-- Explanatory note: Password confirmation via link -->
+        <div class="p-3.5 rounded-[8px] bg-[#F5F5F4] border border-neutral-border flex items-start gap-2.5 text-neutral-muted">
+          <span class="material-symbols-outlined text-[20px] text-brand-teal shrink-0 mt-0.5">mark_email_read</span>
+          <p class="text-[14px] leading-snug">
+            Te enviamos un enlace para confirmar el correo; ahí eliges tu contraseña.
+          </p>
+        </div>
+
+        <!-- Privacy link -->
+        <div class="pt-0.5">
+          <a href="#" class="inline-flex items-center gap-1.5 text-[14px] font-medium text-brand-teal hover:underline focus:outline-none focus:ring-1 focus:ring-brand-teal rounded">
+            <span class="material-symbols-outlined text-[18px]">verified_user</span>
+            <span>Cómo usamos tus datos</span>
+          </a>
+        </div>
+
+        <!-- Primary Action Button (Teal #0F6E6E, width 100%, 10px rounded, 48px+ min-height) -->
+        <div class="pt-2">
+          <button 
+            type="button" 
+            class="w-full min-h-[48px] h-12 bg-brand-teal hover:bg-brand-teal-hover active:bg-brand-teal-dark text-white font-semibold text-[16px] rounded-btn transition-colors flex items-center justify-center gap-2 shadow-none focus:outline-none focus:ring-2 focus:ring-brand-teal focus:ring-offset-2"
+          >
+            <span>Crear cuenta</span>
+            <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Secondary Link: Already have an account? -->
+      <div class="text-center py-2">
+        <p class="text-[15px] text-neutral-muted">
+          ¿Ya tienes cuenta? 
+          <a href="#" class="font-semibold text-brand-teal hover:underline active:opacity-80 transition-opacity ml-1">
+            Entrar
+          </a>
+        </p>
+      </div>
+
+      <!-- Trust & Context Banner (Official & No fee reminder) -->
+      <div class="mt-auto pt-6">
+        <div class="p-3.5 rounded-card border border-neutral-border bg-white flex items-center gap-3 text-neutral-muted">
+          <span class="material-symbols-outlined text-[22px] text-neutral-muted shrink-0">info</span>
+          <p class="text-[13px] leading-snug">
+            La cuenta te permite registrar insumos antes de llegar al punto de recepción y recibir confirmación directa del acopio.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Navigation Bar (Portal: Inicio, Mapa, Más con Más activo) -->
+    <nav aria-label="Navegación principal del portal" class="sticky bottom-0 z-30 w-full bg-white border-t border-neutral-border px-4 py-1.5 shadow-[0_-2px_10px_rgba(0,0,0,0.02)]">
+      <div class="grid grid-cols-3 items-center max-w-sm mx-auto">
+        <!-- 1. Inicio -->
+        <a href="#" class="flex flex-col items-center justify-center min-h-[48px] py-1 text-neutral-muted hover:text-neutral-text transition-colors">
+          <span class="material-symbols-outlined text-[24px]">home</span>
+          <span class="text-[11px] font-medium tracking-[0.015em] mt-0.5">Inicio</span>
+        </a>
+
+        <!-- 2. Mapa -->
+        <a href="#" class="flex flex-col items-center justify-center min-h-[48px] py-1 text-neutral-muted hover:text-neutral-text transition-colors">
+          <span class="material-symbols-outlined text-[24px]">map</span>
+          <span class="text-[11px] font-medium tracking-[0.015em] mt-0.5">Mapa</span>
+        </a>
+
+        <!-- 3. Más (ACTIVO) -->
+        <a href="#" class="flex flex-col items-center justify-center min-h-[48px] py-1 text-brand-teal font-semibold relative">
+          <!-- Active Pill Indicator in pale teal -->
+          <div class="w-12 h-7 bg-brand-teal-light text-brand-teal rounded-full flex items-center justify-center mb-0.5 transition-colors">
+            <span class="material-symbols-outlined text-[22px] fill">more_horiz</span>
+          </div>
+          <span class="text-[11px] font-bold tracking-[0.015em] text-brand-teal">Más</span>
+        </a>
+      </div>
+    </nav>
+
+  </div>
+</body>
+</html>
