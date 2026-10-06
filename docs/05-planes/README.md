@@ -3,7 +3,7 @@ title: "Planes de implementación"
 type: moc
 tags: [moc, planes]
 estado: vigente
-actualizado: 2026-10-05
+actualizado: 2026-10-06
 ---
 
 # Planes de implementación
@@ -45,7 +45,7 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 | 1 · Red, interfaz ciclo 1 | [aprobada](../superpowers/specs/2026-09-30-bloque-1-red-design.md) | [aprobado](2026-09-30-bloque-1-interfaz-ciclo-1.md) | ✅ red y mapa construidos |
 | 1 · Red, interfaz ciclo 2 | [aprobada](../superpowers/specs/2026-09-30-bloque-1-red-design.md) | [aprobado](2026-10-01-bloque-1-interfaz-ciclo-2.md) | ✅ selector de la cabecera y matriz de acceso construidos |
 | 2 · Inventario | [aprobada](../superpowers/specs/2026-10-01-bloque-2-inventario-design.md) | [API](2026-10-01-bloque-2-api.md), [interfaz ciclo 1](2026-10-01-bloque-2-interfaz-ciclo-1.md), [interfaz ciclo 2](2026-10-02-bloque-2-interfaz-ciclo-2.md), [interfaz ciclo 3](2026-10-02-bloque-2-interfaz-ciclo-3.md) | ✅ cerrado el 2026-10-05: API e interfaz (ciclos 1 a 3). El escáner en un teléfono real queda en P-037 |
-| 3 · Custodia | [aprobada](../superpowers/specs/2026-10-05-bloque-3-custodia-design.md) | [API](2026-10-05-bloque-3-api.md); los planes de la interfaz, pendientes | 🟡 API hecha el 2026-10-05, con recorrido en Garage real; falta la interfaz |
+| 3 · Custodia | [aprobada](../superpowers/specs/2026-10-05-bloque-3-custodia-design.md) | [API](2026-10-05-bloque-3-api.md) · [interfaz, ciclo 1](2026-10-06-bloque-3-interfaz-ciclo-1.md); el ciclo 2, pendiente | 🟡 API hecha el 2026-10-05; ciclo 1 (el Donador) en curso desde el 2026-10-06 |
 | 4 · Motor | pendiente | pendiente | ⬜ |
 | 5 · Turnos | pendiente | pendiente | ⬜ |
 | 6 · Extras | pendiente | pendiente | ⬜ |
