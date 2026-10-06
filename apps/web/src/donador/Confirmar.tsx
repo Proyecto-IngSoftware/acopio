@@ -6,6 +6,7 @@ import { CampoContrasena } from '../acceso/CampoContrasena';
 import { ErrorApi } from '../api/cliente';
 import { Boton, EnlaceBoton } from '../componentes/Boton';
 import { Campo } from '../componentes/Campo';
+import { EstadoError } from '../componentes/EstadoError';
 import { Esqueleto } from '../componentes/Esqueleto';
 import { Icono } from '../componentes/Icono';
 import { useSesion } from '../sesion/Sesion';
@@ -23,7 +24,9 @@ export function Confirmar() {
   const navegar = useNavigate();
   // undefined: validando; null: el enlace no sirve
   const [enlace, fijarEnlace] = useState<Enlace | null | undefined>(undefined);
+  // Sin red, un 429 o un 5xx no dicen nada del enlace: se ofrece reintentar
   const [errorValidar, fijarErrorValidar] = useState<string | null>(null);
+  const [intento, fijarIntento] = useState(0);
   const [nombre, fijarNombre] = useState('');
   const [contrasena, fijarContrasena] = useState('');
   const [repeticion, fijarRepeticion] = useState('');
@@ -32,6 +35,8 @@ export function Confirmar() {
 
   useEffect(() => {
     let vigente = true;
+    fijarErrorValidar(null);
+    fijarEnlace(undefined);
     validarEnlace(token)
       .then((r) => {
         if (!vigente) return;
@@ -41,12 +46,11 @@ export function Confirmar() {
       .catch((e) => {
         if (!vigente) return;
         fijarErrorValidar(e instanceof ErrorApi ? e.message : 'No pudimos conectar con Acopio.');
-        fijarEnlace(null);
       });
     return () => {
       vigente = false;
     };
-  }, [token, validarEnlace]);
+  }, [token, validarEnlace, intento]);
 
   async function enviar(e: FormEvent) {
     e.preventDefault();
@@ -70,6 +74,15 @@ export function Confirmar() {
     }
   }
 
+  if (errorValidar) {
+    return (
+      <section className="flex flex-col gap-space-md px-margin py-space-lg">
+        <h1 className="text-headline-lg-mobile text-on-surface">Confirma tu correo</h1>
+        <EstadoError mensaje={errorValidar} alReintentar={() => fijarIntento((n) => n + 1)} />
+      </section>
+    );
+  }
+
   if (enlace === undefined) {
     return (
       <section className="flex flex-col gap-space-md px-margin py-space-lg">
@@ -81,12 +94,13 @@ export function Confirmar() {
   if (enlace === null) {
     return (
       <section className="flex flex-col gap-space-md px-margin py-space-lg">
+        <h1 className="text-headline-lg-mobile text-on-surface">El enlace ya no sirve</h1>
         <p
           role="alert"
           className="flex items-start gap-space-xs rounded-xl border border-error bg-error-container p-space-sm text-body-sm text-on-error-container"
         >
           <Icono nombre="link_off" className="text-[20px] text-error" />
-          <span>{errorValidar ?? ENLACE_VENCIDO}</span>
+          <span>{ENLACE_VENCIDO}</span>
         </p>
         <EnlaceBoton a="/donador" variante="secundario" className="min-h-[56px] w-full">
           Ir a crear cuenta

@@ -87,11 +87,16 @@ function Resultado({ folio }: { folio: string }) {
   );
 }
 
-/** P10: seguimiento público por folio. Diseño: docs/03-diseno/stitch/P10-seguimiento. */
-export function Seguimiento() {
-  const { folio } = useParams();
+/** El campo de folio. Sigue al folio de la URL (atrás, adelante o un enlace de la
+ *  Portada), así nunca muestra uno distinto del que se consulta. */
+function Buscador({ folio }: { folio: string }) {
   const navegar = useNavigate();
-  const [escrito, fijarEscrito] = useState(folio ?? '');
+  const [escrito, fijarEscrito] = useState(folio);
+  const [deLaUrl, fijarDeLaUrl] = useState(folio);
+  if (folio !== deLaUrl) {
+    fijarDeLaUrl(folio);
+    fijarEscrito(folio);
+  }
 
   function buscar(e: FormEvent) {
     e.preventDefault();
@@ -100,24 +105,33 @@ export function Seguimiento() {
   }
 
   return (
+    <form onSubmit={buscar} className="flex items-end gap-space-sm">
+      <div className="min-w-0 flex-1">
+        <Campo
+          id="folio"
+          etiqueta="Folio"
+          value={escrito}
+          onChange={(e) => fijarEscrito(e.target.value)}
+          placeholder="ACO-2026-7KQ4M"
+          autoCapitalize="characters"
+          autoComplete="off"
+          spellCheck={false}
+          className="font-mono"
+        />
+      </div>
+      <Boton type="submit">Buscar</Boton>
+    </form>
+  );
+}
+
+/** P10: seguimiento público por folio. Diseño: docs/03-diseno/stitch/P10-seguimiento. */
+export function Seguimiento() {
+  const { folio } = useParams();
+
+  return (
     <section className="flex flex-col gap-space-md px-margin py-space-lg">
       <h1 className="text-headline-lg-mobile text-on-surface">Seguir una donación</h1>
-      <form onSubmit={buscar} className="flex items-end gap-space-sm">
-        <div className="min-w-0 flex-1">
-          <Campo
-            id="folio"
-            etiqueta="Folio"
-            value={escrito}
-            onChange={(e) => fijarEscrito(e.target.value)}
-            placeholder="ACO-2026-7KQ4M"
-            autoCapitalize="characters"
-            autoComplete="off"
-            spellCheck={false}
-            className="font-mono"
-          />
-        </div>
-        <Boton type="submit">Buscar</Boton>
-      </form>
+      <Buscador folio={folio ?? ''} />
       {folio && <Resultado key={folio} folio={folio} />}
     </section>
   );

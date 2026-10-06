@@ -8,6 +8,7 @@ import {
   useState,
 } from 'react';
 import type { ReactNode } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router';
 import { alPerderSesion, ErrorApi } from '../api/cliente';
 import { clienteAuthLocal, type ClienteAuth, type UsuarioSesion } from './cliente-auth';
@@ -42,7 +43,19 @@ export function SesionProveedor({
   const [usuario, fijarUsuario] = useState<UsuarioSesion | null>(null);
   const [cargando, fijarCargando] = useState(true);
   const navegar = useNavigate();
+  const consultas = useQueryClient();
   const usuarioActual = useRef<UsuarioSesion | null>(null);
+
+  // Al cambiar de cuenta se descarta lo que vio la anterior: en un teléfono prestado el
+  // siguiente no debe ver, ni un momento, los folios de quien salió
+  const cambiarUsuario = useCallback(
+    (u: UsuarioSesion | null) => {
+      if (u?.id !== usuarioActual.current?.id) void consultas.resetQueries();
+      usuarioActual.current = u;
+      fijarUsuario(u);
+    },
+    [consultas],
+  );
 
   useEffect(() => {
     usuarioActual.current = usuario;
@@ -72,31 +85,30 @@ export function SesionProveedor({
       alPerderSesion(() => {
         const perdido = usuarioActual.current;
         if (!perdido) return;
-        usuarioActual.current = null;
         olvidarUsuario();
-        fijarUsuario(null);
+        cambiarUsuario(null);
         // Un Donador vuelve a su cuenta; la consola tiene su propia pantalla de entrada
         navegar(perdido.rol === 'DONADOR' ? '/donador' : '/entrar');
       }),
-    [navegar],
+    [navegar, cambiarUsuario],
   );
 
   const entrar = useCallback(
     async (nombre: string, contrasena: string) => {
       const u = await cliente.iniciarSesion(nombre, contrasena);
       recordarUsuario(u);
-      fijarUsuario(u);
+      cambiarUsuario(u);
     },
-    [cliente],
+    [cliente, cambiarUsuario],
   );
 
   const entrarDonador = useCallback(
     async (correo: string, contrasena: string) => {
       const u = await cliente.iniciarSesionDonador(correo, contrasena);
       recordarUsuario(u);
-      fijarUsuario(u);
+      cambiarUsuario(u);
     },
-    [cliente],
+    [cliente, cambiarUsuario],
   );
 
   const registrarDonador = useCallback(
@@ -110,16 +122,16 @@ export function SesionProveedor({
     async (token: string, contrasena: string, nombre?: string) => {
       const u = await cliente.confirmarCorreo(token, contrasena, nombre);
       recordarUsuario(u);
-      fijarUsuario(u);
+      cambiarUsuario(u);
     },
-    [cliente],
+    [cliente, cambiarUsuario],
   );
 
   const salir = useCallback(async () => {
     await cliente.cerrarSesion();
     olvidarUsuario();
-    fijarUsuario(null);
-  }, [cliente]);
+    cambiarUsuario(null);
+  }, [cliente, cambiarUsuario]);
 
   const valor = useMemo(
     () => ({

@@ -1,4 +1,5 @@
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import { formatearCantidad, SIMBOLO_UNIDAD, formatearNumero } from '@acopio/shared';
 import type { ResultadoBusqueda } from '../api/catalogo';
@@ -8,9 +9,9 @@ import { EstadoError } from '../componentes/EstadoError';
 import { Esqueleto } from '../componentes/Esqueleto';
 import { Icono } from '../componentes/Icono';
 import { BuscadorCategoria, type ResolverCodigo } from '../consola/inventario/BuscadorCategoria';
-import { BarraPasos } from './BarraPasos';
+import { BarraPasos, NOMBRES_PASOS } from './BarraPasos';
 import { PasoEntrega } from './PasoEntrega';
-import { PasoFolio } from './PasoFolio';
+import { PasoFolio, type FalloFactura } from './PasoFolio';
 import { cantidadBase, estadoInicial, reducir, type Linea } from './preparacion';
 
 /** Lo máximo de donaciones preparadas a la vez (RF-DON). */
@@ -119,6 +120,28 @@ function LineaDonacion({
   );
 }
 
+/** El cuerpo de un paso. Al cambiar de paso el botón tocado desaparece, así que el foco
+ *  pasa a este contenedor: el lector de pantalla anuncia el paso nuevo por su nombre. */
+function ContenidoPaso({ paso, children }: { paso: 1 | 2 | 3; children: ReactNode }) {
+  const caja = useRef<HTMLDivElement>(null);
+  const anterior = useRef(paso);
+  useEffect(() => {
+    if (anterior.current !== paso) caja.current?.focus();
+    anterior.current = paso;
+  }, [paso]);
+  return (
+    <div
+      ref={caja}
+      role="region"
+      tabIndex={-1}
+      aria-label={`Paso ${paso} de 3: ${NOMBRES_PASOS[paso - 1]}`}
+      className="flex flex-col gap-space-md outline-none"
+    >
+      {children}
+    </div>
+  );
+}
+
 /** P9: preparar una donación en tres pasos con estado local; recargar empieza de nuevo.
  *  Pasos 2 y 3 en PasoEntrega y PasoFolio. Diseño: docs/03-diseno/stitch/P09-preparar. */
 export function Preparar() {
@@ -126,7 +149,9 @@ export function Preparar() {
   const [q, fijarQ] = useState('');
   const preparadas = useMisDonaciones('PREPARADO');
   const folioPedido = useSearchParams()[0].get('folio');
-  const [creada, fijarCreada] = useState<{ donacion: Donacion; fallo: string | null } | null>(null);
+  const [creada, fijarCreada] = useState<{ donacion: Donacion; fallo: FalloFactura | null } | null>(
+    null,
+  );
 
   const elegir = (c: ResultadoBusqueda, leido?: { ean: string; contenido: number | null }) => {
     enviar({ tipo: 'agregar', categoria: c, leido });
@@ -246,7 +271,7 @@ export function Preparar() {
         </button>
       )}
       <BarraPasos paso={paso} />
-      {cuerpo}
+      <ContenidoPaso paso={paso}>{cuerpo}</ContenidoPaso>
     </section>
   );
 }

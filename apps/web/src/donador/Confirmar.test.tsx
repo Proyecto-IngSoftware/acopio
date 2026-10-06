@@ -119,3 +119,25 @@ it('el enlace vencido tampoco tiene violaciones graves', async () => {
   await screen.findByRole('alert');
   expect(await violacionesGraves(container)).toEqual([]);
 });
+
+it('sin red al validar no dice que el enlace venció y deja reintentar', async () => {
+  const cliente = clienteFalso();
+  cliente.validarEnlace
+    .mockRejectedValueOnce(new ErrorApi(0, 'SIN_RED', 'No pudimos conectar con Acopio.'))
+    .mockResolvedValueOnce(DATOS);
+  pantalla(cliente);
+
+  expect(await screen.findByText('No pudimos conectar con Acopio.')).toBeInTheDocument();
+  expect(screen.queryByText(/ya no sirve/)).not.toBeInTheDocument();
+  expect(screen.queryByRole('link', { name: 'Ir a crear cuenta' })).not.toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
+
+  expect(await screen.findByRole('heading', { name: 'Elige tu contraseña' })).toBeInTheDocument();
+  expect(cliente.validarEnlace).toHaveBeenCalledTimes(2);
+});
+
+it('el enlace vencido tiene su título', async () => {
+  pantalla();
+  expect(await screen.findByRole('heading', { name: 'El enlace ya no sirve' })).toBeInTheDocument();
+});

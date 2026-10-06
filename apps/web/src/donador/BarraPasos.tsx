@@ -1,10 +1,10 @@
-const PASOS = ['Qué llevas', 'Dónde entregar', 'Tu folio'];
+export const NOMBRES_PASOS = ['Qué llevas', 'Dónde entregar', 'Tu folio'];
 
 /** La barra de tres pasos de P9; el actual va marcado y los anteriores, hechos. */
 export function BarraPasos({ paso }: { paso: 1 | 2 | 3 }) {
   return (
     <ol aria-label="Pasos" className="grid grid-cols-3 gap-space-xs">
-      {PASOS.map((nombre, i) => {
+      {NOMBRES_PASOS.map((nombre, i) => {
         const n = i + 1;
         const actual = n === paso;
         return (

@@ -12,6 +12,7 @@ import { Boton } from '../componentes/Boton';
 import { EstadoError } from '../componentes/EstadoError';
 import { Esqueleto } from '../componentes/Esqueleto';
 import { Icono } from '../componentes/Icono';
+import { describirFallo, type FalloFactura } from './PasoFolio';
 import type { Linea } from './preparacion';
 
 type Punto = { lat: number; lng: number };
@@ -43,7 +44,7 @@ interface Props {
   alElegir: (acopioId: string) => void;
   alFactura: (f: File | null) => void;
   /** La donación creada y, si la factura no subió, por qué. */
-  alCrear: (d: Donacion, falloFactura: string | null) => void;
+  alCrear: (d: Donacion, falloFactura: FalloFactura | null) => void;
 }
 
 /** P9, paso 2: dónde entregar y la foto opcional de la factura. */
@@ -96,12 +97,12 @@ export function PasoEntrega({ lineas, acopioId, factura, alElegir, alFactura, al
       });
       return;
     }
-    let fallo: string | null = null;
+    let fallo: FalloFactura | null = null;
     if (factura) {
       try {
         creada = await subirFactura(creada.folio, factura);
       } catch (e) {
-        fallo = e instanceof Error ? e.message : 'No pudimos subir la factura';
+        fallo = describirFallo(e);
       }
     }
     alCrear(creada, fallo);
@@ -175,7 +176,7 @@ export function PasoEntrega({ lineas, acopioId, factura, alElegir, alFactura, al
   return (
     <>
       <div className="flex flex-col gap-space-2xs">
-        <h2 className="text-title-lg text-on-surface">¿Dónde la entregas?</h2>
+        <h2 className="text-headline-sm text-on-surface">¿Dónde la entregas?</h2>
         <p className="text-body-md text-on-surface-variant">
           Primero los acopios que reciben más de lo que llevas y están abiertos.
         </p>

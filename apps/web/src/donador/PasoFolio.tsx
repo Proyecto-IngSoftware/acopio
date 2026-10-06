@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
 import QRCode from 'qrcode';
+import { ErrorApi } from '../api/cliente';
 import { subirFactura, type Donacion } from '../api/donaciones';
 import { Boton, EnlaceBoton } from '../componentes/Boton';
 import { Icono } from '../componentes/Icono';
@@ -29,11 +30,23 @@ function Qr({ folio }: { folio: string }) {
   );
 }
 
+export interface FalloFactura {
+  mensaje: string;
+  /** La API rechazó la foto (pesada, de otro tipo, ilegible): repetirla no sirve. */
+  otraFoto: boolean;
+}
+
+/** Lo que se le dice al Donador cuando la factura no sube. */
+export function describirFallo(e: unknown): FalloFactura {
+  const otraFoto = e instanceof ErrorApi && [400, 413, 415, 422].includes(e.estado);
+  return { mensaje: e instanceof Error ? e.message : 'No pudimos subir la factura', otraFoto };
+}
+
 interface Props {
   donacion: Donacion;
   /** La foto que no subió, para intentarlo otra vez. */
   archivo?: File | null;
-  falloInicial?: string | null;
+  falloInicial?: FalloFactura | null;
 }
 
 /** P9, paso 3: el folio con su QR, el acopio y el estado de la factura. */
@@ -41,7 +54,7 @@ export function PasoFolio({ donacion: inicial, archivo = null, falloInicial = nu
   const consultas = useQueryClient();
   const [donacion, fijarDonacion] = useState(inicial);
   const [pendiente, fijarPendiente] = useState<File | null>(archivo);
-  const [fallo, fijarFallo] = useState<string | null>(falloInicial);
+  const [fallo, fijarFallo] = useState<FalloFactura | null>(falloInicial);
   const [subiendo, fijarSubiendo] = useState(false);
   const [aviso, fijarAviso] = useState<string | null>(null);
   const folioRef = useRef<HTMLSpanElement>(null);
@@ -56,7 +69,7 @@ export function PasoFolio({ donacion: inicial, archivo = null, falloInicial = nu
       void consultas.invalidateQueries({ queryKey: ['misDonaciones'] });
     } catch (e) {
       fijarPendiente(f);
-      fijarFallo(e instanceof Error ? e.message : 'No pudimos subir la factura');
+      fijarFallo(describirFallo(e));
     } finally {
       fijarSubiendo(false);
     }
@@ -82,7 +95,7 @@ export function PasoFolio({ donacion: inicial, archivo = null, falloInicial = nu
 
   return (
     <>
-      <h2 className="text-title-lg text-on-surface">Tu donación está preparada</h2>
+      <h2 className="text-headline-sm text-on-surface">Tu donación está preparada</h2>
       <Qr folio={donacion.folio} />
       <span
         ref={folioRef}
@@ -122,23 +135,20 @@ export function PasoFolio({ donacion: inicial, archivo = null, falloInicial = nu
         <div className="flex flex-col gap-space-xs">
           {fallo && (
             <p role="alert" className="text-body-md text-on-surface">
-              No pudimos subir la factura: {fallo}
+              No pudimos subir la factura: {fallo.mensaje}
             </p>
           )}
-          {pendiente && fallo ? (
+          {/* Sin red o con el servidor caído vale repetir la misma foto; si la API la
+              rechazó, solo sirve elegir otra */}
+          {pendiente && fallo && !fallo.otraFoto && (
             <Boton variante="secundario" disabled={subiendo} onClick={() => void subir(pendiente)}>
               Intentar otra vez
             </Boton>
-          ) : (
-            <Boton
-              variante="secundario"
-              disabled={subiendo}
-              onClick={() => entrada.current?.click()}
-            >
-              <Icono nombre="photo_camera" className="text-[20px]" />
-              Agregar foto de la factura
-            </Boton>
           )}
+          <Boton variante="secundario" disabled={subiendo} onClick={() => entrada.current?.click()}>
+            <Icono nombre="photo_camera" className="text-[20px]" />
+            {fallo ? 'Elegir otra foto' : 'Agregar foto de la factura'}
+          </Boton>
           <input
             ref={entrada}
             type="file"
@@ -148,6 +158,8 @@ export function PasoFolio({ donacion: inicial, archivo = null, falloInicial = nu
             aria-label="Foto de la factura"
             onChange={(e) => {
               const f = e.target.files?.[0];
+              // Se vacía para que elegir otra vez el mismo archivo vuelva a avisar
+              e.target.value = '';
               if (f) void subir(f);
             }}
           />

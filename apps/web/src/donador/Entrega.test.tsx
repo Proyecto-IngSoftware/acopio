@@ -273,7 +273,7 @@ describe('P9, paso 2: dónde entregar', () => {
     expect(peticiones()).toContain('POST /api/donaciones/ACO-2026-7KQ4M/factura');
   });
 
-  it('si la factura falla, el folio se muestra y se puede intentar otra vez', async () => {
+  it('si la API rechaza la factura (413), el folio se muestra y se elige otra foto', async () => {
     URL.createObjectURL = vi.fn(() => 'blob:mini');
     URL.revokeObjectURL = vi.fn();
     responderSegun(
@@ -301,11 +301,17 @@ describe('P9, paso 2: dónde entregar', () => {
         'POST /api/donaciones/*/factura': { ...CREADA, tieneFactura: true },
       }),
     );
-    await userEvent.click(screen.getByRole('button', { name: 'Intentar otra vez' }));
+    // Repetir la foto rechazada no sirve: solo se ofrece elegir otra
+    expect(screen.queryByRole('button', { name: 'Intentar otra vez' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Elegir otra foto' })).toBeInTheDocument();
+    await userEvent.upload(
+      screen.getByLabelText('Foto de la factura'),
+      new File(['y'], 'otra.jpg', { type: 'image/jpeg' }),
+    );
     expect(await screen.findByText('Factura adjunta')).toBeInTheDocument();
   });
 
-  it('si la factura es de un tipo no admitido (415), el folio se muestra y se puede intentar otra vez', async () => {
+  it('si la factura es de un tipo no admitido (415), el folio se muestra y se elige otra foto', async () => {
     URL.createObjectURL = vi.fn(() => 'blob:mini');
     URL.revokeObjectURL = vi.fn();
     responderSegun(
@@ -333,8 +339,47 @@ describe('P9, paso 2: dónde entregar', () => {
         'POST /api/donaciones/*/factura': { ...CREADA, tieneFactura: true },
       }),
     );
+    // Repetir la foto rechazada no sirve: solo se ofrece elegir otra
+    expect(screen.queryByRole('button', { name: 'Intentar otra vez' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Elegir otra foto' })).toBeInTheDocument();
+    await userEvent.upload(
+      screen.getByLabelText('Foto de la factura'),
+      new File(['y'], 'otra.jpg', { type: 'image/jpeg' }),
+    );
+    expect(await screen.findByText('Factura adjunta')).toBeInTheDocument();
+  });
+
+  it('si la subida falla por algo que no es la foto, se puede repetir la misma', async () => {
+    URL.createObjectURL = vi.fn(() => 'blob:mini');
+    URL.revokeObjectURL = vi.fn();
+    responderSegun(base({ 'POST /api/donaciones': CREADA }));
+    await alPasoDos();
+    await userEvent.upload(
+      await screen.findByLabelText('Tomar o subir foto'),
+      new File(['x'], 'f.jpg', { type: 'image/jpeg' }),
+    );
+    await userEvent.click(await preparar());
+    expect(await screen.findByText(/No pudimos subir la factura/)).toBeInTheDocument();
+    responderSegun(
+      base({
+        'POST /api/donaciones/*/factura': { ...CREADA, tieneFactura: true },
+      }),
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Intentar otra vez' }));
     expect(await screen.findByText('Factura adjunta')).toBeInTheDocument();
+  });
+
+  it('al cambiar de paso el foco va al paso nuevo y se anuncia', async () => {
+    responderSegun(base({ 'POST /api/donaciones': CREADA }));
+    await alPasoDos();
+
+    const region = await screen.findByRole('region', { name: 'Paso 2 de 3: Dónde entregar' });
+    expect(region).toHaveFocus();
+
+    await userEvent.click(await preparar());
+
+    const folio = await screen.findByRole('region', { name: 'Paso 3 de 3: Tu folio' });
+    expect(folio).toHaveFocus();
   });
 
   it('axe: pasos 2 y 3 sin violaciones graves', async () => {

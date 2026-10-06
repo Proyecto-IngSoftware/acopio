@@ -1,6 +1,6 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Route, Routes, useLocation } from 'react-router';
+import { Route, Routes, useLocation, useNavigate } from 'react-router';
 import { violacionesGraves } from '../pruebas/accesibilidad';
 import { conEstado, envolver, responderSegun } from '../pruebas/utilidades';
 import { Seguimiento } from './Seguimiento';
@@ -20,7 +20,13 @@ const seguimiento = {
 };
 
 function Ubicacion() {
-  return <output data-testid="ruta">{useLocation().pathname}</output>;
+  const navegar = useNavigate();
+  return (
+    <>
+      <output data-testid="ruta">{useLocation().pathname}</output>
+      <button onClick={() => navegar('/seguimiento/ACO-2026-ZZZZZ')}>Ir a otro folio</button>
+    </>
+  );
 }
 
 const pantalla = (ruta: string) =>
@@ -105,6 +111,16 @@ describe('Seguimiento', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Buscar' }));
     expect(screen.getByTestId('ruta')).toHaveTextContent('/seguimiento/aco-2026-7kq4m');
     expect(await screen.findByText('Recibida en el acopio')).toBeInTheDocument();
+  });
+
+  it('el campo sigue al folio de la URL cuando cambia sin salir de la pantalla', async () => {
+    responderSegun({ 'GET /api/seguimiento/*': seguimiento });
+    pantalla('/seguimiento/ACO-2026-7KQ4M');
+    expect(await screen.findByLabelText('Folio')).toHaveValue('ACO-2026-7KQ4M');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Ir a otro folio' }));
+
+    await waitFor(() => expect(screen.getByLabelText('Folio')).toHaveValue('ACO-2026-ZZZZZ'));
   });
 
   it('axe: sin violaciones graves con resultado y sin encontrar', async () => {

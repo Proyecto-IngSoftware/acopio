@@ -168,6 +168,26 @@ describe('P9, paso 1: qué llevas', () => {
     expect(peticiones().filter((p) => p.startsWith('POST'))).toEqual([]);
   });
 
+  it('un escaneo reconocido borra el aviso del código desconocido', async () => {
+    leera('7702001234567');
+    pantalla({
+      'GET /api/donaciones/codigos/7702001234567': conEstado(404, {
+        estado: 404,
+        codigo: 'EAN_DESCONOCIDO',
+        mensaje: 'Código desconocido',
+      }),
+      [`GET /api/donaciones/codigos/${EAN}`]: AGUA,
+    });
+    await escanear();
+    await screen.findByText(/No conocemos este código/);
+
+    leera(EAN);
+    await escanear();
+
+    await screen.findByRole('listitem', { name: 'Agua potable' });
+    expect(screen.queryByText(/No conocemos este código/)).not.toBeInTheDocument();
+  });
+
   it('«Vence (opcional)» solo en las perecederas', async () => {
     leera(EAN);
     pantalla({ [`GET /api/donaciones/codigos/${EAN}`]: AGUA });

@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event';
 import { ErrorApi } from '../api/cliente';
 import { clienteFalso, envolver } from '../pruebas/utilidades';
@@ -138,5 +139,58 @@ describe('sesión del Donador', () => {
 
     await screen.findByText('Sesión de Ana Pérez');
     expect(cliente.confirmarCorreo).toHaveBeenCalledWith('tok', 'una frase larga', 'Ana');
+  });
+});
+
+describe('las consultas no pasan de una cuenta a otra', () => {
+  const donador = { id: 'd1', username: null, nombre: 'Ana Pérez', rol: 'DONADOR' as const };
+  const otro = { id: 'd2', username: null, nombre: 'Luis Gómez', rol: 'DONADOR' as const };
+
+  function Cache() {
+    const consultas = useQueryClient();
+    const { data } = useQuery({
+      queryKey: ['misDonaciones'],
+      queryFn: () => Promise.resolve(null),
+      enabled: false,
+    });
+    const { usuario, entrarDonador, salir } = useSesion();
+    return (
+      <>
+        <p>{usuario ? `Sesión de ${usuario.nombre}` : 'Sin sesión'}</p>
+        <p>{data ? 'Hay datos' : 'Sin datos'}</p>
+        <button onClick={() => consultas.setQueryData(['misDonaciones'], ['ACO-2026-7KQ4M'])}>
+          Guardar
+        </button>
+        <button onClick={() => void entrarDonador('luis@correo.co', 'otra frase larga')}>
+          Entrar otro
+        </button>
+        <button onClick={() => void salir()}>Salir</button>
+      </>
+    );
+  }
+
+  it('salir borra lo que vio la cuenta anterior', async () => {
+    render(envolver(<Cache />, '/', clienteFalso(donador)));
+    await screen.findByText('Sesión de Ana Pérez');
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar' }));
+    expect(screen.getByText('Hay datos')).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Salir' }));
+
+    await screen.findByText('Sin sesión');
+    expect(screen.getByText('Sin datos')).toBeInTheDocument();
+  });
+
+  it('entrar con otra cuenta borra lo que vio la anterior', async () => {
+    const cliente = clienteFalso(donador);
+    cliente.iniciarSesionDonador.mockResolvedValue(otro);
+    render(envolver(<Cache />, '/', cliente));
+    await screen.findByText('Sesión de Ana Pérez');
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar' }));
+
+    await userEvent.click(screen.getByRole('button', { name: 'Entrar otro' }));
+
+    await screen.findByText('Sesión de Luis Gómez');
+    expect(screen.getByText('Sin datos')).toBeInTheDocument();
   });
 });
