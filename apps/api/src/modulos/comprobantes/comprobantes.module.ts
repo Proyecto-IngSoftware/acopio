@@ -9,6 +9,7 @@ import { FacturasService } from './facturas.service';
 import { RecepcionService } from './recepcion.service';
 import { SeguimientoController } from './seguimiento.controller';
 import { SeguimientoService } from './seguimiento.service';
+import { TareasCustodiaService } from './tareas-custodia.service';
 
 /** Custodia de donaciones (Bloque 3). Usa inventario, acopios, almacenamiento y notificaciones. */
 @Module({
@@ -25,6 +26,7 @@ import { SeguimientoService } from './seguimiento.service';
     RecepcionService,
     ConciliacionService,
     SeguimientoService,
+    TareasCustodiaService,
   ],
 })
 export class ComprobantesModule {}
