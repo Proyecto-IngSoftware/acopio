@@ -1,8 +1,9 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { violacionesGraves } from '../pruebas/accesibilidad';
 import { clienteFalso, envolver, responderSegun } from '../pruebas/utilidades';
 import type { UsuarioSesion } from '../sesion/cliente-auth';
+import { encolar, listarCola } from '../sin-conexion/cola';
 import { Mas } from './Mas';
 
 const persona = (rol: UsuarioSesion['rol']): UsuarioSesion => ({
@@ -128,9 +129,56 @@ it('Cerrar sesión cierra la sesión', async () => {
   const cliente = clienteFalso(persona('ADMIN'));
   render(envolver(<Mas />, '/mas', cliente));
   await userEvent.click(await screen.findByRole('button', { name: 'Cerrar sesión' }));
-  expect(cliente.cerrarSesion).toHaveBeenCalledTimes(1);
+  // Antes de cerrar mira si hay entradas sin enviar en el teléfono (O-12)
+  await waitFor(() => expect(cliente.cerrarSesion).toHaveBeenCalledTimes(1));
   expect(await screen.findByRole('region', { name: 'Tu donación' })).toBeInTheDocument();
   expect(screen.queryByRole('region', { name: 'Tu cuenta' })).not.toBeInTheDocument();
+});
+
+describe('Cerrar sesión con entradas sin enviar (O-12)', () => {
+  const tres = async () => {
+    for (const [i, cantidad] of [12, 24, 5].entries()) {
+      await encolar('u1', 'x1', { id: `e${i}`, categoriaId: 'c1', cantidad });
+    }
+  };
+
+  it('avisa cuántas son antes de cerrar y deja seguir en la consola', async () => {
+    await tres();
+    const cliente = clienteFalso(persona('OPERADOR'));
+    render(envolver(<Mas />, '/mas', cliente));
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Cerrar sesión' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Tienes 3 entradas sin enviar' });
+    expect(hoja).toHaveTextContent('quedan guardadas en este teléfono');
+    expect(cliente.cerrarSesion).not.toHaveBeenCalled();
+
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Seguir en la consola' }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.getByRole('region', { name: 'Tu cuenta' })).toBeInTheDocument();
+  });
+
+  it('«Salir de todas formas» cierra la sesión y la cola se queda en el teléfono', async () => {
+    await tres();
+    const cliente = clienteFalso(persona('OPERADOR'));
+    render(envolver(<Mas />, '/mas', cliente));
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Cerrar sesión' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Salir de todas formas' }));
+
+    expect(cliente.cerrarSesion).toHaveBeenCalledTimes(1);
+    expect(await listarCola('u1')).toHaveLength(3);
+  });
+
+  it('las entradas de otra persona del teléfono no cuentan', async () => {
+    await encolar('otra', 'x1', { id: 'e9', categoriaId: 'c1', cantidad: 1 });
+    const cliente = clienteFalso(persona('OPERADOR'));
+    render(envolver(<Mas />, '/mas', cliente));
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Cerrar sesión' }));
+
+    await waitFor(() => expect(cliente.cerrarSesion).toHaveBeenCalledTimes(1));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
 });
 
 it('no tiene violaciones graves de accesibilidad', async () => {

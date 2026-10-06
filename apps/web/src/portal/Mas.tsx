@@ -4,6 +4,7 @@ import { FilaMenu, SeccionMenu } from '../componentes/Menu';
 import type { Rol } from '../sesion/cliente-auth';
 import { iniciales, nombreRol } from '../sesion/roles';
 import { useSesion } from '../sesion/Sesion';
+import { useSalida } from '../sesion/useSalida';
 import { useUbicacionActiva } from '../sesion/ubicacion-activa';
 import { AvisoSinDinero } from './bloques/AvisoSinDinero';
 
@@ -130,7 +131,8 @@ function descripcionCuenta(rol: Rol, asignadas: number): string {
 /** «Más» para todos: con sesión suma la cuenta y las herramientas del rol (R-01).
  *  Diseño: docs/03-diseno/stitch/mas-con-sesion. */
 export function Mas() {
-  const { usuario, salir } = useSesion();
+  const { usuario } = useSesion();
+  const { pedirSalida, hoja } = useSalida();
   const { ubicaciones } = useUbicacionActiva();
   const herramientas = usuario ? HERRAMIENTAS.filter((h) => h.roles.includes(usuario.rol)) : [];
 
@@ -210,13 +212,14 @@ export function Mas() {
       </SeccionMenu>
 
       {usuario && (
-        <Boton variante="secundario" className="w-full" onClick={() => void salir()}>
+        <Boton variante="secundario" className="w-full" onClick={() => void pedirSalida()}>
           <Icono nombre="logout" className="text-[20px]" />
           Cerrar sesión
         </Boton>
       )}
 
       <AvisoSinDinero />
+      {hoja}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import { useCallback, useSyncExternalStore } from 'react';
+import { useCallback, useEffect, useSyncExternalStore } from 'react';
 import { useUbicacionesMias, type Ubicacion } from '../api/red';
 import { useSesion } from './Sesion';
 
@@ -7,6 +7,16 @@ const oyentes = new Set<() => void>();
 const enMemoria = new Map<string, string>();
 
 const llave = (usuarioId: string) => `acopio.ubicacion.${usuarioId}`;
+const llaveAsignadas = (usuarioId: string) => `acopio.ubicaciones.${usuarioId}`;
+
+/** Las asignaciones que llegaron la última vez con red, para operar sin conexión (O-05). */
+function asignadasGuardadas(usuarioId: string): Ubicacion[] {
+  try {
+    return JSON.parse(localStorage.getItem(llaveAsignadas(usuarioId)) ?? '[]') as Ubicacion[];
+  } catch {
+    return [];
+  }
+}
 
 function leer(clave: string): string | null {
   try {
@@ -51,7 +61,16 @@ export function useUbicacionActiva(): UbicacionActiva {
     [clave],
   );
 
-  const ubicaciones = conAsignaciones ? (data ?? []) : [];
+  useEffect(() => {
+    if (!usuario || !data) return;
+    try {
+      localStorage.setItem(llaveAsignadas(usuario.id), JSON.stringify(data));
+    } catch {
+      // Sin almacenamiento, sin red no habrá ubicación
+    }
+  }, [usuario, data]);
+
+  const ubicaciones = conAsignaciones ? (data ?? asignadasGuardadas(usuario.id)) : [];
   const activa = ubicaciones.find((u) => u.id === guardada) ?? ubicaciones[0] ?? null;
   return { ubicaciones, activa, elegir };
 }

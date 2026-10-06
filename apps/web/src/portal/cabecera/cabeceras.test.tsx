@@ -5,6 +5,7 @@ import { api } from '../../api/cliente';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
 import { clienteFalso, envolver, responderJson } from '../../pruebas/utilidades';
 import { Rutas } from '../../rutas';
+import { encolar } from '../../sin-conexion/cola';
 import { iniciales } from '../../sesion/roles';
 
 const DANIELA = {
@@ -43,8 +44,22 @@ it('el menú de la cuenta muestra nombre y rol, y cierra la sesión', async () =
   expect(menu).toHaveTextContent('Daniela Méndez');
   expect(menu).toHaveTextContent('Operador');
   await userEvent.click(screen.getByRole('menuitem', { name: 'Cerrar sesión' }));
-  expect(cliente.cerrarSesion).toHaveBeenCalledTimes(1);
+  await waitFor(() => expect(cliente.cerrarSesion).toHaveBeenCalledTimes(1));
   expect(await screen.findByRole('link', { name: 'Entrar' })).toBeInTheDocument();
+});
+
+it('con entradas sin enviar, el menú de la cuenta pide confirmar antes de cerrar', async () => {
+  await encolar('u1', 'x1', { id: 'e1', categoriaId: 'c1', cantidad: 12 });
+  const cliente = clienteFalso(DANIELA);
+  render(envolver(<Rutas />, '/', cliente));
+  await userEvent.click(await screen.findByRole('button', { name: 'Cuenta de Daniela Méndez' }));
+
+  await userEvent.click(screen.getByRole('menuitem', { name: 'Cerrar sesión' }));
+
+  expect(
+    await screen.findByRole('dialog', { name: 'Tienes 1 entrada sin enviar' }),
+  ).toBeInTheDocument();
+  expect(cliente.cerrarSesion).not.toHaveBeenCalled();
 });
 
 it('Escape cierra el menú', async () => {

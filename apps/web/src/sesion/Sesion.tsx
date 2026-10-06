@@ -9,8 +9,9 @@ import {
 } from 'react';
 import type { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
-import { alPerderSesion } from '../api/cliente';
+import { alPerderSesion, ErrorApi } from '../api/cliente';
 import { clienteAuthLocal, type ClienteAuth, type UsuarioSesion } from './cliente-auth';
+import { leerRecordado, olvidarUsuario, recordarUsuario } from './recordada';
 
 interface EstadoSesion {
   usuario: UsuarioSesion | null;
@@ -44,8 +45,14 @@ export function SesionProveedor({
     let vigente = true;
     cliente
       .usuarioActual()
+      .then((u) => {
+        if (u) recordarUsuario(u);
+        else olvidarUsuario();
+        return u;
+      })
+      // Sin red sigue el último usuario recordado, para capturar sin conexión (O-05)
+      .catch((e) => (e instanceof ErrorApi && e.estado === 0 ? leerRecordado() : null))
       .then((u) => vigente && fijarUsuario(u))
-      .catch(() => vigente && fijarUsuario(null))
       .finally(() => vigente && fijarCargando(false));
     return () => {
       vigente = false;
@@ -58,6 +65,7 @@ export function SesionProveedor({
       alPerderSesion(() => {
         if (!usuarioActual.current) return;
         usuarioActual.current = null;
+        olvidarUsuario();
         fijarUsuario(null);
         navegar('/entrar');
       }),
@@ -66,13 +74,16 @@ export function SesionProveedor({
 
   const entrar = useCallback(
     async (nombre: string, contrasena: string) => {
-      fijarUsuario(await cliente.iniciarSesion(nombre, contrasena));
+      const u = await cliente.iniciarSesion(nombre, contrasena);
+      recordarUsuario(u);
+      fijarUsuario(u);
     },
     [cliente],
   );
 
   const salir = useCallback(async () => {
     await cliente.cerrarSesion();
+    olvidarUsuario();
     fijarUsuario(null);
   }, [cliente]);
 
