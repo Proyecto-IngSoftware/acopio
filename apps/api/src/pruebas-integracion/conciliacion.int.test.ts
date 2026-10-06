@@ -14,7 +14,9 @@ type Usuario = Awaited<ReturnType<typeof crearUsuarioActivo>>;
 describe('bandeja y conciliación (RF-CMP-003 a 005)', () => {
   let a: AppPrueba;
   let donador: Awaited<ReturnType<typeof crearDonador>>;
+  let admin: Awaited<ReturnType<typeof iniciarSesion>>;
   let op: Usuario;
+  let opB: Usuario;
   let auditor: Usuario;
   let auditorB: Usuario;
   let categoria: string;
@@ -22,8 +24,12 @@ describe('bandeja y conciliación (RF-CMP-003 a 005)', () => {
   beforeAll(async () => {
     a = await crearAppPrueba();
     donador = await crearDonador(a);
-    const admin = await iniciarSesion(a, ADMIN.username, ADMIN.contrasena);
+    admin = await iniciarSesion(a, ADMIN.username, ADMIN.contrasena);
     op = await crearUsuarioActivo(a, admin, { rol: 'OPERADOR' });
+    opB = await crearUsuarioActivo(a, admin, {
+      rol: 'OPERADOR',
+      asignaciones: [{ tipo: 'ACOPIO', ubicacionId: ACOPIO_B }],
+    });
     auditor = await crearUsuarioActivo(a, admin, { rol: 'AUDITOR' });
     auditorB = await crearUsuarioActivo(a, admin, {
       rol: 'AUDITOR',
@@ -149,6 +155,70 @@ describe('bandeja y conciliación (RF-CMP-003 a 005)', () => {
     expect(
       await a.prisma.comprobanteMovimiento.count({ where: { comprobante: { folio: d.folio } } }),
     ).toBe(0);
+  });
+
+  it('un lote con una entrada libre y una ya vinculada se rechaza entero', async () => {
+    const usada = await recibida();
+    const vinculo = await a.prisma.comprobanteMovimiento.findFirstOrThrow({
+      where: { comprobante: { folio: usada } },
+    });
+    const libre = await como(op.token)
+      .post(`/api/acopios/${ACOPIO_A}/entradas`, { categoriaId: categoria, cantidad: 3 })
+      .expect(201);
+    const d = await preparada();
+    const r = await como(auditor.token)
+      .post(`/api/comprobantes/${d.folio}/vinculos`, {
+        movimientoIds: [libre.body.movimiento.id, vinculo.movimiento_id],
+      })
+      .expect(422);
+    expect(r.body.codigo).toBe('MOVIMIENTO_NO_VINCULABLE');
+    expect(
+      await a.prisma.comprobanteMovimiento.count({ where: { comprobante: { folio: d.folio } } }),
+    ).toBe(0);
+    expect(
+      await a.prisma.comprobanteMovimiento.count({
+        where: { movimiento_id: libre.body.movimiento.id },
+      }),
+    ).toBe(0);
+  });
+
+  it('el Auditor de B no vincula un folio de A a una entrada de B; el Administrador sí y el folio pasa a B', async () => {
+    const d = await preparada();
+    const entrada = await como(opB.token)
+      .post(`/api/acopios/${ACOPIO_B}/entradas`, { categoriaId: categoria, cantidad: 4 })
+      .expect(201);
+    const id = entrada.body.movimiento.id as string;
+    await como(auditorB.token)
+      .post(`/api/comprobantes/${d.folio}/vinculos`, { movimientoIds: [id] })
+      .expect(403);
+    expect(
+      await a.prisma.comprobanteMovimiento.count({ where: { comprobante: { folio: d.folio } } }),
+    ).toBe(0);
+    const r = await como(admin)
+      .post(`/api/comprobantes/${d.folio}/vinculos`, { movimientoIds: [id] })
+      .expect(200);
+    expect(r.body.acopio.id).toBe(ACOPIO_B);
+  });
+
+  it('una entrada de una categoría que no está en las líneas aparece en el resumen sin cuadrar', async () => {
+    const otra = (
+      await a.prisma.categoria.findFirstOrThrow({
+        where: { id: { not: categoria }, perecedero: false, archivada: false },
+      })
+    ).id;
+    const folio = await recibida();
+    const extra = await como(op.token)
+      .post(`/api/acopios/${ACOPIO_A}/entradas`, { categoriaId: otra, cantidad: 2 })
+      .expect(201);
+    await como(auditor.token)
+      .post(`/api/comprobantes/${folio}/vinculos`, { movimientoIds: [extra.body.movimiento.id] })
+      .expect(200);
+    const r = await como(auditor.token).get(`/api/comprobantes/${folio}/conciliacion`).expect(200);
+    expect(r.body.resumen).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ categoriaId: otra, confirmado: 0, entradas: 2, cuadra: false }),
+      ]),
+    );
   });
 
   it('rechazar pide motivo, avisa al Donador por correo, no borra mercancía y se puede revertir', async () => {

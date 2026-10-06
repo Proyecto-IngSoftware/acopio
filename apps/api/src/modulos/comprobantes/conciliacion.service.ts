@@ -102,7 +102,9 @@ export class ConciliacionService {
     await this.exigirAlcance(usuario, c.acopio_id);
     const vinculos = await this.prisma.comprobanteMovimiento.findMany({
       where: { comprobante_id: c.id },
-      include: { movimiento: true },
+      include: {
+        movimiento: { include: { categoria: { select: { nombre: true, unidad_base: true } } } },
+      },
       orderBy: { vinculado_en: 'asc' },
     });
     const resumen = new Map<
@@ -120,8 +122,14 @@ export class ConciliacionService {
       resumen.set(l.categoria_id, fila);
     }
     for (const v of vinculos) {
-      const fila = resumen.get(v.movimiento.categoria_id);
-      if (fila) fila.entradas += Number(v.movimiento.cantidad);
+      const fila = resumen.get(v.movimiento.categoria_id) ?? {
+        categoria: v.movimiento.categoria.nombre,
+        unidad: v.movimiento.categoria.unidad_base,
+        confirmado: 0,
+        entradas: 0,
+      };
+      fila.entradas += Number(v.movimiento.cantidad);
+      resumen.set(v.movimiento.categoria_id, fila);
     }
     return {
       ...aComprobanteVista(c),
@@ -187,6 +195,8 @@ export class ConciliacionService {
       throw noVinculable('Las entradas tienen que ser de un mismo acopio');
     const acopioId = movs[0]!.acopio_id;
     await this.exigirAlcance(usuario, acopioId);
+    // Reasignar el folio saca el comprobante del alcance de quien lo tenía
+    await this.exigirAlcance(usuario, c.acopio_id);
 
     try {
       const hecho = await this.prisma.$transaction(async (tx) => {
@@ -247,7 +257,7 @@ export class ConciliacionService {
       throw new ErrorDominio('SIN_VINCULOS', 'Vincula al menos una entrada antes de conciliar');
     }
     const ahora = new Date();
-    return this.cambiar(usuario, c, 'comprobante.conciliado', false, {
+    return this.cambiar(usuario, c, 'comprobante.conciliado', 'conciliar', false, {
       estado: 'CONCILIADO',
       verificado_por: usuario.id,
       verificado_en: ahora,
@@ -273,6 +283,7 @@ export class ConciliacionService {
       usuario,
       c,
       'comprobante.rechazado',
+      'rechazar',
       true,
       {
         estado: 'RECHAZADO',
@@ -302,7 +313,7 @@ export class ConciliacionService {
     const c = await buscarPorFolio(this.prisma, texto);
     await this.exigirAlcance(usuario, c.acopio_id);
     if (c.estado !== 'RECHAZADO') throw estadoInvalido(c.estado, 'revertir el rechazo');
-    return this.cambiar(usuario, c, 'comprobante.rechazo_revertido', true, {
+    return this.cambiar(usuario, c, 'comprobante.rechazo_revertido', 'revertir el rechazo', true, {
       estado: 'PENDIENTE',
       motivo_rechazo: null,
       nota_rechazo: null,
@@ -316,6 +327,7 @@ export class ConciliacionService {
     usuario: UsuarioAutenticado,
     c: ComprobanteConLineas,
     accion: string,
+    verbo: string,
     destacado: boolean,
     data: Prisma.ComprobanteUncheckedUpdateInput,
     ademas?: (tx: Prisma.TransactionClient) => Promise<void>,
@@ -328,7 +340,7 @@ export class ConciliacionService {
       });
       if (count === 0) {
         const ahora = await tx.comprobante.findUniqueOrThrow({ where: { id: c.id } });
-        throw estadoInvalido(ahora.estado, 'cambiar');
+        throw estadoInvalido(ahora.estado, verbo);
       }
       const actualizado = await tx.comprobante.findUniqueOrThrow({
         where: { id: c.id },
