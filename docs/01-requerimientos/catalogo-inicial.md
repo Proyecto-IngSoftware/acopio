@@ -5,16 +5,15 @@ tags: [requerimientos, catalogo]
 estado: vigente
 modulo: catalogo
 bloque: 0
-actualizado: 2026-09-28
+actualizado: 2026-10-06
 ---
 
 # Catálogo inicial de categorías
 
-Respuesta a [P-003](pendientes.md) y primera versión de la canasta de
-[P-001](pendientes.md), acordadas el 2026-09-28 y registradas en
-[#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20). Es el contenido del
-*seed* del primer arranque ([despliegue](../06-operacion/despliegue.md#primer-arranque)).
-Las cifras de la canasta se confirman en la fuente antes del *seed*; ver
+Respuesta a [P-003](pendientes.md) y canasta estándar de [P-001](pendientes.md),
+registradas en [#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20). Es el
+contenido del *seed* del primer arranque ([despliegue](../06-operacion/despliegue.md#primer-arranque)).
+Las cifras de la canasta se validaron en la fuente el 2026-10-06; ver
 [Verificar antes del seed](#verificar-antes-del-seed) y
 [I-006](../00-contexto/investigaciones.md#i-006--cantidades-por-persona-para-la-canasta-estándar).
 
@@ -88,60 +87,87 @@ operador escribe la cantidad de piezas.
 | **Comida preparada** | No se almacena en un acopio. Se canaliza por ollas comunitarias |
 | **Dinero** | Fuera de alcance del producto ([fuera-de-alcance](../00-contexto/fuera-de-alcance.md)) |
 
-## Canasta estándar — primera versión
+## Canasta estándar
 
 **Solo 10 de las 39 categorías llevan canasta.** Las demás no tienen un estándar por
 persona y día que se pueda defender. Según [RF-CAT-003](funcionales/catalogo.md#rf-cat-003--definir-la-canasta-estándar),
 quedan fuera del cálculo automático: su necesidad llega por el reporte del Receptor
-([P-015](pendientes.md)). Así, que no exista un número para todo deja de ser un
-problema, porque la mayoría de las categorías no lo necesita.
+([P-015](pendientes.md)). La mayoría de las categorías no necesita un número.
 
-| Categoría | Por persona y día | Fuente (`canasta_estandar.fuente`) |
-|---|--:|---|
-| Agua potable | 15 L | Manual Esfera 2018, abastecimiento de agua, norma 2.1 |
-| Arroz | 0,25 kg | Ración de 2.100 kcal (Esfera 2018), con alimentos del kit alimentario de la UNGRD; cálculo propio |
-| Harinas | 0,10 kg | Ídem |
-| Pasta | 0,10 kg | Ídem |
-| Granos secos | 0,05 kg | Ídem |
-| Aceite | 0,03 L | Ídem |
-| Azúcar y panela | 0,02 kg | Ídem |
-| Sal | 0,005 kg | Ídem |
-| Jabón de baño | 0,067 unidades | Esfera 2018: 250 g de jabón de baño por persona al mes, en barras de 125 g |
-| Detergente para ropa | 0,0067 kg | Esfera 2018: 200 g de jabón de lavar por persona al mes |
+La versión vigente es la 2, del 2026-10-06. Sale de la validación de
+[I-006](../00-contexto/investigaciones.md#i-006--cantidades-por-persona-para-la-canasta-estándar),
+que corrigió la mezcla de alimentos de la versión 1 (2026-09-28). La canasta es
+versionada: el *seed* carga las dos y la 1 queda en el historial de cada categoría.
+
+| Categoría | Por persona y día | v1 | Fuente (`canasta_estandar.fuente`) |
+|---|--:|--:|---|
+| Agua potable | 15 L | 15 L | Esfera 2018, norma 2.1 de abastecimiento de agua, p. 121-122 y apéndice 3, p. 164 |
+| Arroz | 0,20 kg | 0,25 kg | Ración de 2.100 kcal con 17 % de grasa (Esfera 2018, norma 6.1); cálculo propio |
+| Harinas | 0,10 kg | 0,10 kg | Ídem |
+| Pasta | 0,10 kg | 0,10 kg | Ídem |
+| Granos secos | 0,08 kg | 0,05 kg | Ídem |
+| Aceite | 0,04 L | 0,03 L | Ídem |
+| Azúcar y panela | 0,02 kg | 0,02 kg | Ídem |
+| Sal | 0,005 kg | 0,005 kg | Ídem |
+| Jabón de baño | 0,067 unidades | igual | Esfera 2018, norma 1.2 de promoción de la higiene, p. 114: 250 g por persona al mes, en barras de 125 g |
+| Detergente para ropa | 0,0067 kg | igual | Esfera 2018, norma 1.2, p. 114: 200 g de jabón de colada por persona al mes |
+
+Las páginas son las impresas de la edición en español de Esfera 2018.
+
+Los 15 L de agua cubren beber, cocinar e higiene. Para beber son 2,5 a 3 L; el resto es
+agua de uso doméstico. Esfera dice que el valor es un mínimo que depende del contexto,
+nunca un máximo. El jabón y el detergente se fijan por mes, así que un reparto de menos
+de un mes se prorratea. Las barras de 125 g son una decisión de empaque del proyecto.
 
 ### Cómo se llega a las 2.100 kcal
 
-Esfera fija la energía (2.100 kcal por persona al día), no los alimentos. La
-distribución la hace el proyecto con los productos del kit alimentario de la UNGRD:
-arroz, harina para arepa, pasta, fríjol, aceite, azúcar y sal.
+Esfera (norma 6.1, p. 222-223, y apéndice 6, p. 259) fija la energía, 2.100 kcal por
+persona al día, con 10 a 12 % de la energía en proteína y 17 % en grasa. No fija gramos
+por alimento. La distribución es del proyecto, con los productos del kit alimentario de
+la UNGRD: arroz, harina para arepa, pasta, fríjol, aceite, azúcar, panela y sal.
 
-| Alimento | g/día | kcal por 100 g (aprox.) | kcal |
+| Alimento | g/día | kcal por 100 g (TCAC 2015) | kcal |
 |---|--:|--:|--:|
-| Cereales (arroz, harinas, pasta) | 450 | 357 | 1.607 |
-| Granos secos | 50 | 340 | 170 |
-| Aceite (0,03 L ≈ 27,6 g) | 27,6 | 884 | 244 |
-| Azúcar y panela | 20 | 387 | 77 |
+| Arroz blanco crudo (fila 11) | 200 | 349 | 698 |
+| Harina de maíz (fila 43) | 100 | 365 | 365 |
+| Pasta (fila 91) | 100 | 354 | 354 |
+| Fríjol rojo (fila 948) | 80 | 336 | 269 |
+| Aceite (0,04 L × 0,92 g/mL ≈ 36,8 g; filas 374-379) | 36,8 | 900 | 331 |
+| Azúcar (fila 688, 397) y panela (fila 721, 371), mitad y mitad | 20 | 384 | 77 |
 | Sal | 5 | 0 | 0 |
-| **Total** | | | **≈ 2.098** |
+| **Total** | | | **≈ 2.094** |
 
-Es una sola distribución defendible, no la única correcta. La canasta es versionada y
-editable por el Administrador. Si el equipo consigue una ración oficial de la UNGRD por
-persona, se carga como versión nueva con esa fuente.
+Con esta mezcla la grasa queda cerca del 18 % de la energía y la proteína cerca del
+10 %, en el borde bajo de Esfera. Son cálculos propios con valores aproximados de
+grasa y proteína. La v1 llevaba 450 g de cereal, 50 g de granos y 0,03 L de aceite:
+sumaba la energía, pero la grasa quedaba en 13-15 %. Las raciones de ACNUR y PMA que
+se pudieron citar usan unos 400 g de cereal y 60-80 g de legumbres.
+
+Para los grupos vulnerables (gestantes, lactantes, menores de 7 años y adultos
+mayores) la UNGRD prevé Bienestarina del ICBF como complemento. No entra en la canasta.
+
+Si el equipo consigue una ración oficial por persona, se carga como versión nueva con
+esa fuente. La «ración diaria sugerida» del manual de la UNGRD (2013, p. 75) no sirve
+para eso. Suma 1.960 kcal porque cuenta todos los productos del mercado, incluidos
+lácteos y atún.
 
 ## Verificar antes del seed
 
-- [ ] **Kilocalorías por alimento**: son aproximadas. Confirmarlas con la Tabla de
-      Composición de Alimentos Colombianos del ICBF y citarla en `fuente`.
-- [ ] **Jabón y detergente**: confirmar los 250 g y 200 g al mes en el capítulo de
-      artículos de higiene del Manual Esfera 2018.
-- [ ] **Kit alimentario de la UNGRD**: confirmar la lista de productos en el
-      *Manual de estandarización de la ayuda humanitaria de Colombia* (UNGRD, 2013).
+- [x] **Kilocalorías por alimento**: confirmadas con la Tabla de Composición de
+      Alimentos Colombianos del ICBF (TCAC 2015); la tabla de arriba cita cada fila.
+- [x] **Jabón y detergente**: confirmados en Esfera 2018, norma 1.2, p. 114.
+- [x] **Kit alimentario de la UNGRD**: confirmado en el manual de 2013, p. 70.
 - [ ] **Revisión de sinónimos**: que Brayan pruebe la entrada rápida (C04) con 10
       productos reales.
 
 ## Fuentes
 
+- Manual Esfera 2018 (español), las páginas citadas — <https://emergency.unhcr.org/sites/default/files/Esfera%20Manuel%20%282018%29.pdf>
 - Manual Esfera 2018 (inglés) — <https://spherestandards.org/wp-content/uploads/Sphere-Handbook-2018-EN.pdf>
+- ICBF, *Tabla de Composición de Alimentos Colombianos* (2015) —
+  <https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/INEC/IETS/tabla-de-composicion-alimentos-colombianos-2015.pdf>
+- USDA FoodData Central, aceite de soya (FDC 171411), para la densidad del aceite —
+  <https://fdc.nal.usda.gov/fdc-app.html#/food-details/171411/nutrients>
 - UNGRD, *Estandarización de ayuda humanitaria de Colombia* (2013) —
   <https://portal.gestiondelriesgo.gov.co/Documents/Manuales/Manual_de_Estandarizacion_AHE_de_Colombia.pdf>
 - UNGRD, adquisición de productos del kit alimentario de emergencia —

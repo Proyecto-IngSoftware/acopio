@@ -287,31 +287,30 @@ export const CATEGORIAS: CategoriaSemilla[] = [
   },
 ];
 
-const RACION =
-  'Ración de 2.100 kcal por persona al día (Manual Esfera 2018) repartida con los alimentos del kit alimentario de la UNGRD; cálculo propio';
-/** Hasta que se complete la lista de verificación de #20. */
-const POR_VERIFICAR = ' · Por verificar en la fuente (#20)';
-
 export interface CanastaSemilla {
   categoria: string;
   cantidadPersonaDia: number;
   fuente: string;
 }
 
-/** Primera versión de la canasta (P-001). Solo 10 categorías tienen un valor defendible. */
-export const CANASTA: CanastaSemilla[] = [
+const RACION_V1 =
+  'Ración de 2.100 kcal por persona al día (Manual Esfera 2018) repartida con los alimentos del kit alimentario de la UNGRD; cálculo propio';
+const POR_VERIFICAR = ' · Por verificar en la fuente (#20)';
+
+/** Primera versión (2026-09-28). Se conserva para que el historial sea el mismo en toda base. */
+const CANASTA_V1: CanastaSemilla[] = [
   {
     categoria: 'Agua potable',
     cantidadPersonaDia: 15,
     fuente: 'Manual Esfera 2018, abastecimiento de agua, norma 2.1',
   },
-  { categoria: 'Arroz', cantidadPersonaDia: 0.25, fuente: RACION + POR_VERIFICAR },
-  { categoria: 'Harinas', cantidadPersonaDia: 0.1, fuente: RACION + POR_VERIFICAR },
-  { categoria: 'Pasta', cantidadPersonaDia: 0.1, fuente: RACION + POR_VERIFICAR },
-  { categoria: 'Granos secos', cantidadPersonaDia: 0.05, fuente: RACION + POR_VERIFICAR },
-  { categoria: 'Aceite', cantidadPersonaDia: 0.03, fuente: RACION + POR_VERIFICAR },
-  { categoria: 'Azúcar y panela', cantidadPersonaDia: 0.02, fuente: RACION + POR_VERIFICAR },
-  { categoria: 'Sal', cantidadPersonaDia: 0.005, fuente: RACION + POR_VERIFICAR },
+  { categoria: 'Arroz', cantidadPersonaDia: 0.25, fuente: RACION_V1 + POR_VERIFICAR },
+  { categoria: 'Harinas', cantidadPersonaDia: 0.1, fuente: RACION_V1 + POR_VERIFICAR },
+  { categoria: 'Pasta', cantidadPersonaDia: 0.1, fuente: RACION_V1 + POR_VERIFICAR },
+  { categoria: 'Granos secos', cantidadPersonaDia: 0.05, fuente: RACION_V1 + POR_VERIFICAR },
+  { categoria: 'Aceite', cantidadPersonaDia: 0.03, fuente: RACION_V1 + POR_VERIFICAR },
+  { categoria: 'Azúcar y panela', cantidadPersonaDia: 0.02, fuente: RACION_V1 + POR_VERIFICAR },
+  { categoria: 'Sal', cantidadPersonaDia: 0.005, fuente: RACION_V1 + POR_VERIFICAR },
   {
     categoria: 'Jabón de baño',
     cantidadPersonaDia: 0.067,
@@ -326,5 +325,44 @@ export const CANASTA: CanastaSemilla[] = [
   },
 ];
 
-/** Fecha de la primera versión de la canasta. */
-export const CANASTA_VIGENTE_DESDE = new Date('2026-09-28T00:00:00Z');
+const RACION =
+  'Cálculo propio: 2.100 kcal con 17 % de grasa (Manual Esfera 2018, norma 6.1, p. 222-223 y apéndice 6, p. 259). ' +
+  'Esfera no fija gramos por alimento; kcal por 100 g de la TCAC 2015 del ICBF (P-001)';
+
+/** Canasta vigente (P-001, validada el 2026-10-06). Solo 10 categorías tienen un valor defendible. */
+export const CANASTA: CanastaSemilla[] = [
+  {
+    categoria: 'Agua potable',
+    cantidadPersonaDia: 15,
+    fuente:
+      'Manual Esfera 2018, norma 2.1 de abastecimiento de agua, p. 121-122 y apéndice 3, p. 164: ' +
+      'beber, cocinar e higiene; para beber, 2,5 a 3 L',
+  },
+  { categoria: 'Arroz', cantidadPersonaDia: 0.2, fuente: RACION },
+  { categoria: 'Harinas', cantidadPersonaDia: 0.1, fuente: RACION },
+  { categoria: 'Pasta', cantidadPersonaDia: 0.1, fuente: RACION },
+  { categoria: 'Granos secos', cantidadPersonaDia: 0.08, fuente: RACION },
+  { categoria: 'Aceite', cantidadPersonaDia: 0.04, fuente: RACION },
+  { categoria: 'Azúcar y panela', cantidadPersonaDia: 0.02, fuente: RACION },
+  { categoria: 'Sal', cantidadPersonaDia: 0.005, fuente: RACION },
+  {
+    categoria: 'Jabón de baño',
+    cantidadPersonaDia: 0.067,
+    fuente:
+      'Manual Esfera 2018, norma 1.2 de promoción de la higiene, p. 114: 250 g de jabón de baño ' +
+      'por persona al mes; barras de 125 g por decisión de empaque',
+  },
+  {
+    categoria: 'Detergente para ropa',
+    cantidadPersonaDia: 0.0067,
+    fuente:
+      'Manual Esfera 2018, norma 1.2 de promoción de la higiene, p. 114: 200 g de jabón de ' +
+      'colada por persona al mes',
+  },
+];
+
+/** Versiones de la canasta que carga el seed, de la más antigua a la vigente. */
+export const CANASTA_VERSIONES = [
+  { vigenteDesde: new Date('2026-09-28T00:00:00Z'), filas: CANASTA_V1 },
+  { vigenteDesde: new Date('2026-10-06T00:00:00Z'), filas: CANASTA },
+];

@@ -1,6 +1,6 @@
 import type { PrismaService } from '../comun/prisma/prisma.service';
 import type { ProveedorIdentidad } from '../modulos/identidad/proveedor/proveedor-identidad';
-import { CANASTA, CANASTA_VIGENTE_DESDE, CATEGORIAS } from './datos-catalogo';
+import { CANASTA_VERSIONES, CATEGORIAS } from './datos-catalogo';
 
 export interface AdminSemilla {
   username: string;
@@ -16,7 +16,7 @@ export interface ResumenSeed {
 }
 
 /**
- * Carga el catálogo inicial, la primera canasta y el primer administrador.
+ * Carga el catálogo inicial, las versiones de la canasta y el primer administrador.
  * Idempotente: correrlo dos veces deja lo mismo (criterio de salida del Bloque 0).
  * No toca lo que ya existe: si alguien editó una categoría, el seed no la pisa.
  */
@@ -39,23 +39,24 @@ export async function sembrar(
     });
   }
 
-  for (const v of CANASTA) {
-    const categoria = await prisma.categoria.findUniqueOrThrow({ where: { nombre: v.categoria } });
-    await prisma.canastaEstandar.upsert({
-      where: {
-        categoria_id_vigente_desde: {
-          categoria_id: categoria.id,
-          vigente_desde: CANASTA_VIGENTE_DESDE,
+  for (const { vigenteDesde, filas } of CANASTA_VERSIONES) {
+    for (const v of filas) {
+      const categoria = await prisma.categoria.findUniqueOrThrow({
+        where: { nombre: v.categoria },
+      });
+      await prisma.canastaEstandar.upsert({
+        where: {
+          categoria_id_vigente_desde: { categoria_id: categoria.id, vigente_desde: vigenteDesde },
         },
-      },
-      update: {},
-      create: {
-        categoria_id: categoria.id,
-        cantidad_persona_dia: v.cantidadPersonaDia,
-        fuente: v.fuente,
-        vigente_desde: CANASTA_VIGENTE_DESDE,
-      },
-    });
+        update: {},
+        create: {
+          categoria_id: categoria.id,
+          cantidad_persona_dia: v.cantidadPersonaDia,
+          fuente: v.fuente,
+          vigente_desde: vigenteDesde,
+        },
+      });
+    }
   }
 
   const adminCreado = await sembrarAdmin(prisma, proveedor, admin);

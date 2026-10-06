@@ -119,6 +119,25 @@ describe('catálogo', () => {
       ).toBe(15);
     });
 
+    it('la vigente es la versión 2 (P-001) y la primera queda en el historial', async () => {
+      const r = await a.http().get('/api/canasta').set(comoAdmin()).expect(200);
+      const cantidad = (c: string) =>
+        r.body.find((f: { categoria: string }) => f.categoria === c).cantidadPersonaDia;
+      expect(cantidad('Arroz')).toBe(0.2);
+      expect(cantidad('Granos secos')).toBe(0.08);
+      expect(cantidad('Aceite')).toBe(0.04);
+      for (const fila of r.body) expect(fila.fuente).not.toMatch(/Por verificar/);
+      const arroz = (await a.prisma.categoria.findUniqueOrThrow({ where: { nombre: 'Arroz' } })).id;
+      const historial = await a
+        .http()
+        .get(`/api/categorias/${arroz}/canasta`)
+        .set(comoAdmin())
+        .expect(200);
+      expect(
+        historial.body.map((h: { cantidadPersonaDia: number }) => h.cantidadPersonaDia),
+      ).toEqual([0.2, 0.25]);
+    });
+
     it('una versión nueva no reescribe la anterior', async () => {
       const agua = (
         await a.prisma.categoria.findUniqueOrThrow({ where: { nombre: 'Agua potable' } })
@@ -140,7 +159,7 @@ describe('catálogo', () => {
         .expect(200);
       expect(
         historial.body.map((h: { cantidadPersonaDia: number }) => h.cantidadPersonaDia),
-      ).toEqual([20, 15]);
+      ).toEqual([20, 15, 15]);
       // Hoy sigue vigente la de 15
       const vigente = await a.http().get('/api/canasta').set(comoAdmin());
       expect(

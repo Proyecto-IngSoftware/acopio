@@ -284,6 +284,42 @@ cálculo propio, declarado como tal en `canasta_estandar.fuente`. Las demás cat
 se mueven por el reporte del Receptor. Detalle y lista de verificación en
 [catalogo-inicial.md](../01-requerimientos/catalogo-inicial.md).
 
+**Validación del 2026-10-06.** Búsqueda en las fuentes primarias, con el PDF en español
+de Esfera 2018 leído directamente (páginas impresas):
+
+- Agua: 15 L por persona al día, norma 2.1, p. 121-122. El apéndice 3 (p. 164) reparte
+  2,5-3 L para beber, 2-6 L para higiene y 3-6 L para cocinar. Es un mínimo que depende
+  del contexto, nunca un máximo. El manual de la UNGRD cita la misma cifra (p. 186).
+- Energía: 2.100 kcal con 10-12 % de proteína y 17 % de grasa, norma 6.1, p. 222-223, y
+  apéndice 6, p. 259 (53 g de proteína, 40 g de grasa). Esfera no da gramos por
+  alimento; remite a NutVal.
+- Jabón: 250 g de jabón de baño y 200 g de jabón de colada por persona al mes, norma 1.2,
+  p. 114. Las barras de 125 g no salen de Esfera.
+- UNGRD: el manual de 2013 (Resolución 1808 de 2013, aún citado por la Resolución 0382
+  de 2025) da un mercado para una familia de hasta 5 personas (p. 70), pero se
+  contradice en la duración: 8 a 10 días, una semana o 15 días. Su ración diaria
+  sugerida (p. 75) suma 1.960 kcal y no apunta a las 2.100.
+- Kilocalorías: la TCAC 2015 del ICBF da arroz 349, harina de maíz 365, pasta 354,
+  fríjol rojo 336, aceite 900, azúcar 397 y panela 371 por 100 g. Los valores de la v1
+  estaban a menos de 5 %.
+- La mezcla de la v1 tenía demasiado cereal (450 g) y poca grasa (13-15 % de la
+  energía). La v2 baja el arroz a 0,20 kg, sube los granos a 0,08 kg y el aceite a
+  0,04 L: unas 2.094 kcal con cerca de 18 % de grasa.
+- La Cruz Roja Colombiana no publica cantidades; solo hay notas de prensa. El ICBF no
+  tiene ración de emergencia por persona; aporta Bienestarina para grupos vulnerables.
+
+Sin verificar: las guías OMS/ACNUR/UNICEF/PMA de 2004 (el PDF no se pudo bajar), NutVal
+y si existe una edición de Esfera posterior a 2018.
+
+- Manual Esfera 2018 (español) — <https://emergency.unhcr.org/sites/default/files/Esfera%20Manuel%20%282018%29.pdf> — consultado 2026-10-06
+- ICBF, TCAC 2015 — <https://www.minsalud.gov.co/sites/rid/Lists/BibliotecaDigital/RIDE/INEC/IETS/tabla-de-composicion-alimentos-colombianos-2015.pdf> — consultado 2026-10-06
+- Unidad para las Víctimas, orientaciones para la AHI (2024) — <https://www.unidadvictimas.gov.co/wp-content/uploads/2024/03/Orientaciones-para-la-entrega-y-reporte-de-AHI_compressed-1.pdf> — consultado 2026-10-06
+- ACNUR, canasta del PMA en Uganda — <https://im.unhcr.org/uga/wfp.html> — consultado 2026-10-06
+
+**Conclusión aplicada (2026-10-06):** canasta v2 en
+[catalogo-inicial.md](../01-requerimientos/catalogo-inicial.md#canasta-estándar), con la
+cita de cada valor en `canasta_estandar.fuente`. P-001 queda resuelto.
+
 ---
 
 ## Relacionado

@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: catalogo
 bloque: 0
-actualizado: 2026-10-01
+actualizado: 2026-10-06
 ---
 
 # RF-CAT · Catálogo maestro
@@ -57,7 +57,7 @@ emparejamiento.
 **Nota:** este requerimiento está bloqueado por
 [P-001](../pendientes.md). Sin fuente citable, el motor entero queda sin defensa.
 Primera versión, con 10 categorías, en
-[catalogo-inicial.md](../catalogo-inicial.md#canasta-estándar--primera-versión).
+[catalogo-inicial.md](../catalogo-inicial.md#canasta-estándar).
 
 ### RF-CAT-004 · Mapear códigos de barras
 **Actor:** Administrador, Operador · **Prioridad:** DEBERÍA

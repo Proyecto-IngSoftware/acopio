@@ -87,7 +87,7 @@ Hay uno por bloque o ciclo pendiente y uno por cada pendiente técnico de
 | Issue | Qué |
 |---|---|
 | [#34](https://github.com/Proyecto-IngSoftware/acopio/issues/34) | Bloque 3, ciclo 2: Recibir por folio y conciliación en la consola |
-| [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35) | Bloque 4, Motor (espera P-001 y P-002, en #20) |
+| [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35) | Bloque 4, Motor |
 | [#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36) | Bloque 5, Turnos |
 | [#37](https://github.com/Proyecto-IngSoftware/acopio/issues/37) | Bloque 6, Extras |
 | [#38](https://github.com/Proyecto-IngSoftware/acopio/issues/38) a [#43](https://github.com/Proyecto-IngSoftware/acopio/issues/43) | Deuda técnica: P-031, P-035, P-037, P-039, P-042 y menores de las revisiones |

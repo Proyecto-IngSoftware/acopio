@@ -44,19 +44,25 @@ Una entrada nunca se borra en silencio. Se mueve y se marca resuelta.
 persona por día, con una fuente citable (Esfera, UNGRD o Cruz Roja).
 **Por qué:** el motor entero se apoya en este número. Inventado, todo el cálculo
 de déficit queda sin defensa ante el jurado.
-**Estado:** ABIERTO — bloquea el Bloque 4
+**Estado:** RESUELTO el 2026-10-06 → canasta v2
 **Avance 2026-09-11:** el equipo decidió usar los datos de las fuentes **solo como
 referencia**. El Avance 1 cita el Manual Esfera: 15 L de agua segura y 2.100 kcal por
 persona al día. Falta la cantidad de referencia del resto de categorías.
 `canasta_estandar.fuente` ya obliga a citar cada valor.
 **Avance 2026-09-28:** primera versión de la canasta en
-[catalogo-inicial.md](catalogo-inicial.md#canasta-estándar--primera-versión). Solo 10
+[catalogo-inicial.md](catalogo-inicial.md#canasta-estándar). Solo 10
 categorías llevan cantidad por persona: agua (15 L, Esfera), jabón y detergente
 (Esfera) y siete alimentos que suman 2.100 kcal (Esfera) con productos del kit de la
 UNGRD. Las demás quedan fuera del cálculo automático y se mueven por el reporte del
 Receptor (P-015), como ya permite RF-CAT-003. Falta confirmar las cifras en la fuente
 ([I-006](../00-contexto/investigaciones.md#i-006--cantidades-por-persona-para-la-canasta-estándar));
 registro en [#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20).
+**Resuelto el 2026-10-06:** una búsqueda en las fuentes primarias confirmó el agua, la
+energía y el jabón en Esfera 2018, con página, y las kilocalorías en la TCAC 2015 del
+ICBF. Encontró que la mezcla de alimentos tenía poca grasa. La canasta v2 corrige arroz
+(0,20 kg), granos secos (0,08 kg) y aceite (0,04 L) y cita la fuente de cada valor.
+Detalle en [I-006](../00-contexto/investigaciones.md#i-006--cantidades-por-persona-para-la-canasta-estándar)
+y [catalogo-inicial.md](catalogo-inicial.md#canasta-estándar).
 
 ### P-002 · Origen de la población estimada por zona
 **Fecha:** 2026-08-20 · **Propuesto por:** equipo
