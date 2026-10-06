@@ -60,12 +60,20 @@ export class ProveedorLocal implements ProveedorIdentidad {
     });
   }
 
-  async iniciarSesion(correo: string, contrasena: string): Promise<SesionEmitida | null> {
+  async eliminarUsuario(uid: string): Promise<void> {
+    await this.prisma.identidadLocal.deleteMany({ where: { id: uid } });
+  }
+
+  async iniciarSesion(
+    correo: string,
+    contrasena: string,
+  ): Promise<SesionEmitida | { sinConfirmar: true } | null> {
     const identidad = await this.prisma.identidadLocal.findUnique({ where: { correo } });
     // Se compara igual aunque no exista, para no revelar por tiempo si el correo existe
     const hash = identidad?.password_hash ?? HASH_SENUELO;
     const coincide = await bcrypt.compare(contrasena, hash);
-    if (!identidad || !coincide || !identidad.correo_confirmado_en) return null;
+    if (!identidad || !coincide) return null;
+    if (!identidad.correo_confirmado_en) return { sinConfirmar: true };
 
     const { privada, publica } = await this.obtenerLlaves();
     const expiraEn = new Date(Date.now() + VIGENCIA_HORAS * 3600 * 1000);

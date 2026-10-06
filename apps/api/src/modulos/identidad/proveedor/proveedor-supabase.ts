@@ -48,7 +48,15 @@ export class ProveedorSupabase implements ProveedorIdentidad {
     if (error) throw error;
   }
 
-  async iniciarSesion(correo: string, contrasena: string): Promise<SesionEmitida | null> {
+  async eliminarUsuario(uid: string): Promise<void> {
+    const { error } = await this.admin.auth.admin.deleteUser(uid);
+    if (error) throw error;
+  }
+
+  async iniciarSesion(
+    correo: string,
+    contrasena: string,
+  ): Promise<SesionEmitida | { sinConfirmar: true } | null> {
     // Con la llave pública, como lo haría el navegador; la sesión la guarda el cliente
     const cliente = createClient(this.entorno.SUPABASE_URL!, this.entorno.SUPABASE_ANON_KEY!, {
       auth: { autoRefreshToken: false, persistSession: false },
@@ -57,6 +65,8 @@ export class ProveedorSupabase implements ProveedorIdentidad {
       email: correo,
       password: contrasena,
     });
+    // Supabase verifica la contraseña antes de avisar que falta confirmar el correo
+    if (error?.code === 'email_not_confirmed') return { sinConfirmar: true };
     if (error || !data.session) return null;
     return {
       accessToken: data.session.access_token,

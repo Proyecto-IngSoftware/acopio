@@ -1,3 +1,4 @@
+import { BitacoraService } from '../modulos/auditoria/bitacora.service';
 import { ADMIN, crearAppPrueba, unico, type AppPrueba } from '../../test/app-prueba';
 
 describe('registro del Donador (RF-IDE-013)', () => {
@@ -56,8 +57,62 @@ describe('registro del Donador (RF-IDE-013)', () => {
     expect(await a.prisma.usuario.findUnique({ where: { correo } })).toBeNull();
   });
 
-  it('un enlace usado o inventado no sirve', async () => {
+  it('un enlace inventado no sirve', async () => {
     await a.http().post('/api/auth/registro/confirmar').send({ token: 'inventado' }).expect(404);
+  });
+
+  it('un enlace ya usado no sirve una segunda vez', async () => {
+    const correo = `${unico('doble')}@correo.test`;
+    await registrar(correo).expect(202);
+    const { token } = await enlaceDe(correo);
+    await a.http().post('/api/auth/registro/confirmar').send({ token }).expect(200);
+    const otra = await a.http().post('/api/auth/registro/confirmar').send({ token }).expect(404);
+    expect(otra.body.codigo).toBe('ENLACE_INVALIDO');
+  });
+
+  it('una contraseña que el DTO acepta pero la política rechaza da 422', async () => {
+    const correo = `${unico('comun')}@correo.test`;
+    const r = await registrar(correo, 'contrasena2026').expect(422);
+    expect(r.body.codigo).toBe('CONTRASENA_DEBIL');
+    expect(await a.prisma.usuario.findUnique({ where: { correo } })).toBeNull();
+  });
+
+  it('si el alta falla a medias no queda una credencial huérfana y se puede reintentar', async () => {
+    const correo = `${unico('huerfana')}@correo.test`;
+    const espia = jest
+      .spyOn(a.app.get(BitacoraService), 'registrar')
+      .mockRejectedValueOnce(new Error('falla simulada'));
+    try {
+      await registrar(correo).expect(500);
+    } finally {
+      espia.mockRestore();
+    }
+    expect(await a.prisma.usuario.findUnique({ where: { correo } })).toBeNull();
+    expect(await a.prisma.identidadLocal.findUnique({ where: { correo } })).toBeNull();
+    await registrar(correo).expect(202);
+    expect(await a.prisma.usuario.findUnique({ where: { correo } })).not.toBeNull();
+  });
+
+  it('dos registros simultáneos del mismo correo responden 202 los dos', async () => {
+    const correo = `${unico('carrera')}@correo.test`;
+    const respuestas = await Promise.all([registrar(correo), registrar(correo)]);
+    expect(respuestas.map((r) => r.status)).toEqual([202, 202]);
+    expect(await a.prisma.usuario.count({ where: { correo } })).toBe(1);
+  });
+
+  it('sin confirmar, una contraseña mala da el mismo 401 que un correo inexistente', async () => {
+    const correo = `${unico('sinconf')}@correo.test`;
+    await registrar(correo).expect(202);
+    const entrar = (c: string, contrasena: string) =>
+      a.http().post('/api/auth/donador/sesion').send({ correo: c, contrasena });
+    const mala = await entrar(correo, 'una contraseña equivocada').expect(401);
+    const inexistente = await entrar(
+      `${unico('nadie')}@correo.test`,
+      'una contraseña equivocada',
+    ).expect(401);
+    expect(mala.body).toEqual(inexistente.body);
+    const buena = await entrar(correo, 'una frase larga para donar').expect(403);
+    expect(buena.body.codigo).toBe('CORREO_SIN_CONFIRMAR');
   });
 
   it('el Donador no entra por la puerta de la consola', async () => {

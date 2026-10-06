@@ -207,5 +207,10 @@ export async function crearDonador(a: AppPrueba) {
     },
   });
   const sesion = await proveedor.iniciarSesion(correo, contrasena);
-  return { id: usuario.id, correo, contrasena, token: sesion!.accessToken };
+  return {
+    id: usuario.id,
+    correo,
+    contrasena,
+    token: (sesion as { accessToken: string }).accessToken,
+  };
 }

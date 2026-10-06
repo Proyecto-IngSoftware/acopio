@@ -18,8 +18,16 @@ export interface ProveedorIdentidad {
   /** Marca el correo como confirmado: desde ahí puede iniciar sesión. */
   confirmarCorreo(uid: string): Promise<void>;
   cambiarContrasena(uid: string, contrasena: string): Promise<void>;
-  /** Devuelve null si el correo o la contraseña no coinciden. */
-  iniciarSesion(correo: string, contrasena: string): Promise<SesionEmitida | null>;
+  /** Borra la credencial: compensa un alta cuyo resto no se pudo guardar. */
+  eliminarUsuario(uid: string): Promise<void>;
+  /**
+   * Devuelve null si el correo o la contraseña no coinciden. `sinConfirmar` solo sale
+   * cuando la contraseña es correcta, para no revelar qué correos tienen cuenta.
+   */
+  iniciarSesion(
+    correo: string,
+    contrasena: string,
+  ): Promise<SesionEmitida | { sinConfirmar: true } | null>;
   /** Llaves públicas para verificar los tokens. Con Supabase, las del proyecto. */
   jwks(): Promise<JSONWebKeySet>;
 }

@@ -28,7 +28,7 @@ export class SesionService {
       throw CREDENCIALES_INVALIDAS();
     }
     const sesion = await this.proveedor.iniciarSesion(usuario.correo, contrasena);
-    if (!sesion) throw CREDENCIALES_INVALIDAS();
+    if (!sesion || 'sinConfirmar' in sesion) throw CREDENCIALES_INVALIDAS();
     return {
       accessToken: sesion.accessToken,
       expiraEn: sesion.expiraEn,

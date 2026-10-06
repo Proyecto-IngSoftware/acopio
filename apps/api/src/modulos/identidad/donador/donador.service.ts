@@ -63,13 +63,31 @@ export class DonadorService {
       return;
     }
 
-    const { uid } = await this.proveedor.crearUsuario(correo, datos.contrasena, {
-      confirmado: false,
-    });
+    let uid: string;
+    try {
+      ({ uid } = await this.proveedor.crearUsuario(correo, datos.contrasena, {
+        confirmado: false,
+      }));
+    } catch (error) {
+      // Carrera: otro registro del mismo correo ganó. Se responde igual (C-09).
+      const codigo = (error as { code?: string }).code;
+      if (codigo === 'P2002' || codigo === 'email_exists') return;
+      throw error;
+    }
+    try {
+      await this.crearCuenta(uid, correo, datos.nombre);
+    } catch (error) {
+      // Sin esto queda una credencial huérfana y el correo no se puede volver a registrar
+      await this.proveedor.eliminarUsuario(uid).catch(() => undefined);
+      throw error;
+    }
+  }
+
+  private async crearCuenta(uid: string, correo: string, nombre: string) {
     await this.prisma.$transaction(async (tx) => {
       const usuario = await tx.usuario.create({
         data: {
-          nombre: datos.nombre.trim(),
+          nombre: nombre.trim(),
           correo,
           rol: 'DONADOR',
           estado: 'ACTIVO',
@@ -144,18 +162,15 @@ export class DonadorService {
       await this.proveedor.iniciarSesion('no-existe@acopio.local', contrasena);
       throw CREDENCIALES_INVALIDAS();
     }
-    const pendiente = await this.prisma.verificacionCorreo.findFirst({
-      where: { usuario_id: usuario.id, usado_en: null },
-    });
-    if (pendiente) {
+    const sesion = await this.proveedor.iniciarSesion(correo, contrasena);
+    if (!sesion) throw CREDENCIALES_INVALIDAS();
+    if ('sinConfirmar' in sesion) {
       throw new ErrorDominio(
         'CORREO_SIN_CONFIRMAR',
         'Confirma tu correo con el enlace que te enviamos antes de entrar',
         403,
       );
     }
-    const sesion = await this.proveedor.iniciarSesion(correo, contrasena);
-    if (!sesion) throw CREDENCIALES_INVALIDAS();
     return {
       accessToken: sesion.accessToken,
       expiraEn: sesion.expiraEn,
