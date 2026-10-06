@@ -38,6 +38,8 @@ export class RecepcionService {
   ) {
     await this.movimientos.exigirOperador(usuario, datos.acopioId);
     const previo = await buscarPorFolio(this.prisma, texto);
+    // El estado manda sobre la forma del cuerpo: un reintento sobre un folio ya recibido es 409
+    if (previo.estado !== 'PREPARADO') throw estadoInvalido(previo.estado, 'recibir');
     const ids = new Set(datos.lineas.map((l) => l.lineaId));
     if (
       ids.size !== datos.lineas.length ||

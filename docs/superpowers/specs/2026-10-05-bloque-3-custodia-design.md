@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-3]
 estado: vigente
 bloque: 3
-actualizado: 2026-10-05
+actualizado: 2026-10-06
 ---
 
 # Bloque 3 · Custodia · especificación
@@ -364,5 +364,10 @@ Cada etapa tiene su plan, escrito al empezarla.
 | `exportar-openapi.ts` ahora pone valores de relleno para las variables `S3_*` | Sin ellas el script no arrancaba, porque el entorno exige el almacenamiento |
 | El recorrido con curl pasó con Garage real: registro, confirmación por Mailpit, factura, WebP sin `Artist` ni GPS en la foto y la miniatura, recepción, conciliación, seguimiento sin correo y vínculo de `ACO-2026-DEMA4` | Las pruebas usan `AlmacenMemoria`; esto comprueba el adaptador S3 |
 | Las URL firmadas llevan el host interno de Garage (`storage:3900`); el recorrido las bajó con `curl --connect-to` | Un navegador no las abre. Queda en [P-041](../../01-requerimientos/pendientes.md) |
+| Revisión final, 2026-10-06: `S3_URL_PUBLICA` opcional; un segundo cliente S3 firma con ese host y `docker-compose.dev.yml` la fija en `http://localhost:3900` | La URL firmada se baja desde el anfitrión sin `--connect-to` (200, `image/webp`). La ruta pública de Garage en producción sigue abierta en P-041 |
+| Revisión final: vincular responde 422 si el comprobante ya tiene vínculos de otro acopio; solo un folio sin vínculos cambia de acopio | Un lote no mezcla acopios |
+| Revisión final: recibir un folio que ya no está `PREPARADO` da 409 antes de validar las líneas | Un reintento con líneas incompletas no debe dar 422 |
+| Revisión final: la foto de más de 8 MB da 413 `ARCHIVO_GRANDE` y un campo de subida con otro nombre da 400 en español; `sharp` limita la entrada a 50 millones de píxeles | multer respondía en inglés y con otro código |
+| Revisión final: migración `20261006120000_bloque_3_fk_usuarios` con llaves foráneas a `usuario` para `recibido_por`, `verificado_por` y `vinculado_por` (RESTRICT) | Estaban en el §4 y faltaban |
 | Los HEIC no se probaron con una imagen real de iPhone | Se decodifican o dan 415; la prueba con un teléfono queda para la interfaz |
 | Queda abierto que alguien registre el correo de otra persona con su propia contraseña | [P-040](../../01-requerimientos/pendientes.md) |

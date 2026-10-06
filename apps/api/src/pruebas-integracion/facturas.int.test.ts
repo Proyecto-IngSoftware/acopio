@@ -51,6 +51,28 @@ describe('foto de factura (RF-CMP-002)', () => {
     expect((await sharp(guardada.datos).metadata()).exif).toBeUndefined();
   });
 
+  it('una foto de 9 MB da 413 ARCHIVO_GRANDE con el mensaje de la API', async () => {
+    const r = await subir(donador.token, Buffer.alloc(9 * 1024 * 1024)).expect(413);
+    expect(r.body).toEqual({
+      estado: 413,
+      codigo: 'ARCHIVO_GRANDE',
+      mensaje: 'La foto pesa más de 8 MB',
+    });
+  });
+
+  it('un campo con otro nombre da 400 en español que nombra «factura»', async () => {
+    const r = await a
+      .http()
+      .post(`/api/donaciones/${folio}/factura`)
+      .set('authorization', `Bearer ${donador.token}`)
+      .attach('otro', jpeg, 'f.jpg')
+      .expect(400);
+    expect(r.body.estado).toBe(400);
+    expect(r.body.codigo).toBe('SOLICITUD_INVALIDA');
+    expect(r.body.mensaje).toContain('factura');
+    expect(r.body.mensaje).not.toMatch(/Unexpected/);
+  });
+
   it('una segunda foto reemplaza a la primera y borra la anterior', async () => {
     const antes = await a.prisma.comprobante.findUniqueOrThrow({ where: { folio } });
     await subir(donador.token, jpeg).expect(200);

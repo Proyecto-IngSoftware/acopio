@@ -83,6 +83,51 @@ describe('seguimiento público por folio (RF-CMP-006)', () => {
   });
 });
 
+describe('seguimiento de una donación rechazada', () => {
+  it('dice «No se pudo conciliar» y no revela el motivo ni la nota', async () => {
+    const a = await crearAppPrueba();
+    try {
+      const donador = await crearDonador(a);
+      const admin = await iniciarSesion(a, ADMIN.username, ADMIN.contrasena);
+      const op = await crearUsuarioActivo(a, admin, { rol: 'OPERADOR' });
+      const auditor = await crearUsuarioActivo(a, admin, { rol: 'AUDITOR' });
+      const cat = await a.prisma.categoria.findFirstOrThrow({
+        where: { perecedero: false, unidad_base: 'UNIDAD', archivada: false },
+      });
+      const d = await a
+        .http()
+        .post('/api/donaciones')
+        .set('authorization', `Bearer ${donador.token}`)
+        .send({ acopioId: ACOPIO_A, lineas: [{ categoriaId: cat.id, cantidad: 5 }] })
+        .expect(201);
+      await a
+        .http()
+        .post(`/api/comprobantes/${d.body.folio}/recepcion`)
+        .set('authorization', `Bearer ${op.token}`)
+        .send({
+          acopioId: ACOPIO_A,
+          lineas: [{ lineaId: d.body.lineas[0].id, cantidadConfirmada: 5 }],
+        })
+        .expect(200);
+      await a
+        .http()
+        .post(`/api/comprobantes/${d.body.folio}/rechazar`)
+        .set('authorization', `Bearer ${auditor.token}`)
+        .send({ motivo: 'DIFERENCIA_SIN_EXPLICAR', nota: 'nota-secreta-del-auditor' })
+        .expect(200);
+      const r = await a.http().get(`/api/seguimiento/${d.body.folio}`).expect(200);
+      expect(r.body.estado).toBe('No se pudo conciliar');
+      const texto = JSON.stringify(r.body);
+      expect(texto).not.toContain('nota-secreta-del-auditor');
+      expect(texto).not.toContain('DIFERENCIA_SIN_EXPLICAR');
+      expect(texto).not.toMatch(/diferencia sin explicar/i);
+      expect(texto).not.toMatch(/motivo|nota/i);
+    } finally {
+      await a.cerrar();
+    }
+  });
+});
+
 describe('seguimiento con el límite por IP', () => {
   it('el undécimo intento del minuto recibe 429', async () => {
     const b = await crearAppPrueba({ limiteDeIntentos: true });

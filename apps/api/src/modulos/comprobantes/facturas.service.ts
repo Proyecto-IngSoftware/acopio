@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, Logger } from '@nestjs/common';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { PrismaService } from '../../comun/prisma/prisma.service';
@@ -13,6 +13,8 @@ const NO_ENCONTRADO = () =>
 /** Foto de factura opcional (RF-CMP-001B, 002). Una por donación (C-08). */
 @Injectable()
 export class FacturasService {
+  private readonly log = new Logger(FacturasService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly bitacora: BitacoraService,
@@ -26,8 +28,15 @@ export class FacturasService {
     if (c.estado !== 'PREPARADO') throw estadoInvalido(c.estado, 'cambiar la factura');
     const imagen = await this.almacenamiento.guardarImagen(`facturas/${c.id}`, datos);
     let hecho;
+    let anteriores: (string | null)[] = [];
     try {
       hecho = await this.prisma.$transaction(async (tx) => {
+        // Con la fila bloqueada se leen las claves vigentes: dos reemplazos a la vez no se pisan
+        const previas = await tx.$queryRaw<
+          { factura_key: string | null; miniatura_key: string | null }[]
+        >`
+          SELECT factura_key, miniatura_key FROM comprobante WHERE id = ${c.id}::uuid FOR UPDATE`;
+        anteriores = [previas[0]?.factura_key ?? null, previas[0]?.miniatura_key ?? null];
         // El estado se vuelve a exigir en el UPDATE: pudo cancelarse o recibirse en medio
         const { count } = await tx.comprobante.updateMany({
           where: { id: c.id, estado: 'PREPARADO' },
@@ -64,8 +73,13 @@ export class FacturasService {
       throw e;
     }
     // La anterior se borra después de guardar la nueva: si algo falla, no queda sin foto
-    if (c.factura_key) await this.almacenamiento.borrar(c.factura_key);
-    if (c.miniatura_key) await this.almacenamiento.borrar(c.miniatura_key);
+    // Ya está guardado: si el borrado falla se registra, nunca se responde 500
+    const resultados = await Promise.allSettled(
+      anteriores.filter((k): k is string => !!k).map((k) => this.almacenamiento.borrar(k)),
+    );
+    for (const r of resultados) {
+      if (r.status === 'rejected') this.log.error('No se pudo borrar la foto anterior', r.reason);
+    }
     return aComprobanteVista(hecho);
   }
 

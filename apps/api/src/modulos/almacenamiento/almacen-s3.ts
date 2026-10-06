@@ -13,15 +13,21 @@ import type { Almacen } from './almacen';
 @Injectable()
 export class AlmacenS3 implements Almacen {
   private readonly cliente: S3Client;
+  // SigV4 firma el Host: la URL se firma ya con el host público, sin reescribirla después
+  private readonly firmador: S3Client;
   private readonly bucket: string;
 
   constructor(@Inject(ENTORNO) entorno: Entorno) {
     this.bucket = entorno.S3_BUCKET;
-    this.cliente = new S3Client({
-      endpoint: entorno.S3_ENDPOINT,
+    const base = {
       region: entorno.S3_REGION,
       forcePathStyle: true,
       credentials: { accessKeyId: entorno.S3_ACCESS_KEY, secretAccessKey: entorno.S3_SECRET_KEY },
+    };
+    this.cliente = new S3Client({ ...base, endpoint: entorno.S3_ENDPOINT });
+    this.firmador = new S3Client({
+      ...base,
+      endpoint: entorno.S3_URL_PUBLICA ?? entorno.S3_ENDPOINT,
     });
   }
 
@@ -32,7 +38,7 @@ export class AlmacenS3 implements Almacen {
   }
 
   urlFirmada(clave: string, segundos: number) {
-    return getSignedUrl(this.cliente, new GetObjectCommand({ Bucket: this.bucket, Key: clave }), {
+    return getSignedUrl(this.firmador, new GetObjectCommand({ Bucket: this.bucket, Key: clave }), {
       expiresIn: segundos,
     });
   }

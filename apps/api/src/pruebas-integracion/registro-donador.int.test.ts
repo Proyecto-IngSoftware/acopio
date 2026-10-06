@@ -50,6 +50,31 @@ describe('registro del Donador (RF-IDE-013)', () => {
     expect((await enlaceDe(ADMIN.correo)).asunto).toBe('Ya tienes una cuenta en Acopio');
   });
 
+  it('un enlace vencido da 404 ENLACE_INVALIDO', async () => {
+    const correo = `${unico('vencido')}@correo.test`;
+    await registrar(correo).expect(202);
+    const { token } = await enlaceDe(correo);
+    const usuario = await a.prisma.usuario.findUniqueOrThrow({ where: { correo } });
+    await a.prisma.verificacionCorreo.updateMany({
+      where: { usuario_id: usuario.id },
+      data: { vence_en: new Date(Date.now() - 60_000) },
+    });
+    const r = await a.http().post('/api/auth/registro/confirmar').send({ token }).expect(404);
+    expect(r.body.codigo).toBe('ENLACE_INVALIDO');
+  });
+
+  it('un segundo registro sobre una cuenta pendiente encola un enlace nuevo', async () => {
+    const correo = `${unico('pendiente')}@correo.test`;
+    await registrar(correo).expect(202);
+    const primero = (await enlaceDe(correo)).token;
+    await registrar(correo).expect(202);
+    const segundo = await enlaceDe(correo);
+    expect(segundo.asunto).not.toBe('Ya tienes una cuenta en Acopio');
+    expect(segundo.token).toBeDefined();
+    expect(segundo.token).not.toBe(primero);
+    expect(await a.prisma.correoSaliente.count({ where: { destinatario: correo } })).toBe(2);
+  });
+
   it('una contraseña débil no crea nada', async () => {
     const correo = `${unico('debil')}@correo.test`;
     const r = await registrar(correo, 'corta').expect(400);

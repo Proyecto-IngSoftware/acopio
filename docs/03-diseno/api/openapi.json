@@ -3283,6 +3283,25 @@
             }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "factura": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "factura"
+                ]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "",

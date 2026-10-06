@@ -4238,7 +4238,14 @@ export interface operations {
             };
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    factura: string;
+                };
+            };
+        };
         responses: {
             200: {
                 headers: {

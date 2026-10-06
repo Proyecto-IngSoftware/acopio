@@ -29,6 +29,8 @@ const esquema = z
     FACTURA_RETENCION_MESES: z.coerce.number().int().positive().default(12),
     // Almacenamiento de objetos (ADR-0012)
     S3_ENDPOINT: z.url(),
+    // Host por el que el navegador alcanza el almacenamiento; firma las URL. Sin él, S3_ENDPOINT.
+    S3_URL_PUBLICA: z.url().optional(),
     S3_REGION: z.string().min(1),
     S3_BUCKET: z.string().min(1),
     S3_ACCESS_KEY: z.string().min(1),

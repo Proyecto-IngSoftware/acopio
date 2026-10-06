@@ -8,7 +8,14 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiConsumes, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiOkResponse,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
@@ -28,6 +35,13 @@ export class FacturasController {
   @Post('donaciones/:folio/factura')
   @HttpCode(200)
   @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: { factura: { type: 'string', format: 'binary' } },
+      required: ['factura'],
+    },
+  })
   // Un byte más que el máximo: así procesarImagen responde 413 con su mensaje
   @UseInterceptors(FileInterceptor('factura', { limits: { fileSize: TAMANO_MAXIMO + 1 } }))
   @ApiOkResponse({ type: ComprobanteDto })

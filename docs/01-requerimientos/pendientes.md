@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-05
+actualizado: 2026-10-06
 ---
 
 # Pendientes — bandeja de entrada
@@ -704,13 +704,20 @@ formulario donde la dueña elige su contraseña.
 
 ### P-041 · Las URL firmadas de la factura traen el host interno de Garage
 **Fecha:** 2026-10-05 · **Propuesto por:** Joseph
-**Qué:** la API firma las URL con `S3_ENDPOINT`, que en el Compose es `http://storage:3900`.
+**Qué:** la API firmaba las URL con `S3_ENDPOINT`, que en el Compose es `http://storage:3900`.
 Un navegador no resuelve ese nombre. El recorrido con curl tuvo que redirigir el host con
-`--connect-to`. Hace falta un endpoint público de Garage (por ejemplo `S3_URL_PUBLICA`) para
-firmar las URL que ve el navegador, o un proxy en la API.
+`--connect-to`.
 **Por qué:** lo encontró el recorrido de cierre del Bloque 3. Las pruebas usan
-`AlmacenMemoria` y no lo ven. Se resuelve antes de que la interfaz muestre la factura.
-**Estado:** ABIERTO.
+`AlmacenMemoria` y no lo ven.
+**Resuelto en desarrollo (2026-10-06):** `S3_URL_PUBLICA` es opcional. Si existe, un segundo
+cliente S3 firma con ese host, porque SigV4 firma el Host y la URL no se puede reescribir
+después. `docker-compose.dev.yml` la fija en `http://localhost:3900`. Con la API en el Compose,
+una URL firmada se bajó con curl desde el anfitrión, sin `--connect-to`: 200 e `image/webp`.
+**Sigue abierto:** en producción Garage tiene que ser alcanzable por una ruta pública, y eso
+choca con «El almacenamiento nunca se expone» de [vista-general](../02-arquitectura/vista-general.md).
+Hay que decidir entre exponer solo la ruta de lectura de Garage o un proxy en la API, y
+registrarlo en un ADR.
+**Estado:** ABIERTO (solo producción).
 
 ---
 

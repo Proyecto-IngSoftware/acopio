@@ -171,6 +171,19 @@ describe('recibir una donación preparada (RF-CMP-001C)', () => {
     expect(r.body).toMatchObject({ codigo: 'ESTADO_INVALIDO', detalles: { estado: 'PENDIENTE' } });
   });
 
+  it('recibir otra vez un folio ya recibido, con líneas incompletas, da 409 y no 422', async () => {
+    const d = await preparar();
+    await recibir(opA.token, d.folio, {
+      acopioId: ACOPIO_A,
+      lineas: confirmar(d, [1, 1, 1]),
+    }).expect(200);
+    const r = await recibir(opA.token, d.folio, {
+      acopioId: ACOPIO_A,
+      lineas: confirmar(d, [1, 1, 1]).slice(0, 1),
+    }).expect(409);
+    expect(r.body).toMatchObject({ codigo: 'ESTADO_INVALIDO', detalles: { estado: 'PENDIENTE' } });
+  });
+
   it('si falta una línea responde 422 sin tocar nada', async () => {
     const d = await preparar();
     const r = await recibir(opA.token, d.folio, {

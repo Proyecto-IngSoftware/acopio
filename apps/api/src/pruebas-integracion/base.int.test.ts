@@ -186,6 +186,25 @@ describe('base de datos', () => {
       await expect(app.query(`DELETE FROM comprobante`)).rejects.toThrow(/permission denied/);
     });
 
+    it('recibido_por, verificado_por y vinculado_por exigen un usuario que exista', async () => {
+      const admin = await a.prisma.usuario.findFirstOrThrow({
+        where: { username: ADMIN.username },
+      });
+      const fantasma = '00000000-0000-4000-8000-000000000000';
+      await expect(
+        app.query(
+          `INSERT INTO comprobante (folio, donador_id, acopio_id, recibido_por) VALUES ('ACO-2026-FKAAA', $1, $2, $3)`,
+          [admin.id, ACOPIO_A, fantasma],
+        ),
+      ).rejects.toThrow(/comprobante_recibido_por_fkey/);
+      await expect(
+        app.query(
+          `INSERT INTO comprobante (folio, donador_id, acopio_id, verificado_por) VALUES ('ACO-2026-FKBBB', $1, $2, $3)`,
+          [admin.id, ACOPIO_A, fantasma],
+        ),
+      ).rejects.toThrow(/comprobante_verificado_por_fkey/);
+    });
+
     it('un folio fuera de formato no entra', async () => {
       const admin = await a.prisma.usuario.findFirstOrThrow({
         where: { username: ADMIN.username },

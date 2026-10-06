@@ -50,14 +50,17 @@ model Usuario {
   tokens_validos_desde DateTime?     @db.Timestamptz
   creado_en            DateTime      @default(now()) @db.Timestamptz
 
-  asignaciones         UsuarioAsignacion[] @relation("asignaciones")
-  asignaciones_hechas  UsuarioAsignacion[] @relation("asignado_por")
-  invitaciones         Invitacion[]        @relation("invitado")
-  invitaciones_creadas Invitacion[]        @relation("creada_por")
+  asignaciones         UsuarioAsignacion[]     @relation("asignaciones")
+  asignaciones_hechas  UsuarioAsignacion[]     @relation("asignado_por")
+  invitaciones         Invitacion[]            @relation("invitado")
+  invitaciones_creadas Invitacion[]            @relation("creada_por")
   verificaciones       VerificacionCorreo[]
   bitacora             Bitacora[]
   movimientos          Movimiento[]
-  donaciones           Comprobante[] @relation("donaciones")
+  donaciones           Comprobante[]           @relation("donaciones")
+  recibidas            Comprobante[]           @relation("recibidas")
+  verificadas          Comprobante[]           @relation("verificadas")
+  vinculos_hechos      ComprobanteMovimiento[] @relation("vinculos_hechos")
 
   @@map("usuario")
 }
@@ -191,12 +194,12 @@ model Categoria {
   archivada   Boolean        @default(false)
   creado_en   DateTime       @default(now()) @db.Timestamptz
 
-  canasta        CanastaEstandar[]
-  no_recibir     NoRecibir[]
-  movimientos    Movimiento[]
-  saldos         Saldo[]
-  umbrales       Umbral[]
-  codigos_barras CodigoBarras[]
+  canasta            CanastaEstandar[]
+  no_recibir         NoRecibir[]
+  movimientos        Movimiento[]
+  saldos             Saldo[]
+  umbrales           Umbral[]
+  codigos_barras     CodigoBarras[]
   lineas_comprobante LineaComprobante[]
 
   @@map("categoria")
@@ -278,21 +281,21 @@ model Entidad {
 
 /// RF-RED-001. Los acopios referenciados (tipo, fuente) llegan con el importador.
 model Acopio {
-  id                  String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  entidad_id          String       @db.Uuid
-  entidad             Entidad      @relation(fields: [entidad_id], references: [id])
+  id                  String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entidad_id          String        @db.Uuid
+  entidad             Entidad       @relation(fields: [entidad_id], references: [id])
   nombre              String
   direccion           String
   municipio           String
-  lat                 Decimal      @db.Decimal(9, 6)
-  lng                 Decimal      @db.Decimal(9, 6)
+  lat                 Decimal       @db.Decimal(9, 6)
+  lng                 Decimal       @db.Decimal(9, 6)
   telefono            String?
   indicaciones_acceso String?
   /// { lun: [{ abre: "08:00", cierra: "12:00" }], … } en hora de Bogotá
   horario             Json
-  estado              EstadoAcopio @default(ACTIVO)
-  creado_en           DateTime     @default(now()) @db.Timestamptz
-  actualizado_en      DateTime     @default(now()) @updatedAt @db.Timestamptz
+  estado              EstadoAcopio  @default(ACTIVO)
+  creado_en           DateTime      @default(now()) @db.Timestamptz
+  actualizado_en      DateTime      @default(now()) @updatedAt @db.Timestamptz
   no_recibir          NoRecibir[]
   movimientos         Movimiento[]
   saldos              Saldo[]
@@ -355,26 +358,26 @@ enum MotivoSalida {
 /// Append-only (ADR-0002): acopio_app solo SELECT e INSERT. Un error se corrige con un AJUSTE.
 /// El id puede venir del cliente: es la llave de idempotencia de la captura sin conexión.
 model Movimiento {
-  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  acopio_id      String         @db.Uuid
-  acopio         Acopio         @relation(fields: [acopio_id], references: [id])
-  categoria_id   String         @db.Uuid
-  categoria      Categoria      @relation(fields: [categoria_id], references: [id])
+  id             String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  acopio_id      String                 @db.Uuid
+  acopio         Acopio                 @relation(fields: [acopio_id], references: [id])
+  categoria_id   String                 @db.Uuid
+  categoria      Categoria              @relation(fields: [categoria_id], references: [id])
   tipo           TipoMovimiento
-  cantidad       Decimal        @db.Decimal(12, 3)
-  signo          Int            @db.SmallInt
+  cantidad       Decimal                @db.Decimal(12, 3)
+  signo          Int                    @db.SmallInt
   motivo_salida  MotivoSalida?
   nota           String?
   motivo         String?
-  vence_en       DateTime?      @db.Date
-  usuario_id     String         @db.Uuid
-  usuario        Usuario        @relation(fields: [usuario_id], references: [id])
-  ocurrido_en    DateTime       @db.Timestamptz
-  registrado_en  DateTime       @default(now()) @db.Timestamptz
-  origen_offline Boolean        @default(false)
+  vence_en       DateTime?              @db.Date
+  usuario_id     String                 @db.Uuid
+  usuario        Usuario                @relation(fields: [usuario_id], references: [id])
+  ocurrido_en    DateTime               @db.Timestamptz
+  registrado_en  DateTime               @default(now()) @db.Timestamptz
+  origen_offline Boolean                @default(false)
   /// Orden en que entró a la base: ordena el historial y su saldo corriente. registrado_en
   /// es la hora de inicio de la transacción y no siempre coincide con ese orden.
-  secuencia      BigInt         @unique @default(autoincrement())
+  secuencia      BigInt                 @unique @default(autoincrement())
   vinculo        ComprobanteMovimiento?
 
   @@index([acopio_id, categoria_id, registrado_en])
@@ -461,28 +464,30 @@ enum OrigenVinculo {
 
 /// Una donación preparada por un Donador (RF-CMP-001B). Vale cuando se concilia.
 model Comprobante {
-  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  folio              String            @unique
-  donador_id         String            @db.Uuid
-  donador            Usuario           @relation("donaciones", fields: [donador_id], references: [id])
-  acopio_id          String            @db.Uuid
-  acopio             Acopio            @relation(fields: [acopio_id], references: [id])
-  estado             EstadoComprobante @default(PREPARADO)
-  creado_en          DateTime          @default(now()) @db.Timestamptz
-  recibido_por       String?           @db.Uuid
-  recibido_en        DateTime?         @db.Timestamptz
-  verificado_por     String?           @db.Uuid
-  verificado_en      DateTime?         @db.Timestamptz
-  motivo_rechazo     MotivoRechazo?
-  nota_rechazo       String?
-  cerrado_en         DateTime?         @db.Timestamptz
-  factura_key        String?
-  miniatura_key      String?
-  factura_tipo       String?
-  factura_bytes      Int?
-  factura_borrada_en DateTime?         @db.Timestamptz
-  lineas             LineaComprobante[]
-  vinculos           ComprobanteMovimiento[]
+  id                     String                  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  folio                  String                  @unique
+  donador_id             String                  @db.Uuid
+  donador                Usuario                 @relation("donaciones", fields: [donador_id], references: [id])
+  acopio_id              String                  @db.Uuid
+  acopio                 Acopio                  @relation(fields: [acopio_id], references: [id])
+  estado                 EstadoComprobante       @default(PREPARADO)
+  creado_en              DateTime                @default(now()) @db.Timestamptz
+  recibido_por           String?                 @db.Uuid
+  recibido_por_usuario   Usuario?                @relation("recibidas", fields: [recibido_por], references: [id], onDelete: Restrict)
+  recibido_en            DateTime?               @db.Timestamptz
+  verificado_por         String?                 @db.Uuid
+  verificado_por_usuario Usuario?                @relation("verificadas", fields: [verificado_por], references: [id], onDelete: Restrict)
+  verificado_en          DateTime?               @db.Timestamptz
+  motivo_rechazo         MotivoRechazo?
+  nota_rechazo           String?
+  cerrado_en             DateTime?               @db.Timestamptz
+  factura_key            String?
+  miniatura_key          String?
+  factura_tipo           String?
+  factura_bytes          Int?
+  factura_borrada_en     DateTime?               @db.Timestamptz
+  lineas                 LineaComprobante[]
+  vinculos               ComprobanteMovimiento[]
 
   @@index([estado, acopio_id, creado_en])
   @@index([donador_id, estado])
@@ -508,13 +513,14 @@ model LineaComprobante {
 
 /// Solo inserción (C-05): une una donación con sus ENTRADA, al recibir o al vincular.
 model ComprobanteMovimiento {
-  comprobante_id String        @db.Uuid
-  comprobante    Comprobante   @relation(fields: [comprobante_id], references: [id])
-  movimiento_id  String        @unique @db.Uuid
-  movimiento     Movimiento    @relation(fields: [movimiento_id], references: [id])
-  origen         OrigenVinculo
-  vinculado_por  String        @db.Uuid
-  vinculado_en   DateTime      @default(now()) @db.Timestamptz
+  comprobante_id        String        @db.Uuid
+  comprobante           Comprobante   @relation(fields: [comprobante_id], references: [id])
+  movimiento_id         String        @unique @db.Uuid
+  movimiento            Movimiento    @relation(fields: [movimiento_id], references: [id])
+  origen                OrigenVinculo
+  vinculado_por         String        @db.Uuid
+  vinculado_por_usuario Usuario       @relation("vinculos_hechos", fields: [vinculado_por], references: [id])
+  vinculado_en          DateTime      @default(now()) @db.Timestamptz
 
   @@id([comprobante_id, movimiento_id])
   @@map("comprobante_movimiento")

@@ -197,6 +197,13 @@ export class ConciliacionService {
     await this.exigirAlcance(usuario, acopioId);
     // Reasignar el folio saca el comprobante del alcance de quien lo tenía
     await this.exigirAlcance(usuario, c.acopio_id);
+    // Reasignar el acopio solo vale en un folio sin vínculos: con ellos, el lote no se mezcla
+    const previos = await this.prisma.comprobanteMovimiento.findMany({
+      where: { comprobante_id: c.id },
+      select: { movimiento: { select: { acopio_id: true } } },
+    });
+    if (previos.some((v) => v.movimiento.acopio_id !== acopioId))
+      throw noVinculable('Las entradas tienen que ser del mismo acopio que las ya vinculadas');
 
     try {
       const hecho = await this.prisma.$transaction(async (tx) => {

@@ -1,10 +1,12 @@
 import {
   ArgumentsHost,
+  BadRequestException,
   Catch,
   ExceptionFilter,
   HttpException,
   HttpStatus,
   Logger,
+  PayloadTooLargeException,
 } from '@nestjs/common';
 import { ThrottlerException } from '@nestjs/throttler';
 import type { Response } from 'express';
@@ -63,6 +65,20 @@ export class FiltroErrores implements ExceptionFilter {
         estado: HttpStatus.TOO_MANY_REQUESTS,
         codigo: 'DEMASIADOS_INTENTOS',
         mensaje: 'Demasiados intentos. Espera un minuto.',
+      };
+    }
+    // multer corta la subida con mensajes en inglés: se traducen a los de la API
+    if (error instanceof PayloadTooLargeException && error.message === 'File too large') {
+      return { estado: 413, codigo: 'ARCHIVO_GRANDE', mensaje: 'La foto pesa más de 8 MB' };
+    }
+    if (
+      error instanceof BadRequestException &&
+      /^Unexpected field|^Unexpected file field/.test(error.message)
+    ) {
+      return {
+        estado: 400,
+        codigo: 'SOLICITUD_INVALIDA',
+        mensaje: 'Adjunta la foto en el campo «factura»',
       };
     }
     if (error instanceof HttpException) {

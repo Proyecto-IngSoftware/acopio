@@ -54,4 +54,16 @@ describe('procesarImagen (RF-CMP-002)', () => {
       estado: 415,
     });
   });
+
+  it('una imagen de 8000 x 8000 px no revienta: 413 o 415, nunca 500', async () => {
+    const enorme = await sharp({
+      create: { width: 8000, height: 8000, channels: 3, background: '#fff' },
+    })
+      .png({ compressionLevel: 9 })
+      .toBuffer();
+    await expect(procesarImagen(enorme)).rejects.toMatchObject({
+      codigo: 'ARCHIVO_GRANDE',
+      estado: 413,
+    });
+  });
 });

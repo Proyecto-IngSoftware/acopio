@@ -24,5 +24,7 @@ services:
       NODE_ENV: development
       AUTH_PROVEEDOR: local
       SUPABASE_JWKS_URL: http://localhost:3000/api/auth/.well-known/jwks.json
+      # El navegador no resuelve «storage»: las URL firmadas salen con el host del anfitrión
+      S3_URL_PUBLICA: ${S3_URL_PUBLICA:-http://localhost:3900}
       SMTP_HOST: mailpit
       SMTP_PORT: 1025

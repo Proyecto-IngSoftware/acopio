@@ -200,6 +200,29 @@ describe('bandeja y conciliación (RF-CMP-003 a 005)', () => {
     expect(r.body.acopio.id).toBe(ACOPIO_B);
   });
 
+  it('el Administrador no mezcla acopios: con vínculos en A, una entrada de B da 422 y el folio sigue en A', async () => {
+    const folio = await recibida();
+    const entrada = await como(opB.token)
+      .post(`/api/acopios/${ACOPIO_B}/entradas`, { categoriaId: categoria, cantidad: 4 })
+      .expect(201);
+    const antes = await a.prisma.comprobanteMovimiento.count({
+      where: { comprobante: { folio } },
+    });
+    const r = await como(admin)
+      .post(`/api/comprobantes/${folio}/vinculos`, { movimientoIds: [entrada.body.movimiento.id] })
+      .expect(422);
+    expect(r.body.codigo).toBe('MOVIMIENTO_NO_VINCULABLE');
+    expect(r.body.mensaje).toBe(
+      'Las entradas tienen que ser del mismo acopio que las ya vinculadas',
+    );
+    expect(await a.prisma.comprobanteMovimiento.count({ where: { comprobante: { folio } } })).toBe(
+      antes,
+    );
+    expect((await a.prisma.comprobante.findUniqueOrThrow({ where: { folio } })).acopio_id).toBe(
+      ACOPIO_A,
+    );
+  });
+
   it('una entrada de una categoría que no está en las líneas aparece en el resumen sin cuadrar', async () => {
     const otra = (
       await a.prisma.categoria.findFirstOrThrow({
