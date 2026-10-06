@@ -72,7 +72,12 @@ export class RecepcionService {
         throw estadoInvalido(actual.estado, 'recibir');
       }
 
-      for (const linea of previo.lineas) {
+      // Las entradas toman un candado por acopio y categoría hasta el commit: todas las
+      // transacciones los piden en el mismo orden para que dos recepciones no se crucen
+      const lineas = [...previo.lineas].sort(
+        (x, y) => x.categoria_id.localeCompare(y.categoria_id) || x.id.localeCompare(y.id),
+      );
+      for (const linea of lineas) {
         const recibida = porLinea.get(linea.id)!;
         const venceEn = recibida.venceEn ?? linea.vence_en;
         if (recibida.cantidadConfirmada > 0) {
@@ -107,7 +112,7 @@ export class RecepcionService {
           where: { id: linea.id },
           data: {
             cantidad_confirmada: recibida.cantidadConfirmada,
-            vence_en: venceEn ?? null,
+            vence_en: linea.categoria.perecedero ? (venceEn ?? null) : null,
             motivo_diferencia: recibida.motivoDiferencia?.trim() || null,
           },
         });

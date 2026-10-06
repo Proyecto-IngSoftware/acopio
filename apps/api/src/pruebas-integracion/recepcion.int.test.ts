@@ -224,4 +224,35 @@ describe('recibir una donación preparada (RF-CMP-001C)', () => {
       expect(await vinculosDe(d.folio)).toHaveLength(x.status === 200 ? 3 : 0);
     }
   });
+
+  it('folios distintos con las mismas categorías, recibidos a la vez, no se bloquean entre sí', async () => {
+    const dosLineas = async () => {
+      const donador = await crearDonador(a);
+      const r = await a
+        .http()
+        .post('/api/donaciones')
+        .set('authorization', `Bearer ${donador.token}`)
+        .send({
+          acopioId: ACOPIO_A,
+          lineas: [
+            { categoriaId: unidades, cantidad: 4 },
+            { categoriaId: agua, ean: '7702001045231', cantidad: 6 },
+          ],
+        })
+        .expect(201);
+      return r.body as Preparada;
+    };
+    for (let ronda = 0; ronda < 6; ronda++) {
+      const [x, y] = [await dosLineas(), await dosLineas()];
+      const cuerpo = (d: Preparada) => ({
+        acopioId: ACOPIO_A,
+        lineas: d.lineas.map((l) => ({ lineaId: l.id, cantidadConfirmada: 1 })),
+      });
+      const [rx, ry] = await Promise.all([
+        recibir(opA.token, x.folio, cuerpo(x)),
+        recibir(opA2.token, y.folio, cuerpo(y)),
+      ]);
+      expect([rx.status, ry.status]).toEqual([200, 200]);
+    }
+  });
 });
