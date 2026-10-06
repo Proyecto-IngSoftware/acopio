@@ -85,13 +85,22 @@ describe('rutas del Donador', () => {
 
   it.each([
     ['/donador', 'Tu cuenta de Donador'],
-    ['/donador/confirmar/abc', 'Confirma tu correo'],
     ['/seguimiento', 'Seguimiento'],
     ['/seguimiento/ACO-2026-7KQ4M', 'Seguimiento'],
     ['/privacidad', 'Privacidad'],
   ])('%s carga su pantalla dentro del portal', async (ruta, titulo) => {
     render(envolver(<Rutas />, ruta));
     expect(await screen.findByRole('heading', { level: 1, name: titulo })).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Secciones' })).toBeInTheDocument();
+  });
+
+  it('/donador/confirmar/abc carga su pantalla dentro del portal', async () => {
+    const cliente = clienteFalso();
+    cliente.validarEnlace.mockResolvedValue({ nombre: 'Ana Ruiz', correo: 'ana@correo.co' });
+    render(envolver(<Rutas />, '/donador/confirmar/abc', cliente));
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Elige tu contraseña' }),
+    ).toBeInTheDocument();
     expect(screen.getByRole('navigation', { name: 'Secciones' })).toBeInTheDocument();
   });
 
