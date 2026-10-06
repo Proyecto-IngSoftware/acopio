@@ -8,6 +8,8 @@ import {
 } from '../../api/catalogo';
 import { ErrorApi } from '../../api/cliente';
 import { Icono } from '../../componentes/Icono';
+import { buscarEnCopia, useCategoriasLocales } from '../../sin-conexion/busqueda-local';
+import { buscarCodigoVisto } from '../../sin-conexion/datos-locales';
 import { HojaCodigoNuevo, VistaCamara } from './Escaner';
 
 /** Lo que el escáner leyó: C4 cuenta presentaciones si trae contenido. */
@@ -36,15 +38,20 @@ export function BuscadorCategoria({
   q,
   onQ,
   onElegir,
+  sinRed = false,
   ref,
 }: {
   id: string;
   q: string;
   onQ: (q: string) => void;
   onElegir: (c: ResultadoBusqueda, leido?: Leido) => void;
+  /** C4 sin red busca en la copia del teléfono (O-06). */
+  sinRed?: boolean;
   ref?: Ref<HTMLInputElement>;
 }) {
-  const resultados = useBuscarCategorias(q);
+  const remotos = useBuscarCategorias(sinRed ? '' : q);
+  const locales = useCategoriasLocales(sinRed);
+  const encontrados = sinRed ? buscarEnCopia(locales.data ?? [], q) : (remotos.data ?? []);
   const [escaneo, fijarEscaneo] = useState<Escaneo>({ paso: 'nada' });
   const [aviso, fijarAviso] = useState('');
   const propio = useRef<HTMLInputElement>(null);
@@ -61,8 +68,12 @@ export function BuscadorCategoria({
       const c = await consultarCodigo(ean);
       onElegir(categoriaDe(c), { ean, contenido: c.contenido });
     } catch (e) {
-      if (e instanceof ErrorApi && e.estado === 404) fijarEscaneo({ paso: 'nuevo', ean });
-      else fijarAviso(e instanceof ErrorApi && e.estado === 0 ? SIN_RED : (e as Error).message);
+      if (e instanceof ErrorApi && e.estado === 404) return fijarEscaneo({ paso: 'nuevo', ean });
+      if (!(e instanceof ErrorApi && e.estado === 0)) return fijarAviso((e as Error).message);
+      // Sin red reconoce los códigos que ya vio este teléfono y no aprende nuevos (O-08)
+      const visto = await buscarCodigoVisto(ean);
+      if (visto) onElegir(categoriaDe(visto), { ean, contenido: visto.contenido });
+      else fijarAviso(SIN_RED);
     }
   };
 
@@ -120,9 +131,15 @@ export function BuscadorCategoria({
           Escanear
         </button>
       </div>
-      {(resultados.data ?? []).length > 0 && (
+      {sinRed && (
+        <p className="flex items-center gap-space-xs text-body-sm text-on-surface-variant">
+          <Icono nombre="smartphone" className="text-[18px]" />
+          Busca en la copia guardada en el teléfono
+        </p>
+      )}
+      {encontrados.length > 0 && (
         <ul aria-label="Resultados" className="flex flex-col gap-space-xs">
-          {resultados.data!.map((c) => (
+          {encontrados.map((c) => (
             <li key={c.id}>
               <button
                 type="button"
