@@ -121,6 +121,24 @@ describe('registro del Donador (RF-IDE-013, P-040)', () => {
       await a.http().get(`/api/auth/registro/confirmar/${token}`).expect(404);
     });
 
+    it('uno demasiado largo da 404', async () => {
+      const r = await a
+        .http()
+        .get(`/api/auth/registro/confirmar/${'x'.repeat(201)}`)
+        .expect(404);
+      expect(r.body.codigo).toBe('ENLACE_INVALIDO');
+    });
+
+    it('uno de un usuario que no es Donador da 404', async () => {
+      const { correo, token } = await registrarYTomarEnlace('norol');
+      await a.prisma.usuario.update({
+        where: { correo },
+        data: { rol: 'OPERADOR', username: unico('op') },
+      });
+      await a.http().get(`/api/auth/registro/confirmar/${token}`).expect(404);
+      await confirmar(token).expect(404);
+    });
+
     it('uno ya usado da 404', async () => {
       const { token } = await registrarYTomarEnlace('previausado');
       await confirmar(token).expect(200);

@@ -1,4 +1,4 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ErrorDominio } from '../../../comun/errores/error-dominio';
 import { PrismaService } from '../../../comun/prisma/prisma.service';
 import { ENTORNO, type Entorno } from '../../../config/entorno';
@@ -9,6 +9,7 @@ import { motivoRechazo } from '../invitaciones/politica-contrasena';
 import { generarToken, hashToken } from '../invitaciones/token-invitacion';
 import { PROVEEDOR_IDENTIDAD, type ProveedorIdentidad } from '../proveedor/proveedor-identidad';
 
+const LARGO_MAXIMO_TOKEN = 200;
 const VIGENCIA_ENLACE_MS = 48 * 3600_000;
 const CREDENCIALES_INVALIDAS = () => new UnauthorizedException('Correo o contraseña incorrectos');
 const ENLACE_INVALIDO = () =>
@@ -25,6 +26,8 @@ const ENLACE_INVALIDO = () =>
  */
 @Injectable()
 export class DonadorService {
+  private readonly log = new Logger(DonadorService.name);
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly bitacora: BitacoraService,
@@ -98,6 +101,7 @@ export class DonadorService {
 
   /** Datos del enlace para pintar el formulario antes de pedir la contraseña. */
   async validarEnlace(token: string) {
+    if (token.length > LARGO_MAXIMO_TOKEN) throw ENLACE_INVALIDO();
     const fila = await this.enlaceVigente(token);
     return { nombre: fila.usuario.nombre, correo: fila.usuario.correo! };
   }
@@ -105,13 +109,16 @@ export class DonadorService {
   private async enlaceVigente(token: string) {
     const fila = await this.prisma.verificacionCorreo.findUnique({
       where: { token_hash: hashToken(token) },
-      include: { usuario: { select: { id: true, nombre: true, correo: true, estado: true } } },
+      include: {
+        usuario: { select: { id: true, nombre: true, correo: true, estado: true, rol: true } },
+      },
     });
     if (
       !fila ||
       fila.usado_en ||
       fila.vence_en < new Date() ||
-      fila.usuario.estado !== 'INVITADO'
+      fila.usuario.estado !== 'INVITADO' ||
+      fila.usuario.rol !== 'DONADOR'
     ) {
       throw ENLACE_INVALIDO();
     }
@@ -168,7 +175,9 @@ export class DonadorService {
       });
     } catch (error) {
       // Sin esto queda una credencial huérfana y el correo no se puede volver a confirmar
-      await this.proveedor.eliminarUsuario(uid).catch(() => undefined);
+      await this.proveedor.eliminarUsuario(uid).catch((falla) => {
+        this.log.error(`No se pudo borrar la credencial huérfana ${uid}: ${String(falla)}`);
+      });
       throw error;
     }
     return this.iniciarSesion(correo, contrasena);
