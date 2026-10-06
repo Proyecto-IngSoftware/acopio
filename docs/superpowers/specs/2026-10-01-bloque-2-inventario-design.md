@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-2]
 estado: vigente
 bloque: 2
-actualizado: 2026-10-02
+actualizado: 2026-10-05
 ---
 
 # Bloque 2 · Inventario · especificación
@@ -334,3 +334,15 @@ Si el tiempo no alcanza se recorta primero el ciclo 3 y después el escáner.
 | Token `inverse-on-surface` en `packages/ui-tokens`, con el valor del tema de Stitch | La vista de la cámara usa texto claro sobre fondo oscuro y el token no se había traído |
 | En una categoría por unidades, el contenido de un código va entero: la API responde 422 `CONTENIDO_FRACCIONARIO` al asociarlo o al editarlo, y la web avisa antes | Hallazgo de la revisión final: con «2,5 und» por paquete, C4 calculaba 7,5 und y la entrada fallaba recién al registrarla |
 | El punto escrito cuenta como coma en todos los campos de cantidad, y las consultas no reintentan un 4xx | Hallazgos de la revisión final: «2.5» se volvía 25, y un 403 al leer los saldos se reintentaba y dejaba C5 y C6 mostrando un saldo de 0 |
+
+**2026-10-05 · Interfaz, ciclo 3.** Construida según el
+[plan](../../05-planes/2026-10-02-bloque-2-interfaz-ciclo-3.md).
+
+| Qué | Por qué |
+|---|---|
+| «Cerrar sesión» con entradas sin enviar pide confirmar en una hoja (O-12) | La especificación no decía qué pasa con la cola al salir; Joseph lo sumó al aprobar el plan |
+| C4 se porta como sin red también cuando el navegador dice que hay red pero la API no responde, y una entrada que falla por red al registrarla va a la cola | `navigator.onLine` dice «con red» detrás de un portal cautivo o con una señal que no alcanza, y la entrada no debe perderse en un error |
+| La copia local ignora los fallos de IndexedDB; la cola no | La copia es una ayuda: con red, la app funciona igual sin ella. Una entrada que no se pudo guardar sí hay que avisarla |
+| Con la pastilla visible, la cabecera queda solo con el logo | A 360 px el botón de la cuenta quedaba cortado. Lo encontró el recorrido del cierre |
+| Los íconos de Google Fonts se guardan en el service worker en tiempo de ejecución | Sin esa caché no se verían sin red |
+| `vite preview` sirve el build en el 5173 | La API rechaza escrituras con cookie desde un origen distinto de `APP_URL`: en el 4173 las tres entradas del recorrido volvieron rechazadas (403) |

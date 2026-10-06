@@ -62,6 +62,15 @@ it('con entradas sin enviar, el menú de la cuenta pide confirmar antes de cerra
   expect(cliente.cerrarSesion).not.toHaveBeenCalled();
 });
 
+it('con entradas en la cola la marca queda solo con el logo, para que quepa la pastilla', async () => {
+  await encolar('u1', 'x1', { id: 'e1', categoriaId: 'c1', cantidad: 12 });
+  render(envolver(<Rutas />, '/', clienteFalso(DANIELA)));
+
+  await screen.findByRole('link', { name: '1 sin sincronizar' });
+  const marca = screen.getByText('Acopio', { selector: 'span' }).parentElement;
+  expect(marca).toHaveClass('hidden');
+});
+
 it('Escape cierra el menú', async () => {
   render(envolver(<Rutas />, '/', clienteFalso(DANIELA)));
   await userEvent.click(await screen.findByRole('button', { name: 'Cuenta de Daniela Méndez' }));

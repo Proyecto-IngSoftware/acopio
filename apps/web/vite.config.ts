@@ -102,9 +102,11 @@ export default defineConfig({
     // Mismo origen que la API, como en producción detrás de Traefik (ADR-0014)
     proxy: { '/api': 'http://localhost:3000' },
   },
-  // El build con el service worker, para probar la captura sin conexión (cierre del ciclo 3)
+  // El build con el service worker, para probar la captura sin conexión (cierre del ciclo 3).
+  // Mismo puerto que en desarrollo: la API rechaza escrituras con cookie desde un origen
+  // distinto de APP_URL
   preview: {
-    port: 4173,
+    port: 5173,
     strictPort: true,
     proxy: { '/api': 'http://localhost:3000' },
   },

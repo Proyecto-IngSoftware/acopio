@@ -3,6 +3,7 @@ import type { UsuarioSesion } from '../../sesion/cliente-auth';
 import { iniciales, nombreRol } from '../../sesion/roles';
 import { useSalida } from '../../sesion/useSalida';
 import { PastillaCola } from '../../sin-conexion/PastillaCola';
+import { useCola } from '../../sin-conexion/useCola';
 import { useUbicacionActiva } from '../../sesion/ubicacion-activa';
 import { CabeceraBase } from './Marca';
 import { SelectorUbicacion } from './SelectorUbicacion';
@@ -12,6 +13,8 @@ import { SelectorUbicacion } from './SelectorUbicacion';
 export function CabeceraConSesion({ usuario }: { usuario: UsuarioSesion }) {
   const { pedirSalida, hoja } = useSalida();
   const { ubicaciones } = useUbicacionActiva();
+  // Con la pastilla, a 360 px la marca queda solo con el logo: si no, el botón de la cuenta no cabe
+  const { data: cola = [] } = useCola(usuario.id);
   const [abierto, fijarAbierto] = useState(false);
   const contenedor = useRef<HTMLDivElement>(null);
 
@@ -26,7 +29,7 @@ export function CabeceraConSesion({ usuario }: { usuario: UsuarioSesion }) {
   }, [abierto]);
 
   return (
-    <CabeceraBase compacta={ubicaciones.length >= 2}>
+    <CabeceraBase compacta={ubicaciones.length >= 2 || cola.length > 0}>
       <div className="flex min-w-0 items-center gap-space-xs">
         <SelectorUbicacion />
         <PastillaCola />

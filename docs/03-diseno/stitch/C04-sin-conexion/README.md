@@ -14,6 +14,7 @@ actualizado: 2026-10-05
 | Pantallas de Stitch | Solo [«Pendientes de sincronizar»](../C04-pendientes/README.md). «C4 sin conexión», «C5 sin red y versión nueva» y «Salir con pendientes» se cortaron por tiempo el 2026-10-05 y no aparecieron en el proyecto |
 | Maqueta | [maqueta.html](maqueta.html), publicada en <https://claude.ai/artifact/Tqpy5wb9smKWyDaBQ1gTfS> |
 | Aprobación | Joseph la aprobó el 2026-10-05 |
+| Construida | [construida.png](construida.png), con el build y su service worker, sin red, a 360 × 640 |
 
 Las tres pantallas que Stitch cortó se armaron con los tokens del tema en la maqueta, como
 C3 y los umbrales del ciclo 2. La maqueta reúne las seis vistas del ciclo 3:

@@ -16,6 +16,7 @@ actualizado: 2026-10-05
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | En la [maqueta de la captura sin conexión](../C04-sin-conexion/maqueta.html), publicada en <https://claude.ai/artifact/Tqpy5wb9smKWyDaBQ1gTfS> |
 | Aprobación | Joseph la aprobó el 2026-10-05, con las diferencias de abajo |
+| Construida | [construida.png](construida.png), con el build y su service worker, sin red, a 360 × 640 |
 
 ## Qué muestra
 
