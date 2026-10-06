@@ -30,6 +30,12 @@ const categoriaDe = (c: CodigoBarras): ResultadoBusqueda => ({
   puntaje: 1,
 });
 
+/** Otra fuente de códigos para quien no es de la consola (el Donador): devuelve la categoría y
+ *  lo que trae cada presentación, o null si no se conoce. */
+export type ResolverCodigo = (
+  ean: string,
+) => Promise<{ categoria: ResultadoBusqueda; contenido: number | null } | null>;
+
 type Escaneo = { paso: 'nada' } | { paso: 'camara' } | { paso: 'nuevo'; ean: string };
 
 /** Búsqueda de categoría de C4, C5 y C6, por nombre o con la cámara (RF-INV-002). */
@@ -39,6 +45,8 @@ export function BuscadorCategoria({
   onQ,
   onElegir,
   sinRed = false,
+  resolverCodigo,
+  avisoCodigoDesconocido = 'No conocemos este código: búscalo por nombre.',
   ref,
 }: {
   id: string;
@@ -47,6 +55,10 @@ export function BuscadorCategoria({
   onElegir: (c: ResultadoBusqueda, leido?: Leido) => void;
   /** C4 sin red busca en la copia del teléfono (O-06). */
   sinRed?: boolean;
+  /** Con esto el escáner usa esta consulta y un código desconocido solo avisa: no se asocia
+   *  ni se guarda (el Donador no aprende códigos). */
+  resolverCodigo?: ResolverCodigo;
+  avisoCodigoDesconocido?: string;
   ref?: Ref<HTMLInputElement>;
 }) {
   const remotos = useBuscarCategorias(sinRed ? '' : q);
@@ -64,6 +76,19 @@ export function BuscadorCategoria({
 
   const leer = async (ean: string) => {
     fijarEscaneo({ paso: 'nada' });
+    if (resolverCodigo) {
+      try {
+        const r = await resolverCodigo(ean);
+        if (r) onElegir(r.categoria, { ean, contenido: r.contenido });
+        else {
+          fijarAviso(avisoCodigoDesconocido);
+          setTimeout(() => propio.current?.focus(), 0);
+        }
+      } catch (e) {
+        fijarAviso((e as Error).message);
+      }
+      return;
+    }
     try {
       const c = await consultarCodigo(ean);
       onElegir(categoriaDe(c), { ean, contenido: c.contenido });
