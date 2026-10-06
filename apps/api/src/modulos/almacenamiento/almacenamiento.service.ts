@@ -23,7 +23,13 @@ export class AlmacenamientoService {
     const clave = `${prefijo}/${id}.webp`;
     const claveMini = `${prefijo}/${id}-mini.webp`;
     await this.almacen.guardar(clave, imagen, 'image/webp');
-    await this.almacen.guardar(claveMini, miniatura, 'image/webp');
+    try {
+      await this.almacen.guardar(claveMini, miniatura, 'image/webp');
+    } catch (error) {
+      // no dejar el principal huérfano
+      await this.almacen.borrar(clave).catch(() => undefined);
+      throw error;
+    }
     return { clave, miniatura: claveMini, tipo: 'image/webp', bytes: imagen.length };
   }
 

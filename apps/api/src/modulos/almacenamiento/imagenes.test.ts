@@ -4,13 +4,17 @@ import { procesarImagen } from './imagenes';
 const foto = (formato: 'jpeg' | 'png', ancho = 3000, alto = 2000) =>
   sharp({ create: { width: ancho, height: alto, channels: 3, background: '#7a9' } })
     [formato]()
-    .withExif({ IFD0: { Artist: 'Ana Donadora', Copyright: 'cédula 123' } })
+    .withExif({
+      IFD0: { Artist: 'Ana Donadora', Copyright: 'cédula 123' },
+      IFD3: { GPSLatitudeRef: 'N', GPSLatitude: '4/1 36/1 0/1' },
+    })
     .toBuffer();
 
 describe('procesarImagen (RF-CMP-002)', () => {
   it('guarda un WebP de 2000 px como máximo, sin metadatos', async () => {
-    const { imagen } = await procesarImagen(await foto('jpeg'));
+    const { imagen, miniatura } = await procesarImagen(await foto('jpeg'));
     const m = await sharp(imagen).metadata();
+    expect((await sharp(miniatura).metadata()).exif).toBeUndefined();
     expect(m.format).toBe('webp');
     expect(Math.max(m.width!, m.height!)).toBe(2000);
     expect(m.exif).toBeUndefined();
@@ -35,6 +39,19 @@ describe('procesarImagen (RF-CMP-002)', () => {
   it('rechaza más de 8 MB', async () => {
     await expect(procesarImagen(Buffer.alloc(8 * 1024 * 1024 + 1))).rejects.toMatchObject({
       codigo: 'ARCHIVO_GRANDE',
+    });
+  });
+
+  it('rechaza con 415 una imagen con encabezado válido pero truncada', async () => {
+    const completa = await sharp({
+      create: { width: 1200, height: 800, channels: 3, background: '#7a9' },
+    })
+      .jpeg()
+      .toBuffer();
+    const truncada = completa.subarray(0, Math.floor(completa.length * 0.6));
+    await expect(procesarImagen(truncada)).rejects.toMatchObject({
+      codigo: 'TIPO_NO_ADMITIDO',
+      estado: 415,
     });
   });
 });

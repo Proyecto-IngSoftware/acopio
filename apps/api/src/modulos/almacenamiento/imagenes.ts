@@ -22,9 +22,20 @@ export async function procesarImagen(
     formato = undefined;
   }
   if (!formato || !ADMITIDOS.has(formato)) {
-    throw new ErrorDominio('TIPO_NO_ADMITIDO', 'Sube una foto en JPEG, PNG, WebP o HEIC', 415);
+    throw new ErrorDominio('TIPO_NO_ADMITIDO', MENSAJE_TIPO, 415);
   }
   const base = sharp(datos).rotate();
+  try {
+    return await convertir(base);
+  } catch {
+    // encabezado válido pero imagen truncada o un HEIC que sharp no sabe decodificar
+    throw new ErrorDominio('TIPO_NO_ADMITIDO', MENSAJE_TIPO, 415);
+  }
+}
+
+const MENSAJE_TIPO = 'Sube una foto en JPEG, PNG, WebP o HEIC';
+
+async function convertir(base: sharp.Sharp): Promise<{ imagen: Buffer; miniatura: Buffer }> {
   const [imagen, miniatura] = await Promise.all([
     base
       .clone()
