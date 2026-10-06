@@ -148,13 +148,8 @@ function EntrarDonador({ enLinea }: { enLinea: boolean }) {
     try {
       await entrarDonador(correo.trim(), contrasena);
     } catch (err) {
-      // El mismo mensaje para cualquier credencial mala; el límite de intentos y la falta
-      // de red se explican con el texto de la API
-      fijarError(
-        err instanceof ErrorApi && (err.estado === 429 || err.estado === 0)
-          ? err.message
-          : CREDENCIALES,
-      );
+      // Solo un 401 son credenciales malas; cualquier otro error se explica con el texto de la API
+      fijarError(err instanceof ErrorApi && err.estado !== 401 ? err.message : CREDENCIALES);
       fijarEnviando(false);
     }
   }

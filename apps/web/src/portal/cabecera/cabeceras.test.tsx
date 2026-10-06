@@ -7,6 +7,7 @@ import { clienteFalso, envolver, responderJson } from '../../pruebas/utilidades'
 import { Rutas } from '../../rutas';
 import { encolar } from '../../sin-conexion/cola';
 import { iniciales } from '../../sesion/roles';
+import { useSesion } from '../../sesion/Sesion';
 
 const DANIELA = {
   id: 'u1',
@@ -91,22 +92,6 @@ it('con un Donador la cabecera muestra su nombre y Salir, sin selector de ubicac
   await waitFor(() => expect(cliente.cerrarSesion).toHaveBeenCalledTimes(1));
 });
 
-it('un 401 con un Donador en sesión lo lleva a /donador y no a /entrar', async () => {
-  render(envolver(<Destinos />, '/', clienteFalso(ANA)));
-  await screen.findByText('inicio');
-  responderJson({ estado: 401, codigo: 'NO_AUTENTICADO', mensaje: 'x' }, 401);
-  await api.GET('/api/auth/yo');
-  expect(await screen.findByText('cuenta del donador')).toBeInTheDocument();
-});
-
-const Destinos = () => (
-  <Routes>
-    <Route path="/" element={<p>inicio</p>} />
-    <Route path="/donador" element={<p>cuenta del donador</p>} />
-    <Route path="/entrar" element={<p>pantalla de entrar</p>} />
-  </Routes>
-);
-
 it('un 401 con sesión cierra la sesión en la web y lleva a Entrar', async () => {
   render(envolver(<Destinos />, '/', clienteFalso(DANIELA)));
   await screen.findByText('inicio');
@@ -128,4 +113,37 @@ it('la cabecera con el menú abierto no tiene violaciones graves', async () => {
   const { container } = render(envolver(<Rutas />, '/mapa', clienteFalso(DANIELA)));
   await userEvent.click(await screen.findByRole('button', { name: 'Cuenta de Daniela Méndez' }));
   expect(await violacionesGraves(container)).toEqual([]);
+});
+
+const Destinos = () => (
+  <Routes>
+    <Route path="/" element={<p>inicio</p>} />
+    <Route path="/donador" element={<p>cuenta del donador</p>} />
+    <Route path="/entrar" element={<p>pantalla de entrar</p>} />
+  </Routes>
+);
+
+/** Muestra el nombre cuando la sesión ya cargó: un 401 antes de eso no cierra nada. */
+function SesionCargada() {
+  const { usuario } = useSesion();
+  return usuario ? <p>{`sesión de ${usuario.nombre}`}</p> : null;
+}
+
+it('un 401 con un Donador en sesión lo lleva a /donador y no a /entrar', async () => {
+  render(
+    envolver(
+      <>
+        <Destinos />
+        <SesionCargada />
+      </>,
+      '/',
+      clienteFalso(ANA),
+    ),
+  );
+  // Espera la sesión, no solo la pantalla: «inicio» aparece antes de que la sesión cargue
+  await screen.findByText('sesión de Ana Ruiz');
+  responderJson({ estado: 401, codigo: 'NO_AUTENTICADO', mensaje: 'x' }, 401);
+  await api.GET('/api/auth/yo');
+  expect(await screen.findByText('cuenta del donador', {}, { timeout: 5000 })).toBeInTheDocument();
+  expect(screen.queryByText('pantalla de entrar')).not.toBeInTheDocument();
 });

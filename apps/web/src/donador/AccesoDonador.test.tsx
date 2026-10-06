@@ -107,6 +107,20 @@ describe('entrar', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('Demasiados intentos. Espera');
   });
 
+  it('con un 500 muestra el mensaje de la API, no el de credenciales', async () => {
+    const cliente = clienteFalso();
+    cliente.iniciarSesionDonador.mockRejectedValue(
+      new ErrorApi(500, 'ERROR_INTERNO', 'Algo falló de nuestro lado.'),
+    );
+    pantalla('/donador?entrar', cliente);
+    await userEvent.type(await screen.findByLabelText('Correo'), 'ana@correo.co');
+    await userEvent.type(screen.getByLabelText('Contraseña'), 'x');
+    await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
+    const alerta = await screen.findByRole('alert');
+    expect(alerta).toHaveTextContent('Algo falló de nuestro lado.');
+    expect(alerta).not.toHaveTextContent('incorrectos');
+  });
+
   it('sin red deja «Entrar» inactivo con el aviso', async () => {
     vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
     pantalla('/donador?entrar');
