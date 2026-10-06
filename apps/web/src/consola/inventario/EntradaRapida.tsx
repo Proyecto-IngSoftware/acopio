@@ -94,6 +94,8 @@ export function EntradaRapida() {
     fijarCategoria(c);
     fijarLeido(l ?? null);
     fijarCantidad('');
+    // La fecha de un perecedero no pasa a la categoría siguiente (P-038)
+    fijarVence('');
     fijarAviso('');
     registrar.reset();
   };
@@ -247,7 +249,8 @@ export function EntradaRapida() {
             <input
               id="entrada-cantidad"
               aria-label="Cantidad"
-              inputMode="decimal"
+              // Sin decimales, el teléfono abre el teclado de números enteros (P-038)
+              inputMode={decimales ? 'decimal' : 'numeric'}
               autoComplete="off"
               value={cantidad}
               onChange={(e) => fijarCantidad(limpiarCantidad(e.target.value))}

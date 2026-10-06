@@ -674,6 +674,8 @@ local con permiso de cámara).
 | C4 pide teclado decimal también en categorías por unidades; C5 y C6 piden el numérico | `EntradaRapida.tsx` |
 
 **Estado:** ABIERTO. Ninguno rompe un flujo; se toman cuando se vuelva a tocar el archivo.
+El 2026-10-05, en la tarea 5 del ciclo 3 (O-10), se resolvieron dos: la fecha que pasaba a
+la categoría siguiente y el teclado decimal en unidades. Los otros cinco siguen abiertos.
 
 ### P-039 · Los íconos se ven como texto mientras baja su fuente
 **Fecha:** 2026-10-05 · **Propuesto por:** Joseph

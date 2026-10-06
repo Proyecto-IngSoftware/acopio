@@ -11,7 +11,9 @@ import { EstadoError } from '../../componentes/EstadoError';
 import { EtiquetaSemaforo } from '../../componentes/EtiquetaSemaforo';
 import { Icono } from '../../componentes/Icono';
 import { diaLargo } from '../../formato';
+import { useEnLinea } from '../../sin-conexion/en-linea';
 import { Encabezado } from '../Encabezado';
+import { NecesitaRed } from './NecesitaRed';
 import { BuscadorCategoria } from './BuscadorCategoria';
 import { TarjetaSaldo } from './TarjetaSaldo';
 import { aNumero, limpiarCantidad, TecladoCantidad, teclear } from './TecladoCantidad';
@@ -42,6 +44,7 @@ export function Salida() {
   const busqueda = useRef<HTMLInputElement>(null);
   const { data: acopio } = useAcopio(acopioId);
   const saldos = useSaldos(acopioId);
+  const enLinea = useEnLinea();
   const registrar = useRegistrarSalida(acopioId);
 
   const decimales = categoria?.unidadBase !== 'UNIDAD';
@@ -95,6 +98,24 @@ export function Salida() {
       },
     );
   };
+
+  // Sin red, o si la API no responde, esto no se registra (O-09)
+  const sinRed = !enLinea || saldos.error?.estado === 0;
+  if (sinRed) {
+    return (
+      <div className="flex flex-col gap-space-md px-margin py-space-md">
+        <Encabezado
+          titulo="Registrar salida"
+          subtitulo={acopio?.nombre}
+          volverA={`/consola/acopios/${acopioId}/inventario`}
+        />
+        <NecesitaRed titulo="La salida necesita conexión" acopioId={acopioId}>
+          Sin red, una salida podría dejar un saldo negativo que nadie vea. Las entradas sí se
+          guardan en el teléfono.
+        </NecesitaRed>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-space-md px-margin py-space-md">

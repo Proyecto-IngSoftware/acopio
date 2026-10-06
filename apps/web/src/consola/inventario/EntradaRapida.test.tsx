@@ -103,6 +103,27 @@ const teclear = async (...teclas: string[]) => {
 };
 
 describe('C4 Entrada rápida', () => {
+  it('elegir otra categoría limpia la fecha de vencimiento (P-038)', async () => {
+    pantalla();
+    await elegir('arroz', /Arroz/);
+    await userEvent.type(screen.getByLabelText('Vence el'), '2026-12-01');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Cambiar' }));
+    await elegir('arroz', /Arroz/);
+
+    expect(screen.getByLabelText('Vence el')).toHaveValue('');
+  });
+
+  it('pide el teclado numérico en unidades y el decimal en kilos (P-038)', async () => {
+    pantalla();
+    await elegir('pañal', /Pañal adulto/);
+    expect(screen.getByLabelText('Cantidad')).toHaveAttribute('inputmode', 'numeric');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Cambiar' }));
+    await elegir('arroz', /Arroz/);
+    expect(screen.getByLabelText('Cantidad')).toHaveAttribute('inputmode', 'decimal');
+  });
+
   it('al abrir con red guarda la copia local para capturar sin conexión', async () => {
     const vigentes = [{ id: 'c2', nombre: 'Arroz' }];
     const noRecibe = [{ categoriaId: 'c9', hasta: null }];

@@ -18,7 +18,9 @@ import { EstadoError } from '../../componentes/EstadoError';
 import { TarjetaNoTraigan } from '../../componentes/TarjetaNoTraigan';
 import { haceCuanto } from '../../formato';
 import { useSesion } from '../../sesion/Sesion';
+import { useEnLinea } from '../../sin-conexion/en-linea';
 import { Encabezado } from '../Encabezado';
+import { NecesitaRed } from '../inventario/NecesitaRed';
 import { FormularioError } from '../catalogo/FormularioError';
 import { Buscador } from './Buscador';
 import { limpiarCantidad } from '../inventario/TecladoCantidad';
@@ -42,6 +44,7 @@ export function NoRecibir() {
   const desmarcar = useDesmarcarNoRecibir(acopioId);
   // Los umbrales llegan con los saldos; si no cargan, la lista sigue sirviendo para «no recibir»
   const saldos = useSaldos(acopioId);
+  const enLinea = useEnLinea();
   const [editando, fijarEditando] = useState<Categoria | null>(null);
 
   const acopio = acopios?.find((a) => a.id === acopioId);
@@ -62,6 +65,18 @@ export function NoRecibir() {
       : `/consola/acopios/${acopioId}/operacion`;
   const error = categorias.error ?? marcas.error;
 
+  // Sin red, o si la API no responde, esto no se registra (O-09)
+  const sinRed = !enLinea || saldos.error?.estado === 0;
+  if (sinRed) {
+    return (
+      <div className="flex flex-col gap-space-md">
+        <Encabezado titulo="Umbrales y no recibir" subtitulo={acopio?.nombre} volverA={volverA} />
+        <NecesitaRed titulo="Los umbrales necesitan conexión" acopioId={acopioId}>
+          Los umbrales y «no recibir» se cambian con red, para que todos vean lo mismo.
+        </NecesitaRed>
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col gap-space-md">
       <Encabezado titulo="Umbrales y no recibir" subtitulo={acopio?.nombre} volverA={volverA} />
