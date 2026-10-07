@@ -86,9 +86,11 @@ export function useAcopio(id: string) {
   });
 }
 
-export function useAcopiosGestion() {
+/** Con `activo` en falso no consulta: solo el Administrador ve todos los acopios. */
+export function useAcopiosGestion(activo = true) {
   return useQuery<Acopio[], ErrorApi>({
     queryKey: ['acopios', 'gestion'],
+    enabled: activo,
     queryFn: async () =>
       ((await desenvolver(api.GET('/api/acopios/gestion'))) as unknown as Acopio[]).map(acopio),
   });

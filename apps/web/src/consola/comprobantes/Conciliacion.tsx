@@ -22,6 +22,7 @@ import { useEnLinea } from '../../sin-conexion/en-linea';
 import { Encabezado } from '../Encabezado';
 import { NecesitaRed } from '../inventario/NecesitaRed';
 import { HojaRechazo } from './HojaRechazo';
+import { HojaVincular } from './HojaVincular';
 
 interface FilaCategoria {
   categoriaId: string;
@@ -77,7 +78,7 @@ export function Conciliacion() {
   const revertir = useRevertirRechazo(folio);
   const [rechazando, setRechazando] = useState(false);
   const [viendoFactura, setViendoFactura] = useState(false);
-  const [, setVinculando] = useState(false);
+  const [vinculando, setVinculando] = useState(false);
 
   const marco = (contenido: React.ReactNode) => (
     <div className="flex flex-col gap-space-md px-margin py-space-md">
@@ -325,6 +326,16 @@ export function Conciliacion() {
       )}
 
       {rechazando && <HojaRechazo folio={folio} alCerrar={() => setRechazando(false)} />}
+      {vinculando && (
+        <HojaVincular
+          folio={folio}
+          acopio={d.acopio}
+          alCerrar={() => {
+            setVinculando(false);
+            conciliar.reset();
+          }}
+        />
+      )}
       {viendoFactura && <VerFactura folio={folio} alCerrar={() => setViendoFactura(false)} />}
     </>,
   );

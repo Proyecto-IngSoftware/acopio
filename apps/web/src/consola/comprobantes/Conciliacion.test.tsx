@@ -263,6 +263,17 @@ it('un folio que no existe lo dice', async () => {
   expect(await screen.findByText('No encontramos ese folio')).toBeInTheDocument();
 });
 
+it('«Vincular entradas» abre la hoja con las entradas del acopio del comprobante', async () => {
+  pantalla({ 'GET /api/comprobantes/*/entradas-vinculables': [] });
+  await userEvent.click(await screen.findByRole('button', { name: 'Vincular entradas' }));
+  expect(await screen.findByRole('dialog', { name: 'Vincular entradas' })).toBeInTheDocument();
+  await waitFor(() =>
+    expect(peticiones()).toContain(
+      `GET /api/comprobantes/${FOLIO}/entradas-vinculables?acopioId=a1`,
+    ),
+  );
+});
+
 it('axe: sin violaciones graves en la pantalla y en la hoja de rechazo', async () => {
   const { container } = pantalla();
   await screen.findByRole('table', { name: 'Por categoría' });
