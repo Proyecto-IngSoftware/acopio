@@ -799,7 +799,24 @@ el orden de construcción ni en un issue. Además, el inventario no atenúa ni a
 una categoría sin movimientos en más de 6 horas (criterio 2 de HU-05).
 **Por qué:** HU-02 y HU-15 son Must y entraron en el Sprint 1; el Sprint Review las
 marca «No».
-**Estado:** ABIERTO. Hay que abrir un issue por pieza y meterlas en el plan del Sprint 2
+La misma especificación apartó la pieza «D» (contenido del home, páginas legales y Open
+Graph), que tampoco tenía issue.
+**Estado:** ABIERTO. Desde el 2026-10-07 cada pieza tiene issue y fecha: la C en
+[#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48) (hasta el 1 de noviembre),
+la E en [#49](https://github.com/Proyecto-IngSoftware/acopio/issues/49) y la D en
+[#50](https://github.com/Proyecto-IngSoftware/acopio/issues/50) (hasta el 15 de
+noviembre). El criterio 2 de HU-05 quedó en
+[#43](https://github.com/Proyecto-IngSoftware/acopio/issues/43). Fechas en el
+[cronograma](../05-planes/cronograma.md)
+
+### P-047 · Fechas del segundo corte y de los Sprints 2 y 3
+**Fecha:** 2026-10-07 · **Propuesto por:** Joseph
+**Qué:** el [cronograma](../05-planes/cronograma.md) supone sprints de tres semanas
+(Sprint 2 en las semanas 11 a 13, Sprint 3 en las 14 a 16). Tampoco se sabe cuándo es
+la sustentación del segundo corte. La del primero fue en la semana 6; si se repite el
+intervalo, la segunda caería en la semana 12, pero ninguna guía lo dice.
+**Por qué:** de esas fechas depende qué evidencia tiene que estar lista y cuándo.
+**Estado:** ABIERTO. Se confirma con el docente o con la guía del Avance 5
 
 ---
 
