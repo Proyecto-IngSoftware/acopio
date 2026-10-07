@@ -201,6 +201,7 @@ export async function sembrarEscenariosDemo(prisma: PrismaService, proveedor: Pr
   await sembrarCasosInventario(prisma, ids.operador1!, ids.operador2!);
   const donador = await sembrarDonadorDemo(prisma, proveedor);
   await sembrarDonacionesDemo(prisma, donador, ids.operador1!);
+  await sembrarMotorDemo(prisma, ids.operador1!);
   return [...USUARIOS_DEMO.map((u) => u.username), DONADOR_DEMO.correo];
 }
 
@@ -307,6 +308,59 @@ async function sembrarDonacionesDemo(prisma: PrismaService, donadorId: string, o
       origen_offline: true,
     },
   });
+}
+
+const ZONA_DEMO_2 = 'd0000000-0000-4000-8000-000000000032';
+
+/**
+ * Excedentes de agua y arroz en Kennedy y Suba, con umbrales, y una segunda zona más
+ * pequeña: el primer recálculo propone traslados a las dos. Solo la primera vez.
+ */
+async function sembrarMotorDemo(prisma: PrismaService, operador: string) {
+  if (await prisma.zona.findUnique({ where: { id: ZONA_DEMO_2 } })) return;
+  await prisma.zona.create({
+    data: {
+      id: ZONA_DEMO_2,
+      emergencia_id: EMERGENCIA_DEMO,
+      nombre: 'Vereda El Pepino (prueba)',
+      municipio: 'Mocoa',
+      lat: 1.1301,
+      lng: -76.6603,
+      poblacion_estimada: 400,
+      poblacion_fuente: 'Dato ficticio de la demo',
+      poblacion_fecha: new Date('2026-09-25T00:00:00Z'),
+    },
+  });
+  const categorias = await prisma.categoria.findMany({
+    where: { nombre: { in: ['Agua potable', 'Arroz'] } },
+  });
+  for (const [i, acopio] of [ACOPIOS[1]!, ACOPIOS[2]!].entries()) {
+    for (const c of categorias) {
+      const esAgua = c.nombre === 'Agua potable';
+      await prisma.movimiento.create({
+        data: {
+          acopio_id: acopio.id,
+          categoria_id: c.id,
+          tipo: 'ENTRADA',
+          signo: 1,
+          cantidad: esAgua ? 3000 + i * 1000 : 800 + i * 200,
+          usuario_id: operador,
+          ocurrido_en: new Date(),
+        },
+      });
+      await prisma.umbral.upsert({
+        where: { acopio_id_categoria_id: { acopio_id: acopio.id, categoria_id: c.id } },
+        update: {},
+        create: {
+          acopio_id: acopio.id,
+          categoria_id: c.id,
+          minimo: esAgua ? 200 : 50,
+          maximo: esAgua ? 1000 : 300,
+          actualizado_por: operador,
+        },
+      });
+    }
+  }
 }
 
 /** Solo la primera vez: se reconoce por los umbrales del acopio de Chapinero. */
