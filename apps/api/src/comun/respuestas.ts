@@ -638,3 +638,26 @@ const filaVistaPrevia = z.object({
 export class VistaPreviaMotorDto extends createZodDto(
   z.object({ actual: z.array(filaVistaPrevia), propuesta: z.array(filaVistaPrevia) }),
 ) {}
+
+export class AprobacionDto extends createZodDto(
+  z.object({
+    sugerenciaId: z.uuid(),
+    cantidad: z.number(),
+    remision: z.object({ id: z.uuid(), codigo: z.string(), creada: z.boolean() }),
+  }),
+) {}
+
+export class DescarteDto extends createZodDto(
+  z.object({ id: z.uuid(), estado: z.literal('DESCARTADA') }),
+) {}
+
+const conteo = z.array(z.object({ nombre: z.string(), veces: z.number().int() }));
+export class InformeDescartesDto extends createZodDto(
+  z.object({
+    total: z.number().int(),
+    porMotivo: conteo,
+    porCategoria: conteo,
+    porAcopio: conteo,
+    recientes: z.array(SugerenciaDto.schema),
+  }),
+) {}

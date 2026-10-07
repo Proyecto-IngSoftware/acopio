@@ -63,6 +63,14 @@ export const aMovimientoVista = (m: Movimiento): MovimientoVista => ({
   origenOffline: m.origen_offline,
 });
 
+/**
+ * Candado de la transacción por (acopio, categoría). Lo toman las salidas, los ajustes y
+ * el motor al aprobar: así se ordenan entre sí sin FOR UPDATE (ADR-0015).
+ */
+export async function candadoSaldo(tx: ClienteBd, acopioId: string, categoriaId: string) {
+  await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${acopioId} || ':' || ${categoriaId}, 0))`;
+}
+
 /** Hasta 7 días atrás y como mucho 5 minutos adelante (relojes desfasados). */
 export function exigirOcurridoEn(ocurridoEn: Date | null): Date {
   const ahora = Date.now();
@@ -209,7 +217,7 @@ export class MovimientosService {
     acopioId: string,
     categoriaId: string,
   ): Promise<number> {
-    await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${acopioId} || ':' || ${categoriaId}, 0))`;
+    await candadoSaldo(tx, acopioId, categoriaId);
     return this.saldoDe(tx, acopioId, categoriaId);
   }
 
