@@ -71,6 +71,19 @@ export class ZonasService {
       const antes = await tx.zona.findUnique({ where: { id } });
       if (!antes) throw new ErrorDominio('ZONA_NO_ENCONTRADA', 'La zona no existe', 404);
       await exigirEmergenciaAbierta(tx, antes.emergencia_id);
+      // RF-MOT-012: un número nuevo llega con su fuente y la fecha de esa estimación
+      if (
+        cambios.poblacionEstimada !== undefined &&
+        cambios.poblacionEstimada !== antes.poblacion_estimada &&
+        (!cambios.poblacionFuente?.trim() ||
+          !cambios.poblacionFecha ||
+          cambios.poblacionFecha.getTime() === antes.poblacion_fecha.getTime())
+      ) {
+        throw new ErrorDominio(
+          'POBLACION_SIN_FUENTE_NUEVA',
+          'Un número nuevo de población necesita su fuente y la fecha de esa estimación',
+        );
+      }
       const despues = await tx.zona.update({
         where: { id },
         data: {
