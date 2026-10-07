@@ -585,3 +585,36 @@ export class ExcedenteDto extends createZodDto(
     aviso: z.enum(['SIN_UMBRAL']).nullable(),
   }),
 ) {}
+
+const componentes = z.object({
+  criticidad: z.number(),
+  urgencia: z.number(),
+  proximidad: z.number(),
+  magnitud: z.number(),
+});
+const referencia = z.object({ id: z.uuid(), nombre: z.string() });
+
+export class SugerenciaDto extends createZodDto(
+  z.object({
+    id: z.uuid(),
+    ronda: fecha,
+    estado: z.enum(['PROPUESTA', 'APROBADA', 'DESCARTADA']),
+    acopio: referencia,
+    zona: referencia,
+    emergencia: referencia,
+    categoria: referencia.extend({ unidad }),
+    cantidad: z.number(),
+    puntaje: z.number(),
+    desglose: componentes,
+    justificacion: z.string(),
+    cantidadAprobada: z.number().nullable(),
+    remisionCodigo: z.string().nullable(),
+    motivoDescarte: z.string().nullable(),
+    decididaPor: z.string().nullable(),
+    decididaEn: fecha.nullable(),
+  }),
+) {}
+
+export class RecalculoDto extends createZodDto(
+  z.object({ ronda: fecha, generadas: z.number().int() }),
+) {}
