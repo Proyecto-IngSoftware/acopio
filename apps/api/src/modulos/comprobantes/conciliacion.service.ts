@@ -103,7 +103,12 @@ export class ConciliacionService {
     const vinculos = await this.prisma.comprobanteMovimiento.findMany({
       where: { comprobante_id: c.id },
       include: {
-        movimiento: { include: { categoria: { select: { nombre: true, unidad_base: true } } } },
+        movimiento: {
+          include: {
+            categoria: { select: { nombre: true, unidad_base: true } },
+            usuario: { select: { nombre: true } },
+          },
+        },
       },
       orderBy: { vinculado_en: 'asc' },
     });
@@ -137,9 +142,12 @@ export class ConciliacionService {
       entradas: vinculos.map((v) => ({
         movimientoId: v.movimiento_id,
         categoriaId: v.movimiento.categoria_id,
+        categoria: v.movimiento.categoria.nombre,
+        unidad: v.movimiento.categoria.unidad_base,
         cantidad: Number(v.movimiento.cantidad),
         ocurridoEn: v.movimiento.ocurrido_en,
         origen: v.origen,
+        registradoPor: v.movimiento.usuario.nombre,
       })),
       resumen: [...resumen].map(([categoriaId, f]) => ({
         categoriaId,
@@ -163,7 +171,10 @@ export class ConciliacionService {
         vinculo: null,
         registrado_en: { gte: new Date(Date.now() - CATORCE_DIAS) },
       },
-      include: { categoria: { select: { nombre: true, unidad_base: true } } },
+      include: {
+        categoria: { select: { nombre: true, unidad_base: true } },
+        usuario: { select: { nombre: true } },
+      },
       orderBy: { secuencia: 'desc' },
       take: 100,
     });
@@ -175,6 +186,7 @@ export class ConciliacionService {
       cantidad: Number(m.cantidad),
       ocurridoEn: m.ocurrido_en,
       origenOffline: m.origen_offline,
+      registradoPor: m.usuario.nombre,
     }));
   }
 

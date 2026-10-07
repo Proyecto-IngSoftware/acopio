@@ -407,9 +407,12 @@ export class ConciliacionDto extends createZodDto(
       z.object({
         movimientoId: z.uuid(),
         categoriaId: z.uuid(),
+        categoria: z.string(),
+        unidad: z.string(),
         cantidad: z.number(),
         ocurridoEn: fecha,
         origen: z.enum(['RECEPCION', 'AUDITOR']),
+        registradoPor: z.string().describe('Nombre de quien registró la entrada'),
       }),
     ),
     resumen: z.array(
@@ -434,6 +437,7 @@ export class EntradaVinculableDto extends createZodDto(
     cantidad: z.number(),
     ocurridoEn: fecha,
     origenOffline: z.boolean(),
+    registradoPor: z.string().describe('Nombre de quien registró la entrada'),
   }),
 ) {}
 

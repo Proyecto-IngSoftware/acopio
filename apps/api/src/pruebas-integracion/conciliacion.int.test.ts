@@ -95,6 +95,33 @@ describe('bandeja y conciliación (RF-CMP-003 a 005)', () => {
     expect(r.body.entradas).toHaveLength(1);
   });
 
+  it('cada entrada dice su categoría, su unidad y quién la registró', async () => {
+    const folio = await recibida(10, 8);
+    const { nombre } = await a.prisma.usuario.findUniqueOrThrow({ where: { id: op.id } });
+    const { nombre: categoriaNombre, unidad_base } = await a.prisma.categoria.findUniqueOrThrow({
+      where: { id: categoria },
+    });
+    const r = await como(auditor.token).get(`/api/comprobantes/${folio}/conciliacion`).expect(200);
+    expect(r.body.entradas[0]).toEqual(
+      expect.objectContaining({
+        categoria: categoriaNombre,
+        unidad: unidad_base,
+        registradoPor: nombre,
+      }),
+    );
+    const d = await preparada();
+    const entrada = await como(op.token)
+      .post(`/api/acopios/${ACOPIO_A}/entradas`, { categoriaId: categoria, cantidad: 3 })
+      .expect(201);
+    const vinculables = await como(auditor.token)
+      .get(`/api/comprobantes/${d.folio}/entradas-vinculables`)
+      .expect(200);
+    expect(
+      vinculables.body.find((m: { id: string }) => m.id === entrada.body.movimiento.id)
+        .registradoPor,
+    ).toBe(nombre);
+  });
+
   it('conciliar cierra la donación', async () => {
     const folio = await recibida();
     const r = await como(auditor.token).post(`/api/comprobantes/${folio}/conciliar`).expect(200);

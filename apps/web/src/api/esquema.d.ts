@@ -2136,11 +2136,15 @@ export interface components {
                 movimientoId: string;
                 /** Format: uuid */
                 categoriaId: string;
+                categoria: string;
+                unidad: string;
                 cantidad: number;
                 /** Format: date-time */
                 ocurridoEn: string;
                 /** @enum {string} */
                 origen: "RECEPCION" | "AUDITOR";
+                /** @description Nombre de quien registró la entrada */
+                registradoPor: string;
             }[];
             resumen: {
                 /** Format: uuid */
@@ -2163,6 +2167,8 @@ export interface components {
             /** Format: date-time */
             ocurridoEn: string;
             origenOffline: boolean;
+            /** @description Nombre de quien registró la entrada */
+            registradoPor: string;
         };
         VincularDto: {
             movimientoIds: string[];
