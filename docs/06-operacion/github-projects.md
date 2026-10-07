@@ -3,7 +3,7 @@ title: "GitHub — organización y Project"
 type: operacion
 tags: [operacion]
 estado: borrador
-actualizado: 2026-10-06
+actualizado: 2026-10-07
 ---
 
 # GitHub — organización y Project
@@ -103,12 +103,52 @@ casilla y se comenta qué se probó; al cerrar el ciclo se cierra el issue con e
 Todo issue nuevo se agrega al Project.
 
 **Columnas del tablero.** La guía del Avance 2 pide **Product Backlog · To Do · In
-Progress · Review · Done**. La vista Board con esas columnas y su captura siguen en
-[#21](https://github.com/Proyecto-IngSoftware/acopio/issues/21); se crean desde la web
-del Project.
+Progress · Review · Done**, que son las opciones del campo «Status».
+
+**Campos y vistas del Project.**
+
+| Qué | Para qué |
+|---|---|
+| Campo «Status» | Columna del tablero |
+| Campo «Sprint» (Sprint 0, 1, 2, 3, Cierre) | Agrupa issues e historias por sprint. Creado el 2026-10-07 |
+| Milestones «Semana N · hasta el …» | Fecha máxima de cada issue, según el [cronograma](../05-planes/cronograma.md) |
+| [View 1](https://github.com/orgs/Proyecto-IngSoftware/projects/1/views/1) | Tabla con todo |
+| [Sprint 1](https://github.com/orgs/Proyecto-IngSoftware/projects/1/views/2) | Board por Status, filtro `sprint:"Sprint 1" is:draft`: solo las historias del Sprint 1. Es la vista de la captura del Avance 4 |
+| [Sprint 2](https://github.com/orgs/Proyecto-IngSoftware/projects/1/views/3) | Board por Status, filtro `sprint:"Sprint 2"`: historias e issues del Sprint 2 |
+
+Las historias de usuario son draft issues del Project, una por HU, con su sprint y su
+estado. Las vistas se pueden crear desde la web o con la API REST
+(`POST /orgs/Proyecto-IngSoftware/projectsV2/1/views`).
 
 El backlog inicial de septiembre (los siete draft issues del Avance 3) ya se convirtió
 en issues y se cerró; queda en el historial del repositorio.
+
+## 7. Equipo y asignaciones
+
+| Integrante | Usuario de GitHub | Rol del Sprint 0 |
+|---|---|---|
+| Joseph | `Josephqaz` | Arquitectura y liderazgo de integración |
+| Brayan | `Bij3y` | Análisis de requerimientos y diseño UI/UX |
+| Alejandra | `algn1265-code` | Coordinación de Sprint y documentación |
+| Michael | `estebangutierrez406-svg` | Calidad, pruebas y despliegue |
+
+Joseph confirmó los usuarios el 2026-10-07. El de Michael no lleva su nombre; es
+`estebangutierrez406-svg`.
+
+Cada issue se asigna a quien tiene el rol de esa área, según el
+[Avance 1](../entregas/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo):
+
+| Tipo de issue | Se asigna a |
+|---|---|
+| Ceremonias del sprint, tablero, revisión de documentos y Word de los avances | Alejandra |
+| Calidad, RNF, pruebas, despliegue, deuda de las revisiones | Michael |
+| Maquetas en Stitch, accesibilidad, contenido del portal | Brayan |
+| API, modelo de datos, contrato e integración de cada bloque | Joseph |
+| Interfaz de un bloque con maquetas nuevas | Joseph y Brayan |
+| Historias de usuario (draft issues) | Joseph, que construye e integra, y Brayan, que valida los criterios de aceptación |
+
+Los roles no rotan en el Sprint 2 ([P-048](../01-requerimientos/pendientes.md)). Si
+rotan más adelante, se cambia esta tabla y se reasignan los issues abiertos.
 
 ---
 

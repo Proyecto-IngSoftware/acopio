@@ -33,12 +33,16 @@ un avance, se regenera su Word y luego el unificado.
 
 ## Equipo
 
-| Integrante | Responsabilidad inicial |
-|---|---|
-| Joseph | Arquitectura y liderazgo de integración |
-| Brayan | Análisis de requerimientos · Diseño UI/UX |
-| Alejandra | Coordinación de Sprint y documentación |
-| Michael | Calidad, pruebas y despliegue |
+| Integrante | Usuario de GitHub | Responsabilidad inicial |
+|---|---|---|
+| Joseph | [`Josephqaz`](https://github.com/Josephqaz) | Arquitectura y liderazgo de integración |
+| Brayan | [`Bij3y`](https://github.com/Bij3y) | Análisis de requerimientos · Diseño UI/UX |
+| Alejandra | [`algn1265-code`](https://github.com/algn1265-code) | Coordinación de Sprint y documentación |
+| Michael | [`estebangutierrez406-svg`](https://github.com/estebangutierrez406-svg) | Calidad, pruebas y despliegue |
+
+Los usuarios los confirmó Joseph el 2026-10-07. Los roles no rotan en el Sprint 2
+([P-048](../01-requerimientos/pendientes.md)). Así se asignan los issues y las tarjetas
+del Project: ver [github-projects.md](../06-operacion/github-projects.md#7-equipo-y-asignaciones).
 
 ## Evidencia del Avance 1
 
