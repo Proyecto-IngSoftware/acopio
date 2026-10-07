@@ -19,6 +19,10 @@ historias y los issues por sprint.
 
 ## Supuestos
 
+El docente entrega cada consigna a medida que avanza el curso. La del Sprint 2 llega en
+la clase virtual del viernes 9 de octubre a las 6:30 p. m.; con ella se revisan las
+semanas 11 a 13 de este cronograma y sus milestones.
+
 - Los sprints duran tres semanas, como el Sprint 1: Sprint 2 en las semanas 11 a 13,
   Sprint 3 en las 14 a 16 y cierre en las 17 y 18. Si la guía del próximo avance trae
   otras semanas, se corren las fechas, pero el orden de los bloques se mantiene.

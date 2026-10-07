@@ -816,7 +816,9 @@ noviembre). El criterio 2 de HU-05 quedó en
 la sustentación del segundo corte. La del primero fue en la semana 6; si se repite el
 intervalo, la segunda caería en la semana 12, pero ninguna guía lo dice.
 **Por qué:** de esas fechas depende qué evidencia tiene que estar lista y cuándo.
-**Estado:** ABIERTO. Se confirma con el docente o con la guía del Avance 5
+**Estado:** ABIERTO. El docente presenta la consigna del Sprint 2 en la clase virtual del
+viernes 9 de octubre a las 6:30 p. m. Con ella se corrigen el
+[calendario](../entregas/calendario.md) y el cronograma
 
 ---
 
