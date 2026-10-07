@@ -33,7 +33,7 @@ Lo que todavía depende de una reunión del equipo está marcado como pendiente.
 | Repositorio público | ✅ | Se publicó el 2026-10-07 |
 | 2. Diagrama de paquetes | ✅ | Dos vistas en [vista-general.md](../02-arquitectura/vista-general.md#diagrama-de-paquetes) |
 | 3a. Tabla del Sprint Planning | ✅ | |
-| 3a. Captura del tablero con las historias del Sprint 1 | ⚠️ | El Project ya tiene las historias y el campo «Sprint» (2026-10-07). Falta crear la vista Board y tomar la captura ([#21](https://github.com/Proyecto-IngSoftware/acopio/issues/21), [#45](https://github.com/Proyecto-IngSoftware/acopio/issues/45)) |
+| 3a. Captura del tablero con las historias del Sprint 1 | ⚠️ | La vista Board [«Sprint 1»](https://github.com/orgs/Proyecto-IngSoftware/projects/1/views/2) ya existe (2026-10-07). Falta tomar la captura ([#21](https://github.com/Proyecto-IngSoftware/acopio/issues/21), [#45](https://github.com/Proyecto-IngSoftware/acopio/issues/45)) |
 | 3b. Evidencia del seguimiento (captura o foto) | ❌ | Seguimiento del viernes 9 de octubre |
 | 3b. Tabla del seguimiento | ⚠️ | Falta la fila de Brayan, Alejandra y Michael |
 | 3c. Evidencia de la revisión | ✅ | [Pruebas con curl](evidencia/avance-04/pruebas-api.txt) y [contenedores](evidencia/avance-04/contenedores.txt) |
@@ -114,10 +114,11 @@ terminó siendo el Sprint 1, no solo lo previsto el 28 de septiembre.
 | Dependencias o riesgos | RTA-01, NestJS nuevo para el equipo: se resolvió con el spike ([#19](https://github.com/Proyecto-IngSoftware/acopio/issues/19)). RTA-02, concurrencia del inventario: prueba contra PostgreSQL en contenedor ([#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27)). Canasta estándar y población por zona, que bloqueaban el motor ([#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20)). Proveedor del VPS, dominio y remitente de correo, todavía abierto ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)). Que una sola persona construya todo |
 | Definition of Done | Pasan `lint`, `typecheck`, `depcruise`, las pruebas unitarias, las de integración y `scripts/revisar-colores.sh`, en local y en el CI de `main`. Si cambió un endpoint, el contrato OpenAPI y los tipos de la web están regenerados. Si tocó el Compose o el Dockerfile, levanta con `bun run servicios:todo`. Al cerrar el bloque pasa su recorrido de punta a punta. Los criterios de aceptación de la historia están verificados. El plan del bloque y la sección «Cambios al construir» de su especificación están al día |
 
-**Falta la captura del tablero.** El 2026-10-07 se agregó al Project el campo
-«Sprint», una tarjeta por historia con su estado según el Review y los issues cerrados
-pasaron a «Done». Falta crear a mano la vista Board filtrada por «Sprint 1» (la API de
-GitHub no crea vistas) y guardar la captura en `evidencia/avance-04/tablero.png`.
+**Falta la captura del tablero.** El Project tiene desde el 2026-10-07 el campo
+«Sprint», una tarjeta por historia con su estado según el Review y la vista Board
+[«Sprint 1»](https://github.com/orgs/Proyecto-IngSoftware/projects/1/views/2), que
+muestra solo las historias de ese sprint en columnas por estado. Falta guardar la captura
+en `evidencia/avance-04/tablero.png`.
 
 ### 3b. Seguimiento del equipo (Daily Scrum)
 
