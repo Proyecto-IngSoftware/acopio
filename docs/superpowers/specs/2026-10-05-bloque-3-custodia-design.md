@@ -314,13 +314,15 @@ Cada etapa tiene su plan, escrito al empezarla.
 
 ## 9. Criterios de salida
 
-- [ ] El recorrido del §1 funciona en el Compose local
-- [ ] Recibir un folio crea las entradas y los vínculos sin dejar nada a medias, y dos
+- [x] El recorrido del §1 funciona en el Compose local (`apps/web/recorridos/donador.mjs` y
+      `consola-comprobantes.mjs`, 2026-10-06)
+- [x] Recibir un folio crea las entradas y los vínculos sin dejar nada a medias, y dos
       recepciones simultáneas del mismo folio no duplican entradas
-- [ ] El seguimiento público no expone datos del Donador ni la factura
-- [ ] La factura se guarda sin EXIF y solo se ve con una URL firmada
-- [ ] axe sin violaciones graves en cada pantalla nueva a 360 × 640
-- [ ] Pasan `lint`, `typecheck`, `depcruise`, `test`, `test:int` y
+- [x] El seguimiento público no expone datos del Donador ni la factura
+- [x] La factura se guarda sin EXIF y solo se ve con una URL firmada (ADR-0017 la pasará
+      por la API antes del primer despliegue, #26)
+- [x] axe sin violaciones graves en cada pantalla nueva a 360 × 640
+- [x] Pasan `lint`, `typecheck`, `depcruise`, `test`, `test:int` y
       `scripts/revisar-colores.sh`; el contrato y los tipos quedan al día; la imagen
       Docker de la API se construye con `sharp`, y el CI de `main` queda en verde
 
@@ -382,3 +384,12 @@ Cada etapa tiene su plan, escrito al empezarla.
 | El paso 3 se reabre desde «Ver folio» de «Mis donaciones» con `/donar?folio=` | Así el folio y su QR se ven otra vez sin preparar otra donación |
 | En P10 los pasos pendientes ya no van con `opacity-60` | El texto atenuado quedaba en 3,16:1 de contraste y axe lo marcó en el recorrido |
 
+**2026-10-06 · Interfaz, ciclo 2 (la consola).** Construida según el [plan](../../05-planes/2026-10-06-bloque-3-interfaz-ciclo-2.md).
+
+| Qué | Por qué |
+|---|---|
+| La conciliación y las entradas vinculables dicen quién registró cada entrada (`registradoPor`), y las de la conciliación traen además la categoría y la unidad | La maqueta lo muestra y el Auditor lo necesita para revisar. El contrato y los tipos de la web se regeneraron |
+| C8 tiene un campo «Buscar folio», que no estaba en la maqueta | Un folio entregado sin red sigue `PREPARADO` y la bandeja no lo lista. Sin el campo, el Auditor no tenía cómo abrirlo para vincularle entradas |
+| En recibir por folio, cada línea usa − / + y un campo editable con el teclado del teléfono, sin el teclado numérico de C4 en pantalla | La maqueta aprobada muestra el control − / +. Si en terreno el teclado del sistema estorba, se cambia |
+| `useAcopiosGestion` acepta `activo` | El selector de acopio de «Vincular entradas» solo pide todos los acopios para el Administrador; al Auditor la API le respondía 403 |
+| El selector de «Vincular entradas» ofrece al Auditor sus acopios asignados y al Administrador todos | La especificación dice que el Auditor ve sus acopios y el Administrador todos |

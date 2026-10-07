@@ -127,8 +127,8 @@ export function Conciliacion() {
         aria-label="Comprobante"
         className="flex flex-col gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md"
       >
-        <div className="flex items-center gap-space-sm">
-          <span className="font-mono text-body-lg font-bold">{d.folio}</span>
+        <div className="flex flex-wrap items-center gap-space-sm">
+          <span className="font-mono text-body-lg font-bold whitespace-nowrap">{d.folio}</span>
           <span className="ml-auto rounded-full bg-surface-container px-space-sm py-1 text-label-md">
             {ESTADOS_DONACION[d.estado]}
           </span>

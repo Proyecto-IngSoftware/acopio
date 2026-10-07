@@ -40,13 +40,13 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 | C4 Escáner y código nuevo | [C04-escaner](C04-escaner/README.md) | Bloque 2 |
 | C4 Captura sin conexión | [C04-sin-conexion](C04-sin-conexion/README.md) | Bloque 2 |
 | C4 Sin sincronizar | [C04-pendientes](C04-pendientes/README.md) | Bloque 2 |
-| Recibir por folio | [C04-recibir-folio](C04-recibir-folio/README.md) | Bloque 3, ciclo 2 (en construcción) |
+| Recibir por folio | [C04-recibir-folio](C04-recibir-folio/README.md) | Bloque 3, ciclo 2 |
 | C5 Salida | [C05-salida](C05-salida/README.md) | Bloque 2 |
 | C6 Conteo físico | [C06-conteo-fisico](C06-conteo-fisico/README.md) | Bloque 2 |
 | C7 No recibir | [C07-no-recibir](C07-no-recibir/README.md) | Bloque 1 |
 | C7 Umbrales | [C07-umbrales](C07-umbrales/README.md) | Bloque 2 |
-| C8 Comprobantes | [C08-comprobantes](C08-comprobantes/README.md) | Bloque 3, ciclo 2 (en construcción) |
-| C8 Conciliación | [C08-conciliacion](C08-conciliacion/README.md) | Bloque 3, ciclo 2 (en construcción) |
+| C8 Comprobantes | [C08-comprobantes](C08-comprobantes/README.md) | Bloque 3, ciclo 2 |
+| C8 Conciliación | [C08-conciliacion](C08-conciliacion/README.md) | Bloque 3, ciclo 2 |
 | C9 Zonas afectadas | [C09-zonas](C09-zonas/README.md) | Bloque 1 |
 | C15 Entidades | [C15-entidades](C15-entidades/README.md) | Bloque 1 |
 | C16 Usuarios y accesos | [C16-usuarios](C16-usuarios/) (lista, detalle, invitar y matriz) | Bloque 0 y Bloque 1 |
@@ -58,6 +58,5 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 
 ## Lo que sigue
 
-Los diseños del ciclo 2 del Bloque 3 están aprobados; su construcción va en
-[#34](https://github.com/Proyecto-IngSoftware/acopio/issues/34). Lo siguiente sin diseño son
-las pantallas del motor (Bloque 4).
+Lo siguiente sin diseño son las pantallas del motor (Bloque 4,
+[#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)).

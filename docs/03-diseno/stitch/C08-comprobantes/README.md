@@ -16,6 +16,7 @@ actualizado: 2026-10-06
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | [maqueta.html](maqueta.html), la del ciclo 2 completo (<https://claude.ai/artifact/PHHhK2wyZjCj8bJZ1P3QRJ>) |
 | Aprobación | Joseph la aprobó el 2026-10-06 |
+| Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
 
 ## Qué muestra
 

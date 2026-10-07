@@ -19,7 +19,7 @@ construcción.
 | [2026-09-30 · Interfaz · Ciclo 2](2026-09-30-interfaz-ciclo-2-acceso-design.md) | Sesión en cookie, C01 Entrar y Activar cuenta, cabeceras compartidas | Aprobada |
 | [2026-09-30 · Bloque 1 · Red](2026-09-30-bloque-1-red-design.md) | Acopios, zonas, entidades, mapa, home | Aprobada · construido |
 | [2026-10-01 · Bloque 2 · Inventario](2026-10-01-bloque-2-inventario-design.md) | Movimientos, saldos, umbrales, entrada rápida, captura sin conexión | Aprobada · construido |
-| [2026-10-05 · Bloque 3 · Custodia](2026-10-05-bloque-3-custodia-design.md) | Donador, comprobantes con folio, factura en Garage, recepción, conciliación, seguimiento | Aprobada · API e interfaz del Donador construidas; falta la consola (#34) |
+| [2026-10-05 · Bloque 3 · Custodia](2026-10-05-bloque-3-custodia-design.md) | Donador, comprobantes con folio, factura en Garage, recepción, conciliación, seguimiento | Aprobada · construido |
 | Bloque 4 · Motor | Déficit, sugerencias, remisiones | ⬜ pendiente |
 | Bloque 5 · Turnos | Jornadas, reservas, aforo | ⬜ pendiente |
 | Bloque 6 · Extras | Bitácora enriquecida, transparencia, publicaciones | ⬜ pendiente |

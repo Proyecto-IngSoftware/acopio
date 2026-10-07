@@ -16,6 +16,7 @@ actualizado: 2026-10-06
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | En la [maqueta del ciclo 2](../C08-comprobantes/maqueta.html) (<https://claude.ai/artifact/PHHhK2wyZjCj8bJZ1P3QRJ>) |
 | Aprobación | Joseph la aprobó el 2026-10-06 |
+| Construida | [construida.png](construida.png) · [construida-rechazo.png](construida-rechazo.png) · [construida-vincular.png](construida-vincular.png), en Chromium a 360 × 640 |
 
 ## Qué muestra
 

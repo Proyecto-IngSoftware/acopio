@@ -36,14 +36,14 @@ y las notas de [recibir por folio](../03-diseno/stitch/C04-recibir-folio/README.
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 API: quién registró cada entrada | ⬜ | |
-| 2 Cliente de la API de comprobantes | ⬜ | |
-| 3 Rutas, «Más» y la tarjeta de C4 | ⬜ | |
-| 4 Recibir por folio | ⬜ | |
-| 5 C8 Comprobantes | ⬜ | |
-| 6 Conciliación: ver, conciliar, rechazar y revertir | ⬜ | |
-| 7 Vincular entradas | ⬜ | |
-| 8 Recorrido y cierre del Bloque 3 | ⬜ | |
+| 1 API: quién registró cada entrada | ✅ `3b24606` | |
+| 2 Cliente de la API de comprobantes | ✅ `624fa67` | |
+| 3 Rutas, «Más» y la tarjeta de C4 | ✅ `c326dba` | |
+| 4 Recibir por folio | ✅ `bf78016` | |
+| 5 C8 Comprobantes | ✅ `0878f6f` | |
+| 6 Conciliación: ver, conciliar, rechazar y revertir | ✅ `3bfd982` | |
+| 7 Vincular entradas | ✅ `d6fbdbe` | |
+| 8 Recorrido y cierre del Bloque 3 | ✅ cierre del ciclo | |
 
 ## Restricciones globales
 
