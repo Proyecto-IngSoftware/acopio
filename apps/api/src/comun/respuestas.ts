@@ -503,3 +503,85 @@ export class SeguimientoDto extends createZodDto(
     ),
   }),
 ) {}
+
+// ── Motor (Bloque 4) ────────────────────────────────────────────────────────
+
+export class FichaZonaDto extends createZodDto(
+  z.object({
+    zona: z.object({
+      id: z.uuid(),
+      nombre: z.string(),
+      municipio: z.string(),
+      poblacionEstimada: z.number().int(),
+      poblacionFuente: z.string(),
+      poblacionFecha: fecha,
+      emergencia: z.object({
+        id: z.uuid(),
+        nombre: z.string(),
+        estado: z.enum(['ACTIVA', 'EN_SEGUIMIENTO', 'CERRADA']),
+        horizonteDias: z.number().int(),
+      }),
+    }),
+    categorias: z.array(
+      z.object({
+        categoriaId: z.uuid(),
+        categoria: z.string(),
+        unidad,
+        origen: z.enum(['CANASTA', 'MANUAL']),
+        cantidadPersonaDia: z.number().nullable(),
+        fuenteCanasta: z.string().nullable(),
+        manual: z
+          .object({
+            cantidad: z.number(),
+            motivo: z.string(),
+            puestaPor: z.string(),
+            puestaEn: fecha,
+          })
+          .nullable(),
+        necesidad: z.number(),
+        recibido: z.number(),
+        enCamino: z.number(),
+        deficit: z.number(),
+        cobertura: z.number().nullable(),
+      }),
+    ),
+    coberturaGlobal: z.number().nullable(),
+    categoriaMasBaja: z
+      .object({ categoriaId: z.uuid(), categoria: z.string(), cobertura: z.number() })
+      .nullable(),
+    reportes: z.array(
+      z.object({
+        categoriaId: z.uuid(),
+        categoria: z.string(),
+        nota: z.string().nullable(),
+        reportadoEn: fecha,
+      }),
+    ),
+  }),
+) {}
+
+export class NecesidadManualDto extends createZodDto(
+  z.object({
+    categoriaId: z.uuid(),
+    cantidad: z.number().nullable(),
+    motivo: z.string(),
+    puestaEn: fecha,
+  }),
+) {}
+
+export class ExcedenteDto extends createZodDto(
+  z.object({
+    categoriaId: z.uuid(),
+    categoria: z.string(),
+    unidad,
+    saldo: z.number(),
+    umbral: z.object({ minimo: z.number(), maximo: z.number() }).nullable(),
+    noRecibe: z.boolean(),
+    superavit: z.number(),
+    comprometido: z.number(),
+    vencido: z.number(),
+    movible: z.number(),
+    diasParaVencer: z.number().int().nullable(),
+    aviso: z.enum(['SIN_UMBRAL']).nullable(),
+  }),
+) {}
