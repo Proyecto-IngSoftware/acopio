@@ -52,10 +52,19 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 
 ## Lo que sigue
 
-1. **Bloque 4** ([#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)): sigue la
-   etapa 2 de la API (remisiones, recepción en zona, reportes de necesidad y mapa público),
-   y en paralelo el diseño de C10 y C11 en Stitch.
-2. En paralelo, cuando haga falta, la deuda técnica de
+1. **Bloque 4** ([#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)), etapa 2
+   de la API. Primero se escribe su plan, a partir del §8 de la
+   [especificación](../superpowers/specs/2026-10-06-bloque-4-motor-design.md). Entran las
+   remisiones (crear a mano, editar el borrador, despachar con las `SALIDA`, cancelar y el
+   QR), la recepción en zona con foto, los reportes de necesidad del Receptor, la capa de
+   zonas del mapa público y el vínculo folio-remisión (RF-CMP-007). Las tablas ya existen
+   desde la etapa 1 y `RemisionesBorradorService` ya arma los borradores. El plan también
+   recoge los ocho menores que dejó la revisión final de la etapa 1 (anotados al pie de la
+   tabla de estado de su [plan](2026-10-06-bloque-4-api-etapa-1.md)).
+2. En paralelo con la etapa 2, el diseño de C10 Ficha de zona y C11 Motor de sugerencias en
+   Stitch: son el ciclo 1 de interfaz y no se escriben sin la maqueta aprobada. La API que
+   necesitan ya está.
+3. En paralelo, cuando haga falta, la deuda técnica de
    [#38 a #43](https://github.com/Proyecto-IngSoftware/acopio/issues?q=is%3Aopen+label%3Adeuda)
    y el primer despliegue ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)).
 
