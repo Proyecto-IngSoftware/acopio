@@ -428,4 +428,10 @@ Cada etapa tiene su plan, escrito al empezarla.
 
 ## 13. Cambios al construir
 
-(vacío)
+**2026-10-06 · API, etapa 1.** Según el [plan](../../05-planes/2026-10-06-bloque-4-api-etapa-1.md).
+
+| Qué | Por qué |
+|---|---|
+| `dias_para_vencer` usa `vencimientoEstimado` (V-02): sale primero lo que vence antes, no lo que entró primero como decía M-05. Lo vencido que sigue en el estante no cuenta como movible | C3 ya muestra los vencimientos con esa estimación; con otra, la urgencia del motor contradiría el inventario |
+| `remision.responsable` es opcional en `BORRADOR` y obligatorio desde `EN_TRANSITO` (`remision_despachada_con_responsable`) | Al aprobar una sugerencia todavía no se sabe quién lleva el envío |
+| Las llaves foráneas de `movimiento` hacia `acopio`, `zona` y `remision` son `RESTRICT` | Prisma propone `SET NULL` en una relación opcional, y eso chocaría con `movimiento_acopio_o_zona` |

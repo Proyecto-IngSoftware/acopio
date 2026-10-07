@@ -3,3 +3,4 @@ export * from './formato.js';
 export * from './horario.js';
 export * from './distancia.js';
 export * from './inventario.js';
+export * from './motor/index.js';

@@ -1,3 +1,4 @@
+import { CANTIDAD_MINIMA_POR_DEFECTO, PESOS_POR_DEFECTO } from '@acopio/shared';
 import type { PrismaService } from '../comun/prisma/prisma.service';
 import type { ProveedorIdentidad } from '../modulos/identidad/proveedor/proveedor-identidad';
 import { CANASTA_VERSIONES, CATEGORIAS } from './datos-catalogo';
@@ -65,8 +66,8 @@ export async function sembrar(
     update: {},
     create: {
       id: 1,
-      pesos: { criticidad: 0.45, urgencia: 0.25, proximidad: 0.15, magnitud: 0.15 },
-      cantidad_minima: 5,
+      pesos: { ...PESOS_POR_DEFECTO },
+      cantidad_minima: CANTIDAD_MINIMA_POR_DEFECTO,
     },
   });
 
