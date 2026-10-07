@@ -59,6 +59,17 @@ export async function sembrar(
     }
   }
 
+  // RF-CAT-006: una sola fila global con los pesos por defecto
+  await prisma.configuracionMotor.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      id: 1,
+      pesos: { criticidad: 0.45, urgencia: 0.25, proximidad: 0.15, magnitud: 0.15 },
+      cantidad_minima: 5,
+    },
+  });
+
   const adminCreado = await sembrarAdmin(prisma, proveedor, admin);
 
   return {

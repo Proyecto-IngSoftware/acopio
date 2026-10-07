@@ -210,6 +210,7 @@ export class ConciliacionService {
     if (new Set(movs.map((m) => m.acopio_id)).size !== 1)
       throw noVinculable('Las entradas tienen que ser de un mismo acopio');
     const acopioId = movs[0]!.acopio_id;
+    if (!acopioId) throw noVinculable('Solo se vinculan entradas de un acopio');
     await this.exigirAlcance(usuario, acopioId);
     // Reasignar el folio saca el comprobante del alcance de quien lo tenía
     await this.exigirAlcance(usuario, c.acopio_id);

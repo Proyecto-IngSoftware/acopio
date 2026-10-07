@@ -63,6 +63,10 @@ export class ConsultasService {
             ? vencimientoEstimado(
                 movimientos
                   .filter((m) => m.categoria_id === c.id)
+                  .filter(
+                    (m): m is typeof m & { tipo: 'ENTRADA' | 'SALIDA' | 'AJUSTE' } =>
+                      m.tipo !== 'RECEPCION',
+                  )
                   .map((m) => ({
                     tipo: m.tipo,
                     signo: m.signo as 1 | -1,

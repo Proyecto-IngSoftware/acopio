@@ -2,7 +2,7 @@
 title: "Bloque 4 · Motor: API, etapa 1 · plan"
 type: plan
 tags: [plan, bloque-4]
-estado: borrador
+estado: aprobado
 bloque: 4
 actualizado: 2026-10-06
 ---

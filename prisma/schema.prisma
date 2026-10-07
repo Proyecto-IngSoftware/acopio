@@ -50,17 +50,26 @@ model Usuario {
   tokens_validos_desde DateTime?     @db.Timestamptz
   creado_en            DateTime      @default(now()) @db.Timestamptz
 
-  asignaciones         UsuarioAsignacion[]     @relation("asignaciones")
-  asignaciones_hechas  UsuarioAsignacion[]     @relation("asignado_por")
-  invitaciones         Invitacion[]            @relation("invitado")
-  invitaciones_creadas Invitacion[]            @relation("creada_por")
-  verificaciones       VerificacionCorreo[]
-  bitacora             Bitacora[]
-  movimientos          Movimiento[]
-  donaciones           Comprobante[]           @relation("donaciones")
-  recibidas            Comprobante[]           @relation("recibidas")
-  verificadas          Comprobante[]           @relation("verificadas")
-  vinculos_hechos      ComprobanteMovimiento[] @relation("vinculos_hechos")
+  asignaciones           UsuarioAsignacion[]     @relation("asignaciones")
+  asignaciones_hechas    UsuarioAsignacion[]     @relation("asignado_por")
+  invitaciones           Invitacion[]            @relation("invitado")
+  invitaciones_creadas   Invitacion[]            @relation("creada_por")
+  verificaciones         VerificacionCorreo[]
+  bitacora               Bitacora[]
+  movimientos            Movimiento[]
+  donaciones             Comprobante[]           @relation("donaciones")
+  recibidas              Comprobante[]           @relation("recibidas")
+  verificadas            Comprobante[]           @relation("verificadas")
+  vinculos_hechos        ComprobanteMovimiento[] @relation("vinculos_hechos")
+  remisiones_creadas     Remision[]              @relation("remisiones_creadas")
+  remisiones_despachadas Remision[]              @relation("remisiones_despachadas")
+  remisiones_recibidas   Remision[]              @relation("remisiones_recibidas")
+  remisiones_canceladas  Remision[]              @relation("remisiones_canceladas")
+  remisiones_vinculadas  RemisionComprobante[]   @relation("remisiones_vinculadas")
+  sugerencias_decididas  Sugerencia[]            @relation("sugerencias_decididas")
+  reportes_necesidad     ReporteNecesidad[]      @relation("reportes_necesidad")
+  necesidades_manuales   NecesidadManual[]       @relation("necesidades_manuales")
+  configuracion_motor    ConfiguracionMotor[]    @relation("configuracion_motor")
 
   @@map("usuario")
 }
@@ -194,13 +203,17 @@ model Categoria {
   archivada   Boolean        @default(false)
   creado_en   DateTime       @default(now()) @db.Timestamptz
 
-  canasta            CanastaEstandar[]
-  no_recibir         NoRecibir[]
-  movimientos        Movimiento[]
-  saldos             Saldo[]
-  umbrales           Umbral[]
-  codigos_barras     CodigoBarras[]
-  lineas_comprobante LineaComprobante[]
+  canasta              CanastaEstandar[]
+  no_recibir           NoRecibir[]
+  movimientos          Movimiento[]
+  saldos               Saldo[]
+  umbrales             Umbral[]
+  codigos_barras       CodigoBarras[]
+  lineas_comprobante   LineaComprobante[]
+  lineas_remision      LineaRemision[]
+  sugerencias          Sugerencia[]
+  reportes_necesidad   ReporteNecesidad[]
+  necesidades_manuales NecesidadManual[]
 
   @@map("categoria")
 }
@@ -238,6 +251,7 @@ model Emergencia {
   motivo_cierre   String?
   creado_en       DateTime         @default(now()) @db.Timestamptz
   zonas           Zona[]
+  sugerencias     Sugerencia[]
 
   @@map("emergencia")
 }
@@ -301,6 +315,8 @@ model Acopio {
   saldos              Saldo[]
   umbrales            Umbral[]
   comprobantes        Comprobante[]
+  remisiones          Remision[]
+  sugerencias         Sugerencia[]
 
   @@index([estado])
   @@map("acopio")
@@ -308,19 +324,24 @@ model Acopio {
 
 /// RF-MOT-001. Pertenece a una emergencia; cerrada la emergencia, queda en solo lectura.
 model Zona {
-  id                 String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  emergencia_id      String     @db.Uuid
-  emergencia         Emergencia @relation(fields: [emergencia_id], references: [id])
-  nombre             String
-  municipio          String
-  lat                Decimal    @db.Decimal(9, 6)
-  lng                Decimal    @db.Decimal(9, 6)
-  poblacion_estimada Int
-  poblacion_fuente   String
-  poblacion_fecha    DateTime   @db.Date
-  estado             EstadoZona @default(SIN_ATENDER)
-  creado_en          DateTime   @default(now()) @db.Timestamptz
-  actualizado_en     DateTime   @default(now()) @updatedAt @db.Timestamptz
+  id                   String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  emergencia_id        String             @db.Uuid
+  emergencia           Emergencia         @relation(fields: [emergencia_id], references: [id])
+  nombre               String
+  municipio            String
+  lat                  Decimal            @db.Decimal(9, 6)
+  lng                  Decimal            @db.Decimal(9, 6)
+  poblacion_estimada   Int
+  poblacion_fuente     String
+  poblacion_fecha      DateTime           @db.Date
+  estado               EstadoZona         @default(SIN_ATENDER)
+  creado_en            DateTime           @default(now()) @db.Timestamptz
+  actualizado_en       DateTime           @default(now()) @updatedAt @db.Timestamptz
+  movimientos          Movimiento[]
+  remisiones           Remision[]
+  sugerencias          Sugerencia[]
+  reportes             ReporteNecesidad[]
+  necesidades_manuales NecesidadManual[]
 
   @@index([emergencia_id])
   @@map("zona")
@@ -346,6 +367,7 @@ enum TipoMovimiento {
   ENTRADA
   SALIDA
   AJUSTE
+  RECEPCION
 }
 
 enum MotivoSalida {
@@ -359,8 +381,13 @@ enum MotivoSalida {
 /// El id puede venir del cliente: es la llave de idempotencia de la captura sin conexión.
 model Movimiento {
   id             String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  acopio_id      String                 @db.Uuid
-  acopio         Acopio                 @relation(fields: [acopio_id], references: [id])
+  /// Nulo en una RECEPCION: esa es de una zona (M-01, ADR-0018)
+  acopio_id      String?                @db.Uuid
+  acopio         Acopio?                @relation(fields: [acopio_id], references: [id], onDelete: Restrict)
+  zona_id        String?                @db.Uuid
+  zona           Zona?                  @relation(fields: [zona_id], references: [id], onDelete: Restrict)
+  remision_id    String?                @db.Uuid
+  remision       Remision?              @relation(fields: [remision_id], references: [id], onDelete: Restrict)
   categoria_id   String                 @db.Uuid
   categoria      Categoria              @relation(fields: [categoria_id], references: [id])
   tipo           TipoMovimiento
@@ -382,6 +409,7 @@ model Movimiento {
 
   @@index([acopio_id, categoria_id, registrado_en])
   @@index([registrado_en])
+  @@index([zona_id, categoria_id, ocurrido_en])
   @@map("movimiento")
 }
 
@@ -469,7 +497,7 @@ model Comprobante {
   donador_id             String                  @db.Uuid
   donador                Usuario                 @relation("donaciones", fields: [donador_id], references: [id])
   acopio_id              String                  @db.Uuid
-  acopio                 Acopio                  @relation(fields: [acopio_id], references: [id])
+  acopio                 Acopio                  @relation(fields: [acopio_id], references: [id], onDelete: Restrict)
   estado                 EstadoComprobante       @default(PREPARADO)
   creado_en              DateTime                @default(now()) @db.Timestamptz
   recibido_por           String?                 @db.Uuid
@@ -488,6 +516,7 @@ model Comprobante {
   factura_borrada_en     DateTime?               @db.Timestamptz
   lineas                 LineaComprobante[]
   vinculos               ComprobanteMovimiento[]
+  remisiones             RemisionComprobante[]
 
   @@index([estado, acopio_id, creado_en])
   @@index([donador_id, estado])
@@ -524,4 +553,163 @@ model ComprobanteMovimiento {
 
   @@id([comprobante_id, movimiento_id])
   @@map("comprobante_movimiento")
+}
+
+// ── Motor (Bloque 4) ────────────────────────────────────────────────────────
+
+enum EstadoRemision {
+  BORRADOR
+  EN_TRANSITO
+  RECIBIDA
+  CANCELADA
+}
+
+enum EstadoSugerencia {
+  PROPUESTA
+  APROBADA
+  DESCARTADA
+}
+
+/// RF-MOT-008. Sin zona es un despacho general. Se cancela, no se borra.
+model Remision {
+  id                 String                @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  codigo             String                @unique
+  acopio_origen_id   String                @db.Uuid
+  acopio_origen      Acopio                @relation(fields: [acopio_origen_id], references: [id])
+  zona_destino_id    String?               @db.Uuid
+  zona_destino       Zona?                 @relation(fields: [zona_destino_id], references: [id])
+  estado             EstadoRemision        @default(BORRADOR)
+  /// Se completa antes de despachar: al aprobar una sugerencia aún no se sabe
+  responsable        String?
+  qr_token           String                @unique
+  creada_por         String                @db.Uuid
+  creador            Usuario               @relation("remisiones_creadas", fields: [creada_por], references: [id])
+  creada_en          DateTime              @default(now()) @db.Timestamptz
+  despachada_por     String?               @db.Uuid
+  despachador        Usuario?              @relation("remisiones_despachadas", fields: [despachada_por], references: [id])
+  despachada_en      DateTime?             @db.Timestamptz
+  recibida_por       String?               @db.Uuid
+  receptor           Usuario?              @relation("remisiones_recibidas", fields: [recibida_por], references: [id])
+  recibida_en        DateTime?             @db.Timestamptz
+  evidencia_keys     String[]              @default([])
+  nota_recepcion     String?
+  cancelada_por      String?               @db.Uuid
+  cancelador         Usuario?              @relation("remisiones_canceladas", fields: [cancelada_por], references: [id])
+  cancelada_en       DateTime?             @db.Timestamptz
+  motivo_cancelacion String?
+  lineas             LineaRemision[]
+  sugerencias        Sugerencia[]
+  movimientos        Movimiento[]
+  comprobantes       RemisionComprobante[]
+
+  @@index([estado, acopio_origen_id])
+  @@index([estado, zona_destino_id])
+  @@map("remision")
+}
+
+/// Una línea por categoría. Se edita solo en BORRADOR (disparador linea_remision_editable).
+model LineaRemision {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  remision_id       String    @db.Uuid
+  remision          Remision  @relation(fields: [remision_id], references: [id])
+  categoria_id      String    @db.Uuid
+  categoria         Categoria @relation(fields: [categoria_id], references: [id])
+  cantidad_planeada Decimal   @db.Decimal(12, 3)
+  cantidad_recibida Decimal?  @db.Decimal(12, 3)
+
+  @@unique([remision_id, categoria_id])
+  @@map("linea_remision")
+}
+
+/// RF-CMP-007. Solo inserción.
+model RemisionComprobante {
+  remision_id    String      @db.Uuid
+  remision       Remision    @relation(fields: [remision_id], references: [id])
+  comprobante_id String      @db.Uuid
+  comprobante    Comprobante @relation(fields: [comprobante_id], references: [id])
+  vinculado_por  String      @db.Uuid
+  vinculador     Usuario     @relation("remisiones_vinculadas", fields: [vinculado_por], references: [id])
+  vinculado_en   DateTime    @default(now()) @db.Timestamptz
+
+  @@id([remision_id, comprobante_id])
+  @@index([comprobante_id])
+  @@map("remision_comprobante")
+}
+
+/// RF-MOT-005 a 007. Las PROPUESTA se reemplazan en cada recálculo; las decididas quedan (M-04).
+model Sugerencia {
+  id                String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ronda             DateTime         @db.Timestamptz
+  emergencia_id     String           @db.Uuid
+  emergencia        Emergencia       @relation(fields: [emergencia_id], references: [id])
+  acopio_id         String           @db.Uuid
+  acopio            Acopio           @relation(fields: [acopio_id], references: [id])
+  zona_id           String           @db.Uuid
+  zona              Zona             @relation(fields: [zona_id], references: [id])
+  categoria_id      String           @db.Uuid
+  categoria         Categoria        @relation(fields: [categoria_id], references: [id])
+  cantidad          Decimal          @db.Decimal(12, 3)
+  puntaje           Decimal          @db.Decimal(6, 4)
+  /// {criticidad, urgencia, proximidad, magnitud}
+  desglose          Json
+  justificacion     String
+  estado            EstadoSugerencia @default(PROPUESTA)
+  cantidad_aprobada Decimal?         @db.Decimal(12, 3)
+  remision_id       String?          @db.Uuid
+  remision          Remision?        @relation(fields: [remision_id], references: [id])
+  motivo_descarte   String?
+  decidida_por      String?          @db.Uuid
+  decisor           Usuario?         @relation("sugerencias_decididas", fields: [decidida_por], references: [id])
+  decidida_en       DateTime?        @db.Timestamptz
+
+  @@index([estado, puntaje])
+  @@index([acopio_id, zona_id, categoria_id, decidida_en])
+  @@map("sugerencia")
+}
+
+/// RF-MOT-011. Solo inserción: la vigente de una categoría es la más reciente.
+model ReporteNecesidad {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  zona_id       String    @db.Uuid
+  zona          Zona      @relation(fields: [zona_id], references: [id])
+  categoria_id  String    @db.Uuid
+  categoria     Categoria @relation(fields: [categoria_id], references: [id])
+  reportado_por String    @db.Uuid
+  reportante    Usuario   @relation("reportes_necesidad", fields: [reportado_por], references: [id])
+  nota          String?
+  resuelta      Boolean   @default(false)
+  reportado_en  DateTime  @default(now()) @db.Timestamptz
+
+  @@index([zona_id, categoria_id, reportado_en])
+  @@map("reporte_necesidad")
+}
+
+/// RF-MOT-002. Solo inserción: vale la más reciente; cantidad nula vuelve al cálculo.
+model NecesidadManual {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  zona_id      String    @db.Uuid
+  zona         Zona      @relation(fields: [zona_id], references: [id])
+  categoria_id String    @db.Uuid
+  categoria    Categoria @relation(fields: [categoria_id], references: [id])
+  cantidad     Decimal?  @db.Decimal(12, 3)
+  motivo       String
+  puesta_por   String    @db.Uuid
+  autor        Usuario   @relation("necesidades_manuales", fields: [puesta_por], references: [id])
+  puesta_en    DateTime  @default(now()) @db.Timestamptz
+
+  @@index([zona_id, categoria_id, puesta_en])
+  @@map("necesidad_manual")
+}
+
+/// RF-CAT-006. Una sola fila, global (ADR-0010).
+model ConfiguracionMotor {
+  id              Int      @id @db.SmallInt
+  /// {criticidad, urgencia, proximidad, magnitud}, suman 1
+  pesos           Json
+  cantidad_minima Decimal  @db.Decimal(12, 3)
+  actualizado_por String?  @db.Uuid
+  actualizador    Usuario? @relation("configuracion_motor", fields: [actualizado_por], references: [id])
+  actualizado_en  DateTime @default(now()) @db.Timestamptz
+
+  @@map("configuracion_motor")
 }

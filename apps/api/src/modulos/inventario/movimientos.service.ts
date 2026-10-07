@@ -22,7 +22,7 @@ export interface DatosEntrada {
 
 export interface MovimientoVista {
   id: string;
-  tipo: 'ENTRADA' | 'SALIDA' | 'AJUSTE';
+  tipo: 'ENTRADA' | 'SALIDA' | 'AJUSTE' | 'RECEPCION';
   categoriaId: string;
   cantidad: number;
   signo: 1 | -1;

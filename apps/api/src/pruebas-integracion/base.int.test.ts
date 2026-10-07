@@ -4,6 +4,7 @@ import {
   ACOPIO_A,
   ACOPIO_B,
   ADMIN,
+  EMERGENCIA_PRUEBA,
   ZONA_A,
   crearAppPrueba,
   type AppPrueba,
@@ -172,6 +173,145 @@ describe('base de datos', () => {
     });
   });
 
+  describe('motor (Bloque 4)', () => {
+    let categoria: string;
+    let adminId: string;
+    let remision: string;
+
+    beforeAll(async () => {
+      categoria = (
+        await a.prisma.categoria.create({
+          data: {
+            nombre: `Base motor ${Date.now()}`,
+            grupo: 'HERRAMIENTAS',
+            unidad_base: 'UNIDAD',
+          },
+        })
+      ).id;
+      adminId = (await a.prisma.usuario.findFirstOrThrow({ where: { username: ADMIN.username } }))
+        .id;
+      remision = (
+        await a.prisma.remision.create({
+          data: {
+            codigo: 'R-2026-BASE2',
+            acopio_origen_id: ACOPIO_A,
+            zona_destino_id: ZONA_A,
+            qr_token: `base-${Date.now()}`,
+            creada_por: adminId,
+            lineas: { create: [{ categoria_id: categoria, cantidad_planeada: 4 }] },
+          },
+        })
+      ).id;
+    });
+
+    const recepcion = (extra: Record<string, unknown> = {}) =>
+      a.prisma.movimiento.create({
+        data: {
+          zona_id: ZONA_A,
+          categoria_id: categoria,
+          tipo: 'RECEPCION',
+          signo: 1,
+          cantidad: 4,
+          remision_id: remision,
+          usuario_id: adminId,
+          ocurrido_en: new Date(),
+          ...extra,
+        },
+      });
+
+    it('una RECEPCION en zona entra y no crea saldo', async () => {
+      const antes = await a.prisma.saldo.count();
+      await recepcion();
+      expect(await a.prisma.saldo.count()).toBe(antes);
+    });
+
+    it('un movimiento no es de un acopio y de una zona a la vez', async () => {
+      await expect(recepcion({ acopio_id: ACOPIO_A })).rejects.toThrow(/movimiento_acopio_o_zona/);
+    });
+
+    it('una RECEPCION sin remisión no entra', async () => {
+      await expect(recepcion({ remision_id: null })).rejects.toThrow(
+        /movimiento_recepcion_con_remision/,
+      );
+    });
+
+    it('una ENTRADA en una zona no entra', async () => {
+      await expect(recepcion({ tipo: 'ENTRADA' })).rejects.toThrow(/movimiento_recepcion_en_zona/);
+    });
+
+    it('las líneas de una remisión en tránsito no se editan, salvo lo recibido', async () => {
+      await a.prisma.remision.update({
+        where: { id: remision },
+        data: {
+          estado: 'EN_TRANSITO',
+          responsable: 'Conductor de prueba',
+          despachada_en: new Date(),
+        },
+      });
+      await expect(
+        app.query(`UPDATE linea_remision SET cantidad_planeada = 9 WHERE remision_id = $1`, [
+          remision,
+        ]),
+      ).rejects.toThrow(/linea_remision_no_editable/);
+      await expect(
+        app.query(`DELETE FROM linea_remision WHERE remision_id = $1`, [remision]),
+      ).rejects.toThrow(/linea_remision_no_editable/);
+      await expect(
+        app.query(`UPDATE linea_remision SET cantidad_recibida = 4 WHERE remision_id = $1`, [
+          remision,
+        ]),
+      ).resolves.toBeDefined();
+    });
+
+    it('una sugerencia decidida no se borra; una propuesta sí', async () => {
+      const base = {
+        ronda: new Date(),
+        emergencia_id: EMERGENCIA_PRUEBA,
+        acopio_id: ACOPIO_A,
+        zona_id: ZONA_A,
+        categoria_id: categoria,
+        cantidad: 3,
+        puntaje: 0.5,
+        desglose: {},
+        justificacion: 'Prueba de la base',
+      };
+      const decidida = await a.prisma.sugerencia.create({
+        data: {
+          ...base,
+          estado: 'DESCARTADA',
+          motivo_descarte: 'No hace falta ahora',
+          decidida_por: adminId,
+          decidida_en: new Date(),
+        },
+      });
+      const propuesta = await a.prisma.sugerencia.create({ data: base });
+      await expect(
+        app.query(`DELETE FROM sugerencia WHERE id = $1`, [decidida.id]),
+      ).rejects.toThrow(/sugerencia_decidida_no_se_borra/);
+      await expect(
+        app.query(`DELETE FROM sugerencia WHERE id = $1`, [propuesta.id]),
+      ).resolves.toBeDefined();
+    });
+
+    it.each([
+      ['reporte_necesidad', 'zona_id = zona_id'],
+      ['necesidad_manual', 'zona_id = zona_id'],
+      ['remision_comprobante', 'vinculado_en = now()'],
+    ])('acopio_app no cambia ni borra %s', async (tabla, asignacion) => {
+      await expect(app.query(`DELETE FROM ${tabla} WHERE false`)).rejects.toThrow(
+        /permission denied/,
+      );
+      await expect(app.query(`UPDATE ${tabla} SET ${asignacion} WHERE false`)).rejects.toThrow(
+        /permission denied/,
+      );
+    });
+
+    it.each(['remision', 'configuracion_motor'])('acopio_app no borra %s', async (tabla) => {
+      await expect(app.query(`DELETE FROM ${tabla} WHERE false`)).rejects.toThrow(
+        /permission denied/,
+      );
+    });
+  });
   describe('custodia (Bloque 3)', () => {
     it('acopio_app no cambia ni borra vínculos de donaciones', async () => {
       await expect(
