@@ -20,7 +20,7 @@ construcción.
 | [2026-09-30 · Bloque 1 · Red](2026-09-30-bloque-1-red-design.md) | Acopios, zonas, entidades, mapa, home | Aprobada · construido |
 | [2026-10-01 · Bloque 2 · Inventario](2026-10-01-bloque-2-inventario-design.md) | Movimientos, saldos, umbrales, entrada rápida, captura sin conexión | Aprobada · construido |
 | [2026-10-05 · Bloque 3 · Custodia](2026-10-05-bloque-3-custodia-design.md) | Donador, comprobantes con folio, factura en Garage, recepción, conciliación, seguimiento | Aprobada · construido |
-| [2026-10-06 · Bloque 4 · Motor](2026-10-06-bloque-4-motor-design.md) | Necesidad, déficit, sugerencias, remisiones, recepción en zona, reporte de necesidad, simulador | Borrador |
+| [2026-10-06 · Bloque 4 · Motor](2026-10-06-bloque-4-motor-design.md) | Necesidad, déficit, sugerencias, remisiones, recepción en zona, reporte de necesidad, simulador | Aprobada |
 | Bloque 5 · Turnos | Jornadas, reservas, aforo | ⬜ pendiente |
 | Bloque 6 · Extras | Bitácora enriquecida, transparencia, publicaciones | ⬜ pendiente |
 

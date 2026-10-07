@@ -2,7 +2,7 @@
 title: "Bloque 4 · Motor · especificación"
 type: spec
 tags: [spec, bloque-4]
-estado: borrador
+estado: vigente
 bloque: 4
 actualizado: 2026-10-06
 ---
@@ -10,7 +10,7 @@ actualizado: 2026-10-06
 # Bloque 4 · Motor · especificación
 
 **Fecha:** 2026-10-06
-**Estado:** borrador, en revisión de Joseph
+**Estado:** aprobada por Joseph el 2026-10-06
 **Deriva de:** [especificación general](2026-08-20-acopio-design.md) §7,
 [RF-MOT](../../01-requerimientos/funcionales/motor.md),
 [RF-CAT-006](../../01-requerimientos/funcionales/catalogo.md#rf-cat-006--configurar-pesos-del-motor),
