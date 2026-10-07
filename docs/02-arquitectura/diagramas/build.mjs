@@ -90,9 +90,12 @@ const celda = (t) => esc(t).replace(/`([^`]+)`/g, '<code>$1</code>');
 const c4 = [
   ['## C4 nivel 1 — Contexto', 'Contexto', 'Quién usa Acopio y con qué sistemas externos habla.'],
   ['## C4 nivel 2 — Contenedores', 'Contenedores', 'Qué corre dentro del VPS, cómo se enrutan las peticiones y qué módulos tiene la API.'],
+  // Diagrama de paquetes (Avance 4): cada caja es una carpeta real del repositorio.
+  ['### Paquetes del monorepo', 'Paquetes del monorepo', 'Las carpetas de primer nivel y cómo se relacionan la web, la API y los paquetes compartidos.'],
+  ['### Paquetes de la API', 'Paquetes de la API', 'Los módulos de apps/api/src y sus importaciones reales, medidas con dependency-cruiser.'],
 ].map(([enc, titulo, bajada]) => {
   const s = seccion(vista, enc);
-  return { titulo, id: slug(titulo), bajada, codigo: bloquesMermaid(s)[0], notas: prosa(sinMermaid(s)) };
+  return { enc, titulo, id: slug(titulo), bajada, codigo: bloquesMermaid(s)[0], notas: prosa(sinMermaid(s)) };
 });
 
 // ── Fuentes .mmd para los PNG ─────────────────────────────────────────────
@@ -113,7 +116,7 @@ writeFileSync(join(aqui, 'datos.json'), JSON.stringify({
   notas: notasER.map((n) => ({ titulo: n.titulo, md: partes.slice(1).find((p) => p.split('\n')[0].replace(/`/g, '') === n.titulo).split('\n').slice(1).join('\n').trim() })),
   invariantes: filasInv,
   cierreInvMd: inv.split('\n').filter((l) => !l.startsWith('|')).join('\n').trim(),
-  c4: c4.map((c) => ({ titulo: c.titulo, bajada: c.bajada, png: pngDe.get(c.codigo), md: sinMermaid(seccion(vista, c.titulo === 'Contexto' ? '## C4 nivel 1 — Contexto' : '## C4 nivel 2 — Contenedores')).trim() })),
+  c4: c4.map((c) => ({ titulo: c.titulo, bajada: c.bajada, png: pngDe.get(c.codigo), md: sinMermaid(seccion(vista, c.enc)).trim() })),
 }, null, 1));
 
 // ── Página ────────────────────────────────────────────────────────────────

@@ -5,7 +5,9 @@ erDiagram
     ZONA   ||--o{ SUGERENCIA : destino
     CATEGORIA ||--o{ SUGERENCIA : refiere
     USUARIO |o--o{ SUGERENCIA : decide
-    SUGERENCIA |o--o| REMISION : genera
+    REMISION |o--o{ SUGERENCIA : agrupa
+    ZONA ||--o{ NECESIDAD_MANUAL : corrige
+    CATEGORIA ||--o{ NECESIDAD_MANUAL : refiere
     REMISION ||--o{ LINEA_REMISION : detalla
     ZONA ||--o{ REPORTE_NECESIDAD : reporta
     CATEGORIA ||--o{ REPORTE_NECESIDAD : refiere
@@ -30,6 +32,7 @@ erDiagram
         uuid acopio_id FK
         uuid zona_id FK
         uuid categoria_id FK
+        uuid remision_id FK "al aprobarse"
         numeric puntaje
         text estado
     }
@@ -51,4 +54,10 @@ erDiagram
         uuid zona_id FK
         uuid categoria_id FK
         text nota
+    }
+    NECESIDAD_MANUAL {
+        uuid id PK
+        uuid zona_id FK
+        uuid categoria_id FK
+        numeric cantidad "null = vuelve al cálculo"
     }

@@ -776,6 +776,31 @@ cuántas categorías una zona cuenta como cubierta; la especificación del Bloqu
 fuera para no abrir esa discusión.
 **Estado:** ABIERTO
 
+### P-045 · Calendario por semanas, alcance del Sprint 1 y seguimiento semanal
+**Fecha:** 2026-10-07 · **Propuesto por:** Joseph
+**Qué:** tres decisiones al preparar el Avance 4. Las fechas del curso se cuentan por
+semana, con la semana 18 en la del 1 de diciembre; la semana 1 empieza el 3 de agosto
+y la tabla está en [calendario.md](../entregas/calendario.md). El Sprint 1 (semanas 8
+a 10, del 21 de septiembre al 11 de octubre) abarca lo que se construyó en ese tiempo:
+los Bloques 0 a 3 y la etapa 1 de la API del Bloque 4. El ADR-001 lo había limitado al
+Bloque 0. El equipo se reúne una vez por semana, el miércoles o el viernes, y esa
+reunión cuenta como el «Daily Scrum» de las guías.
+**Por qué:** la guía del Avance 4 fecha el sprint por semanas y pide el registro de un
+seguimiento con evidencia; el equipo acordó no reunirse a diario.
+**Estado:** DECIDIDO. Aplicado en [avance-04-sprint1.md](../entregas/avance-04-sprint1.md)
+
+### P-046 · Historias Must sin plan: causas, verificación de entidades e importador
+**Fecha:** 2026-10-07 · **Propuesto por:** Joseph
+**Qué:** la revisión del Sprint 1 encontró trabajo comprometido que no tiene plan ni
+issue. La especificación del Bloque 1 apartó dos piezas para después: la «C»
+(verificación de entidades con documento, causas y su archivado: HU-02 y HU-15) y la
+«E» (importador de RedAcopio y carga por CSV: criterio 2 de HU-01). Ninguna quedó en
+el orden de construcción ni en un issue. Además, el inventario no atenúa ni advierte
+una categoría sin movimientos en más de 6 horas (criterio 2 de HU-05).
+**Por qué:** HU-02 y HU-15 son Must y entraron en el Sprint 1; el Sprint Review las
+marca «No».
+**Estado:** ABIERTO. Hay que abrir un issue por pieza y meterlas en el plan del Sprint 2
+
 ---
 
 ## Resueltos

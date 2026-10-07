@@ -1,0 +1,9 @@
+NAMES               IMAGE                    STATUS                 PORTS
+acopio-api-1        acopio-api               Up 4 hours (healthy)   0.0.0.0:3000->3000/tcp, [::]:3000->3000/tcp
+acopio-db-1         postgres:16-alpine       Up 4 hours (healthy)   0.0.0.0:5440->5432/tcp, [::]:5440->5432/tcp
+acopio-storage-1    dxflrs/garage:v2.4.1     Up 4 hours (healthy)   0.0.0.0:3900->3900/tcp, [::]:3900->3900/tcp
+acopio-mailpit-1    axllent/mailpit:latest   Up 4 hours (healthy)   0.0.0.0:1025->1025/tcp, [::]:1025->1025/tcp, 0.0.0.0:8025->8025/tcp, [::]:8025->8025/tcp, 1110/tcp
+acopio_garagedata
+acopio_garagemeta
+acopio_llaves
+acopio_pgdata

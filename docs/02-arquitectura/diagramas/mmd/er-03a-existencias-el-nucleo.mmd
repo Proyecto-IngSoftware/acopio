@@ -19,10 +19,12 @@ erDiagram
     }
     MOVIMIENTO {
         uuid id PK "id del cliente: la cola sin red no duplica"
-        uuid acopio_id FK
+        uuid acopio_id FK "nulo en una RECEPCION"
+        uuid zona_id FK "solo en una RECEPCION"
+        uuid remision_id FK
         uuid categoria_id FK
         uuid usuario_id FK
-        text tipo "ENTRADA | SALIDA | AJUSTE"
+        text tipo "ENTRADA | SALIDA | AJUSTE | RECEPCION"
         numeric cantidad "> 0"
         smallint signo
         text motivo_salida "solo SALIDA"

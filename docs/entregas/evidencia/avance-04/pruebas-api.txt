@@ -1,0 +1,121 @@
+# Pruebas manuales de la API de Acopio
+Fecha: 2026-10-07 14:14 -05 · API: http://localhost:3000/api
+
+### 1. Estado del servicio (público)
+$ curl -X GET http://localhost:3000/api/salud
+HTTP 200
+{
+  "estado": "ok",
+  "base": "ok"
+}
+
+### 2. Sin sesión, una ruta protegida responde 401
+$ curl -X GET http://localhost:3000/api/categorias
+HTTP 401
+{
+  "estado": 401,
+  "codigo": "NO_AUTENTICADO",
+  "mensaje": "Falta la sesión"
+}
+
+### 3. Inicio de sesión del administrador
+$ curl -X POST http://localhost:3000/api/auth/sesion -H 'Content-Type: application/json' -d '{"usuario":"admin","contrasena":"********"}'
+HTTP/1.1 200 OK
+Set-Cookie: acopio_sesion=<token>; Max-Age=28799; Path=/api; Expires=Thu, 08 Oct 2026 03:14:01 GMT; HttpOnly; SameSite=Strict
+
+### 4. Quién soy
+$ curl -X GET http://localhost:3000/api/auth/yo -H 'Authorization: Bearer <token>'
+HTTP 200
+{
+  "id": "c17b10e6-f29c-405e-987f-3e883c5b1b8a",
+  "username": "admin",
+  "nombre": "Administrador",
+  "rol": "ADMIN",
+  "alcanceGlobal": true,
+  "asignaciones": []
+}
+
+### 5. Crear una categoría (C de CRUD)
+$ curl -X POST http://localhost:3000/api/categorias -H 'Authorization: Bearer <token>' -H 'Content-Type: application/json' -d '{"nombre":"Pilas AA prueba 141401","grupo":"HERRAMIENTAS","unidadBase":"UNIDAD","sinonimos":["baterías"]}'
+HTTP 201
+{
+  "id": "a20cbde5-68fe-4279-8942-d156e67e3b09",
+  "nombre": "Pilas AA prueba 141401",
+  "grupo": "HERRAMIENTAS",
+  "unidadBase": "UNIDAD",
+  "perecedero": false,
+  "sinonimos": [
+    "baterías"
+  ],
+  "archivada": false
+}
+
+### 6. Consultar la categoría creada (R)
+$ curl -X GET http://localhost:3000/api/categorias/a20cbde5-68fe-4279-8942-d156e67e3b09 -H 'Authorization: Bearer <token>'
+HTTP 200
+{
+  "id": "a20cbde5-68fe-4279-8942-d156e67e3b09",
+  "nombre": "Pilas AA prueba 141401",
+  "grupo": "HERRAMIENTAS",
+  "unidadBase": "UNIDAD",
+  "perecedero": false,
+  "sinonimos": [
+    "baterías"
+  ],
+  "archivada": false
+}
+
+### 7. Modificarla (U)
+$ curl -X PATCH http://localhost:3000/api/categorias/a20cbde5-68fe-4279-8942-d156e67e3b09 -H 'Authorization: Bearer <token>' -H 'Content-Type: application/json' -d '{"perecedero":false,"sinonimos":["baterías","pilas doble A"]}'
+HTTP 200
+{
+  "id": "a20cbde5-68fe-4279-8942-d156e67e3b09",
+  "nombre": "Pilas AA prueba 141401",
+  "grupo": "HERRAMIENTAS",
+  "unidadBase": "UNIDAD",
+  "perecedero": false,
+  "sinonimos": [
+    "baterías",
+    "pilas doble A"
+  ],
+  "archivada": false
+}
+
+### 8. Validación: falta la unidad base, responde 400 con el detalle
+$ curl -X POST http://localhost:3000/api/categorias -H 'Authorization: Bearer <token>' -H 'Content-Type: application/json' -d '{"nombre":"Sin unidad","grupo":"HERRAMIENTAS"}'
+HTTP 400
+{
+  "estado": 400,
+  "codigo": "VALIDACION",
+  "mensaje": "Hay datos inválidos en la solicitud",
+  "detalles": [
+    {
+      "campo": "unidadBase",
+      "mensaje": "Opción inválida: se esperaba una de \"LITRO\"|\"KILOGRAMO\"|\"UNIDAD\""
+    }
+  ]
+}
+
+### 9. Borrarla (D)
+$ curl -X DELETE http://localhost:3000/api/categorias/a20cbde5-68fe-4279-8942-d156e67e3b09 -H 'Authorization: Bearer <token>'
+HTTP 204
+(sin cuerpo)
+
+### 10. Ya no existe: 404 con el formato único de error
+$ curl -X GET http://localhost:3000/api/categorias/a20cbde5-68fe-4279-8942-d156e67e3b09 -H 'Authorization: Bearer <token>'
+HTTP 404
+{
+  "estado": 404,
+  "codigo": "CATEGORIA_NO_ENCONTRADA",
+  "mensaje": "La categoría no existe"
+}
+
+### 11. Seguimiento público de un folio que no existe: mensaje genérico
+$ curl -X GET http://localhost:3000/api/seguimiento/DON-0000-0000
+HTTP 404
+{
+  "estado": 404,
+  "codigo": "FOLIO_NO_ENCONTRADO",
+  "mensaje": "No encontramos ese folio"
+}
+
