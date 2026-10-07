@@ -119,6 +119,21 @@ describe('emparejar', () => {
     expect(r.map((s) => s.zonaId)).toEqual(['z1', 'z2']);
   });
 
+  it('la justificación cuenta como cobertura solo lo recibido, igual que la ficha', () => {
+    const r = emparejar(
+      entrada({
+        demandas: [
+          { zonaId: 'z1', categoriaId: 'agua', necesidad: 1000, recibido: 0, enCamino: 600 },
+        ],
+        ofertas: [oferta('cerca', 100), oferta('lejos', 100)],
+      }),
+      PESOS_POR_DEFECTO,
+      5,
+    );
+    expect(r).toHaveLength(2);
+    for (const s of r) expect(s.justificacion).toMatch(/^Zona 1 tiene 0 % de cobertura/);
+  });
+
   it('el desglose explica el puntaje; el par más lejano de la ronda tiene proximidad 0', () => {
     const [s] = emparejar(
       entrada({ demandas: [demanda('z1', 100)], ofertas: [oferta('cerca', 100)] }),

@@ -5,11 +5,12 @@ export interface DatosJustificacion {
   zona: string;
   categoria: string;
   unidad: UnidadBase;
-  /** (recibido + en camino) / necesidad antes de esta sugerencia. */
+  /** recibido / necesidad: la misma cobertura que muestra la ficha de zona. */
   cobertura: number;
   acopio: string;
   noRecibe: boolean;
   superavit: number;
+  /** Lo que el acopio todavía puede mandar en esta ronda. */
   movible: number;
   km: number;
   diasParaVencer: number | null;
@@ -20,9 +21,10 @@ export function justificar(d: DatosJustificacion): string {
   const categoria = d.categoria.toLowerCase();
   const sobra = d.noRecibe
     ? `${d.acopio} no recibe ${categoria} y puede liberar ${formatearCantidad(d.movible, d.unidad)} hasta su mínimo`
-    : `${d.acopio} tiene ${formatearCantidad(d.superavit, d.unidad)} sobre su máximo`;
+    : `${d.acopio} puede mandar ${formatearCantidad(d.movible, d.unidad)} sin bajar de su máximo`;
   const partes = [
-    `${d.zona} tiene ${Math.round(d.cobertura * 100)} % de cobertura en ${categoria}`,
+    // Hacia abajo: una zona al 99,6 % todavía tiene déficit y no debe leerse «100 %»
+    `${d.zona} tiene ${Math.floor(d.cobertura * 100)} % de cobertura en ${categoria}`,
     `${sobra}, a ${formatearNumero(Math.round(d.km))} km`,
   ];
   if (d.diasParaVencer !== null) {

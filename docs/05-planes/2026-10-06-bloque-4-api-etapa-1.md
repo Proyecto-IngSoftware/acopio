@@ -48,6 +48,17 @@ porque aprobar una sugerencia escribe en `remision`.
 | 9 Datos de ejemplo del motor | ✅ | `de77414` |
 | 10 Contrato, documentación y cierre de la etapa | ✅ | El commit de esta tarea. La revisión final y el CI quedan anotados abajo |
 
+**Revisión final, 2026-10-07.** Un revisor independiente leyó toda la etapa. Sin hallazgos
+críticos. Se corrigieron los cinco importantes, cada uno con su prueba: aprobar hacia una
+emergencia cerrada, aprobar y descartar a la vez, un descarte durante un recálculo, y la
+cobertura y el sobrante que mostraba la justificación (§13 de la especificación). Quedan
+anotados para la etapa 2 ocho menores: leer el estado del acopio dentro de la transacción
+al aprobar, impedir `UPDATE` de una sugerencia decidida y mover una línea entre remisiones
+en la base, el tope entero en el mensaje de 409, bitácora del antes y después de una
+línea que se suma, cantidades enteras en la necesidad manual de una categoría por
+unidades, `distancia_max` solo con pares elegibles y la lectura completa del historial de
+perecederos en cada cálculo.
+
 ## Restricciones globales
 
 - Node 22 (`nvm use`), Bun 1.3 para instalar y correr scripts.

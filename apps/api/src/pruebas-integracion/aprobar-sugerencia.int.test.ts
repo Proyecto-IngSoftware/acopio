@@ -172,6 +172,85 @@ describe('aprobar y descartar sugerencias', () => {
     expect(Number(planeado._sum.cantidad_planeada)).toBeLessThanOrEqual(500);
   });
 
+  it('no se aprueba hacia una zona cuya emergencia se cerró después del recálculo', async () => {
+    const emergencia = await a.prisma.emergencia.create({
+      data: {
+        nombre: unico('Se cierra '),
+        tipo: 'Inundación',
+        inicio: new Date('2026-09-01T00:00:00Z'),
+        destacada_hasta: new Date('2099-01-01T00:00:00Z'),
+      },
+    });
+    const zona = await a.prisma.zona.create({
+      data: {
+        emergencia_id: emergencia.id,
+        nombre: unico('Zona que se cierra '),
+        municipio: 'Bogotá',
+        lat: 4.58,
+        lng: -74.1,
+        poblacion_estimada: 100,
+        poblacion_fuente: 'Prueba',
+        poblacion_fecha: new Date(),
+      },
+    });
+    const { sugerencias } = await escenario({ saldo: 80, necesidades: [[zona.id, 80]] });
+    await a.prisma.emergencia.update({
+      where: { id: emergencia.id },
+      data: { estado: 'CERRADA', cerrada_en: new Date(), motivo_cierre: 'Terminó la atención' },
+    });
+    const r = await aprobar(sugerencias[0]!.id).expect(409);
+    expect(r.body.codigo).toBe('ZONA_SOLO_LECTURA');
+    expect(await a.prisma.remision.count({ where: { zona_destino_id: zona.id } })).toBe(0);
+  });
+
+  it('aprobar y descartar la misma sugerencia a la vez: solo una decisión queda', async () => {
+    for (let i = 0; i < 5; i++) {
+      const { sugerencias } = await escenario({ saldo: 40, necesidades: [[ZONA_A, 40]] });
+      const id = sugerencias[0]!.id;
+      const [ap, de] = await Promise.all([
+        aprobar(id),
+        a
+          .http()
+          .post(`/api/sugerencias/${id}/descartar`)
+          .set(como(token))
+          .send({ motivo: 'Descarte simultáneo de prueba' }),
+      ]);
+      expect([ap.status, de.status].sort()).toEqual([200, 409]);
+      const s = await a.prisma.sugerencia.findUniqueOrThrow({ where: { id } });
+      if (ap.status === 200) {
+        expect(s).toMatchObject({ estado: 'APROBADA', motivo_descarte: null });
+      } else {
+        expect(s).toMatchObject({ estado: 'DESCARTADA', remision_id: null });
+      }
+    }
+  });
+
+  it('un descarte durante un recálculo no deja el par propuesto otra vez', async () => {
+    for (let i = 0; i < 5; i++) {
+      const { cat, sugerencias } = await escenario({ saldo: 30, necesidades: [[ZONA_A, 30]] });
+      const s = sugerencias[0]!;
+      const [, de] = await Promise.all([
+        motor.recalcular(),
+        a
+          .http()
+          .post(`/api/sugerencias/${s.id}/descartar`)
+          .set(como(token))
+          .send({ motivo: 'Descarte durante el recálculo' }),
+      ]);
+      if (de.status !== 200) continue; // el recálculo llegó primero y la reemplazó
+      expect(
+        await a.prisma.sugerencia.count({
+          where: {
+            categoria_id: cat,
+            acopio_id: s.acopio_id,
+            zona_id: ZONA_A,
+            estado: 'PROPUESTA',
+          },
+        }),
+      ).toBe(0);
+    }
+  });
+
   it('una sugerencia decidida no se aprueba otra vez; una inexistente da 404', async () => {
     const { sugerencias } = await escenario({ saldo: 50, necesidades: [[ZONA_A, 50]] });
     await aprobar(sugerencias[0]!.id).expect(200);

@@ -124,6 +124,18 @@ export class SugerenciasService {
         if (!s) throw noEncontrada();
         if (s.estado !== 'PROPUESTA') throw decidida();
         await this.acopios.exigirAbierto(s.acopio_id);
+        // Una emergencia cerrada después del recálculo deja su zona en solo lectura
+        const zona = await tx.zona.findUniqueOrThrow({
+          where: { id: s.zona_id },
+          select: { emergencia: { select: { estado: true } } },
+        });
+        if (zona.emergencia.estado === 'CERRADA') {
+          throw new ErrorDominio(
+            'ZONA_SOLO_LECTURA',
+            'La emergencia está cerrada: sus zonas quedan en solo lectura',
+            409,
+          );
+        }
         const cantidad = cantidadPedida ?? Number(s.cantidad);
         exigirCantidad(cantidad, s.categoria.unidad_base);
         await candadoSaldo(tx, s.acopio_id, s.categoria_id);
@@ -152,8 +164,8 @@ export class SugerenciasService {
           categoriaId: s.categoria_id,
           cantidad,
         });
-        await tx.sugerencia.update({
-          where: { id },
+        const { count } = await tx.sugerencia.updateMany({
+          where: { id, estado: 'PROPUESTA' },
           data: {
             estado: 'APROBADA',
             cantidad_aprobada: cantidad,
@@ -162,6 +174,8 @@ export class SugerenciasService {
             decidida_en: ahora,
           },
         });
+        // Si otra decisión llegó primero, la transacción se revierte con la remisión incluida
+        if (count === 0) throw decidida();
         await this.bitacora.registrar(tx, {
           usuarioId: admin.id,
           accion: 'sugerencia.aprobada',
@@ -185,6 +199,8 @@ export class SugerenciasService {
 
   async descartar(admin: UsuarioAutenticado, id: string, motivo: string) {
     return this.prisma.$transaction(async (tx) => {
+      // Mismo candado que aprobar y recalcular: un descarte no se cruza con ninguno de los dos
+      await bloquearMotor(tx);
       const texto = motivo.trim();
       // Condicionado al estado: un recálculo o una aprobación a la vez no lo pisan
       const { count } = await tx.sugerencia.updateMany({

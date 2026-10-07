@@ -153,7 +153,7 @@ export function emparejar(
                 zona: z.nombre,
                 categoria: cat.nombre,
                 unidad: cat.unidad,
-                cobertura: cubierto,
+                cobertura: Math.min(1, d.recibido / d.necesidad),
                 acopio: a.nombre,
                 noRecibe: o.noRecibe,
                 superavit: o.superavit,

@@ -16,7 +16,7 @@ const base = {
 describe('justificar', () => {
   it('nombra la cobertura, el sobrante y la distancia', () => {
     expect(justificar(base)).toBe(
-      'Zona 7 tiene 12 % de cobertura en agua potable; Acopio Norte tiene 800 L sobre su máximo, a 41 km',
+      'Zona 7 tiene 12 % de cobertura en agua potable; Acopio Norte puede mandar 800 L sin bajar de su máximo, a 41 km',
     );
   });
 
@@ -26,6 +26,16 @@ describe('justificar', () => {
     );
     expect(justificar({ ...base, diasParaVencer: 1 })).toMatch(/vence en 1 día \(estimado\)$/);
     expect(justificar({ ...base, diasParaVencer: 0 })).toMatch(/vence hoy \(estimado\)$/);
+  });
+
+  it('la cobertura se redondea hacia abajo: 99,6 % no se lee como 100 %', () => {
+    expect(justificar({ ...base, cobertura: 0.996 })).toMatch(/^Zona 7 tiene 99 % de cobertura/);
+  });
+
+  it('el sobrante es lo que se puede mandar, no lo que pasa del máximo', () => {
+    expect(justificar({ ...base, superavit: 800, movible: 100 })).toContain(
+      'Acopio Norte puede mandar 100 L sin bajar de su máximo',
+    );
   });
 
   it('un acopio en «no recibir» libera hasta su mínimo', () => {
