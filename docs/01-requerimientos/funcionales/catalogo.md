@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: catalogo
 bloque: 0
-actualizado: 2026-10-06
+actualizado: 2026-10-07
 ---
 
 # RF-CAT · Catálogo maestro
@@ -109,9 +109,9 @@ pertenece a la zona afectada, no al acopio.
 
 **Criterios de aceptación:**
 - [ ] Los cuatro pesos —criticidad, urgencia, proximidad, magnitud— son editables
-- [ ] Son globales, no de cada emergencia: el motor hace un solo ranking para todas
+- [x] Son globales, no de cada emergencia: el motor hace un solo ranking para todas
       las emergencias activas y en seguimiento
       ([ADR-0010](../../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md))
-- [ ] Se valida que sumen 1
-- [ ] Cambiarlos no altera sugerencias ya aprobadas
+- [x] Se valida que sumen 1, con tolerancia de 0,001 (422 `PESOS_NO_SUMAN_UNO`)
+- [x] Cambiarlos no altera sugerencias ya aprobadas
 - [ ] Vista previa del efecto sobre el ranking actual antes de guardar

@@ -3,7 +3,7 @@ title: "Acopio — Especificación de diseño"
 type: spec
 tags: [spec, arquitectura]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-07
 ---
 
 # Acopio — Especificación de diseño
@@ -417,9 +417,10 @@ Es el aporte original del proyecto.
 
 ```
 necesidad(z,c)  = canasta(c) × poblacion(z) × horizonte_dias
-recibido(z,c)   = Σ movimientos RECEPCION en z de categoría c
-deficit(z,c)    = max(0, necesidad − recibido)
-cobertura(z,c)  = recibido / necesidad                       [0..1]
+recibido(z,c)   = Σ RECEPCION en z de c dentro del horizonte
+en_camino(z,c)  = Σ líneas BORRADOR o EN_TRANSITO hacia z
+deficit(z,c)    = max(0, necesidad − recibido − en_camino)
+cobertura(z,c)  = min(1, recibido / necesidad)               [0..1]
 
 saldo(a,c)      = Σ movimientos en acopio a de categoría c
 superavit(a,c)  = max(0, saldo − umbral_max(a,c))
@@ -432,7 +433,7 @@ superavit(a,c)  = max(0, saldo − umbral_max(a,c))
 puntaje = w1·criticidad + w2·urgencia + w3·proximidad + w4·magnitud
 
 criticidad = 1 − cobertura(z,c)
-urgencia   = 1 / (1 + dias_para_vencer)      1 si no es perecedero sin fecha
+urgencia   = 1 / (1 + dias_para_vencer)      0 sin fecha o no perecedero
 proximidad = 1 − (distancia / distancia_max)
 magnitud   = min(1, movible / deficit)
 
@@ -442,9 +443,11 @@ cantidad_sugerida = min(movible(a,c), deficit(z,c))
 
 ### Generación
 
-Heurística voraz por categoría: zonas ordenadas por criticidad descendente,
-acopios por superávit descendente, emparejamiento sucesivo hasta agotar déficit o
-superávit. Recalculo bajo demanda y de forma programada cada 15 minutos.
+Heurística voraz por puntaje: en cada categoría se puntúan todos los pares acopio y
+zona, se toma el mejor, se le asigna `min(movible, déficit)` y se repite hasta agotar
+déficit o movible. Así la proximidad decide quién atiende a quién. Recálculo bajo demanda
+y de forma programada cada 15 minutos; cada recálculo reemplaza las propuestas abiertas.
+Detalle y razones en la [especificación del Bloque 4](2026-10-06-bloque-4-motor-design.md).
 
 ### Ciclo de vida
 

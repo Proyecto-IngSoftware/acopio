@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-4]
 estado: vigente
 bloque: 4
-actualizado: 2026-10-06
+actualizado: 2026-10-07
 ---
 
 # Bloque 4 · Motor · especificación
@@ -435,3 +435,5 @@ Cada etapa tiene su plan, escrito al empezarla.
 | `dias_para_vencer` usa `vencimientoEstimado` (V-02): sale primero lo que vence antes, no lo que entró primero como decía M-05. Lo vencido que sigue en el estante no cuenta como movible | C3 ya muestra los vencimientos con esa estimación; con otra, la urgencia del motor contradiría el inventario |
 | `remision.responsable` es opcional en `BORRADOR` y obligatorio desde `EN_TRANSITO` (`remision_despachada_con_responsable`) | Al aprobar una sugerencia todavía no se sabe quién lleva el envío |
 | Las llaves foráneas de `movimiento` hacia `acopio`, `zona` y `remision` son `RESTRICT` | Prisma propone `SET NULL` en una relación opcional, y eso chocaría con `movimiento_acopio_o_zona` |
+| Un cambio de población exige fuente y una fecha distinta de la guardada; la fuente puede repetir el texto | La misma alcaldía puede actualizar su conteo. Lo que no puede pasar es un número nuevo con la estimación vieja |
+| Cuando un solo par compite en una ronda, su proximidad es 0 | `distancia_max` es la mayor entre los candidatos, así que el más lejano siempre puntúa 0 en proximidad. Es lo que dice la fórmula de M-06; el orden entre pares no cambia |

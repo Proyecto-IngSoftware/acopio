@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-07
 ---
 
 # Pendientes — bandeja de entrada
@@ -752,6 +752,29 @@ llevan el correo de un integrante: `joseph@acopio.co` (operador1), `brayan@acopi
 (operador2), `michael@acopio.co` (auditor1) y `alejandra@acopio.co` (receptor1). Ninguno es un
 buzón real. Si el proyecto llega a tener uno, se cambia la constante y la variable.
 **Estado:** RESUELTO el 2026-10-06.
+
+---
+
+### P-043 · Pantalla del simulador del motor
+**Fecha:** 2026-10-06 · **Propuesto por:** Joseph
+**Qué:** una pantalla de la consola que corra el simulador de RF-MOT-010 con parámetros
+editables y muestre la comparación contra el reparto igualitario y por cercanía.
+**Por qué:** en el Bloque 4 el simulador es un script con semilla que escribe un informe en
+la bóveda (M-08): es reproducible y basta para la sustentación. Una pantalla luce en vivo,
+pero necesita diseño en Stitch. Como el cálculo vive en `packages/shared`, se puede agregar
+sin tocarlo.
+**Estado:** ABIERTO
+
+---
+
+### P-044 · Estado automático de una zona
+**Fecha:** 2026-10-06 · **Propuesto por:** Joseph
+**Qué:** derivar `zona.estado` (`SIN_ATENDER`, `EN_ATENCION`, `CUBIERTA`) de la cobertura
+calculada por el motor, en vez de que el Administrador lo cambie a mano en C9.
+**Por qué:** la cobertura ya se calcula en la ficha de zona. Falta decidir con qué umbral y en
+cuántas categorías una zona cuenta como cubierta; la especificación del Bloque 4 lo dejó
+fuera para no abrir esa discusión.
+**Estado:** ABIERTO
 
 ---
 

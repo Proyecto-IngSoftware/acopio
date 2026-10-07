@@ -4,7 +4,7 @@ type: plan
 tags: [plan, bloque-4]
 estado: aprobado
 bloque: 4
-actualizado: 2026-10-06
+actualizado: 2026-10-07
 ---
 
 # Bloque 4 · Motor: API, etapa 1 · plan de implementación
@@ -37,16 +37,16 @@ porque aprobar una sugerencia escribe en `remision`.
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 Esquema del motor y movimientos de zona | ⬜ | |
-| 2 Fórmulas del motor en `shared` | ⬜ | |
-| 3 Emparejamiento y justificación en `shared` | ⬜ | |
-| 4 Módulo `motor`: ficha de zona, necesidad manual y excedentes | ⬜ | |
-| 5 Población con fuente nueva (RF-MOT-012) | ⬜ | |
-| 6 Recálculo y ranking | ⬜ | |
-| 7 Configuración del motor con vista previa | ⬜ | |
-| 8 Aprobar y descartar | ⬜ | |
-| 9 Datos de ejemplo del motor | ⬜ | |
-| 10 Contrato, documentación y cierre de la etapa | ⬜ | |
+| 1 Esquema del motor y movimientos de zona | ✅ | `f7b24b1` |
+| 2 Fórmulas del motor en `shared` | ✅ | `503bd65` |
+| 3 Emparejamiento y justificación en `shared` | ✅ | `20ec636` |
+| 4 Módulo `motor`: ficha de zona, necesidad manual y excedentes | ✅ | `1e2fa2b` |
+| 5 Población con fuente nueva (RF-MOT-012) | ✅ | `e396207` |
+| 6 Recálculo y ranking | ✅ | `9344ead` |
+| 7 Configuración del motor con vista previa | ✅ | `9dd792f` |
+| 8 Aprobar y descartar | ✅ | `48b78cc` |
+| 9 Datos de ejemplo del motor | ✅ | `de77414` |
+| 10 Contrato, documentación y cierre de la etapa | ✅ | El commit de esta tarea. La revisión final y el CI quedan anotados abajo |
 
 ## Restricciones globales
 

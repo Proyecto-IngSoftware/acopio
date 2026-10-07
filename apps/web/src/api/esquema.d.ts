@@ -1100,6 +1100,166 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/zonas/{id}/necesidad": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NecesidadController_ficha"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/zonas/{id}/necesidad-manual/{categoriaId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["NecesidadController_ponerManual"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/acopios/{id}/excedentes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["NecesidadController_excedentes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sugerencias/descartes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SugerenciasController_descartes"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sugerencias": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SugerenciasController_listar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sugerencias/recalcular": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["SugerenciasController_recalcular"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sugerencias/{id}/aprobar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["SugerenciasController_aprobar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/sugerencias/{id}/descartar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["SugerenciasController_descartar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/motor/configuracion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ConfiguracionController_leer"];
+        put: operations["ConfiguracionController_guardar"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/motor/configuracion/vista-previa": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["ConfiguracionController_vistaPrevia"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/salud": {
         parameters: {
             query?: never;
@@ -2250,6 +2410,266 @@ export interface components {
                 /** @description Lo declarado si aún no se recibe; lo confirmado después */
                 cantidad: number;
                 confirmada: boolean;
+            }[];
+        };
+        FichaZonaDto: {
+            zona: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+                municipio: string;
+                poblacionEstimada: number;
+                poblacionFuente: string;
+                /** Format: date-time */
+                poblacionFecha: string;
+                emergencia: {
+                    /** Format: uuid */
+                    id: string;
+                    nombre: string;
+                    /** @enum {string} */
+                    estado: "ACTIVA" | "EN_SEGUIMIENTO" | "CERRADA";
+                    horizonteDias: number;
+                };
+            };
+            categorias: {
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
+                /** @enum {string} */
+                unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
+                /** @enum {string} */
+                origen: "CANASTA" | "MANUAL";
+                cantidadPersonaDia: number | null;
+                fuenteCanasta: string | null;
+                manual: {
+                    cantidad: number;
+                    motivo: string;
+                    puestaPor: string;
+                    /** Format: date-time */
+                    puestaEn: string;
+                } | null;
+                necesidad: number;
+                recibido: number;
+                enCamino: number;
+                deficit: number;
+                cobertura: number | null;
+            }[];
+            coberturaGlobal: number[];
+            categoriaMasBaja: {
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
+                cobertura: number;
+            } | null;
+            reportes: {
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
+                nota: string | null;
+                /** Format: date-time */
+                reportadoEn: string;
+            }[];
+        };
+        ManualDto: {
+            cantidad: number | null;
+            motivo: string;
+        };
+        NecesidadManualDto: {
+            /** Format: uuid */
+            categoriaId: string;
+            cantidad: number[];
+            motivo: string;
+            /** Format: date-time */
+            puestaEn: string;
+        };
+        ExcedenteDto: {
+            /** Format: uuid */
+            categoriaId: string;
+            categoria: string;
+            /** @enum {string} */
+            unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
+            saldo: number;
+            umbral: {
+                minimo: number;
+                maximo: number;
+            } | null;
+            noRecibe: boolean;
+            superavit: number;
+            comprometido: number;
+            vencido: number;
+            movible: number;
+            diasParaVencer: number | null;
+            /** @enum {string|null} */
+            aviso: "SIN_UMBRAL" | null;
+        };
+        InformeDescartesDto: {
+            total: number;
+            porMotivo: {
+                nombre: string;
+                veces: number;
+            }[];
+            porCategoria: {
+                nombre: string;
+                veces: number;
+            }[];
+            porAcopio: {
+                nombre: string;
+                veces: number;
+            }[];
+            recientes: {
+                /** Format: uuid */
+                id: string;
+                /** Format: date-time */
+                ronda: string;
+                /** @enum {string} */
+                estado: "PROPUESTA" | "APROBADA" | "DESCARTADA";
+                acopio: {
+                    /** Format: uuid */
+                    id: string;
+                    nombre: string;
+                };
+                zona: {
+                    /** Format: uuid */
+                    id: string;
+                    nombre: string;
+                };
+                emergencia: {
+                    /** Format: uuid */
+                    id: string;
+                    nombre: string;
+                };
+                categoria: {
+                    /** Format: uuid */
+                    id: string;
+                    nombre: string;
+                    /** @enum {string} */
+                    unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
+                };
+                cantidad: number;
+                puntaje: number;
+                desglose: {
+                    criticidad: number;
+                    urgencia: number;
+                    proximidad: number;
+                    magnitud: number;
+                };
+                justificacion: string;
+                cantidadAprobada: number | null;
+                remisionCodigo: string | null;
+                motivoDescarte: string | null;
+                decididaPor: string | null;
+                /** Format: date-time */
+                decididaEn: string | null;
+            }[];
+        };
+        SugerenciaDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: date-time */
+            ronda: string;
+            /** @enum {string} */
+            estado: "PROPUESTA" | "APROBADA" | "DESCARTADA";
+            acopio: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+            };
+            zona: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+            };
+            emergencia: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+            };
+            categoria: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+                /** @enum {string} */
+                unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
+            };
+            cantidad: number;
+            puntaje: number;
+            desglose: {
+                criticidad: number;
+                urgencia: number;
+                proximidad: number;
+                magnitud: number;
+            };
+            justificacion: string;
+            cantidadAprobada: number[];
+            remisionCodigo: string[];
+            motivoDescarte: string[];
+            decididaPor: string[];
+            /** Format: date-time */
+            decididaEn: string | null;
+        };
+        RecalculoDto: {
+            /** Format: date-time */
+            ronda: string;
+            generadas: number;
+        };
+        AprobarDto: {
+            cantidad?: number;
+        };
+        AprobacionDto: {
+            /** Format: uuid */
+            sugerenciaId: string;
+            cantidad: number;
+            remision: {
+                /** Format: uuid */
+                id: string;
+                codigo: string;
+                creada: boolean;
+            };
+        };
+        DescartarDto: {
+            motivo: string;
+        };
+        DescarteDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            estado: "DESCARTADA";
+        };
+        ConfiguracionMotorDto: {
+            pesos: {
+                criticidad: number;
+                urgencia: number;
+                proximidad: number;
+                magnitud: number;
+            };
+            cantidadMinima: number;
+            /** Format: date-time */
+            actualizadoEn: string | null;
+            actualizadoPor: string[];
+        };
+        GuardarConfiguracionDto: {
+            pesos: {
+                criticidad: number;
+                urgencia: number;
+                proximidad: number;
+                magnitud: number;
+            };
+            cantidadMinima: number;
+        };
+        VistaPreviaMotorDto: {
+            actual: {
+                acopio: string;
+                zona: string;
+                categoria: string;
+                cantidad: number;
+                puntaje: number;
+            }[];
+            propuesta: {
+                acopio: string;
+                zona: string;
+                categoria: string;
+                cantidad: number;
+                puntaje: number;
             }[];
         };
         SaludDto: {
@@ -4648,6 +5068,317 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SeguimientoDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    NecesidadController_ficha: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FichaZonaDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    NecesidadController_ponerManual: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                categoriaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ManualDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NecesidadManualDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    NecesidadController_excedentes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ExcedenteDto"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    SugerenciasController_descartes: {
+        parameters: {
+            query?: {
+                desde?: string;
+                hasta?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["InformeDescartesDto"];
+                };
+            };
+        };
+    };
+    SugerenciasController_listar: {
+        parameters: {
+            query?: {
+                zona?: string;
+                acopio?: string;
+                categoria?: string;
+                estado?: "PROPUESTA" | "APROBADA" | "DESCARTADA";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["SugerenciaDto"][];
+                };
+            };
+        };
+    };
+    SugerenciasController_recalcular: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RecalculoDto"];
+                };
+            };
+        };
+    };
+    SugerenciasController_aprobar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AprobarDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AprobacionDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    SugerenciasController_descartar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DescartarDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DescarteDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ConfiguracionController_leer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConfiguracionMotorDto"];
+                };
+            };
+        };
+    };
+    ConfiguracionController_guardar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GuardarConfiguracionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ConfiguracionMotorDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ConfiguracionController_vistaPrevia: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["GuardarConfiguracionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["VistaPreviaMotorDto"];
                 };
             };
             /** @description Error */

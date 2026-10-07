@@ -3,7 +3,7 @@ title: "Planes de implementación"
 type: moc
 tags: [moc, planes]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-07
 ---
 
 # Planes de implementación
@@ -46,15 +46,15 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 | 1 · Red, interfaz ciclo 2 | [aprobada](../superpowers/specs/2026-09-30-bloque-1-red-design.md) | [aprobado](2026-10-01-bloque-1-interfaz-ciclo-2.md) | ✅ selector de la cabecera y matriz de acceso construidos |
 | 2 · Inventario | [aprobada](../superpowers/specs/2026-10-01-bloque-2-inventario-design.md) | [API](2026-10-01-bloque-2-api.md), [interfaz ciclo 1](2026-10-01-bloque-2-interfaz-ciclo-1.md), [interfaz ciclo 2](2026-10-02-bloque-2-interfaz-ciclo-2.md), [interfaz ciclo 3](2026-10-02-bloque-2-interfaz-ciclo-3.md) | ✅ cerrado el 2026-10-05: API e interfaz (ciclos 1 a 3). El escáner en un teléfono real queda en P-037 |
 | 3 · Custodia | [aprobada](../superpowers/specs/2026-10-05-bloque-3-custodia-design.md) | [API](2026-10-05-bloque-3-api.md) · [interfaz, ciclo 1](2026-10-06-bloque-3-interfaz-ciclo-1.md) · [interfaz, ciclo 2](2026-10-06-bloque-3-interfaz-ciclo-2.md) | ✅ Cerrado el 2026-10-06: API, ciclo 1 (el Donador) y ciclo 2 (la consola), con sus recorridos en `apps/web/recorridos/donador.mjs` y `consola-comprobantes.mjs` |
-| 4 · Motor | pendiente | pendiente | ⬜ [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35) |
+| 4 · Motor | [aprobada](../superpowers/specs/2026-10-06-bloque-4-motor-design.md) | [API, etapa 1](2026-10-06-bloque-4-api-etapa-1.md) | 🟡 Etapa 1 de la API hecha el 2026-10-07 (cálculo, sugerencias, pesos, aprobar y descartar). Faltan la etapa 2 (remisiones, recepción, reportes, mapa), el simulador y tres ciclos de interfaz. [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35) |
 | 5 · Turnos | pendiente | pendiente | ⬜ [#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36) |
 | 6 · Extras | pendiente | pendiente | ⬜ [#37](https://github.com/Proyecto-IngSoftware/acopio/issues/37) |
 
 ## Lo que sigue
 
-1. **Bloque 4** ([#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)): ya no
-   lo bloquea nada. La canasta v2 tiene fuente (P-001) y la población de las zonas se
-   ajusta según RF-MOT-012 (P-002).
+1. **Bloque 4** ([#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)): sigue la
+   etapa 2 de la API (remisiones, recepción en zona, reportes de necesidad y mapa público),
+   y en paralelo el diseño de C10 y C11 en Stitch.
 2. En paralelo, cuando haga falta, la deuda técnica de
    [#38 a #43](https://github.com/Proyecto-IngSoftware/acopio/issues?q=is%3Aopen+label%3Adeuda)
    y el primer despliegue ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)).

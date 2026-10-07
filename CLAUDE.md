@@ -53,7 +53,7 @@ CI (`.github/workflows/ci.yml`) corre en cada PR y en `main`: lint, tipos, depcr
 Monorepo con workspaces de Bun:
 
 - `apps/api`: NestJS 11 y Prisma 7.10 sobre PostgreSQL 16. Monolito modular, sin microservicios.
-- `packages/shared`: funciones puras que usan la API y el frontend (formato, unidades, y más adelante las fórmulas del motor).
+- `packages/shared`: funciones puras que usan la API y el frontend (formato, unidades y las fórmulas del motor).
 - `prisma/`: esquema y migraciones, en la raíz. `apps/api/prisma.config.ts` apunta allá y carga el `.env` de la raíz.
 - `infra/`: `docker-compose.yml` es la base de producción; `docker-compose.dev.yml` añade puertos, Mailpit y el login local.
 - `apps/web`: SPA con Vite, React, React Router, TanStack Query y Tailwind 4. Las pantallas se diseñan en Google Stitch y se reescriben con componentes propios (ADR-0011). El cliente de la API se tipa desde el contrato OpenAPI (`src/api/esquema.d.ts`, generado). Lee `@acopio/shared` desde su código fuente (alias en `vite.config.ts`). El script `build` fija `NODE_ENV=production` porque el `.env` de la raíz trae `development` para la API y Vite lo leería. El build mete en el HTML la precarga de las pantallas que suelen abrirse primero por un enlace (`PRECARGAS` en `vite.config.ts`); una pantalla así se agrega ahí.
@@ -61,7 +61,7 @@ Monorepo con workspaces de Bun:
 
 ### Módulos de la API
 
-Cada carpeta de `apps/api/src/modulos/` es un límite de dominio. Hoy existen `identidad`, `auditoria`, `catalogo`, `notificaciones`, `salud`, `acopios`, `inventario` (movimientos, saldos, umbrales y «no recibir»; los códigos de barras viven en `catalogo`), `comprobantes` (donaciones con folio, recepción, conciliación y seguimiento) y `almacenamiento` (Garage por S3, hoja del grafo); faltan `motor`, `turnos` e `importacion`.
+Cada carpeta de `apps/api/src/modulos/` es un límite de dominio. Hoy existen `identidad`, `auditoria`, `catalogo`, `notificaciones`, `salud`, `acopios`, `inventario` (movimientos, saldos, umbrales y «no recibir»; los códigos de barras viven en `catalogo`), `comprobantes` (donaciones con folio, recepción, conciliación y seguimiento), `almacenamiento` (Garage por S3, hoja del grafo) y `motor` (necesidad, excedentes, sugerencias y pesos; las fórmulas viven en `packages/shared/src/motor`; remisiones y recepción llegan en la etapa 2); faltan `turnos` e `importacion`.
 
 Quién puede importar a quién está en la tabla «Dependencias permitidas» de `docs/02-arquitectura/vista-general.md`, y `apps/api/.dependency-cruiser.cjs` la hace cumplir. Un módulo nuevo se agrega a las dos. `comun/`, `config/` y `generado/` no son módulos y los usa cualquiera; los decoradores de autorización viven en `comun/autorizacion` para evitar un ciclo entre `identidad` y `auditoria`.
 

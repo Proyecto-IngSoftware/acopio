@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: motor
 bloque: 4
-actualizado: 2026-10-06
+actualizado: 2026-10-07
 ---
 
 # RF-MOT · Zonas y motor de emparejamiento
@@ -40,12 +40,14 @@ este requerimiento fija las reglas.
 - [ ] El valor de partida es la proyección de población del DANE 2020-2035 para el
       municipio, como referencia ([I-005](../../00-contexto/investigaciones.md))
 - [ ] Solo el Administrador cambia el número, desde C9
-- [ ] Cambiar el número exige una fuente y una fecha de estimación nuevas: no se
-      guarda un número nuevo con la fuente del anterior
-- [ ] La bitácora guarda el valor de antes y el de después, con quién lo cambió
+- [x] Cambiar el número exige una fuente y una fecha de estimación nuevas: no se
+      guarda un número nuevo con la fuente del anterior. La fuente puede repetir el texto
+      (la alcaldía actualiza su conteo), pero la fecha tiene que cambiar; si no, la API
+      responde 422 `POBLACION_SIN_FUENTE_NUEVA`
+- [x] La bitácora guarda el valor de antes y el de después, con quién lo cambió
 - [ ] La zona muestra el número junto a su fuente y su fecha, en el mapa interno y en
       la ficha (RNF-04)
-- [ ] El cálculo de necesidad usa siempre el valor vigente
+- [x] El cálculo de necesidad usa siempre el valor vigente
 
 **Por afinar:** si el Receptor de la zona puede proponer un número que el
 Administrador acepta o descarta.
@@ -59,26 +61,36 @@ necesidad(z,c) = canasta(c) × poblacion(z) × horizonte_dias
 ```
 
 **Criterios de aceptación:**
-- [ ] Se calcula automáticamente para toda categoría con canasta definida
-- [ ] El horizonte en días es configurable por emergencia; por defecto 7. Cada zona
+- [x] Se calcula automáticamente para toda categoría con canasta definida
+- [x] El horizonte en días es configurable por emergencia; por defecto 7. Cada zona
       usa el de su emergencia
 - [ ] El administrador puede sobrescribir manualmente la necesidad de una categoría,
-      y la interfaz muestra que ese valor es manual y quién lo puso
+      y la interfaz muestra que ese valor es manual y quién lo puso. La sobrescritura vive
+      en `necesidad_manual`, solo de inserción: vale la más reciente, y una sin cantidad
+      vuelve al cálculo. La API ya la guarda y dice quién la puso; falta C10
 - [ ] La pantalla muestra los tres términos del cálculo, no solo el resultado
 
 ### RF-MOT-003 · Calcular déficit y cobertura
 **Actor:** Sistema · **Prioridad:** DEBE
 
 ```
-recibido(z,c)  = Σ movimientos RECEPCION en z de categoría c
-deficit(z,c)   = max(0, necesidad − recibido)
-cobertura(z,c) = recibido / necesidad
+recibido(z,c)  = Σ RECEPCION en z de c con ocurrido_en ≥ hoy − horizonte_dias
+en_camino(z,c) = Σ líneas de remisiones BORRADOR o EN_TRANSITO con destino z
+deficit(z,c)   = max(0, necesidad − recibido − en_camino)
+cobertura(z,c) = min(1, recibido / necesidad)
 ```
+
+**2026-10-06 (M-02, M-03 de la [especificación del Bloque 4](../../superpowers/specs/2026-10-06-bloque-4-motor-design.md)).** La necesidad
+cubre el horizonte, así que lo recibido cuenta solo dentro de esa misma ventana: si no, una
+zona bien atendida la primera semana quedaría cubierta para siempre. Lo que va en camino
+se resta del déficit para que el motor no vuelva a proponer el mismo traslado.
 
 **Criterios de aceptación:**
 - [ ] Ficha de zona con tabla: categoría, necesidad, recibido, déficit, cobertura
 - [ ] Barra de cobertura con color por criticidad
-- [ ] Cobertura global de la zona como promedio ponderado por criticidad
+- [ ] Cobertura global de la zona: promedio de las coberturas por categoría, cada una
+      topada en 1, con la categoría más baja al lado (M-11). Ninguna categoría tiene un
+      peso de criticidad y litros y kilos no se suman. La API la calcula; falta C10
 
 ### RF-MOT-004 · Calcular superávit de un acopio
 **Actor:** Sistema · **Prioridad:** DEBE
@@ -89,8 +101,12 @@ superavit(a,c) = max(0, saldo − umbral_max(a,c))
 ```
 
 **Criterios de aceptación:**
-- [ ] Se recalcula al registrarse cualquier movimiento
-- [ ] Un acopio en *no recibir* libera hasta su mínimo, no solo hasta su máximo
+- [x] Se recalcula al registrarse cualquier movimiento: se deriva del saldo en cada
+      lectura
+- [x] Un acopio en *no recibir* libera hasta su mínimo, no solo hasta su máximo
+- [x] Sin umbral en el acopio, la categoría no tiene excedente (M-12)
+- [x] Lo que la estimación de vencimientos (V-02) da por vencido no se mueve, y el
+      movible descuenta las líneas en `BORRADOR` que salen del acopio
 
 ### RF-MOT-005 · Generar sugerencias
 **Actor:** Sistema · **Prioridad:** DEBE
@@ -107,18 +123,24 @@ cantidad_sugerida = min(movible(a,c), deficit(z,c))
 ```
 
 **Criterios de aceptación:**
-- [ ] Heurística voraz por categoría: zonas por criticidad descendente, acopios por
-      superávit descendente, emparejamiento sucesivo
+- [x] Heurística voraz por puntaje (M-06): en cada categoría se puntúan todos los pares
+      acopio y zona, se toma el mejor, se le asigna `min(movible, déficit)` y se repite.
+      Así la proximidad decide quién atiende a quién. Distancia en línea recta;
+      `distancia_max` es la mayor entre los pares candidatos de la ronda
+- [x] Urgencia 0 en las categorías no perecederas o sin fecha; los días salen de la
+      misma estimación de vencimientos que C3 (V-02)
 - [ ] Los cuatro pesos son globales, configurables ([RF-CAT-006](catalogo.md#rf-cat-006--configurar-pesos-del-motor)),
       y suman 1
-- [ ] Un solo cálculo sobre las zonas de todas las emergencias `ACTIVA` y
+- [x] Un solo cálculo sobre las zonas de todas las emergencias `ACTIVA` y
       `EN_SEGUIMIENTO`. **La prioridad de una emergencia en el portal no altera el
       puntaje**: el reparto sigue a la necesidad, no a la visibilidad
       ([ADR-0010](../../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md))
-- [ ] Recálculo bajo demanda y programado cada 15 minutos
-- [ ] No genera sugerencias por debajo de una cantidad mínima configurable, para no
+- [x] Recálculo bajo demanda y programado cada 15 minutos. Cada recálculo reemplaza las
+      propuestas abiertas; las decididas se conservan (M-04)
+- [x] No genera sugerencias por debajo de una cantidad mínima configurable, para no
       proponer traslados irrisorios
-- [ ] Con 50 zonas y 40 categorías, el recálculo completo toma menos de 5 s
+- [x] Con 50 zonas y 40 categorías, el recálculo completo toma menos de 5 s
+      (`motor-rendimiento.int.test.ts`, con 20 acopios)
 
 ### RF-MOT-006 · Presentar el ranking
 **Actor:** Administrador · **Prioridad:** DEBE
@@ -141,11 +163,12 @@ PROPUESTA ──aprobar──→ APROBADA → genera Remision en BORRADOR
 ```
 
 **Criterios de aceptación:**
-- [ ] **Ninguna sugerencia se ejecuta sola**
+- [x] **Ninguna sugerencia se ejecuta sola**: aprobar solo arma una remisión en borrador
 - [ ] Al aprobar, la cantidad es editable antes de confirmar
-- [ ] Descartar exige motivo escrito
+- [x] Descartar exige motivo escrito (10 caracteres o más). El mismo par no se vuelve a
+      proponer durante 24 horas
 - [ ] Los motivos de descarte se agregan en un informe: sirven para afinar los pesos
-- [ ] Queda registrado quién aprobó y cuándo
+- [x] Queda registrado quién aprobó y cuándo
 
 ### RF-MOT-008 · Gestionar remisiones
 **Actor:** Operador, Administrador · **Prioridad:** DEBE

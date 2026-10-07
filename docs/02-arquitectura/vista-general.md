@@ -3,7 +3,7 @@ title: "Vista general de arquitectura"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-07
 ---
 
 # Vista general de arquitectura
@@ -57,7 +57,7 @@ flowchart TB
         Web["web<br/>nginx + build de Vite"]
 
         subgraph API["api · NestJS · monolito modular"]
-            Dominio["Módulos de dominio<br/>identidad · catalogo · acopios · inventario · comprobantes<br/>pendientes: motor · turnos · importacion"]
+            Dominio["Módulos de dominio<br/>identidad · catalogo · acopios · inventario · comprobantes · motor<br/>pendientes: turnos · importacion"]
             Transversales["Módulos transversales<br/>auditoria · notificaciones · almacenamiento · salud"]
             Tareas["Tareas programadas<br/>@nestjs/schedule"]
         end
@@ -111,9 +111,10 @@ Un módulo NestJS por límite de dominio. Sin dependencias circulares; cuando do
 módulos necesitan hablarse, lo hacen por una interfaz declarada, no importando
 clases internas.
 
-Construidos al 2026-10-06: `identidad`, `auditoria`, `catalogo`, `notificaciones`,
-`salud`, `acopios`, `inventario`, `comprobantes` y `almacenamiento`. Faltan `motor`
-(Bloque 4), `turnos` (Bloque 5) e `importacion`.
+Construidos al 2026-10-07: `identidad`, `auditoria`, `catalogo`, `notificaciones`,
+`salud`, `acopios`, `inventario`, `comprobantes`, `almacenamiento` y la primera etapa de
+`motor` (cálculo, sugerencias y configuración; las remisiones, la recepción y los reportes
+llegan en la segunda). Faltan `turnos` (Bloque 5) e `importacion`.
 
 | Módulo | Responsabilidad | Expone |
 |---|---|---|
@@ -122,7 +123,7 @@ Construidos al 2026-10-06: `identidad`, `auditoria`, `catalogo`, `notificaciones
 | `acopios` | Acopios operados y referenciados, zonas, entidades, causas y su archivado. Búsqueda por dirección con Nominatim y caché | `UbicacionService` |
 | `inventario` | Movimientos, saldos, umbrales, no recibir | `MovimientoService`, `SaldoService` |
 | `comprobantes` | Donaciones preparadas con folio, sugerencia de acopio, factura, recepción por folio, conciliación, seguimiento público y tareas de vencimiento y retención | `DonacionesService`, `RecepcionService`, `ConciliacionService` |
-| `motor` | Déficit, superávit, sugerencias, remisiones y despacho general, vínculo folio–remisión, necesidad reportada | `MotorService`, `RemisionService` |
+| `motor` | Necesidad, déficit, excedentes, sugerencias con su recálculo, pesos, remisiones y despacho general, vínculo folio–remisión, necesidad reportada. Las fórmulas viven en `packages/shared` | `EstadoMotorService`, `NecesidadService`, `SugerenciasService`, `ConfiguracionService`, `RemisionesBorradorService` |
 | `turnos` | Jornadas, reservas, cupos | `JornadaService` |
 | `auditoria` | Bitácora. Cada servicio la escribe en la misma transacción que el cambio; no hay interceptor | `BitacoraService` |
 | `notificaciones` | Correo por SMTP: invitaciones, reservas, avisos de folio y de acopio cerrado. Envío con reintentos | `NotificacionService` |
@@ -183,6 +184,7 @@ protege con un bloqueo en PostgreSQL para que no corra dos veces.
 | Tarea | Frecuencia | Módulo |
 |---|---|---|
 | Sincronizar puntos referenciados | Cada 60 min | `importacion` |
+| Recalcular las sugerencias del motor | Cada 15 minutos | `motor` |
 | Cancelar folios `PREPARADO` con más de 7 días | Diaria | `comprobantes` |
 | Archivar causas vencidas o de entidades con verificación caducada | Diaria | `acopios` |
 | Alertas de vencimiento de perecederos | Diaria | `inventario` |

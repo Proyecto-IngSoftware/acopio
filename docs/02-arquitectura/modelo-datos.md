@@ -3,7 +3,7 @@ title: "Modelo de datos"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-07
 ---
 
 # Modelo de datos
@@ -157,9 +157,11 @@ que reimportar actualice en vez de duplicar. Ver
 ```
 movimiento
   id                uuid pk         lo genera el cliente: la cola sin red no duplica
-  acopio_id         fk
+  acopio_id         fk?             nulo solo en una RECEPCION (ADR-0018)
+  zona_id           fk?             solo en una RECEPCION
+  remision_id       fk?             la SALIDA de un despacho y la RECEPCION que la cierra
   categoria_id      fk
-  tipo              ENTRADA | SALIDA | AJUSTE
+  tipo              ENTRADA | SALIDA | AJUSTE | RECEPCION
   cantidad          numeric(12,3)   siempre > 0
   signo             smallint        +1 | -1; ENTRADA suma y SALIDA resta
   motivo_salida     ENTREGA_FAMILIAS | TRASLADO | VENCIDO | OTRO   solo en SALIDA
@@ -200,6 +202,12 @@ zonas sumarán `zona_id` cuando tengan movimientos. `movimiento.tipo` nace sin
 `RECEPCION`, gana `motivo_salida` (`ENTREGA_FAMILIAS | TRASLADO | VENCIDO | OTRO`) y
 `nota`, y `vence_en` solo se acepta en entradas. `remision_id` llega en su bloque. El vínculo
 con un comprobante no vive en `movimiento`: lo guarda `comprobante_movimiento` (ver Custodia). Detalle en la [especificación del Bloque 2](../superpowers/specs/2026-10-01-bloque-2-inventario-design.md#4-datos).
+
+**2026-10-06 · Bloque 4 ([ADR-0018](adr/ADR-0018-movimientos-de-zona.md)).** Las zonas
+reciben en esta misma tabla. `acopio_id` pasa a ser opcional y llegan `zona_id`,
+`remision_id` y el tipo `RECEPCION`, con tres `CHECK`: cada fila es de un acopio o de una
+zona, una `RECEPCION` es siempre de una zona, y trae su remisión y suma. El disparador del
+saldo corre solo en filas de acopio. Las tres llaves foráneas son `RESTRICT`.
 
 ```
 umbral
@@ -275,13 +283,19 @@ verificacion_correo
   Guarda el hash del token, nunca el token. Lo crea el registro del Donador (RF-IDE-013).
 
 remision
-  id · acopio_origen_id
+  id · codigo text UNIQUE      R-2026-7KQ4M, mismo alfabeto que el folio
+  acopio_origen_id
   zona_destino_id fk?          null = despacho general, sin zona fija al salir
   estado  BORRADOR | EN_TRANSITO | RECIBIDA | CANCELADA
-  responsable · qr_token text UNIQUE
-  despachada_en · recibida_en · evidencia_keys text[] · nota_recepcion text?
-  sugerencia_id fk?
-  CHECK (estado <> 'RECIBIDA' OR zona_destino_id IS NOT NULL)
+  responsable text?            obligatorio desde EN_TRANSITO
+  qr_token text UNIQUE
+  creada_por · creada_en · despachada_por? · despachada_en?
+  recibida_por? · recibida_en? · evidencia_keys text[] · nota_recepcion text?
+  cancelada_por? · cancelada_en? · motivo_cancelacion text?
+  CHECK (estado <> 'RECIBIDA' OR (zona_destino_id IS NOT NULL
+         AND recibida_en IS NOT NULL AND cardinality(evidencia_keys) >= 1))
+  CHECK (estado IN ('BORRADOR','CANCELADA') OR responsable no vacío)
+  CHECK (estado <> 'CANCELADA' OR motivo_cancelacion de 10 caracteres o más)
 
   El Receptor confirma con un botón «Recibido» y al menos una foto —
   `evidencia_keys` — sin conteo por categoría; lo que llegó
@@ -294,13 +308,22 @@ remision
 
 linea_remision
   id · remision_id · categoria_id
-  cantidad_planeada numeric · cantidad_recibida numeric?
-  motivo_diferencia text?
+  cantidad_planeada numeric > 0 · cantidad_recibida numeric?
+  UNIQUE (remision_id, categoria_id)
+  Se edita solo en BORRADOR; en EN_TRANSITO solo cambia cantidad_recibida
+  (disparador linea_remision_editable)
 
 remision_comprobante
   remision_id · comprobante_id · vinculado_por · vinculado_en
   PK (remision_id, comprobante_id)
 ```
+
+**2026-10-06 · Bloque 4.** Una remisión agrupa las sugerencias aprobadas del mismo acopio a
+la misma zona (M-07 de la [especificación](../superpowers/specs/2026-10-06-bloque-4-motor-design.md)),
+así que el vínculo va en `sugerencia.remision_id` y `remision` pierde `sugerencia_id`.
+`linea_remision` pierde `motivo_diferencia`: sin conteo por categoría no hay diferencia por
+línea, y lo que llega distinto va en `nota_recepcion`. `acopio_app` lee, inserta y
+actualiza `remision`, sin `DELETE`; `remision_comprobante` es solo de inserción.
 
 **Permisos de `acopio_app` (2026-10-05).** `comprobante` y `linea_comprobante`: leer,
 insertar y actualizar, sin `DELETE` ni `TRUNCATE`; un comprobante se cancela o se rechaza,
@@ -337,13 +360,28 @@ destino.
 
 ```
 sugerencia
-  id · emergencia_id · acopio_id · zona_id · categoria_id
-  cantidad numeric · puntaje numeric
+  id · ronda timestamptz           generada_en común a la tanda
+  emergencia_id · acopio_id · zona_id · categoria_id
+  cantidad numeric > 0 · puntaje numeric
   desglose jsonb    {criticidad, urgencia, proximidad, magnitud}
   justificacion text
   estado  PROPUESTA | APROBADA | DESCARTADA
-  motivo_descarte · decidida_por · decidida_en · generada_en
+  cantidad_aprobada? · remision_id fk?
+  motivo_descarte? · decidida_por? · decidida_en?
+  CHECK (estado <> 'DESCARTADA' OR motivo de 10 caracteres o más)
+  CHECK (estado <> 'APROBADA' OR (remision_id IS NOT NULL AND cantidad_aprobada > 0))
+
+necesidad_manual                   RF-MOT-002, solo inserción
+  id · zona_id · categoria_id
+  cantidad numeric?                null = vuelve al cálculo
+  motivo text (10 o más) · puesta_por · puesta_en
 ```
+
+**2026-10-06 · Bloque 4.** Cada recálculo borra las `PROPUESTA` y guarda la ronda nueva; un
+disparador impide borrar una sugerencia decidida (M-04). La sobrescritura de la necesidad
+vive en `necesidad_manual`: vale la fila más reciente de cada zona y categoría, y una con
+`cantidad` nula vuelve al cálculo. `configuracion_motor.actualizado_por` es opcional, porque
+la fila nace en el seed.
 
 `desglose` guarda los cuatro componentes por separado: sin ellos, el ranking es
 una caja negra y la justificación no se puede reconstruir a posteriori.
@@ -476,7 +514,10 @@ Cada uno se hace cumplir donde no se pueda evadir.
 | Una línea de remisión no excede el saldo de origen | Transacción |
 | Una causa publicada exige entidad `VERIFICADA` | Transacción |
 | No se puede suspender al último `ADMIN` activo | Transacción |
-| `reporte_necesidad` no admite `UPDATE` ni `DELETE` | Permisos de base de datos |
+| `reporte_necesidad` y `necesidad_manual` no admiten `UPDATE` ni `DELETE` | Permisos de base de datos |
+| Un movimiento es de un acopio o de una zona; en una zona solo hay `RECEPCION`, con remisión | `CHECK` (ADR-0018) |
+| Una línea de remisión se edita solo en `BORRADOR` | Disparador `linea_remision_editable` |
+| Una sugerencia decidida no se borra | Disparador `sugerencia_borrable` |
 | Un usuario interno tiene `username`; un Donador, correo real | `CHECK` |
 | Un Donador no tiene filas en `usuario_asignacion` | Transacción |
 | `comprobante.donador_id` apunta a un usuario con rol `DONADOR` | Transacción |
@@ -631,8 +672,9 @@ erDiagram
 El saldo se deriva de movimientos inmutables
 ([ADR-0002](adr/ADR-0002-saldo-derivado.md)) y lo guarda la tabla `saldo`, que mantiene
 un disparador sobre `movimiento` ([ADR-0015](adr/ADR-0015-saldo-en-tabla-por-disparador.md)).
-Hoy los movimientos, saldos y umbrales son de un acopio, con llave foránea real; las
-zonas sumarán su propia columna cuando tengan movimientos (Bloque 4). Se dibuja en dos
+Los saldos y umbrales son de un acopio, con llave foránea real. Un movimiento es de un
+acopio o, si es una `RECEPCION`, de una zona ([ADR-0018](adr/ADR-0018-movimientos-de-zona.md));
+las zonas no tienen saldo. Se dibuja en dos
 diagramas: los movimientos con su saldo, y lo que el Operador fija por categoría.
 
 ```mermaid
@@ -656,10 +698,12 @@ erDiagram
     }
     MOVIMIENTO {
         uuid id PK "id del cliente: la cola sin red no duplica"
-        uuid acopio_id FK
+        uuid acopio_id FK "nulo en una RECEPCION"
+        uuid zona_id FK "solo en una RECEPCION"
+        uuid remision_id FK
         uuid categoria_id FK
         uuid usuario_id FK
-        text tipo "ENTRADA | SALIDA | AJUSTE"
+        text tipo "ENTRADA | SALIDA | AJUSTE | RECEPCION"
         numeric cantidad "> 0"
         smallint signo
         text motivo_salida "solo SALIDA"
@@ -780,7 +824,7 @@ erDiagram
 
 ### Motor
 
-Se construye en el Bloque 4. Es el aporte original del proyecto
+Bloque 4; la primera etapa de la API se construyó el 2026-10-06. Es el aporte original del proyecto
 ([spec §7](../superpowers/specs/2026-08-20-acopio-design.md)).
 
 ```mermaid
@@ -790,7 +834,9 @@ erDiagram
     ZONA   ||--o{ SUGERENCIA : destino
     CATEGORIA ||--o{ SUGERENCIA : refiere
     USUARIO |o--o{ SUGERENCIA : decide
-    SUGERENCIA |o--o| REMISION : genera
+    REMISION |o--o{ SUGERENCIA : agrupa
+    ZONA ||--o{ NECESIDAD_MANUAL : corrige
+    CATEGORIA ||--o{ NECESIDAD_MANUAL : refiere
     REMISION ||--o{ LINEA_REMISION : detalla
     ZONA ||--o{ REPORTE_NECESIDAD : reporta
     CATEGORIA ||--o{ REPORTE_NECESIDAD : refiere
@@ -815,6 +861,7 @@ erDiagram
         uuid acopio_id FK
         uuid zona_id FK
         uuid categoria_id FK
+        uuid remision_id FK "al aprobarse"
         numeric puntaje
         text estado
     }
@@ -836,6 +883,12 @@ erDiagram
         uuid zona_id FK
         uuid categoria_id FK
         text nota
+    }
+    NECESIDAD_MANUAL {
+        uuid id PK
+        uuid zona_id FK
+        uuid categoria_id FK
+        numeric cantidad "null = vuelve al cálculo"
     }
 ```
 
