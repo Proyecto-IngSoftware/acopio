@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { act, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes } from 'react-router';
 import { vi } from 'vitest';
@@ -212,6 +212,28 @@ it('si otro Operador lo recibió antes, lo explica y vuelve a cargar el folio', 
   await waitFor(() =>
     expect(peticiones().filter((p) => p === `GET /api/comprobantes/${FOLIO}`)).toHaveLength(2),
   );
+});
+
+it('si se cae la señal mientras confirma, conserva lo escrito y no deja registrar', async () => {
+  pantalla();
+  await buscar();
+  const arroz = await screen.findByRole('listitem', { name: 'Arroz' });
+  await userEvent.click(within(arroz).getByRole('button', { name: 'Menos Arroz' }));
+  await userEvent.type(
+    within(arroz).getByRole('textbox', { name: '¿Qué pasó con la diferencia?' }),
+    'Un paquete roto',
+  );
+  const linea = vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+  act(() => void window.dispatchEvent(new Event('offline')));
+  expect(await screen.findByText(/Sin conexión/)).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /Registrar recepción/ })).toBeDisabled();
+  linea.mockReturnValue(true);
+  act(() => void window.dispatchEvent(new Event('online')));
+  const deNuevo = screen.getByRole('listitem', { name: 'Arroz' });
+  expect(within(deNuevo).getByRole('textbox', { name: 'Llegó de Arroz' })).toHaveValue('4');
+  expect(
+    within(deNuevo).getByRole('textbox', { name: '¿Qué pasó con la diferencia?' }),
+  ).toHaveValue('Un paquete roto');
 });
 
 it('axe: sin violaciones graves al buscar y al confirmar', async () => {

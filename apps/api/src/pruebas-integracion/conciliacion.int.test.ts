@@ -95,6 +95,16 @@ describe('bandeja y conciliación (RF-CMP-003 a 005)', () => {
     expect(r.body.entradas).toHaveLength(1);
   });
 
+  it('el contador por acopio no cambia al filtrar por un acopio', async () => {
+    await recibida();
+    const todos = await como(admin).get('/api/comprobantes').expect(200);
+    const filtrado = await como(admin).get(`/api/comprobantes?acopioId=${ACOPIO_B}`).expect(200);
+    expect(filtrado.body.porAcopio).toEqual(todos.body.porAcopio);
+    expect(
+      filtrado.body.porAcopio.find((x: { acopioId: string }) => x.acopioId === ACOPIO_A),
+    ).toBeDefined();
+  });
+
   it('cada entrada dice su categoría, su unidad y quién la registró', async () => {
     const folio = await recibida(10, 8);
     const { nombre } = await a.prisma.usuario.findUniqueOrThrow({ where: { id: op.id } });

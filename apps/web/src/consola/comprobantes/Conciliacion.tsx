@@ -1,6 +1,6 @@
 import { formatearCantidad, type UnidadBase } from '@acopio/shared';
 import { useState } from 'react';
-import { Link, useParams } from 'react-router';
+import { Link, useLocation, useParams } from 'react-router';
 import {
   enBase,
   MOTIVOS_RECHAZO,
@@ -72,6 +72,9 @@ function porCategoria(d: Detalle): FilaCategoria[] {
 export function Conciliacion() {
   const { folio: param } = useParams();
   const folio = param!;
+  // C8 manda su filtro para que «Volver» lo conserve
+  const desde = (useLocation().state as { desde?: string } | null)?.desde ?? '';
+  const bandeja = `/consola/comprobantes${desde}`;
   const enLinea = useEnLinea();
   const detalle = useConciliacion(folio);
   const conciliar = useConciliar(folio);
@@ -82,7 +85,7 @@ export function Conciliacion() {
 
   const marco = (contenido: React.ReactNode) => (
     <div className="flex flex-col gap-space-md px-margin py-space-md">
-      <Encabezado titulo={folio} volverA="/consola/comprobantes" />
+      <Encabezado titulo={folio} volverA={bandeja} />
       {contenido}
     </div>
   );
@@ -100,7 +103,7 @@ export function Conciliacion() {
         <p className="text-body-md text-on-surface">
           {detalle.error.estado === 404 ? 'No encontramos ese folio' : detalle.error.message}
         </p>
-        <Link to="/consola/comprobantes" className="text-label-md text-primary-container">
+        <Link to={bandeja} className="text-label-md text-primary-container">
           Volver a comprobantes
         </Link>
       </div>,
@@ -287,7 +290,7 @@ export function Conciliacion() {
               <button
                 type="button"
                 onClick={() => setRechazando(true)}
-                className="min-h-[48px] text-label-md text-error"
+                className="min-h-[48px] text-label-md text-primary-container"
               >
                 Rechazar
               </button>

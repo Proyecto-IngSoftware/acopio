@@ -62,7 +62,8 @@ export function RecibirFolio() {
     setTexto('');
   };
 
-  if (!enLinea) {
+  // Mientras confirma, una caída de señal no borra lo escrito: el formulario sigue y avisa
+  if (!enLinea && vista !== 'confirmar') {
     return (
       <div className="flex flex-col gap-space-md px-margin py-space-md">
         <Encabezado titulo="Recibir por folio" volverA={`/consola/acopios/${acopioId}/entrada`} />
@@ -146,6 +147,7 @@ export function RecibirFolio() {
           comprobante={comprobante}
           acopioId={acopioId}
           titulo={titulo}
+          sinRed={!enLinea}
           alRecargar={() => void consulta.refetch()}
           alRecibir={(lineas) => setHecho({ folio: comprobante.folio, lineas })}
         />
@@ -240,11 +242,13 @@ function Confirmar({
   comprobante,
   acopioId,
   titulo,
+  sinRed,
   alRecargar,
   alRecibir,
 }: {
   comprobante: Comprobante;
   acopioId: string;
+  sinRed: boolean;
   titulo: React.RefObject<HTMLHeadingElement | null>;
   alRecargar: () => void;
   alRecibir: (lineas: LineaRecepcion[]) => void;
@@ -322,9 +326,15 @@ function Confirmar({
         </div>
       )}
 
+      {sinRed && (
+        <p role="status" className={AVISO}>
+          <Icono nombre="wifi_off" className="text-[22px] text-on-surface-variant" />
+          Sin conexión. Lo que escribiste se queda aquí; registra cuando vuelva la señal.
+        </p>
+      )}
       <Boton
         onClick={registrar}
-        disabled={!listoParaRegistrar(lineas) || recibir.isPending}
+        disabled={sinRed || !listoParaRegistrar(lineas) || recibir.isPending}
         className="sticky bottom-space-sm min-h-[56px]"
       >
         {n > 0 ? `Registrar recepción (${nEntradas(n)})` : 'Registrar que no llegó nada'}

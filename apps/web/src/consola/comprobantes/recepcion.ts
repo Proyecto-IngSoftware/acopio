@@ -63,7 +63,8 @@ export function recepcion(lineas: LineaRecepcion[], a: Accion): LineaRecepcion[]
         return { ...l, texto: aTexto(Math.max(0, Math.floor(cantidadDe(l)) + a.delta)) };
       case 'escribir': {
         const limpio = limpiarCantidad(a.texto);
-        return { ...l, texto: soloEnteros(l) ? limpio.replace(',', '') : limpio };
+        // Sin fracciones se queda la parte entera: «2,5» no puede volverse 25
+        return { ...l, texto: soloEnteros(l) ? limpio.split(',')[0]! : limpio };
       }
       case 'vencer':
         return { ...l, venceEn: a.venceEn };

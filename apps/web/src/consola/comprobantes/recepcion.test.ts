@@ -45,7 +45,8 @@ it('lo escrito acepta coma decimal, salvo en presentaciones o unidades, que van 
   e = recepcion(e, { tipo: 'escribir', id: 'l1', texto: '4.5' });
   e = recepcion(e, { tipo: 'escribir', id: 'l2', texto: '4,5' });
   expect(cantidadDe(e[0]!)).toBe(4.5);
-  expect(cantidadDe(e[1]!)).toBe(45);
+  // Sin fracciones se queda la parte entera: «4,5» no puede volverse 45
+  expect(cantidadDe(e[1]!)).toBe(4);
   expect(soloEnteros(e[1]!)).toBe(true);
   expect(soloEnteros(iniciar(comprobante([linea({ unidad: 'UNIDAD' })]))[0]!)).toBe(true);
 });

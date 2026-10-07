@@ -99,7 +99,7 @@ const DETALLE = {
   ],
 };
 
-const pantalla = (extra: Record<string, unknown> = {}) => {
+const pantalla = (extra: Record<string, unknown> = {}, desde = '') => {
   const mapa: Record<string, unknown> = {
     'GET /api/comprobantes/*/conciliacion': DETALLE,
     'GET /api/comprobantes/*/factura': {
@@ -118,7 +118,7 @@ const pantalla = (extra: Record<string, unknown> = {}) => {
       <Routes>
         <Route path="/consola/comprobantes/:folio" element={<Conciliacion />} />
       </Routes>,
-      `/consola/comprobantes/${FOLIO}`,
+      { pathname: `/consola/comprobantes/${FOLIO}`, state: desde ? { desde } : undefined } as never,
       clienteFalso(AUDITOR),
     ),
   );
@@ -272,6 +272,20 @@ it('«Vincular entradas» abre la hoja con las entradas del acopio del comproban
       `GET /api/comprobantes/${FOLIO}/entradas-vinculables?acopioId=a1`,
     ),
   );
+});
+
+it('«Volver» regresa a la bandeja con el filtro con que se abrió', async () => {
+  pantalla({}, '?estado=RECHAZADO&acopio=a1');
+  await screen.findByRole('table', { name: 'Por categoría' });
+  expect(screen.getByRole('link', { name: 'Volver' })).toHaveAttribute(
+    'href',
+    '/consola/comprobantes?estado=RECHAZADO&acopio=a1',
+  );
+});
+
+it('«Rechazar» no va en rojo: el rojo queda para confirmar en la hoja', async () => {
+  pantalla();
+  expect(await screen.findByRole('button', { name: 'Rechazar' })).not.toHaveClass('text-error');
 });
 
 it('axe: sin violaciones graves en la pantalla y en la hoja de rechazo', async () => {

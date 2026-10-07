@@ -115,6 +115,23 @@ it('«Buscar folio» abre la conciliación de ese folio', async () => {
   );
 });
 
+it('con un acopio filtrado sin pendientes, «Todos» sigue a la vista y quita el filtro', async () => {
+  pantalla({ comprobantes: [], porAcopio: [] }, '/consola/comprobantes?acopio=a9');
+  await userEvent.click(await screen.findByRole('button', { name: 'Todos 0' }));
+  expect(screen.getByRole('status', { name: 'Ubicación' })).toHaveTextContent(
+    /^\/consola\/comprobantes$/,
+  );
+});
+
+it('la fila lleva el filtro para que «Volver» lo conserve', async () => {
+  pantalla(BANDEJA, '/consola/comprobantes?estado=RECHAZADO&acopio=a1');
+  const lista = await screen.findByRole('list', { name: 'Comprobantes' });
+  await userEvent.click(within(lista).getAllByRole('link')[0]!);
+  expect(screen.getByRole('status', { name: 'Ubicación' })).toHaveTextContent(
+    '/consola/comprobantes/ACO-2026-AAAA1',
+  );
+});
+
 it('vacía, lo dice según la pestaña', async () => {
   pantalla({ comprobantes: [], porAcopio: [] });
   expect(await screen.findByText('No hay comprobantes pendientes')).toBeInTheDocument();

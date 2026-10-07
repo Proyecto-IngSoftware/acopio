@@ -75,9 +75,13 @@ export class ConciliacionService {
       orderBy: { creado_en: 'asc' },
       take: 200,
     });
+    // El contador cubre todo el alcance aunque la lista venga filtrada por un acopio
     const grupos = await this.prisma.comprobante.groupBy({
       by: ['acopio_id'],
-      where: { ...enAlcance, estado: 'PENDIENTE' },
+      where: {
+        ...(asignados === null ? {} : { acopio_id: { in: asignados } }),
+        estado: 'PENDIENTE',
+      },
       _count: { _all: true },
     });
     const nombres = await this.prisma.acopio.findMany({

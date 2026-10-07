@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Link, useNavigate, useSearchParams } from 'react-router';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router';
 import { useBandeja, type EstadoBandeja } from '../../api/comprobantes';
 import { Boton } from '../../componentes/Boton';
 import { Esqueleto } from '../../componentes/Esqueleto';
@@ -26,6 +26,7 @@ export function Comprobantes() {
   const enLinea = useEnLinea();
   const navegar = useNavigate();
   const [parametros, setParametros] = useSearchParams();
+  const { search } = useLocation();
   const estado = (ESTADOS.find((e) => e.valor === parametros.get('estado'))?.valor ??
     'PENDIENTE') as EstadoBandeja;
   const acopioId = parametros.get('acopio') ?? undefined;
@@ -94,7 +95,7 @@ export function Comprobantes() {
         opciones={ESTADOS.map(({ valor, texto }) => ({ valor, texto }))}
       />
 
-      {porAcopio.length > 0 && (
+      {(porAcopio.length > 0 || acopioId) && (
         <div className="-mx-margin flex gap-space-xs overflow-x-auto px-margin">
           <Chip activo={!acopioId} alTocar={() => filtrar({ acopio: null })}>
             Todos {total}
@@ -127,6 +128,7 @@ export function Comprobantes() {
               <li key={c.folio}>
                 <Link
                   to={`/consola/comprobantes/${encodeURIComponent(c.folio)}`}
+                  state={{ desde: search }}
                   className="flex flex-col gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md"
                 >
                   <span className="flex items-center gap-space-sm">
