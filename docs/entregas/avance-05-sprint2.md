@@ -29,7 +29,7 @@ arranque del Sprint 2.
 | 3 | Leer juntos la retrospectiva del Sprint 1 y confirmarla o corregirla | Retrospectiva sin la marca de borrador | [#45](https://github.com/Proyecto-IngSoftware/acopio/issues/45) |
 | 4 | Captura del tablero con las historias del Sprint 1, **antes** de mover tarjetas al Sprint 2 | `evidencia/avance-04/tablero.png` | [#21](https://github.com/Proyecto-IngSoftware/acopio/issues/21) |
 | 5 | Repasar la consigna del Sprint 2 que acaba de dar el docente: semanas, entregables, formato | Notas para ajustar el calendario y esta nota | [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47) |
-| 6 | Primer Planning del Sprint 2 sobre el borrador de abajo: Sprint Goal, historias, responsables por rol, si los roles rotan, y Definition of Done | Tabla del Planning y de tareas confirmadas | [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47) |
+| 6 | Primer Planning del Sprint 2 sobre el borrador de abajo: Sprint Goal, historias, responsables por rol y Definition of Done | Tabla del Planning y de tareas confirmadas | [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47) |
 | 7 | Mover en el tablero las historias del Sprint 2 y asignar responsables | Tarjetas con «Sprint 2» | [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47) |
 
 El orden de los puntos 4 y 7 importa: si las tarjetas se mueven antes de la captura, el
@@ -69,11 +69,9 @@ garantiza que avance y quede documentada.
 | Planning, seguimientos semanales, tablero y cierre del sprint ([#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47)) | Alejandra | Coordinación de Sprint | |
 | Registro del sprint, «Cambios al construir», pendientes, ADR nuevos y Word del avance | Alejandra | Documentación | Joseph genera el Word |
 
-**Rotación de roles.** El Avance 1 dice que los roles rotan cada sprint y propone a cada
-quien un rol posible: Joseph pasaría a calidad y despliegue, Brayan a documentación y
-coordinación, Alejandra al desarrollo del portal público y Michael a arquitectura y base
-de datos. En el Sprint 1 no rotaron. Este borrador mantiene los roles del Sprint 0; si el
-equipo decide rotar el viernes, se cambia la columna de responsables con esa propuesta.
+**Rotación de roles.** El Avance 1 dice que los roles rotan cada sprint. El equipo
+decidió el 2026-10-07 que en el Sprint 2 no rotan: siguen los del Sprint 0
+([P-048](../01-requerimientos/pendientes.md)).
 
 **Calendario del sprint (provisional).**
 

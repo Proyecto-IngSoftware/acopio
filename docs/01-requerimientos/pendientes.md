@@ -823,6 +823,17 @@ intervalo, la segunda caería en la semana 12, pero ninguna guía lo dice.
 viernes 9 de octubre a las 6:30 p. m. Con ella se corrigen el
 [calendario](../entregas/calendario.md) y el cronograma
 
+
+### P-048 · Los roles no rotan en el Sprint 2
+**Fecha:** 2026-10-07 · **Propuesto por:** Joseph
+**Qué:** el [Avance 1](../entregas/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo)
+dice que los roles rotan cada sprint y propone a cada integrante un rol posible. En el
+Sprint 2 se mantienen los del Sprint 0: Joseph en arquitectura e integración, Brayan en
+requerimientos y diseño UI/UX, Alejandra en coordinación y documentación, y Michael en
+calidad, pruebas y despliegue. Los responsables del Sprint 1 y del borrador del Sprint 2
+siguen esos roles.
+**Por qué:** decisión de Joseph del 2026-10-07.
+**Estado:** DECIDIDO. Se vuelve a revisar en el Planning del Sprint 3
 ---
 
 ## Resueltos
