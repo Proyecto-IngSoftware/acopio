@@ -31,6 +31,8 @@ bun run --filter @acopio/api openapi      # regenera docs/03-diseno/api/openapi.
 bun run --filter @acopio/web api:tipos    # regenera los tipos del cliente desde el contrato
 ```
 
+Los recorridos de punta a punta (`apps/web/recorridos/*.mjs`) prueban la web contra la API del Compose en Chromium; cómo se corren y qué cubre cada uno está en `docs/06-operacion/recorridos.md`. Se corren al cerrar cada bloque.
+
 Una sola prueba, desde `apps/api`:
 
 ```bash

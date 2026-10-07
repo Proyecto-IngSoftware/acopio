@@ -3,7 +3,7 @@ title: "Operación — índice"
 type: moc
 tags: [moc, operacion]
 estado: vigente
-actualizado: 2026-09-12
+actualizado: 2026-10-07
 ---
 
 # Operación — índice
@@ -12,6 +12,7 @@ actualizado: 2026-09-12
 |---|---|
 | [despliegue.md](despliegue.md) | Al montar el entorno o publicar una versión |
 | [runbook.md](runbook.md) | Cuando algo falla, y **72 h antes de cada sustentación** |
+| [recorridos.md](recorridos.md) | Al cerrar un bloque, o cuando cambie una pantalla o un flujo |
 | [github-projects.md](github-projects.md) | Al montar la organización de GitHub y el Project, o al cargar el backlog |
 
 ## Lo que no se puede olvidar

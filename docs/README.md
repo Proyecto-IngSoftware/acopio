@@ -3,7 +3,7 @@ title: "Acopio — portada"
 type: moc
 tags: [moc, indice]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-07
 ---
 
 # Acopio
@@ -42,6 +42,7 @@ plan de trabajo: el próximo es el ciclo 2 del Bloque 3 (#34).
 | Construir interfaz | [Diseños de Stitch](03-diseno/stitch/README.md) · [Contrato de la API](03-diseno/api/README.md) |
 | Saber qué se construyó y qué sigue | [Planes](05-planes/README.md) · [Issues](https://github.com/Proyecto-IngSoftware/acopio/issues) |
 | Desplegar o arreglar algo roto | [Runbook](06-operacion/runbook.md) |
+| Probar los flujos de punta a punta | [Recorridos](06-operacion/recorridos.md) |
 
 ---
 
@@ -55,7 +56,7 @@ plan de trabajo: el próximo es el ciclo 2 del Bloque 3 (#34).
 | [03-diseno/](03-diseno/README.md) | Diseños de Stitch por pantalla, sistema de diseño, flujos, contrato de la API | Al construir interfaz |
 | [superpowers/specs/](superpowers/specs/README.md) | Especificaciones formales por bloque | Al iniciar un bloque |
 | [05-planes/](05-planes/README.md) | Planes de implementación | Al iniciar un bloque |
-| [06-operacion/](06-operacion/README.md) | Despliegue, runbook | Al desplegar, y cuando algo falla |
+| [06-operacion/](06-operacion/README.md) | Despliegue, runbook, recorridos | Al desplegar, y cuando algo falla |
 | [entregas/](entregas/README.md) | Entregables de la asignatura | En cada avance de proyecto |
 | [99-futuro/](99-futuro/backlog.md) | Aplazado, recuperable | Al recortar algo |
 | [plantillas/](plantillas/plantilla-adr.md) | Plantillas de ADR y de requerimiento | Al crear una nota nueva |
