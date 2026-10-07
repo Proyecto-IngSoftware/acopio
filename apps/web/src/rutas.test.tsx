@@ -123,3 +123,31 @@ describe('rutas del Donador', () => {
     expect(await screen.findByRole('heading', { name: 'No tienes acceso' })).toBeInTheDocument();
   });
 });
+
+describe('rutas de comprobantes (Bloque 3, ciclo 2)', () => {
+  const persona = (rol: 'OPERADOR' | 'AUDITOR' | 'ADMIN') => ({
+    id: 'u1',
+    username: 'j.quintero',
+    nombre: 'Joseph Quintero',
+    rol,
+  });
+
+  it.each([
+    ['/consola/acopios/x1/recibir', 'OPERADOR', 'Recibir por folio'],
+    ['/consola/comprobantes', 'AUDITOR', 'Comprobantes'],
+    ['/consola/comprobantes', 'ADMIN', 'Comprobantes'],
+    ['/consola/comprobantes/ACO-2026-7KQ4M', 'AUDITOR', 'ACO-2026-7KQ4M'],
+  ] as const)('%s abre su pantalla para %s', async (ruta, rol, titulo) => {
+    render(envolver(<Rutas />, ruta, clienteFalso(persona(rol))));
+    expect(await screen.findByRole('heading', { level: 1, name: titulo })).toBeInTheDocument();
+  });
+
+  it.each([
+    ['/consola/acopios/x1/recibir', 'AUDITOR'],
+    ['/consola/comprobantes', 'OPERADOR'],
+    ['/consola/comprobantes/ACO-2026-7KQ4M', 'OPERADOR'],
+  ] as const)('%s rechaza a %s', async (ruta, rol) => {
+    render(envolver(<Rutas />, ruta, clienteFalso(persona(rol))));
+    expect(await screen.findByRole('heading', { name: 'No tienes acceso' })).toBeInTheDocument();
+  });
+});

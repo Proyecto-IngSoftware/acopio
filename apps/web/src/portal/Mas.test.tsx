@@ -60,6 +60,10 @@ it('el Administrador ve su cuenta y sus herramientas, también las de la red', a
     'href',
     '/consola/catalogo',
   );
+  expect(within(admin).getByRole('link', { name: /Comprobantes/ })).toHaveAttribute(
+    'href',
+    '/consola/comprobantes',
+  );
   for (const [nombre, a] of [
     ['Acopios', '/consola/acopios'],
     ['Entidades', '/consola/entidades'],
@@ -73,12 +77,16 @@ it('el Administrador ve su cuenta y sus herramientas, también las de la red', a
   expect(screen.queryByRole('region', { name: 'Mi acopio' })).not.toBeInTheDocument();
 });
 
-it('el Auditor ve la bitácora y la matriz de acceso', async () => {
+it('el Auditor ve la bitácora, los comprobantes y la matriz de acceso', async () => {
   responderSegun({ 'GET /api/ubicaciones/mias': [] });
   pantalla(persona('AUDITOR'));
   const admin = await screen.findByRole('region', { name: 'Administración' });
-  expect(within(admin).getAllByRole('link')).toHaveLength(2);
+  expect(within(admin).getAllByRole('link')).toHaveLength(3);
   expect(within(admin).getByRole('link', { name: /Bitácora/ })).toBeInTheDocument();
+  expect(within(admin).getByRole('link', { name: /Comprobantes/ })).toHaveAttribute(
+    'href',
+    '/consola/comprobantes',
+  );
   expect(within(admin).getByRole('link', { name: /Matriz de acceso/ })).toHaveAttribute(
     'href',
     '/consola/accesos',

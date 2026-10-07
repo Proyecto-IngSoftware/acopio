@@ -75,6 +75,15 @@ const Seguimiento = lazy(() =>
 const Privacidad = lazy(() =>
   import('./portal/Privacidad').then((m) => ({ default: m.Privacidad })),
 );
+const RecibirFolio = lazy(() =>
+  import('./consola/comprobantes/RecibirFolio').then((m) => ({ default: m.RecibirFolio })),
+);
+const Comprobantes = lazy(() =>
+  import('./consola/comprobantes/Comprobantes').then((m) => ({ default: m.Comprobantes })),
+);
+const Conciliacion = lazy(() =>
+  import('./consola/comprobantes/Conciliacion').then((m) => ({ default: m.Conciliacion })),
+);
 const Mapa = lazy(() => import('./portal/mapa/Mapa').then((m) => ({ default: m.Mapa })));
 
 const SIN_CONSTRUIR = ['causas', 'voluntariado', 'proximamente'];
@@ -126,6 +135,7 @@ export function Rutas() {
             ['consola/acopios/:id/entrada', <EntradaRapida key="ent" />],
             ['consola/acopios/:id/salida', <Salida key="sal" />],
             ['consola/acopios/:id/conteo', <Conteo key="con" />],
+            ['consola/acopios/:id/recibir', <RecibirFolio key="rec" />],
             // Las entradas guardadas sin red: solo las captura el Operador (ADR-0005)
             ['consola/sin-sincronizar', <SinSincronizar key="sin" />],
           ] as const
@@ -135,6 +145,18 @@ export function Rutas() {
             key={ruta}
             path={ruta}
             element={<RequiereRol roles={['OPERADOR']}>{pantalla}</RequiereRol>}
+          />
+        ))}
+        {(
+          [
+            ['consola/comprobantes', <Comprobantes key="cmp" />],
+            ['consola/comprobantes/:folio', <Conciliacion key="cnc" />],
+          ] as const
+        ).map(([ruta, pantalla]) => (
+          <Route
+            key={ruta}
+            path={ruta}
+            element={<RequiereRol roles={['ADMIN', 'AUDITOR']}>{pantalla}</RequiereRol>}
           />
         ))}
         <Route

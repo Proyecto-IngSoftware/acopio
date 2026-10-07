@@ -137,11 +137,11 @@ describe('C4 Entrada rápida', () => {
     await waitFor(async () => expect(await leerCategorias()).toEqual(vigentes));
   });
 
-  it('arriba ofrece «Recibir por folio», que llega con los comprobantes', async () => {
+  it('arriba ofrece «Recibir por folio», que lleva a recibir en este acopio', async () => {
     pantalla();
-    const folio = await screen.findByRole('region', { name: 'Recibir por folio' });
-    expect(folio).toHaveTextContent('Llega con los comprobantes');
-    expect(within(folio).queryByRole('link')).not.toBeInTheDocument();
+    const folio = await screen.findByRole('link', { name: /Recibir por folio/ });
+    expect(folio).toHaveAttribute('href', '/consola/acopios/x1/recibir');
+    expect(folio).toHaveTextContent('Escanea o escribe el folio');
   });
 
   it('busca la categoría y muestra su saldo actual y su unidad', async () => {

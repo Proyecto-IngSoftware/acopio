@@ -33,6 +33,13 @@ const HERRAMIENTAS: Herramienta[] = [
     roles: ['ADMIN', 'AUDITOR'],
   },
   {
+    a: '/consola/comprobantes',
+    icono: 'receipt_long',
+    titulo: 'Comprobantes',
+    descripcion: 'Revisar y conciliar donaciones',
+    roles: ['ADMIN', 'AUDITOR'],
+  },
+  {
     a: '/consola/accesos',
     icono: 'grid_view',
     titulo: 'Matriz de acceso',

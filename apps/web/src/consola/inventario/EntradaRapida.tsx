@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import { formatearCantidad, formatearNumero, SIMBOLO_UNIDAD } from '@acopio/shared';
 import type { ResultadoBusqueda } from '../../api/catalogo';
 import { useRegistrarEntrada, useSaldos, type DatosEntrada } from '../../api/inventario';
@@ -161,16 +161,17 @@ export function EntradaRapida() {
         </p>
       )}
 
-      <section
-        aria-label="Recibir por folio"
-        className="flex items-center gap-space-sm rounded-xl border border-dashed border-outline-variant bg-surface-container-low p-space-md text-on-surface-variant"
+      <Link
+        to={`/consola/acopios/${acopioId}/recibir`}
+        className="flex min-h-[64px] items-center gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md text-on-surface-variant"
       >
-        <Icono nombre="qr_code_scanner" className="text-[28px]" />
-        <span className="flex flex-col">
+        <Icono nombre="qr_code_scanner" className="text-[28px] text-primary-container" />
+        <span className="flex flex-1 flex-col">
           <span className="font-bold text-on-surface">Recibir por folio</span>
-          <span className="text-body-sm">Llega con los comprobantes</span>
+          <span className="text-body-sm">Escanea o escribe el folio</span>
         </span>
-      </section>
+        <Icono nombre="chevron_right" className="text-[24px]" />
+      </Link>
 
       <p
         role="status"
