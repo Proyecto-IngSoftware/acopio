@@ -74,6 +74,18 @@ const antes = (x: Candidata, y: Candidata) =>
   x.sugerencia.zonaId.localeCompare(y.sugerencia.zonaId) ||
   x.sugerencia.acopioId.localeCompare(y.sugerencia.acopioId);
 
+/** El mismo orden que `antes`, sin armar la sugerencia: se usa dentro del ciclo caliente. */
+const antesQue = (
+  x: { puntaje: number; cantidad: number; zona: ZonaMotor; acopio: AcopioMotor },
+  y: { puntaje: number; cantidad: number; zona: ZonaMotor; acopio: AcopioMotor },
+) =>
+  (y.puntaje - x.puntaje ||
+    y.cantidad - x.cantidad ||
+    x.zona.nombre.localeCompare(y.zona.nombre, 'es') ||
+    x.acopio.nombre.localeCompare(y.acopio.nombre, 'es') ||
+    x.zona.id.localeCompare(y.zona.id) ||
+    x.acopio.id.localeCompare(y.acopio.id)) < 0;
+
 /**
  * M-06: voraz por puntaje. En cada categoría se puntúan todos los pares acopio y zona, se
  * toma el mejor, se le asigna min(movible, déficit), se descuenta de los dos lados y se
@@ -87,12 +99,14 @@ export function emparejar(
   const zonas = new Map(entrada.zonas.map((z) => [z.id, z]));
   const acopios = new Map(entrada.acopios.map((a) => [a.id, a]));
   const bloqueados = entrada.bloqueados ?? new Set<string>();
-  const distancias = new Map<string, number>();
+  // Distancias por índice: una búsqueda por texto en cada candidato pesaba más que el cálculo
+  const indiceZona = new Map(entrada.zonas.map((z, i) => [z.id, i]));
+  const indiceAcopio = new Map(entrada.acopios.map((a, i) => [a.id, i]));
+  const distancias = new Float64Array(entrada.zonas.length * entrada.acopios.length).fill(-1);
   const km = (a: AcopioMotor, z: ZonaMotor) => {
-    const clave = `${a.id}:${z.id}`;
-    let d = distancias.get(clave);
-    if (d === undefined) distancias.set(clave, (d = distanciaKm(a, z)));
-    return d;
+    const k = indiceZona.get(z.id)! * entrada.acopios.length + indiceAcopio.get(a.id)!;
+    if (distancias[k]! < 0) distancias[k] = distanciaKm(a, z);
+    return distancias[k]!;
   };
 
   // distancia_max: la mayor entre los pares candidatos de la ronda (M-06)
@@ -108,68 +122,97 @@ export function emparejar(
   }
 
   const elegidas: Candidata[] = [];
+  // Un solo objeto para los componentes de cada candidato; se copia solo el del elegido
+  const tmp: Componentes = { criticidad: 0, urgencia: 0, proximidad: 0, magnitud: 0 };
   for (const cat of entrada.categorias) {
     const demandas = entrada.demandas
       .filter((d) => d.categoriaId === cat.id && zonas.has(d.zonaId))
       .map((d) => ({ ...d, asignado: 0 }));
     const ofertas = entrada.ofertas
       .filter((o) => o.categoriaId === cat.id && acopios.has(o.acopioId))
-      .map((o) => ({ ...o, restante: o.movible }));
+      .map((o) => ({
+        ...o,
+        restante: o.movible,
+        urgencia: urgencia(o.diasParaVencer),
+        acopio: acopios.get(o.acopioId)!,
+        // Zonas a las que este acopio no puede proponer: descartadas hace menos de 24 horas
+        bloqueadas: new Set(
+          entrada.zonas
+            .filter((z) => bloqueados.has(clavePar(o.acopioId, z.id, cat.id)))
+            .map((z) => z.id),
+        ),
+      }));
 
     for (;;) {
-      let mejor:
-        (Candidata & { d: (typeof demandas)[number]; o: (typeof ofertas)[number] }) | null = null;
+      // Solo se arma la sugerencia completa, con su frase, para el par elegido: con 50
+      // zonas, 20 acopios y 40 categorías hay millones de candidatos por ronda (RF-MOT-005)
+      let mejor: {
+        d: (typeof demandas)[number];
+        o: (typeof ofertas)[number];
+        z: ZonaMotor;
+        a: AcopioMotor;
+        cantidad: number;
+        distancia: number;
+        cubierto: number;
+        desglose: Componentes;
+        puntaje: number;
+      } | null = null;
       for (const d of demandas) {
         const deficit = r3(d.necesidad - d.recibido - d.enCamino - d.asignado);
         if (deficit <= 0) continue;
         const z = zonas.get(d.zonaId)!;
+        const cubierto = Math.min(1, (d.recibido + d.enCamino + d.asignado) / d.necesidad);
         for (const o of ofertas) {
-          if (o.restante <= 0 || bloqueados.has(clavePar(o.acopioId, d.zonaId, cat.id))) continue;
+          if (o.restante <= 0 || o.bloqueadas.has(d.zonaId)) continue;
           const bruta = Math.min(o.restante, deficit);
           const cantidad = cat.unidad === 'UNIDAD' ? Math.floor(bruta) : r3(bruta);
           if (cantidad <= 0 || cantidad < minimo) continue;
-          const a = acopios.get(o.acopioId)!;
+          const a = o.acopio;
           const distancia = km(a, z);
-          const cubierto = Math.min(1, (d.recibido + d.enCamino + d.asignado) / d.necesidad);
-          const desglose: Componentes = {
-            criticidad: 1 - cubierto,
-            urgencia: urgencia(o.diasParaVencer),
-            proximidad: distanciaMax > 0 ? 1 - distancia / distanciaMax : 1,
-            magnitud: Math.min(1, o.restante / deficit),
-          };
-          const candidata = {
-            d,
-            o,
-            zona: z.nombre,
-            acopio: a.nombre,
-            sugerencia: {
-              acopioId: a.id,
-              zonaId: z.id,
-              categoriaId: cat.id,
-              cantidad,
-              puntaje: puntaje(desglose, pesos),
-              desglose,
-              justificacion: justificar({
-                zona: z.nombre,
-                categoria: cat.nombre,
-                unidad: cat.unidad,
-                cobertura: Math.min(1, d.recibido / d.necesidad),
-                acopio: a.nombre,
-                noRecibe: o.noRecibe,
-                superavit: o.superavit,
-                movible: o.restante,
-                km: distancia,
-                diasParaVencer: o.diasParaVencer,
-              }),
-            },
-          };
-          if (!mejor || antes(candidata, mejor) < 0) mejor = candidata;
+          tmp.criticidad = 1 - cubierto;
+          tmp.urgencia = o.urgencia;
+          tmp.proximidad = distanciaMax > 0 ? 1 - distancia / distanciaMax : 1;
+          tmp.magnitud = Math.min(1, o.restante / deficit);
+          const p = puntaje(tmp, pesos);
+          if (
+            !mejor ||
+            antesQue(
+              { puntaje: p, cantidad, zona: z, acopio: a },
+              { puntaje: mejor.puntaje, cantidad: mejor.cantidad, zona: mejor.z, acopio: mejor.a },
+            )
+          ) {
+            mejor = { d, o, z, a, cantidad, distancia, cubierto, desglose: { ...tmp }, puntaje: p };
+          }
         }
       }
       if (!mejor) break;
-      elegidas.push({ sugerencia: mejor.sugerencia, zona: mejor.zona, acopio: mejor.acopio });
-      mejor.d.asignado = r3(mejor.d.asignado + mejor.sugerencia.cantidad);
-      mejor.o.restante = r3(mejor.o.restante - mejor.sugerencia.cantidad);
+      const { d, o, z, a } = mejor;
+      elegidas.push({
+        zona: z.nombre,
+        acopio: a.nombre,
+        sugerencia: {
+          acopioId: a.id,
+          zonaId: z.id,
+          categoriaId: cat.id,
+          cantidad: mejor.cantidad,
+          puntaje: mejor.puntaje,
+          desglose: mejor.desglose,
+          justificacion: justificar({
+            zona: z.nombre,
+            categoria: cat.nombre,
+            unidad: cat.unidad,
+            cobertura: Math.min(1, d.recibido / d.necesidad),
+            acopio: a.nombre,
+            noRecibe: o.noRecibe,
+            superavit: o.superavit,
+            movible: o.restante,
+            km: mejor.distancia,
+            diasParaVencer: o.diasParaVencer,
+          }),
+        },
+      });
+      d.asignado = r3(d.asignado + mejor.cantidad);
+      o.restante = r3(o.restante - mejor.cantidad);
     }
   }
   return elegidas.sort(antes).map((c) => c.sugerencia);
