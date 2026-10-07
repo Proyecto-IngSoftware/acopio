@@ -36,7 +36,7 @@ lo que lo bloquea. Se decidió el 2026-10-07 y está en
 | 7 | 14 sep | 20 sep | Sprint 0 | Plazo de correcciones del [Avance 3](avance-03-arquitectura.md) (14 sep). Se retoma el [Avance 2](avance-02-requisitos.md) |
 | 8 | 21 sep | 27 sep | Sprint 1 | Planeación del Sprint 1 |
 | 9 | 28 sep | 4 oct | Sprint 1 | Bloque 0 (28 sep), Bloque 1 (30 sep a 1 oct), Bloque 2 (1 a 5 oct) |
-| 10 | 5 oct | 11 oct | Sprint 1 | Bloque 3 (5 y 6 oct), etapa 1 del Bloque 4 (7 oct). Review y retrospectiva. [Avance 4](avance-04-sprint1.md). Clase virtual el viernes 9 a las 6:30 p. m.: tema de la semana y consigna del Sprint 2 |
+| 10 | 5 oct | 11 oct | Sprint 1 | Bloque 3 (5 y 6 oct), etapa 1 del Bloque 4 (7 oct). Review y retrospectiva. [Avance 4](avance-04-sprint1.md). Clase virtual el viernes 9 a las 6:30 p. m.: tema de la semana y consigna del Sprint 2. Al terminar, seguimiento del equipo y primer Planning del Sprint 2 ([agenda](avance-05-sprint2.md#reunión-del-viernes-9-de-octubre-después-de-la-clase)) |
 | 11 | 12 oct | 18 oct | Sprint 2 | Planning del Sprint 2 (12 oct). API de la etapa 2 del motor. Decisión de VPS y dominio |
 | 12 | 19 oct | 25 oct | Sprint 2 | Interfaz del motor: Bloque 4 cerrado |
 | 13 | 26 oct | 1 nov | Sprint 2 | Verificación de entidades y causas. Servidor de pruebas. Review del Sprint 2 (30 oct) |

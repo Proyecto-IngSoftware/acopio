@@ -123,7 +123,8 @@ GitHub no crea vistas) y guardar la captura en `evidencia/avance-04/tablero.png`
 
 El equipo no se reúne a diario: hace un seguimiento por semana, el miércoles o el
 viernes ([calendario](calendario.md#seguimiento-del-equipo)). El del Sprint 1 es el
-**viernes 9 de octubre**. Se toma una captura de la videollamada o una foto y cada
+**viernes 9 de octubre**, al terminar la clase virtual de las 6:30 p. m.
+([agenda](avance-05-sprint2.md#reunión-del-viernes-9-de-octubre-después-de-la-clase)). Se toma una captura de la videollamada o una foto y cada
 integrante llena su fila.
 
 | Integrante | ¿Qué terminé desde el último seguimiento? | ¿Qué haré a continuación? | ¿Qué bloqueo o ayuda necesito? |

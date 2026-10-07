@@ -787,7 +787,10 @@ Bloque 0. El equipo se reúne una vez por semana, el miércoles o el viernes, y 
 reunión cuenta como el «Daily Scrum» de las guías.
 **Por qué:** la guía del Avance 4 fecha el sprint por semanas y pide el registro de un
 seguimiento con evidencia; el equipo acordó no reunirse a diario.
+El seguimiento del Sprint 1 es el viernes 9 de octubre al terminar la clase virtual, en
+la misma reunión del primer Planning del Sprint 2.
 **Estado:** DECIDIDO. Aplicado en [avance-04-sprint1.md](../entregas/avance-04-sprint1.md)
+y en [avance-05-sprint2.md](../entregas/avance-05-sprint2.md)
 
 ### P-046 · Historias Must sin plan: causas, verificación de entidades e importador
 **Fecha:** 2026-10-07 · **Propuesto por:** Joseph
