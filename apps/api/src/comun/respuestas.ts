@@ -618,3 +618,23 @@ export class SugerenciaDto extends createZodDto(
 export class RecalculoDto extends createZodDto(
   z.object({ ronda: fecha, generadas: z.number().int() }),
 ) {}
+
+export class ConfiguracionMotorDto extends createZodDto(
+  z.object({
+    pesos: componentes,
+    cantidadMinima: z.number(),
+    actualizadoEn: fecha.nullable(),
+    actualizadoPor: z.string().nullable(),
+  }),
+) {}
+
+const filaVistaPrevia = z.object({
+  acopio: z.string(),
+  zona: z.string(),
+  categoria: z.string(),
+  cantidad: z.number(),
+  puntaje: z.number(),
+});
+export class VistaPreviaMotorDto extends createZodDto(
+  z.object({ actual: z.array(filaVistaPrevia), propuesta: z.array(filaVistaPrevia) }),
+) {}
