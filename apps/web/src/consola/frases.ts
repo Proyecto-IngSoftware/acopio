@@ -17,7 +17,9 @@ export function frase(r: RegistroBitacora): string {
   const antes = datos(r.datos_antes);
   const despues = datos(r.datos_despues);
   const quien = nombreDe(despues) || nombreDe(antes);
-  const con = (texto: string) => (quien ? `${texto} ${quien}` : texto);
+  const con = (verbo: string) => (quien ? `${verbo} ${quien}` : verbo);
+  // Los movimientos y las marcas de un acopio guardan el nombre de la categoría
+  const categoria = texto(despues?.categoria) || texto(antes?.categoria);
 
   switch (r.accion) {
     case 'usuario.creado':
@@ -66,10 +68,81 @@ export function frase(r: RegistroBitacora): string {
       return quien
         ? `La emergencia ${quien} pasó a seguimiento`
         : 'Una emergencia pasó a seguimiento';
+    case 'acopio.creado':
+      return con('Creó el acopio');
+    case 'acopio.actualizado':
+      return con('Editó el acopio');
+    case 'acopio.cerrado':
+      return con('Cerró el acopio');
+    case 'acopio.operado':
+      return con('Actualizó la operación de');
+    case 'entidad.creada':
+      return con('Creó la entidad');
+    case 'entidad.actualizada':
+      return con('Editó la entidad');
+    case 'zona.creada':
+      return con('Registró la zona');
+    case 'zona.actualizada':
+      return con('Editó la zona');
+    case 'codigo_barras.asociado':
+    case 'codigo_barras.editado': {
+      const ean = texto(despues?.ean) || texto(antes?.ean);
+      const verbo = r.accion === 'codigo_barras.asociado' ? 'Asoció' : 'Editó';
+      if (!ean) return `${verbo} un código de barras`;
+      return categoria ? `${verbo} el código ${ean} a ${categoria}` : `${verbo} el código ${ean}`;
+    }
+    case 'movimiento.entrada':
+      return categoria ? `Registró una entrada de ${categoria}` : 'Registró una entrada';
+    case 'movimiento.salida':
+      return categoria ? `Registró una salida de ${categoria}` : 'Registró una salida';
+    case 'movimiento.ajuste':
+      return categoria
+        ? `Ajustó ${categoria} con un conteo físico`
+        : 'Ajustó el inventario con un conteo físico';
+    case 'no_recibir.marcado':
+      return categoria
+        ? `Marcó ${categoria} como «no recibir»`
+        : 'Marcó una categoría como «no recibir»';
+    case 'no_recibir.desmarcado':
+      return categoria ? `Quitó «no recibir» de ${categoria}` : 'Quitó una marca de «no recibir»';
+    case 'umbral.fijado':
+      return categoria ? `Fijó el umbral de ${categoria}` : 'Fijó un umbral';
+    case 'umbral.quitado':
+      return categoria ? `Quitó el umbral de ${categoria}` : 'Quitó un umbral';
+    case 'donador.registrado':
+      return 'Se registró como Donador';
+    case 'donador.confirmado':
+      return 'Confirmó su cuenta de Donador';
+    case 'donador.correo_confirmado':
+      return 'Confirmó su correo';
+    case 'comprobante.preparado': {
+      const folio = texto(despues?.folio);
+      return folio ? `Preparó la donación ${folio}` : 'Preparó una donación';
+    }
+    case 'comprobante.cancelado':
+      return 'Canceló una donación';
+    case 'comprobante.vencido':
+      return 'Una donación preparada venció sin entregarse';
+    case 'comprobante.factura':
+      return 'Adjuntó la foto de la factura';
+    case 'comprobante.factura_borrada':
+      return 'Se borró la foto de una factura al cumplir su plazo';
+    case 'comprobante.recibido':
+      return 'Recibió una donación';
+    case 'comprobante.vinculado':
+      return 'Vinculó entradas a una donación';
+    case 'comprobante.conciliado':
+      return 'Concilió una donación';
+    case 'comprobante.rechazado':
+      return 'Rechazó una donación';
+    case 'comprobante.rechazo_revertido':
+      return 'Revirtió el rechazo de una donación';
     default:
       return r.accion;
   }
 }
+
+const texto = (v: unknown) => (typeof v === 'string' ? v : '');
 
 /** Ícono de la fila según lo que pasó. */
 export function iconoDe(r: RegistroBitacora): string {
@@ -81,6 +154,8 @@ export function iconoDe(r: RegistroBitacora): string {
   if (r.accion.startsWith('canasta.')) return 'shopping_basket';
   if (r.entidad === 'categoria') return 'inventory_2';
   if (r.entidad === 'emergencia') return 'emergency';
+  if (r.entidad === 'comprobante') return 'receipt_long';
+  if (r.entidad === 'movimiento') return 'swap_vert';
   return 'history';
 }
 
