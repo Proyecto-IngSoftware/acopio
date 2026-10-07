@@ -45,6 +45,16 @@ y las notas de [recibir por folio](../03-diseno/stitch/C04-recibir-folio/README.
 | 7 Vincular entradas | ✅ `d6fbdbe` | |
 | 8 Recorrido y cierre del Bloque 3 | ✅ cierre del ciclo | |
 
+La revisión final del ciclo (`0722c82`) dejó cinco arreglos:
+- el contador por acopio de C8 cubre todo el alcance aunque la lista se filtre;
+- si se cae la señal mientras el Operador confirma, lo escrito se queda;
+- «Volver» desde la conciliación conserva el filtro de la bandeja;
+- «Rechazar» deja de ir en rojo;
+- en una línea sin fracciones, «2,5» queda en 2 y no en 25.
+
+Los detalles menores que quedaron para después están en
+[#43](https://github.com/Proyecto-IngSoftware/acopio/issues/43).
+
 ## Restricciones globales
 
 - La maqueta aprobada manda en la estética, con sus diferencias. Sin colores hexadecimales en
