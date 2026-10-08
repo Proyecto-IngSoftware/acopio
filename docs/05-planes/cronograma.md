@@ -52,20 +52,25 @@ semanas 11 a 13 de este cronograma y sus milestones.
 | Planning del Sprint 2 el lunes 12, con las historias del sprint en el tablero | [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47) |
 | API de la etapa 2 del motor: remisiones con QR, despacho, recepción en zona, reportes de necesidad, capa de zonas, vínculo folio-remisión y simulador | [#46](https://github.com/Proyecto-IngSoftware/acopio/issues/46) |
 | Contrato OpenAPI sin arreglos en los campos nullable, antes de la interfaz del motor | [#38](https://github.com/Proyecto-IngSoftware/acopio/issues/38) |
-| Decisión del proveedor del VPS, el dominio y el remitente de correo | [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26) |
+| Servidor de pruebas arriba: VPS contratado, Dokploy y subdominio | [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26) |
+| Compose listo para el servidor de pruebas: servicio web, Supabase, contraseña de las cuentas demo por variable | [#53](https://github.com/Proyecto-IngSoftware/acopio/issues/53) |
+| Acopio levantado en un segundo equipo siguiendo solo el README | [#54](https://github.com/Proyecto-IngSoftware/acopio/issues/54) |
+| Escenarios de prueba por rol, escritos desde los criterios de aceptación | [#55](https://github.com/Proyecto-IngSoftware/acopio/issues/55) |
+| Maquetas de C10 y C11 aprobadas | [#56](https://github.com/Proyecto-IngSoftware/acopio/issues/56) |
 
 ### Semana 12 · hasta el domingo 25 de octubre · Sprint 2
 
 | Qué tiene que estar listo | Issue |
 |---|---|
 | Interfaz del motor en sus tres ciclos, con sus recorridos. Bloque 4 cerrado: HU-10a, HU-10b, HU-11, HU-12 y HU-13 | [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35) |
+| Primera ronda de pruebas del equipo en el servidor, con sus hallazgos como issues | [#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58) |
+| Maquetas de P3 y P4 (causas) aprobadas | [#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57) |
 
 ### Semana 13 · hasta el domingo 1 de noviembre · cierre del Sprint 2
 
 | Qué tiene que estar listo | Issue |
 |---|---|
 | Pieza C del Bloque 1: verificación de entidades con documento y causas (HU-02, HU-15) | [#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48) |
-| Servidor de pruebas desplegado con Dokploy, con HTTPS | [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26) |
 | Review del Sprint 2 el viernes 30, historia por historia, y retrospectiva | [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47) |
 
 ### Semana 14 · hasta el domingo 8 de noviembre · Sprint 3
@@ -106,6 +111,31 @@ Desde el lunes 23 no entra funcionalidad nueva.
 | Qué tiene que estar listo | Issue |
 |---|---|
 | Entrega final y sustentación | [#52](https://github.com/Proyecto-IngSoftware/acopio/issues/52) |
+
+## Tareas por integrante
+
+Cada issue está asignado según los roles del Sprint 0
+([github-projects.md §7](../06-operacion/github-projects.md#7-equipo-y-asignaciones)).
+Esta tabla junta las tareas abiertas hasta la semana 13; la fecha es el domingo de esa
+semana.
+
+| Integrante | Tarea | Hasta |
+|---|---|---|
+| Alejandra | Seguimiento del 9 de octubre, capturas y Word en OneDrive [#45](https://github.com/Proyecto-IngSoftware/acopio/issues/45) | 11 oct |
+| Alejandra | Revisión de redacción y formato del documento del curso [#23](https://github.com/Proyecto-IngSoftware/acopio/issues/23) | 11 oct |
+| Alejandra | Planning, seguimientos y cierre del Sprint 2 [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47) | 1 nov |
+| Alejandra | Organizar la primera ronda de pruebas y ordenar los hallazgos [#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58) | 25 oct |
+| Brayan | Escenarios de prueba por rol [#55](https://github.com/Proyecto-IngSoftware/acopio/issues/55) | 18 oct |
+| Brayan | Maquetas de C10 y C11 [#56](https://github.com/Proyecto-IngSoftware/acopio/issues/56) | 18 oct |
+| Brayan | Maquetas de P3 y P4 [#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57) | 25 oct |
+| Brayan | Probar como visitante y Donador en la primera ronda [#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58) | 25 oct |
+| Michael | Servidor de pruebas: VPS, Dokploy y subdominio [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26) | 18 oct |
+| Michael | Levantar Acopio en su equipo con el README [#54](https://github.com/Proyecto-IngSoftware/acopio/issues/54) | 18 oct |
+| Michael | Probar como Operador y Receptor, con el escáner en un teléfono [#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58) | 25 oct |
+| Joseph | API de la etapa 2 del motor [#46](https://github.com/Proyecto-IngSoftware/acopio/issues/46) y contrato [#38](https://github.com/Proyecto-IngSoftware/acopio/issues/38) | 18 oct |
+| Joseph | Compose listo para el servidor de pruebas [#53](https://github.com/Proyecto-IngSoftware/acopio/issues/53) | 18 oct |
+| Joseph | Interfaz del motor [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35) | 25 oct |
+| Joseph | Verificación de entidades y causas [#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48) | 1 nov |
 
 ## Si el calendario aprieta
 

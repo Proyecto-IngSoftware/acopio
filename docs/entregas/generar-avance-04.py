@@ -4,7 +4,8 @@
 El texto sale de avance-04-sprint1.md, desde «## 1. Incremento funcional» hasta el
 final; lo de antes es el tablero de trabajo y no va al Word. Además usa:
   - assets/diagramas/arquitectura-03-*.png y arquitectura-04-*.png  (diagrama de paquetes)
-  - evidencia/avance-04/pruebas-api.txt y contenedores.txt          (Sprint Review)
+  - evidencia/avance-04/consola/*.png                                (capturas de las pruebas;
+    salen de pruebas-api.txt y contenedores.txt con node capturas-consola.mjs)
   - evidencia/avance-04/tablero.png y seguimiento.png, si existen   (capturas del equipo;
     mientras falten, el Word deja un recuadro que dice qué va ahí)
 Usa «Avance 1 - Sprint 0 - Acopio.docx» como plantilla: estilos, márgenes y pie.
@@ -190,28 +191,6 @@ def recuadro(texto):
     doc.add_paragraph().paragraph_format.space_after = Pt(2)
 
 
-def consola(texto, tam=7.5):
-    """Salida de terminal en monoespaciada, en un recuadro gris."""
-    t = doc.add_table(rows=1, cols=1)
-    t.style = "Table Grid"
-    t.alignment = WD_TABLE_ALIGNMENT.CENTER
-    celda = t.cell(0, 0)
-    celda.width = Cm(util(doc.sections[-1])[0])
-    sombrear(celda, "F5F5F4")
-    p = celda.paragraphs[0]
-    p.paragraph_format.space_after = Pt(0)
-    for k, linea in enumerate(texto.rstrip("\n").split("\n")):
-        r = p.add_run(linea)
-        r.font.name = "Consolas"
-        r._element.rPr.rFonts.set(qn("w:hAnsi"), "Consolas")
-        r.font.size = Pt(tam)
-        if linea.startswith("$ ") or linea.startswith("### "):
-            r.bold = True
-        if k < len(texto.rstrip("\n").split("\n")) - 1:
-            r.add_break()
-    doc.add_paragraph().paragraph_format.space_after = Pt(2)
-
-
 # ── Figuras ──────────────────────────────────────────────────────────────────
 n_figura = 0
 
@@ -234,6 +213,10 @@ def figura(ruta, pie, alto_max=None):
     p.paragraph_format.keep_with_next = True
     p.paragraph_format.space_after = Pt(2)
     p.add_run().add_picture(str(ruta), width=Cm(ancho))
+    if not pie:
+        p.paragraph_format.space_after = Pt(10)
+        n_figura -= 1
+        return
     c = doc.add_paragraph()
     c.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r = c.add_run(f"Figura {n_figura}. ")
@@ -398,7 +381,9 @@ parrafo("**Leyenda.** «interfaz» es un puerto: un contrato con más de una imp
         "por configuración o en las pruebas. «controlador» atiende rutas HTTP, «servicio» tiene la "
         "lógica y la transacción y «guard» corre antes de cada petición. La línea continua es una "
         "importación en el código; la punteada es una relación que no es un import, como una llamada "
-        "HTTP o un archivo generado. Las cajas grises son paquetes y las verdes, su contenido.")
+        "HTTP o un archivo generado. Las cajas grises con pestaña son paquetes y las blancas, su "
+        "contenido. En el diagrama de la API, las flechas hacia auditoria e identidad salen del grupo "
+        "de módulos de dominio, porque las importan casi todos.")
 vista = (DOCS / "02-arquitectura" / "vista-general.md").read_text(encoding="utf-8")
 for enc, png, pie in (
     ("### Paquetes del monorepo", "arquitectura-03-paquetes-del-monorepo.png",
@@ -412,7 +397,8 @@ for enc, png, pie in (
     seccion = vista[i:j]
     titulo(enc[4:], 2)
     figura(IMG / png, pie)
-    volcar_md(seccion.split("\n", 1)[1], nivel_base=2)
+    cuerpo_seccion = seccion.split("\n", 1)[1]
+    volcar_md("\n".join(l for l in cuerpo_seccion.split("\n") if not l.startswith("![")), nivel_base=2)
 md2 = parte("## 2. Diagrama de paquetes", "## 3. Registro documental del Sprint")
 volcar_md(md2[md2.index("Corresponde al ADR-001"):])
 
@@ -442,15 +428,13 @@ volcar_md(retro, nivel_base=1)
 # ═════════════════════════════════════════════════════════════════════════════
 salto_pagina()
 titulo("Anexo. Evidencia de las pruebas manuales", 1)
-parrafo("Salida de `scripts/pruebas-manuales.sh` contra la API levantada con Docker Compose. Cada "
-        "bloque muestra la petición con curl, el código HTTP y el cuerpo de la respuesta. La "
-        "contraseña y el token de sesión se reemplazan por asteriscos y por «<token>».")
-consola((EVIDENCIA / "pruebas-api.txt").read_text(encoding="utf-8"))
-titulo("Contenedores y volúmenes", 2)
-parrafo("Salida de `docker ps` y `docker volume ls` el mismo día: los cuatro servicios del Compose "
-        "en estado «healthy» y los volúmenes donde persisten la base y los archivos.")
-consola((EVIDENCIA / "contenedores.txt").read_text(encoding="utf-8"))
-
+parrafo("Salida de `scripts/pruebas-manuales.sh` contra la API levantada con Docker Compose, una "
+        "captura por prueba: la petición con curl, el código HTTP y el cuerpo de la respuesta. La "
+        "contraseña y el token de sesión se reemplazan por asteriscos y por «<token>». La última "
+        "captura muestra los contenedores del Compose en estado «healthy» y los volúmenes donde "
+        "persisten la base y los archivos.")
+for png in sorted((EVIDENCIA / "consola").glob("*.png")):
+    figura(png, "")
 doc.core_properties.title = "Avance de proyecto #4 — Sprint 1"
 doc.core_properties.subject = "Acopio · Ingeniería de Software I · ETITC"
 doc.save(str(SALIDA))

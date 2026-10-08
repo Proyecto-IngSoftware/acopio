@@ -184,6 +184,12 @@ del grafo que mide dependency-cruiser (`bun run --filter @acopio/api depcruise`)
 2026-10-07, no de la tabla de arriba: `motor` todavía no importa `almacenamiento` y
 `acopios` todavía no importa `notificaciones`, aunque la tabla los permite.
 
+Los dos diagramas se dibujan a mano en SVG en
+[diagramas/paquetes.html](diagramas/paquetes.html), que también se publica como página
+para verlos con zoom. Los PNG salen de ahí con `node exportar-paquetes.mjs`. En el de
+la API no se dibujan las flechas hacia `auditoria` e `identidad`, que importan casi
+todos los módulos: una flecha desde el grupo de dominio dice quiénes.
+
 Convenciones de los dos diagramas:
 
 - `«interfaz»` es un puerto: un contrato con más de una implementación, elegida por
@@ -195,55 +201,7 @@ Convenciones de los dos diagramas:
 
 ### Paquetes del monorepo
 
-```mermaid
-flowchart LR
-    subgraph WEB["apps/web · SPA React"]
-        direction TB
-        W1["portal/ · donador/ · acceso/<br/>consola/ · sin-conexion/<br/>«componentes» pantallas por ruta"]
-        W2["sesion/<br/>«interfaz» ClienteAuth"]
-        W3["api/<br/>cliente tipado · esquema.d.ts"]
-        W4["componentes/<br/>piezas de interfaz propias"]
-    end
-
-    subgraph API["apps/api · NestJS"]
-        direction TB
-        A1["src/modulos/<br/>10 módulos de dominio y transversales"]
-        A2["src/comun/ · src/config/"]
-        A3["src/generado/<br/>cliente de Prisma"]
-    end
-
-    subgraph SHARED["packages/shared"]
-        S1["formato · unidades · distancia<br/>motor/: calculo · emparejar · justificar"]
-    end
-
-    subgraph TOKENS["packages/ui-tokens"]
-        T1["tokens de color y tipografía<br/>del tema de Stitch"]
-    end
-
-    subgraph PRISMA["prisma/"]
-        P1["schema.prisma · migrations/"]
-    end
-
-    subgraph INFRA["infra/"]
-        I1["docker-compose.yml<br/>docker-compose.dev.yml"]
-    end
-
-    CONTRATO["docs/03-diseno/api/<br/>openapi.json"]
-
-    W1 --> W2
-    W1 --> W3
-    W1 --> W4
-    WEB --> SHARED
-    WEB --> TOKENS
-    A1 --> A2
-    A1 --> A3
-    API --> SHARED
-    P1 -.->|"genera"| A3
-    API -.->|"exporta"| CONTRATO
-    CONTRATO -.->|"genera los tipos"| W3
-    W3 -.->|"HTTP /api"| API
-    I1 -.->|"construye y levanta"| API
-```
+![Paquetes del monorepo](../assets/diagramas/arquitectura-03-paquetes-del-monorepo.png)
 
 `apps/web` nunca importa código de `apps/api`. Lo que comparten pasa por dos caminos:
 las funciones puras de `packages/shared` y el contrato OpenAPI, del que salen los tipos
@@ -251,67 +209,7 @@ del cliente.
 
 ### Paquetes de la API
 
-```mermaid
-flowchart TB
-    subgraph MOTOR["modulos/motor"]
-        MO1["«controlador» NecesidadController<br/>«servicio» NecesidadService<br/>«servicio» SugerenciasService<br/>«servicio» RemisionesBorradorService"]
-    end
-
-    subgraph COMPROBANTES["modulos/comprobantes"]
-        CO1["«servicio» DonacionesService<br/>«servicio» RecepcionService<br/>«servicio» ConciliacionService<br/>«servicio» SeguimientoService"]
-    end
-
-    subgraph INVENTARIO["modulos/inventario"]
-        IN1["«servicio» MovimientosService<br/>«servicio» ConsultasService<br/>«servicio» UmbralesService<br/>«servicio» NoRecibirService"]
-    end
-
-    subgraph ACOPIOS["modulos/acopios"]
-        AC1["«servicio» AcopiosService<br/>«servicio» ZonasService<br/>«servicio» UbicacionesService<br/>«interfaz» Geocodificador"]
-    end
-
-    subgraph CATALOGO["modulos/catalogo"]
-        CA1["«servicio» CategoriasService<br/>«servicio» CodigosBarrasService<br/>«servicio» EmergenciasService"]
-    end
-
-    subgraph IDENTIDAD["modulos/identidad"]
-        ID1["«guard» AutenticacionGuard<br/>«servicio» AlcanceService<br/>«interfaz» ProveedorIdentidad<br/>ProveedorLocal · ProveedorSupabase"]
-    end
-
-    subgraph TRANSVERSALES["Módulos hoja"]
-        AU1["modulos/auditoria<br/>«servicio» BitacoraService"]
-        NO1["modulos/notificaciones<br/>«servicio» NotificacionService"]
-        AL1["modulos/almacenamiento<br/>«interfaz» Almacen<br/>AlmacenS3 · AlmacenMemoria"]
-        SA1["modulos/salud<br/>«controlador» SaludController"]
-    end
-
-    subgraph COMUN["comun/ · config/ · generado/ (los usan todos)"]
-        CM1["autorizacion/: @Roles · @Publico<br/>errores/: FiltroErrores · ErrorDominio<br/>prisma/: PrismaService<br/>ubicaciones/: «interfaz» VerificadorUbicaciones<br/>config/: entorno validado con Zod"]
-    end
-
-    MOTOR --> COMPROBANTES
-    MOTOR --> INVENTARIO
-    MOTOR --> ACOPIOS
-    MOTOR --> CATALOGO
-    COMPROBANTES --> INVENTARIO
-    COMPROBANTES --> ACOPIOS
-    COMPROBANTES --> AL1
-    COMPROBANTES --> NO1
-    INVENTARIO --> ACOPIOS
-    INVENTARIO --> CATALOGO
-    MOTOR --> IDENTIDAD
-    COMPROBANTES --> IDENTIDAD
-    INVENTARIO --> IDENTIDAD
-    ACOPIOS --> IDENTIDAD
-    IDENTIDAD --> NO1
-    MOTOR --> AU1
-    COMPROBANTES --> AU1
-    INVENTARIO --> AU1
-    ACOPIOS --> AU1
-    CATALOGO --> AU1
-    IDENTIDAD --> AU1
-    ACOPIOS -.->|"implementa"| CM1
-    IDENTIDAD -.->|"usa el puerto"| CM1
-```
+![Paquetes de la API](../assets/diagramas/arquitectura-04-paquetes-de-la-api.png)
 
 Las flechas apuntan hacia abajo: un módulo solo importa a los que están debajo de él.
 Las únicas importaciones hacia `identidad` son a `AlcanceService`, que dice qué acopios

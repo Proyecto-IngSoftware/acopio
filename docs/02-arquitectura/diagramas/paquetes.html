@@ -1,0 +1,334 @@
+<title>Paquetes de Acopio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<style>
+/* Plano técnico: dos láminas a todo el ancho, leyenda arriba, notas debajo de cada una. */
+:root {
+  --bg: #F7F8F7;
+  --fg: #1F2624;
+  --muted: #5B6662;
+  --pkg: #ECEFEE;
+  --pkg-line: #9AA6A2;
+  --inner: #FFFFFF;
+  --accent: #0F6E6E;
+  --accent-soft: #D7ECEC;
+  --sans: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', Consolas, 'Courier New', monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141917; --fg: #E4EAE8; --muted: #9DABA6; --pkg: #1E2523; --pkg-line: #4E5B57;
+    --inner: #262E2C; --accent: #5EC4C4; --accent-soft: #1D3837; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141917; --fg: #E4EAE8; --muted: #9DABA6; --pkg: #1E2523; --pkg-line: #4E5B57;
+  --inner: #262E2C; --accent: #5EC4C4; --accent-soft: #1D3837; color-scheme: dark;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.55; }
+.hoja { max-width: 1240px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 48px; display: grid; gap: 28px; }
+header { display: grid; gap: 6px; max-width: 72ch; }
+.ceja { font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: 0; font-size: 30px; line-height: 1.15; text-wrap: balance; }
+h2 { margin: 0; font-size: 20px; text-wrap: balance; }
+p { margin: 0; max-width: 72ch; }
+code { font-family: var(--mono); font-size: .92em; }
+.leyenda { display: flex; flex-wrap: wrap; gap: 10px 24px; font-size: 13.5px; color: var(--muted); }
+.leyenda span { display: inline-flex; align-items: center; gap: 8px; }
+.leyenda svg { width: 44px; height: 14px; color: var(--fg); }
+figure { margin: 0; display: grid; gap: 12px; }
+.lamina { overflow-x: auto; border: 1px solid var(--pkg-line); border-radius: 6px; background: var(--bg); }
+.lamina svg { display: block; width: 100%; min-width: 900px; height: auto; color: var(--fg); }
+figcaption { display: grid; gap: 8px; }
+figcaption p { color: var(--muted); }
+</style>
+
+<div class="hoja">
+  <header>
+    <span class="ceja">Avance 4 · Diagrama de paquetes</span>
+    <h1>Paquetes de Acopio</h1>
+    <p>Cada caja es una carpeta del repositorio <code>Proyecto-IngSoftware/acopio</code> y lleva su ruta. Adentro van las clases, interfaces y componentes que más pesan en ese paquete, con su nombre en el código. Implementa la arquitectura del ADR-001: cliente y servidor, con la API como monolito modular.</p>
+  </header>
+
+  <div class="leyenda" aria-label="Leyenda">
+    <span><svg viewBox="0 0 44 14" aria-hidden="true"><line x1="2" y1="7" x2="34" y2="7" stroke="currentColor" stroke-width="1.6"/><polygon points="34,2.5 42,7 34,11.5" fill="currentColor"/></svg>importa código de</span>
+    <span><svg viewBox="0 0 44 14" aria-hidden="true"><line x1="2" y1="7" x2="34" y2="7" stroke="currentColor" stroke-width="1.6" stroke-dasharray="5 4"/><polygon points="34,2.5 42,7 34,11.5" fill="currentColor"/></svg>genera, exporta o llama por HTTP</span>
+    <span><svg viewBox="0 0 44 14" aria-hidden="true"><rect x="2" y="1" width="16" height="4" style="fill:var(--pkg);stroke:var(--pkg-line)"/><rect x="2" y="5" width="40" height="8" style="fill:var(--pkg);stroke:var(--pkg-line)"/></svg>paquete (carpeta)</span>
+    <span>«interfaz» puerto con más de una implementación · «servicio» lógica y transacción · «controlador» rutas HTTP · «guard» corre antes de cada petición</span>
+  </div>
+
+  <figure>
+    <h2>1. Paquetes del monorepo</h2>
+    <div class="lamina">
+      <svg viewBox="0 0 1220 560" role="img" aria-label="La web y la API son paquetes separados: comparten código solo por packages/shared y se conectan por HTTP y por el contrato OpenAPI, del que salen los tipos del cliente.">
+        <defs>
+          <marker id="m1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+        </defs>
+
+        <!-- apps/web -->
+        <rect x="30" y="20" width="118" height="22" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="40" y="36" style="font:600 13px var(--mono);fill:currentColor">apps/web</text>
+        <rect x="30" y="42" width="380" height="298" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="400" y="62" text-anchor="end" style="font:13px var(--sans);fill:var(--muted)">SPA · React · Vite</text>
+        <rect x="50" y="74" width="340" height="52" rx="3" style="fill:var(--inner);stroke:var(--pkg-line)"/>
+        <text x="62" y="96" style="font:600 13px var(--mono);fill:currentColor">portal/ · donador/ · acceso/ · consola/</text>
+        <text x="62" y="115" style="font:13px var(--sans);fill:var(--muted)">«componente» una pantalla por ruta</text>
+        <rect x="50" y="140" width="160" height="56" rx="3" style="fill:var(--inner);stroke:var(--pkg-line)"/>
+        <text x="62" y="163" style="font:600 13px var(--mono);fill:currentColor">componentes/</text>
+        <text x="62" y="182" style="font:13px var(--sans);fill:var(--muted)">piezas propias</text>
+        <rect x="230" y="140" width="160" height="56" rx="3" style="fill:var(--inner);stroke:var(--pkg-line)"/>
+        <text x="242" y="163" style="font:600 13px var(--mono);fill:currentColor">sesion/</text>
+        <text x="242" y="182" style="font:13px var(--sans);fill:var(--muted)">«interfaz» ClienteAuth</text>
+        <rect x="50" y="262" width="145" height="56" rx="3" style="fill:var(--inner);stroke:var(--pkg-line)"/>
+        <text x="62" y="285" style="font:600 13px var(--mono);fill:currentColor">sin-conexion/</text>
+        <text x="62" y="304" style="font:13px var(--sans);fill:var(--muted)">service worker</text>
+        <rect x="210" y="262" width="180" height="56" rx="3" style="fill:var(--accent-soft);stroke:var(--accent)"/>
+        <text x="222" y="285" style="font:600 13px var(--mono);fill:currentColor">api/</text>
+        <text x="222" y="304" style="font:13px var(--sans);fill:var(--muted)">cliente · esquema.d.ts</text>
+
+        <!-- contrato -->
+        <rect x="500" y="70" width="200" height="62" rx="3" style="fill:var(--inner);stroke:var(--accent)"/>
+        <text x="600" y="95" text-anchor="middle" style="font:13px var(--mono);fill:var(--muted)">docs/03-diseno/api/</text>
+        <text x="600" y="116" text-anchor="middle" style="font:600 14px var(--mono);fill:currentColor">openapi.json</text>
+
+        <!-- apps/api -->
+        <rect x="790" y="20" width="118" height="22" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="800" y="36" style="font:600 13px var(--mono);fill:currentColor">apps/api</text>
+        <rect x="790" y="42" width="380" height="298" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="1160" y="62" text-anchor="end" style="font:13px var(--sans);fill:var(--muted)">NestJS · monolito modular</text>
+        <rect x="810" y="74" width="340" height="52" rx="3" style="fill:var(--inner);stroke:var(--pkg-line)"/>
+        <text x="822" y="96" style="font:600 13px var(--mono);fill:currentColor">src/modulos/</text>
+        <text x="822" y="115" style="font:13px var(--sans);fill:var(--muted)">10 módulos: ver el diagrama 2</text>
+        <rect x="810" y="140" width="340" height="56" rx="3" style="fill:var(--inner);stroke:var(--pkg-line)"/>
+        <text x="822" y="163" style="font:600 13px var(--mono);fill:currentColor">src/comun/ · src/config/</text>
+        <text x="822" y="182" style="font:13px var(--sans);fill:var(--muted)">autorización, errores, PrismaService</text>
+        <rect x="960" y="262" width="190" height="56" rx="3" style="fill:var(--inner);stroke:var(--pkg-line)"/>
+        <text x="972" y="285" style="font:600 13px var(--mono);fill:currentColor">src/generado/</text>
+        <text x="972" y="304" style="font:13px var(--sans);fill:var(--muted)">cliente de Prisma</text>
+
+        <!-- paquetes de abajo -->
+        <rect x="30" y="400" width="172" height="22" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="40" y="416" style="font:600 13px var(--mono);fill:currentColor">packages/ui-tokens</text>
+        <rect x="30" y="422" width="240" height="96" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="44" y="452" style="font:13px var(--sans);fill:currentColor">colores y tipografía</text>
+        <text x="44" y="472" style="font:13px var(--sans);fill:currentColor">del tema de Stitch</text>
+        <text x="44" y="502" style="font:12px var(--sans);fill:var(--muted)">único lugar con colores</text>
+
+        <rect x="300" y="400" width="146" height="22" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="310" y="416" style="font:600 13px var(--mono);fill:currentColor">packages/shared</text>
+        <rect x="300" y="422" width="460" height="96" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="314" y="452" style="font:13px var(--mono);fill:currentColor">formato · unidades · distancia · horario</text>
+        <text x="314" y="474" style="font:13px var(--mono);fill:currentColor">motor/: calculo · emparejar · justificar</text>
+        <text x="314" y="502" style="font:12px var(--sans);fill:var(--muted)">funciones puras que usan la web y la API</text>
+
+        <rect x="790" y="400" width="74" height="22" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="800" y="416" style="font:600 13px var(--mono);fill:currentColor">prisma/</text>
+        <rect x="790" y="422" width="220" height="96" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="804" y="452" style="font:13px var(--mono);fill:currentColor">schema.prisma</text>
+        <text x="804" y="474" style="font:13px var(--mono);fill:currentColor">migrations/</text>
+
+        <rect x="1030" y="400" width="66" height="22" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="1040" y="416" style="font:600 13px var(--mono);fill:currentColor">infra/</text>
+        <rect x="1030" y="422" width="160" height="96" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="1044" y="452" style="font:13px var(--sans);fill:currentColor">Docker Compose</text>
+        <text x="1044" y="474" style="font:13px var(--sans);fill:currentColor">base y desarrollo</text>
+
+        <!-- flechas -->
+        <g style="stroke:currentColor;fill:none" stroke-width="1.6">
+          <line x1="790" y1="101" x2="704" y2="101" stroke-dasharray="6 4" marker-end="url(#m1)"/>
+          <polyline points="500,120 452,120 452,280 393,280" stroke-dasharray="6 4" marker-end="url(#m1)"/>
+          <line x1="390" y1="304" x2="788" y2="304" stroke-dasharray="6 4" marker-end="url(#m1)"/>
+          <line x1="120" y1="340" x2="120" y2="397" marker-end="url(#m1)"/>
+          <line x1="330" y1="340" x2="380" y2="397" marker-end="url(#m1)"/>
+          <line x1="830" y1="340" x2="740" y2="419" marker-end="url(#m1)"/>
+          <line x1="990" y1="420" x2="990" y2="321" stroke-dasharray="6 4" marker-end="url(#m1)"/>
+          <line x1="1165" y1="420" x2="1165" y2="343" stroke-dasharray="6 4" marker-end="url(#m1)"/>
+        </g>
+        <g style="font:12.5px var(--sans);fill:currentColor">
+          <text x="747" y="92" text-anchor="middle">exporta</text>
+          <text x="460" y="200">genera</text>
+          <text x="460" y="216">los tipos</text>
+          <text x="598" y="296" text-anchor="middle">HTTP /api · cookie de sesión</text>
+          <text x="128" y="374">usa</text>
+          <text x="362" y="366">importa</text>
+          <text x="780" y="378" text-anchor="end">importa</text>
+          <text x="998" y="374">genera</text>
+          <text x="1157" y="366" text-anchor="end">construye</text>
+          <text x="1157" y="382" text-anchor="end">y levanta</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>
+      <p>La web nunca importa código de la API. Comparten dos cosas: las funciones puras de <code>packages/shared</code> y el contrato <code>openapi.json</code>, que la API exporta y del que salen los tipos del cliente de la web. En ejecución, la web le habla a la API solo por HTTP en <code>/api</code>.</p>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <h2>2. Paquetes de la API</h2>
+    <div class="lamina">
+      <svg viewBox="0 0 1200 900" role="img" aria-label="Los módulos de dominio de la API se apilan en capas: motor arriba, luego comprobantes e inventario, luego acopios y catálogo. Todos importan hacia abajo; ningún módulo de abajo importa a uno de arriba.">
+        <defs>
+          <marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+        </defs>
+
+        <!-- grupo de dominio -->
+        <rect x="15" y="8" width="1170" height="572" rx="8" style="fill:none;stroke:var(--pkg-line)" stroke-dasharray="8 6"/>
+        <text x="1170" y="32" text-anchor="end" style="font:600 13px var(--sans);fill:var(--muted)">módulos de dominio · apps/api/src/modulos/</text>
+
+        <!-- motor -->
+        <rect x="430" y="30" width="138" height="20" style="fill:var(--accent-soft);stroke:var(--accent)"/>
+        <text x="440" y="45" style="font:600 12.5px var(--mono);fill:currentColor">modulos/motor</text>
+        <rect x="430" y="50" width="340" height="120" style="fill:var(--pkg);stroke:var(--accent)"/>
+        <g style="font:13px var(--sans);fill:currentColor">
+          <text x="444" y="75"><tspan style="fill:var(--muted)">«controlador» </tspan>NecesidadController</text>
+          <text x="444" y="96"><tspan style="fill:var(--muted)">«controlador» </tspan>SugerenciasController</text>
+          <text x="444" y="117"><tspan style="fill:var(--muted)">«servicio» </tspan>NecesidadService · SugerenciasService</text>
+          <text x="444" y="138"><tspan style="fill:var(--muted)">«servicio» </tspan>RemisionesBorradorService</text>
+          <text x="444" y="159" style="font:12px var(--sans);fill:var(--muted)">fórmulas en packages/shared/motor</text>
+        </g>
+
+        <!-- comprobantes -->
+        <rect x="40" y="230" width="176" height="20" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="50" y="245" style="font:600 12.5px var(--mono);fill:currentColor">modulos/comprobantes</text>
+        <rect x="40" y="250" width="340" height="120" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <g style="font:13px var(--sans);fill:currentColor">
+          <text x="54" y="275"><tspan style="fill:var(--muted)">«servicio» </tspan>DonacionesService</text>
+          <text x="54" y="296"><tspan style="fill:var(--muted)">«servicio» </tspan>RecepcionService</text>
+          <text x="54" y="317"><tspan style="fill:var(--muted)">«servicio» </tspan>ConciliacionService</text>
+          <text x="54" y="338"><tspan style="fill:var(--muted)">«servicio» </tspan>SeguimientoService</text>
+          <text x="54" y="359" style="font:12px var(--sans);fill:var(--muted)">donación con folio y su custodia</text>
+        </g>
+
+        <!-- inventario -->
+        <rect x="680" y="230" width="154" height="20" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="690" y="245" style="font:600 12.5px var(--mono);fill:currentColor">modulos/inventario</text>
+        <rect x="680" y="250" width="320" height="120" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <g style="font:13px var(--sans);fill:currentColor">
+          <text x="694" y="275"><tspan style="fill:var(--muted)">«servicio» </tspan>MovimientosService</text>
+          <text x="694" y="296"><tspan style="fill:var(--muted)">«servicio» </tspan>ConsultasService</text>
+          <text x="694" y="317"><tspan style="fill:var(--muted)">«servicio» </tspan>UmbralesService</text>
+          <text x="694" y="338"><tspan style="fill:var(--muted)">«servicio» </tspan>NoRecibirService</text>
+          <text x="694" y="359" style="font:12px var(--sans);fill:var(--muted)">el saldo sale de los movimientos</text>
+        </g>
+
+        <!-- acopios -->
+        <rect x="430" y="430" width="140" height="20" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="440" y="445" style="font:600 12.5px var(--mono);fill:currentColor">modulos/acopios</text>
+        <rect x="430" y="450" width="340" height="120" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <g style="font:13px var(--sans);fill:currentColor">
+          <text x="444" y="475"><tspan style="fill:var(--muted)">«servicio» </tspan>AcopiosService · ZonasService</text>
+          <text x="444" y="496"><tspan style="fill:var(--muted)">«servicio» </tspan>EntidadesService</text>
+          <text x="444" y="517"><tspan style="fill:var(--muted)">«servicio» </tspan>UbicacionesService</text>
+          <text x="444" y="538"><tspan style="fill:var(--muted)">«interfaz» </tspan>Geocodificador</text>
+          <text x="444" y="559" style="font:12px var(--sans);fill:var(--muted)">implementa VerificadorUbicaciones</text>
+        </g>
+
+        <!-- catalogo -->
+        <rect x="860" y="430" width="146" height="20" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="870" y="445" style="font:600 12.5px var(--mono);fill:currentColor">modulos/catalogo</text>
+        <rect x="860" y="450" width="300" height="120" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <g style="font:13px var(--sans);fill:currentColor">
+          <text x="874" y="475"><tspan style="fill:var(--muted)">«servicio» </tspan>CategoriasService</text>
+          <text x="874" y="496"><tspan style="fill:var(--muted)">«servicio» </tspan>CodigosBarrasService</text>
+          <text x="874" y="517"><tspan style="fill:var(--muted)">«servicio» </tspan>EmergenciasService</text>
+          <text x="874" y="538"><tspan style="fill:var(--muted)">«servicio» </tspan>CanastaService</text>
+        </g>
+
+        <!-- flechas entre módulos de dominio -->
+        <g style="stroke:currentColor;fill:none" stroke-width="1.6">
+          <line x1="470" y1="170" x2="300" y2="248" marker-end="url(#m2)"/>
+          <line x1="730" y1="170" x2="900" y2="248" marker-end="url(#m2)"/>
+          <line x1="620" y1="170" x2="620" y2="448" marker-end="url(#m2)"/>
+          <polyline points="770,90 1110,90 1110,448" marker-end="url(#m2)"/>
+          <line x1="380" y1="310" x2="678" y2="310" marker-end="url(#m2)"/>
+          <line x1="380" y1="355" x2="428" y2="500" marker-end="url(#m2)"/>
+          <line x1="720" y1="370" x2="720" y2="448" marker-end="url(#m2)"/>
+          <line x1="940" y1="370" x2="940" y2="428" marker-end="url(#m2)"/>
+        </g>
+
+        <!-- capa de abajo: módulos hoja y transversales -->
+        <text x="1170" y="765" text-anchor="end" style="font:600 13px var(--sans);fill:var(--muted)">módulos transversales y hoja</text>
+
+        <rect x="30" y="625" width="196" height="20" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="40" y="640" style="font:600 12.5px var(--mono);fill:currentColor">modulos/almacenamiento</text>
+        <rect x="30" y="645" width="200" height="100" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <g style="font:13px var(--sans);fill:currentColor">
+          <text x="44" y="670"><tspan style="fill:var(--muted)">«interfaz» </tspan>Almacen</text>
+          <text x="44" y="691">AlmacenS3</text>
+          <text x="44" y="712">AlmacenMemoria</text>
+          <text x="44" y="733" style="font:12px var(--sans);fill:var(--muted)">archivos en Garage</text>
+        </g>
+
+        <rect x="250" y="625" width="196" height="20" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="260" y="640" style="font:600 12.5px var(--mono);fill:currentColor">modulos/notificaciones</text>
+        <rect x="250" y="645" width="200" height="100" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <g style="font:13px var(--sans);fill:currentColor">
+          <text x="264" y="670">NotificacionService</text>
+          <text x="264" y="691" style="font:12px var(--sans);fill:var(--muted)">cola correo_saliente,</text>
+          <text x="264" y="709" style="font:12px var(--sans);fill:var(--muted)">envío cada minuto</text>
+        </g>
+
+        <rect x="500" y="625" width="154" height="20" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="510" y="640" style="font:600 12.5px var(--mono);fill:currentColor">modulos/identidad</text>
+        <rect x="500" y="645" width="240" height="100" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <g style="font:13px var(--sans);fill:currentColor">
+          <text x="514" y="670"><tspan style="fill:var(--muted)">«guard» </tspan>AutenticacionGuard</text>
+          <text x="514" y="691"><tspan style="fill:var(--muted)">«servicio» </tspan>AlcanceService</text>
+          <text x="514" y="712"><tspan style="fill:var(--muted)">«interfaz» </tspan>ProveedorIdentidad</text>
+          <text x="514" y="733" style="font:12px var(--sans);fill:var(--muted)">ProveedorLocal · ProveedorSupabase</text>
+        </g>
+
+        <rect x="760" y="625" width="154" height="20" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="770" y="640" style="font:600 12.5px var(--mono);fill:currentColor">modulos/auditoria</text>
+        <rect x="760" y="645" width="212" height="100" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <g style="font:13px var(--sans);fill:currentColor">
+          <text x="774" y="670"><tspan style="fill:var(--muted)">«servicio» </tspan>BitacoraService</text>
+          <text x="774" y="691" style="font:12.5px var(--sans)"><tspan style="fill:var(--muted)">«controlador» </tspan>BitacoraController</text>
+          <text x="774" y="712" style="font:12px var(--sans);fill:var(--muted)">antes y después de cada</text>
+          <text x="774" y="730" style="font:12px var(--sans);fill:var(--muted)">cambio, en su transacción</text>
+        </g>
+
+        <rect x="990" y="625" width="126" height="20" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="1000" y="640" style="font:600 12.5px var(--mono);fill:currentColor">modulos/salud</text>
+        <rect x="990" y="645" width="180" height="100" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <g style="font:13px var(--sans);fill:currentColor">
+          <text x="1004" y="670" style="fill:var(--muted)">«controlador»</text>
+          <text x="1004" y="691">SaludController</text>
+          <text x="1004" y="714" style="font:12.5px var(--mono);fill:currentColor">GET /api/salud</text>
+        </g>
+
+        <!-- flechas hacia la capa de abajo -->
+        <g style="stroke:currentColor;fill:none" stroke-width="1.6">
+          <line x1="135" y1="370" x2="135" y2="622" marker-end="url(#m2)"/>
+          <line x1="345" y1="370" x2="345" y2="622" marker-end="url(#m2)"/>
+          <line x1="560" y1="580" x2="560" y2="622" marker-end="url(#m2)"/>
+          <line x1="860" y1="580" x2="860" y2="622" marker-end="url(#m2)"/>
+          <line x1="500" y1="725" x2="453" y2="725" marker-end="url(#m2)"/>
+        </g>
+        <g style="font:12.5px var(--sans);fill:currentColor">
+          <text x="568" y="604">AlcanceService: todos menos catalogo</text>
+          <text x="868" y="604">BitacoraService: todos</text>
+          <text x="476" y="716" text-anchor="middle">correo</text>
+        </g>
+
+        <!-- comun -->
+        <rect x="30" y="785" width="232" height="20" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="40" y="800" style="font:600 12.5px var(--mono);fill:currentColor">comun/ · config/ · generado/</text>
+        <rect x="30" y="805" width="1140" height="80" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="1160" y="800" text-anchor="end" style="font:13px var(--sans);fill:var(--muted)">los importan todos los módulos; sin flechas para no tapar el resto</text>
+        <g style="font:13px var(--sans);fill:currentColor">
+          <text x="46" y="833"><tspan style="font:600 12.5px var(--mono)">autorizacion/ </tspan>@Roles · @Publico</text>
+          <text x="46" y="858"><tspan style="font:600 12.5px var(--mono)">errores/ </tspan>FiltroErrores · ErrorDominio</text>
+          <text x="420" y="833"><tspan style="font:600 12.5px var(--mono)">prisma/ </tspan>PrismaService</text>
+          <text x="420" y="858"><tspan style="font:600 12.5px var(--mono)">ubicaciones/ </tspan>«interfaz» VerificadorUbicaciones</text>
+          <text x="820" y="833"><tspan style="font:600 12.5px var(--mono)">config/ </tspan>entorno validado con Zod</text>
+          <text x="820" y="858"><tspan style="font:600 12.5px var(--mono)">generado/ </tspan>cliente de Prisma</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>
+      <p>Las flechas son las importaciones reales entre módulos, medidas con dependency-cruiser el 7 de octubre de 2026; el CI rechaza cualquier importación que no esté permitida. Todas bajan: el motor depende de comprobantes, inventario, acopios y catálogo, y ningún módulo de abajo importa a uno de arriba.</p>
+      <p><code>identidad</code> no importa <code>acopios</code>: valida las ubicaciones de una asignación con la interfaz <code>VerificadorUbicaciones</code> de <code>comun/</code>, que <code>acopios</code> implementa. Así no se forma un ciclo entre los dos.</p>
+    </figcaption>
+  </figure>
+</div>

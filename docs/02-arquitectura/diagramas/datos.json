@@ -212,18 +212,6 @@
    "bajada": "Qué corre dentro del VPS, cómo se enrutan las peticiones y qué módulos tiene la API.",
    "png": "arquitectura-02-contenedores.png",
    "md": "**Cómo leer el diagrama.** El navegador descarga la SPA desde `web` y habla con\nla API por HTTPS a través de Traefik; solo va directo a Supabase para iniciar\nsesión y a OpenStreetMap por los mosaicos del mapa. La API es un único proceso con\nonce módulos —ocho de dominio y tres transversales— y sus tareas programadas; es la\núnica pieza que toca la base de datos, los archivos y los servicios externos: el\nservidor SMTP para el correo, Nominatim para buscar direcciones y RedAcopio para\nimportar puntos referenciados. Supabase usa el mismo servidor SMTP para sus correos.\n\n**El almacenamiento nunca se expone.** Es Garage, compatible con S3\n([ADR-0012](adr/ADR-0012-almacenamiento-garage.md)); la API le habla por la API de\nS3, así que cambiar de servidor es configuración. Todo archivo pasa por la API: la\nfoto de la factura la entrega la propia API, que revisa el permiso y lee el objeto de\nGarage ([ADR-0017](adr/ADR-0017-factura-servida-por-la-api.md)). Hasta que ese cambio\nentre (#26), la API devuelve URL firmadas de cinco minutos, y en desarrollo las firma\ncon `S3_URL_PUBLICA` (`http://localhost:3900`) para que el navegador las abra.\n\n**Lo que corre hoy.** Mientras el desarrollo es local (P-032), todo se levanta con\nDocker Compose: `db`, `storage` (Garage), `mailpit` para ver los correos y la `api`.\nLa web corre con Vite y todavía no tiene servicio en el Compose. El inicio de sesión\nusa el adaptador `local` de `ProveedorIdentidad` (P-025); Supabase Auth entra con el\nprimer despliegue.\n\n**El `proxy: nginx` de antes lo reemplaza Traefik.** Dokploy lo trae incluido:\nmismas reglas de enrutamiento (`/` a `web`, `/api` y `/files` a `api`), y encima\nresuelve el certificado HTTPS sin configurarlo a mano. Detalle completo en\n[despliegue.md](../06-operacion/despliegue.md#producción--vps-con-dokploy)."
-  },
-  {
-   "titulo": "Paquetes del monorepo",
-   "bajada": "Las carpetas de primer nivel y cómo se relacionan la web, la API y los paquetes compartidos.",
-   "png": "arquitectura-03-paquetes-del-monorepo.png",
-   "md": "`apps/web` nunca importa código de `apps/api`. Lo que comparten pasa por dos caminos:\nlas funciones puras de `packages/shared` y el contrato OpenAPI, del que salen los tipos\ndel cliente."
-  },
-  {
-   "titulo": "Paquetes de la API",
-   "bajada": "Los módulos de apps/api/src y sus importaciones reales, medidas con dependency-cruiser.",
-   "png": "arquitectura-04-paquetes-de-la-api.png",
-   "md": "Las flechas apuntan hacia abajo: un módulo solo importa a los que están debajo de él.\nLas únicas importaciones hacia `identidad` son a `AlcanceService`, que dice qué acopios\ny zonas puede tocar el usuario de la petición. `identidad` no importa `acopios`: valida\nlas ubicaciones de una asignación con el puerto `VerificadorUbicaciones` de `comun/`,\nque `acopios` implementa. Las cuatro hojas no importan ningún módulo de dominio, y por\neso no pueden cerrar un ciclo. No se dibujan las flechas hacia `comun/`, `config/` y\n`generado/`, porque las tienen todos los módulos. Tampoco `motor → packages/shared`,\nque está en la vista del monorepo."
   }
  ]
 }

@@ -1,0 +1,58 @@
+name: Hallazgo de prueba
+description: Algo que falla, confunde o falta al probar Acopio en el servidor de pruebas
+title: 'Hallazgo · '
+labels: [hallazgo]
+body:
+  - type: dropdown
+    id: rol
+    attributes:
+      label: ¿Con qué cuenta probaste?
+      options:
+        - Sin sesión (portal público)
+        - Donador
+        - Operador
+        - Auditor
+        - Receptor
+        - Administrador
+    validations:
+      required: true
+  - type: input
+    id: pantalla
+    attributes:
+      label: ¿En qué pantalla o dirección?
+      placeholder: 'Ejemplo: /consola/inventario'
+    validations:
+      required: true
+  - type: textarea
+    id: pasos
+    attributes:
+      label: ¿Qué hiciste?
+      description: Los pasos, en orden, para que otra persona lo repita.
+      placeholder: |
+        1. Entré como operador1
+        2. Abrí Entrada rápida
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: ¿Qué esperabas y qué pasó?
+    validations:
+      required: true
+  - type: dropdown
+    id: tipo
+    attributes:
+      label: Tipo
+      options:
+        - Error (algo no funciona)
+        - Confuso (funciona, pero no se entiende)
+        - Falta algo
+        - Idea o mejora
+    validations:
+      required: true
+  - type: textarea
+    id: evidencia
+    attributes:
+      label: Captura o video
+      description: Arrastra aquí la imagen. Incluye el teléfono o navegador si importa.
