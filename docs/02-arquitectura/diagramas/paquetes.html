@@ -2,7 +2,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
 <style>
-/* Plano técnico: dos láminas a todo el ancho, leyenda arriba, notas debajo de cada una. */
+/* Plano técnico en tema claro fijo, como el Word: dos láminas a todo el ancho, leyenda arriba. */
 :root {
   --bg: #F7F8F7;
   --fg: #1F2624;
@@ -14,16 +14,7 @@
   --accent-soft: #D7ECEC;
   --sans: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
   --mono: 'IBM Plex Mono', Consolas, 'Courier New', monospace;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #141917; --fg: #E4EAE8; --muted: #9DABA6; --pkg: #1E2523; --pkg-line: #4E5B57;
-    --inner: #262E2C; --accent: #5EC4C4; --accent-soft: #1D3837; color-scheme: dark;
-  }
-}
-:root[data-theme="dark"] {
-  --bg: #141917; --fg: #E4EAE8; --muted: #9DABA6; --pkg: #1E2523; --pkg-line: #4E5B57;
-  --inner: #262E2C; --accent: #5EC4C4; --accent-soft: #1D3837; color-scheme: dark;
+  color-scheme: light;
 }
 body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.55; }
 .hoja { max-width: 1240px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 48px; display: grid; gap: 28px; }

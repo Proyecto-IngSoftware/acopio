@@ -47,17 +47,17 @@ const pintar = (l) => {
 
 const html = (b) => `<!doctype html><meta charset="utf-8">
 <style>
-  body{margin:0;background:#fff;font-family:'JetBrains Mono',Consolas,monospace}
-  .ventana{width:860px;margin:16px;border-radius:10px;overflow:hidden;background:#1C1917;box-shadow:0 2px 10px rgba(0,0,0,.25)}
-  .barra{display:flex;align-items:center;gap:7px;padding:9px 14px;background:#292524;color:#D6D3D1;font:600 13px Inter,Arial,sans-serif}
-  .barra i{width:11px;height:11px;border-radius:50%;display:inline-block}
+  body{margin:0;background:#fff;font-family:'IBM Plex Mono',Consolas,monospace}
+  .ventana{width:860px;margin:16px;border-radius:8px;overflow:hidden;background:#F7F8F7;border:1px solid #9AA6A2}
+  .barra{display:flex;align-items:center;gap:7px;padding:9px 14px;background:#ECEFEE;border-bottom:1px solid #9AA6A2;color:#1F2624;font:600 13px 'IBM Plex Sans',Arial,sans-serif}
+  .barra i{width:11px;height:11px;border-radius:50%;display:inline-block;background:#C9D1CE}
   .barra span{margin-left:10px}
-  pre{margin:0;padding:14px 18px;color:#E7E5E4;font-size:13px;line-height:1.5;white-space:pre-wrap;word-break:break-all}
-  .pr{color:#5EEAD4}.cmd{color:#FDE68A}.ok{color:#86EFAC;font-weight:700}.err{color:#FCA5A5;font-weight:700}
-  .hdr{color:#93C5FD}.key{color:#93C5FD}.str{color:#FDBA74}
+  pre{margin:0;padding:14px 18px;color:#1F2624;font-size:13px;line-height:1.5;white-space:pre-wrap;word-break:break-all}
+  .pr{color:#0F6E6E;font-weight:600}.cmd{color:#1F2624;font-weight:600}.ok{color:#15803D;font-weight:700}.err{color:#B42318;font-weight:700}
+  .hdr{color:#0F6E6E}.key{color:#0F6E6E}.str{color:#7A4A12}
 </style>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@600&family=JetBrains+Mono&display=block">
-<div class="ventana"><div class="barra"><i style="background:#F87171"></i><i style="background:#FBBF24"></i><i style="background:#4ADE80"></i><span>${esc(b.titulo)}</span></div>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@600&family=IBM+Plex+Mono&display=block">
+<div class="ventana"><div class="barra"><i></i><i></i><i></i><span>${esc(b.titulo)}</span></div>
 <pre>${b.lineas.map(pintar).join('\n')}</pre></div>`;
 
 const navegador = await chromium.launch();
