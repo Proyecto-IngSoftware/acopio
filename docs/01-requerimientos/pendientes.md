@@ -834,6 +834,21 @@ calidad, pruebas y despliegue. Los responsables del Sprint 1 y del borrador del 
 siguen esos roles.
 **Por qué:** decisión de Joseph del 2026-10-07.
 **Estado:** DECIDIDO. Se vuelve a revisar en el Planning del Sprint 3
+
+### P-049 · Cerrar el Avance 4 después de la reunión del 9 de octubre
+**Fecha:** 2026-10-07 · **Propuesto por:** Joseph
+**Qué:** el Word del Avance 4 está revisado y aprobado por Joseph. Falta lo que sale de
+la reunión del viernes 9 de octubre, al terminar la clase virtual de las 6:30 p. m.:
+la captura de la reunión (`docs/entregas/evidencia/avance-04/seguimiento.png`), las
+filas de Brayan, Alejandra y Michael en la tabla del seguimiento y la retrospectiva
+confirmada por el equipo. Con eso se regeneran los Word (`generar-avance-04.py` y
+`unificar-avances.py`), se actualiza el índice en Word y se pasa al documento de
+OneDrive antes del domingo 11. Si en la clase llega la consigna del Sprint 2, se
+ajustan también el calendario, el cronograma, los milestones de las semanas 11 a 13
+y el borrador de [avance-05-sprint2.md](../entregas/avance-05-sprint2.md).
+**Por qué:** la guía pide la evidencia de un seguimiento del equipo y la
+retrospectiva hecha por el equipo; ninguna de las dos se puede escribir sin la reunión.
+**Estado:** ABIERTO. Issue [#45](https://github.com/Proyecto-IngSoftware/acopio/issues/45)
 ---
 
 ## Resueltos
