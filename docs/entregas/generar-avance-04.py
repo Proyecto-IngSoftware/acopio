@@ -4,8 +4,8 @@
 El texto sale de avance-04-sprint1.md, desde «## 1. Incremento funcional» hasta el
 final; lo de antes es el tablero de trabajo y no va al Word. Además usa:
   - assets/diagramas/arquitectura-03-*.png y arquitectura-04-*.png  (diagrama de paquetes)
-  - evidencia/avance-04/consola/*.png                                (capturas de las pruebas;
-    salen de pruebas-api.txt y contenedores.txt con node capturas-consola.mjs)
+  - evidencia/avance-04/pruebas-api.txt y contenedores.txt         (pruebas manuales: tabla resumen
+    en la sección 3c y una ficha por prueba en el anexo)
   - evidencia/avance-04/tablero.png y seguimiento.png, si existen   (capturas del equipo;
     mientras falten, el Word deja un recuadro que dice qué va ahí)
 Usa «Avance 1 - Sprint 0 - Acopio.docx» como plantilla: estilos, márgenes y pie.
@@ -334,6 +334,111 @@ def volcar_md(md, nivel_base=1):
             tabla(filas, anchos_para(filas), centradas)
 
 
+# ── Pruebas manuales: salida de scripts/pruebas-manuales.sh → tablas ─────────
+ESPERADO = {1: 200, 2: 401, 3: 200, 4: 200, 5: 201, 6: 200, 7: 200, 8: 400, 9: 204, 10: 404, 11: 404}
+RAZON = {200: "OK", 201: "Created", 204: "No Content", 400: "Bad Request", 401: "Unauthorized", 404: "Not Found"}
+
+
+def leer_pruebas():
+    """Cada bloque «### N. Título» de pruebas-api.txt, con su petición y su respuesta."""
+    texto = (EVIDENCIA / "pruebas-api.txt").read_text(encoding="utf-8")
+    pruebas = []
+    for bloque in re.split(r"\n(?=### )", texto):
+        if not bloque.startswith("### "):
+            continue
+        lineas = bloque.strip().split("\n")
+        m = re.match(r"### (\d+)\. (.+)", lineas[0])
+        num, titulo = int(m.group(1)), m.group(2)
+        cmd = next(l[2:] for l in lineas if l.startswith("$ "))
+        metodo, url = re.match(r"curl -X (\w+) (\S+)", cmd).groups()
+        ruta = re.sub(r"^https?://[^/]+", "", url)
+        enviado = re.search(r"-d '(.+)'$", cmd)
+        token = "Authorization: Bearer" in cmd
+        i_http = next(i for i, l in enumerate(lineas) if l.startswith("HTTP"))
+        codigo = int(re.search(r"\b(\d{3})\b", lineas[i_http]).group(1))
+        resto = lineas[i_http + 1:]
+        cookie = next((l for l in resto if l.lower().startswith("set-cookie")), None)
+        cuerpo = "\n".join(l for l in resto if not l.lower().startswith("set-cookie")).strip()
+        pruebas.append(dict(num=num, titulo=titulo, metodo=metodo, ruta=ruta, token=token,
+                            enviado=enviado.group(1) if enviado else None, codigo=codigo,
+                            cookie=cookie, cuerpo=cuerpo if cuerpo and cuerpo != "(sin cuerpo)" else None))
+    return pruebas
+
+
+def texto_celda(celda, texto, mono=False, tam=8, negrita=False, color=None):
+    p = celda.paragraphs[0]
+    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    p.paragraph_format.space_after = Pt(1)
+    lineas = texto.split("\n")
+    for k, linea in enumerate(lineas):
+        r = p.add_run(linea)
+        r.font.size = Pt(tam)
+        r.bold = negrita
+        if color is not None:
+            r.font.color.rgb = color
+        if mono:
+            r.font.name = "Consolas"
+            r._element.rPr.rFonts.set(qn("w:hAnsi"), "Consolas")
+        if k < len(lineas) - 1:
+            r.add_break()
+
+
+def no_partir(t):
+    for fila in t.rows:
+        partir = OxmlElement("w:cantSplit")
+        partir.set(qn("w:val"), "true")
+        fila._tr.get_or_add_trPr().append(partir)
+
+
+def ficha(prueba):
+    """Una prueba en una tabla de dos columnas con el encabezado del documento."""
+    filas = [("Petición", f"{prueba['metodo']} {prueba['ruta']}", True)]
+    if prueba["token"]:
+        filas.append(("Sesión", "Authorization: Bearer <token>", True))
+    if prueba["enviado"]:
+        filas.append(("Envía", prueba["enviado"], True))
+    filas.append(("Respuesta", f"{prueba['codigo']} {RAZON.get(prueba['codigo'], '')}".strip(), True))
+    if prueba["cookie"]:
+        filas.append(("Cookie", prueba["cookie"].split(":", 1)[1].strip(), True))
+    if prueba["cuerpo"]:
+        filas.append(("Cuerpo", prueba["cuerpo"], True))
+    ancho = util(doc.sections[-1])[0]
+    t = doc.add_table(rows=len(filas) + 1, cols=2)
+    t.style = "Table Grid"
+    t.alignment = WD_TABLE_ALIGNMENT.CENTER
+    cab = t.cell(0, 0).merge(t.cell(0, 1))
+    sombrear(cab, MARCA)
+    texto_celda(cab, f"{prueba['num']}. {prueba['titulo']}", tam=9, negrita=True, color=BLANCO)
+    for i, (etiqueta, valor, mono) in enumerate(filas, 1):
+        izq, der = t.cell(i, 0), t.cell(i, 1)
+        izq.width, der.width = Cm(2.6), Cm(ancho - 2.6)
+        sombrear(izq, "E6F4F4")
+        texto_celda(izq, etiqueta, tam=8.5, negrita=True)
+        texto_celda(der, valor, mono=mono, tam=8)
+    no_partir(t)
+    encabezado = t.rows[0]._tr.get_or_add_trPr()
+    repetir = OxmlElement("w:tblHeader")
+    repetir.set(qn("w:val"), "true")
+    encabezado.append(repetir)
+    doc.add_paragraph().paragraph_format.space_after = Pt(4)
+
+
+def tabla_contenedores():
+    lineas = (EVIDENCIA / "contenedores.txt").read_text(encoding="utf-8").strip().split("\n")
+    filas = [["Contenedor", "Imagen", "Estado", "Puerto en el equipo"]]
+    volumenes = []
+    for l in lineas[1:]:
+        cols = re.split(r"\s{2,}", l.strip())
+        if len(cols) >= 4:
+            puerto = re.search(r"0\.0\.0\.0:(\d+)->(\d+)", cols[3])
+            filas.append([cols[0], cols[1], cols[2], f"{puerto.group(1)} → {puerto.group(2)}" if puerto else ""])
+        elif cols and cols[0]:
+            volumenes.append(cols[0])
+    ancho = util(doc.sections[-1])[0]
+    tabla(filas, [3.6, 4.2, 4.0, ancho - 11.8], tam=8)
+    return volumenes
+
+
 # ── Partes de la nota ────────────────────────────────────────────────────────
 cuerpo = NOTA[NOTA.index("## 1. Incremento funcional"):]
 
@@ -418,7 +523,22 @@ captura_o_recuadro("seguimiento.png", "Seguimiento del equipo del viernes 9 de o
                    "captura o foto del seguimiento del viernes 9 de octubre "
                    "(evidencia/avance-04/seguimiento.png).")
 
-volcar_md(parte("### 3c.", "#### Retrospectiva"), nivel_base=1)
+md3c = parte("### 3c.", "#### Retrospectiva")
+corte = md3c.index("| Historia |")
+volcar_md(md3c[:corte], nivel_base=1)
+PRUEBAS = leer_pruebas()
+cumplen = sum(pr["codigo"] == ESPERADO[pr["num"]] for pr in PRUEBAS)
+parrafo(f"**Resultado de las pruebas manuales.** {cumplen} de {len(PRUEBAS)} peticiones respondieron "
+        "el código esperado. El detalle de cada una está en el anexo; `{id}` es la categoría creada "
+        "en la prueba 5.")
+filas_p = [["#", "Prueba", "Petición", "Esperado", "Obtenido", "¿Cumple?"]]
+for pr in PRUEBAS:
+    esperado = ESPERADO[pr["num"]]
+    filas_p.append([str(pr["num"]), pr["titulo"], "`" + pr["metodo"] + " " + re.sub(r"[0-9a-f]{8}-[0-9a-f-]{27}", "{id}", pr["ruta"]) + "`", str(esperado),
+                    str(pr["codigo"]), "Sí" if pr["codigo"] == esperado else "No"])
+ancho_p = util(doc.sections[-1])[0]
+tabla(filas_p, [0.8, ancho_p - 10.8, 5.2, 1.6, 1.6, 1.6], centradas={0, 3, 4, 5}, tam=8)
+volcar_md(md3c[corte:], nivel_base=1)
 retro = parte("#### Retrospectiva")
 retro = retro.replace("#### Retrospectiva (borrador para confirmar el 9 de octubre)", "#### Retrospectiva")
 volcar_md(retro, nivel_base=1)
@@ -428,13 +548,15 @@ volcar_md(retro, nivel_base=1)
 # ═════════════════════════════════════════════════════════════════════════════
 salto_pagina()
 titulo("Anexo. Evidencia de las pruebas manuales", 1)
-parrafo("Salida de `scripts/pruebas-manuales.sh` contra la API levantada con Docker Compose, una "
-        "captura por prueba: la petición con curl, el código HTTP y el cuerpo de la respuesta. La "
-        "contraseña y el token de sesión se reemplazan por asteriscos y por «<token>». La última "
-        "captura muestra los contenedores del Compose en estado «healthy» y los volúmenes donde "
-        "persisten la base y los archivos.")
-for png in sorted((EVIDENCIA / "consola").glob("*.png")):
-    figura(png, "")
+parrafo("Cada ficha es una petición de `scripts/pruebas-manuales.sh` contra la API levantada con "
+        "Docker Compose, con lo que se envió y lo que respondió la API. La contraseña y el token de "
+        "sesión no se muestran: el token aparece como «<token>».")
+for pr in PRUEBAS:
+    ficha(pr)
+titulo("Contenedores y volúmenes", 2)
+parrafo("Salida de `docker ps` el mismo día: los cuatro servicios del Compose en estado «healthy».")
+vols = tabla_contenedores()
+parrafo("Volúmenes donde persisten la base, los archivos y las llaves: " + ", ".join(f"`{v}`" for v in vols) + ".")
 doc.core_properties.title = "Avance de proyecto #4 — Sprint 1"
 doc.core_properties.subject = "Acopio · Ingeniería de Software I · ETITC"
 doc.save(str(SALIDA))
