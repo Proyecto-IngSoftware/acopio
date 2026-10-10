@@ -298,4 +298,16 @@ describe('aprobar y descartar sugerencias', () => {
       ]),
     );
   });
+
+  it('no aprueba desde un acopio cerrado después del recálculo', async () => {
+    const { cat, sugerencias } = await escenario({ saldo: 50, necesidades: [[ZONA_A, 20]] });
+    await a.prisma.acopio.update({ where: { id: ACOPIO_A }, data: { estado: 'CERRADO' } });
+    try {
+      const r = await aprobar(sugerencias[0]!.id).expect(409);
+      expect(r.body.codigo).toBe('ACOPIO_CERRADO');
+      expect(await a.prisma.lineaRemision.count({ where: { categoria_id: cat } })).toBe(0);
+    } finally {
+      await a.prisma.acopio.update({ where: { id: ACOPIO_A }, data: { estado: 'ACTIVO' } });
+    }
+  });
 });
