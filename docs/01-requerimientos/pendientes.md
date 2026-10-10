@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-07
+actualizado: 2026-10-09
 ---
 
 # Pendientes — bandeja de entrada
@@ -819,9 +819,14 @@ noviembre). El criterio 2 de HU-05 quedó en
 la sustentación del segundo corte. La del primero fue en la semana 6; si se repite el
 intervalo, la segunda caería en la semana 12, pero ninguna guía lo dice.
 **Por qué:** de esas fechas depende qué evidencia tiene que estar lista y cuándo.
-**Estado:** ABIERTO. El docente presenta la consigna del Sprint 2 en la clase virtual del
-viernes 9 de octubre a las 6:30 p. m. Con ella se corrigen el
-[calendario](../entregas/calendario.md) y el cronograma
+**Estado:** RESUELTO el 2026-10-09 → [calendario](../entregas/calendario.md) y
+[cronograma](../05-planes/cronograma.md). La guía del
+[Avance 5](../talleres/Avance%20de%20Proyecto%205%20–%20IS1.pdf) pone el Sprint 2 en
+las semanas 10 a 12 y la sustentación del segundo corte el viernes 23 de octubre. El
+Sprint 2 se cierra en la semana 12 y el Sprint 3 empieza en la 13; su duración sigue
+siendo un supuesto hasta su consigna. Queda una duda: la guía habla de una «validación
+que se realizará en clase el próximo viernes» sin fecha. Si es el 16 de octubre, ese día
+se muestra lo que haya y la Review formal se hace antes del 23. Se le pregunta al docente
 
 
 ### P-048 · Los roles no rotan en el Sprint 2
@@ -849,6 +854,37 @@ y el borrador de [avance-05-sprint2.md](../entregas/avance-05-sprint2.md).
 **Por qué:** la guía pide la evidencia de un seguimiento del equipo y la
 retrospectiva hecha por el equipo; ninguna de las dos se puede escribir sin la reunión.
 **Estado:** ABIERTO. Issue [#45](https://github.com/Proyecto-IngSoftware/acopio/issues/45)
+
+### P-050 · El Avance 5 exige DAO aunque el proyecto descartó Repository sobre Prisma
+**Fecha:** 2026-10-09 · **Propuesto por:** Joseph
+**Qué:** la guía del [Avance 5](../talleres/Avance%20de%20Proyecto%205%20–%20IS1.pdf)
+pide DAO de forma obligatoria y aclara que un ORM no basta: hay que mostrar cómo se
+encapsula el acceso a datos aunque por dentro se use Prisma. También pide DTO, o una
+justificación si no aplican, y al menos dos patrones creacionales, dos estructurales y
+uno de comportamiento (el texto dice dos), cada uno con código identificable y con su
+beneficio y su complejidad explicados. La
+[nota de patrones](../02-arquitectura/patrones-y-practicas.md) descarta hoy «Repository
+sobre Prisma» y 28 servicios llaman a `this.prisma` directamente. Los controladores no
+consultan la base, salvo `salud`. Adapter, Decorator y Strategy ya están en el código;
+los creacionales no están documentados.
+**Por qué:** es requisito de la consigna y se evalúa en la sustentación del 23 de
+octubre. Cambiar el criterio sobre Repository es una decisión de arquitectura y va en un
+ADR nuevo, que dice en qué módulos entran los DAOs y cómo comparten la transacción de
+cada servicio con la bitácora y la cola de correo.
+**Estado:** ABIERTO. Issue [#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59),
+hasta el 18 de octubre
+
+### P-051 · Evidencia de ramas, pull requests y revisión en el Sprint 2
+**Fecha:** 2026-10-09 · **Propuesto por:** Joseph
+**Qué:** el Avance 5 pide evidencia de colaboración en GitHub: commits, ramas, pull
+requests y revisión de cambios. Hoy, mientras Joseph trabaja solo, los cambios van
+directo a `main` sin PR (CLAUDE.md, «Flujo de trabajo»). El borrador del Planning ya
+propone que en el Sprint 2 cada cambio entre por un PR que otro integrante revise.
+**Por qué:** sin ramas ni PR el repositorio no muestra la evidencia que pide la guía, y
+el repositorio tiene que estar público con su enlace en el documento.
+**Estado:** ABIERTO. Joseph decide si desde el Sprint 2 el trabajo va en ramas con PR y,
+si es así, se actualiza el «Flujo de trabajo» de CLAUDE.md
+
 ---
 
 ## Resueltos

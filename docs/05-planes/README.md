@@ -3,7 +3,7 @@ title: "Planes de implementación"
 type: moc
 tags: [moc, planes]
 estado: vigente
-actualizado: 2026-10-07
+actualizado: 2026-10-09
 ---
 
 # Planes de implementación
@@ -69,7 +69,12 @@ Las fechas máximas de cada semana, hasta la entrega final, están en el
 2. En paralelo con la etapa 2, el diseño de C10 Ficha de zona y C11 Motor de sugerencias en
    Stitch: son el ciclo 1 de interfaz y no se escriben sin la maqueta aprobada. La API que
    necesitan ya está.
-3. En paralelo, cuando haga falta, la deuda técnica de
+3. DAO, DTO y patrones de diseño que pide el Avance 5
+   ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59), hasta el 18 de octubre).
+   Primero un ADR que dice en qué módulos entran los DAOs y cómo comparten la
+   transacción de cada servicio. La sustentación del segundo corte es el viernes 23 de
+   octubre ([cronograma](cronograma.md)).
+4. En paralelo, cuando haga falta, la deuda técnica de
    [#38 a #43](https://github.com/Proyecto-IngSoftware/acopio/issues?q=is%3Aopen+label%3Adeuda)
    y el primer despliegue ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)).
 

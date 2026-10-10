@@ -3,19 +3,36 @@ title: "Sprint 2 — borrador del registro y reunión del 9 de octubre"
 type: entrega
 tags: [entrega, is1, sprint-2]
 estado: borrador
-actualizado: 2026-10-07
+actualizado: 2026-10-09
 ---
 
 # Sprint 2 — borrador del registro y reunión del 9 de octubre
 
-La consigna del Sprint 2 todavía no existe: el docente la presenta en la clase virtual
-del **viernes 9 de octubre a las 6:30 p. m.** Esta nota adelanta lo que se puede
-preparar sin ella, con el formato del [Avance 4](avance-04-sprint1.md): la agenda de
-la reunión del equipo que sigue a la clase, un borrador del Planning y las tablas
-vacías del seguimiento y del Review. Cuando llegue la consigna, se ajusta todo lo de
-la [lista del final](#cuando-llegue-la-consigna).
+La consigna llegó el 9 de octubre: [Avance de Proyecto 5](../talleres/Avance%20de%20Proyecto%205%20–%20IS1.pdf),
+«Sprint 2: interfaz funcional y aplicación de patrones de diseño». El Sprint 2 va de la
+semana 10 a la 12 y la sustentación del segundo corte es el viernes 23 de octubre. Esta
+nota junta lo que pide la guía, la agenda de la reunión del 9, el borrador del Planning
+y las tablas del seguimiento y de la Review, con el formato del
+[Avance 4](avance-04-sprint1.md).
 
-El nombre del archivo es provisional; si la guía lo llama distinto, se renombra.
+## Qué pide la guía
+
+El avance no se califica solo: es evidencia para la sustentación del 23 de octubre, en
+la que basta con mostrar el proyecto en ejecución y el diagrama de paquetes del Avance 4.
+Se entrega actualizando el mismo documento de OneDrive, sin crear uno nuevo.
+
+| Parte | Qué lleva | Dónde está |
+|---|---|---|
+| Incremento | API con base de datos, Docker Compose reproducible con volumen, variables de entorno sin credenciales en el repositorio, manejo de errores y validaciones | Ya está desde el Sprint 1 |
+| Colaboración | Commits, ramas, pull requests y revisión de cambios en GitHub | Hoy no hay ramas ni PR ([P-051](../01-requerimientos/pendientes.md)) |
+| Pantallas | Una o dos pantallas conectadas a la API, con datos reales, mensajes de confirmación, validación o error y un flujo completo. En el documento, capturas, explicación del flujo e historias relacionadas | Hay muchas más. Falta elegir cuáles se documentan |
+| DAO | Obligatorio: DAOs por entidad, usados desde los servicios, sin acceso a datos en controladores ni en la interfaz. Un ORM no basta | Falta ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59), [P-050](../01-requerimientos/pendientes.md)) |
+| DTO | Si aplica: qué transporta, en qué flujo y en qué se diferencia de la entidad persistida. Si no aplica, una justificación | Existen; falta documentarlos ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59)) |
+| Patrones | Al menos dos creacionales, dos estructurales y uno de comportamiento (el texto de la guía dice dos), cada uno con código, problema que resuelve, beneficio y complejidad | Adapter, Decorator y Strategy existen; faltan los creacionales y la explicación ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59)) |
+| Planning | Sprint Goal, historias con sus criterios, tareas técnicas, responsables, riesgos y Definition of Done, con captura del tablero del Sprint 2 | [Borrador abajo](#borrador-del-sprint-planning) |
+| Daily Scrum | Al menos un seguimiento con captura y la tabla por integrante | [Abajo](#seguimientos-del-sprint-2) |
+| Review y retrospectiva | Evidencia (video, capturas de Postman o de contenedores), tabla por historia y retrospectiva en párrafos que termina en una acción concreta y verificable | [Abajo](#sprint-review) |
+| Entrega | Enlace al repositorio público, explicación de los patrones y registro del Sprint 2 en el documento de OneDrive | Se arma en la semana 12 |
 
 ## Reunión del viernes 9 de octubre, después de la clase
 
@@ -37,15 +54,17 @@ tablero ya no muestra el Sprint 1.
 
 ## Borrador del Sprint Planning
 
-Todo lo de esta tabla es propuesta y se confirma el viernes. Las semanas suponen un
-sprint de tres semanas, del 12 de octubre al 1 de noviembre
-([P-047](../01-requerimientos/pendientes.md)).
+Todo lo de esta tabla es propuesta y se confirma en el Planning. El sprint va hasta el
+domingo 25 de octubre, con la Review antes de la sustentación del viernes 23
+([P-047](../01-requerimientos/pendientes.md)). Con una semana menos de la que suponía
+este borrador, la pieza C (HU-02 y HU-15) probablemente pasa al Sprint 3; se decide en el
+Planning.
 
 | Elemento | Propuesta |
 |---|---|
 | Sprint Goal | El administrador decide cada traslado con el ranking del motor y lo despacha con una remisión que la zona confirma al recibir, y el portal muestra solo causas de entidades verificadas |
 | Historias seleccionadas | Del Sprint 1, sin terminar: HU-10a Ver a dónde falta y de dónde sobra (8) y HU-10b Aprobar o descartar un traslado (5). Nuevas: HU-11 Despachar con un documento verificable (5), HU-12 Confirmar la llegada sin contar unidad por unidad (3) y HU-13 Contar lo que la fórmula no ve (3). Pendientes del Sprint 1: HU-02 Donar a una causa real (3) y HU-15 No dirigir donantes a una estafa (3). Suman 30 puntos. Los criterios de aceptación están en el [Avance 2](avance-02-requisitos.md#historias) |
-| Tareas técnicas | API de la etapa 2 del motor y simulador ([#46](https://github.com/Proyecto-IngSoftware/acopio/issues/46)). Contrato OpenAPI sin arreglos en los nullable ([#38](https://github.com/Proyecto-IngSoftware/acopio/issues/38)). Maquetas en Stitch de C10, C11 y las pantallas de remisión y recepción. Interfaz del motor en tres ciclos ([#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)). Pieza C del Bloque 1: verificación de entidades y causas ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)). Servidor de pruebas ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)) |
+| Tareas técnicas | DAO, DTO y patrones de diseño ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59)). API de la etapa 2 del motor y simulador ([#46](https://github.com/Proyecto-IngSoftware/acopio/issues/46)). Contrato OpenAPI sin arreglos en los nullable ([#38](https://github.com/Proyecto-IngSoftware/acopio/issues/38)). Maquetas en Stitch de C10, C11 y las pantallas de remisión y recepción. Interfaz del motor en tres ciclos ([#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)). Pieza C del Bloque 1: verificación de entidades y causas ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)). Servidor de pruebas ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)) |
 | Responsables iniciales | Según los roles del Sprint 0 ([Avance 1, §5](avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo)): Joseph, arquitectura, modelo de datos e integración; Brayan, requerimientos y diseño UI/UX; Alejandra, coordinación del sprint y documentación; Michael, calidad, pruebas y despliegue. El responsable hace el seguimiento de su área; la programación se reparte entre los cuatro. Detalle por tarea en la tabla de abajo |
 | Dependencias o riesgos | La interfaz del motor depende de la API de la etapa 2 y de las maquetas aprobadas. El servidor de pruebas depende de decidir proveedor, dominio y remitente antes del 18 de octubre. Microsoft 365 retira el SMTP con contraseña a fines de 2026 (RTA-04) |
 | Definition of Done | La misma del Sprint 1 ([Avance 4](avance-04-sprint1.md#3a-sprint-planning)), con un punto más: el cambio entra por un pull request que otro integrante revisa y aprueba |
@@ -73,23 +92,23 @@ garantiza que avance y quede documentada.
 decidió el 2026-10-07 que en el Sprint 2 no rotan: siguen los del Sprint 0
 ([P-048](../01-requerimientos/pendientes.md)).
 
-**Calendario del sprint (provisional).**
+**Calendario del sprint.**
 
 | Semana | Fecha máxima | Qué tiene que estar listo |
 |:-:|---|---|
-| 11 | domingo 18 oct | API de la etapa 2 del motor, contrato corregido, decisión de VPS y dominio |
-| 12 | domingo 25 oct | Interfaz del motor: Bloque 4 cerrado |
-| 13 | domingo 1 nov | Pieza C, servidor de pruebas, Review y retrospectiva |
+| 10 | domingo 11 oct | Cierre del Avance 4, Planning del Sprint 2 |
+| 11 | domingo 18 oct | API de la etapa 2 del motor, contrato corregido, DAO y patrones, decisión de VPS y dominio |
+| 12 | domingo 25 oct | Interfaz del motor (Bloque 4 cerrado), Review y retrospectiva antes del viernes 23, Avance 5 en OneDrive, sustentación el 23 |
 
 ## Seguimientos del Sprint 2
 
-Uno por semana, el miércoles o el viernes, con captura y una fila por integrante.
+Uno por semana, el miércoles o el viernes, con captura y una fila por integrante. La
+guía pide al menos uno.
 
 | Semana | Fecha | Captura |
 |:-:|---|---|
-| 11 | por definir el viernes 9 | `evidencia/avance-05/seguimiento-semana-11.png` |
+| 11 | por definir | `evidencia/avance-05/seguimiento-semana-11.png` |
 | 12 | por definir | `evidencia/avance-05/seguimiento-semana-12.png` |
-| 13 | por definir | `evidencia/avance-05/seguimiento-semana-13.png` |
 
 Tabla de cada seguimiento:
 
@@ -100,7 +119,10 @@ Tabla de cada seguimiento:
 | Alejandra | | | |
 | Michael | | | |
 
-## Sprint Review (se llena en la semana 13)
+## Sprint Review
+
+Se hace en la semana 12, antes de la sustentación del viernes 23. Evidencia: video breve
+o capturas de los contenedores en ejecución y de las pruebas de la API.
 
 | Historia | ¿Se cumplió? | Criterios pendientes, ajustes u observaciones |
 |---|---|---|
@@ -112,17 +134,17 @@ Tabla de cada seguimiento:
 | HU-02 Donar a una causa real | | |
 | HU-15 No dirigir donantes a una estafa | | |
 
-La retrospectiva responde las cuatro preguntas del Avance 4 y revisa si se cumplió la
+La retrospectiva responde en párrafos las cuatro preguntas del Avance 4, la última con
+una acción concreta y verificable, y revisa si se cumplió la
 acción del Sprint 1: cuántos pull requests abrió y revisó cada integrante
 (`gh pr list --state merged`).
 
 ## Cuando llegue la consigna
 
-Lo que se ajusta en cuanto se conozca la consigna del Sprint 2:
+Lo que se ajustó al llegar la consigna del Sprint 2:
 
-- [ ] Guardar la guía en `docs/talleres/` si viene en PDF, o su texto en esta nota
-- [ ] Semanas del Sprint 2 en el [calendario](calendario.md) y en el [cronograma](../05-planes/cronograma.md)
-- [ ] Fechas de los milestones de las semanas 11 a 13 en GitHub
-- [ ] Este borrador: secciones o tablas que pida la guía y no estén, y nombre del archivo
-- [ ] [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47) y [P-047](../01-requerimientos/pendientes.md)
+- [x] Guardar la guía en `docs/talleres/`
+- [x] Semanas del Sprint 2 en el [calendario](calendario.md) y en el [cronograma](../05-planes/cronograma.md). Los milestones semanales no cambian de fecha; cambian los issues de cada uno
+- [x] Este borrador: lo que pide la guía, la Review en la semana 12 y el calendario del sprint
+- [x] [P-047](../01-requerimientos/pendientes.md) resuelto; comentario en [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47)
 - [ ] Un `generar-avance-05.py` con el formato del Avance 4, y el Word en `unificar-avances.py`
