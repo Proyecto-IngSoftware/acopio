@@ -4,7 +4,7 @@ type: plan
 tags: [plan, bloque-4]
 estado: aprobado
 bloque: 4
-actualizado: 2026-10-09
+actualizado: 2026-10-10
 ---
 
 # Bloque 4 · Motor: API, etapa 2 · plan de implementación
@@ -108,17 +108,17 @@ una tiene su prueba en la tarea que la posee.
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 `motor` a DAO, con dos menores de la etapa 1 | ⬜ | |
-| 2 Transiciones de la remisión y `distancia_max` en `shared` | ⬜ | |
-| 3 Salida de traslado, ajuste de cancelación y recepción en `inventario` | ⬜ | |
-| 4 Disparadores: sugerencia decidida y línea que cambia de remisión | ⬜ | |
-| 5 Remisiones: crear, listar, ver y editar, con `PlanRemision` | ⬜ | |
-| 6 Despachar con folios y cancelar | ⬜ | |
-| 7 Evidencia y recepción en zona | ⬜ | |
-| 8 Reportes de necesidad y capa pública | ⬜ | |
-| 9 «Recibido en destino» en el seguimiento (RF-CMP-007) | ⬜ | |
-| 10 Simulador con semilla | ⬜ | |
-| 11 `seed:demo`, contrato, documentación y cierre | ⬜ | |
+| 1 `motor` a DAO, con dos menores de la etapa 1 | ✅ | #65 |
+| 2 Transiciones de la remisión y `distancia_max` en `shared` | ✅ | #66 |
+| 3 Salida de traslado, ajuste de cancelación y recepción en `inventario` | ✅ | #67 |
+| 4 Disparadores: sugerencia decidida y línea que cambia de remisión | ✅ | #68 |
+| 5 Remisiones: crear, listar, ver y editar, con `PlanRemision` | ✅ | #69 |
+| 6 Despachar con folios y cancelar | ✅ | #70 |
+| 7 Evidencia y recepción en zona | ✅ | #71 |
+| 8 Reportes de necesidad y capa pública | ✅ | #72 |
+| 9 «Recibido en destino» en el seguimiento (RF-CMP-007) | ✅ | #73 |
+| 10 Simulador con semilla | ✅ | #74 |
+| 11 `seed:demo`, contrato, documentación y cierre | ✅ | El PR de esta tarea. Los pasos 4 a 7 del §1 se probaron con curl contra el Compose el 2026-10-10 |
 
 ---
 

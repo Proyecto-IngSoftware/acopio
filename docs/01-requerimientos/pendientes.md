@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-09
+actualizado: 2026-10-10
 ---
 
 # Pendientes — bandeja de entrada
@@ -891,6 +891,18 @@ el repositorio tiene que estar público con su enlace en el documento.
 cada cambio va en una rama con PR. Joseph lo revisa y lo fusiona cuando el CI pasa; como
 GitHub no deja aprobar un PR propio, la revisión queda como comentario. El primero es el
 que registra esta decisión
+
+
+### P-052 · Dos DTO con el mismo nombre se pisan en el contrato
+**Fecha:** 2026-10-10 · **Propuesto por:** Joseph
+**Qué:** Swagger nombra cada esquema del contrato con el nombre de la clase del DTO. En la
+etapa 2 del motor, `RecibirDto` existía en `comprobantes` y en `motor`, y el contrato se
+quedó con uno solo: la web dejó de compilar porque la recepción de donaciones perdió sus
+campos. Se renombró a `RecibirRemisionDto`, pero nada impide que vuelva a pasar.
+**Por qué:** el error no aparece en la API ni en sus pruebas, solo en los tipos de la web,
+y en otro caso podría pasar sin que nada compile mal.
+**Estado:** ABIERTO. Una prueba unitaria en `apps/api` que busque nombres de clase
+`*Dto` repetidos en `src/` o que revise el contrato generado
 
 ---
 
