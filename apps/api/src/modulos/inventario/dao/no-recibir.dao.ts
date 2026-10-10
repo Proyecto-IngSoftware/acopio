@@ -29,6 +29,22 @@ export class NoRecibirDao {
     });
   }
 
+  /** Las marcas vigentes de unas categorías, en cualquier acopio. */
+  vigentesDeCategorias(categoriaIds: string[], hoy: Date) {
+    return this.prisma.noRecibir.findMany({
+      where: { categoria_id: { in: categoriaIds }, ...vigente(hoy) },
+      select: { acopio_id: true, categoria_id: true },
+    });
+  }
+
+  /** Cuáles de unas categorías no recibe hoy un acopio. */
+  vigentesEnAcopio(acopioId: string, categoriaIds: string[], hoy: Date) {
+    return this.prisma.noRecibir.findMany({
+      where: { acopio_id: acopioId, categoria_id: { in: categoriaIds }, ...vigente(hoy) },
+      select: { categoria_id: true },
+    });
+  }
+
   buscar(acopioId: string, categoriaId: string, bd: ClienteBd = this.prisma) {
     return bd.noRecibir.findUnique({
       where: clave(acopioId, categoriaId),

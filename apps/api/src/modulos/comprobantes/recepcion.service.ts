@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import { BitacoraService } from '../auditoria/bitacora.service';
+import { NoRecibirDao } from '../inventario/dao/no-recibir.dao';
 import { MovimientosService } from '../inventario/movimientos.service';
-import { aComprobanteVista, buscarPorFolio, CON_LINEAS, estadoInvalido } from './vistas';
+import { ComprobanteDao } from './dao/comprobante.dao';
+import { aComprobanteVista, buscarPorFolio, estadoInvalido } from './vistas';
 
 export interface LineaRecibida {
   lineaId: string;
@@ -22,13 +24,15 @@ const aBase = (presentaciones: number, contenido: number) =>
 @Injectable()
 export class RecepcionService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly transacciones: Transacciones,
+    private readonly comprobantes: ComprobanteDao,
+    private readonly noRecibir: NoRecibirDao,
     private readonly bitacora: BitacoraService,
     private readonly movimientos: MovimientosService,
   ) {}
 
   async consultar(texto: string) {
-    return aComprobanteVista(await buscarPorFolio(this.prisma, texto));
+    return aComprobanteVista(await buscarPorFolio(this.comprobantes, texto));
   }
 
   async recibir(
@@ -37,7 +41,7 @@ export class RecepcionService {
     datos: { acopioId: string; lineas: LineaRecibida[] },
   ) {
     await this.movimientos.exigirOperador(usuario, datos.acopioId);
-    const previo = await buscarPorFolio(this.prisma, texto);
+    const previo = await buscarPorFolio(this.comprobantes, texto);
     // El estado manda sobre la forma del cuerpo: un reintento sobre un folio ya recibido es 409
     if (previo.estado !== 'PREPARADO') throw estadoInvalido(previo.estado, 'recibir');
     const ids = new Set(datos.lineas.map((l) => l.lineaId));
@@ -54,24 +58,17 @@ export class RecepcionService {
     const porLinea = new Map(datos.lineas.map((l) => [l.lineaId, l]));
     const ahora = new Date();
 
-    const c = await this.prisma.$transaction(async (tx) => {
+    const c = await this.transacciones.ejecutar(async (tx) => {
       // El UPDATE condicionado toma el candado de la fila: otra recepción o una cancelación
       // espera aquí y luego ve que ya no está PREPARADO
-      const { count } = await tx.comprobante.updateMany({
-        where: { id: previo.id, estado: 'PREPARADO' },
-        data: {
-          estado: 'PENDIENTE',
-          acopio_id: datos.acopioId,
-          recibido_por: usuario.id,
-          recibido_en: ahora,
-        },
+      const cambiadas = await this.comprobantes.cambiarSiEstado(tx, previo.id, 'PREPARADO', {
+        estado: 'PENDIENTE',
+        acopio_id: datos.acopioId,
+        recibido_por: usuario.id,
+        recibido_en: ahora,
       });
-      if (count === 0) {
-        const actual = await tx.comprobante.findUniqueOrThrow({
-          where: { id: previo.id },
-          select: { estado: true },
-        });
-        throw estadoInvalido(actual.estado, 'recibir');
+      if (cambiadas === 0) {
+        throw estadoInvalido(await this.comprobantes.estado(tx, previo.id), 'recibir');
       }
 
       // Las entradas toman un candado por acopio y categoría hasta el commit: todas las
@@ -101,22 +98,15 @@ export class RecepcionService {
               origenOffline: false,
             },
           );
-          await tx.comprobanteMovimiento.create({
-            data: {
-              comprobante_id: previo.id,
-              movimiento_id: fila.id,
-              origen: 'RECEPCION',
-              vinculado_por: usuario.id,
-            },
+          await this.comprobantes.vincular(tx, previo.id, [fila.id], {
+            origen: 'RECEPCION',
+            usuarioId: usuario.id,
           });
         }
-        await tx.lineaComprobante.update({
-          where: { id: linea.id },
-          data: {
-            cantidad_confirmada: recibida.cantidadConfirmada,
-            vence_en: linea.categoria.perecedero ? (venceEn ?? null) : null,
-            motivo_diferencia: recibida.motivoDiferencia?.trim() || null,
-          },
+        await this.comprobantes.actualizarLinea(tx, linea.id, {
+          cantidad_confirmada: recibida.cantidadConfirmada,
+          vence_en: linea.categoria.perecedero ? (venceEn ?? null) : null,
+          motivo_diferencia: recibida.motivoDiferencia?.trim() || null,
         });
       }
 
@@ -131,17 +121,14 @@ export class RecepcionService {
         // Llegó a otro acopio: el cambio tiene que saltar a la vista del Auditor
         destacado: previo.acopio_id !== datos.acopioId,
       });
-      return tx.comprobante.findUniqueOrThrow({ where: { id: previo.id }, include: CON_LINEAS });
+      return this.comprobantes.conLineas(tx, previo.id);
     }, TRANSACCION);
 
-    const marcas = await this.prisma.noRecibir.findMany({
-      where: {
-        acopio_id: datos.acopioId,
-        categoria_id: { in: c.lineas.map((l) => l.categoria_id) },
-        OR: [{ hasta: null }, { hasta: { gte: new Date(ahora.toISOString().slice(0, 10)) } }],
-      },
-      select: { categoria_id: true },
-    });
+    const marcas = await this.noRecibir.vigentesEnAcopio(
+      datos.acopioId,
+      c.lineas.map((l) => l.categoria_id),
+      new Date(ahora.toISOString().slice(0, 10)),
+    );
     return { comprobante: aComprobanteVista(c), noRecibe: marcas.map((m) => m.categoria_id) };
   }
 }

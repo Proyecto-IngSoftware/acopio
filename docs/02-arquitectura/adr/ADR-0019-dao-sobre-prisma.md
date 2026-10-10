@@ -50,7 +50,9 @@ transacción (ADR-0015). Un DAO que abriera su propia transacción rompería las
   `MovimientoDao` solo inserta y lee, igual que los permisos de `acopio_app`.
 - Un módulo que necesita datos de otro usa el DAO que ese módulo exporta, dentro de la
   tabla de dependencias permitidas. `inventario` lee categorías con el `CategoriaDao`
-  de `catalogo`.
+  de `catalogo`; `comprobantes` usa además `CodigoBarrasDao`, los DAO de movimientos y
+  de «no recibir» de `inventario`, `AcopioDao` de `acopios` y `UsuarioDao` de
+  `identidad`. Para eso `catalogo` admite ahora que lo importe `comprobantes`.
 
 Dependency-cruiser lo hace cumplir con dos reglas en `apps/api/.dependency-cruiser.cjs`:
 
@@ -62,9 +64,11 @@ Dependency-cruiser lo hace cumplir con dos reglas en `apps/api/.dependency-cruis
 
 ## Alcance
 
-Se migraron `inventario` y `salud` el 2026-10-09. `comprobantes` sigue, porque sus
-pantallas se muestran en la sustentación del 23 de octubre. Los demás módulos se migran
-cuando se toquen; al migrar uno se agrega a `MIGRADOS_A_DAO`.
+El 2026-10-09 se migraron `inventario`, `salud` y `comprobantes`. `ComprobanteDao`
+cubre el agregado entero: el comprobante, sus líneas y sus vínculos con movimientos.
+`acopios`, `identidad` y `catalogo` ya exportan DAO para otros módulos, pero sus
+servicios todavía usan Prisma. Los módulos que faltan se migran cuando se toquen, y al
+migrar uno se agrega a `MIGRADOS_A_DAO`.
 
 ## Alternativas
 

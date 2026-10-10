@@ -1,9 +1,10 @@
 import { Inject, Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import { ENTORNO, type Entorno } from '../../config/entorno';
 import { AlmacenamientoService } from '../almacenamiento/almacenamiento.service';
 import { BitacoraService } from '../auditoria/bitacora.service';
+import { ComprobanteDao } from './dao/comprobante.dao';
 
 const DIA = 86_400_000;
 
@@ -13,7 +14,8 @@ export class TareasCustodiaService {
   private readonly log = new Logger(TareasCustodiaService.name);
 
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly transacciones: Transacciones,
+    private readonly comprobantes: ComprobanteDao,
     private readonly bitacora: BitacoraService,
     private readonly almacen: AlmacenamientoService,
     @Inject(ENTORNO) private readonly entorno: Entorno,
@@ -23,19 +25,16 @@ export class TareasCustodiaService {
   @Cron('15 0 * * *', { name: 'preparadas-vencidas', timeZone: 'America/Bogota' })
   async cancelarVencidas(ahora = new Date()): Promise<number> {
     const limite = new Date(ahora.getTime() - this.entorno.PREPARADA_VIGENCIA_DIAS * DIA);
-    const vencidas = await this.prisma.comprobante.findMany({
-      where: { estado: 'PREPARADO', creado_en: { lt: limite } },
-      select: { id: true, acopio_id: true },
-    });
+    const vencidas = await this.comprobantes.preparadasAntesDe(limite);
     let canceladas = 0;
     for (const c of vencidas) {
-      await this.prisma.$transaction(async (tx) => {
+      await this.transacciones.ejecutar(async (tx) => {
         // Si el Operador la recibió entre la lectura y ahora, ya no está PREPARADO y se deja
-        const { count } = await tx.comprobante.updateMany({
-          where: { id: c.id, estado: 'PREPARADO' },
-          data: { estado: 'CANCELADO', cerrado_en: ahora },
+        const cambiadas = await this.comprobantes.cambiarSiEstado(tx, c.id, 'PREPARADO', {
+          estado: 'CANCELADO',
+          cerrado_en: ahora,
         });
-        if (count === 0) return;
+        if (cambiadas === 0) return;
         canceladas++;
         await this.bitacora.registrar(tx, {
           usuarioId: null,
@@ -57,11 +56,7 @@ export class TareasCustodiaService {
   async borrarFacturasVencidas(ahora = new Date()): Promise<number> {
     const limite = new Date(ahora);
     limite.setUTCMonth(limite.getUTCMonth() - this.entorno.FACTURA_RETENCION_MESES);
-    const vencidas = await this.prisma.comprobante.findMany({
-      where: { cerrado_en: { lt: limite }, factura_key: { not: null } },
-      select: { id: true, acopio_id: true, factura_key: true, miniatura_key: true },
-      take: 500,
-    });
+    const vencidas = await this.comprobantes.conFacturaCerradosAntesDe(limite);
     let borradas = 0;
     for (const c of vencidas) {
       try {
@@ -69,11 +64,8 @@ export class TareasCustodiaService {
         // y borrar en S3 una clave que ya no existe no es error
         for (const clave of [c.factura_key, c.miniatura_key])
           if (clave) await this.almacen.borrar(clave);
-        await this.prisma.$transaction(async (tx) => {
-          await tx.comprobante.update({
-            where: { id: c.id },
-            data: { factura_key: null, miniatura_key: null, factura_borrada_en: ahora },
-          });
+        await this.transacciones.ejecutar(async (tx) => {
+          await this.comprobantes.quitarFactura(tx, c.id, ahora);
           await this.bitacora.registrar(tx, {
             usuarioId: null,
             accion: 'comprobante.factura_borrada',

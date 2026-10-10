@@ -4,14 +4,19 @@ import type { EstadoComprobante } from '../../generado/prisma/client';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { esLlaveDuplicada } from '../../comun/prisma/errores';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import { ENTORNO, type Entorno } from '../../config/entorno';
+import { AcopioDao } from '../acopios/dao/acopio.dao';
 import { AcopiosService } from '../acopios/acopios.service';
 import { BitacoraService } from '../auditoria/bitacora.service';
+import { CategoriaDao } from '../catalogo/dao/categoria.dao';
+import { CodigoBarrasDao } from '../catalogo/dao/codigo-barras.dao';
 import { exigirCantidad } from '../inventario/cantidades';
+import { NoRecibirDao } from '../inventario/dao/no-recibir.dao';
+import { ComprobanteDao } from './dao/comprobante.dao';
 import { generarFolio } from './folio';
 import { ordenarSugerencias } from './sugerencias';
-import { aComprobanteVista, buscarPorFolio, CON_LINEAS, estadoInvalido } from './vistas';
+import { aComprobanteVista, buscarPorFolio, estadoInvalido } from './vistas';
 
 export interface LineaPreparada {
   categoriaId: string;
@@ -24,7 +29,12 @@ export interface LineaPreparada {
 @Injectable()
 export class DonacionesService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly transacciones: Transacciones,
+    private readonly comprobantes: ComprobanteDao,
+    private readonly categorias: CategoriaDao,
+    private readonly codigos: CodigoBarrasDao,
+    private readonly acopiosDao: AcopioDao,
+    private readonly noRecibir: NoRecibirDao,
     private readonly bitacora: BitacoraService,
     private readonly acopios: AcopiosService,
     @Inject(ENTORNO) private readonly entorno: Entorno,
@@ -36,12 +46,9 @@ export class DonacionesService {
 
     for (let intento = 0; intento < 5; intento++) {
       try {
-        const c = await this.prisma.$transaction(async (tx) => {
-          // Dos pestañas a la vez no pasan juntas el límite de preparadas
-          await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${'preparadas:' + usuario.id}, 0))`;
-          const abiertas = await tx.comprobante.count({
-            where: { donador_id: usuario.id, estado: 'PREPARADO' },
-          });
+        const c = await this.transacciones.ejecutar(async (tx) => {
+          await this.comprobantes.bloquearPreparadas(tx, usuario.id);
+          const abiertas = await this.comprobantes.contarPreparadas(tx, usuario.id);
           if (abiertas >= this.entorno.PREPARADAS_MAXIMO) {
             throw new ErrorDominio(
               'LIMITE_PREPARADAS',
@@ -49,14 +56,11 @@ export class DonacionesService {
               409,
             );
           }
-          const creado = await tx.comprobante.create({
-            data: {
-              folio: generarFolio(new Date().getUTCFullYear()),
-              donador_id: usuario.id,
-              acopio_id: datos.acopioId,
-              lineas: { create: lineas },
-            },
-            include: CON_LINEAS,
+          const creado = await this.comprobantes.crear(tx, {
+            folio: generarFolio(new Date().getUTCFullYear()),
+            donadorId: usuario.id,
+            acopioId: datos.acopioId,
+            lineas,
           });
           await this.bitacora.registrar(tx, {
             usuarioId: usuario.id,
@@ -79,19 +83,14 @@ export class DonacionesService {
   }
 
   private async prepararLinea(l: LineaPreparada) {
-    const cat = await this.prisma.categoria.findUnique({
-      where: { id: l.categoriaId },
-      select: { archivada: true, unidad_base: true },
-    });
+    const cat = await this.categorias.buscar(l.categoriaId);
     if (!cat || cat.archivada) {
       throw new ErrorDominio(
         'CATEGORIA_NO_DISPONIBLE',
         'Una de las categorías ya no está disponible',
       );
     }
-    const codigo = l.ean
-      ? await this.prisma.codigoBarras.findUnique({ where: { ean: l.ean } })
-      : null;
+    const codigo = l.ean ? await this.codigos.buscar(l.ean) : null;
     if (codigo && codigo.categoria_id !== l.categoriaId) {
       throw new ErrorDominio('CODIGO_NO_COINCIDE', 'El código escaneado es de otra categoría');
     }
@@ -104,7 +103,7 @@ export class DonacionesService {
     }
     return {
       categoria_id: l.categoriaId,
-      ean: codigo ? l.ean : null,
+      ean: codigo ? codigo.ean : null,
       contenido_unitario: contenido,
       cantidad_declarada: l.cantidad,
       vence_en: l.venceEn ?? null,
@@ -112,31 +111,23 @@ export class DonacionesService {
   }
 
   async listar(usuario: UsuarioAutenticado, estado?: EstadoComprobante) {
-    const filas = await this.prisma.comprobante.findMany({
-      where: { donador_id: usuario.id, ...(estado ? { estado } : {}) },
-      include: CON_LINEAS,
-      orderBy: { creado_en: 'desc' },
-    });
+    const filas = await this.comprobantes.delDonador(usuario.id, estado);
     return filas.map(aComprobanteVista);
   }
 
   async cancelar(usuario: UsuarioAutenticado, texto: string) {
-    const c = await buscarPorFolio(this.prisma, texto);
+    const c = await buscarPorFolio(this.comprobantes, texto);
     // Una donación ajena responde igual que una que no existe
-    if (c.donador_id !== usuario.id) await buscarPorFolio(this.prisma, '');
+    if (c.donador_id !== usuario.id) await buscarPorFolio(this.comprobantes, '');
     if (c.estado !== 'PREPARADO') throw estadoInvalido(c.estado, 'cancelar');
-    const hecho = await this.prisma.$transaction(async (tx) => {
+    const hecho = await this.transacciones.ejecutar(async (tx) => {
       // El estado se vuelve a exigir en el UPDATE: un Operador pudo recibir el folio en medio
-      const { count } = await tx.comprobante.updateMany({
-        where: { id: c.id, estado: 'PREPARADO' },
-        data: { estado: 'CANCELADO', cerrado_en: new Date() },
+      const cambiadas = await this.comprobantes.cambiarSiEstado(tx, c.id, 'PREPARADO', {
+        estado: 'CANCELADO',
+        cerrado_en: new Date(),
       });
-      if (count === 0) {
-        const actual = await tx.comprobante.findUniqueOrThrow({
-          where: { id: c.id },
-          select: { estado: true },
-        });
-        throw estadoInvalido(actual.estado, 'cancelar');
+      if (cambiadas === 0) {
+        throw estadoInvalido(await this.comprobantes.estado(tx, c.id), 'cancelar');
       }
       await this.bitacora.registrar(tx, {
         usuarioId: usuario.id,
@@ -147,24 +138,15 @@ export class DonacionesService {
         antes: { estado: c.estado },
         despues: { estado: 'CANCELADO' },
       });
-      return tx.comprobante.findUniqueOrThrow({ where: { id: c.id }, include: CON_LINEAS });
+      return this.comprobantes.conLineas(tx, c.id);
     });
     return aComprobanteVista(hecho);
   }
 
   async sugerir(categorias: string[], ubicacion?: { lat: number; lng: number }) {
     const hoy = new Date();
-    const acopios = await this.prisma.acopio.findMany({
-      where: { estado: 'ACTIVO' },
-      select: { id: true, nombre: true, direccion: true, lat: true, lng: true, horario: true },
-    });
-    const marcas = await this.prisma.noRecibir.findMany({
-      where: {
-        categoria_id: { in: categorias },
-        OR: [{ hasta: null }, { hasta: { gte: hoy } }],
-      },
-      select: { acopio_id: true, categoria_id: true },
-    });
+    const acopios = await this.acopiosDao.activos();
+    const marcas = await this.noRecibir.vigentesDeCategorias(categorias, hoy);
     return ordenarSugerencias(
       acopios.map((x) => ({
         acopioId: x.id,
@@ -182,20 +164,7 @@ export class DonacionesService {
 
   /** Para el escáner del Donador: sin quién asoció el código (P-038). */
   async codigo(ean: string) {
-    const c = await this.prisma.codigoBarras.findUnique({
-      where: { ean },
-      include: {
-        categoria: {
-          select: {
-            nombre: true,
-            unidad_base: true,
-            perecedero: true,
-            grupo: true,
-            archivada: true,
-          },
-        },
-      },
-    });
+    const c = await this.codigos.conCategoria(ean);
     if (!c || c.categoria.archivada) {
       throw new ErrorDominio(
         'EAN_DESCONOCIDO',

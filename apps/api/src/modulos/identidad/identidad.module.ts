@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { ENTORNO, type Entorno } from '../../config/entorno';
+import { UsuarioDao } from './dao/usuario.dao';
 import { AlcanceService } from './autenticacion/alcance.service';
 import { AutenticacionGuard } from './autenticacion/autenticacion.guard';
 import { VerificadorToken } from './autenticacion/verificador-token';
@@ -20,6 +21,7 @@ import { UsuariosService } from './usuarios/usuarios.service';
 @Module({
   controllers: [SesionController, DonadorController, InvitacionesController, UsuariosController],
   providers: [
+    UsuarioDao,
     ProveedorLocal,
     ProveedorSupabase,
     {
@@ -36,6 +38,6 @@ import { UsuariosService } from './usuarios/usuarios.service';
     UsuariosService,
     AutenticacionGuard,
   ],
-  exports: [AlcanceService, AutenticacionGuard, PROVEEDOR_IDENTIDAD],
+  exports: [UsuarioDao, AlcanceService, AutenticacionGuard, PROVEEDOR_IDENTIDAD],
 })
 export class IdentidadModule {}

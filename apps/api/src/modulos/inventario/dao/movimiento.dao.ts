@@ -18,6 +18,27 @@ export class MovimientoDao {
     return tx.movimiento.create({ data: datos });
   }
 
+  /** Entradas de un acopio registradas desde `desde` que no son de ninguna donación. */
+  entradasSinVincular(acopioId: string, desde: Date) {
+    return this.prisma.movimiento.findMany({
+      where: { acopio_id: acopioId, tipo: 'ENTRADA', vinculo: null, registrado_en: { gte: desde } },
+      include: {
+        categoria: { select: { nombre: true, unidad_base: true } },
+        usuario: { select: { nombre: true } },
+      },
+      orderBy: { secuencia: 'desc' },
+      take: 100,
+    });
+  }
+
+  /** Los movimientos pedidos, cada uno con su vínculo a una donación si lo tiene. */
+  conVinculo(ids: string[]) {
+    return this.prisma.movimiento.findMany({
+      where: { id: { in: ids } },
+      include: { vinculo: true },
+    });
+  }
+
   /** Lo que piden los vencimientos estimados de las categorías perecederas. */
   paraVencimientos(acopioId: string, categoriaIds: string[], bd: ClienteBd = this.prisma) {
     return bd.movimiento.findMany({

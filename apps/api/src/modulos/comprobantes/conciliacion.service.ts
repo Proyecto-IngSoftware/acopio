@@ -2,16 +2,19 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { esLlaveDuplicada } from '../../comun/prisma/errores';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import type { Prisma } from '../../generado/prisma/client';
+import { AcopioDao } from '../acopios/dao/acopio.dao';
 import { BitacoraService } from '../auditoria/bitacora.service';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
+import { UsuarioDao } from '../identidad/dao/usuario.dao';
+import { MovimientoDao } from '../inventario/dao/movimiento.dao';
 import { NotificacionService } from '../notificaciones/notificacion.service';
 import { plantillas } from '../notificaciones/plantillas';
+import { ComprobanteDao } from './dao/comprobante.dao';
 import {
   aComprobanteVista,
   buscarPorFolio,
-  CON_LINEAS,
   estadoInvalido,
   type ComprobanteConLineas,
 } from './vistas';
@@ -36,7 +39,11 @@ const conDiferencia = (c: ComprobanteConLineas) =>
 @Injectable()
 export class ConciliacionService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly transacciones: Transacciones,
+    private readonly comprobantes: ComprobanteDao,
+    private readonly movimientos: MovimientoDao,
+    private readonly acopiosDao: AcopioDao,
+    private readonly usuarios: UsuarioDao,
     private readonly bitacora: BitacoraService,
     private readonly alcance: AlcanceService,
     private readonly correo: NotificacionService,
@@ -63,31 +70,15 @@ export class ConciliacionService {
         ? [filtro.acopioId]
         : []
       : asignados;
-    const enAlcance: Prisma.ComprobanteWhereInput =
-      acopios === null ? {} : { acopio_id: { in: acopios } };
-    const filas = await this.prisma.comprobante.findMany({
-      where: {
-        ...enAlcance,
-        estado: filtro.estado ?? 'PENDIENTE',
-        creado_en: { gte: filtro.desde, lte: filtro.hasta },
-      },
-      include: CON_LINEAS,
-      orderBy: { creado_en: 'asc' },
-      take: 200,
+    const filas = await this.comprobantes.bandeja({
+      acopios,
+      estado: filtro.estado ?? 'PENDIENTE',
+      desde: filtro.desde,
+      hasta: filtro.hasta,
     });
     // El contador cubre todo el alcance aunque la lista venga filtrada por un acopio
-    const grupos = await this.prisma.comprobante.groupBy({
-      by: ['acopio_id'],
-      where: {
-        ...(asignados === null ? {} : { acopio_id: { in: asignados } }),
-        estado: 'PENDIENTE',
-      },
-      _count: { _all: true },
-    });
-    const nombres = await this.prisma.acopio.findMany({
-      where: { id: { in: grupos.map((g) => g.acopio_id) } },
-      select: { id: true, nombre: true },
-    });
+    const grupos = await this.comprobantes.pendientesPorAcopio(asignados);
+    const nombres = await this.acopiosDao.nombres(grupos.map((g) => g.acopio_id));
     return {
       comprobantes: filas.map((c) => ({
         ...aComprobanteVista(c),
@@ -102,20 +93,9 @@ export class ConciliacionService {
   }
 
   async detalle(usuario: UsuarioAutenticado, texto: string) {
-    const c = await buscarPorFolio(this.prisma, texto);
+    const c = await buscarPorFolio(this.comprobantes, texto);
     await this.exigirAlcance(usuario, c.acopio_id);
-    const vinculos = await this.prisma.comprobanteMovimiento.findMany({
-      where: { comprobante_id: c.id },
-      include: {
-        movimiento: {
-          include: {
-            categoria: { select: { nombre: true, unidad_base: true } },
-            usuario: { select: { nombre: true } },
-          },
-        },
-      },
-      orderBy: { vinculado_en: 'asc' },
-    });
+    const vinculos = await this.comprobantes.vinculos(c.id);
     const resumen = new Map<
       string,
       { categoria: string; unidad: string; confirmado: number; entradas: number }
@@ -165,23 +145,13 @@ export class ConciliacionService {
   }
 
   async vinculables(usuario: UsuarioAutenticado, texto: string, acopioId?: string) {
-    const c = await buscarPorFolio(this.prisma, texto);
+    const c = await buscarPorFolio(this.comprobantes, texto);
     const acopio = acopioId ?? c.acopio_id;
     await this.exigirAlcance(usuario, acopio);
-    const filas = await this.prisma.movimiento.findMany({
-      where: {
-        acopio_id: acopio,
-        tipo: 'ENTRADA',
-        vinculo: null,
-        registrado_en: { gte: new Date(Date.now() - CATORCE_DIAS) },
-      },
-      include: {
-        categoria: { select: { nombre: true, unidad_base: true } },
-        usuario: { select: { nombre: true } },
-      },
-      orderBy: { secuencia: 'desc' },
-      take: 100,
-    });
+    const filas = await this.movimientos.entradasSinVincular(
+      acopio,
+      new Date(Date.now() - CATORCE_DIAS),
+    );
     return filas.map((m) => ({
       id: m.id,
       categoriaId: m.categoria_id,
@@ -195,14 +165,11 @@ export class ConciliacionService {
   }
 
   async vincular(usuario: UsuarioAutenticado, texto: string, movimientoIds: string[]) {
-    const c = await buscarPorFolio(this.prisma, texto);
+    const c = await buscarPorFolio(this.comprobantes, texto);
     if (c.estado !== 'PREPARADO' && c.estado !== 'PENDIENTE')
       throw estadoInvalido(c.estado, 'vincular entradas');
     const ids = [...new Set(movimientoIds)];
-    const movs = await this.prisma.movimiento.findMany({
-      where: { id: { in: ids } },
-      include: { vinculo: true },
-    });
+    const movs = await this.movimientos.conVinculo(ids);
     if (movs.length !== ids.length) throw noVinculable('Una de las entradas no existe');
     if (movs.some((m) => m.tipo !== 'ENTRADA')) throw noVinculable('Solo se vinculan entradas');
     if (movs.some((m) => m.vinculo))
@@ -215,42 +182,28 @@ export class ConciliacionService {
     // Reasignar el folio saca el comprobante del alcance de quien lo tenía
     await this.exigirAlcance(usuario, c.acopio_id);
     // Reasignar el acopio solo vale en un folio sin vínculos: con ellos, el lote no se mezcla
-    const previos = await this.prisma.comprobanteMovimiento.findMany({
-      where: { comprobante_id: c.id },
-      select: { movimiento: { select: { acopio_id: true } } },
-    });
-    if (previos.some((v) => v.movimiento.acopio_id !== acopioId))
+    const previos = await this.comprobantes.acopiosVinculados(c.id);
+    if (previos.some((acopio) => acopio !== acopioId))
       throw noVinculable('Las entradas tienen que ser del mismo acopio que las ya vinculadas');
 
     try {
-      const hecho = await this.prisma.$transaction(async (tx) => {
+      const hecho = await this.transacciones.ejecutar(async (tx) => {
         // Condicionado al estado leído: una recepción o cancelación concurrente no se pisa
-        const { count } = await tx.comprobante.updateMany({
-          where: { id: c.id, estado: c.estado },
-          data: {
-            acopio_id: acopioId,
-            // Entregado sin red: nadie lo recibió por folio, así que entra a la bandeja ahora
-            ...(c.estado === 'PREPARADO'
-              ? { estado: 'PENDIENTE' as const, recibido_en: new Date() }
-              : {}),
-          },
+        const cambiadas = await this.comprobantes.cambiarSiEstado(tx, c.id, c.estado, {
+          acopio_id: acopioId,
+          // Entregado sin red: nadie lo recibió por folio, así que entra a la bandeja ahora
+          ...(c.estado === 'PREPARADO'
+            ? { estado: 'PENDIENTE' as const, recibido_en: new Date() }
+            : {}),
         });
-        if (count === 0) {
-          const actual = await tx.comprobante.findUniqueOrThrow({ where: { id: c.id } });
-          throw estadoInvalido(actual.estado, 'vincular entradas');
+        if (cambiadas === 0) {
+          throw estadoInvalido(await this.comprobantes.estado(tx, c.id), 'vincular entradas');
         }
-        await tx.comprobanteMovimiento.createMany({
-          data: ids.map((id) => ({
-            comprobante_id: c.id,
-            movimiento_id: id,
-            origen: 'AUDITOR' as const,
-            vinculado_por: usuario.id,
-          })),
+        await this.comprobantes.vincular(tx, c.id, ids, {
+          origen: 'AUDITOR',
+          usuarioId: usuario.id,
         });
-        const actualizado = await tx.comprobante.findUniqueOrThrow({
-          where: { id: c.id },
-          include: CON_LINEAS,
-        });
+        const actualizado = await this.comprobantes.conLineas(tx, c.id);
         await this.bitacora.registrar(tx, {
           usuarioId: usuario.id,
           accion: 'comprobante.vinculado',
@@ -272,12 +225,10 @@ export class ConciliacionService {
   }
 
   async conciliar(usuario: UsuarioAutenticado, texto: string) {
-    const c = await buscarPorFolio(this.prisma, texto);
+    const c = await buscarPorFolio(this.comprobantes, texto);
     await this.exigirAlcance(usuario, c.acopio_id);
     if (c.estado !== 'PENDIENTE') throw estadoInvalido(c.estado, 'conciliar');
-    if (
-      (await this.prisma.comprobanteMovimiento.count({ where: { comprobante_id: c.id } })) === 0
-    ) {
+    if ((await this.comprobantes.contarVinculos(c.id)) === 0) {
       throw new ErrorDominio('SIN_VINCULOS', 'Vincula al menos una entrada antes de conciliar');
     }
     const ahora = new Date();
@@ -294,14 +245,11 @@ export class ConciliacionService {
     texto: string,
     datos: { motivo: Motivo; nota?: string },
   ) {
-    const c = await buscarPorFolio(this.prisma, texto);
+    const c = await buscarPorFolio(this.comprobantes, texto);
     await this.exigirAlcance(usuario, c.acopio_id);
     if (c.estado !== 'PENDIENTE') throw estadoInvalido(c.estado, 'rechazar');
     const nota = datos.nota?.trim() || null;
-    const donador = await this.prisma.usuario.findUniqueOrThrow({
-      where: { id: c.donador_id },
-      select: { nombre: true, correo: true },
-    });
+    const donador = await this.usuarios.contacto(c.donador_id);
     const ahora = new Date();
     return this.cambiar(
       usuario,
@@ -334,7 +282,7 @@ export class ConciliacionService {
   }
 
   async revertirRechazo(usuario: UsuarioAutenticado, texto: string) {
-    const c = await buscarPorFolio(this.prisma, texto);
+    const c = await buscarPorFolio(this.comprobantes, texto);
     await this.exigirAlcance(usuario, c.acopio_id);
     if (c.estado !== 'RECHAZADO') throw estadoInvalido(c.estado, 'revertir el rechazo');
     return this.cambiar(usuario, c, 'comprobante.rechazo_revertido', 'revertir el rechazo', true, {
@@ -353,23 +301,16 @@ export class ConciliacionService {
     accion: string,
     verbo: string,
     destacado: boolean,
-    data: Prisma.ComprobanteUncheckedUpdateInput,
+    data: Prisma.ComprobanteUncheckedUpdateManyInput,
     ademas?: (tx: Prisma.TransactionClient) => Promise<void>,
   ) {
-    const hecho = await this.prisma.$transaction(async (tx) => {
+    const hecho = await this.transacciones.ejecutar(async (tx) => {
       // updateMany con el estado leído: si otro Auditor cambió el folio en medio, no pisa
-      const { count } = await tx.comprobante.updateMany({
-        where: { id: c.id, estado: c.estado },
-        data,
-      });
-      if (count === 0) {
-        const ahora = await tx.comprobante.findUniqueOrThrow({ where: { id: c.id } });
-        throw estadoInvalido(ahora.estado, verbo);
+      const cambiadas = await this.comprobantes.cambiarSiEstado(tx, c.id, c.estado, data);
+      if (cambiadas === 0) {
+        throw estadoInvalido(await this.comprobantes.estado(tx, c.id), verbo);
       }
-      const actualizado = await tx.comprobante.findUniqueOrThrow({
-        where: { id: c.id },
-        include: CON_LINEAS,
-      });
+      const actualizado = await this.comprobantes.conLineas(tx, c.id);
       await this.bitacora.registrar(tx, {
         usuarioId: usuario.id,
         accion,
