@@ -1420,6 +1420,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/zonas/{id}/reportes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ReportesController_deZona"];
+        put?: never;
+        post: operations["ReportesController_reportar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/publico/zonas-necesidad": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["ReportesController_capaPublica"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/salud": {
         parameters: {
             query?: never;
@@ -2915,6 +2947,43 @@ export interface components {
              */
             zonaId?: string;
             nota?: string;
+        };
+        ReportarDto: {
+            categorias: string[];
+            /** @description Pública: el mapa la muestra tal cual. Sin nombres ni datos de personas */
+            nota?: string;
+            resuelta: boolean;
+        };
+        ReportesCreadosDto: {
+            creados: string[];
+        };
+        ReporteNecesidadDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            categoriaId: string;
+            categoria: string;
+            nota: string[];
+            resuelta: boolean;
+            reportadoPor: string;
+            /** Format: date-time */
+            reportadoEn: string;
+        };
+        ZonaPublicaDto: {
+            /** Format: uuid */
+            zonaId: string;
+            /** @description Redondeado a dos decimales */
+            centro: {
+                lat: number;
+                lng: number;
+            };
+            radioKm: number;
+            necesidades: {
+                categoria: string;
+                nota: string | null;
+                /** Format: date-time */
+                reportadoEn: string;
+            }[];
         };
         SaludDto: {
             /** @enum {string} */
@@ -6003,6 +6072,89 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ReportesController_deZona: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReporteNecesidadDto"][];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ReportesController_reportar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ReportarDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReportesCreadosDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    ReportesController_capaPublica: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ZonaPublicaDto"][];
                 };
             };
         };
