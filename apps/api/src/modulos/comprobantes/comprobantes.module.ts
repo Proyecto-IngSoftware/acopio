@@ -31,5 +31,6 @@ import { TareasCustodiaService } from './tareas-custodia.service';
     SeguimientoService,
     TareasCustodiaService,
   ],
+  exports: [ComprobanteDao],
 })
 export class ComprobantesModule {}

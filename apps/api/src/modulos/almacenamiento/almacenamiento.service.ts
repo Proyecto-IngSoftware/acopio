@@ -33,6 +33,11 @@ export class AlmacenamientoService {
     return { clave, miniatura: claveMini, tipo: 'image/webp', bytes: imagen.length };
   }
 
+  /** ADR-0017: la API entrega los bytes y Garage nunca se expone. */
+  leerImagen(clave: string): Promise<{ datos: Buffer; tipo: string }> {
+    return this.almacen.leer(clave);
+  }
+
   async urlFirmada(clave: string): Promise<{ url: string; venceEn: Date }> {
     return {
       url: await this.almacen.urlFirmada(clave, VIDA_URL_SEGUNDOS),
