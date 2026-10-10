@@ -2,7 +2,7 @@
 title: "Bloque 4 · Motor: API, etapa 2 · plan"
 type: plan
 tags: [plan, bloque-4]
-estado: borrador
+estado: aprobado
 bloque: 4
 actualizado: 2026-10-09
 ---
@@ -74,8 +74,8 @@ Las tablas de esta etapa ya existen desde la etapa 1 (`remision`, `linea_remisio
 
 ## Decisiones de este plan
 
-La especificación deja estas cuatro abiertas. Las tomo así y Joseph las confirma al
-revisar el plan.
+La especificación deja estas cuatro abiertas. Joseph aprobó el plan con ellas el
+2026-10-09 y eligió la ejecución directa.
 
 | # | Decisión | Por qué |
 |---|---|---|
