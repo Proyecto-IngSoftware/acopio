@@ -122,6 +122,8 @@ Servicios de otros módulos que se usan desde cualquier parte: `BitacoraService.
 | `motor/calculo.ts` | `necesidad`, `estadoZona`, `estadoAcopio`, `urgencia`, `puntaje`, `pesosValidos` y las constantes del motor |
 | `motor/emparejar.ts` | `emparejar`, `clavePar` |
 | `motor/justificar.ts` | `justificar`, el texto de cada sugerencia |
+| `motor/remision.ts` | `TRANSICIONES_REMISION`, `puedeRemision`, `estadoTras`, `MAXIMO_EVIDENCIAS`: el ciclo de vida de la remisión para la API y la web |
+| `motor/simulador.ts` | `simular` y `generador` (semilla): el escenario repartido por el motor, en partes iguales y al más cercano (RF-MOT-010) |
 | `index.ts`, `motor/index.ts` | Reexportan lo anterior |
 
 ### Web
