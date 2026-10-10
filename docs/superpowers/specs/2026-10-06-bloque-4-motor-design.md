@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-4]
 estado: vigente
 bloque: 4
-actualizado: 2026-10-07
+actualizado: 2026-10-10
 ---
 
 # Bloque 4 · Motor · especificación
@@ -439,3 +439,18 @@ Cada etapa tiene su plan, escrito al empezarla.
 | Cuando un solo par compite en una ronda, su proximidad es 0 | `distancia_max` es la mayor entre los candidatos, así que el más lejano siempre puntúa 0 en proximidad. Es lo que dice la fórmula de M-06; el orden entre pares no cambia |
 | La justificación dice «Acopio Norte puede mandar 800 L sin bajar de su máximo» y usa como cobertura solo lo recibido, redondeado hacia abajo | La revisión final encontró que la frase mezclaba lo que va en camino con lo que llegó y mostraba el sobrante bruto, sin descontar lo vencido ni lo comprometido. Ahora coincide con la ficha de zona y con lo que de verdad se puede mover |
 | Aprobar rechaza con 409 `ZONA_SOLO_LECTURA` una sugerencia hacia una emergencia cerrada después del recálculo; descartar toma el candado del motor y aprobar cambia el estado solo si sigue en `PROPUESTA` | Revisión final: sin eso, una sugerencia podía quedar aprobada y descartada a la vez, o un par recién descartado volver en el recálculo en curso |
+
+**2026-10-10 · API, etapa 2.** Según el [plan](../../05-planes/2026-10-09-bloque-4-api-etapa-2.md).
+
+| Qué | Por qué |
+|---|---|
+| `motor` pasa a DAO antes de la etapa (ADR-0019) | Regla de CLAUDE.md al tocar un módulo sin migrar |
+| El ciclo de vida de la remisión es una tabla en `packages/shared/src/motor/remision.ts` (`TRANSICIONES_REMISION`) | La API y la web leen la misma regla; el error es `REMISION_ESTADO_INVALIDO` con el estado actual |
+| Hasta 5 fotos de evidencia; la sexta da 422 `EVIDENCIA_MAXIMA` (E2-01) | La especificación pedía al menos una y no fijaba tope |
+| El mapa público no lleva el nombre de la zona (E2-02); el seguimiento muestra de cada remisión solo el estado y las fechas (E2-03) | «Sin nombres» del §6, y el código de la remisión no le dice nada al Donador |
+| La evidencia se sirve en bytes desde la API, como ADR-0017 | Garage no se expone; la factura sigue con URL firmada hasta #26 |
+| El paso `RECIBIDA_EN_DESTINO` del seguimiento aparece solo si el folio salió en alguna remisión | Sin remisión, ese paso no le toca a la donación y la web lo mostraría pendiente |
+| Recibir bloquea la fila con un `UPDATE` condicionado que deja `EN_TRANSITO`, marca lo recibido y después pasa a `RECIBIDA` | `linea_remision_editable` solo deja escribir `cantidad_recibida` en `EN_TRANSITO` |
+| El ajuste de una cancelación y la recepción aceptan una categoría archivada | Lo que ya salió tiene que poder volver o llegar |
+| Errores nuevos fuera de la tabla del §6: `RESPONSABLE_OBLIGATORIO` 422, `FOLIO_NO_VINCULABLE` 422, `EVIDENCIA_MAXIMA` 422, `ZONA_OBLIGATORIA` 400, `REMISION_NO_ENCONTRADA` y `EVIDENCIA_NO_ENCONTRADA` 404 | Casos que la especificación no nombraba |
+| El simulador vive en `packages/shared/src/motor/simulador.ts`; con la semilla 42 el motor deja la cobertura más pareja entre zonas que repartir en partes iguales o al más cercano ([informe](../../03-diseno/motor/simulacion.md)) | M-08 |
