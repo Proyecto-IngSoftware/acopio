@@ -293,6 +293,69 @@ describe('base de datos', () => {
       ).resolves.toBeDefined();
     });
 
+    it('una sugerencia decidida no cambia; una propuesta sí', async () => {
+      const base = {
+        ronda: new Date(),
+        emergencia_id: EMERGENCIA_PRUEBA,
+        acopio_id: ACOPIO_A,
+        zona_id: ZONA_A,
+        categoria_id: categoria,
+        cantidad: 3,
+        puntaje: 0.5,
+        desglose: {},
+        justificacion: 'Prueba de la base',
+      };
+      const decidida = await a.prisma.sugerencia.create({
+        data: {
+          ...base,
+          estado: 'DESCARTADA',
+          motivo_descarte: 'No hace falta ahora',
+          decidida_por: adminId,
+          decidida_en: new Date(),
+        },
+      });
+      const propuesta = await a.prisma.sugerencia.create({ data: base });
+      await expect(
+        app.query(`UPDATE sugerencia SET cantidad = 1 WHERE id = $1`, [decidida.id]),
+      ).rejects.toThrow(/sugerencia_decidida/);
+      await expect(
+        app.query(`UPDATE sugerencia SET cantidad = 1 WHERE id = $1`, [propuesta.id]),
+      ).resolves.toBeDefined();
+    });
+
+    it('una línea no cambia de remisión ni de categoría', async () => {
+      const otra = await a.prisma.remision.create({
+        data: {
+          codigo: 'R-2026-BASE3',
+          acopio_origen_id: ACOPIO_A,
+          zona_destino_id: ZONA_A,
+          qr_token: `base3-${Date.now()}`,
+          creada_por: adminId,
+        },
+      });
+      const destino = await a.prisma.remision.create({
+        data: {
+          codigo: 'R-2026-BASE4',
+          acopio_origen_id: ACOPIO_A,
+          zona_destino_id: ZONA_A,
+          qr_token: `base4-${Date.now()}`,
+          creada_por: adminId,
+        },
+      });
+      const linea = await a.prisma.lineaRemision.create({
+        data: { remision_id: otra.id, categoria_id: categoria, cantidad_planeada: 2 },
+      });
+      await expect(
+        app.query(`UPDATE linea_remision SET remision_id = $1 WHERE id = $2`, [
+          destino.id,
+          linea.id,
+        ]),
+      ).rejects.toThrow(/linea_remision_fija/);
+      await expect(
+        app.query(`UPDATE linea_remision SET cantidad_planeada = 5 WHERE id = $1`, [linea.id]),
+      ).resolves.toBeDefined();
+    });
+
     it.each([
       ['reporte_necesidad', 'zona_id = zona_id'],
       ['necesidad_manual', 'zona_id = zona_id'],

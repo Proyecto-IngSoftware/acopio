@@ -1260,6 +1260,86 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/remisiones": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RemisionesController_listar"];
+        put?: never;
+        post: operations["RemisionesController_crear"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/remisiones/{codigo}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RemisionesController_ver"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["RemisionesController_editar"];
+        trace?: never;
+    };
+    "/api/remisiones/{codigo}/lineas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["RemisionesController_lineas"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/remisiones/{codigo}/despachar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RemisionesController_despachar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/remisiones/{codigo}/cancelar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["RemisionesController_cancelar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/salud": {
         parameters: {
             query?: never;
@@ -2671,6 +2751,82 @@ export interface components {
                 cantidad: number;
                 puntaje: number;
             }[];
+        };
+        CrearRemisionDto: {
+            /** Format: uuid */
+            acopioId: string;
+            /**
+             * Format: uuid
+             * @description null: despacho general
+             */
+            zonaId: string | null;
+            responsable?: string | null;
+            lineas: {
+                /** Format: uuid */
+                categoriaId: string;
+                cantidad: number;
+            }[];
+        };
+        RemisionDto: {
+            /** Format: uuid */
+            id: string;
+            /** @description R-AAAA-XXXXX */
+            codigo: string;
+            /** @enum {string} */
+            estado: "BORRADOR" | "EN_TRANSITO" | "RECIBIDA" | "CANCELADA";
+            acopio: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+            };
+            /** @description null: despacho general */
+            zona: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+            } | null;
+            responsable: string[];
+            qrToken: string;
+            /** Format: date-time */
+            creadaEn: string;
+            /** Format: date-time */
+            despachadaEn: string | null;
+            /** Format: date-time */
+            recibidaEn: string | null;
+            /** Format: date-time */
+            canceladaEn: string | null;
+            motivoCancelacion: string[];
+            notaRecepcion: string[];
+            /** @description Fotos de evidencia subidas */
+            evidencias: number;
+            folios: string[];
+            lineas: {
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
+                /** @enum {string} */
+                unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
+                cantidadPlaneada: number;
+                cantidadRecibida: number | null;
+            }[];
+        };
+        LineasDto: {
+            lineas: {
+                /** Format: uuid */
+                categoriaId: string;
+                cantidad: number;
+            }[];
+        };
+        DespacharDto: {
+            folios?: string[];
+        };
+        CancelarDto: {
+            motivo: string;
+        };
+        EditarRemisionDto: {
+            responsable?: string | null;
+            /** Format: uuid */
+            zonaId?: string | null;
         };
         SaludDto: {
             /** @enum {string} */
@@ -5379,6 +5535,226 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["VistaPreviaMotorDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    RemisionesController_listar: {
+        parameters: {
+            query?: {
+                estado?: "BORRADOR" | "EN_TRANSITO" | "RECIBIDA" | "CANCELADA";
+                zona?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemisionDto"][];
+                };
+            };
+        };
+    };
+    RemisionesController_crear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearRemisionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemisionDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    RemisionesController_ver: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                codigo: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemisionDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    RemisionesController_editar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                codigo: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditarRemisionDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemisionDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    RemisionesController_lineas: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                codigo: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["LineasDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemisionDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    RemisionesController_despachar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                codigo: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DespacharDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemisionDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    RemisionesController_cancelar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                codigo: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CancelarDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["RemisionDto"];
                 };
             };
             /** @description Error */

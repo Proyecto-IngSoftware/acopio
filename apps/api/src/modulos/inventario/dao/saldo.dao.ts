@@ -28,6 +28,15 @@ export class SaldoDao {
     return bd.saldo.findMany({ where: { acopio_id: acopioId } });
   }
 
+  deVarios(acopioIds: string[], categoriaIds?: string[], bd: ClienteBd = this.prisma) {
+    return bd.saldo.findMany({
+      where: {
+        acopio_id: { in: acopioIds },
+        categoria_id: categoriaIds ? { in: categoriaIds } : undefined,
+      },
+    });
+  }
+
   bloquear(tx: ClienteBd, acopioId: string, categoriaId: string) {
     return candadoSaldo(tx, acopioId, categoriaId);
   }
