@@ -16,7 +16,9 @@ Los patrones no se eligieron por adelantado. La arquitectura sí ([ADR-0008](adr
 
 | Patrón | Dónde | Por qué existe | Cuándo se repite |
 |---|---|---|---|
-| Monolito modular en capas | `apps/api/src/modulos/*`: controlador, servicio y Prisma en cada módulo | Un solo despliegue para un equipo de cuatro, con límites de dominio que se pueden revisar ([ADR-0008](adr/ADR-0008-arquitectura-stack-inicial.md)) | Cada módulo nuevo sigue la misma forma y entra en la tabla «Dependencias permitidas» de [vista-general.md](vista-general.md) y en `apps/api/.dependency-cruiser.cjs` |
+| Monolito modular en capas | `apps/api/src/modulos/*`: controlador, servicio y DAO en cada módulo | Un solo despliegue para un equipo de cuatro, con límites de dominio que se pueden revisar ([ADR-0008](adr/ADR-0008-arquitectura-stack-inicial.md)) | Cada módulo nuevo sigue la misma forma y entra en la tabla «Dependencias permitidas» de [vista-general.md](vista-general.md) y en `apps/api/.dependency-cruiser.cjs` |
+| DAO sobre Prisma ([ADR-0019](adr/ADR-0019-dao-sobre-prisma.md)) | `modulos/<módulo>/dao/*.dao.ts`: `MovimientoDao`, `SaldoDao`, `UmbralDao` y `NoRecibirDao` en `inventario`, `CategoriaDao` en `catalogo`, `SaludDao` | El servicio guarda las reglas de negocio y el DAO las consultas. Cada método recibe la `tx` de quien llama, así la bitácora y el candado del saldo siguen en la misma transacción | Toda consulta nueva en un módulo migrado (`MIGRADOS_A_DAO` en `.dependency-cruiser.cjs`) va en su DAO. Al tocar un módulo sin migrar, se migra entero |
+| Unidad de trabajo | `Transacciones.ejecutar` en `comun/prisma/transacciones.ts` | El servicio decide qué operaciones van juntas sin tocar Prisma | Toda operación que escriba en más de una tabla o registre bitácora |
 | Puertos y adaptadores (estrategia elegida por inyección de dependencias) | `ProveedorIdentidad` con `local` y `supabase`; el almacén de archivos (`almacen.ts`) con `almacen-s3.ts` para Garage ([ADR-0012](adr/ADR-0012-almacenamiento-garage.md)) y `almacen-memoria.ts`; geocodificación con Nominatim y un adaptador falso en las pruebas | Cambiar un servicio externo sin tocar el dominio y probar sin red | Cuando un servicio externo tiene dos implementaciones reales, o una real y una de prueba. `importacion` llevará un adaptador por fuente |
 | Inversión de dependencias | `VerificadorUbicaciones` en `comun/ubicaciones`, que implementa `acopios` y usa `identidad` | Rompe el ciclo entre `identidad` y `acopios` | Cuando dos módulos se necesitan entre sí: el contrato va a `comun/` y lo implementa el módulo que tiene los datos |
 | Registro de solo inserción con saldo derivado | `movimiento` y la tabla `saldo`, que mantiene un disparador ([ADR-0002](adr/ADR-0002-saldo-derivado.md), [ADR-0015](adr/ADR-0015-saldo-en-tabla-por-disparador.md), [ADR-0018](adr/ADR-0018-movimientos-de-zona.md)) | El inventario se puede auditar y nunca queda negativo | Todo cambio de existencias es un movimiento nuevo; nada actualiza un saldo a mano |
@@ -31,7 +33,7 @@ Los patrones no se eligieron por adelantado. La arquitectura sí ([ADR-0008](adr
 
 Eventos de dominio u Observer en la API. Hoy, cuando cambia una donación, el servicio escribe la bitácora y, solo al rechazarla, encola un correo: un único efecto no justifica la indirección. Además, `@nestjs/event-emitter` no comparte la transacción con los listeners y pierde los errores de los asíncronos, cosa que la bandeja de salida evita. Se reconsidera cuando varias reacciones de módulos distintos dependan del mismo cambio (avisos al recibir o conciliar, turnos, remisiones de la etapa 2), y sobre todo si alguna obligaría a romper la tabla de dependencias. Llegado ese caso, los eventos serían síncronos, recibirían la `tx` y se despacharían dentro de la transacción.
 
-Repository sobre Prisma. El cliente generado ya es la capa de acceso a datos, tipada y con transacciones. Envolverlo duplicaría cada consulta sin ganar nada que hoy se necesite.
+Repositorio genérico (`Repositorio<T>` con `buscar`, `crear`, `actualizar`). Las consultas del proyecto no son CRUD: los saldos solo se leen y los movimientos no se actualizan. Los DAO del [ADR-0019](adr/ADR-0019-dao-sobre-prisma.md) tienen métodos con nombre de negocio.
 
 Interceptor para la bitácora. Se descartó porque no conoce el estado anterior ni la transacción del servicio.
 
@@ -79,10 +81,13 @@ Cada sección lista lo que hay, por archivo. Cuando se agrega una pieza reutiliz
 | `prisma/cliente-bd.ts` | Tipo `ClienteBd`: conexión o transacción |
 | `prisma/errores.ts` | `esLlaveDuplicada` |
 | `prisma/errores-prisma.ts` | `restriccionUnicaViolada` |
-| `prisma/prisma.module.ts`, `prisma/prisma.service.ts` | `PrismaModule`, `PrismaService` |
+| `prisma/prisma.module.ts`, `prisma/prisma.service.ts` | `PrismaModule`, `PrismaService`. En un módulo migrado solo lo inyectan los DAO |
+| `prisma/transacciones.ts` | `Transacciones.ejecutar(trabajo, opciones)`: abre la transacción que comparten los DAO, la bitácora y la cola de correo |
 | `respuestas.ts` | DTO de respuesta para el contrato (`ComprobanteDto`, `SaldoDto`, `AcopioDto`…) |
 | `ubicaciones/verificador-ubicaciones.ts` | Puerto `VerificadorUbicaciones` y su token |
 | `validacion/cantidades.ts` | `cantidadPositiva`, `cantidadNoNegativa` (zod) |
+
+DAO que otros módulos usan: `CategoriaDao` (`catalogo/dao/`) y `SaldoDao` con `candadoSaldo` (`inventario/dao/saldo.dao.ts`).
 
 Servicios de otros módulos que se usan desde cualquier parte: `BitacoraService.registrar(tx, evento)` en `auditoria` y `NotificacionService.encolar(tx, destinatario, correo)` en `notificaciones`, con las plantillas de `notificaciones/plantillas.ts`.
 

@@ -19,6 +19,9 @@ const TODOS = [
   'salud',
 ];
 
+/** Módulos cuyo acceso a datos ya pasa por DAO (ADR-0019). Los demás se migran al tocarlos. */
+const MIGRADOS_A_DAO = ['inventario', 'salud'];
+
 /** módulo → módulos que lo pueden importar */
 const PERMITIDOS = {
   identidad: TODOS,
@@ -62,6 +65,22 @@ module.exports = {
       comment: 'comun y config son la base: no importan módulos de dominio',
       from: { path: '^src/(comun|config)/' },
       to: { path: '^src/modulos/' },
+    },
+    {
+      name: 'controladores-sin-acceso-a-datos',
+      severity: 'error',
+      comment:
+        'Un controlador llama servicios, no Prisma ni los DAO (ADR-0019). salud solo pregunta si la base responde',
+      from: { path: '\\.controller\\.ts$', pathNot: '^src/modulos/salud/' },
+      to: { path: ['^src/comun/prisma/prisma\\.service\\.ts$', '\\.dao\\.ts$'] },
+    },
+    {
+      name: 'acceso-a-datos-por-dao',
+      severity: 'error',
+      comment:
+        'En los módulos migrados solo los DAO usan PrismaService; los servicios abren la transacción con Transacciones (ADR-0019)',
+      from: { path: `^src/modulos/(${MIGRADOS_A_DAO.join('|')})/`, pathNot: '\\.dao\\.ts$' },
+      to: { path: '^src/comun/prisma/prisma\\.service\\.ts$' },
     },
     ...reglasDeModulo,
   ],

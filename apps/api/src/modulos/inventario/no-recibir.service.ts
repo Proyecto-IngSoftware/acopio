@@ -1,32 +1,30 @@
 import { Injectable } from '@nestjs/common';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import { AcopiosService } from '../acopios/acopios.service';
 import { BitacoraService } from '../auditoria/bitacora.service';
+import { CategoriaDao } from '../catalogo/dao/categoria.dao';
 import { hoyEnBogota } from '../catalogo/emergencias.service';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
+import { NoRecibirDao } from './dao/no-recibir.dao';
 
 const soloDia = (d: Date | null) => (d ? d.toISOString().slice(0, 10) : null);
-/** Vigente: sin fecha de reapertura, o con una que no ha pasado. */
-const vigente = () => ({ OR: [{ hasta: null }, { hasta: { gte: hoyEnBogota() } }] });
 
 /** «No recibir» por categoría y acopio (RF-INV-008, B-02, B-06). */
 @Injectable()
 export class NoRecibirService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly transacciones: Transacciones,
+    private readonly marcas: NoRecibirDao,
+    private readonly categorias: CategoriaDao,
     private readonly bitacora: BitacoraService,
     private readonly alcance: AlcanceService,
     private readonly acopios: AcopiosService,
   ) {}
 
   async listar(acopioId: string) {
-    const filas = await this.prisma.noRecibir.findMany({
-      where: { acopio_id: acopioId, ...vigente() },
-      include: { categoria: { select: { nombre: true } } },
-      orderBy: { categoria: { nombre: 'asc' } },
-    });
+    const filas = await this.marcas.vigentesDelAcopio(acopioId, hoyEnBogota());
     return filas.map((f) => ({
       categoriaId: f.categoria_id,
       categoria: f.categoria.nombre,
@@ -36,14 +34,7 @@ export class NoRecibirService {
   }
 
   async porCategoria(categoriaId: string) {
-    const filas = await this.prisma.noRecibir.findMany({
-      where: {
-        categoria_id: categoriaId,
-        ...vigente(),
-        acopio: { estado: { not: 'CERRADO' } },
-      },
-      select: { acopio_id: true, hasta: true },
-    });
+    const filas = await this.marcas.vigentesPorCategoria(categoriaId, hoyEnBogota());
     return filas.map((f) => ({ acopioId: f.acopio_id, hasta: soloDia(f.hasta) }));
   }
 
@@ -58,7 +49,7 @@ export class NoRecibirService {
     if (hasta && hasta < hoyEnBogota()) {
       throw new ErrorDominio('FECHA_PASADA', 'La fecha de reapertura ya pasó');
     }
-    const cat = await this.prisma.categoria.findUnique({ where: { id: categoriaId } });
+    const cat = await this.categorias.buscar(categoriaId);
     if (!cat || cat.archivada) {
       throw new ErrorDominio(
         'CATEGORIA_NO_ENCONTRADA',
@@ -66,13 +57,11 @@ export class NoRecibirService {
         404,
       );
     }
-    return this.prisma.$transaction(async (tx) => {
-      const clave = { acopio_id_categoria_id: { acopio_id: acopioId, categoria_id: categoriaId } };
-      const antes = await tx.noRecibir.findUnique({ where: clave });
-      const fila = await tx.noRecibir.upsert({
-        where: clave,
-        update: { hasta, marcado_por: usuario.id, marcado_en: new Date() },
-        create: { acopio_id: acopioId, categoria_id: categoriaId, hasta, marcado_por: usuario.id },
+    return this.transacciones.ejecutar(async (tx) => {
+      const antes = await this.marcas.buscar(acopioId, categoriaId, tx);
+      const fila = await this.marcas.guardar(tx, acopioId, categoriaId, {
+        hasta,
+        usuarioId: usuario.id,
       });
       await this.bitacora.registrar(tx, {
         usuarioId: usuario.id,
@@ -94,14 +83,10 @@ export class NoRecibirService {
 
   async desmarcar(usuario: UsuarioAutenticado, acopioId: string, categoriaId: string) {
     await this.alcance.exigir(usuario, 'ACOPIO', acopioId);
-    await this.prisma.$transaction(async (tx) => {
-      const clave = { acopio_id_categoria_id: { acopio_id: acopioId, categoria_id: categoriaId } };
-      const antes = await tx.noRecibir.findUnique({
-        where: clave,
-        include: { categoria: { select: { nombre: true } } },
-      });
+    await this.transacciones.ejecutar(async (tx) => {
+      const antes = await this.marcas.buscar(acopioId, categoriaId, tx);
       if (!antes) return;
-      await tx.noRecibir.delete({ where: clave });
+      await this.marcas.borrar(tx, acopioId, categoriaId);
       await this.bitacora.registrar(tx, {
         usuarioId: usuario.id,
         accion: 'no_recibir.desmarcado',

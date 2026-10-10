@@ -1,12 +1,14 @@
 import type { ClienteBd } from '../../comun/prisma/cliente-bd';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
+import type { CategoriaDao } from '../catalogo/dao/categoria.dao';
 
 /** La categoría de un movimiento: existe y no está archivada. */
-export async function categoriaParaMovimiento(tx: ClienteBd, categoriaId: string) {
-  const cat = await tx.categoria.findUnique({
-    where: { id: categoriaId },
-    select: { id: true, nombre: true, unidad_base: true, perecedero: true, archivada: true },
-  });
+export async function categoriaParaMovimiento(
+  categorias: CategoriaDao,
+  tx: ClienteBd,
+  categoriaId: string,
+) {
+  const cat = await categorias.paraMovimiento(categoriaId, tx);
   if (!cat) throw new ErrorDominio('CATEGORIA_NO_ENCONTRADA', 'La categoría no existe', 404);
   if (cat.archivada) {
     throw new ErrorDominio(
