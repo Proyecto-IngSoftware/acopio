@@ -24,15 +24,17 @@ El docente entrega cada consigna a medida que avanza el curso. La del Sprint 2
 octubre: el Sprint 2 va de la semana 10 a la 12 y la sustentación del segundo corte es
 el viernes 23 de octubre ([P-047](../01-requerimientos/pendientes.md)).
 
-- El Sprint 2 se cierra en la semana 12, con la Review antes de la sustentación. En ella
-  basta con mostrar el proyecto en ejecución y el diagrama de paquetes del Avance 4.
+- El Sprint 2 se cierra en la semana 12. La Review es la validación en clase del viernes
+  23, que también es la sustentación: basta con mostrar el proyecto en ejecución y el
+  diagrama de paquetes del Avance 4.
 - El Sprint 3 empieza en la semana 13. Mientras no llegue su consigna, se supone que va
   hasta la 16 y que el cierre ocupa las 17 y 18. Si la guía trae otras semanas, se
   corren las fechas y el orden de los bloques se mantiene.
 - La guía pide DAO, DTO y patrones de las tres familias con su código
   ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59),
   [P-050](../01-requerimientos/pendientes.md)) y evidencia de ramas, pull requests y
-  revisión ([P-051](../01-requerimientos/pendientes.md)).
+  revisión. Desde el Sprint 2 cada cambio entra por PR
+  ([P-051](../01-requerimientos/pendientes.md)).
 - El ritmo del Sprint 1 fue de cuatro bloques y medio en nueve días de trabajo. El
   cronograma pide menos que eso por semana para que quede margen para las revisiones,
   la deuda y las semanas con más carga de otras materias. Si una semana termina antes,
@@ -68,7 +70,7 @@ el viernes 23 de octubre ([P-047](../01-requerimientos/pendientes.md)).
 | Qué tiene que estar listo | Issue |
 |---|---|
 | Interfaz del motor en sus tres ciclos, con sus recorridos. Bloque 4 cerrado: HU-10a, HU-10b, HU-11, HU-12 y HU-13 | [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35) |
-| Review del Sprint 2 antes del viernes 23, historia por historia, y retrospectiva | [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47) |
+| Review del Sprint 2 en la validación de clase del viernes 23, historia por historia, y retrospectiva | [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47) |
 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio | [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47), [#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59) |
 | Sustentación del segundo corte el viernes 23: proyecto en ejecución y diagrama de paquetes | [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47) |
 | Primera ronda de pruebas del equipo en el servidor, con sus hallazgos como issues | [#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58) |

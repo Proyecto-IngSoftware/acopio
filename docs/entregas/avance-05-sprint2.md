@@ -24,7 +24,7 @@ Se entrega actualizando el mismo documento de OneDrive, sin crear uno nuevo.
 | Parte | Qué lleva | Dónde está |
 |---|---|---|
 | Incremento | API con base de datos, Docker Compose reproducible con volumen, variables de entorno sin credenciales en el repositorio, manejo de errores y validaciones | Ya está desde el Sprint 1 |
-| Colaboración | Commits, ramas, pull requests y revisión de cambios en GitHub | Hoy no hay ramas ni PR ([P-051](../01-requerimientos/pendientes.md)) |
+| Colaboración | Commits, ramas, pull requests y revisión de cambios en GitHub | Desde el 9 de octubre, cada cambio va en una rama con PR revisado y fusionado por Joseph ([P-051](../01-requerimientos/pendientes.md)) |
 | Pantallas | Una o dos pantallas conectadas a la API, con datos reales, mensajes de confirmación, validación o error y un flujo completo. En el documento, capturas, explicación del flujo e historias relacionadas | Hay muchas más. Falta elegir cuáles se documentan |
 | DAO | Obligatorio: DAOs por entidad, usados desde los servicios, sin acceso a datos en controladores ni en la interfaz. Un ORM no basta | Falta ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59), [P-050](../01-requerimientos/pendientes.md)) |
 | DTO | Si aplica: qué transporta, en qué flujo y en qué se diferencia de la entidad persistida. Si no aplica, una justificación | Existen; falta documentarlos ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59)) |
@@ -55,7 +55,7 @@ tablero ya no muestra el Sprint 1.
 ## Borrador del Sprint Planning
 
 Todo lo de esta tabla es propuesta y se confirma en el Planning. El sprint va hasta el
-domingo 25 de octubre, con la Review antes de la sustentación del viernes 23
+domingo 25 de octubre, con la Review en la validación de clase del viernes 23
 ([P-047](../01-requerimientos/pendientes.md)). Con una semana menos de la que suponía
 este borrador, la pieza C (HU-02 y HU-15) probablemente pasa al Sprint 3; se decide en el
 Planning.
@@ -67,7 +67,7 @@ Planning.
 | Tareas técnicas | DAO, DTO y patrones de diseño ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59)). API de la etapa 2 del motor y simulador ([#46](https://github.com/Proyecto-IngSoftware/acopio/issues/46)). Contrato OpenAPI sin arreglos en los nullable ([#38](https://github.com/Proyecto-IngSoftware/acopio/issues/38)). Maquetas en Stitch de C10, C11 y las pantallas de remisión y recepción. Interfaz del motor en tres ciclos ([#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)). Pieza C del Bloque 1: verificación de entidades y causas ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)). Servidor de pruebas ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)) |
 | Responsables iniciales | Según los roles del Sprint 0 ([Avance 1, §5](avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo)): Joseph, arquitectura, modelo de datos e integración; Brayan, requerimientos y diseño UI/UX; Alejandra, coordinación del sprint y documentación; Michael, calidad, pruebas y despliegue. El responsable hace el seguimiento de su área; la programación se reparte entre los cuatro. Detalle por tarea en la tabla de abajo |
 | Dependencias o riesgos | La interfaz del motor depende de la API de la etapa 2 y de las maquetas aprobadas. El servidor de pruebas depende de decidir proveedor, dominio y remitente antes del 18 de octubre. Microsoft 365 retira el SMTP con contraseña a fines de 2026 (RTA-04) |
-| Definition of Done | La misma del Sprint 1 ([Avance 4](avance-04-sprint1.md#3a-sprint-planning)), con un punto más: el cambio entra por un pull request que otro integrante revisa y aprueba |
+| Definition of Done | La misma del Sprint 1 ([Avance 4](avance-04-sprint1.md#3a-sprint-planning)), con un punto más: el cambio entra por un pull request con el CI en verde, que Joseph revisa y fusiona ([P-051](../01-requerimientos/pendientes.md)) |
 
 **Tareas y responsables (propuesta).** Cada tarea queda con quien tiene ese rol desde
 el Sprint 0. Una tarea con responsable no es de una sola persona: el responsable
@@ -98,7 +98,7 @@ decidió el 2026-10-07 que en el Sprint 2 no rotan: siguen los del Sprint 0
 |:-:|---|---|
 | 10 | domingo 11 oct | Cierre del Avance 4, Planning del Sprint 2 |
 | 11 | domingo 18 oct | API de la etapa 2 del motor, contrato corregido, DAO y patrones, decisión de VPS y dominio |
-| 12 | domingo 25 oct | Interfaz del motor (Bloque 4 cerrado), Review y retrospectiva antes del viernes 23, Avance 5 en OneDrive, sustentación el 23 |
+| 12 | domingo 25 oct | Interfaz del motor (Bloque 4 cerrado), Avance 5 en OneDrive antes del viernes 23, Review en la validación de clase de ese día y retrospectiva |
 
 ## Seguimientos del Sprint 2
 
@@ -121,8 +121,9 @@ Tabla de cada seguimiento:
 
 ## Sprint Review
 
-Se hace en la semana 12, antes de la sustentación del viernes 23. Evidencia: video breve
-o capturas de los contenedores en ejecución y de las pruebas de la API.
+Se hace en la validación de clase del viernes 23 de octubre, que es también la
+sustentación del segundo corte. Evidencia: video breve o capturas de los contenedores en
+ejecución y de las pruebas de la API.
 
 | Historia | ¿Se cumplió? | Criterios pendientes, ajustes u observaciones |
 |---|---|---|
