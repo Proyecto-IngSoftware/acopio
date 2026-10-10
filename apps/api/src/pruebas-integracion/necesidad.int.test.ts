@@ -332,4 +332,19 @@ describe('necesidad y excedentes', () => {
       await a.http().get(`/api/acopios/${ACOPIO_B}/excedentes`).set(como(op.token)).expect(403);
     });
   });
+
+  it('en una categoría por unidades, la necesidad manual es entera', async () => {
+    const jabon = (
+      await a.prisma.categoria.create({
+        data: { nombre: unico('Jabón '), grupo: 'ASEO_PERSONAL', unidad_base: 'UNIDAD' },
+      })
+    ).id;
+    const r = await a
+      .http()
+      .put(`/api/zonas/${ZONA_A}/necesidad-manual/${jabon}`)
+      .set(como(tokenAdmin))
+      .send({ cantidad: 10.5, motivo: 'Familias que llegaron anoche' })
+      .expect(422);
+    expect(r.body.codigo).toBe('CANTIDAD_ENTERA');
+  });
 });

@@ -11,13 +11,20 @@ import { EstadoMotorService } from './estado-motor.service';
 import { NecesidadController } from './necesidad.controller';
 import { NecesidadService } from './necesidad.service';
 import { RemisionesBorradorService } from './remisiones-borrador.service';
+import { RemisionesController } from './remisiones.controller';
+import { RemisionesService } from './remisiones.service';
 import { SugerenciasController } from './sugerencias.controller';
 import { SugerenciasService } from './sugerencias.service';
 
 /** Motor (Bloque 4): necesidad, excedentes, sugerencias y remisiones. Nadie lo importa. */
 @Module({
   imports: [InventarioModule, CatalogoModule],
-  controllers: [NecesidadController, SugerenciasController, ConfiguracionController],
+  controllers: [
+    NecesidadController,
+    SugerenciasController,
+    ConfiguracionController,
+    RemisionesController,
+  ],
   providers: [
     ConfiguracionDao,
     NecesidadDao,
@@ -28,6 +35,7 @@ import { SugerenciasService } from './sugerencias.service';
     SugerenciasService,
     ConfiguracionService,
     RemisionesBorradorService,
+    RemisionesService,
   ],
 })
 export class MotorModule {}

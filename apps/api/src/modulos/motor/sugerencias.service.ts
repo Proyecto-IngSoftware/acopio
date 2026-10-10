@@ -135,7 +135,9 @@ export class SugerenciasService {
         const deficit = demanda
           ? (estadoZona(demanda.necesidad, demanda.recibido, demanda.enCamino)?.deficit ?? 0)
           : 0;
-        const maximo = Math.min(oferta?.movible ?? 0, deficit);
+        const tope = Math.min(oferta?.movible ?? 0, deficit);
+        // Una categoría por unidades no manda fracciones: el tope es entero (menor de la etapa 1)
+        const maximo = s.categoria.unidad_base === 'UNIDAD' ? Math.floor(tope + 1e-9) : tope;
         if (cantidad > maximo + 1e-9) {
           throw new ErrorDominio(
             'SUGERENCIA_DESACTUALIZADA',
