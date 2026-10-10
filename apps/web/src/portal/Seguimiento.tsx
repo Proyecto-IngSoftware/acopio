@@ -13,6 +13,7 @@ const NOMBRE_PASO: Record<DatosSeguimiento['pasos'][number]['paso'], string> = {
   PREPARADA: 'Preparada',
   RECIBIDA: 'Recibida',
   CONCILIADA: 'Conciliada',
+  RECIBIDA_EN_DESTINO: 'Recibida en destino',
 };
 
 function Resultado({ folio }: { folio: string }) {

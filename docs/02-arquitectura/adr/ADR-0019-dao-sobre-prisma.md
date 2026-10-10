@@ -64,7 +64,9 @@ Dependency-cruiser lo hace cumplir con dos reglas en `apps/api/.dependency-cruis
 
 ## Alcance
 
-El 2026-10-09 se migraron `inventario`, `salud` y `comprobantes`. `ComprobanteDao`
+El 2026-10-09 se migraron `inventario`, `salud` y `comprobantes`, y con la etapa 2 del
+motor, `motor`: `SugerenciaDao`, `RemisionDao`, `NecesidadDao` y `ConfiguracionDao`, más
+`ZonaDao` en `acopios`. `ComprobanteDao`
 cubre el agregado entero: el comprobante, sus líneas y sus vínculos con movimientos.
 `acopios`, `identidad` y `catalogo` ya exportan DAO para otros módulos, pero sus
 servicios todavía usan Prisma. Los módulos que faltan se migran cuando se toquen, y al

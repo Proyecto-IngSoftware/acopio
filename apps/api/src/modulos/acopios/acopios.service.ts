@@ -187,8 +187,8 @@ export class AcopiosService {
   }
 
   /** Para inventario: 404 si no existe, 409 si está cerrado. */
-  async exigirAbierto(id: string): Promise<void> {
-    const f = await this.prisma.acopio.findUnique({ where: { id }, select: { estado: true } });
+  async exigirAbierto(id: string, bd: ClienteBd = this.prisma): Promise<void> {
+    const f = await bd.acopio.findUnique({ where: { id }, select: { estado: true } });
     if (!f) throw new ErrorDominio('ACOPIO_NO_ENCONTRADO', 'El acopio no existe', 404);
     if (f.estado === 'CERRADO') {
       throw new ErrorDominio('ACOPIO_CERRADO', 'El acopio está cerrado', 409);

@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { emparejar, pesosValidos, type Pesos, type SugerenciaCalculada } from '@acopio/shared';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import { BitacoraService } from '../auditoria/bitacora.service';
-import { leerConfiguracion } from './configuracion';
+import { ConfiguracionDao } from './dao/configuracion.dao';
 import { SugerenciasService } from './sugerencias.service';
 
 export interface DatosConfiguracion {
@@ -21,34 +21,21 @@ const exigirPesos = (p: Pesos) => {
 @Injectable()
 export class ConfiguracionService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly transacciones: Transacciones,
+    private readonly configuracion: ConfiguracionDao,
     private readonly bitacora: BitacoraService,
     private readonly sugerencias: SugerenciasService,
   ) {}
 
   leer() {
-    return leerConfiguracion(this.prisma);
+    return this.configuracion.leer();
   }
 
   async guardar(admin: UsuarioAutenticado, d: DatosConfiguracion) {
     exigirPesos(d.pesos);
-    await this.prisma.$transaction(async (tx) => {
-      const antes = await leerConfiguracion(tx);
-      await tx.configuracionMotor.upsert({
-        where: { id: 1 },
-        update: {
-          pesos: { ...d.pesos },
-          cantidad_minima: d.cantidadMinima,
-          actualizado_por: admin.id,
-          actualizado_en: new Date(),
-        },
-        create: {
-          id: 1,
-          pesos: { ...d.pesos },
-          cantidad_minima: d.cantidadMinima,
-          actualizado_por: admin.id,
-        },
-      });
+    await this.transacciones.ejecutar(async (tx) => {
+      const antes = await this.configuracion.leer(tx);
+      await this.configuracion.guardar(tx, { ...d, usuarioId: admin.id });
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
         accion: 'motor.configuracion',
@@ -63,8 +50,14 @@ export class ConfiguracionService {
   /** El ranking con los pesos guardados y con los propuestos, sin guardar nada. */
   async vistaPrevia(d: DatosConfiguracion, ahora = new Date()) {
     exigirPesos(d.pesos);
-    const actual = await leerConfiguracion(this.prisma);
-    const { entrada } = await this.sugerencias.cargarEntrada(this.prisma, ahora);
+    // Una transacción de solo lectura: la configuración y el estado salen de la misma foto
+    const { actual, entrada } = await this.transacciones.ejecutar(
+      async (tx) => ({
+        actual: await this.configuracion.leer(tx),
+        entrada: (await this.sugerencias.cargarEntrada(tx, ahora)).entrada,
+      }),
+      { timeout: 30_000, maxWait: 10_000 },
+    );
     const nombre = (lista: { id: string; nombre: string }[], id: string) =>
       lista.find((x) => x.id === id)?.nombre ?? '';
     const vista = (s: SugerenciaCalculada) => ({
