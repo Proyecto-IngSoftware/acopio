@@ -824,9 +824,9 @@ intervalo, la segunda caería en la semana 12, pero ninguna guía lo dice.
 [Avance 5](../talleres/Avance%20de%20Proyecto%205%20–%20IS1.pdf) pone el Sprint 2 en
 las semanas 10 a 12 y la sustentación del segundo corte el viernes 23 de octubre. El
 Sprint 2 se cierra en la semana 12 y el Sprint 3 empieza en la 13; su duración sigue
-siendo un supuesto hasta su consigna. Queda una duda: la guía habla de una «validación
-que se realizará en clase el próximo viernes» sin fecha. Si es el 16 de octubre, ese día
-se muestra lo que haya y la Review formal se hace antes del 23. Se le pregunta al docente
+siendo un supuesto hasta su consigna. La «validación que se realizará en clase el próximo viernes»
+que menciona la guía es la misma sustentación del 23 (confirmado por Joseph); la Review
+del Sprint 2 se hace ese día
 
 
 ### P-048 · Los roles no rotan en el Sprint 2
@@ -882,8 +882,10 @@ directo a `main` sin PR (CLAUDE.md, «Flujo de trabajo»). El borrador del Plann
 propone que en el Sprint 2 cada cambio entre por un PR que otro integrante revise.
 **Por qué:** sin ramas ni PR el repositorio no muestra la evidencia que pide la guía, y
 el repositorio tiene que estar público con su enlace en el documento.
-**Estado:** ABIERTO. Joseph decide si desde el Sprint 2 el trabajo va en ramas con PR y,
-si es así, se actualiza el «Flujo de trabajo» de CLAUDE.md
+**Estado:** RESUELTO el 2026-10-09 → «Flujo de trabajo» de CLAUDE.md. Desde el Sprint 2
+cada cambio va en una rama con PR. Joseph lo revisa y lo fusiona cuando el CI pasa; como
+GitHub no deja aprobar un PR propio, la revisión queda como comentario. El primero es el
+que registra esta decisión
 
 ---
 

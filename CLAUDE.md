@@ -109,7 +109,7 @@ Antes de escribir documentación, un comentario o cierre de issue, o la descripc
 
 ## Flujo de trabajo
 
-Mientras Joseph trabaje solo, los cambios van directo a `main`, sin PR: se corre la verificación de abajo y, si pasa, se hace commit y se sube. Después del push se revisa el CI con `gh run watch`. Los mensajes de commit van en español, con el área al inicio (`CI: …`, `Compose: …`, `ADR-0012: …`).
+Desde el Sprint 2, cada cambio va en una rama con pull request hacia `main` (P-051): la guía del Avance 5 pide evidencia de ramas, PR y revisión. Se corre la verificación de abajo y, si pasa, se hace commit en la rama, se sube y se abre el PR con `gh pr create`. Con el CI en verde (`gh pr checks --watch`), Joseph revisa y fusiona con `gh pr merge --merge --delete-branch`, que conserva los commits. GitHub no deja aprobar un PR propio, así que la revisión queda como comentario (`gh pr review --comment`). Nada se sube directo a `main`. Los mensajes de commit van en español, con el área al inicio (`CI: …`, `Compose: …`, `ADR-0012: …`).
 
 El trabajo se organiza por bloques, según el plan vigente en `docs/05-planes/`.
 
