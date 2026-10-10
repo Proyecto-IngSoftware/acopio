@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { ComprobanteDao } from './dao/comprobante.dao';
 import { normalizarFolio } from './folio';
 
 const ETIQUETAS = {
@@ -20,31 +20,12 @@ const redondo = (n: number) => Math.round(n * 1000) / 1000;
  */
 @Injectable()
 export class SeguimientoService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly comprobantes: ComprobanteDao) {}
 
   async consultar(texto: string) {
     const folio = normalizarFolio(texto);
     if (!folio) throw noEncontrado();
-    const c = await this.prisma.comprobante.findUnique({
-      where: { folio },
-      select: {
-        folio: true,
-        estado: true,
-        creado_en: true,
-        recibido_en: true,
-        verificado_en: true,
-        acopio: { select: { nombre: true } },
-        lineas: {
-          select: {
-            cantidad_declarada: true,
-            cantidad_confirmada: true,
-            contenido_unitario: true,
-            categoria: { select: { nombre: true, unidad_base: true } },
-          },
-          orderBy: { id: 'asc' },
-        },
-      },
-    });
+    const c = await this.comprobantes.paraSeguimiento(folio);
     if (!c) throw noEncontrado();
     const recibida = c.recibido_en !== null;
     return {

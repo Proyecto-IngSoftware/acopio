@@ -1,17 +1,9 @@
 import { ErrorDominio } from '../../comun/errores/error-dominio';
-import type { ClienteBd } from '../../comun/prisma/cliente-bd';
 import type { Prisma } from '../../generado/prisma/client';
+import type { ComprobanteConLineas, ComprobanteDao } from './dao/comprobante.dao';
 import { normalizarFolio } from './folio';
 
-export const CON_LINEAS = {
-  acopio: { select: { id: true, nombre: true } },
-  lineas: {
-    include: { categoria: { select: { nombre: true, unidad_base: true, perecedero: true } } },
-    orderBy: { id: 'asc' },
-  },
-} satisfies Prisma.ComprobanteInclude;
-
-export type ComprobanteConLineas = Prisma.ComprobanteGetPayload<{ include: typeof CON_LINEAS }>;
+export type { ComprobanteConLineas } from './dao/comprobante.dao';
 
 const soloDia = (d: Date | null) => (d ? d.toISOString().slice(0, 10) : null);
 const numero = (d: Prisma.Decimal | null) => (d === null ? null : Number(d));
@@ -46,11 +38,9 @@ export function aComprobanteVista(c: ComprobanteConLineas) {
 export type ComprobanteVista = ReturnType<typeof aComprobanteVista>;
 
 /** Un folio mal escrito y uno que no existe dan el mismo 404 (RF-CMP-006). */
-export async function buscarPorFolio(cliente: ClienteBd, texto: string) {
+export async function buscarPorFolio(comprobantes: ComprobanteDao, texto: string) {
   const folio = normalizarFolio(texto);
-  const c = folio
-    ? await cliente.comprobante.findUnique({ where: { folio }, include: CON_LINEAS })
-    : null;
+  const c = folio ? await comprobantes.porFolio(folio) : null;
   if (!c) throw new ErrorDominio('FOLIO_NO_ENCONTRADO', 'No encontramos ese folio', 404);
   return c;
 }

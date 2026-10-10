@@ -5,17 +5,19 @@ import { CodigosBarrasController } from './codigos-barras.controller';
 import { CodigosBarrasService } from './codigos-barras.service';
 import { CategoriasService } from './categorias.service';
 import { CategoriaDao } from './dao/categoria.dao';
+import { CodigoBarrasDao } from './dao/codigo-barras.dao';
 import { EmergenciasService } from './emergencias.service';
 
 @Module({
   controllers: [CatalogoController, CodigosBarrasController],
   providers: [
     CategoriaDao,
+    CodigoBarrasDao,
     CategoriasService,
     CanastaService,
     EmergenciasService,
     CodigosBarrasService,
   ],
-  exports: [CategoriaDao, CategoriasService, CanastaService],
+  exports: [CategoriaDao, CodigoBarrasDao, CategoriasService, CanastaService],
 })
 export class CatalogoModule {}

@@ -3,7 +3,7 @@ title: "Vista general de arquitectura"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-07
+actualizado: 2026-10-09
 ---
 
 # Vista general de arquitectura
@@ -146,7 +146,7 @@ identidad      ← todos           (autorización)
 auditoria      ← todos           (registro)
 notificaciones ← identidad, acopios, comprobantes, turnos
 almacenamiento ← acopios, comprobantes, motor
-catalogo       ← inventario, motor
+catalogo       ← inventario, comprobantes, motor
 acopios        ← inventario, comprobantes, motor, turnos, importacion
 inventario     ← comprobantes, motor
 comprobantes   ← motor           (solo lectura, para trazabilidad)
@@ -154,6 +154,9 @@ comprobantes   ← motor           (solo lectura, para trazabilidad)
 
 `notificaciones` y `almacenamiento` no dependen de ningún módulo de dominio: son
 hojas del grafo, y por eso no pueden crear ciclos.
+
+**2026-10-09.** `comprobantes` puede importar `catalogo`: lee categorías y códigos de
+barras por sus DAO ([ADR-0019](adr/ADR-0019-dao-sobre-prisma.md)).
 
 **2026-09-28 · construido en el Bloque 0.** Estas reglas las hace cumplir
 dependency-cruiser en CI (`apps/api/.dependency-cruiser.cjs`). Dos piezas que no son
