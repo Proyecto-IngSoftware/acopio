@@ -1,6 +1,7 @@
 import {
   ACOPIO_A,
   ADMIN,
+  EMERGENCIA_PRUEBA,
   ZONA_A,
   crearAppPrueba,
   crearUsuarioActivo,
@@ -153,9 +154,25 @@ describe('despacho y cancelación de remisiones', () => {
 
   it('cancelar en tránsito devuelve el saldo, libera «en camino» y deja las sugerencias aprobadas', async () => {
     const cat = await categoria(50);
+    // Zona propia: aprobar suma la línea al borrador del par acopio-zona (M-07), y en la base
+    // compartida el de ACOPIO_A→ZONA_A trae líneas de otras suites
+    const zona = (
+      await a.prisma.zona.create({
+        data: {
+          emergencia_id: EMERGENCIA_PRUEBA,
+          nombre: unico('Zona despacho '),
+          municipio: 'Bogotá',
+          lat: 4.6,
+          lng: -74.08,
+          poblacion_estimada: 300,
+          poblacion_fuente: 'Censo de prueba',
+          poblacion_fecha: new Date('2026-09-01T00:00:00Z'),
+        },
+      })
+    ).id;
     await a.prisma.necesidadManual.create({
       data: {
-        zona_id: ZONA_A,
+        zona_id: zona,
         categoria_id: cat,
         cantidad: 20,
         motivo: 'Necesidad de la prueba de despacho',
@@ -164,7 +181,7 @@ describe('despacho y cancelación de remisiones', () => {
     });
     await a.app.get(SugerenciasService).recalcular();
     const s = await a.prisma.sugerencia.findFirstOrThrow({
-      where: { categoria_id: cat, estado: 'PROPUESTA' },
+      where: { categoria_id: cat, zona_id: zona, estado: 'PROPUESTA' },
     });
     const ap = await post(`/api/sugerencias/${s.id}/aprobar`, admin, { cantidad: 8 }).expect(200);
     const codigo = ap.body.remision.codigo as string;
@@ -187,7 +204,7 @@ describe('despacho y cancelación de remisiones', () => {
     expect((await a.prisma.sugerencia.findUniqueOrThrow({ where: { id: s.id } })).estado).toBe(
       'APROBADA',
     );
-    const ficha = await get(`/api/zonas/${ZONA_A}/necesidad`, admin).expect(200);
+    const ficha = await get(`/api/zonas/${zona}/necesidad`, admin).expect(200);
     const enCamino = ficha.body.categorias.find(
       (c: { categoriaId: string }) => c.categoriaId === cat,
     ).enCamino;
