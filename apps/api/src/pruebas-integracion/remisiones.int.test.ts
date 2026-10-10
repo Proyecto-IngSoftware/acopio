@@ -176,4 +176,47 @@ describe('remisiones', () => {
     await get(`/api/remisiones/${creada.body.codigo}`, admin).expect(200);
     await get('/api/remisiones/R-2026-ZZZZZ', admin).expect(404);
   });
+
+  it('en una categoría por unidades, una línea con fracción responde 422 CANTIDAD_ENTERA', async () => {
+    const panales = (
+      await a.prisma.categoria.create({
+        data: { nombre: unico('Pañales '), grupo: 'BEBE', unidad_base: 'UNIDAD' },
+      })
+    ).id;
+    await a.prisma.movimiento.create({
+      data: {
+        acopio_id: ACOPIO_A,
+        categoria_id: panales,
+        tipo: 'ENTRADA',
+        signo: 1,
+        cantidad: 20,
+        usuario_id: adminId,
+        ocurrido_en: new Date(),
+      },
+    });
+    await a.prisma.umbral.create({
+      data: {
+        acopio_id: ACOPIO_A,
+        categoria_id: panales,
+        minimo: 0,
+        maximo: 0,
+        actualizado_por: adminId,
+      },
+    });
+    const r = await post('/api/remisiones', operadorA, {
+      acopioId: ACOPIO_A,
+      zonaId: ZONA_A,
+      lineas: [{ categoriaId: panales, cantidad: 2.5 }],
+    }).expect(422);
+    expect(r.body.codigo).toBe('CANTIDAD_ENTERA');
+  });
+
+  it('una categoría que no existe responde 404', async () => {
+    const r = await post('/api/remisiones', operadorA, {
+      acopioId: ACOPIO_A,
+      zonaId: ZONA_A,
+      lineas: [{ categoriaId: '99999999-9999-4999-8999-999999999999', cantidad: 1 }],
+    }).expect(404);
+    expect(r.body.codigo).toBe('CATEGORIA_NO_ENCONTRADA');
+  });
 });

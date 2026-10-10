@@ -9,6 +9,7 @@ import {
   type AppPrueba,
 } from '../../test/app-prueba';
 import { generarFolio } from '../modulos/comprobantes/folio';
+import { RemisionesService } from '../modulos/motor/remisiones.service';
 import { SugerenciasService } from '../modulos/motor/sugerencias.service';
 
 /** RF-MOT-008 y M-07: despachar con salidas y folios, y cancelar en borrador o en tránsito. */
@@ -215,5 +216,34 @@ describe('despacho y cancelación de remisiones', () => {
     const cat = await categoria(5);
     const r = await borrador(cat, 1, null);
     await post(`/api/remisiones/${r.codigo}/cancelar`, operador, { motivo: 'corto' }).expect(400);
+  });
+
+  it('si las líneas cambian mientras se despacha, responde 409 y no escribe salidas', async () => {
+    const cat = await categoria(40);
+    const r = await borrador(cat, 10, 'Ana');
+    const servicio = a.app.get(RemisionesService);
+    const original = servicio.encontrar.bind(servicio);
+    // Entre la lectura de despachar y su transacción, otro usuario cambia la línea a 20
+    const espia = jest.spyOn(servicio, 'encontrar').mockImplementationOnce(async (codigo, bd) => {
+      const leida = await original(codigo, bd);
+      await a
+        .http()
+        .put(`/api/remisiones/${r.codigo}/lineas`)
+        .set(como(operador))
+        .send({ lineas: [{ categoriaId: cat, cantidad: 20 }] })
+        .expect(200);
+      return leida;
+    });
+    try {
+      const d = await post(`/api/remisiones/${r.codigo}/despachar`, operador, {}).expect(409);
+      expect(d.body.codigo).toBe('REMISION_CAMBIO');
+    } finally {
+      espia.mockRestore();
+    }
+    expect(await a.prisma.movimiento.count({ where: { remision_id: r.id } })).toBe(0);
+    expect((await a.prisma.remision.findUniqueOrThrow({ where: { id: r.id } })).estado).toBe(
+      'BORRADOR',
+    );
+    expect(await saldo(cat)).toBe(40);
   });
 });

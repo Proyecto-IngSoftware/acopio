@@ -20,12 +20,26 @@ export type RemisionConLineas = Prisma.RemisionGetPayload<{ include: typeof CON_
 export class RemisionDao {
   constructor(private readonly prisma: PrismaService) {}
 
-  borradorDelPar(tx: ClienteBd, acopioId: string, zonaId: string | null) {
-    return tx.remision.findFirst({
-      where: { estado: 'BORRADOR', acopio_origen_id: acopioId, zona_destino_id: zonaId },
-      orderBy: { creada_en: 'asc' },
-      select: { id: true, codigo: true },
-    });
+  /**
+   * El borrador del par, con la fila bloqueada hasta el fin de la transacción: un despacho
+   * o una cancelación a la vez esperan, y si ganaron, aquí ya no aparece como BORRADOR.
+   */
+  async borradorDelPar(tx: ClienteBd, acopioId: string, zonaId: string | null) {
+    const filas = await tx.$queryRaw<{ id: string; codigo: string }[]>`
+      SELECT id, codigo FROM remision
+      WHERE estado = 'BORRADOR' AND acopio_origen_id = ${acopioId}::uuid
+        AND zona_destino_id IS NOT DISTINCT FROM ${zonaId}::uuid
+      ORDER BY creada_en
+      LIMIT 1
+      FOR UPDATE`;
+    return filas[0] ?? null;
+  }
+
+  /** Bloquea la fila hasta el fin de la transacción y devuelve su estado de ahora. */
+  async bloquear(tx: ClienteBd, id: string): Promise<EstadoRemision | null> {
+    const filas = await tx.$queryRaw<{ estado: EstadoRemision }[]>`
+      SELECT estado FROM remision WHERE id = ${id}::uuid FOR UPDATE`;
+    return filas[0]?.estado ?? null;
   }
 
   porCodigo(codigo: string, bd: ClienteBd = this.prisma) {

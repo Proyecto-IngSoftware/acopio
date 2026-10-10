@@ -120,6 +120,28 @@ una tiene su prueba en la tarea que la posee.
 | 10 Simulador con semilla | ✅ | #74 |
 | 11 `seed:demo`, contrato, documentación y cierre | ✅ | El PR de esta tarea. Los pasos 4 a 7 del §1 se probaron con curl contra el Compose el 2026-10-10 |
 
+**Revisión final, 2026-10-10.** Un revisor independiente leyó toda la etapa. Sin hallazgos
+críticos. Se corrigieron los dos importantes, cada uno con su prueba:
+
+- Una línea editada o agregada mientras se despachaba quedaba en tránsito sin su salida.
+  Ahora despachar toma los candados de saldo antes que la remisión, relee las líneas
+  dentro de la transacción y responde 409 `REMISION_CAMBIO` si cambiaron. Aprobar y
+  editar bloquean la fila de la remisión con `FOR UPDATE`.
+- Una remisión a mano aceptaba fracciones en una categoría por unidades y respondía 422
+  con máximo 0 ante una categoría inexistente. Ahora valida cada línea con
+  `exigirCantidad` y responde 404 `CATEGORIA_NO_ENCONTRADA`.
+
+Quedan para la interfaz ocho menores:
+
+- un folio repetido con otra capitalización da 500 al despachar;
+- la evidencia de un despacho general la ve y la llena cualquier Receptor;
+- `reportar` no valida las categorías ni la zona;
+- `distancia_max` con cantidad mínima 0;
+- ruido de coma flotante en el máximo del 422;
+- el «antes» de la bitácora al editar se lee fuera de la transacción;
+- la demo no completa una corrida a medias si falla entre la remisión y su salida;
+- la prueba del foco 4 no comprueba que «en camino» valía 8 antes de cancelar.
+
 ---
 
 ### Tarea 1: `motor` a DAO, con dos menores de la etapa 1
