@@ -873,8 +873,10 @@ ADR nuevo, que dice en qué módulos entran los DAOs y cómo comparten la transa
 cada servicio con la bitácora y la cola de correo.
 **Estado:** EN DISCUSIÓN. La parte de arquitectura quedó en el
 [ADR-0019](../02-arquitectura/adr/ADR-0019-dao-sobre-prisma.md), con `inventario`,
-`comprobantes` y `salud` migrados a DAO el 2026-10-09. Faltan los patrones creacionales
-y la explicación de cada patrón. Issue
+`comprobantes` y `salud` migrados a DAO el 2026-10-09. La sección de patrones del
+[Avance 5](../entregas/avance-05-sprint2.md#patrones-de-diseño) explica cada uno, y el
+Factory Method del proveedor de identidad quedó en su propia función. Falta pasar esa
+sección al Word del avance. Issue
 [#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59), hasta el 18 de octubre
 
 ### P-051 · Evidencia de ramas, pull requests y revisión en el Sprint 2
