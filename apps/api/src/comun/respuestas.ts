@@ -661,3 +661,55 @@ export class InformeDescartesDto extends createZodDto(
     recientes: z.array(SugerenciaDto.schema),
   }),
 ) {}
+
+const lineaRemision = z.object({
+  categoriaId: z.uuid(),
+  categoria: z.string(),
+  unidad,
+  cantidadPlaneada: z.number(),
+  cantidadRecibida: z.number().nullable(),
+});
+
+export class RemisionDto extends createZodDto(
+  z.object({
+    id: z.uuid(),
+    codigo: z.string().describe('R-AAAA-XXXXX'),
+    estado: z.enum(['BORRADOR', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+    acopio: referencia,
+    zona: referencia.nullable().describe('null: despacho general'),
+    responsable: z.string().nullable(),
+    qrToken: z.string(),
+    creadaEn: fecha,
+    despachadaEn: fecha.nullable(),
+    recibidaEn: fecha.nullable(),
+    canceladaEn: fecha.nullable(),
+    motivoCancelacion: z.string().nullable(),
+    notaRecepcion: z.string().nullable(),
+    evidencias: z.number().int().describe('Fotos de evidencia subidas'),
+    folios: z.array(z.string()),
+    lineas: z.array(lineaRemision),
+  }),
+) {}
+
+export class ReporteNecesidadDto extends createZodDto(
+  z.object({
+    id: z.uuid(),
+    categoriaId: z.uuid(),
+    categoria: z.string(),
+    nota: z.string().nullable(),
+    resuelta: z.boolean(),
+    reportadoPor: z.string(),
+    reportadoEn: fecha,
+  }),
+) {}
+
+export class ZonaPublicaDto extends createZodDto(
+  z.object({
+    zonaId: z.uuid(),
+    centro: z.object({ lat: z.number(), lng: z.number() }).describe('Redondeado a dos decimales'),
+    radioKm: z.number(),
+    necesidades: z.array(
+      z.object({ categoria: z.string(), nota: z.string().nullable(), reportadoEn: fecha }),
+    ),
+  }),
+) {}
