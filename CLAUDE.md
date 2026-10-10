@@ -107,7 +107,7 @@ Antes de escribir documentación, un comentario o cierre de issue, o la descripc
 
 ## Flujo de trabajo
 
-Mientras Joseph trabaje solo, los cambios van directo a `main`, sin PR: se hace commit, se corre la verificación de abajo y se sube. Después del push se revisa el CI con `gh run watch`. Los mensajes de commit van en español, con el área al inicio (`CI: …`, `Compose: …`, `ADR-0012: …`).
+Mientras Joseph trabaje solo, los cambios van directo a `main`, sin PR: se corre la verificación de abajo y, si pasa, se hace commit y se sube. Después del push se revisa el CI con `gh run watch`. Los mensajes de commit van en español, con el área al inicio (`CI: …`, `Compose: …`, `ADR-0012: …`).
 
 El trabajo se organiza por bloques, según el plan vigente en `docs/05-planes/`.
 
@@ -132,4 +132,4 @@ Al terminar una sesión, dejar el estado escrito donde el equipo lo lee:
 
 Un cambio se da por hecho cuando pasan `lint`, `typecheck`, `depcruise`, `test`, `test:int` y `scripts/revisar-colores.sh`. Si toca el Compose o el Dockerfile, además se levanta con `bun run servicios:todo`.
 
-Si las verificaciones y el commit van en un mismo comando, el commit y el push se encadenan con `&&` (y `set -o pipefail` si la salida pasa por `|`). Con `;` o en otra línea corren aunque una prueba falle, como pasó el 2026-10-02. El hook `~/.claude/hooks/commit-tras-verificar.sh` rechaza esos comandos.
+Si las verificaciones y el commit van en un mismo comando, el commit y el push se encadenan con `&&` (y `set -o pipefail` si la salida pasa por `|`). Con `;` o en otra línea corren aunque una prueba falle. El hook `~/.claude/hooks/commit-tras-verificar.sh` rechaza esos comandos.
