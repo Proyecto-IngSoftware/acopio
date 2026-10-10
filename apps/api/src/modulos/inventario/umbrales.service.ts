@@ -1,17 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { esLlaveDuplicada } from '../../comun/prisma/errores';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import { AcopiosService } from '../acopios/acopios.service';
 import { BitacoraService } from '../auditoria/bitacora.service';
+import { CategoriaDao } from '../catalogo/dao/categoria.dao';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
 import { categoriaParaMovimiento } from './cantidades';
+import { UmbralDao } from './dao/umbral.dao';
 
 /** Mínimo y máximo por acopio y categoría (RF-INV-007). Operador asignado o Administrador. */
 @Injectable()
 export class UmbralesService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly transacciones: Transacciones,
+    private readonly umbrales: UmbralDao,
+    private readonly categorias: CategoriaDao,
     private readonly bitacora: BitacoraService,
     private readonly alcance: AlcanceService,
     private readonly acopios: AcopiosService,
@@ -26,21 +30,12 @@ export class UmbralesService {
     await this.alcance.exigir(usuario, 'ACOPIO', acopioId);
     await this.acopios.exigirAbierto(acopioId);
     const guardar = () =>
-      this.prisma.$transaction(async (tx) => {
-        const cat = await categoriaParaMovimiento(tx, categoriaId);
-        const clave = {
-          acopio_id_categoria_id: { acopio_id: acopioId, categoria_id: categoriaId },
-        };
-        const antes = await tx.umbral.findUnique({ where: clave });
-        const fila = await tx.umbral.upsert({
-          where: clave,
-          update: { ...datos, actualizado_por: usuario.id, actualizado_en: new Date() },
-          create: {
-            acopio_id: acopioId,
-            categoria_id: categoriaId,
-            ...datos,
-            actualizado_por: usuario.id,
-          },
+      this.transacciones.ejecutar(async (tx) => {
+        const cat = await categoriaParaMovimiento(this.categorias, tx, categoriaId);
+        const antes = await this.umbrales.buscar(acopioId, categoriaId, tx);
+        const fila = await this.umbrales.guardar(tx, acopioId, categoriaId, {
+          ...datos,
+          usuarioId: usuario.id,
         });
         await this.bitacora.registrar(tx, {
           usuarioId: usuario.id,
@@ -73,14 +68,10 @@ export class UmbralesService {
   async quitar(usuario: UsuarioAutenticado, acopioId: string, categoriaId: string) {
     await this.alcance.exigir(usuario, 'ACOPIO', acopioId);
     await this.acopios.exigirAbierto(acopioId);
-    await this.prisma.$transaction(async (tx) => {
-      const clave = { acopio_id_categoria_id: { acopio_id: acopioId, categoria_id: categoriaId } };
-      const antes = await tx.umbral.findUnique({
-        where: clave,
-        include: { categoria: { select: { nombre: true } } },
-      });
+    await this.transacciones.ejecutar(async (tx) => {
+      const antes = await this.umbrales.buscar(acopioId, categoriaId, tx);
       if (!antes) return;
-      await tx.umbral.delete({ where: clave });
+      await this.umbrales.borrar(tx, acopioId, categoriaId);
       await this.bitacora.registrar(tx, {
         usuarioId: usuario.id,
         accion: 'umbral.quitado',

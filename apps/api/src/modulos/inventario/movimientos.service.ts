@@ -3,12 +3,15 @@ import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autent
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import type { ClienteBd } from '../../comun/prisma/cliente-bd';
 import { esLlaveDuplicada } from '../../comun/prisma/errores';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import type { Movimiento } from '../../generado/prisma/client';
 import { AcopiosService } from '../acopios/acopios.service';
 import { BitacoraService } from '../auditoria/bitacora.service';
+import { CategoriaDao } from '../catalogo/dao/categoria.dao';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
 import { categoriaParaMovimiento, exigirCantidad } from './cantidades';
+import { MovimientoDao } from './dao/movimiento.dao';
+import { SaldoDao } from './dao/saldo.dao';
 import { NoRecibirService } from './no-recibir.service';
 
 export interface DatosEntrada {
@@ -63,14 +66,6 @@ export const aMovimientoVista = (m: Movimiento): MovimientoVista => ({
   origenOffline: m.origen_offline,
 });
 
-/**
- * Candado de la transacción por (acopio, categoría). Lo toman las salidas, los ajustes y
- * el motor al aprobar: así se ordenan entre sí sin FOR UPDATE (ADR-0015).
- */
-export async function candadoSaldo(tx: ClienteBd, acopioId: string, categoriaId: string) {
-  await tx.$executeRaw`SELECT pg_advisory_xact_lock(hashtextextended(${acopioId} || ':' || ${categoriaId}, 0))`;
-}
-
 /** Hasta 7 días atrás y como mucho 5 minutos adelante (relojes desfasados). */
 export function exigirOcurridoEn(ocurridoEn: Date | null): Date {
   const ahora = Date.now();
@@ -89,7 +84,10 @@ export function exigirOcurridoEn(ocurridoEn: Date | null): Date {
 @Injectable()
 export class MovimientosService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly transacciones: Transacciones,
+    private readonly movimientos: MovimientoDao,
+    private readonly saldos: SaldoDao,
+    private readonly categorias: CategoriaDao,
     private readonly bitacora: BitacoraService,
     private readonly alcance: AlcanceService,
     private readonly acopios: AcopiosService,
@@ -102,12 +100,8 @@ export class MovimientosService {
     await this.acopios.exigirAbierto(acopioId);
   }
 
-  async saldoDe(cliente: ClienteBd, acopioId: string, categoriaId: string): Promise<number> {
-    const s = await cliente.saldo.findUnique({
-      where: { acopio_id_categoria_id: { acopio_id: acopioId, categoria_id: categoriaId } },
-      select: { cantidad: true },
-    });
-    return s ? Number(s.cantidad) : 0;
+  saldoDe(cliente: ClienteBd, acopioId: string, categoriaId: string): Promise<number> {
+    return this.saldos.cantidad(acopioId, categoriaId, cliente);
   }
 
   async noRecibe(acopioId: string, categoriaId: string): Promise<boolean> {
@@ -133,7 +127,7 @@ export class MovimientosService {
       origenOffline: boolean;
     },
   ): Promise<{ fila: Movimiento; saldo: number }> {
-    const cat = await categoriaParaMovimiento(tx, datos.categoriaId);
+    const cat = await categoriaParaMovimiento(this.categorias, tx, datos.categoriaId);
     exigirCantidad(datos.cantidad, cat.unidad_base);
     if (cat.perecedero && !datos.venceEn) {
       throw new ErrorDominio(
@@ -143,19 +137,17 @@ export class MovimientosService {
     }
     // El candado deja el antes y el después de la bitácora sin entradas ajenas en medio
     const antes = await this.bloquearSaldo(tx, acopioId, datos.categoriaId);
-    const fila = await tx.movimiento.create({
-      data: {
-        id: datos.id,
-        acopio_id: acopioId,
-        categoria_id: datos.categoriaId,
-        tipo: 'ENTRADA',
-        signo: 1,
-        cantidad: datos.cantidad,
-        vence_en: cat.perecedero ? datos.venceEn : null,
-        usuario_id: usuario.id,
-        ocurrido_en: datos.ocurridoEn,
-        origen_offline: datos.origenOffline,
-      },
+    const fila = await this.movimientos.crear(tx, {
+      id: datos.id,
+      acopio_id: acopioId,
+      categoria_id: datos.categoriaId,
+      tipo: 'ENTRADA',
+      signo: 1,
+      cantidad: datos.cantidad,
+      vence_en: cat.perecedero ? datos.venceEn : null,
+      usuario_id: usuario.id,
+      ocurrido_en: datos.ocurridoEn,
+      origen_offline: datos.origenOffline,
     });
     const saldo = await this.saldoDe(tx, acopioId, datos.categoriaId);
     await this.bitacora.registrar(tx, {
@@ -179,14 +171,14 @@ export class MovimientosService {
     // acopio o la fecha haya salido de la ventana de 7 días: solo se exige el alcance
     await this.alcance.exigir(usuario, 'ACOPIO', acopioId);
     if (datos.id) {
-      const previo = await this.prisma.movimiento.findUnique({ where: { id: datos.id } });
+      const previo = await this.movimientos.buscar(datos.id);
       if (previo) return { resultado: await this.repetido(previo, acopioId, datos), nuevo: false };
     }
     await this.acopios.exigirAbierto(acopioId);
     const ocurridoEn = exigirOcurridoEn(datos.ocurridoEn);
 
     try {
-      const resultado = await this.prisma.$transaction(async (tx) => {
+      const resultado = await this.transacciones.ejecutar(async (tx) => {
         const { fila, saldo } = await this.entradaEnTransaccion(tx, usuario, acopioId, {
           ...datos,
           ocurridoEn,
@@ -200,7 +192,8 @@ export class MovimientosService {
     } catch (e) {
       // Dos envíos simultáneos del mismo id: el segundo choca con la llave primaria
       if (datos.id && esLlaveDuplicada(e)) {
-        const previo = await this.prisma.movimiento.findUniqueOrThrow({ where: { id: datos.id } });
+        const previo = await this.movimientos.buscar(datos.id);
+        if (!previo) throw e;
         return { resultado: await this.repetido(previo, acopioId, datos), nuevo: false };
       }
       throw e;
@@ -217,7 +210,7 @@ export class MovimientosService {
     acopioId: string,
     categoriaId: string,
   ): Promise<number> {
-    await candadoSaldo(tx, acopioId, categoriaId);
+    await this.saldos.bloquear(tx, acopioId, categoriaId);
     return this.saldoDe(tx, acopioId, categoriaId);
   }
 
@@ -240,23 +233,21 @@ export class MovimientosService {
       );
     }
     return this.conSaldoInsuficiente(acopioId, datos.categoriaId, () =>
-      this.prisma.$transaction(async (tx) => {
-        const cat = await categoriaParaMovimiento(tx, datos.categoriaId);
+      this.transacciones.ejecutar(async (tx) => {
+        const cat = await categoriaParaMovimiento(this.categorias, tx, datos.categoriaId);
         exigirCantidad(datos.cantidad, cat.unidad_base);
         const antes = await this.bloquearSaldo(tx, acopioId, datos.categoriaId);
         if (datos.cantidad > antes + 1e-9) throw saldoInsuficiente(antes);
-        const fila = await tx.movimiento.create({
-          data: {
-            acopio_id: acopioId,
-            categoria_id: datos.categoriaId,
-            tipo: 'SALIDA',
-            signo: -1,
-            cantidad: datos.cantidad,
-            motivo_salida: datos.motivoSalida,
-            nota,
-            usuario_id: usuario.id,
-            ocurrido_en: new Date(),
-          },
+        const fila = await this.movimientos.crear(tx, {
+          acopio_id: acopioId,
+          categoria_id: datos.categoriaId,
+          tipo: 'SALIDA',
+          signo: -1,
+          cantidad: datos.cantidad,
+          motivo_salida: datos.motivoSalida,
+          nota,
+          usuario_id: usuario.id,
+          ocurrido_en: new Date(),
         });
         const saldo = await this.saldoDe(tx, acopioId, datos.categoriaId);
         await this.bitacora.registrar(tx, {
@@ -287,8 +278,8 @@ export class MovimientosService {
     await this.exigirOperador(usuario, acopioId);
     const motivo = datos.motivo.trim();
     return this.conSaldoInsuficiente(acopioId, datos.categoriaId, () =>
-      this.prisma.$transaction(async (tx) => {
-        const cat = await categoriaParaMovimiento(tx, datos.categoriaId);
+      this.transacciones.ejecutar(async (tx) => {
+        const cat = await categoriaParaMovimiento(this.categorias, tx, datos.categoriaId);
         if (datos.cantidadContada > 0) exigirCantidad(datos.cantidadContada, cat.unidad_base);
         const antes = await this.bloquearSaldo(tx, acopioId, datos.categoriaId);
         const diferencia = Math.round((datos.cantidadContada - antes) * 1000) / 1000;
@@ -298,17 +289,15 @@ export class MovimientosService {
             'Lo contado coincide con el saldo; no hay nada que ajustar',
           );
         }
-        const fila = await tx.movimiento.create({
-          data: {
-            acopio_id: acopioId,
-            categoria_id: datos.categoriaId,
-            tipo: 'AJUSTE',
-            signo: diferencia > 0 ? 1 : -1,
-            cantidad: Math.abs(diferencia),
-            motivo,
-            usuario_id: usuario.id,
-            ocurrido_en: new Date(),
-          },
+        const fila = await this.movimientos.crear(tx, {
+          acopio_id: acopioId,
+          categoria_id: datos.categoriaId,
+          tipo: 'AJUSTE',
+          signo: diferencia > 0 ? 1 : -1,
+          cantidad: Math.abs(diferencia),
+          motivo,
+          usuario_id: usuario.id,
+          ocurrido_en: new Date(),
         });
         const saldo = await this.saldoDe(tx, acopioId, datos.categoriaId);
         await this.bitacora.registrar(tx, {
@@ -342,7 +331,7 @@ export class MovimientosService {
       return await hacer();
     } catch (e) {
       if (/saldo_cantidad_no_negativa/.test(String((e as Error)?.message ?? ''))) {
-        throw saldoInsuficiente(await this.saldoDe(this.prisma, acopioId, categoriaId));
+        throw saldoInsuficiente(await this.saldos.cantidad(acopioId, categoriaId));
       }
       throw e;
     }
@@ -351,10 +340,7 @@ export class MovimientosService {
   /** La fecha que se guarda: en una categoría no perecedera se descarta. */
   private async venceGuardado(datos: DatosEntrada): Promise<Date | null> {
     if (!datos.venceEn) return null;
-    const cat = await this.prisma.categoria.findUnique({
-      where: { id: datos.categoriaId },
-      select: { perecedero: true },
-    });
+    const cat = await this.categorias.buscar(datos.categoriaId);
     return cat?.perecedero ? datos.venceEn : null;
   }
 
@@ -375,7 +361,7 @@ export class MovimientosService {
     }
     return {
       movimiento: aMovimientoVista(previo),
-      saldo: await this.saldoDe(this.prisma, acopioId, datos.categoriaId),
+      saldo: await this.saldos.cantidad(acopioId, datos.categoriaId),
       noRecibe: await this.noRecibe(acopioId, datos.categoriaId),
     };
   }

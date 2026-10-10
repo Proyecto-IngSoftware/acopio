@@ -4,7 +4,7 @@ import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { AcopiosService } from '../acopios/acopios.service';
 import { BitacoraService } from '../auditoria/bitacora.service';
 import { exigirCantidad } from '../inventario/cantidades';
-import { candadoSaldo } from '../inventario/movimientos.service';
+import { candadoSaldo } from '../inventario/dao/saldo.dao';
 import { RemisionesBorradorService } from './remisiones-borrador.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';

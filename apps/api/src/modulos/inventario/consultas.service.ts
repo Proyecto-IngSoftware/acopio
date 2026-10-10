@@ -2,9 +2,11 @@ import { ForbiddenException, Injectable } from '@nestjs/common';
 import { semaforo, vencimientoEstimado } from '@acopio/shared';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
-import { PrismaService } from '../../comun/prisma/prisma.service';
-import type { Movimiento } from '../../generado/prisma/client';
+import { CategoriaDao } from '../catalogo/dao/categoria.dao';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
+import { MovimientoDao } from './dao/movimiento.dao';
+import { SaldoDao } from './dao/saldo.dao';
+import { UmbralDao } from './dao/umbral.dao';
 import { aMovimientoVista } from './movimientos.service';
 
 const POR_PAGINA = 50;
@@ -13,7 +15,10 @@ const POR_PAGINA = 50;
 @Injectable()
 export class ConsultasService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly saldosDao: SaldoDao,
+    private readonly umbrales: UmbralDao,
+    private readonly movimientos: MovimientoDao,
+    private readonly categorias: CategoriaDao,
     private readonly alcance: AlcanceService,
   ) {}
 
@@ -28,19 +33,16 @@ export class ConsultasService {
   async saldos(usuario: UsuarioAutenticado, acopioId: string) {
     await this.exigirLectura(usuario, acopioId);
     const [saldos, umbrales] = await Promise.all([
-      this.prisma.saldo.findMany({ where: { acopio_id: acopioId } }),
-      this.prisma.umbral.findMany({ where: { acopio_id: acopioId } }),
+      this.saldosDao.delAcopio(acopioId),
+      this.umbrales.delAcopio(acopioId),
     ]);
     const ids = [
       ...new Set([...saldos.map((s) => s.categoria_id), ...umbrales.map((u) => u.categoria_id)]),
     ];
-    const categorias = await this.prisma.categoria.findMany({ where: { id: { in: ids } } });
+    const categorias = await this.categorias.varias(ids);
     const perecederas = categorias.filter((c) => c.perecedero).map((c) => c.id);
     const movimientos = perecederas.length
-      ? await this.prisma.movimiento.findMany({
-          where: { acopio_id: acopioId, categoria_id: { in: perecederas } },
-          select: { categoria_id: true, tipo: true, signo: true, cantidad: true, vence_en: true },
-        })
+      ? await this.movimientos.paraVencimientos(acopioId, perecederas)
       : [];
 
     return categorias
@@ -89,18 +91,7 @@ export class ConsultasService {
     await this.exigirLectura(usuario, acopioId);
     const limite = opciones.limite ?? POR_PAGINA;
     const desde = opciones.cursor ? leerCursor(opciones.cursor) : null;
-    const filas = await this.prisma.$queryRaw<
-      (Movimiento & { usuario_nombre: string; saldo_despues: string })[]
-    >`
-      SELECT * FROM (
-        SELECT m.*, u.nombre AS usuario_nombre,
-               (SUM(m.cantidad * m.signo) OVER (ORDER BY m.secuencia))::text AS saldo_despues
-        FROM movimiento m JOIN usuario u ON u.id = m.usuario_id
-        WHERE m.acopio_id = ${acopioId}::uuid AND m.categoria_id = ${categoriaId}::uuid
-      ) t
-      WHERE ${desde === null} OR t.secuencia < ${desde ?? 0n}
-      ORDER BY t.secuencia DESC
-      LIMIT ${limite + 1}`;
+    const filas = await this.movimientos.historial(acopioId, categoriaId, desde, limite + 1);
     const pagina = filas.slice(0, limite);
     const ultima = pagina.at(-1);
     return {

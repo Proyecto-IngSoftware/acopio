@@ -3,7 +3,7 @@ title: "Registro de decisiones de arquitectura"
 type: moc
 tags: [moc, adr]
 estado: vigente
-actualizado: 2026-10-07
+actualizado: 2026-10-09
 ---
 
 # Registro de decisiones de arquitectura
@@ -37,6 +37,7 @@ documento que se reescribe hasta perder la historia.
 | [0016](ADR-0016-service-worker-con-vite-plugin-pwa.md) | La captura sin conexión usa un service worker de vite-plugin-pwa | aceptada |
 | [0017](ADR-0017-factura-servida-por-la-api.md) | La API sirve la foto de la factura y Garage no se expone | aceptada |
 | [0018](ADR-0018-movimientos-de-zona.md) | Las zonas reciben en el mismo libro de movimientos que los acopios | aceptada |
+| [0019](ADR-0019-dao-sobre-prisma.md) | El acceso a datos pasa por DAO sobre Prisma | aceptada |
 
 ## Cuándo escribir una
 

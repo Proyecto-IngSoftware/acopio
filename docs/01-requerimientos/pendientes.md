@@ -871,8 +871,11 @@ los creacionales no están documentados.
 octubre. Cambiar el criterio sobre Repository es una decisión de arquitectura y va en un
 ADR nuevo, que dice en qué módulos entran los DAOs y cómo comparten la transacción de
 cada servicio con la bitácora y la cola de correo.
-**Estado:** ABIERTO. Issue [#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59),
-hasta el 18 de octubre
+**Estado:** EN DISCUSIÓN. La parte de arquitectura quedó en el
+[ADR-0019](../02-arquitectura/adr/ADR-0019-dao-sobre-prisma.md), con `inventario` y
+`salud` migrados a DAO el 2026-10-09. Faltan `comprobantes`, los patrones creacionales y
+la explicación de cada patrón. Issue
+[#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59), hasta el 18 de octubre
 
 ### P-051 · Evidencia de ramas, pull requests y revisión en el Sprint 2
 **Fecha:** 2026-10-09 · **Propuesto por:** Joseph
