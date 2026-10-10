@@ -27,12 +27,77 @@ Se entrega actualizando el mismo documento de OneDrive, sin crear uno nuevo.
 | Colaboración | Commits, ramas, pull requests y revisión de cambios en GitHub | Desde el 9 de octubre, cada cambio va en una rama con PR revisado y fusionado por Joseph ([P-051](../01-requerimientos/pendientes.md)) |
 | Pantallas | Una o dos pantallas conectadas a la API, con datos reales, mensajes de confirmación, validación o error y un flujo completo. En el documento, capturas, explicación del flujo e historias relacionadas | Hay muchas más. Falta elegir cuáles se documentan |
 | DAO | Obligatorio: DAOs por entidad, usados desde los servicios, sin acceso a datos en controladores ni en la interfaz. Un ORM no basta | [ADR-0019](../02-arquitectura/adr/ADR-0019-dao-sobre-prisma.md): `inventario` y `comprobantes` migrados, con su regla en dependency-cruiser ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59)) |
-| DTO | Si aplica: qué transporta, en qué flujo y en qué se diferencia de la entidad persistida. Si no aplica, una justificación | Existen; falta documentarlos ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59)) |
-| Patrones | Al menos dos creacionales, dos estructurales y uno de comportamiento (el texto de la guía dice dos), cada uno con código, problema que resuelve, beneficio y complejidad | Adapter, Decorator y Strategy existen; faltan los creacionales y la explicación ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59)) |
+| DTO | Si aplica: qué transporta, en qué flujo y en qué se diferencia de la entidad persistida. Si no aplica, una justificación | [Sección DTO](#dto) |
+| Patrones | Al menos dos creacionales, dos estructurales y uno de comportamiento (el texto de la guía dice dos), cada uno con código, problema que resuelve, beneficio y complejidad | [Sección de patrones](#patrones-de-diseño): dos creacionales, tres estructurales y tres de comportamiento ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59)) |
 | Planning | Sprint Goal, historias con sus criterios, tareas técnicas, responsables, riesgos y Definition of Done, con captura del tablero del Sprint 2 | [Borrador abajo](#borrador-del-sprint-planning) |
 | Daily Scrum | Al menos un seguimiento con captura y la tabla por integrante | [Abajo](#seguimientos-del-sprint-2) |
 | Review y retrospectiva | Evidencia (video, capturas de Postman o de contenedores), tabla por historia y retrospectiva en párrafos que termina en una acción concreta y verificable | [Abajo](#sprint-review) |
 | Entrega | Enlace al repositorio público, explicación de los patrones y registro del Sprint 2 en el documento de OneDrive | Se arma en la semana 12 |
+
+## Patrones de diseño
+
+Borrador de la sección del documento. Cada patrón tiene código que se puede abrir; las
+rutas son de `apps/api/src/` salvo que digan otra cosa. El detalle de cada uno y cuándo
+se repite está en [patrones y prácticas](../02-arquitectura/patrones-y-practicas.md).
+
+### DAO
+
+El acceso a datos pasa por DAO ([ADR-0019](../02-arquitectura/adr/ADR-0019-dao-sobre-prisma.md)).
+Cada tabla o agregado tiene uno en `modulos/<módulo>/dao/`: `ComprobanteDao`,
+`MovimientoDao`, `SaldoDao`, `UmbralDao`, `NoRecibirDao`, `CategoriaDao`, entre otros.
+Los servicios los usan y abren la transacción con `Transacciones.ejecutar`; los
+controladores no los ven. Por dentro usan Prisma, pero en `inventario`, `comprobantes` y
+`salud` ningún otro archivo lo toca, y dependency-cruiser lo revisa en cada PR.
+
+- Beneficio: el servicio de recepción, por ejemplo, se lee como reglas de negocio (qué
+  líneas se confirman, cuándo se rechaza) sin consultas en medio. Una consulta se cambia
+  en un solo lugar.
+- Complejidad: una capa más, y cada consulta nueva pide un método en el DAO. La
+  transacción viaja como parámetro para que la bitácora quede en la misma.
+
+### DTO
+
+Sí aplica. Hay dos clases de DTO, todas con `createZodDto`, que valida y además genera el
+contrato OpenAPI del que la web saca sus tipos:
+
+- De entrada, en cada controlador: `CrearDonacionDto` lleva el acopio y las líneas
+  (categoría, código de barras, cantidad, vencimiento) cuando el Donador prepara una
+  donación; `RecibirDto` lleva lo que el Operador confirma de cada línea al recibir.
+- De respuesta, en `comun/respuestas.ts` (51 clases): `ComprobanteDto` es lo que la web
+  muestra de una donación.
+
+Se diferencian de la entidad persistida en lo que dejan fuera y en la forma.
+`ComprobanteDto` no trae el donador, las claves de la factura en Garage ni quién la
+verificó; trae el nombre del acopio y de cada categoría en vez de sus identificadores, y
+`tieneFactura` en vez de la clave. Los nombres van en camelCase y las cantidades como
+números, no como `Decimal`.
+
+### Creacionales
+
+| Patrón | Dónde | Problema que resuelve | Beneficio | Complejidad |
+|---|---|---|---|---|
+| Factory Method | `fabricarProveedorIdentidad` en `modulos/identidad/proveedor/fabrica-proveedor.ts`, registrada con `useFactory` en `identidad.module.ts` | La API autentica con un proveedor local en desarrollo y con Supabase en producción. Quien inicia sesión o verifica un token no debe saber cuál | Cambiar de proveedor es cambiar `AUTH_PROVEEDOR`. Ningún servicio tiene un `if` por proveedor | Los dos adaptadores se construyen aunque se use uno. La elección vive en la configuración del módulo, lejos de quien la usa |
+| Singleton | `ENTORNO` en `config/config.module.ts`, que lee y valida las variables una sola vez con `leerEntorno()`; `PrismaService`, una sola conexión con su pool para toda la API | Validar el entorno en cada uso sería lento, y abrir un cliente de base por servicio agotaría las conexiones | Una variable inválida detiene el arranque; todos comparten el mismo pool | Es el contenedor de Nest el que garantiza una sola instancia (alcance por defecto), no la clase. Un `new PrismaService()` a mano lo rompería |
+
+### Estructurales
+
+| Patrón | Dónde | Problema que resuelve | Beneficio | Complejidad |
+|---|---|---|---|---|
+| Adapter | `ProveedorLocal` y `ProveedorSupabase` frente al puerto `ProveedorIdentidad`; `AlmacenS3` y `AlmacenMemoria` frente a `Almacen`; el geocodificador de Nominatim | Supabase, el SDK de S3 y Nominatim tienen interfaces propias. El dominio necesita una sola, en español y con sus tipos | Las pruebas usan el almacén en memoria y el geocodificador falso, sin red. Cambiar de proveedor no toca el dominio | Una interfaz y un archivo por servicio externo, y el adaptador hay que mantenerlo cuando cambia el SDK |
+| Proxy | `GeocodificacionService` en `modulos/acopios/geocodificacion.ts`, delante del geocodificador de Nominatim | El endpoint que convierte una dirección en coordenadas es público, y Nominatim permite una consulta por segundo | Caché de 24 horas, una cola con tope y una sola llamada para consultas iguales simultáneas. Quien geocodifica no sabe nada de eso | La caché vive en memoria: se pierde al reiniciar y no se comparte entre instancias de la API |
+| Facade | `AlmacenamientoService` en `modulos/almacenamiento/` | Guardar la foto de una factura exige convertirla a WebP, hacer la miniatura, subir las dos, borrar la primera si falla la segunda y firmar URLs | `FacturasService` llama a `guardarImagen` y a `urlFirmada` y no sabe nada de sharp ni de S3 | Si alguien necesita algo que la fachada no ofrece, tiene que ampliarla en vez de ir al almacén directamente |
+
+### De comportamiento
+
+| Patrón | Dónde | Problema que resuelve | Beneficio | Complejidad |
+|---|---|---|---|---|
+| Chain of Responsibility | Los guards globales de `app.module.ts`: `OrigenGuard`, luego `LimiteIntentosGuard`, luego `AutenticacionGuard`. Después, el pipe de validación y el filtro de errores | Cada petición pasa por varias revisiones independientes: origen de las escrituras con cookie, límite de intentos, sesión y rol | Cada eslabón decide si deja pasar o corta con su error. Agregar una revisión es agregar un guard, sin tocar los demás | El orden importa y está en un solo arreglo. Un error en un eslabón corta la cadena y puede esconder lo que habrían dicho los siguientes |
+| Strategy | El mismo puerto `ProveedorIdentidad` usado por `SesionService` e `InvitacionesService`, y `Almacen` usado por `AlmacenamientoService` | Iniciar sesión o guardar un archivo tiene dos algoritmos válidos según el ambiente | Quien usa la estrategia no cambia al cambiarla. Las pruebas de integración inyectan la de memoria | Se solapa con Adapter en las mismas clases: el adaptador traduce la interfaz y la estrategia es poder intercambiarlas |
+| Observer | TanStack Query en la web (`apps/web/src/api/`): cada pantalla se suscribe a una consulta con un hook `useAlgo` | Varias pantallas muestran el mismo dato, por ejemplo los saldos de un acopio, y tienen que actualizarse juntas tras una salida | Al invalidar una consulta después de una escritura, todas las suscritas se vuelven a pintar | Hay que saber qué consultas invalidar después de cada escritura; si falta una, la pantalla muestra datos viejos |
+
+Un Builder propio no hace falta todavía: ningún objeto del dominio se arma en muchos
+pasos opcionales. La remisión de la etapa 2 del motor es candidata, y si se usa se agrega
+aquí.
 
 ## Reunión del viernes 9 de octubre, después de la clase
 

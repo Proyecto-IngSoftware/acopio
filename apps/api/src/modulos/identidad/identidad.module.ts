@@ -1,5 +1,5 @@
 import { Global, Module } from '@nestjs/common';
-import { ENTORNO, type Entorno } from '../../config/entorno';
+import { ENTORNO } from '../../config/entorno';
 import { UsuarioDao } from './dao/usuario.dao';
 import { AlcanceService } from './autenticacion/alcance.service';
 import { AutenticacionGuard } from './autenticacion/autenticacion.guard';
@@ -8,6 +8,7 @@ import { DonadorController } from './donador/donador.controller';
 import { DonadorService } from './donador/donador.service';
 import { InvitacionesController } from './invitaciones/invitaciones.controller';
 import { InvitacionesService } from './invitaciones/invitaciones.service';
+import { fabricarProveedorIdentidad } from './proveedor/fabrica-proveedor';
 import { PROVEEDOR_IDENTIDAD } from './proveedor/proveedor-identidad';
 import { ProveedorLocal } from './proveedor/proveedor-local';
 import { ProveedorSupabase } from './proveedor/proveedor-supabase';
@@ -27,8 +28,7 @@ import { UsuariosService } from './usuarios/usuarios.service';
     {
       provide: PROVEEDOR_IDENTIDAD,
       inject: [ENTORNO, ProveedorLocal, ProveedorSupabase],
-      useFactory: (e: Entorno, local: ProveedorLocal, supabase: ProveedorSupabase) =>
-        e.AUTH_PROVEEDOR === 'local' ? local : supabase,
+      useFactory: fabricarProveedorIdentidad,
     },
     VerificadorToken,
     AlcanceService,
