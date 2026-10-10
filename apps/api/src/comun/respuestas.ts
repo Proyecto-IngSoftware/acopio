@@ -488,11 +488,22 @@ export class SeguimientoDto extends createZodDto(
     estado: z.string().describe('Etiqueta para mostrar, por ejemplo «Recibida en el acopio»'),
     pasos: z.array(
       z.object({
-        paso: z.enum(['PREPARADA', 'RECIBIDA', 'CONCILIADA']),
+        paso: z.enum(['PREPARADA', 'RECIBIDA', 'CONCILIADA', 'RECIBIDA_EN_DESTINO']),
         en: fecha.nullable(),
         acopio: z.string().optional().describe('Nombre del acopio, desde que se recibe'),
       }),
     ),
+    recibidoEnDestino: z.boolean().describe('Alguna remisión con este folio llegó a su zona'),
+    remisiones: z
+      .array(
+        z.object({
+          estado: z.enum(['EN_TRANSITO', 'RECIBIDA']),
+          despachadaEn: fecha,
+          recibidaEn: fecha.nullable(),
+        }),
+      )
+      .describe('Lo despachado con este folio, sin código ni zona'),
+    parteDeTuDonacion: z.boolean().describe('Más de una remisión: cada una lleva una parte'),
     lineas: z.array(
       z.object({
         categoria: z.string(),
@@ -659,5 +670,57 @@ export class InformeDescartesDto extends createZodDto(
     porCategoria: conteo,
     porAcopio: conteo,
     recientes: z.array(SugerenciaDto.schema),
+  }),
+) {}
+
+const lineaRemision = z.object({
+  categoriaId: z.uuid(),
+  categoria: z.string(),
+  unidad,
+  cantidadPlaneada: z.number(),
+  cantidadRecibida: z.number().nullable(),
+});
+
+export class RemisionDto extends createZodDto(
+  z.object({
+    id: z.uuid(),
+    codigo: z.string().describe('R-AAAA-XXXXX'),
+    estado: z.enum(['BORRADOR', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']),
+    acopio: referencia,
+    zona: referencia.nullable().describe('null: despacho general'),
+    responsable: z.string().nullable(),
+    qrToken: z.string(),
+    creadaEn: fecha,
+    despachadaEn: fecha.nullable(),
+    recibidaEn: fecha.nullable(),
+    canceladaEn: fecha.nullable(),
+    motivoCancelacion: z.string().nullable(),
+    notaRecepcion: z.string().nullable(),
+    evidencias: z.number().int().describe('Fotos de evidencia subidas'),
+    folios: z.array(z.string()),
+    lineas: z.array(lineaRemision),
+  }),
+) {}
+
+export class ReporteNecesidadDto extends createZodDto(
+  z.object({
+    id: z.uuid(),
+    categoriaId: z.uuid(),
+    categoria: z.string(),
+    nota: z.string().nullable(),
+    resuelta: z.boolean(),
+    reportadoPor: z.string(),
+    reportadoEn: fecha,
+  }),
+) {}
+
+export class ZonaPublicaDto extends createZodDto(
+  z.object({
+    zonaId: z.uuid(),
+    centro: z.object({ lat: z.number(), lng: z.number() }).describe('Redondeado a dos decimales'),
+    radioKm: z.number(),
+    necesidades: z.array(
+      z.object({ categoria: z.string(), nota: z.string().nullable(), reportadoEn: fecha }),
+    ),
   }),
 ) {}

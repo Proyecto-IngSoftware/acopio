@@ -46,4 +46,12 @@ export class AlmacenS3 implements Almacen {
   async borrar(clave: string) {
     await this.cliente.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: clave }));
   }
+
+  async leer(clave: string) {
+    const r = await this.cliente.send(new GetObjectCommand({ Bucket: this.bucket, Key: clave }));
+    return {
+      datos: Buffer.from(await r.Body!.transformToByteArray()),
+      tipo: r.ContentType ?? 'application/octet-stream',
+    };
+  }
 }

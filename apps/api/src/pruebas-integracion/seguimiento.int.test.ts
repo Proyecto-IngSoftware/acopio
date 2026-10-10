@@ -1,12 +1,15 @@
 import {
   ACOPIO_A,
   ADMIN,
+  ZONA_A,
   crearAppPrueba,
   crearDonador,
   crearUsuarioActivo,
   iniciarSesion,
   type AppPrueba,
 } from '../../test/app-prueba';
+import { generarFolio } from '../modulos/comprobantes/folio';
+import { generarCodigoRemision } from '../modulos/motor/codigo-remision';
 
 describe('seguimiento público por folio (RF-CMP-006)', () => {
   let a: AppPrueba;
@@ -138,5 +141,89 @@ describe('seguimiento con el límite por IP', () => {
     } finally {
       await b.cerrar();
     }
+  });
+});
+
+describe('recibido en destino en el seguimiento (RF-CMP-007)', () => {
+  let a: AppPrueba;
+  let adminId: string;
+
+  async function folioConciliado() {
+    const c = await a.prisma.comprobante.create({
+      data: {
+        folio: generarFolio(2026),
+        donador_id: adminId,
+        acopio_id: ACOPIO_A,
+        estado: 'CONCILIADO',
+      },
+    });
+    return c;
+  }
+
+  async function remision(estado: 'EN_TRANSITO' | 'RECIBIDA' | 'CANCELADA') {
+    const ahora = new Date();
+    return a.prisma.remision.create({
+      data: {
+        codigo: generarCodigoRemision(2026),
+        acopio_origen_id: ACOPIO_A,
+        zona_destino_id: ZONA_A,
+        qr_token: `seg-${Math.random()}`,
+        creada_por: adminId,
+        estado,
+        responsable: 'Ana',
+        despachada_en: ahora,
+        ...(estado === 'RECIBIDA'
+          ? { recibida_en: ahora, evidencia_keys: ['remisiones/prueba.webp'] }
+          : {}),
+        ...(estado === 'CANCELADA'
+          ? { cancelada_en: ahora, motivo_cancelacion: 'El camión no salió del acopio' }
+          : {}),
+      },
+    });
+  }
+
+  const vincular = (remisionId: string, comprobanteId: string) =>
+    a.prisma.remisionComprobante.create({
+      data: { remision_id: remisionId, comprobante_id: comprobanteId, vinculado_por: adminId },
+    });
+
+  beforeAll(async () => {
+    a = await crearAppPrueba();
+    adminId = (await a.prisma.usuario.findFirstOrThrow({ where: { username: ADMIN.username } })).id;
+  });
+  afterAll(() => a.cerrar());
+
+  it('un folio vinculado a una remisión recibida dice «recibido en destino»', async () => {
+    const c = await folioConciliado();
+    await vincular((await remision('RECIBIDA')).id, c.id);
+    const r = await a.http().get(`/api/seguimiento/${c.folio}`).expect(200);
+    expect(r.body.recibidoEnDestino).toBe(true);
+    expect(r.body.pasos.at(-1)).toMatchObject({ paso: 'RECIBIDA_EN_DESTINO' });
+    expect(r.body.remisiones).toEqual([
+      { estado: 'RECIBIDA', despachadaEn: expect.any(String), recibidaEn: expect.any(String) },
+    ]);
+    expect(r.body.parteDeTuDonacion).toBe(false);
+    expect(JSON.stringify(r.body)).not.toMatch(/R-\d{4}-/);
+  });
+
+  it('con dos remisiones avisa que es parte de la donación', async () => {
+    const c = await folioConciliado();
+    await vincular((await remision('RECIBIDA')).id, c.id);
+    await vincular((await remision('EN_TRANSITO')).id, c.id);
+    const r = await a.http().get(`/api/seguimiento/${c.folio}`).expect(200);
+    expect(r.body.parteDeTuDonacion).toBe(true);
+    expect(r.body.remisiones.map((x: { estado: string }) => x.estado).sort()).toEqual([
+      'EN_TRANSITO',
+      'RECIBIDA',
+    ]);
+  });
+
+  it('una remisión cancelada no aparece en el seguimiento', async () => {
+    const c = await folioConciliado();
+    await vincular((await remision('CANCELADA')).id, c.id);
+    const r = await a.http().get(`/api/seguimiento/${c.folio}`).expect(200);
+    expect(r.body.remisiones).toEqual([]);
+    expect(r.body.recibidoEnDestino).toBe(false);
+    expect(r.body.parteDeTuDonacion).toBe(false);
   });
 });

@@ -19,6 +19,15 @@ export class CategoriaDao {
     return bd.categoria.findUnique({ where: { id } });
   }
 
+  /** Nombre, unidad y si es perecedera, ordenadas por nombre. */
+  basicas(ids: string[], bd: ClienteBd = this.prisma) {
+    return bd.categoria.findMany({
+      where: { id: { in: [...new Set(ids)] } },
+      select: { id: true, nombre: true, unidad_base: true, perecedero: true },
+      orderBy: { nombre: 'asc' },
+    });
+  }
+
   varias(ids: string[], bd: ClienteBd = this.prisma) {
     return bd.categoria.findMany({ where: { id: { in: ids } } });
   }

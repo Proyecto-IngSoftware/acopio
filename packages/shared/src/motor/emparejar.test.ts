@@ -32,6 +32,39 @@ const entrada = (e: Partial<EntradaMotor>): EntradaMotor => ({
 });
 
 describe('emparejar', () => {
+  it('un par bloqueado por un descarte no estira distancia_max', () => {
+    const base = entrada({
+      zonas: [z1],
+      demandas: [demanda('z1', 100)],
+      ofertas: [oferta('cerca', 80), oferta('lejos', 80)],
+    });
+    const de = (r: ReturnType<typeof emparejar>) => r.find((x) => x.acopioId === 'cerca')!;
+    const sinBloqueo = emparejar(base, PESOS_POR_DEFECTO, 5);
+    const conBloqueo = emparejar(
+      { ...base, bloqueados: new Set([clavePar('lejos', 'z1', 'agua')]) },
+      PESOS_POR_DEFECTO,
+      5,
+    );
+    // Con Lejos en la ronda, Cerca puntúa cerca de 0,9 en proximidad; sin él es el único
+    // par y su proximidad es 0 (§13 de la especificación)
+    expect(de(sinBloqueo).desglose.proximidad).toBeGreaterThan(0.8);
+    expect(de(conBloqueo).desglose.proximidad).toBe(0);
+  });
+
+  it('un acopio con movible menor que el mínimo no estira distancia_max', () => {
+    const r = emparejar(
+      entrada({
+        zonas: [z1],
+        demandas: [demanda('z1', 100)],
+        ofertas: [oferta('cerca', 80), oferta('lejos', 3)],
+      }),
+      PESOS_POR_DEFECTO,
+      5,
+    );
+    expect(r).toHaveLength(1);
+    expect(r[0]!.desglose.proximidad).toBe(0);
+  });
+
   it('la proximidad decide quién atiende, aunque el lejano tenga más (M-06)', () => {
     const r = emparejar(
       entrada({

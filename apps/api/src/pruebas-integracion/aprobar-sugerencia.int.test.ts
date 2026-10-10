@@ -18,10 +18,18 @@ describe('aprobar y descartar sugerencias', () => {
   let adminId: string;
   const como = (t: string) => ({ authorization: `Bearer ${t}` });
 
-  async function escenario(opciones: { saldo: number; necesidades: [string, number][] }) {
+  async function escenario(opciones: {
+    saldo: number;
+    necesidades: [string, number][];
+    unidad?: 'KILOGRAMO' | 'UNIDAD';
+  }) {
     const cat = (
       await a.prisma.categoria.create({
-        data: { nombre: unico('Aprobar '), grupo: 'ALIMENTOS', unidad_base: 'KILOGRAMO' },
+        data: {
+          nombre: unico('Aprobar '),
+          grupo: 'ALIMENTOS',
+          unidad_base: opciones.unidad ?? 'KILOGRAMO',
+        },
       })
     ).id;
     await a.prisma.movimiento.create({
@@ -297,5 +305,56 @@ describe('aprobar y descartar sugerencias', () => {
         { nombre: 'la vía a la zona está cerrada', veces: expect.any(Number) },
       ]),
     );
+  });
+
+  it('no aprueba desde un acopio cerrado después del recálculo', async () => {
+    const { cat, sugerencias } = await escenario({ saldo: 50, necesidades: [[ZONA_A, 20]] });
+    await a.prisma.acopio.update({ where: { id: ACOPIO_A }, data: { estado: 'CERRADO' } });
+    try {
+      const r = await aprobar(sugerencias[0]!.id).expect(409);
+      expect(r.body.codigo).toBe('ACOPIO_CERRADO');
+      expect(await a.prisma.lineaRemision.count({ where: { categoria_id: cat } })).toBe(0);
+    } finally {
+      await a.prisma.acopio.update({ where: { id: ACOPIO_A }, data: { estado: 'ACTIVO' } });
+    }
+  });
+
+  it('en una categoría por unidades, el máximo del 409 es entero', async () => {
+    const { cat, sugerencias } = await escenario({
+      saldo: 20,
+      necesidades: [[ZONA_A, 20]],
+      unidad: 'UNIDAD',
+    });
+    // Un déficit de 7,6 en una categoría por unidades, como el que deja la canasta
+    // (persona-día × población × días). Va directo a la base: la API ya no acepta 7,6 a mano
+    await a.prisma.necesidadManual.create({
+      data: {
+        zona_id: ZONA_A,
+        categoria_id: cat,
+        cantidad: 7.6,
+        motivo: 'Déficit fraccionario de la prueba',
+        puesta_por: adminId,
+      },
+    });
+    const r = await aprobar(sugerencias[0]!.id, 20).expect(409);
+    expect(r.body.codigo).toBe('SUGERENCIA_DESACTUALIZADA');
+    expect(r.body.detalles.maximo).toBe(7);
+    expect(r.body.mensaje).toContain('hasta 7.');
+  });
+
+  it('sumar a una línea existente deja el antes y el después en la bitácora', async () => {
+    const { cat, sugerencias } = await escenario({ saldo: 50, necesidades: [[ZONA_A, 30]] });
+    const primera = await aprobar(sugerencias[0]!.id, 10).expect(200);
+    await motor.recalcular();
+    const otra = await a.prisma.sugerencia.findFirstOrThrow({
+      where: { categoria_id: cat, estado: 'PROPUESTA' },
+    });
+    await aprobar(otra.id, 5).expect(200);
+    const b = await a.prisma.bitacora.findFirstOrThrow({
+      where: { accion: 'remision.linea', entidad_id: primera.body.remision.id },
+      orderBy: { ocurrido_en: 'desc' },
+    });
+    expect(b.datos_antes).toMatchObject({ cantidad: 10 });
+    expect(b.datos_despues).toMatchObject({ cantidad: 15 });
   });
 });

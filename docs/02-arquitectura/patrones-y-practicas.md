@@ -17,7 +17,7 @@ Los patrones no se eligieron por adelantado. La arquitectura sí ([ADR-0008](adr
 | Patrón | Dónde | Por qué existe | Cuándo se repite |
 |---|---|---|---|
 | Monolito modular en capas | `apps/api/src/modulos/*`: controlador, servicio y DAO en cada módulo | Un solo despliegue para un equipo de cuatro, con límites de dominio que se pueden revisar ([ADR-0008](adr/ADR-0008-arquitectura-stack-inicial.md)) | Cada módulo nuevo sigue la misma forma y entra en la tabla «Dependencias permitidas» de [vista-general.md](vista-general.md) y en `apps/api/.dependency-cruiser.cjs` |
-| DAO sobre Prisma ([ADR-0019](adr/ADR-0019-dao-sobre-prisma.md)) | `modulos/<módulo>/dao/*.dao.ts`: `MovimientoDao`, `SaldoDao`, `UmbralDao` y `NoRecibirDao` en `inventario`; `ComprobanteDao` en `comprobantes`; `CategoriaDao` y `CodigoBarrasDao` en `catalogo`; `AcopioDao`, `UsuarioDao` y `SaludDao` | El servicio guarda las reglas de negocio y el DAO las consultas. Cada método recibe la `tx` de quien llama, así la bitácora y el candado del saldo siguen en la misma transacción | Toda consulta nueva en un módulo migrado (`MIGRADOS_A_DAO` en `.dependency-cruiser.cjs`) va en su DAO. Al tocar un módulo sin migrar, se migra entero |
+| DAO sobre Prisma ([ADR-0019](adr/ADR-0019-dao-sobre-prisma.md)) | `modulos/<módulo>/dao/*.dao.ts`: `MovimientoDao`, `SaldoDao`, `UmbralDao` y `NoRecibirDao` en `inventario`; `ComprobanteDao` en `comprobantes`; `SugerenciaDao`, `RemisionDao`, `NecesidadDao` y `ConfiguracionDao` en `motor`; `CategoriaDao` y `CodigoBarrasDao` en `catalogo`; `AcopioDao` y `ZonaDao` en `acopios`; `UsuarioDao` y `SaludDao` | El servicio guarda las reglas de negocio y el DAO las consultas. Cada método recibe la `tx` de quien llama, así la bitácora y el candado del saldo siguen en la misma transacción | Toda consulta nueva en un módulo migrado (`MIGRADOS_A_DAO` en `.dependency-cruiser.cjs`) va en su DAO. Al tocar un módulo sin migrar, se migra entero |
 | Unidad de trabajo | `Transacciones.ejecutar` en `comun/prisma/transacciones.ts` | El servicio decide qué operaciones van juntas sin tocar Prisma | Toda operación que escriba en más de una tabla o registre bitácora |
 | Factory Method | `fabricarProveedorIdentidad` en `modulos/identidad/proveedor/fabrica-proveedor.ts`, con `useFactory` en `identidad.module.ts` | El adaptador de identidad se elige con `AUTH_PROVEEDOR` en un solo lugar | Cuando un puerto tenga dos implementaciones reales que se elijan por configuración |
 | Singleton por el contenedor | `ENTORNO` (`config/config.module.ts`, `leerEntorno()` una vez) y `PrismaService` | El entorno se valida al arrancar y toda la API comparte un pool de conexiones | Todo proveedor de Nest es una sola instancia por defecto; nada se construye con `new` fuera de las pruebas |
@@ -122,6 +122,8 @@ Servicios de otros módulos que se usan desde cualquier parte: `BitacoraService.
 | `motor/calculo.ts` | `necesidad`, `estadoZona`, `estadoAcopio`, `urgencia`, `puntaje`, `pesosValidos` y las constantes del motor |
 | `motor/emparejar.ts` | `emparejar`, `clavePar` |
 | `motor/justificar.ts` | `justificar`, el texto de cada sugerencia |
+| `motor/remision.ts` | `TRANSICIONES_REMISION`, `puedeRemision`, `estadoTras`, `MAXIMO_EVIDENCIAS`: el ciclo de vida de la remisión para la API y la web |
+| `motor/simulador.ts` | `simular` y `generador` (semilla): el escenario repartido por el motor, en partes iguales y al más cercano (RF-MOT-010) |
 | `index.ts`, `motor/index.ts` | Reexportan lo anterior |
 
 ### Web
