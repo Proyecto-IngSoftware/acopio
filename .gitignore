@@ -1,5 +1,7 @@
-# Herramientas personales de cada integrante
-.claude/
+# Herramientas personales de cada integrante; los hooks del proyecto sí se versionan
+.claude/*
+!.claude/settings.json
+!.claude/hooks/
 .agents/
 skills-lock.json
 

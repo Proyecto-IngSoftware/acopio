@@ -3,7 +3,7 @@ title: "Arquitectura — índice"
 type: moc
 tags: [moc, arquitectura]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-09
 ---
 
 # Arquitectura — índice
@@ -12,6 +12,7 @@ actualizado: 2026-10-06
 |---|---|
 | [vista-general.md](vista-general.md) | Cómo encajan las piezas: C4, contenedores, módulos, dependencias |
 | [modelo-datos.md](modelo-datos.md) | Qué tablas hay, qué invariantes se hacen cumplir y dónde |
+| [patrones-y-practicas.md](patrones-y-practicas.md) | Qué patrones usa el código, cuáles se descartaron y qué hay para reutilizar antes de escribir algo nuevo |
 | [adr/](adr/) | Por qué se decidió cada cosa |
 | [diagramas/](diagramas/diagramas-acopio.html) | Los ocho clústeres entidad-relación y el C4, generados desde estas notas con `node diagramas/build.mjs`; los PNG están en [assets/diagramas](../assets/diagramas) |
 

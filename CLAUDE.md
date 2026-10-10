@@ -67,6 +67,8 @@ Quién puede importar a quién está en la tabla «Dependencias permitidas» de 
 
 ### Reglas que atraviesan varios archivos
 
+Los patrones en uso, los descartados y el catálogo de lo reutilizable están en `docs/02-arquitectura/patrones-y-practicas.md`. Una pieza reutilizable nueva se anota en ese catálogo; los hooks de `.claude/settings.json` lo recuerdan al crear archivos.
+
 - Dos roles de base de datos. `acopio_owner` (`DATABASE_URL_OWNER`) corre migraciones y seed. La API se conecta como `acopio_app` (`DATABASE_URL`), que no tiene `UPDATE` ni `DELETE` sobre `bitacora`.
 - La bitácora la escribe cada servicio dentro de la misma transacción que el cambio, con los datos de antes y después. No hay interceptor.
 - La sesión viaja en la cookie `acopio_sesion` (`HttpOnly`, `SameSite=Strict`, `Path=/api`, ADR-0014). La web nunca ve el token: todo pasa por `ClienteAuth` (`apps/web/src/sesion/`). El guard acepta la cookie o `Authorization: Bearer` (pruebas y curl); `iniciarSesion` de las pruebas de integración saca el token de `Set-Cookie`. Un guard global rechaza escrituras con la cookie desde un `Origin` distinto de `APP_URL`. En desarrollo Vite reenvía `/api` a la API.
