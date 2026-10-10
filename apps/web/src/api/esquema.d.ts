@@ -2590,12 +2590,25 @@ export interface components {
             estado: string;
             pasos: {
                 /** @enum {string} */
-                paso: "PREPARADA" | "RECIBIDA" | "CONCILIADA";
+                paso: "PREPARADA" | "RECIBIDA" | "CONCILIADA" | "RECIBIDA_EN_DESTINO";
                 /** Format: date-time */
                 en: string | null;
                 /** @description Nombre del acopio, desde que se recibe */
                 acopio?: string;
             }[];
+            /** @description Alguna remisión con este folio llegó a su zona */
+            recibidoEnDestino: boolean;
+            /** @description Lo despachado con este folio, sin código ni zona */
+            remisiones: {
+                /** @enum {string} */
+                estado: "EN_TRANSITO" | "RECIBIDA";
+                /** Format: date-time */
+                despachadaEn: string;
+                /** Format: date-time */
+                recibidaEn: string | null;
+            }[];
+            /** @description Más de una remisión: cada una lleva una parte */
+            parteDeTuDonacion: boolean;
             lineas: {
                 categoria: string;
                 unidad: string;

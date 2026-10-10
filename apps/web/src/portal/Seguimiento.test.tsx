@@ -62,6 +62,30 @@ describe('Seguimiento', () => {
     expect(screen.getByText('No mostramos quién donó.')).toBeInTheDocument();
   });
 
+  it('con una remisión recibida muestra el paso «Recibida en destino»', async () => {
+    responderSegun({
+      'GET /api/seguimiento/*': {
+        ...seguimiento,
+        pasos: [
+          ...seguimiento.pasos,
+          { paso: 'RECIBIDA_EN_DESTINO', en: '2026-10-06T16:00:00.000Z' },
+        ],
+        recibidoEnDestino: true,
+        remisiones: [
+          {
+            estado: 'RECIBIDA',
+            despachadaEn: '2026-10-05T12:00:00.000Z',
+            recibidaEn: '2026-10-06T16:00:00.000Z',
+          },
+        ],
+        parteDeTuDonacion: false,
+      },
+    });
+    pantalla('/seguimiento/ACO-2026-7KQ4M');
+    const paso = (await screen.findByText('Recibida en destino')).closest('li')!;
+    expect(paso).toHaveTextContent(/6 oct/);
+  });
+
   it('un paso pendiente sale sin fecha y con el círculo vacío', async () => {
     responderSegun({ 'GET /api/seguimiento/*': seguimiento });
     pantalla('/seguimiento/ACO-2026-7KQ4M');

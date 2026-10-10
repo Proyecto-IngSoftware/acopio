@@ -488,11 +488,22 @@ export class SeguimientoDto extends createZodDto(
     estado: z.string().describe('Etiqueta para mostrar, por ejemplo «Recibida en el acopio»'),
     pasos: z.array(
       z.object({
-        paso: z.enum(['PREPARADA', 'RECIBIDA', 'CONCILIADA']),
+        paso: z.enum(['PREPARADA', 'RECIBIDA', 'CONCILIADA', 'RECIBIDA_EN_DESTINO']),
         en: fecha.nullable(),
         acopio: z.string().optional().describe('Nombre del acopio, desde que se recibe'),
       }),
     ),
+    recibidoEnDestino: z.boolean().describe('Alguna remisión con este folio llegó a su zona'),
+    remisiones: z
+      .array(
+        z.object({
+          estado: z.enum(['EN_TRANSITO', 'RECIBIDA']),
+          despachadaEn: fecha,
+          recibidaEn: fecha.nullable(),
+        }),
+      )
+      .describe('Lo despachado con este folio, sin código ni zona'),
+    parteDeTuDonacion: z.boolean().describe('Más de una remisión: cada una lleva una parte'),
     lineas: z.array(
       z.object({
         categoria: z.string(),

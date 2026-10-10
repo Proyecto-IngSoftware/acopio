@@ -138,6 +138,14 @@ export class ComprobanteDao {
           },
           orderBy: { id: 'asc' },
         },
+        // RF-CMP-007: lo que salió hacia una zona; las canceladas y los borradores no cuentan
+        remisiones: {
+          where: { remision: { estado: { in: ['EN_TRANSITO', 'RECIBIDA'] } } },
+          select: {
+            remision: { select: { estado: true, despachada_en: true, recibida_en: true } },
+          },
+          orderBy: { vinculado_en: 'asc' },
+        },
       },
     });
   }
