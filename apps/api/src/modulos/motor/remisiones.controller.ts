@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { createZodDto } from 'nestjs-zod';
 import { z } from 'zod';
@@ -26,6 +26,10 @@ class LineasDto extends createZodDto(z.object({ lineas })) {}
 class EditarRemisionDto extends createZodDto(
   z.object({ responsable: responsable.optional(), zonaId: z.uuid().nullable().optional() }),
 ) {}
+class DespacharDto extends createZodDto(
+  z.object({ folios: z.array(z.string().trim().min(1)).max(20).optional() }),
+) {}
+class CancelarDto extends createZodDto(z.object({ motivo: z.string().trim().min(10).max(280) })) {}
 class FiltroRemisionesDto extends createZodDto(
   z.object({
     estado: z.enum(['BORRADOR', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']).optional(),
@@ -72,6 +76,30 @@ export class RemisionesController {
     @Body() d: LineasDto,
   ) {
     return this.remisiones.reemplazarLineas(u, codigo, d.lineas);
+  }
+
+  @Post(':codigo/despachar')
+  @HttpCode(200)
+  @ApiOkResponse({ type: RemisionDto })
+  @ApiResponse(errores)
+  despachar(
+    @UsuarioActual() u: UsuarioAutenticado,
+    @Param('codigo') codigo: string,
+    @Body() d: DespacharDto,
+  ) {
+    return this.remisiones.despachar(u, codigo, d.folios);
+  }
+
+  @Post(':codigo/cancelar')
+  @HttpCode(200)
+  @ApiOkResponse({ type: RemisionDto })
+  @ApiResponse(errores)
+  cancelar(
+    @UsuarioActual() u: UsuarioAutenticado,
+    @Param('codigo') codigo: string,
+    @Body() d: CancelarDto,
+  ) {
+    return this.remisiones.cancelar(u, codigo, d.motivo);
   }
 
   @Patch(':codigo')

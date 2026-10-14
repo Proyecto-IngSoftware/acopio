@@ -1,5 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { puedeRemision, type AccionRemision, type EstadoRemision } from '@acopio/shared';
+import {
+  estadoTras,
+  puedeRemision,
+  type AccionRemision,
+  type EstadoRemision,
+} from '@acopio/shared';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import type { ClienteBd } from '../../comun/prisma/cliente-bd';
@@ -7,8 +12,11 @@ import { Transacciones } from '../../comun/prisma/transacciones';
 import { AcopiosService } from '../acopios/acopios.service';
 import { ZonaDao } from '../acopios/dao/zona.dao';
 import { BitacoraService } from '../auditoria/bitacora.service';
+import { ComprobanteDao } from '../comprobantes/dao/comprobante.dao';
+import { normalizarFolio } from '../comprobantes/folio';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
 import { candadoSaldo } from '../inventario/dao/saldo.dao';
+import { MovimientosService } from '../inventario/movimientos.service';
 import { RemisionDao } from './dao/remision.dao';
 import { EstadoMotorService } from './estado-motor.service';
 import { PlanRemision } from './plan-remision';
@@ -43,6 +51,8 @@ export class RemisionesService {
     private readonly alcance: AlcanceService,
     private readonly acopios: AcopiosService,
     private readonly bitacora: BitacoraService,
+    private readonly movimientos: MovimientosService,
+    private readonly comprobantes: ComprobanteDao,
   ) {}
 
   /** 409 REMISION_ESTADO_INVALIDO si la acción no vale desde el estado (TRANSICIONES_REMISION). */
@@ -170,6 +180,114 @@ export class RemisionesService {
     const r = await this.encontrar(codigo);
     await this.alcance.exigir(usuario, 'ACOPIO', r.acopio_origen_id);
     return aRemisionVista(r);
+  }
+
+  /**
+   * Crea una SALIDA por línea bajo el candado de saldo, vincula los folios y deja la
+   * remisión EN_TRANSITO. Si una línea no alcanza, la transacción entera se revierte.
+   */
+  async despachar(usuario: UsuarioAutenticado, codigo: string, folios: string[] = []) {
+    const r = await this.encontrar(codigo);
+    await this.alcance.exigir(usuario, 'ACOPIO', r.acopio_origen_id);
+    this.exigirAccion(r, 'despachar');
+    if (!r.responsable?.trim()) {
+      throw new ErrorDominio(
+        'RESPONSABLE_OBLIGATORIO',
+        'Indica quién lleva el envío antes de despacharlo',
+        422,
+      );
+    }
+    const vinculos = await this.foliosVinculables(r.acopio_origen_id, folios);
+    return this.transacciones.ejecutar(
+      async (tx) => {
+        const cambiadas = await this.remisiones.cambiarSiEstado(tx, r.id, 'BORRADOR', {
+          estado: estadoTras('BORRADOR', 'despachar'),
+          despachada_por: usuario.id,
+          despachada_en: new Date(),
+        });
+        if (cambiadas === 0) this.exigirAccion(await this.releer(tx, codigo), 'despachar');
+        // CON_LINEAS las trae ordenadas por categoría: los candados se toman siempre en orden
+        for (const l of r.lineas) {
+          await this.movimientos.salidaTrasladoEnTransaccion(tx, usuario, r.acopio_origen_id, {
+            categoriaId: l.categoria_id,
+            cantidad: Number(l.cantidad_planeada),
+            remisionId: r.id,
+            codigo: r.codigo,
+          });
+        }
+        if (vinculos.length) await this.remisiones.vincularFolios(tx, r.id, vinculos, usuario.id);
+        await this.bitacora.registrar(tx, {
+          usuarioId: usuario.id,
+          accion: 'remision.despachada',
+          entidad: 'remision',
+          entidadId: r.id,
+          ubicacionId: r.acopio_origen_id,
+          antes: { estado: 'BORRADOR' },
+          despues: { estado: 'EN_TRANSITO', responsable: r.responsable, folios },
+        });
+        return aRemisionVista((await this.remisiones.porCodigo(codigo, tx))!);
+      },
+      { timeout: 20_000, maxWait: 10_000 },
+    );
+  }
+
+  /** Solo folios CONCILIADO del mismo acopio (§6 de la especificación). */
+  private async foliosVinculables(acopioId: string, folios: string[]) {
+    const ids: string[] = [];
+    for (const texto of new Set(folios)) {
+      const folio = normalizarFolio(texto);
+      const c = folio ? await this.comprobantes.porFolio(folio) : null;
+      if (!c || c.estado !== 'CONCILIADO' || c.acopio_id !== acopioId) {
+        throw new ErrorDominio(
+          'FOLIO_NO_VINCULABLE',
+          `El folio ${texto} no está conciliado en este acopio`,
+          422,
+        );
+      }
+      ids.push(c.id);
+    }
+    return ids;
+  }
+
+  /** M-07: en tránsito, lo despachado vuelve al acopio con un AJUSTE positivo por línea. */
+  async cancelar(usuario: UsuarioAutenticado, codigo: string, motivo: string) {
+    const r = await this.encontrar(codigo);
+    await this.alcance.exigir(usuario, 'ACOPIO', r.acopio_origen_id);
+    this.exigirAccion(r, 'cancelar');
+    const texto = motivo.trim();
+    return this.transacciones.ejecutar(
+      async (tx) => {
+        const cambiadas = await this.remisiones.cambiarSiEstado(tx, r.id, r.estado, {
+          estado: estadoTras(r.estado, 'cancelar'),
+          cancelada_por: usuario.id,
+          cancelada_en: new Date(),
+          motivo_cancelacion: texto,
+        });
+        if (cambiadas === 0) this.exigirAccion(await this.releer(tx, codigo), 'cancelar');
+        if (r.estado === 'EN_TRANSITO') {
+          for (const l of r.lineas) {
+            await this.movimientos.ajusteCancelacionEnTransaccion(tx, usuario, r.acopio_origen_id, {
+              categoriaId: l.categoria_id,
+              cantidad: Number(l.cantidad_planeada),
+              remisionId: r.id,
+              codigo: r.codigo,
+            });
+          }
+        }
+        await this.bitacora.registrar(tx, {
+          usuarioId: usuario.id,
+          accion: 'remision.cancelada',
+          entidad: 'remision',
+          entidadId: r.id,
+          ubicacionId: r.acopio_origen_id,
+          destacado: r.estado === 'EN_TRANSITO',
+          antes: { estado: r.estado },
+          despues: { estado: 'CANCELADA', motivo: texto },
+        });
+        return aRemisionVista((await this.remisiones.porCodigo(codigo, tx))!);
+      },
+      { timeout: 20_000, maxWait: 10_000 },
+    );
   }
 
   /** 404 REMISION_NO_ENCONTRADA. */

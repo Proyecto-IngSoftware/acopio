@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { CatalogoModule } from '../catalogo/catalogo.module';
+import { ComprobantesModule } from '../comprobantes/comprobantes.module';
 import { InventarioModule } from '../inventario/inventario.module';
 import { ConfiguracionController } from './configuracion.controller';
 import { ConfiguracionService } from './configuracion.service';
@@ -18,7 +19,7 @@ import { SugerenciasService } from './sugerencias.service';
 
 /** Motor (Bloque 4): necesidad, excedentes, sugerencias y remisiones. Nadie lo importa. */
 @Module({
-  imports: [InventarioModule, CatalogoModule],
+  imports: [InventarioModule, CatalogoModule, ComprobantesModule],
   controllers: [
     NecesidadController,
     SugerenciasController,
