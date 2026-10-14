@@ -5,6 +5,7 @@ import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { Transacciones } from '../../comun/prisma/transacciones';
 import { ZonaDao } from '../acopios/dao/zona.dao';
 import { CategoriaDao } from '../catalogo/dao/categoria.dao';
+import { exigirCantidad } from '../inventario/cantidades';
 import { NecesidadDao } from './dao/necesidad.dao';
 import { BitacoraService } from '../auditoria/bitacora.service';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
@@ -119,6 +120,8 @@ export class NecesidadService {
       const cat = await this.categorias.buscar(categoriaId, tx);
       if (!cat || cat.archivada)
         throw new ErrorDominio('CATEGORIA_NO_ENCONTRADA', 'La categoría no existe', 404);
+      // Una categoría por unidades no recibe una necesidad fraccionaria (menor de la etapa 1)
+      if (datos.cantidad !== null) exigirCantidad(datos.cantidad, cat.unidad_base);
       const previa = await this.necesidades.ultimaManual(tx, zonaId, categoriaId);
       const motivo = datos.motivo.trim();
       const fila = await this.necesidades.crearManual(tx, {

@@ -1,4 +1,5 @@
 import type { Componentes } from '@acopio/shared';
+import type { RemisionConLineas } from './dao/remision.dao';
 import type { Prisma } from '../../generado/prisma/client';
 
 export const INCLUIR_SUGERENCIA = {
@@ -30,3 +31,30 @@ export const aSugerenciaVista = (s: FilaSugerencia) => ({
   decididaPor: s.decisor?.nombre ?? null,
   decididaEn: s.decidida_en,
 });
+
+export const aRemisionVista = (r: RemisionConLineas) => ({
+  id: r.id,
+  codigo: r.codigo,
+  estado: r.estado,
+  acopio: r.acopio_origen,
+  zona: r.zona_destino,
+  responsable: r.responsable,
+  qrToken: r.qr_token,
+  creadaEn: r.creada_en,
+  despachadaEn: r.despachada_en,
+  recibidaEn: r.recibida_en,
+  canceladaEn: r.cancelada_en,
+  motivoCancelacion: r.motivo_cancelacion,
+  notaRecepcion: r.nota_recepcion,
+  evidencias: r.evidencia_keys.length,
+  folios: r.comprobantes.map((c) => c.comprobante.folio),
+  lineas: r.lineas.map((l) => ({
+    categoriaId: l.categoria_id,
+    categoria: l.categoria.nombre,
+    unidad: l.categoria.unidad_base,
+    cantidadPlaneada: Number(l.cantidad_planeada),
+    cantidadRecibida: l.cantidad_recibida === null ? null : Number(l.cantidad_recibida),
+  })),
+});
+
+export type RemisionVista = ReturnType<typeof aRemisionVista>;
