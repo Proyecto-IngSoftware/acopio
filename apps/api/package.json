@@ -18,7 +18,8 @@
     "seed:dist": "node dist/seed/main.js",
     "openapi": "bun run shared && prisma generate >/dev/null && node -r @swc-node/register src/exportar-openapi.ts",
     "shared": "bun run --cwd ../../packages/shared build >/dev/null",
-    "seed:demo": "bun run shared && prisma generate >/dev/null && node -r @swc-node/register src/seed/demo.ts"
+    "seed:demo": "bun run shared && prisma generate >/dev/null && node -r @swc-node/register src/seed/demo.ts",
+    "simular": "bun run shared && node -r @swc-node/register src/scripts/simular.ts"
   },
   "dependencies": {
     "@acopio/shared": "workspace:*",
