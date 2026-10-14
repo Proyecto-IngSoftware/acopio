@@ -15,6 +15,8 @@ import { BitacoraService } from '../auditoria/bitacora.service';
 import { ComprobanteDao } from '../comprobantes/dao/comprobante.dao';
 import { normalizarFolio } from '../comprobantes/folio';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
+import { CategoriaDao } from '../catalogo/dao/categoria.dao';
+import { categoriaParaMovimiento, exigirCantidad } from '../inventario/cantidades';
 import { candadoSaldo } from '../inventario/dao/saldo.dao';
 import { MovimientosService } from '../inventario/movimientos.service';
 import { RemisionDao } from './dao/remision.dao';
@@ -53,7 +55,16 @@ export class RemisionesService {
     private readonly bitacora: BitacoraService,
     private readonly movimientos: MovimientosService,
     private readonly comprobantes: ComprobanteDao,
+    private readonly categorias: CategoriaDao,
   ) {}
+
+  /** Cada categoría existe y no está archivada; en las de unidades, la cantidad es entera. */
+  private async exigirLineas(tx: ClienteBd, lineas: Linea[]) {
+    for (const l of lineas) {
+      const cat = await categoriaParaMovimiento(this.categorias, tx, l.categoriaId);
+      exigirCantidad(l.cantidad, cat.unidad_base);
+    }
+  }
 
   /** 409 REMISION_ESTADO_INVALIDO si la acción no vale desde el estado (TRANSICIONES_REMISION). */
   exigirAccion(r: { estado: EstadoRemision }, accion: AccionRemision) {
@@ -99,6 +110,7 @@ export class RemisionesService {
       new PlanRemision(),
     );
     return this.transacciones.ejecutar(async (tx) => {
+      await this.exigirLineas(tx, plan.lineas());
       const categorias = plan.lineas().map((l) => l.categoriaId);
       const lineas = plan.validarContra(await this.movibleDe(tx, d.acopioId, categorias)).lineas();
       const r = await this.borradores.nueva(tx, usuario, {
@@ -117,11 +129,13 @@ export class RemisionesService {
     this.exigirAccion(r, 'editar');
     const plan = nuevas.reduce((p, l) => p.agregar(l.categoriaId, l.cantidad), new PlanRemision());
     return this.transacciones.ejecutar(async (tx) => {
+      await this.exigirLineas(tx, plan.lineas());
       const categorias = plan.lineas().map((l) => l.categoriaId);
-      const lineas = plan
-        .validarContra(await this.movibleDe(tx, r.acopio_origen_id, categorias, r.id))
-        .lineas();
-      this.exigirAccion(await this.releer(tx, codigo), 'editar');
+      // Saldo primero y remisión después, el mismo orden que aprobar y despachar
+      const movible = await this.movibleDe(tx, r.acopio_origen_id, categorias, r.id);
+      const estado = await this.remisiones.bloquear(tx, r.id);
+      this.exigirAccion({ estado: estado ?? r.estado }, 'editar');
+      const lineas = plan.validarContra(movible).lineas();
       await this.remisiones.reemplazarLineas(tx, r.id, lineas);
       await this.bitacora.registrar(tx, {
         usuarioId: usuario.id,
@@ -200,14 +214,29 @@ export class RemisionesService {
     const vinculos = await this.foliosVinculables(r.acopio_origen_id, folios);
     return this.transacciones.ejecutar(
       async (tx) => {
+        // Saldo primero, en orden de categoría, y remisión después: el mismo orden que
+        // aprobar y editar, que tocan la remisión con su candado de saldo ya tomado
+        for (const c of [...new Set(r.lineas.map((l) => l.categoria_id))].sort())
+          await candadoSaldo(tx, r.acopio_origen_id, c);
         const cambiadas = await this.remisiones.cambiarSiEstado(tx, r.id, 'BORRADOR', {
           estado: estadoTras('BORRADOR', 'despachar'),
           despachada_por: usuario.id,
           despachada_en: new Date(),
         });
         if (cambiadas === 0) this.exigirAccion(await this.releer(tx, codigo), 'despachar');
-        // CON_LINEAS las trae ordenadas por categoría: los candados se toman siempre en orden
-        for (const l of r.lineas) {
+        // Con la fila tomada, las líneas ya no cambian: si son otras que las leídas, alguien
+        // editó o aprobó en medio y no se despacha a ciegas
+        const actual = await this.releer(tx, codigo);
+        const firma = (ls: typeof r.lineas) =>
+          ls.map((l) => `${l.categoria_id}:${Number(l.cantidad_planeada)}`).join('|');
+        if (firma(actual.lineas) !== firma(r.lineas)) {
+          throw new ErrorDominio(
+            'REMISION_CAMBIO',
+            'La remisión cambió mientras se despachaba: vuelve a cargarla y despáchala otra vez',
+            409,
+          );
+        }
+        for (const l of actual.lineas) {
           await this.movimientos.salidaTrasladoEnTransaccion(tx, usuario, r.acopio_origen_id, {
             categoriaId: l.categoria_id,
             cantidad: Number(l.cantidad_planeada),

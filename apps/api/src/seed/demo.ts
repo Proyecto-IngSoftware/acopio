@@ -202,6 +202,7 @@ export async function sembrarEscenariosDemo(prisma: PrismaService, proveedor: Pr
   const donador = await sembrarDonadorDemo(prisma, proveedor);
   await sembrarDonacionesDemo(prisma, donador, ids.operador1!);
   await sembrarMotorDemo(prisma, ids.operador1!);
+  await sembrarRemisionesDemo(prisma, ids.operador2!, ids.receptor1!, donador);
   return [...USUARIOS_DEMO.map((u) => u.username), DONADOR_DEMO.correo];
 }
 
@@ -360,6 +361,107 @@ async function sembrarMotorDemo(prisma: PrismaService, operador: string) {
         },
       });
     }
+  }
+}
+
+/**
+ * Etapa 2 del motor: una remisión en tránsito desde Kennedy hacia San Agustín con un folio
+ * conciliado vinculado, un despacho general en tránsito y dos reportes de la Receptora.
+ * Cada remisión lleva su SALIDA de traslado, como si se hubiera despachado por la API.
+ */
+async function sembrarRemisionesDemo(
+  prisma: PrismaService,
+  operador: string,
+  receptora: string,
+  donador: string,
+) {
+  const agua = await prisma.categoria.findFirstOrThrow({ where: { nombre: 'Agua potable' } });
+  const arroz = await prisma.categoria.findFirstOrThrow({ where: { nombre: 'Arroz' } });
+  const kennedy = ACOPIOS[1]!.id;
+  const ahora = new Date();
+  const despachar = async (
+    codigo: string,
+    zonaId: string | null,
+    categoriaId: string,
+    cantidad: number,
+  ) => {
+    // Cada parte se revisa por separado: una corrida a medias se completa en la siguiente
+    const existente = await prisma.remision.findUnique({ where: { codigo } });
+    if (existente) return existente;
+    const r = await prisma.remision.create({
+      data: {
+        codigo,
+        acopio_origen_id: kennedy,
+        zona_destino_id: zonaId,
+        responsable: 'Camión de la Defensa Civil (prueba)',
+        qr_token: `demo-${codigo}`,
+        creada_por: operador,
+        lineas: { create: { categoria_id: categoriaId, cantidad_planeada: cantidad } },
+      },
+    });
+    // Las líneas solo se escriben en BORRADOR (linea_remision_editable): se despacha después
+    await prisma.remision.update({
+      where: { id: r.id },
+      data: { estado: 'EN_TRANSITO', despachada_por: operador, despachada_en: ahora },
+    });
+    await prisma.movimiento.create({
+      data: {
+        acopio_id: kennedy,
+        categoria_id: categoriaId,
+        tipo: 'SALIDA',
+        signo: -1,
+        cantidad,
+        motivo_salida: 'TRASLADO',
+        nota: `Remisión ${codigo}`,
+        remision_id: r.id,
+        usuario_id: operador,
+        ocurrido_en: ahora,
+      },
+    });
+    return r;
+  };
+  const conZona = await despachar('R-2026-DEMA2', ZONA_DEMO, agua.id, 400);
+  await despachar('R-2026-DEMA3', null, arroz.id, 60);
+
+  const folio =
+    (await prisma.comprobante.findUnique({ where: { folio: 'ACO-2026-DEMB2' } })) ??
+    (await prisma.comprobante.create({
+      data: {
+        folio: 'ACO-2026-DEMB2',
+        donador_id: donador,
+        acopio_id: kennedy,
+        estado: 'CONCILIADO',
+        recibido_por: operador,
+        recibido_en: ahora,
+        verificado_en: ahora,
+        cerrado_en: ahora,
+        lineas: {
+          create: {
+            categoria_id: agua.id,
+            contenido_unitario: 1,
+            cantidad_declarada: 100,
+            cantidad_confirmada: 100,
+          },
+        },
+      },
+    }));
+  const vinculo = { remision_id: conZona.id, comprobante_id: folio.id };
+  if (
+    !(await prisma.remisionComprobante.findUnique({
+      where: { remision_id_comprobante_id: vinculo },
+    }))
+  )
+    await prisma.remisionComprobante.create({ data: { ...vinculo, vinculado_por: operador } });
+
+  if (await prisma.reporteNecesidad.count({ where: { zona_id: ZONA_DEMO } })) return;
+
+  for (const [categoriaId, nota] of [
+    [agua.id, 'Las familias del coliseo no tienen agua desde ayer'],
+    [arroz.id, 'Faltan alimentos para la olla comunitaria'],
+  ] as const) {
+    await prisma.reporteNecesidad.create({
+      data: { zona_id: ZONA_DEMO, categoria_id: categoriaId, reportado_por: receptora, nota },
+    });
   }
 }
 

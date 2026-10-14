@@ -5,7 +5,7 @@ tags: [arquitectura, adr, almacenamiento, custodia]
 estado: vigente
 adr: 17
 decision: aceptada
-actualizado: 2026-10-06
+actualizado: 2026-10-10
 ---
 
 # ADR-0017 · La API sirve la foto de la factura y Garage no se expone
@@ -56,3 +56,6 @@ ningún entorno.**
 - El cambio de código queda en
   [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26), antes del primer
   despliegue. Hasta entonces, en desarrollo siguen las URL firmadas.
+- **2026-10-10.** La evidencia de las remisiones nace así: `GET /remisiones/:codigo/evidencia/:n`
+  entrega los bytes con `Cache-Control: private, no-store`, y el puerto `Almacen` gana
+  `leer`. La factura puede reutilizar las dos piezas cuando se haga su cambio.
