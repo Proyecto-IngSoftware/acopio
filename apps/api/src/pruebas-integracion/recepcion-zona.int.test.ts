@@ -209,4 +209,17 @@ describe('recepción en zona', () => {
     await get(`/api/remisiones/${conZona.codigo}/evidencia/0`, operador).expect(200);
     await get(`/api/remisiones/${conZona.codigo}/evidencia/9`, admin).expect(404);
   });
+
+  it('un despacho general es del Receptor que subió la primera foto', async () => {
+    const g = await enTransito(null);
+    await subirFoto(g.codigo, receptorA).expect(200);
+    const sube = await subirFoto(g.codigo, receptorB).expect(409);
+    expect(sube.body.codigo).toBe('REMISION_TOMADA');
+    const recibe = await post(`/api/remisiones/${g.codigo}/recibir`, receptorB, {
+      zonaId: zonaB,
+    }).expect(409);
+    expect(recibe.body.codigo).toBe('REMISION_TOMADA');
+    await get(`/api/remisiones/${g.codigo}/evidencia/0`, receptorB).expect(403);
+    await get(`/api/remisiones/${g.codigo}/evidencia/0`, receptorA).expect(200);
+  });
 });

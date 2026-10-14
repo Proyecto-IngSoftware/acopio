@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-4]
 estado: vigente
 bloque: 4
-actualizado: 2026-10-10
+actualizado: 2026-10-14
 ---
 
 # Bloque 4 · Motor · especificación
@@ -454,3 +454,5 @@ Cada etapa tiene su plan, escrito al empezarla.
 | El ajuste de una cancelación y la recepción aceptan una categoría archivada | Lo que ya salió tiene que poder volver o llegar |
 | Errores nuevos fuera de la tabla del §6: `RESPONSABLE_OBLIGATORIO` 422, `FOLIO_NO_VINCULABLE` 422, `EVIDENCIA_MAXIMA` 422, `ZONA_OBLIGATORIA` 400, `REMISION_NO_ENCONTRADA` y `EVIDENCIA_NO_ENCONTRADA` 404 | Casos que la especificación no nombraba |
 | El simulador vive en `packages/shared/src/motor/simulador.ts`; con la semilla 42 el motor deja la cobertura más pareja entre zonas que repartir en partes iguales o al más cercano ([informe](../../03-diseno/motor/simulacion.md)) | M-08 |
+| Un despacho general es del Receptor que sube la primera foto: otro Receptor recibe 409 `REMISION_TOMADA` al subir o al recibir y no ve la evidencia. La clave de cada foto lleva el id de quien la subió | Menor de la revisión final: cualquier Receptor veía y llenaba la evidencia de un despacho general |
+| `reportar` valida la zona (404 `ZONA_NO_ENCONTRADA`, 409 `ZONA_SOLO_LECTURA`) y cada categoría (404 `CATEGORIA_NO_ENCONTRADA`, 422 `CATEGORIA_ARCHIVADA`) | Una categoría inexistente daba 500 y una archivada llegaba a la capa pública |

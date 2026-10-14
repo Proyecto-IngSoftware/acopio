@@ -385,43 +385,48 @@ async function sembrarRemisionesDemo(
     categoriaId: string,
     cantidad: number,
   ) => {
-    // Cada parte se revisa por separado: una corrida a medias se completa en la siguiente
+    // La remisión, su despacho y su salida van juntos: si una corrida falla en medio, no
+    // queda una remisión en tránsito sin salida que la siguiente daría por hecha
     const existente = await prisma.remision.findUnique({ where: { codigo } });
     if (existente) return existente;
-    const r = await prisma.remision.create({
-      data: {
-        codigo,
-        acopio_origen_id: kennedy,
-        zona_destino_id: zonaId,
-        responsable: 'Camión de la Defensa Civil (prueba)',
-        qr_token: `demo-${codigo}`,
-        creada_por: operador,
-        lineas: { create: { categoria_id: categoriaId, cantidad_planeada: cantidad } },
-      },
+    return prisma.$transaction(async (tx) => {
+      const r = await tx.remision.create({
+        data: {
+          codigo,
+          acopio_origen_id: kennedy,
+          zona_destino_id: zonaId,
+          responsable: 'Camión de la Defensa Civil (prueba)',
+          qr_token: `demo-${codigo}`,
+          creada_por: operador,
+          lineas: { create: { categoria_id: categoriaId, cantidad_planeada: cantidad } },
+        },
+      });
+      // Las líneas solo se escriben en BORRADOR (linea_remision_editable): se despacha después
+      await tx.remision.update({
+        where: { id: r.id },
+        data: { estado: 'EN_TRANSITO', despachada_por: operador, despachada_en: ahora },
+      });
+      await tx.movimiento.create({
+        data: {
+          acopio_id: kennedy,
+          categoria_id: categoriaId,
+          tipo: 'SALIDA',
+          signo: -1,
+          cantidad,
+          motivo_salida: 'TRASLADO',
+          nota: `Remisión ${codigo}`,
+          remision_id: r.id,
+          usuario_id: operador,
+          ocurrido_en: ahora,
+        },
+      });
+      return r;
     });
-    // Las líneas solo se escriben en BORRADOR (linea_remision_editable): se despacha después
-    await prisma.remision.update({
-      where: { id: r.id },
-      data: { estado: 'EN_TRANSITO', despachada_por: operador, despachada_en: ahora },
-    });
-    await prisma.movimiento.create({
-      data: {
-        acopio_id: kennedy,
-        categoria_id: categoriaId,
-        tipo: 'SALIDA',
-        signo: -1,
-        cantidad,
-        motivo_salida: 'TRASLADO',
-        nota: `Remisión ${codigo}`,
-        remision_id: r.id,
-        usuario_id: operador,
-        ocurrido_en: ahora,
-      },
-    });
-    return r;
   };
   const conZona = await despachar('R-2026-DEMA2', ZONA_DEMO, agua.id, 400);
   await despachar('R-2026-DEMA3', null, arroz.id, 60);
+
+  // El folio, su vínculo y los reportes se revisan por separado: se completan en otra corrida
 
   const folio =
     (await prisma.comprobante.findUnique({ where: { folio: 'ACO-2026-DEMB2' } })) ??

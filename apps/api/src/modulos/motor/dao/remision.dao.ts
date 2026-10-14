@@ -143,13 +143,20 @@ export class RemisionDao {
   }
 
   /**
-   * Agrega una foto de evidencia si la remisión sigue en tránsito y tiene menos de `maximo`.
+   * Agrega una foto de evidencia si la remisión sigue en tránsito, tiene menos de `maximo` y,
+   * en un despacho general, nadie más subió fotos (el tercer tramo de la clave es el autor).
    * Devuelve las filas cambiadas: 0 si no se pudo.
    */
-  agregarEvidencia(tx: ClienteBd, id: string, clave: string, maximo: number): Promise<number> {
+  agregarEvidencia(
+    tx: ClienteBd,
+    id: string,
+    d: { clave: string; autorId: string; maximo: number },
+  ): Promise<number> {
     return tx.$executeRaw`
-      UPDATE remision SET evidencia_keys = array_append(evidencia_keys, ${clave})
-      WHERE id = ${id}::uuid AND estado = 'EN_TRANSITO' AND cardinality(evidencia_keys) < ${maximo}`;
+      UPDATE remision SET evidencia_keys = array_append(evidencia_keys, ${d.clave})
+      WHERE id = ${id}::uuid AND estado = 'EN_TRANSITO' AND cardinality(evidencia_keys) < ${d.maximo}
+        AND (zona_destino_id IS NOT NULL OR NOT EXISTS (
+          SELECT 1 FROM unnest(evidencia_keys) AS k WHERE split_part(k, '/', 3) <> ${d.autorId}))`;
   }
 
   /** En la confirmación, lo recibido es lo planeado (RF-MOT-009, sin conteo). */

@@ -12,6 +12,9 @@ import { RemisionDao, type RemisionConLineas } from './dao/remision.dao';
 import { RemisionesService } from './remisiones.service';
 import { aRemisionVista } from './vistas';
 
+/** La clave es `remisiones/<remisión>/<autor>/<foto>.webp`: el tercer tramo es quien la subió. */
+const autorDe = (clave: string) => clave.split('/')[2];
+
 /** C13 Recepción en zona (RF-MOT-009): lo que va en camino, la evidencia y la confirmación. */
 @Injectable()
 export class RecepcionesService {
@@ -44,20 +47,24 @@ export class RecepcionesService {
     const r = await this.remisiones.encontrar(codigo);
     this.remisiones.exigirAccion(r, 'subirEvidencia');
     if (r.zona_destino_id) await exigirZonaPropia(this.alcance, usuario, r.zona_destino_id);
-    const imagen = await this.almacenamiento.guardarImagen(`remisiones/${r.id}`, datos);
+    this.exigirNoTomada(usuario, r);
+    const imagen = await this.almacenamiento.guardarImagen(
+      `remisiones/${r.id}/${usuario.id}`,
+      datos,
+    );
     // La evidencia no usa miniatura
     await this.almacenamiento.borrar(imagen.miniatura).catch(() => undefined);
     try {
       return await this.transacciones.ejecutar(async (tx) => {
-        const cambiadas = await this.remisionesDao.agregarEvidencia(
-          tx,
-          r.id,
-          imagen.clave,
-          MAXIMO_EVIDENCIAS,
-        );
+        const cambiadas = await this.remisionesDao.agregarEvidencia(tx, r.id, {
+          clave: imagen.clave,
+          autorId: usuario.id,
+          maximo: MAXIMO_EVIDENCIAS,
+        });
         if (cambiadas === 0) {
           const actual = await this.remisiones.releer(tx, codigo);
           this.remisiones.exigirAccion(actual, 'subirEvidencia');
+          this.exigirNoTomada(usuario, actual);
           throw new ErrorDominio(
             'EVIDENCIA_MAXIMA',
             `Una remisión admite hasta ${MAXIMO_EVIDENCIAS} fotos`,
@@ -109,6 +116,7 @@ export class RecepcionesService {
       throw new ErrorDominio('ZONA_OBLIGATORIA', 'Indica en qué zona recibes este despacho', 400);
     }
     await exigirZonaPropia(this.alcance, usuario, zonaId);
+    this.exigirNoTomada(usuario, r);
     if (r.evidencia_keys.length === 0) {
       throw new ErrorDominio('SIN_EVIDENCIA', 'Sube al menos una foto de lo que llegó', 422);
     }
@@ -150,9 +158,21 @@ export class RecepcionesService {
     );
   }
 
+  /** Un despacho general es del Receptor que subió la primera foto: otro recibe 409. */
+  private exigirNoTomada(usuario: UsuarioAutenticado, r: RemisionConLineas) {
+    if (r.zona_destino_id) return;
+    if (r.evidencia_keys.some((k) => autorDe(k) !== usuario.id)) {
+      throw new ErrorDominio(
+        'REMISION_TOMADA',
+        'Otro Receptor ya está recibiendo este despacho',
+        409,
+      );
+    }
+  }
+
   /**
    * Administrador y Auditor siempre; el Operador con alcance sobre el acopio de origen; el
-   * Receptor si la zona de destino es suya, o cualquiera mientras sea un despacho general.
+   * Receptor si la zona de destino es suya, si la recibió o si subió alguna de las fotos.
    */
   private async exigirVerEvidencia(usuario: UsuarioAutenticado, r: RemisionConLineas) {
     if (usuario.rol === 'ADMIN' || usuario.rol === 'AUDITOR') return;
@@ -162,8 +182,10 @@ export class RecepcionesService {
     )
       return;
     if (usuario.rol === 'RECEPTOR') {
-      if (!r.zona_destino_id) return;
-      if (await this.alcance.puede(usuario, 'ZONA', r.zona_destino_id)) return;
+      if (r.recibida_por === usuario.id) return;
+      if (r.evidencia_keys.some((k) => autorDe(k) === usuario.id)) return;
+      if (r.zona_destino_id && (await this.alcance.puede(usuario, 'ZONA', r.zona_destino_id)))
+        return;
     }
     throw new ForbiddenException('No puedes ver la evidencia de esta remisión');
   }
