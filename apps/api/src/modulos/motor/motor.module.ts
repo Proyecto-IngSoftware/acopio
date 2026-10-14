@@ -11,6 +11,8 @@ import { SugerenciaDao } from './dao/sugerencia.dao';
 import { EstadoMotorService } from './estado-motor.service';
 import { NecesidadController } from './necesidad.controller';
 import { NecesidadService } from './necesidad.service';
+import { RecepcionesController } from './recepciones.controller';
+import { RecepcionesService } from './recepciones.service';
 import { RemisionesBorradorService } from './remisiones-borrador.service';
 import { RemisionesController } from './remisiones.controller';
 import { RemisionesService } from './remisiones.service';
@@ -25,6 +27,7 @@ import { SugerenciasService } from './sugerencias.service';
     SugerenciasController,
     ConfiguracionController,
     RemisionesController,
+    RecepcionesController,
   ],
   providers: [
     ConfiguracionDao,
@@ -37,6 +40,7 @@ import { SugerenciasService } from './sugerencias.service';
     ConfiguracionService,
     RemisionesBorradorService,
     RemisionesService,
+    RecepcionesService,
   ],
 })
 export class MotorModule {}

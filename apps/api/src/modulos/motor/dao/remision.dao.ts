@@ -128,6 +128,16 @@ export class RemisionDao {
     });
   }
 
+  /**
+   * Agrega una foto de evidencia si la remisión sigue en tránsito y tiene menos de `maximo`.
+   * Devuelve las filas cambiadas: 0 si no se pudo.
+   */
+  agregarEvidencia(tx: ClienteBd, id: string, clave: string, maximo: number): Promise<number> {
+    return tx.$executeRaw`
+      UPDATE remision SET evidencia_keys = array_append(evidencia_keys, ${clave})
+      WHERE id = ${id}::uuid AND estado = 'EN_TRANSITO' AND cardinality(evidencia_keys) < ${maximo}`;
+  }
+
   /** En la confirmación, lo recibido es lo planeado (RF-MOT-009, sin conteo). */
   async marcarRecibidas(tx: ClienteBd, remisionId: string) {
     await tx.$executeRaw`

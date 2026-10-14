@@ -15,4 +15,10 @@ export class AlmacenMemoria implements Almacen {
   async borrar(clave: string) {
     this.objetos.delete(clave);
   }
+
+  async leer(clave: string) {
+    const o = this.objetos.get(clave);
+    if (!o) throw new Error(`No existe ${clave}`);
+    return o;
+  }
 }
