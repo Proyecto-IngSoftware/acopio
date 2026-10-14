@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-background text-on-surface" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>C10 Ficha de zona - Consola Acopio</title>
+<!-- Inter font from Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary": "#125454",
+            "surface-container": "#f4ece8",
+            "surface-container-highest": "#e9e1dd",
+            "surface-bright": "#fff8f5",
+            "background": "#fafaf9",
+            "surface-tint": "#03696a",
+            "on-background": "#1c1917",
+            "error-container": "#ffdad6",
+            "on-secondary-container": "#68635f",
+            "on-primary-fixed-variant": "#004f50",
+            "primary-container": "#0f6e6e",
+            "outline-variant": "#e7e5e4",
+            "on-secondary-fixed-variant": "#4a4642",
+            "on-primary-container": "#9eedec",
+            "error": "#ba1a1a",
+            "surface-container-low": "#faf2ee",
+            "inverse-primary": "#85d4d3",
+            "inverse-on-surface": "#f7efeb",
+            "on-tertiary-fixed": "#002020",
+            "on-error": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "surface": "#ffffff",
+            "on-primary": "#ffffff",
+            "primary-fixed": "#a1f0ef",
+            "on-primary-fixed": "#002020",
+            "tertiary-container": "#316c6c",
+            "on-tertiary-container": "#afebea",
+            "primary-fixed-dim": "#85d4d3",
+            "on-surface": "#1c1917",
+            "surface-container-high": "#eee7e3",
+            "tertiary-fixed-dim": "#96d1d0",
+            "secondary-container": "#e9e1db",
+            "tertiary-fixed": "#b2eded",
+            "primary": "#0f6e6e",
+            "surface-container-lowest": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-secondary-fixed": "#1e1b18",
+            "surface-dim": "#e0d8d5",
+            "secondary-fixed": "#e9e1db",
+            "on-surface-variant": "#57534e",
+            "inverse-surface": "#33302d",
+            "secondary": "#57534e",
+            "outline": "#6e7979",
+            "on-secondary": "#ffffff",
+            "secondary-fixed-dim": "#ccc5c0"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter", "sans-serif"],
+            "display": ["Inter", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-full bg-background text-on-surface font-body antialiased flex flex-col justify-between selection:bg-primary-container selection:text-on-primary-container">
+<!-- Mobile Viewport Shell (Constraint to standard mobile 360-414px centered on desktop) -->
+<div class="w-full max-w-md mx-auto min-h-screen flex flex-col bg-background pb-24 relative shadow-sm">
+<!-- 1. Top App Bar (Shared Component Anchor) -->
+<header class="sticky top-0 z-40 flex items-center justify-between w-full h-14 px-4 bg-surface-container-lowest border-b border-outline-variant">
+<div class="flex items-center gap-3">
+<button aria-label="Volver" class="w-12 h-12 -ml-2 flex items-center justify-center rounded-lg text-on-surface active:bg-surface-container transition-colors duration-150" type="button">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="font-headline text-base font-bold text-on-surface tracking-tight truncate max-w-[210px]">
+          Barrio San Agustín (prueba)
+        </h1>
+</div>
+<div class="flex items-center">
+<!-- Trailing Avatar -->
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center border border-outline-variant text-on-surface font-semibold text-sm select-none" title="Administrador JQ">
+          JQ
+        </div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 px-4 py-4 space-y-4">
+<!-- 2. Encabezado de la Zona -->
+<section class="bg-surface rounded-xl border border-outline-variant p-4 space-y-3">
+<div class="flex items-start justify-between gap-2">
+<div class="space-y-1">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-[#E6F4F4] text-primary border border-primary/20">
+                Activa
+              </span>
+<span class="text-xs text-secondary">ID: ZON-86001-A</span>
+</div>
+<p class="text-sm font-medium text-secondary">
+              Mocoa, Putumayo · Inundaciones Putumayo (prueba)
+            </p>
+</div>
+</div>
+<div class="pt-3 border-t border-outline-variant space-y-2">
+<div class="flex items-center justify-between text-sm flex-wrap gap-1">
+<div class="flex items-center gap-1.5 text-on-surface font-medium">
+<span class="material-symbols-outlined text-[18px] text-secondary">group</span>
+<span class="tabular-nums">1.200</span> personas
+              <span class="text-secondary font-normal text-xs">(Censo alcaldía, 2 oct 2026)</span>
+</div>
+<button class="text-sm font-semibold text-primary active:opacity-75 transition-opacity min-h-[48px] flex items-center" type="button">
+              Ajustar población
+            </button>
+</div>
+<div class="flex items-center gap-1.5 text-xs text-secondary font-medium">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<span>Horizonte de abastecimiento: 7 días</span>
+</div>
+</div>
+</section>
+<!-- 3. Tarjeta de Resumen de Cobertura -->
+<section class="bg-surface rounded-xl border border-outline-variant p-5 space-y-3">
+<div class="flex items-baseline justify-between">
+<span class="text-sm font-medium text-secondary">Cobertura de la zona</span>
+<span class="text-xs font-medium text-secondary bg-surface-container px-2 py-0.5 rounded">Meta: 100 %</span>
+</div>
+<div class="flex items-end gap-3">
+<span class="font-headline text-4xl font-bold tracking-tight text-on-surface tabular-nums">
+            18 %
+          </span>
+<span class="text-xs text-secondary mb-1">balance global ponderado</span>
+</div>
+<!-- Barra de progreso general sobria (sin semáforo) -->
+<div class="w-full bg-[#E7E5E4] rounded-full h-2.5 overflow-hidden">
+<div class="bg-primary h-2.5 rounded-full transition-all duration-300" style="width: 18%;"></div>
+</div>
+<div class="flex items-center gap-2 pt-1 text-sm text-secondary">
+<span class="material-symbols-outlined text-[18px] text-secondary">info</span>
+<span>Lo más bajo: <strong class="text-on-surface font-semibold">Agua potable · 0 %</strong></span>
+</div>
+</section>
+<!-- 4. Sección «Por categoría» -->
+<section class="space-y-2.5">
+<div class="flex items-baseline justify-between px-1">
+<h2 class="font-headline text-base font-bold text-on-surface">
+            Por categoría
+          </h2>
+<span class="text-xs text-secondary font-normal">
+            Ordenado de menor a mayor cobertura
+          </span>
+</div>
+<div class="space-y-2">
+<!-- Item A: Agua potable (0%) -->
+<article class="w-full bg-surface rounded-xl border border-outline-variant p-4 text-left transition-colors active:bg-[#F5F5F4]">
+<div class="flex items-center justify-between">
+<span class="text-base font-bold text-on-surface">Agua potable</span>
+<div class="flex items-center gap-1.5">
+<span class="text-base font-bold text-on-surface tabular-nums">0 %</span>
+<span class="material-symbols-outlined text-secondary text-[20px]">chevron_right</span>
+</div>
+</div>
+<!-- Barra delgada 4px -->
+<div class="w-full bg-outline-variant rounded-full h-1.5 my-2.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 0%;"></div>
+</div>
+<p class="text-xs text-secondary tabular-nums leading-relaxed">
+              Necesita 8.400 L · Recibido 0 · En camino 1.550 · Faltan 6.850
+            </p>
+<div class="mt-2.5 pt-2 border-t border-outline-variant flex items-center justify-between">
+<span class="text-[11px] font-medium text-secondary">
+                Regla: Canasta Esfera
+              </span>
+<span class="text-[11px] text-primary font-medium">Ver desglose</span>
+</div>
+</article>
+<!-- Item B: Arroz (3%) -->
+<article class="w-full bg-surface rounded-xl border border-outline-variant p-4 text-left transition-colors active:bg-[#F5F5F4]">
+<div class="flex items-center justify-between">
+<span class="text-base font-bold text-on-surface">Arroz</span>
+<div class="flex items-center gap-1.5">
+<span class="text-base font-bold text-on-surface tabular-nums">3 %</span>
+<span class="material-symbols-outlined text-secondary text-[20px]">chevron_right</span>
+</div>
+</div>
+<div class="w-full bg-outline-variant rounded-full h-1.5 my-2.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 3%;"></div>
+</div>
+<p class="text-xs text-secondary tabular-nums leading-relaxed">
+              Necesita 4.200 kg · Recibido 126 · En camino 440 · Faltan 3.634
+            </p>
+<div class="mt-2.5 pt-2 border-t border-outline-variant flex items-center justify-between">
+<span class="text-[11px] font-medium text-secondary">
+                Regla: Canasta Esfera
+              </span>
+<span class="text-[11px] text-primary font-medium">Ver desglose</span>
+</div>
+</article>
+<!-- Item C: Pañales (25%) -->
+<article class="w-full bg-surface rounded-xl border border-outline-variant p-4 text-left transition-colors active:bg-[#F5F5F4]">
+<div class="flex items-center justify-between">
+<span class="text-base font-bold text-on-surface">Pañales</span>
+<div class="flex items-center gap-1.5">
+<span class="text-base font-bold text-on-surface tabular-nums">25 %</span>
+<span class="material-symbols-outlined text-secondary text-[20px]">chevron_right</span>
+</div>
+</div>
+<div class="w-full bg-outline-variant rounded-full h-1.5 my-2.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 25%;"></div>
+</div>
+<p class="text-xs text-secondary tabular-nums leading-relaxed">
+              Necesita 600 un · Recibido 150 · En camino 0 · Faltan 450
+            </p>
+<div class="mt-2.5 pt-2 border-t border-outline-variant flex items-center justify-between">
+<span class="text-[11px] font-medium text-secondary truncate max-w-[240px]">
+                Manual: «Hay 40 bebés en el coliseo»
+              </span>
+<span class="text-[11px] text-primary font-medium">Ver cálculo</span>
+</div>
+</article>
+<!-- Item D: Kit de aseo (60%) -->
+<article class="w-full bg-surface rounded-xl border border-outline-variant p-4 text-left transition-colors active:bg-[#F5F5F4]">
+<div class="flex items-center justify-between">
+<span class="text-base font-bold text-on-surface">Kit de aseo</span>
+<div class="flex items-center gap-1.5">
+<span class="text-base font-bold text-on-surface tabular-nums">60 %</span>
+<span class="material-symbols-outlined text-secondary text-[20px]">chevron_right</span>
+</div>
+</div>
+<div class="w-full bg-outline-variant rounded-full h-1.5 my-2.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 60%;"></div>
+</div>
+<p class="text-xs text-secondary tabular-nums leading-relaxed">
+              Necesita 300 un · Recibido 180 · En camino 0 · Faltan 120
+            </p>
+<div class="mt-2.5 pt-2 border-t border-outline-variant flex items-center justify-between">
+<span class="text-[11px] font-medium text-secondary">
+                Regla: Canasta Esfera
+              </span>
+<span class="text-[11px] text-primary font-medium">Ver desglose</span>
+</div>
+</article>
+</div>
+</section>
+<!-- 5. Sección «Lo que reporta el Receptor» -->
+<section class="space-y-2.5 pt-2">
+<div class="flex items-center gap-2 px-1">
+<span class="material-symbols-outlined text-[20px] text-primary">record_voice_over</span>
+<h2 class="font-headline text-base font-bold text-on-surface">
+            Lo que reporta el Receptor
+          </h2>
+</div>
+<div class="grid grid-cols-1 gap-2.5">
+<!-- Tarjeta 1: Pañales -->
+<div class="bg-surface rounded-xl border border-outline-variant p-4 space-y-2">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1 text-xs font-bold text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Pañales
+              </span>
+<span class="text-xs text-secondary">hace 2 h</span>
+</div>
+<p class="text-sm text-on-surface italic font-normal">
+              «Las familias del coliseo no tienen pañales»
+            </p>
+<div class="text-[11px] text-secondary pt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+              Punto de acopio Coliseo Municipal
+            </div>
+</div>
+<!-- Tarjeta 2: Agua potable -->
+<div class="bg-surface rounded-xl border border-outline-variant p-4 space-y-2">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1 text-xs font-bold text-on-surface">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                Agua potable
+              </span>
+<span class="text-xs text-secondary">hace 1 día</span>
+</div>
+<p class="text-sm text-on-surface italic font-normal">
+              «No hay agua desde ayer»
+            </p>
+<div class="text-[11px] text-secondary pt-1 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">location_on</span>
+              Comité barrial Sector 2
+            </div>
+</div>
+</div>
+</section>
+<!-- Botón de acción táctil amplio para administradores de zona -->
+<section class="pt-2 pb-2">
+<button class="w-full h-14 bg-primary text-on-primary font-bold rounded-[10px] text-base shadow-sm flex items-center justify-center gap-2 active:bg-[#0A4F4F] transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">add_box</span>
+          Actualizar entrada de suministros
+        </button>
+</section>
+</main>
+<!-- 6. Bottom Navigation Bar (Shared Component Anchor) -->
+<nav aria-label="Navegación principal" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface-container-lowest border-t border-outline-variant pb-safe">
+<!-- Destino 1: Inicio -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-2 hover:text-primary active:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined text-[22px]">home</span>
+<span class="text-[11px] tracking-tight mt-0.5">Inicio</span>
+</a>
+<!-- Destino 2: Mapa (Activo según contexto geográfico/gestión de zona) -->
+<a aria-current="page" class="flex flex-col items-center justify-center text-primary font-bold min-h-[48px] px-2 hover:text-primary active:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="text-[11px] tracking-tight mt-0.5">Mapa</span>
+</a>
+<!-- Destino 3: Causas -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-2 hover:text-primary active:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined text-[22px]">favorite</span>
+<span class="text-[11px] tracking-tight mt-0.5">Causas</span>
+</a>
+<!-- Destino 4: Voluntariado -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-2 hover:text-primary active:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined text-[22px]">volunteer_activism</span>
+<span class="text-[11px] tracking-tight mt-0.5">Voluntariado</span>
+</a>
+<!-- Destino 5: Más -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-2 hover:text-primary active:opacity-80 transition-opacity" href="#">
+<span class="material-symbols-outlined text-[22px]">menu</span>
+<span class="text-[11px] tracking-tight mt-0.5">Más</span>
+</a>
+</nav>
+</div>
+</body></html>

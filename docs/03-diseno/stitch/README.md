@@ -3,7 +3,7 @@ title: "Diseños de Stitch — índice"
 type: moc
 tags: [moc, diseno, stitch]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-14
 ---
 
 # Diseños de Stitch
@@ -48,6 +48,8 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 | C8 Comprobantes | [C08-comprobantes](C08-comprobantes/README.md) | Bloque 3, ciclo 2 |
 | C8 Conciliación | [C08-conciliacion](C08-conciliacion/README.md) | Bloque 3, ciclo 2 |
 | C9 Zonas afectadas | [C09-zonas](C09-zonas/README.md) | Bloque 1 |
+| C10 Ficha de zona | [C10-ficha-zona](C10-ficha-zona/README.md) | Bloque 4, ciclo 1 (pendiente) |
+| C11 Motor de sugerencias | [C11-motor](C11-motor/README.md) | Bloque 4, ciclo 1 (pendiente) |
 | C15 Entidades | [C15-entidades](C15-entidades/README.md) | Bloque 1 |
 | C16 Usuarios y accesos | [C16-usuarios](C16-usuarios/) (lista, detalle, invitar y matriz) | Bloque 0 y Bloque 1 |
 | C17 Bitácora | [C17-bitacora](C17-bitacora/README.md) | Bloque 0 |
@@ -58,5 +60,6 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 
 ## Lo que sigue
 
-Lo siguiente sin diseño son las pantallas del motor (Bloque 4,
-[#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)).
+Del motor (Bloque 4, [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)) faltan
+por diseñar C12 Remisiones, para el ciclo 2, y C13 Recepción, C20 Reportar necesidad, «Mi zona»
+y la capa de zonas en P05, para el ciclo 3.

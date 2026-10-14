@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+
+<html class="h-full bg-[#FAFAF9]" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>C11 Motor de sugerencias - Consola Acopio</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary-fixed-dim": "#ccc5c0",
+            "on-primary": "#ffffff",
+            "on-primary-fixed-variant": "#004f50",
+            "on-secondary-fixed": "#1e1b18",
+            "error": "#ba1a1a",
+            "surface": "#fff8f5",
+            "primary": "#005454",
+            "on-primary-fixed": "#002020",
+            "tertiary-fixed-dim": "#96d1d0",
+            "surface-bright": "#fff8f5",
+            "surface-dim": "#e0d8d5",
+            "on-secondary-fixed-variant": "#4a4642",
+            "tertiary-fixed": "#b2eded",
+            "tertiary": "#125454",
+            "surface-container-highest": "#e9e1dd",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "inverse-primary": "#85d4d3",
+            "primary-fixed": "#a1f0ef",
+            "primary-container": "#0f6e6e",
+            "on-background": "#1e1b19",
+            "surface-container-low": "#faf2ee",
+            "on-surface-variant": "#3e4948",
+            "surface-variant": "#e9e1dd",
+            "surface-container-high": "#eee7e3",
+            "on-tertiary-container": "#afebea",
+            "inverse-surface": "#33302d",
+            "background": "#fff8f5",
+            "outline": "#6e7979",
+            "on-tertiary": "#ffffff",
+            "error-container": "#ffdad6",
+            "outline-variant": "#bec9c8",
+            "on-surface": "#1e1b19",
+            "on-primary-container": "#9eedec",
+            "secondary": "#625e59",
+            "on-secondary": "#ffffff",
+            "inverse-on-surface": "#f7efeb",
+            "surface-tint": "#03696a",
+            "surface-container": "#f4ece8",
+            "surface-container-lowest": "#ffffff",
+            "secondary-container": "#e9e1db",
+            "on-error": "#ffffff",
+            "primary-fixed-dim": "#85d4d3",
+            "tertiary-container": "#316c6c",
+            "on-secondary-container": "#68635f",
+            "on-error-container": "#93000a",
+            "secondary-fixed": "#e9e1db",
+            "on-tertiary-fixed": "#002020"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="h-full bg-[#FAFAF9] text-[#1C1917] font-body flex justify-center selection:bg-[#C7E8E8] selection:text-[#0A4F4F]">
+<!-- Mobile Viewport Shell (390px max-width container) -->
+<div class="w-full max-w-[390px] min-h-screen bg-[#FAFAF9] flex flex-col relative pb-20 shadow-sm border-x border-[#E7E5E4]">
+<!-- TopAppBar (From Shared Component Blueprint) -->
+<header class="flex justify-between items-center w-full px-3 h-14 bg-surface-container-lowest border-b border-[#E7E5E4] z-40 sticky top-0">
+<div class="flex items-center gap-1">
+<button aria-label="Volver" class="w-12 h-12 flex items-center justify-center text-[#1C1917] active:opacity-80 transition-opacity duration-150 hover:bg-surface-container-low rounded-lg" type="button">
+<span class="material-symbols-outlined text-[24px]">arrow_back</span>
+</button>
+<h1 class="font-headline text-[17px] font-bold text-[#1C1917] tracking-tight">Motor de sugerencias</h1>
+</div>
+<div class="flex items-center">
+<button aria-label="Perfil Administrador JQ" class="w-9 h-9 rounded-lg bg-surface-container flex items-center justify-center border border-[#E7E5E4] text-xs font-bold text-[#0F6E6E] active:opacity-80" type="button">
+          JQ
+        </button>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="flex-1 px-4 py-4 space-y-4">
+<!-- Panel de Control y Estado Operativo -->
+<section class="bg-surface-container-lowest rounded-xl border border-[#E7E5E4] p-3.5 space-y-3">
+<div class="flex items-center justify-between gap-3">
+<button class="h-11 px-4 bg-[#0F6E6E] active:bg-[#0A4F4F] text-white rounded-lg flex items-center justify-center gap-2 font-headline font-semibold text-[15px] transition-colors shadow-none" type="button">
+<span class="material-symbols-outlined text-[19px]">refresh</span>
+<span>Recalcular</span>
+</button>
+<div class="flex items-center gap-4 pr-1">
+<a class="text-[15px] font-semibold text-[#0F6E6E] hover:underline active:opacity-80" href="#">Pesos</a>
+<span class="text-[#E7E5E4] text-xs">•</span>
+<a class="text-[15px] font-semibold text-[#57534E] hover:text-[#1C1917] active:opacity-80" href="#">Descartes</a>
+</div>
+</div>
+<div class="flex items-center gap-2 pt-1 border-t border-[#E7E5E4]/60">
+<span class="w-2 h-2 rounded-full bg-[#16A34A] flex-shrink-0"></span>
+<p class="text-[13px] text-[#57534E] font-medium leading-tight">
+            Última ronda: hoy 9:40 · <span class="text-[#1C1917] font-semibold tabular-nums">6 sugerencias activas</span>
+</p>
+</div>
+</section>
+<!-- Fila de Chips de Filtro (Horizontal Scrollable) -->
+<section class="overflow-x-auto no-scrollbar -mx-4 px-4 flex items-center gap-2 py-0.5">
+<button class="h-9 px-3.5 bg-[#0F6E6E] text-white rounded-lg text-sm font-semibold whitespace-nowrap flex items-center gap-1.5 flex-shrink-0" type="button">
+<span>Propuestas (6)</span>
+</button>
+<button class="h-9 px-3.5 bg-surface-container-lowest border border-[#E7E5E4] text-[#57534E] hover:text-[#1C1917] rounded-lg text-sm font-medium whitespace-nowrap flex items-center gap-1 flex-shrink-0" type="button">
+<span>Zona</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">expand_more</span>
+</button>
+<button class="h-9 px-3.5 bg-surface-container-lowest border border-[#E7E5E4] text-[#57534E] hover:text-[#1C1917] rounded-lg text-sm font-medium whitespace-nowrap flex items-center gap-1 flex-shrink-0" type="button">
+<span>Acopio</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">expand_more</span>
+</button>
+<button class="h-9 px-3.5 bg-surface-container-lowest border border-[#E7E5E4] text-[#57534E] hover:text-[#1C1917] rounded-lg text-sm font-medium whitespace-nowrap flex items-center gap-1 flex-shrink-0" type="button">
+<span>Categoría</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">expand_more</span>
+</button>
+</section>
+<!-- Lista de Sugerencias -->
+<div class="space-y-4 pt-1">
+<!-- Tarjeta 1 (Puntaje mayor: 0,60) -->
+<article class="bg-surface-container-lowest rounded-xl border border-[#E7E5E4] p-4 space-y-3.5">
+<!-- Cabecera de la tarjeta: Ruta + Puntaje -->
+<div class="flex items-start justify-between gap-2">
+<div class="space-y-1 pr-1">
+<div class="flex items-center gap-1.5 text-[#0F6E6E]">
+<span class="material-symbols-outlined text-[19px]">local_shipping</span>
+<span class="text-xs font-semibold uppercase tracking-wider text-[#57534E]">Despacho sugerido</span>
+</div>
+<h2 class="text-[17px] font-bold text-[#1C1917] leading-snug">
+                Acopio Suba → Vereda El Pepino
+              </h2>
+</div>
+<div class="flex flex-col items-end flex-shrink-0 bg-[#F5F5F4] px-2.5 py-1.5 rounded-lg border border-[#E7E5E4]">
+<span class="text-[20px] font-bold text-[#0F6E6E] tabular-nums leading-none">0,60</span>
+<span class="text-[11px] font-medium text-[#57534E] uppercase tracking-wider mt-0.5">puntaje</span>
+</div>
+</div>
+<!-- Insumo y cantidad -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-[#57534E]">inventory_2</span>
+<span class="text-[16px] font-semibold text-[#1C1917] tabular-nums">Arroz · 560 kg</span>
+</div>
+<!-- Frase explicativa técnica -->
+<div class="bg-[#F5F5F4] p-3 rounded-lg border border-[#E7E5E4]/80 text-[14px] text-[#1C1917] leading-relaxed">
+            Vereda El Pepino tiene <span class="font-bold tabular-nums">0 %</span> de cobertura en arroz; Acopio Suba puede mandar <span class="font-bold tabular-nums">700 kg</span> sin bajar de su máximo, a <span class="font-semibold tabular-nums">493 km</span>.
+          </div>
+<!-- Mini barras de ponderación técnica -->
+<div class="space-y-2 pt-1 border-t border-[#E7E5E4]/60">
+<!-- Criticidad -->
+<div class="flex items-center justify-between text-xs font-medium text-[#57534E]">
+<span class="w-24">Criticidad</span>
+<div class="flex-1 mx-3 h-1.5 bg-[#E7E5E4] rounded-full overflow-hidden">
+<div class="bg-[#0F6E6E] h-full rounded-full" style="width: 100%;"></div>
+</div>
+<span class="w-8 text-right font-semibold text-[#1C1917] tabular-nums">1,00</span>
+</div>
+<!-- Urgencia -->
+<div class="flex items-center justify-between text-xs font-medium text-[#57534E]">
+<span class="w-24">Urgencia</span>
+<div class="flex-1 mx-3 h-1.5 bg-[#E7E5E4] rounded-full overflow-hidden">
+<div class="bg-[#0F6E6E] h-full rounded-full" style="width: 40%;"></div>
+</div>
+<span class="w-8 text-right font-semibold text-[#1C1917] tabular-nums">0,40</span>
+</div>
+<!-- Proximidad -->
+<div class="flex items-center justify-between text-xs font-medium text-[#57534E]">
+<span class="w-24">Proximidad</span>
+<div class="flex-1 mx-3 h-1.5 bg-[#E7E5E4] rounded-full overflow-hidden">
+<div class="bg-[#0F6E6E] h-full rounded-full" style="width: 0%;"></div>
+</div>
+<span class="w-8 text-right font-semibold text-[#1C1917] tabular-nums">0,00</span>
+</div>
+<!-- Magnitud -->
+<div class="flex items-center justify-between text-xs font-medium text-[#57534E]">
+<span class="w-24">Magnitud</span>
+<div class="flex-1 mx-3 h-1.5 bg-[#E7E5E4] rounded-full overflow-hidden">
+<div class="bg-[#0F6E6E] h-full rounded-full" style="width: 80%;"></div>
+</div>
+<span class="w-8 text-right font-semibold text-[#1C1917] tabular-nums">0,80</span>
+</div>
+</div>
+<!-- Acciones de tarjeta -->
+<div class="flex items-center justify-between pt-2 gap-3">
+<button class="h-12 px-4 rounded-lg text-[15px] font-semibold text-[#57534E] hover:text-[#1C1917] active:bg-[#F5F5F4] transition-colors" type="button">
+              Descartar
+            </button>
+<button class="h-12 px-6 bg-[#0F6E6E] hover:bg-[#0A4F4F] active:opacity-90 text-white rounded-lg font-headline font-semibold text-[15px] flex items-center justify-center gap-1.5 shadow-none transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">check</span>
+<span>Aprobar</span>
+</button>
+</div>
+</article>
+<!-- Tarjeta 2 (Puntaje: 0,48) -->
+<article class="bg-surface-container-lowest rounded-xl border border-[#E7E5E4] p-4 space-y-3.5">
+<!-- Cabecera de la tarjeta -->
+<div class="flex items-start justify-between gap-2">
+<div class="space-y-1 pr-1">
+<div class="flex items-center gap-1.5 text-[#0F6E6E]">
+<span class="material-symbols-outlined text-[19px]">local_shipping</span>
+<span class="text-xs font-semibold uppercase tracking-wider text-[#57534E]">Despacho sugerido</span>
+</div>
+<h2 class="text-[17px] font-bold text-[#1C1917] leading-snug">
+                Acopio Kennedy → Barrio San Agustín
+              </h2>
+</div>
+<div class="flex flex-col items-end flex-shrink-0 bg-[#F5F5F4] px-2.5 py-1.5 rounded-lg border border-[#E7E5E4]">
+<span class="text-[20px] font-bold text-[#0F6E6E] tabular-nums leading-none">0,48</span>
+<span class="text-[11px] font-medium text-[#57534E] uppercase tracking-wider mt-0.5">puntaje</span>
+</div>
+</div>
+<!-- Insumo y cantidad -->
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-[#57534E]">inventory_2</span>
+<span class="text-[16px] font-semibold text-[#1C1917] tabular-nums">Arroz · 440 kg</span>
+</div>
+<!-- Frase explicativa -->
+<div class="bg-[#F5F5F4] p-3 rounded-lg border border-[#E7E5E4]/80 text-[14px] text-[#1C1917] leading-relaxed">
+            Barrio San Agustín tiene <span class="font-bold tabular-nums">3 %</span> de cobertura en arroz; Acopio Kennedy puede mandar <span class="font-bold tabular-nums">440 kg</span> sin bajar de su máximo, a <span class="font-semibold tabular-nums">474 km</span>.
+          </div>
+<!-- Mini barras de ponderación -->
+<div class="space-y-2 pt-1 border-t border-[#E7E5E4]/60">
+<div class="flex items-center justify-between text-xs font-medium text-[#57534E]">
+<span class="w-24">Criticidad</span>
+<div class="flex-1 mx-3 h-1.5 bg-[#E7E5E4] rounded-full overflow-hidden">
+<div class="bg-[#0F6E6E] h-full rounded-full" style="width: 97%;"></div>
+</div>
+<span class="w-8 text-right font-semibold text-[#1C1917] tabular-nums">0,97</span>
+</div>
+<div class="flex items-center justify-between text-xs font-medium text-[#57534E]">
+<span class="w-24">Urgencia</span>
+<div class="flex-1 mx-3 h-1.5 bg-[#E7E5E4] rounded-full overflow-hidden">
+<div class="bg-[#0F6E6E] h-full rounded-full" style="width: 40%;"></div>
+</div>
+<span class="w-8 text-right font-semibold text-[#1C1917] tabular-nums">0,40</span>
+</div>
+<div class="flex items-center justify-between text-xs font-medium text-[#57534E]">
+<span class="w-24">Proximidad</span>
+<div class="flex-1 mx-3 h-1.5 bg-[#E7E5E4] rounded-full overflow-hidden">
+<div class="bg-[#0F6E6E] h-full rounded-full" style="width: 4%;"></div>
+</div>
+<span class="w-8 text-right font-semibold text-[#1C1917] tabular-nums">0,04</span>
+</div>
+<div class="flex items-center justify-between text-xs font-medium text-[#57534E]">
+<span class="w-24">Magnitud</span>
+<div class="flex-1 mx-3 h-1.5 bg-[#E7E5E4] rounded-full overflow-hidden">
+<div class="bg-[#0F6E6E] h-full rounded-full" style="width: 63%;"></div>
+</div>
+<span class="w-8 text-right font-semibold text-[#1C1917] tabular-nums">0,63</span>
+</div>
+</div>
+<!-- Acciones de tarjeta -->
+<div class="flex items-center justify-between pt-2 gap-3">
+<button class="h-12 px-4 rounded-lg text-[15px] font-semibold text-[#57534E] hover:text-[#1C1917] active:bg-[#F5F5F4] transition-colors" type="button">
+              Descartar
+            </button>
+<button class="h-12 px-6 bg-[#0F6E6E] hover:bg-[#0A4F4F] active:opacity-90 text-white rounded-lg font-headline font-semibold text-[15px] flex items-center justify-center gap-1.5 shadow-none transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]">check</span>
+<span>Aprobar</span>
+</button>
+</div>
+</article>
+<!-- Tarjeta 3 (Asomada parcialmente para indicar scroll continuo) -->
+<article class="bg-surface-container-lowest rounded-xl border border-[#E7E5E4] p-4 space-y-3.5 opacity-90">
+<div class="flex items-start justify-between gap-2">
+<div class="space-y-1 pr-1">
+<div class="flex items-center gap-1.5 text-[#0F6E6E]">
+<span class="material-symbols-outlined text-[19px]">local_shipping</span>
+<span class="text-xs font-semibold uppercase tracking-wider text-[#57534E]">Despacho sugerido</span>
+</div>
+<h2 class="text-[17px] font-bold text-[#1C1917] leading-snug">
+                Acopio Suba → Vereda El Pepino
+              </h2>
+</div>
+<div class="flex flex-col items-end flex-shrink-0 bg-[#F5F5F4] px-2.5 py-1.5 rounded-lg border border-[#E7E5E4]">
+<span class="text-[20px] font-bold text-[#0F6E6E] tabular-nums leading-none">0,46</span>
+<span class="text-[11px] font-medium text-[#57534E] uppercase tracking-wider mt-0.5">puntaje</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-[#57534E]">water_drop</span>
+<span class="text-[16px] font-semibold text-[#1C1917] tabular-nums">Agua potable · 3.000 L</span>
+</div>
+<div class="bg-[#F5F5F4] p-3 rounded-lg border border-[#E7E5E4]/80 text-[14px] text-[#1C1917]">
+            Vereda El Pepino reporta desabastecimiento crítico de agua en 2 centros comunitarios.
+          </div>
+</article>
+</div>
+</main>
+<!-- BottomNavBar (Strictly adhering to Shared Component JSON Blueprint) -->
+<!-- Destination count: 5 | Labels: Inicio, Mapa, Causas, Voluntariado, Más -->
+<!-- Active mapping rule: Admin console sits logically under 'Más' -->
+<nav aria-label="Navegación principal" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface-container-lowest border-t border-[#E7E5E4] max-w-[390px] mx-auto right-0">
+<!-- Inicio -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] hover:text-primary active:opacity-80 transition-opacity duration-150 flex-1" href="#">
+<span class="material-symbols-outlined text-[22px]">home</span>
+<span class="font-label text-xs">Inicio</span>
+</a>
+<!-- Mapa -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] hover:text-primary active:opacity-80 transition-opacity duration-150 flex-1" href="#">
+<span class="material-symbols-outlined text-[22px]">map</span>
+<span class="font-label text-xs">Mapa</span>
+</a>
+<!-- Causas -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] hover:text-primary active:opacity-80 transition-opacity duration-150 flex-1" href="#">
+<span class="material-symbols-outlined text-[22px]">favorite</span>
+<span class="font-label text-xs">Causas</span>
+</a>
+<!-- Voluntariado -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] hover:text-primary active:opacity-80 transition-opacity duration-150 flex-1" href="#">
+<span class="material-symbols-outlined text-[22px]">volunteer_activism</span>
+<span class="font-label text-xs">Voluntariado</span>
+</a>
+<!-- Más (ACTIVE: Console interior) -->
+<a aria-current="page" class="flex flex-col items-center justify-center text-primary font-bold min-h-[48px] active:opacity-80 transition-opacity duration-150 flex-1" href="#">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">menu</span>
+<span class="font-label text-xs font-bold text-primary">Más</span>
+</a>
+</nav>
+</div>
+</body></html>
