@@ -28,6 +28,16 @@ export class SeguimientoService {
     const c = await this.comprobantes.paraSeguimiento(folio);
     if (!c) throw noEncontrado();
     const recibida = c.recibido_en !== null;
+    // RF-CMP-007, E2-03: de cada remisión solo el estado y las fechas, sin código ni zona
+    const remisiones = c.remisiones.map(({ remision: r }) => ({
+      estado: r.estado as 'EN_TRANSITO' | 'RECIBIDA',
+      despachadaEn: r.despachada_en,
+      recibidaEn: r.recibida_en,
+    }));
+    const llegadas = remisiones
+      .map((r) => r.recibidaEn)
+      .filter((d): d is Date => d !== null)
+      .sort((x, y) => x.getTime() - y.getTime());
     return {
       folio: c.folio,
       estado: ETIQUETAS[c.estado],
@@ -39,7 +49,14 @@ export class SeguimientoService {
           ...(recibida ? { acopio: c.acopio.nombre } : {}),
         },
         { paso: 'CONCILIADA' as const, en: c.estado === 'CONCILIADO' ? c.verificado_en : null },
+        // Solo cuando el folio ya salió hacia una zona: sin remisión, ese paso no le toca
+        ...(remisiones.length
+          ? [{ paso: 'RECIBIDA_EN_DESTINO' as const, en: llegadas[0] ?? null }]
+          : []),
       ],
+      recibidoEnDestino: llegadas.length > 0,
+      remisiones,
+      parteDeTuDonacion: remisiones.length > 1,
       // Antes de recibir se muestra lo declarado; después, lo que de verdad entró
       lineas: c.lineas
         .map((l) => ({
