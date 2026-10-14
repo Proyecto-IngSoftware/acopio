@@ -690,3 +690,26 @@ export class RemisionDto extends createZodDto(
     lineas: z.array(lineaRemision),
   }),
 ) {}
+
+export class ReporteNecesidadDto extends createZodDto(
+  z.object({
+    id: z.uuid(),
+    categoriaId: z.uuid(),
+    categoria: z.string(),
+    nota: z.string().nullable(),
+    resuelta: z.boolean(),
+    reportadoPor: z.string(),
+    reportadoEn: fecha,
+  }),
+) {}
+
+export class ZonaPublicaDto extends createZodDto(
+  z.object({
+    zonaId: z.uuid(),
+    centro: z.object({ lat: z.number(), lng: z.number() }).describe('Redondeado a dos decimales'),
+    radioKm: z.number(),
+    necesidades: z.array(
+      z.object({ categoria: z.string(), nota: z.string().nullable(), reportadoEn: fecha }),
+    ),
+  }),
+) {}

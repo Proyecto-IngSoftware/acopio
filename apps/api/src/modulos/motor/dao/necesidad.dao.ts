@@ -90,6 +90,63 @@ export class NecesidadDao {
       ORDER BY t.reportado_en DESC`;
   }
 
+  crearReporte(
+    tx: ClienteBd,
+    d: {
+      zonaId: string;
+      categoriaId: string;
+      nota: string | null;
+      resuelta: boolean;
+      usuarioId: string;
+    },
+  ) {
+    return tx.reporteNecesidad.create({
+      data: {
+        zona_id: d.zonaId,
+        categoria_id: d.categoriaId,
+        nota: d.nota,
+        resuelta: d.resuelta,
+        reportado_por: d.usuarioId,
+      },
+      include: { categoria: { select: { nombre: true } } },
+    });
+  }
+
+  /** Los reportes de la zona en la ventana de vigencia, del más nuevo al más viejo. */
+  reportesRecientes(zonaId: string, desde: Date) {
+    return this.prisma.reporteNecesidad.findMany({
+      where: { zona_id: zonaId, reportado_en: { gte: desde } },
+      include: {
+        categoria: { select: { nombre: true } },
+        reportante: { select: { nombre: true } },
+      },
+      orderBy: { reportado_en: 'desc' },
+    });
+  }
+
+  /**
+   * M-09: el último reporte de cada zona y categoría, si no está resuelto y es reciente, en
+   * zonas de emergencias abiertas. Sin quién lo reportó.
+   */
+  vigentesPublicos(ahora: Date) {
+    return this.prisma.$queryRaw<
+      { zona_id: string; categoria: string; nota: string | null; reportado_en: Date }[]
+    >`
+      SELECT t.zona_id, t.categoria, t.nota, t.reportado_en FROM (
+        SELECT DISTINCT ON (r.zona_id, r.categoria_id)
+               r.zona_id, c.nombre AS categoria, r.nota, r.resuelta, r.reportado_en
+        FROM reporte_necesidad r
+        JOIN categoria c ON c.id = r.categoria_id
+        JOIN zona z ON z.id = r.zona_id
+        JOIN emergencia e ON e.id = z.emergencia_id
+        WHERE e.estado IN ('ACTIVA', 'EN_SEGUIMIENTO')
+        ORDER BY r.zona_id, r.categoria_id, r.reportado_en DESC
+      ) t
+      WHERE NOT t.resuelta
+        AND t.reportado_en >= ${ahora}::timestamptz - make_interval(days => ${VIGENCIA_REPORTE_DIAS}::int)
+      ORDER BY t.reportado_en DESC`;
+  }
+
   ultimaManual(tx: ClienteBd, zonaId: string, categoriaId: string) {
     return tx.necesidadManual.findFirst({
       where: { zona_id: zonaId, categoria_id: categoriaId },
