@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { AcopioDao } from './dao/acopio.dao';
+import { ZonaDao } from './dao/zona.dao';
 import { VERIFICADOR_UBICACIONES } from '../../comun/ubicaciones/verificador-ubicaciones';
 import { AcopiosController } from './acopios.controller';
 import { AcopiosService } from './acopios.service';
@@ -33,6 +34,7 @@ import { ZonasService } from './zonas.service';
   ],
   providers: [
     AcopioDao,
+    ZonaDao,
     EntidadesService,
     AcopiosService,
     ZonasService,
@@ -43,6 +45,6 @@ import { ZonasService } from './zonas.service';
     { provide: GEOCODIFICADOR, useExisting: GeocodificadorNominatim },
     { provide: RELOJ, useValue: relojReal },
   ],
-  exports: [AcopioDao, AcopiosService, VERIFICADOR_UBICACIONES],
+  exports: [AcopioDao, ZonaDao, AcopiosService, VERIFICADOR_UBICACIONES],
 })
 export class AcopiosModule {}

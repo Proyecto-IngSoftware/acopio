@@ -45,6 +45,22 @@ export class NoRecibirDao {
     });
   }
 
+  vigentesDeVarios(
+    acopioIds: string[],
+    categoriaIds: string[] | undefined,
+    hoy: Date,
+    bd: ClienteBd = this.prisma,
+  ) {
+    return bd.noRecibir.findMany({
+      where: {
+        acopio_id: { in: acopioIds },
+        categoria_id: categoriaIds ? { in: categoriaIds } : undefined,
+        ...vigente(hoy),
+      },
+      select: { acopio_id: true, categoria_id: true },
+    });
+  }
+
   buscar(acopioId: string, categoriaId: string, bd: ClienteBd = this.prisma) {
     return bd.noRecibir.findUnique({
       where: clave(acopioId, categoriaId),

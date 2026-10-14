@@ -33,6 +33,24 @@ describe('semaforo', () => {
 });
 
 describe('vencimientoEstimado', () => {
+  it('da lo mismo con los movimientos sueltos que con los totales por lote', () => {
+    const sueltos: MovimientoParaVencimiento[] = [
+      { tipo: 'ENTRADA', signo: 1, cantidad: 3, venceEn: '2026-10-20' },
+      { tipo: 'ENTRADA', signo: 1, cantidad: 2, venceEn: '2026-10-20' },
+      { tipo: 'ENTRADA', signo: 1, cantidad: 4, venceEn: '2026-11-01' },
+      { tipo: 'AJUSTE', signo: 1, cantidad: 1, venceEn: null },
+      { tipo: 'SALIDA', signo: -1, cantidad: 1.5, venceEn: null },
+      { tipo: 'AJUSTE', signo: -1, cantidad: 2, venceEn: null },
+    ];
+    const agregados: MovimientoParaVencimiento[] = [
+      { tipo: 'ENTRADA', signo: 1, cantidad: 5, venceEn: '2026-10-20' },
+      { tipo: 'ENTRADA', signo: 1, cantidad: 4, venceEn: '2026-11-01' },
+      { tipo: 'AJUSTE', signo: 1, cantidad: 1, venceEn: null },
+      { tipo: 'SALIDA', signo: -1, cantidad: 3.5, venceEn: null },
+    ];
+    expect(vencimientoEstimado(agregados)).toEqual(vencimientoEstimado(sueltos));
+  });
+
   const entrada = (cantidad: number, venceEn: string | null): MovimientoParaVencimiento => ({
     tipo: 'ENTRADA',
     signo: 1,

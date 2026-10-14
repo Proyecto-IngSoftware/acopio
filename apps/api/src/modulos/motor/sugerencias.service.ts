@@ -10,11 +10,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { BLOQUEO_DESCARTE_HORAS, clavePar, emparejar, type EntradaMotor } from '@acopio/shared';
 import type { ClienteBd } from '../../comun/prisma/cliente-bd';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { Transacciones } from '../../comun/prisma/transacciones';
+import { ZonaDao } from '../acopios/dao/zona.dao';
 import type { EstadoSugerencia } from '../../generado/prisma/enums';
-import { bloquearMotor, leerConfiguracion } from './configuracion';
+import { ConfiguracionDao } from './dao/configuracion.dao';
+import { SugerenciaDao } from './dao/sugerencia.dao';
 import { EstadoMotorService, type ZonaCargada } from './estado-motor.service';
-import { INCLUIR_SUGERENCIA, aSugerenciaVista } from './vistas';
+import { aSugerenciaVista } from './vistas';
 
 const HORA = 3_600_000;
 
@@ -24,7 +26,10 @@ export class SugerenciasService {
   private readonly log = new Logger(SugerenciasService.name);
 
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly transacciones: Transacciones,
+    private readonly sugerencias: SugerenciaDao,
+    private readonly configuracion: ConfiguracionDao,
+    private readonly zonas: ZonaDao,
     private readonly estado: EstadoMotorService,
     private readonly borradores: RemisionesBorradorService,
     private readonly bitacora: BitacoraService,
@@ -44,13 +49,10 @@ export class SugerenciasService {
       cliente,
       demandas.map((d) => d.categoriaId),
     );
-    const descartadas = await cliente.sugerencia.findMany({
-      where: {
-        estado: 'DESCARTADA',
-        decidida_en: { gt: new Date(ahora.getTime() - BLOQUEO_DESCARTE_HORAS * HORA) },
-      },
-      select: { acopio_id: true, zona_id: true, categoria_id: true },
-    });
+    const descartadas = await this.sugerencias.descartadasDesde(
+      cliente,
+      new Date(ahora.getTime() - BLOQUEO_DESCARTE_HORAS * HORA),
+    );
     const bloqueados = new Set(
       descartadas.map((d) => clavePar(d.acopio_id, d.zona_id, d.categoria_id)),
     );
@@ -60,16 +62,16 @@ export class SugerenciasService {
   /** Cada 15 minutos y bajo demanda: borra las PROPUESTA y guarda la ronda nueva (M-04). */
   @Cron('*/15 * * * *', { name: 'motor-recalculo', timeZone: 'America/Bogota' })
   async recalcular(ahora = new Date()): Promise<{ ronda: Date; generadas: number }> {
-    const r = await this.prisma.$transaction(
+    const r = await this.transacciones.ejecutar(
       async (tx) => {
-        await bloquearMotor(tx);
-        const { pesos, cantidadMinima } = await leerConfiguracion(tx);
+        await this.configuracion.bloquearMotor(tx);
+        const { pesos, cantidadMinima } = await this.configuracion.leer(tx);
         const { entrada, zonas } = await this.cargarEntrada(tx, ahora);
         const calculadas = emparejar(entrada, pesos, cantidadMinima);
         const emergencia = new Map(zonas.map((z) => [z.id, z.emergenciaId]));
-        await tx.sugerencia.deleteMany({ where: { estado: 'PROPUESTA' } });
-        await tx.sugerencia.createMany({
-          data: calculadas.map((s) => ({
+        await this.sugerencias.reemplazarPropuestas(
+          tx,
+          calculadas.map((s) => ({
             ronda: ahora,
             emergencia_id: emergencia.get(s.zonaId)!,
             acopio_id: s.acopioId,
@@ -80,7 +82,7 @@ export class SugerenciasService {
             desglose: { ...s.desglose },
             justificacion: s.justificacion,
           })),
-        });
+        );
         return { ronda: ahora, generadas: calculadas.length };
       },
       { timeout: 30_000, maxWait: 10_000 },
@@ -95,17 +97,7 @@ export class SugerenciasService {
     categoriaId?: string;
     estado?: EstadoSugerencia;
   }) {
-    const filas = await this.prisma.sugerencia.findMany({
-      where: {
-        zona_id: filtro.zonaId,
-        acopio_id: filtro.acopioId,
-        categoria_id: filtro.categoriaId,
-        estado: filtro.estado ?? 'PROPUESTA',
-      },
-      include: INCLUIR_SUGERENCIA,
-      orderBy: [{ puntaje: 'desc' }, { cantidad: 'desc' }, { zona: { nombre: 'asc' } }],
-      take: 200,
-    });
+    const filas = await this.sugerencias.listar(filtro);
     return filas.map(aSugerenciaVista);
   }
 
@@ -114,22 +106,17 @@ export class SugerenciasService {
    * momento (M-04) y agrega la línea a la remisión en borrador (M-07).
    */
   async aprobar(admin: UsuarioAutenticado, id: string, cantidadPedida?: number) {
-    return this.prisma.$transaction(
+    return this.transacciones.ejecutar(
       async (tx) => {
-        await bloquearMotor(tx);
-        const s = await tx.sugerencia.findUnique({
-          where: { id },
-          include: { categoria: { select: { nombre: true, unidad_base: true } } },
-        });
+        await this.configuracion.bloquearMotor(tx);
+        const s = await this.sugerencias.buscarConCategoria(tx, id);
         if (!s) throw noEncontrada();
         if (s.estado !== 'PROPUESTA') throw decidida();
-        await this.acopios.exigirAbierto(s.acopio_id);
+        // Dentro de la transacción: un cierre del acopio a la vez no se cuela (menor de la etapa 1)
+        await this.acopios.exigirAbierto(s.acopio_id, tx);
         // Una emergencia cerrada después del recálculo deja su zona en solo lectura
-        const zona = await tx.zona.findUniqueOrThrow({
-          where: { id: s.zona_id },
-          select: { emergencia: { select: { estado: true } } },
-        });
-        if (zona.emergencia.estado === 'CERRADA') {
+        const zona = await this.zonas.conEmergencia(s.zona_id, tx);
+        if (zona?.emergencia.estado === 'CERRADA') {
           throw new ErrorDominio(
             'ZONA_SOLO_LECTURA',
             'La emergencia está cerrada: sus zonas quedan en solo lectura',
@@ -164,15 +151,12 @@ export class SugerenciasService {
           categoriaId: s.categoria_id,
           cantidad,
         });
-        const { count } = await tx.sugerencia.updateMany({
-          where: { id, estado: 'PROPUESTA' },
-          data: {
-            estado: 'APROBADA',
-            cantidad_aprobada: cantidad,
-            remision_id: remision.id,
-            decidida_por: admin.id,
-            decidida_en: ahora,
-          },
+        const count = await this.sugerencias.decidirSiPropuesta(tx, id, {
+          estado: 'APROBADA',
+          cantidad_aprobada: cantidad,
+          remision_id: remision.id,
+          decidida_por: admin.id,
+          decidida_en: ahora,
         });
         // Si otra decisión llegó primero, la transacción se revierte con la remisión incluida
         if (count === 0) throw decidida();
@@ -198,28 +182,19 @@ export class SugerenciasService {
   }
 
   async descartar(admin: UsuarioAutenticado, id: string, motivo: string) {
-    return this.prisma.$transaction(async (tx) => {
+    return this.transacciones.ejecutar(async (tx) => {
       // Mismo candado que aprobar y recalcular: un descarte no se cruza con ninguno de los dos
-      await bloquearMotor(tx);
+      await this.configuracion.bloquearMotor(tx);
       const texto = motivo.trim();
       // Condicionado al estado: un recálculo o una aprobación a la vez no lo pisan
-      const { count } = await tx.sugerencia.updateMany({
-        where: { id, estado: 'PROPUESTA' },
-        data: {
-          estado: 'DESCARTADA',
-          motivo_descarte: texto,
-          decidida_por: admin.id,
-          decidida_en: new Date(),
-        },
+      const count = await this.sugerencias.decidirSiPropuesta(tx, id, {
+        estado: 'DESCARTADA',
+        motivo_descarte: texto,
+        decidida_por: admin.id,
+        decidida_en: new Date(),
       });
-      if (count === 0) {
-        const existe = await tx.sugerencia.findUnique({ where: { id }, select: { id: true } });
-        throw existe ? decidida() : noEncontrada();
-      }
-      const s = await tx.sugerencia.findUniqueOrThrow({
-        where: { id },
-        include: { categoria: { select: { nombre: true } } },
-      });
+      if (count === 0) throw (await this.sugerencias.existe(tx, id)) ? decidida() : noEncontrada();
+      const s = (await this.sugerencias.buscarConCategoria(tx, id))!;
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
         accion: 'sugerencia.descartada',
@@ -241,11 +216,7 @@ export class SugerenciasService {
 
   /** RF-MOT-007: los motivos de descarte agregados, para afinar los pesos. */
   async descartes(desde?: Date, hasta?: Date) {
-    const filas = await this.prisma.sugerencia.findMany({
-      where: { estado: 'DESCARTADA', decidida_en: { gte: desde, lte: hasta } },
-      include: INCLUIR_SUGERENCIA,
-      orderBy: { decidida_en: 'desc' },
-    });
+    const filas = await this.sugerencias.descartadasEntre(desde, hasta);
     const contar = (claves: string[]) =>
       [...claves.reduce((m, k) => m.set(k, (m.get(k) ?? 0) + 1), new Map<string, number>())]
         .map(([nombre, veces]) => ({ nombre, veces }))

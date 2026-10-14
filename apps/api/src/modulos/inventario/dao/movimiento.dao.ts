@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import type { ClienteBd } from '../../../comun/prisma/cliente-bd';
 import { PrismaService } from '../../../comun/prisma/prisma.service';
-import type { Movimiento, Prisma } from '../../../generado/prisma/client';
+import { Prisma, type Movimiento } from '../../../generado/prisma/client';
 
 export type FilaHistorial = Movimiento & { usuario_nombre: string; saldo_despues: string };
 
@@ -37,6 +37,31 @@ export class MovimientoDao {
       where: { id: { in: ids } },
       include: { vinculo: true },
     });
+  }
+
+  /**
+   * Por acopio, categoría y lote: lo que entró con cada fecha y, aparte, lo que salió.
+   * `vencimientoEstimado` solo suma por fecha y resta lo consumido, así que basta con estos
+   * totales en vez del historial completo.
+   */
+  lotesPerecederos(acopioIds: string[], categoriaIds: string[], bd: ClienteBd = this.prisma) {
+    const uuids = (ids: string[]) => Prisma.join(ids.map((id) => Prisma.sql`${id}::uuid`));
+    return bd.$queryRaw<
+      {
+        acopio_id: string;
+        categoria_id: string;
+        signo: number;
+        entrada: boolean;
+        vence_en: Date | null;
+        total: Prisma.Decimal;
+      }[]
+    >`
+      SELECT acopio_id, categoria_id, signo, (tipo = 'ENTRADA') AS entrada,
+             CASE WHEN tipo = 'ENTRADA' THEN vence_en END AS vence_en,
+             SUM(cantidad) AS total
+      FROM movimiento
+      WHERE acopio_id IN (${uuids(acopioIds)}) AND categoria_id IN (${uuids(categoriaIds)})
+      GROUP BY 1, 2, 3, 4, 5`;
   }
 
   /** Lo que piden los vencimientos estimados de las categorías perecederas. */

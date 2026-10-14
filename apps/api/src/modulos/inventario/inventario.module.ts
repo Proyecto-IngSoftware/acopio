@@ -32,6 +32,6 @@ import { UmbralesService } from './umbrales.service';
     ConsultasService,
     UmbralesService,
   ],
-  exports: [MovimientosService, MovimientoDao, SaldoDao, NoRecibirDao],
+  exports: [MovimientosService, MovimientoDao, SaldoDao, NoRecibirDao, UmbralDao],
 })
 export class InventarioModule {}

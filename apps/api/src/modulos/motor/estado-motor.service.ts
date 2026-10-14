@@ -9,10 +9,16 @@ import {
   type ZonaMotor,
 } from '@acopio/shared';
 import type { ClienteBd } from '../../comun/prisma/cliente-bd';
-import { Prisma } from '../../generado/prisma/client';
+import { AcopioDao } from '../acopios/dao/acopio.dao';
+import { ZonaDao } from '../acopios/dao/zona.dao';
+import { CategoriaDao } from '../catalogo/dao/categoria.dao';
 import { hoyEnBogota } from '../catalogo/emergencias.service';
+import { MovimientoDao } from '../inventario/dao/movimiento.dao';
+import { NoRecibirDao } from '../inventario/dao/no-recibir.dao';
+import { SaldoDao } from '../inventario/dao/saldo.dao';
+import { UmbralDao } from '../inventario/dao/umbral.dao';
+import { NecesidadDao } from './dao/necesidad.dao';
 
-const uuids = (ids: string[]) => Prisma.join(ids.map((id) => Prisma.sql`${id}::uuid`));
 const dia = (d: Date) => d.toISOString().slice(0, 10);
 const clave = (x: string, y: string) => `${x}:${y}`;
 
@@ -43,14 +49,19 @@ export interface OfertaDetallada extends OfertaMotor {
  */
 @Injectable()
 export class EstadoMotorService {
+  constructor(
+    private readonly zonasDao: ZonaDao,
+    private readonly acopiosDao: AcopioDao,
+    private readonly categoriasDao: CategoriaDao,
+    private readonly necesidades: NecesidadDao,
+    private readonly saldos: SaldoDao,
+    private readonly umbrales: UmbralDao,
+    private readonly noRecibir: NoRecibirDao,
+    private readonly movimientos: MovimientoDao,
+  ) {}
+
   async zonas(cliente: ClienteBd, filtro: { zonaIds?: string[] }): Promise<ZonaCargada[]> {
-    const filas = await cliente.zona.findMany({
-      where: filtro.zonaIds
-        ? { id: { in: filtro.zonaIds } }
-        : { emergencia: { estado: { in: ['ACTIVA', 'EN_SEGUIMIENTO'] } } },
-      include: { emergencia: { select: { horizonte_dias: true } } },
-      orderBy: { nombre: 'asc' },
-    });
+    const filas = await this.zonasDao.paraMotor(cliente, filtro.zonaIds);
     return filas.map((z) => ({
       id: z.id,
       nombre: z.nombre,
@@ -70,50 +81,10 @@ export class EstadoMotorService {
   ): Promise<DemandaDetallada[]> {
     if (zonas.length === 0) return [];
     const ids = zonas.map((z) => z.id);
-    const hoy = dia(hoyEnBogota(ahora));
-    const canasta = await cliente.$queryRaw<
-      { categoria_id: string; cantidad_persona_dia: Prisma.Decimal; fuente: string }[]
-    >`
-      SELECT DISTINCT ON (ce.categoria_id) ce.categoria_id, ce.cantidad_persona_dia, ce.fuente
-      FROM canasta_estandar ce JOIN categoria c ON c.id = ce.categoria_id
-      WHERE ce.vigente_desde <= ${hoy}::date AND NOT c.archivada
-      ORDER BY ce.categoria_id, ce.vigente_desde DESC`;
-    const manuales = await cliente.$queryRaw<
-      {
-        zona_id: string;
-        categoria_id: string;
-        cantidad: Prisma.Decimal | null;
-        motivo: string;
-        puesta_en: Date;
-        autor: string;
-      }[]
-    >`
-      SELECT DISTINCT ON (n.zona_id, n.categoria_id)
-             n.zona_id, n.categoria_id, n.cantidad, n.motivo, n.puesta_en, u.nombre AS autor
-      FROM necesidad_manual n
-      JOIN usuario u ON u.id = n.puesta_por
-      JOIN categoria c ON c.id = n.categoria_id
-      WHERE n.zona_id IN (${uuids(ids)}) AND NOT c.archivada
-      ORDER BY n.zona_id, n.categoria_id, n.puesta_en DESC`;
-    // M-02: solo lo que llegó dentro del horizonte de la emergencia de cada zona
-    const recibidos = await cliente.$queryRaw<
-      { zona_id: string; categoria_id: string; total: Prisma.Decimal }[]
-    >`
-      SELECT m.zona_id, m.categoria_id, SUM(m.cantidad) AS total
-      FROM movimiento m
-      JOIN zona z ON z.id = m.zona_id
-      JOIN emergencia e ON e.id = z.emergencia_id
-      WHERE m.tipo = 'RECEPCION' AND m.zona_id IN (${uuids(ids)})
-        AND m.ocurrido_en >= ${ahora}::timestamptz - make_interval(days => e.horizonte_dias)
-      GROUP BY m.zona_id, m.categoria_id`;
-    // M-03: lo que va en camino, en borrador o en tránsito, con zona fija
-    const enCamino = await cliente.$queryRaw<
-      { zona_id: string; categoria_id: string; total: Prisma.Decimal }[]
-    >`
-      SELECT r.zona_destino_id AS zona_id, l.categoria_id, SUM(l.cantidad_planeada) AS total
-      FROM linea_remision l JOIN remision r ON r.id = l.remision_id
-      WHERE r.estado IN ('BORRADOR', 'EN_TRANSITO') AND r.zona_destino_id IN (${uuids(ids)})
-      GROUP BY r.zona_destino_id, l.categoria_id`;
+    const canasta = await this.necesidades.canastaVigente(cliente, dia(hoyEnBogota(ahora)));
+    const manuales = await this.necesidades.manualesVigentes(cliente, ids);
+    const recibidos = await this.necesidades.recibidosEnVentana(cliente, ids, ahora);
+    const enCamino = await this.necesidades.enCamino(cliente, ids);
 
     const rec = new Map(recibidos.map((r) => [clave(r.zona_id, r.categoria_id), Number(r.total)]));
     const cam = new Map(enCamino.map((r) => [clave(r.zona_id, r.categoria_id), Number(r.total)]));
@@ -159,13 +130,7 @@ export class EstadoMotorService {
   }
 
   async acopios(cliente: ClienteBd, filtro: { acopioIds?: string[] }): Promise<AcopioMotor[]> {
-    const filas = await cliente.acopio.findMany({
-      where: filtro.acopioIds
-        ? { id: { in: filtro.acopioIds } }
-        : { estado: { in: ['ACTIVO', 'PAUSADO'] } },
-      select: { id: true, nombre: true, lat: true, lng: true },
-      orderBy: { nombre: 'asc' },
-    });
+    const filas = await this.acopiosDao.paraMotor(cliente, filtro.acopioIds);
     return filas.map((f) => ({
       id: f.id,
       nombre: f.nombre,
@@ -184,28 +149,10 @@ export class EstadoMotorService {
     const ids = acopios.map((a) => a.id);
     const hoyFecha = hoyEnBogota(ahora);
     const hoy = dia(hoyFecha);
-    const porCategoria = categoriaIds ? { in: categoriaIds } : undefined;
-    const saldos = await cliente.saldo.findMany({
-      where: { acopio_id: { in: ids }, categoria_id: porCategoria },
-    });
-    const umbrales = await cliente.umbral.findMany({
-      where: { acopio_id: { in: ids }, categoria_id: porCategoria },
-    });
-    const noRecibir = await cliente.noRecibir.findMany({
-      where: {
-        acopio_id: { in: ids },
-        categoria_id: porCategoria,
-        OR: [{ hasta: null }, { hasta: { gte: hoyFecha } }],
-      },
-      select: { acopio_id: true, categoria_id: true },
-    });
-    const comprometidos = await cliente.$queryRaw<
-      { acopio_id: string; categoria_id: string; total: Prisma.Decimal }[]
-    >`
-      SELECT r.acopio_origen_id AS acopio_id, l.categoria_id, SUM(l.cantidad_planeada) AS total
-      FROM linea_remision l JOIN remision r ON r.id = l.remision_id
-      WHERE r.estado = 'BORRADOR' AND r.acopio_origen_id IN (${uuids(ids)})
-      GROUP BY r.acopio_origen_id, l.categoria_id`;
+    const saldos = await this.saldos.deVarios(ids, categoriaIds, cliente);
+    const umbrales = await this.umbrales.deVarios(ids, categoriaIds, cliente);
+    const noRecibir = await this.noRecibir.vigentesDeVarios(ids, categoriaIds, hoyFecha, cliente);
+    const comprometidos = await this.necesidades.comprometidoEnBorradores(cliente, ids);
 
     const pares = new Map<string, { acopioId: string; categoriaId: string }>();
     for (const f of [...saldos, ...umbrales])
@@ -213,23 +160,14 @@ export class EstadoMotorService {
         acopioId: f.acopio_id,
         categoriaId: f.categoria_id,
       });
-    const categorias = await cliente.categoria.findMany({
-      where: { id: { in: [...new Set([...pares.values()].map((p) => p.categoriaId))] } },
-      select: { id: true, perecedero: true },
-    });
+    const categorias = await this.categoriasDao.basicas(
+      [...new Set([...pares.values()].map((p) => p.categoriaId))],
+      cliente,
+    );
     const perecederas = categorias.filter((c) => c.perecedero).map((c) => c.id);
-    const movimientos = perecederas.length
-      ? await cliente.movimiento.findMany({
-          where: { acopio_id: { in: ids }, categoria_id: { in: perecederas } },
-          select: {
-            acopio_id: true,
-            categoria_id: true,
-            tipo: true,
-            signo: true,
-            cantidad: true,
-            vence_en: true,
-          },
-        })
+    // Totales por lote en SQL, no el historial completo (menor de la etapa 1)
+    const lotes = perecederas.length
+      ? await this.movimientos.lotesPerecederos(ids, perecederas, cliente)
       : [];
 
     const saldo = new Map(
@@ -258,17 +196,17 @@ export class EstadoMotorService {
         {
           ...e,
           perecedero: perecederas.includes(categoriaId),
-          movimientos: movimientos
-            .filter((m) => m.acopio_id === acopioId && m.categoria_id === categoriaId)
-            .filter(
-              (m): m is typeof m & { tipo: 'ENTRADA' | 'SALIDA' | 'AJUSTE' } =>
-                m.tipo !== 'RECEPCION',
-            )
-            .map((m) => ({
-              tipo: m.tipo,
-              signo: m.signo as 1 | -1,
-              cantidad: Number(m.cantidad),
-              venceEn: m.vence_en ? dia(m.vence_en) : null,
+          movimientos: lotes
+            .filter((l) => l.acopio_id === acopioId && l.categoria_id === categoriaId)
+            .map((l) => ({
+              tipo: l.entrada
+                ? ('ENTRADA' as const)
+                : l.signo === 1
+                  ? ('AJUSTE' as const)
+                  : ('SALIDA' as const),
+              signo: l.signo as 1 | -1,
+              cantidad: Number(l.total),
+              venceEn: l.vence_en ? dia(l.vence_en) : null,
             })),
         },
         hoy,
@@ -278,11 +216,7 @@ export class EstadoMotorService {
   }
 
   async categorias(cliente: ClienteBd, ids: string[]): Promise<CategoriaMotor[]> {
-    const filas = await cliente.categoria.findMany({
-      where: { id: { in: [...new Set(ids)] } },
-      select: { id: true, nombre: true, unidad_base: true },
-      orderBy: { nombre: 'asc' },
-    });
+    const filas = await this.categoriasDao.basicas(ids, cliente);
     return filas.map((c) => ({ id: c.id, nombre: c.nombre, unidad: c.unidad_base }));
   }
 }

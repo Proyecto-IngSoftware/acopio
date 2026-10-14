@@ -15,6 +15,15 @@ export class UmbralDao {
     return bd.umbral.findMany({ where: { acopio_id: acopioId } });
   }
 
+  deVarios(acopioIds: string[], categoriaIds?: string[], bd: ClienteBd = this.prisma) {
+    return bd.umbral.findMany({
+      where: {
+        acopio_id: { in: acopioIds },
+        categoria_id: categoriaIds ? { in: categoriaIds } : undefined,
+      },
+    });
+  }
+
   buscar(acopioId: string, categoriaId: string, bd: ClienteBd = this.prisma) {
     return bd.umbral.findUnique({
       where: clave(acopioId, categoriaId),

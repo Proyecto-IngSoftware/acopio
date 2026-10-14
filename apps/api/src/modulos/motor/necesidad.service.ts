@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { VIGENCIA_REPORTE_DIAS, coberturaGlobal, estadoZona } from '@acopio/shared';
+import { coberturaGlobal, estadoZona } from '@acopio/shared';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { Transacciones } from '../../comun/prisma/transacciones';
+import { ZonaDao } from '../acopios/dao/zona.dao';
+import { CategoriaDao } from '../catalogo/dao/categoria.dao';
+import { NecesidadDao } from './dao/necesidad.dao';
 import { BitacoraService } from '../auditoria/bitacora.service';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
 import { EstadoMotorService } from './estado-motor.service';
@@ -11,7 +14,10 @@ import { EstadoMotorService } from './estado-motor.service';
 @Injectable()
 export class NecesidadService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly transacciones: Transacciones,
+    private readonly zonas: ZonaDao,
+    private readonly categorias: CategoriaDao,
+    private readonly necesidades: NecesidadDao,
     private readonly bitacora: BitacoraService,
     private readonly alcance: AlcanceService,
     private readonly estado: EstadoMotorService,
@@ -19,17 +25,17 @@ export class NecesidadService {
 
   async ficha(usuario: UsuarioAutenticado, zonaId: string, ahora = new Date()) {
     await this.alcance.exigir(usuario, 'ZONA', zonaId);
-    const z = await this.prisma.zona.findUnique({
-      where: { id: zonaId },
-      include: { emergencia: true },
-    });
+    const z = await this.zonas.conEmergencia(zonaId);
     if (!z) throw new ErrorDominio('ZONA_NO_ENCONTRADA', 'La zona no existe', 404);
-    const zonas = await this.estado.zonas(this.prisma, { zonaIds: [zonaId] });
-    const demandas = await this.estado.demandas(this.prisma, ahora, zonas);
-    const cats = await this.estado.categorias(
-      this.prisma,
-      demandas.map((d) => d.categoriaId),
-    );
+    const { demandas, cats } = await this.transacciones.ejecutar(async (tx) => {
+      const zonas = await this.estado.zonas(tx, { zonaIds: [zonaId] });
+      const demandas = await this.estado.demandas(tx, ahora, zonas);
+      const cats = await this.estado.categorias(
+        tx,
+        demandas.map((d) => d.categoriaId),
+      );
+      return { demandas, cats };
+    });
     const categorias = demandas
       .map((d) => {
         const c = cats.find((x) => x.id === d.categoriaId)!;
@@ -85,19 +91,7 @@ export class NecesidadService {
 
   /** RF-MOT-011: el último reporte de cada categoría, si no está resuelto y es reciente. */
   private async reportesVigentes(zonaId: string, ahora: Date) {
-    const filas = await this.prisma.$queryRaw<
-      { categoria_id: string; categoria: string; nota: string | null; reportado_en: Date }[]
-    >`
-      SELECT t.categoria_id, t.categoria, t.nota, t.reportado_en FROM (
-        SELECT DISTINCT ON (r.categoria_id)
-               r.categoria_id, c.nombre AS categoria, r.nota, r.resuelta, r.reportado_en
-        FROM reporte_necesidad r JOIN categoria c ON c.id = r.categoria_id
-        WHERE r.zona_id = ${zonaId}::uuid
-        ORDER BY r.categoria_id, r.reportado_en DESC
-      ) t
-      WHERE NOT t.resuelta
-        AND t.reportado_en >= ${ahora}::timestamptz - make_interval(days => ${VIGENCIA_REPORTE_DIAS}::int)
-      ORDER BY t.reportado_en DESC`;
+    const filas = await this.necesidades.reportesVigentes(zonaId, ahora);
     return filas.map((f) => ({
       categoriaId: f.categoria_id,
       categoria: f.categoria,
@@ -112,11 +106,8 @@ export class NecesidadService {
     categoriaId: string,
     datos: { cantidad: number | null; motivo: string },
   ) {
-    return this.prisma.$transaction(async (tx) => {
-      const zona = await tx.zona.findUnique({
-        where: { id: zonaId },
-        include: { emergencia: { select: { estado: true } } },
-      });
+    return this.transacciones.ejecutar(async (tx) => {
+      const zona = await this.zonas.conEmergencia(zonaId, tx);
       if (!zona) throw new ErrorDominio('ZONA_NO_ENCONTRADA', 'La zona no existe', 404);
       if (zona.emergencia.estado === 'CERRADA') {
         throw new ErrorDominio(
@@ -125,23 +116,17 @@ export class NecesidadService {
           409,
         );
       }
-      const cat = await tx.categoria.findUnique({ where: { id: categoriaId } });
+      const cat = await this.categorias.buscar(categoriaId, tx);
       if (!cat || cat.archivada)
         throw new ErrorDominio('CATEGORIA_NO_ENCONTRADA', 'La categoría no existe', 404);
-      const previa = await tx.necesidadManual.findFirst({
-        where: { zona_id: zonaId, categoria_id: categoriaId },
-        orderBy: { puesta_en: 'desc' },
-      });
+      const previa = await this.necesidades.ultimaManual(tx, zonaId, categoriaId);
       const motivo = datos.motivo.trim();
-      const fila = await tx.necesidadManual.create({
-        data: {
-          zona_id: zonaId,
-          categoria_id: categoriaId,
-          cantidad: datos.cantidad,
-          motivo,
-          puesta_por: admin.id,
-          puesta_en: new Date(),
-        },
+      const fila = await this.necesidades.crearManual(tx, {
+        zonaId,
+        categoriaId,
+        cantidad: datos.cantidad,
+        motivo,
+        usuarioId: admin.id,
       });
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
@@ -161,14 +146,17 @@ export class NecesidadService {
 
   async excedentes(usuario: UsuarioAutenticado, acopioId: string, ahora = new Date()) {
     await this.alcance.exigir(usuario, 'ACOPIO', acopioId);
-    const acopios = await this.estado.acopios(this.prisma, { acopioIds: [acopioId] });
-    if (acopios.length === 0)
-      throw new ErrorDominio('ACOPIO_NO_ENCONTRADO', 'El acopio no existe', 404);
-    const ofertas = await this.estado.ofertas(this.prisma, ahora, acopios);
-    const cats = await this.estado.categorias(
-      this.prisma,
-      ofertas.map((o) => o.categoriaId),
-    );
+    const { ofertas, cats } = await this.transacciones.ejecutar(async (tx) => {
+      const acopios = await this.estado.acopios(tx, { acopioIds: [acopioId] });
+      if (acopios.length === 0)
+        throw new ErrorDominio('ACOPIO_NO_ENCONTRADO', 'El acopio no existe', 404);
+      const ofertas = await this.estado.ofertas(tx, ahora, acopios);
+      const cats = await this.estado.categorias(
+        tx,
+        ofertas.map((o) => o.categoriaId),
+      );
+      return { ofertas, cats };
+    });
     return ofertas
       .map((o) => {
         const c = cats.find((x) => x.id === o.categoriaId)!;

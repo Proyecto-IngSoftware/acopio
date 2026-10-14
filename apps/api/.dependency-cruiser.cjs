@@ -20,7 +20,7 @@ const TODOS = [
 ];
 
 /** Módulos cuyo acceso a datos ya pasa por DAO (ADR-0019). Los demás se migran al tocarlos. */
-const MIGRADOS_A_DAO = ['inventario', 'comprobantes', 'salud'];
+const MIGRADOS_A_DAO = ['inventario', 'comprobantes', 'motor', 'salud'];
 
 /** módulo → módulos que lo pueden importar */
 const PERMITIDOS = {
