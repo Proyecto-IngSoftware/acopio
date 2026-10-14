@@ -321,6 +321,120 @@ export class MovimientosService {
     );
   }
 
+  /**
+   * La SALIDA de un despacho (M-07), dentro de la transacción de quien llama. Toma el
+   * candado de saldo de la categoría, así que quien recorre varias líneas las ordena antes.
+   */
+  async salidaTrasladoEnTransaccion(
+    tx: ClienteBd,
+    usuario: UsuarioAutenticado,
+    acopioId: string,
+    d: { categoriaId: string; cantidad: number; remisionId: string; codigo: string },
+  ): Promise<{ fila: Movimiento; saldo: number }> {
+    const cat = await categoriaParaMovimiento(this.categorias, tx, d.categoriaId);
+    exigirCantidad(d.cantidad, cat.unidad_base);
+    const antes = await this.bloquearSaldo(tx, acopioId, d.categoriaId);
+    if (d.cantidad > antes + 1e-9) throw saldoInsuficiente(antes);
+    const nota = `Remisión ${d.codigo}`;
+    const fila = await this.movimientos.crear(tx, {
+      acopio_id: acopioId,
+      categoria_id: d.categoriaId,
+      tipo: 'SALIDA',
+      signo: -1,
+      cantidad: d.cantidad,
+      motivo_salida: 'TRASLADO',
+      nota,
+      remision_id: d.remisionId,
+      usuario_id: usuario.id,
+      ocurrido_en: new Date(),
+    });
+    const saldo = await this.saldoDe(tx, acopioId, d.categoriaId);
+    await this.bitacora.registrar(tx, {
+      usuarioId: usuario.id,
+      accion: 'movimiento.salida',
+      entidad: 'movimiento',
+      entidadId: fila.id,
+      ubicacionId: acopioId,
+      antes: { categoria: cat.nombre, saldo: antes },
+      despues: { categoria: cat.nombre, cantidad: d.cantidad, motivo: 'TRASLADO', nota, saldo },
+    });
+    return { fila, saldo };
+  }
+
+  /** M-07: cancelar una remisión en tránsito devuelve lo despachado con un AJUSTE positivo. */
+  async ajusteCancelacionEnTransaccion(
+    tx: ClienteBd,
+    usuario: UsuarioAutenticado,
+    acopioId: string,
+    d: { categoriaId: string; cantidad: number; remisionId: string; codigo: string },
+  ): Promise<{ fila: Movimiento; saldo: number }> {
+    const cat = await this.categoriaExistente(tx, d.categoriaId);
+    const antes = await this.bloquearSaldo(tx, acopioId, d.categoriaId);
+    const motivo = `Cancelación de la remisión ${d.codigo}`;
+    const fila = await this.movimientos.crear(tx, {
+      acopio_id: acopioId,
+      categoria_id: d.categoriaId,
+      tipo: 'AJUSTE',
+      signo: 1,
+      cantidad: d.cantidad,
+      motivo,
+      remision_id: d.remisionId,
+      usuario_id: usuario.id,
+      ocurrido_en: new Date(),
+    });
+    const saldo = await this.saldoDe(tx, acopioId, d.categoriaId);
+    await this.bitacora.registrar(tx, {
+      usuarioId: usuario.id,
+      accion: 'movimiento.ajuste',
+      entidad: 'movimiento',
+      entidadId: fila.id,
+      ubicacionId: acopioId,
+      destacado: true,
+      antes: { categoria: cat.nombre, saldo: antes },
+      despues: { categoria: cat.nombre, diferencia: d.cantidad, motivo, saldo },
+    });
+    return { fila, saldo };
+  }
+
+  /** RECEPCION en una zona (M-01, ADR-0018): sin acopio y sin saldo. */
+  async registrarRecepcion(
+    tx: ClienteBd,
+    usuario: UsuarioAutenticado,
+    zonaId: string,
+    d: { categoriaId: string; cantidad: number; remisionId: string; ocurridoEn: Date },
+  ): Promise<Movimiento> {
+    const cat = await this.categoriaExistente(tx, d.categoriaId);
+    const fila = await this.movimientos.crear(tx, {
+      zona_id: zonaId,
+      categoria_id: d.categoriaId,
+      tipo: 'RECEPCION',
+      signo: 1,
+      cantidad: d.cantidad,
+      remision_id: d.remisionId,
+      usuario_id: usuario.id,
+      ocurrido_en: d.ocurridoEn,
+    });
+    await this.bitacora.registrar(tx, {
+      usuarioId: usuario.id,
+      accion: 'movimiento.recepcion',
+      entidad: 'movimiento',
+      entidadId: fila.id,
+      ubicacionId: zonaId,
+      despues: { categoria: cat.nombre, cantidad: d.cantidad },
+    });
+    return fila;
+  }
+
+  /**
+   * Lo que ya salió de un acopio vuelve o llega aunque su categoría se haya archivado
+   * después: aquí basta con que exista.
+   */
+  private async categoriaExistente(tx: ClienteBd, categoriaId: string) {
+    const cat = await this.categorias.paraMovimiento(categoriaId, tx);
+    if (!cat) throw new ErrorDominio('CATEGORIA_NO_ENCONTRADA', 'La categoría no existe', 404);
+    return cat;
+  }
+
   /** Si el CHECK de saldo salta pese al bloqueo, responde lo mismo que la validación. */
   private async conSaldoInsuficiente<T>(
     acopioId: string,
