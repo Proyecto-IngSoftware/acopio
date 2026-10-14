@@ -192,6 +192,11 @@ describe('despacho y cancelación de remisiones', () => {
       .send({ responsable: 'Ana' })
       .expect(200);
     await post(`/api/remisiones/${codigo}/despachar`, operador, {}).expect(200);
+    const enCaminoDe = async () =>
+      (await get(`/api/zonas/${zona}/necesidad`, admin).expect(200)).body.categorias.find(
+        (c: { categoriaId: string }) => c.categoriaId === cat,
+      ).enCamino;
+    expect(await enCaminoDe()).toBe(8);
     const antes = await saldo(cat);
     await post(`/api/remisiones/${codigo}/cancelar`, operador, {
       motivo: 'El conductor no llegó al acopio',
@@ -262,5 +267,20 @@ describe('despacho y cancelación de remisiones', () => {
       'BORRADOR',
     );
     expect(await saldo(cat)).toBe(40);
+  });
+
+  it('el mismo folio escrito dos veces con otra capitalización se vincula una vez', async () => {
+    const cat = await categoria(5);
+    const f = await folio('CONCILIADO');
+    const r = await borrador(cat, 1, 'Ana');
+    const d = await post(`/api/remisiones/${r.codigo}/despachar`, operador, {
+      folios: [f, f.toLowerCase()],
+    }).expect(200);
+    expect(d.body.folios).toEqual([f]);
+    expect(await a.prisma.remisionComprobante.count({ where: { remision_id: r.id } })).toBe(1);
+    const b = await a.prisma.bitacora.findFirstOrThrow({
+      where: { accion: 'remision.despachada', entidad_id: r.id },
+    });
+    expect(b.datos_despues).toMatchObject({ folios: [f] });
   });
 });

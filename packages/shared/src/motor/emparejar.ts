@@ -111,13 +111,15 @@ export function emparejar(
 
   // distancia_max: la mayor entre los pares candidatos de la ronda (M-06)
   let distanciaMax = 0;
-  // Solo pares que podrían elegirse: sin bloqueo y con lo mínimo de los dos lados
+  // Solo pares que podrían elegirse: sin bloqueo y con lo mínimo de los dos lados. Con
+  // mínimo 0 hace falta además algo que mover, igual que en la asignación
   for (const d of entrada.demandas) {
     const z = zonas.get(d.zonaId);
-    if (!z || d.necesidad - d.recibido - d.enCamino < minimo) continue;
+    const deficit = d.necesidad - d.recibido - d.enCamino;
+    if (!z || deficit <= 0 || deficit < minimo) continue;
     for (const o of entrada.ofertas) {
       const a = acopios.get(o.acopioId);
-      if (!a || o.categoriaId !== d.categoriaId || o.movible < minimo) continue;
+      if (!a || o.categoriaId !== d.categoriaId || o.movible <= 0 || o.movible < minimo) continue;
       if (bloqueados.has(clavePar(o.acopioId, d.zonaId, d.categoriaId))) continue;
       distanciaMax = Math.max(distanciaMax, km(a, z));
     }

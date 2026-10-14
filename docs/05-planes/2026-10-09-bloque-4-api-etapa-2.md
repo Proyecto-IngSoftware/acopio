@@ -4,7 +4,7 @@ type: plan
 tags: [plan, bloque-4]
 estado: aprobado
 bloque: 4
-actualizado: 2026-10-10
+actualizado: 2026-10-14
 ---
 
 # Bloque 4 · Motor: API, etapa 2 · plan de implementación
@@ -131,16 +131,20 @@ críticos. Se corrigieron los dos importantes, cada uno con su prueba:
   con máximo 0 ante una categoría inexistente. Ahora valida cada línea con
   `exigirCantidad` y responde 404 `CATEGORIA_NO_ENCONTRADA`.
 
-Quedan para la interfaz ocho menores:
+Quedaron ocho menores. Se corrigieron el 2026-10-14 en la rama `etapa2-menores`, cada uno
+con su prueba salvo el de la demo, que se probó corriendo `seed:demo` dos veces contra el
+Compose:
 
-- un folio repetido con otra capitalización da 500 al despachar;
-- la evidencia de un despacho general la ve y la llena cualquier Receptor;
-- `reportar` no valida las categorías ni la zona;
-- `distancia_max` con cantidad mínima 0;
-- ruido de coma flotante en el máximo del 422;
-- el «antes» de la bitácora al editar se lee fuera de la transacción;
-- la demo no completa una corrida a medias si falla entre la remisión y su salida;
-- la prueba del foco 4 no comprueba que «en camino» valía 8 antes de cancelar.
+- El mismo folio con otra capitalización se vincula una vez, en lugar de dar 500.
+- Un despacho general es del Receptor que sube la primera foto. Otro Receptor recibe 409
+  `REMISION_TOMADA` al subir o al recibir, y no ve la evidencia.
+- `reportar` responde 404 si la zona o la categoría no existen, 409 `ZONA_SOLO_LECTURA` si
+  la emergencia está cerrada y 422 `CATEGORIA_ARCHIVADA` si la categoría está archivada.
+- Con cantidad mínima 0, `distancia_max` ignora los pares sin déficit o sin movible.
+- El máximo del 422 sale con tres decimales, como `movimiento.cantidad`.
+- Editar bloquea la remisión y lee el «antes» de la bitácora dentro de la transacción.
+- La demo crea la remisión, la despacha y registra su salida en una sola transacción.
+- La prueba de cancelar en tránsito comprueba que «en camino» valía 8 antes de cancelar.
 
 ---
 

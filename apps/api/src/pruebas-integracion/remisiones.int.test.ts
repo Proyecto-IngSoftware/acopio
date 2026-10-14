@@ -9,6 +9,7 @@ import {
   unico,
   type AppPrueba,
 } from '../../test/app-prueba';
+import { RemisionesService } from '../modulos/motor/remisiones.service';
 
 /** RF-MOT-008: remisiones creadas a mano, listadas, vistas y editadas en borrador. */
 describe('remisiones', () => {
@@ -218,5 +219,51 @@ describe('remisiones', () => {
       lineas: [{ categoriaId: '99999999-9999-4999-8999-999999999999', cantidad: 1 }],
     }).expect(404);
     expect(r.body.codigo).toBe('CATEGORIA_NO_ENCONTRADA');
+  });
+
+  it('el máximo del 422 sale redondeado a tres decimales', async () => {
+    const cat = await categoria(10.8);
+    const creada = await post('/api/remisiones', operadorA, {
+      acopioId: ACOPIO_A,
+      zonaId: ZONA_A,
+      lineas: [{ categoriaId: cat, cantidad: 0.1 }],
+    }).expect(201);
+    // movible 10,7 más lo propio 0,1: en coma flotante daría 10,799999999999999
+    const r = await put(`/api/remisiones/${creada.body.codigo}/lineas`, operadorA, {
+      lineas: [{ categoriaId: cat, cantidad: 11 }],
+    }).expect(422);
+    expect(r.body.detalles.maximo).toBe(10.8);
+  });
+
+  it('la bitácora de editar guarda el «antes» que había al cambiar, no el de la lectura previa', async () => {
+    const cat = await categoria(5);
+    const creada = await post('/api/remisiones', operadorA, {
+      acopioId: ACOPIO_A,
+      zonaId: ZONA_A,
+      responsable: 'Primero',
+      lineas: [{ categoriaId: cat, cantidad: 1 }],
+    }).expect(201);
+    const servicio = a.app.get(RemisionesService);
+    const original = servicio.encontrar.bind(servicio);
+    const espia = jest.spyOn(servicio, 'encontrar').mockImplementationOnce(async (codigo, bd) => {
+      const leida = await original(codigo, bd);
+      // Otro usuario cambia el responsable entre la lectura y la transacción
+      await a.prisma.remision.update({
+        where: { id: creada.body.id },
+        data: { responsable: 'Intermedio' },
+      });
+      return leida;
+    });
+    try {
+      await patch(`/api/remisiones/${creada.body.codigo}`, operadorA, {
+        responsable: 'Final',
+      }).expect(200);
+    } finally {
+      espia.mockRestore();
+    }
+    const b = await a.prisma.bitacora.findFirstOrThrow({
+      where: { accion: 'remision.editada', entidad_id: creada.body.id },
+    });
+    expect(b.datos_antes).toMatchObject({ responsable: 'Intermedio' });
   });
 });

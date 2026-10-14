@@ -51,6 +51,20 @@ describe('emparejar', () => {
     expect(de(conBloqueo).desglose.proximidad).toBe(0);
   });
 
+  it('con cantidad mínima 0, un acopio sin movible no estira distancia_max', () => {
+    const r = emparejar(
+      entrada({
+        zonas: [z1],
+        demandas: [demanda('z1', 100)],
+        ofertas: [oferta('cerca', 80), oferta('lejos', 0)],
+      }),
+      PESOS_POR_DEFECTO,
+      0,
+    );
+    expect(r).toHaveLength(1);
+    expect(r[0]!.desglose.proximidad).toBe(0);
+  });
+
   it('un acopio con movible menor que el mínimo no estira distancia_max', () => {
     const r = emparejar(
       entrada({

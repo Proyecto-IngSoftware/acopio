@@ -159,4 +159,40 @@ describe('reportes de necesidad y capa pública', () => {
     const z = await crearZona(cerrada, 4.8);
     expect((await publico()).map((x) => x.zonaId)).not.toContain(z);
   });
+
+  it('reportar valida la categoría y la zona', async () => {
+    const reportar = (t: string, zonaId: string, categorias: string[]) =>
+      a
+        .http()
+        .post(`/api/zonas/${zonaId}/reportes`)
+        .set(como(t))
+        .send({ categorias, resuelta: false });
+    const inexistente = '99999999-9999-4999-8999-999999999999';
+    expect((await reportar(receptor, zona, [inexistente]).expect(404)).body.codigo).toBe(
+      'CATEGORIA_NO_ENCONTRADA',
+    );
+    const archivada = await categoria('Archivada ');
+    await a.prisma.categoria.update({ where: { id: archivada.id }, data: { archivada: true } });
+    expect((await reportar(receptor, zona, [archivada.id]).expect(422)).body.codigo).toBe(
+      'CATEGORIA_ARCHIVADA',
+    );
+    expect((await reportar(admin, inexistente, [agua.id]).expect(404)).body.codigo).toBe(
+      'ZONA_NO_ENCONTRADA',
+    );
+    const cerrada = (
+      await a.prisma.emergencia.create({
+        data: {
+          nombre: unico('Cerrada '),
+          tipo: 'Inundación',
+          inicio: new Date('2026-08-01T00:00:00Z'),
+          destacada_hasta: new Date('2026-08-30T00:00:00Z'),
+          estado: 'CERRADA',
+          cerrada_en: new Date(),
+          motivo_cierre: 'La emergencia terminó hace semanas',
+        },
+      })
+    ).id;
+    const z = await crearZona(cerrada, 4.9);
+    expect((await reportar(admin, z, [agua.id]).expect(409)).body.codigo).toBe('ZONA_SOLO_LECTURA');
+  });
 });

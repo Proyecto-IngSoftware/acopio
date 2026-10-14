@@ -27,6 +27,8 @@ import { aRemisionVista } from './vistas';
 
 type Linea = { categoriaId: string; cantidad: number };
 
+const r3 = (n: number) => Math.round(n * 1000) / 1000;
+
 const VERBO: Record<AccionRemision, string> = {
   editar: 'editar',
   despachar: 'despachar',
@@ -90,10 +92,11 @@ export class RemisionesService {
     const propio = remisionId
       ? await this.remisiones.comprometidoPropio(tx, remisionId)
       : new Map<string, number>();
+    // Tres decimales, como movimiento.cantidad: 10,7 + 0,1 no da 10,799999999999999
     return new Map(
       ordenadas.map((c) => [
         c,
-        (ofertas.find((o) => o.categoriaId === c)?.movible ?? 0) + (propio.get(c) ?? 0),
+        r3((ofertas.find((o) => o.categoriaId === c)?.movible ?? 0) + (propio.get(c) ?? 0)),
       ]),
     );
   }
@@ -133,8 +136,10 @@ export class RemisionesService {
       const categorias = plan.lineas().map((l) => l.categoriaId);
       // Saldo primero y remisión después, el mismo orden que aprobar y despachar
       const movible = await this.movibleDe(tx, r.acopio_origen_id, categorias, r.id);
-      const estado = await this.remisiones.bloquear(tx, r.id);
-      this.exigirAccion({ estado: estado ?? r.estado }, 'editar');
+      await this.remisiones.bloquear(tx, r.id);
+      // Con la fila tomada: el estado y el «antes» de la bitácora son los de ahora
+      const actual = await this.releer(tx, codigo);
+      this.exigirAccion(actual, 'editar');
       const lineas = plan.validarContra(movible).lineas();
       await this.remisiones.reemplazarLineas(tx, r.id, lineas);
       await this.bitacora.registrar(tx, {
@@ -144,7 +149,7 @@ export class RemisionesService {
         entidadId: r.id,
         ubicacionId: r.acopio_origen_id,
         antes: {
-          lineas: r.lineas.map((l) => ({
+          lineas: actual.lineas.map((l) => ({
             categoriaId: l.categoria_id,
             cantidad: Number(l.cantidad_planeada),
           })),
@@ -164,21 +169,26 @@ export class RemisionesService {
     await this.alcance.exigir(usuario, 'ACOPIO', r.acopio_origen_id);
     this.exigirAccion(r, 'editar');
     if (d.zonaId) await this.exigirZonaAbierta(d.zonaId);
-    const responsable = d.responsable === undefined ? r.responsable : d.responsable?.trim() || null;
-    const zonaId = d.zonaId === undefined ? r.zona_destino_id : d.zonaId;
     return this.transacciones.ejecutar(async (tx) => {
-      const cambiadas = await this.remisiones.cambiarSiEstado(tx, r.id, 'BORRADOR', {
+      // Con la fila tomada: el estado y el «antes» de la bitácora son los de ahora
+      await this.remisiones.bloquear(tx, r.id);
+      const actual = await this.releer(tx, codigo);
+      this.exigirAccion(actual, 'editar');
+      // Lo que no viene en el cuerpo se queda como está ahora, no como se leyó antes
+      const responsable =
+        d.responsable === undefined ? actual.responsable : d.responsable?.trim() || null;
+      const zonaId = d.zonaId === undefined ? actual.zona_destino_id : d.zonaId;
+      await this.remisiones.cambiarSiEstado(tx, r.id, 'BORRADOR', {
         responsable,
         zona_destino_id: zonaId,
       });
-      if (cambiadas === 0) this.exigirAccion(await this.releer(tx, codigo), 'editar');
       await this.bitacora.registrar(tx, {
         usuarioId: usuario.id,
         accion: 'remision.editada',
         entidad: 'remision',
         entidadId: r.id,
         ubicacionId: r.acopio_origen_id,
-        antes: { responsable: r.responsable, zonaId: r.zona_destino_id },
+        antes: { responsable: actual.responsable, zonaId: actual.zona_destino_id },
         despues: { responsable, zonaId },
       });
       return aRemisionVista((await this.remisiones.porCodigo(codigo, tx))!);
@@ -244,7 +254,8 @@ export class RemisionesService {
             codigo: r.codigo,
           });
         }
-        if (vinculos.length) await this.remisiones.vincularFolios(tx, r.id, vinculos, usuario.id);
+        if (vinculos.ids.length)
+          await this.remisiones.vincularFolios(tx, r.id, vinculos.ids, usuario.id);
         await this.bitacora.registrar(tx, {
           usuarioId: usuario.id,
           accion: 'remision.despachada',
@@ -252,7 +263,7 @@ export class RemisionesService {
           entidadId: r.id,
           ubicacionId: r.acopio_origen_id,
           antes: { estado: 'BORRADOR' },
-          despues: { estado: 'EN_TRANSITO', responsable: r.responsable, folios },
+          despues: { estado: 'EN_TRANSITO', responsable: r.responsable, folios: vinculos.folios },
         });
         return aRemisionVista((await this.remisiones.porCodigo(codigo, tx))!);
       },
@@ -262,8 +273,9 @@ export class RemisionesService {
 
   /** Solo folios CONCILIADO del mismo acopio (§6 de la especificación). */
   private async foliosVinculables(acopioId: string, folios: string[]) {
-    const ids: string[] = [];
-    for (const texto of new Set(folios)) {
+    // Por comprobante, no por texto: «ACO-…» y «aco-…» son el mismo folio
+    const porId = new Map<string, string>();
+    for (const texto of folios) {
       const folio = normalizarFolio(texto);
       const c = folio ? await this.comprobantes.porFolio(folio) : null;
       if (!c || c.estado !== 'CONCILIADO' || c.acopio_id !== acopioId) {
@@ -273,9 +285,9 @@ export class RemisionesService {
           422,
         );
       }
-      ids.push(c.id);
+      porId.set(c.id, c.folio);
     }
-    return ids;
+    return { ids: [...porId.keys()], folios: [...porId.values()] };
   }
 
   /** M-07: en tránsito, lo despachado vuelve al acopio con un AJUSTE positivo por línea. */

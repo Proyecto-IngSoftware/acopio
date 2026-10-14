@@ -1,10 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { RADIO_ZONA_PUBLICA_KM, VIGENCIA_REPORTE_DIAS } from '@acopio/shared';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
+import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { Transacciones } from '../../comun/prisma/transacciones';
 import { ZonaDao } from '../acopios/dao/zona.dao';
 import { BitacoraService } from '../auditoria/bitacora.service';
+import { CategoriaDao } from '../catalogo/dao/categoria.dao';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
+import { categoriaParaMovimiento } from '../inventario/cantidades';
 import { exigirZonaPropia } from './alcance-zona';
 import { NecesidadDao } from './dao/necesidad.dao';
 
@@ -18,6 +21,7 @@ export class ReportesService {
     private readonly transacciones: Transacciones,
     private readonly necesidades: NecesidadDao,
     private readonly zonas: ZonaDao,
+    private readonly categorias: CategoriaDao,
     private readonly alcance: AlcanceService,
     private readonly bitacora: BitacoraService,
   ) {}
@@ -31,8 +35,19 @@ export class ReportesService {
     await exigirZonaPropia(this.alcance, usuario, zonaId);
     const nota = d.nota?.trim() || null;
     return this.transacciones.ejecutar(async (tx) => {
+      const zona = await this.zonas.conEmergencia(zonaId, tx);
+      if (!zona) throw new ErrorDominio('ZONA_NO_ENCONTRADA', 'La zona no existe', 404);
+      if (zona.emergencia.estado === 'CERRADA') {
+        throw new ErrorDominio(
+          'ZONA_SOLO_LECTURA',
+          'La emergencia está cerrada: sus zonas quedan en solo lectura',
+          409,
+        );
+      }
       const creados = [];
       for (const categoriaId of new Set(d.categorias)) {
+        // Una categoría archivada no se publica en la capa pública
+        await categoriaParaMovimiento(this.categorias, tx, categoriaId);
         const r = await this.necesidades.crearReporte(tx, {
           zonaId,
           categoriaId,
