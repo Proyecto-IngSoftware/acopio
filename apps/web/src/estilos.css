@@ -40,3 +40,15 @@ body {
     transition: none !important;
   }
 }
+
+/* Documento de remisión (C12): carta, márgenes de 15 mm y sin fondos de color */
+@media print {
+  @page {
+    size: letter;
+    margin: 15mm;
+  }
+  body {
+    background: none;
+    print-color-adjust: economy;
+  }
+}

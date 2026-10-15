@@ -1,3 +1,4 @@
+import { useRemisiones } from '../api/remisiones';
 import { Boton } from '../componentes/Boton';
 import { Icono } from '../componentes/Icono';
 import { FilaMenu, SeccionMenu } from '../componentes/Menu';
@@ -81,7 +82,29 @@ const HERRAMIENTAS: Herramienta[] = [
     descripcion: 'Traslados que propone el motor',
     roles: ['ADMIN'],
   },
+  {
+    a: '/consola/remisiones',
+    icono: 'receipt_long',
+    titulo: 'Remisiones',
+    descripcion: 'Traslados en borrador, en camino y recibidos',
+    roles: ['ADMIN'],
+  },
 ];
+
+/** C12 para el Operador, con los borradores que esperan despacho (I2-01). */
+function FilaRemisiones() {
+  const { data } = useRemisiones({ estado: 'BORRADOR' });
+  const n = data?.length ?? 0;
+  return (
+    <FilaMenu
+      a="/consola/remisiones"
+      icono="receipt_long"
+      titulo="Remisiones"
+      descripcion={n > 0 ? `${n} en borrador por despachar` : 'Armar y despachar traslados'}
+      distintivo={n > 0 ? <span className="text-label-md font-bold">{n}</span> : undefined}
+    />
+  );
+}
 
 /** Las herramientas del acopio donde opera la persona, según su rol (J-04, E-07). */
 function MiAcopio() {
@@ -108,6 +131,7 @@ function MiAcopio() {
           descripcion="Registrar lo que sale y por qué"
         />
       )}
+      {operador && <FilaRemisiones />}
       {operador && (
         <FilaMenu
           a={`${base}/conteo`}

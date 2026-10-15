@@ -4,7 +4,7 @@ import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
-import { ErrorDto, RemisionDto } from '../../comun/respuestas';
+import { ErrorDto, FolioVinculableDto, RemisionDto } from '../../comun/respuestas';
 import { cantidadPositiva } from '../../comun/validacion/cantidades';
 import { RemisionesService } from './remisiones.service';
 
@@ -58,6 +58,13 @@ export class RemisionesController {
   @ApiOkResponse({ type: RemisionDto, isArray: true })
   listar(@UsuarioActual() u: UsuarioAutenticado, @Query() f: FiltroRemisionesDto) {
     return this.remisiones.listar(u, { estado: f.estado, zonaId: f.zona });
+  }
+
+  @Get(':codigo/folios-vinculables')
+  @ApiOkResponse({ type: FolioVinculableDto, isArray: true })
+  @ApiResponse(errores)
+  foliosVinculables(@UsuarioActual() u: UsuarioAutenticado, @Param('codigo') codigo: string) {
+    return this.remisiones.foliosVinculables(u, codigo);
   }
 
   @Get(':codigo')

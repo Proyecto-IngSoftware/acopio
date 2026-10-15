@@ -290,6 +290,28 @@ describe('red', () => {
       expect(r.body.codigo).toBe('ZONA_SOLO_LECTURA');
       await a.http().post('/api/zonas').set(comoAdmin()).send(nueva(e.body.id)).expect(409);
     });
+
+    it('el Operador lista zonas pero no las crea ni las edita', async () => {
+      const operador = (await crearUsuarioActivo(a, tokenAdmin, { rol: 'OPERADOR' })).token;
+      const lista = await a
+        .http()
+        .get(`/api/zonas?emergencia=${EMERGENCIA_PRUEBA}`)
+        .set('authorization', `Bearer ${operador}`)
+        .expect(200);
+      expect((lista.body as { id: string }[]).map((z) => z.id)).toContain(ZONA_A);
+      await a
+        .http()
+        .post('/api/zonas')
+        .set('authorization', `Bearer ${operador}`)
+        .send(nueva(EMERGENCIA_PRUEBA))
+        .expect(403);
+      await a
+        .http()
+        .patch(`/api/zonas/${ZONA_A}`)
+        .set('authorization', `Bearer ${operador}`)
+        .send({ nombre: 'No debería cambiar' })
+        .expect(403);
+    });
   });
 
   describe('ubicaciones', () => {

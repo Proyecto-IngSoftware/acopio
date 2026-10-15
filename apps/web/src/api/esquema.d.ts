@@ -1276,6 +1276,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/remisiones/{codigo}/folios-vinculables": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["RemisionesController_foliosVinculables"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/remisiones/{codigo}": {
         parameters: {
             query?: never;
@@ -2934,6 +2950,17 @@ export interface components {
                 cantidadPlaneada: number;
                 cantidadRecibida: number | null;
             }[];
+        };
+        FolioVinculableDto: {
+            /** @description ACO-AAAA-XXXXX */
+            folio: string;
+            /**
+             * Format: date-time
+             * @description null si se concilió sin fecha registrada
+             */
+            conciliadoEn: string | null;
+            /** @description Sin repetir, en orden alfabético */
+            categorias: string[];
         };
         LineasDto: {
             lineas: {
@@ -5759,6 +5786,36 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["RemisionDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    RemisionesController_foliosVinculables: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                codigo: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FolioVinculableDto"][];
                 };
             };
             /** @description Error */

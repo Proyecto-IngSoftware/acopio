@@ -69,6 +69,7 @@ it('el Administrador ve su cuenta y sus herramientas, también las de la red', a
     ['Entidades', '/consola/entidades'],
     ['Zonas afectadas', '/consola/zonas'],
     ['Motor de sugerencias', '/consola/motor'],
+    ['Remisiones', '/consola/remisiones'],
   ]) {
     expect(within(admin).getByRole('link', { name: new RegExp(nombre!) })).toHaveAttribute(
       'href',
@@ -129,8 +130,50 @@ it('un Operador ve «Mi acopio» solo para la ubicación activa', async () => {
     'href',
     '/consola/acopios/x1/conteo',
   );
-  expect(within(mio).getAllByRole('link')).toHaveLength(5);
+  expect(within(mio).getByRole('link', { name: /Remisiones/ })).toHaveAttribute(
+    'href',
+    '/consola/remisiones',
+  );
+  expect(within(mio).getAllByRole('link')).toHaveLength(6);
   expect(screen.queryByRole('region', { name: 'Administración' })).not.toBeInTheDocument();
+});
+
+describe('la fila «Remisiones» del Operador', () => {
+  const ubicaciones = [
+    { tipo: 'ACOPIO', id: 'x1', nombre: 'Acopio Kennedy', municipio: 'Bogotá', estado: 'ACTIVO' },
+  ];
+
+  it('dice cuántos borradores esperan despacho', async () => {
+    responderSegun({
+      'GET /api/ubicaciones/mias': ubicaciones,
+      'GET /api/remisiones': [{ codigo: 'R-1' }, { codigo: 'R-2' }],
+    });
+    pantalla(persona('OPERADOR'));
+    const mio = await screen.findByRole('region', { name: 'Mi acopio' });
+    const fila = await within(mio).findByRole('link', { name: /2 en borrador por despachar/ });
+    expect(fila).toHaveAttribute('href', '/consola/remisiones');
+    expect(within(fila).getByText('2')).toBeInTheDocument();
+  });
+
+  it('sin borradores invita a armar traslados', async () => {
+    responderSegun({ 'GET /api/ubicaciones/mias': ubicaciones, 'GET /api/remisiones': [] });
+    pantalla(persona('OPERADOR'));
+    const mio = await screen.findByRole('region', { name: 'Mi acopio' });
+    expect(
+      await within(mio).findByRole('link', { name: /Armar y despachar traslados/ }),
+    ).toBeInTheDocument();
+  });
+
+  it('un borrador se dice en singular', async () => {
+    responderSegun({
+      'GET /api/ubicaciones/mias': ubicaciones,
+      'GET /api/remisiones': [{ codigo: 'R-1' }],
+    });
+    pantalla(persona('OPERADOR'));
+    expect(
+      await screen.findByRole('link', { name: /1 en borrador por despachar/ }),
+    ).toBeInTheDocument();
+  });
 });
 
 it('el Auditor ve solo el inventario de su ubicación activa', async () => {

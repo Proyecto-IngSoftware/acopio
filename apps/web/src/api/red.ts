@@ -43,7 +43,7 @@ export function opcionesAcopiosPublicos(filtro: FiltroPublico) {
           },
         }),
       );
-      return filas as unknown as AcopioPublico[];
+      return filas;
     },
   });
 }
@@ -216,9 +216,9 @@ export function useAcopiosQueNoReciben(categoriaId: string | null) {
     queryKey: ['no-recibir', 'categoria', categoriaId],
     enabled: categoriaId !== null,
     queryFn: async () => {
-      const filas = (await desenvolver(
+      const filas = await desenvolver(
         api.GET('/api/no-recibir', { params: { query: { categoria: categoriaId! } as never } }),
-      )) as unknown as { acopioId: string }[];
+      );
       return new Set(filas.map((f) => f.acopioId));
     },
   });

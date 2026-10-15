@@ -3,7 +3,7 @@ title: "Más con sesión · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-15
 ---
 
 # Más con sesión · diseño en Stitch
@@ -21,3 +21,7 @@ Sale de «Más - Opciones y Gestión» (`14256c13790d4c4fa9e7e620a784bb87`, guar
 [_compartidos/mas-opciones](../_compartidos/mas-opciones/)). Su patrón de filas (ícono en
 recuadro, título, una línea y chevron, agrupadas por sección) es el que usan también la
 bitácora y el catálogo.
+
+El ciclo 2 del Bloque 4 agrega en «Mi acopio» la fila «Remisiones», después de «Salida».
+Si hay borradores dice «N en borrador por despachar» con el número como distintivo; si no,
+«Armar y despachar traslados». Está en la [maqueta de C12](../C12-remisiones/maqueta.html).

@@ -195,6 +195,22 @@ export class ComprobanteDao {
     });
   }
 
+  /** Los conciliados más recientes de un acopio, para vincularlos al despachar una remisión
+   *  (RF-CMP-007). Con `limite`, la hoja de despachar no crece con la historia (P-053). */
+  conciliadosDeAcopio(acopioId: string, limite: number, bd: ClienteBd = this.prisma) {
+    return bd.comprobante.findMany({
+      where: { acopio_id: acopioId, estado: 'CONCILIADO' },
+      // En PostgreSQL un orden descendente pone los nulos primero
+      orderBy: { verificado_en: { sort: 'desc', nulls: 'last' } },
+      take: limite,
+      select: {
+        folio: true,
+        verificado_en: true,
+        lineas: { select: { categoria: { select: { nombre: true } } } },
+      },
+    });
+  }
+
   async acopiosVinculados(comprobanteId: string): Promise<(string | null)[]> {
     const filas = await this.prisma.comprobanteMovimiento.findMany({
       where: { comprobante_id: comprobanteId },

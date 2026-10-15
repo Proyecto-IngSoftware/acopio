@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Remisiones - Consola Acopio</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts & Material Symbols -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-container": "#316c6c",
+            "surface-container-high": "#eee7e3",
+            "secondary-fixed": "#e9e1db",
+            "outline-variant": "#bec9c8",
+            "background": "#fff8f5",
+            "on-tertiary-container": "#afebea",
+            "inverse-surface": "#33302d",
+            "secondary-fixed-dim": "#ccc5c0",
+            "surface-container": "#f4ece8",
+            "primary": "#005454",
+            "surface-variant": "#e9e1dd",
+            "surface-container-highest": "#e9e1dd",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "on-primary-fixed-variant": "#004f50",
+            "surface-bright": "#fff8f5",
+            "on-tertiary-fixed": "#002020",
+            "on-surface": "#1e1b19",
+            "surface-dim": "#e0d8d5",
+            "surface": "#fff8f5",
+            "secondary": "#625e59",
+            "primary-fixed-dim": "#85d4d3",
+            "tertiary-fixed": "#b2eded",
+            "on-secondary-fixed": "#1e1b18",
+            "error": "#ba1a1a",
+            "on-secondary": "#ffffff",
+            "primary-container": "#0f6e6e",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "surface-tint": "#03696a",
+            "on-surface-variant": "#3e4948",
+            "on-error-container": "#93000a",
+            "primary-fixed": "#a1f0ef",
+            "on-primary": "#ffffff",
+            "inverse-on-surface": "#f7efeb",
+            "surface-container-lowest": "#ffffff",
+            "on-primary-fixed": "#002020",
+            "on-background": "#1e1b19",
+            "tertiary": "#125454",
+            "outline": "#6e7979",
+            "on-secondary-fixed-variant": "#4a4642",
+            "tertiary-fixed-dim": "#96d1d0",
+            "secondary-container": "#e9e1db",
+            "surface-container-low": "#faf2ee",
+            "on-primary-container": "#9eedec",
+            "on-tertiary": "#ffffff",
+            "inverse-primary": "#85d4d3",
+            "on-secondary-container": "#68635f"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter"],
+            "display": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body h-full flex flex-col antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopAppBar -->
+<header class="bg-surface text-primary sticky top-0 z-40 flex justify-between items-center w-full px-4 h-16">
+<div class="flex items-center space-x-3">
+<button aria-label="Volver" class="w-12 h-12 flex items-center justify-center rounded-lg hover:bg-surface-container active:scale-95 transition-transform duration-150 text-on-surface">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<div>
+<h1 class="text-lg font-bold font-headline text-on-surface">Remisiones</h1>
+<p class="text-xs text-secondary">Traslados de tu acopio</p>
+</div>
+</div>
+<div class="flex items-center">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface font-bold text-sm border border-outline-variant" title="Avatar del operador de bodega">
+        OA
+      </div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 overflow-y-auto px-4 py-4 pb-28 max-w-md mx-auto w-full flex flex-col gap-6">
+<!-- Primary Action Button -->
+<button class="w-full h-14 bg-primary text-on-primary font-bold rounded-[10px] flex items-center justify-center gap-2 shadow-sm hover:bg-primary-container active:scale-[0.99] transition-all text-base min-h-[56px]">
+<span class="material-symbols-outlined">add</span>
+      Nueva remisión
+    </button>
+<!-- Filter Chips -->
+<div class="flex items-center gap-2 overflow-x-auto pb-1 no-scrollbar">
+<button class="px-4 py-2 rounded-xl bg-primary-container text-on-primary-container text-sm font-semibold flex items-center gap-1.5 whitespace-nowrap shadow-sm min-h-[48px]">
+        Borradores 3
+      </button>
+<button class="px-4 py-2 rounded-xl bg-surface-container border border-outline-variant text-on-surface-variant text-sm font-medium flex items-center gap-1.5 whitespace-nowrap hover:bg-surface-container-high transition-colors min-h-[48px]">
+        En tránsito
+      </button>
+<button class="px-4 py-2 rounded-xl bg-surface-container border border-outline-variant text-on-surface-variant text-sm font-medium flex items-center gap-1.5 whitespace-nowrap hover:bg-surface-container-high transition-colors min-h-[48px]">
+        Recibidas
+      </button>
+<button class="px-4 py-2 rounded-xl bg-surface-container border border-outline-variant text-on-surface-variant text-sm font-medium flex items-center gap-1.5 whitespace-nowrap hover:bg-surface-container-high transition-colors min-h-[48px]">
+        Canceladas
+      </button>
+</div>
+<!-- Cards Section -->
+<div class="flex flex-col gap-4">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-[12px] p-4 flex flex-col gap-3 shadow-sm hover:border-primary transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-bold text-base text-on-surface font-headline tabular-nums">R-2026-K4P7Q</span>
+<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-secondary flex items-center gap-1 border border-outline-variant">
+<span class="material-symbols-outlined text-sm" style="font-size: 14px;">edit_note</span>
+            Borrador
+          </span>
+</div>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-base">local_shipping</span>
+<span class="font-medium">Acopio Kennedy → Barrio San Agustín</span>
+</div>
+<div class="flex items-center justify-between text-xs text-secondary pt-2 border-t border-surface-variant">
+<span>3 categorías</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" style="font-size: 12px;">schedule</span>
+            hace 2 horas
+          </span>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-[12px] p-4 flex flex-col gap-3 shadow-sm hover:border-primary transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-bold text-base text-on-surface font-headline tabular-nums">R-2026-M2X9D</span>
+<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-secondary flex items-center gap-1 border border-outline-variant">
+<span class="material-symbols-outlined text-sm" style="font-size: 14px;">edit_note</span>
+            Borrador
+          </span>
+</div>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-base">inventory_2</span>
+<span class="font-medium">Despacho general</span>
+</div>
+<div class="flex items-center justify-between text-xs text-secondary pt-2 border-t border-surface-variant">
+<span>1 categoría</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" style="font-size: 12px;">schedule</span>
+            hace 1 día
+          </span>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-[12px] p-4 flex flex-col gap-3 shadow-sm hover:border-primary transition-colors">
+<div class="flex items-center justify-between">
+<span class="font-bold text-base text-on-surface font-headline tabular-nums">R-2026-T7H3B</span>
+<span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-surface-container text-secondary flex items-center gap-1 border border-outline-variant">
+<span class="material-symbols-outlined text-sm" style="font-size: 14px;">edit_note</span>
+            Borrador
+          </span>
+</div>
+<div class="flex items-center gap-2 text-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-primary text-base">near_me</span>
+<span class="font-medium">Vereda El Pepino</span>
+</div>
+<div class="flex items-center justify-between text-xs text-secondary pt-2 border-t border-surface-variant">
+<span>5 categorías</span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-xs" style="font-size: 12px;">schedule</span>
+            hace 3 días
+          </span>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface dark:bg-surface">
+<!-- Inicio (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-medium min-h-[48px] px-2 hover:text-primary transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined text-xl">home</span>
+<span class="text-xs font-label mt-0.5">Inicio</span>
+</a>
+<!-- Mapa (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-medium min-h-[48px] px-2 hover:text-primary transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined text-xl">map</span>
+<span class="text-xs font-label mt-0.5">Mapa</span>
+</a>
+<!-- Causas (Active based on context/intent mapping or standard navigation highlight) -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold min-h-[48px] px-2 active:opacity-80 transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+<span class="text-xs font-label mt-0.5">Causas</span>
+</a>
+<!-- Voluntariado (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-medium min-h-[48px] px-2 hover:text-primary transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined text-xl">group</span>
+<span class="text-xs font-label mt-0.5">Voluntariado</span>
+</a>
+<!-- Más (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed-dim font-medium min-h-[48px] px-2 hover:text-primary transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined text-xl">more_horiz</span>
+<span class="text-xs font-label mt-0.5">Más</span>
+</a>
+</nav>
+</body></html>

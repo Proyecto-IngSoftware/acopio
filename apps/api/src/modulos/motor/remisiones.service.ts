@@ -43,6 +43,9 @@ const ESTADO: Record<EstadoRemision, string> = {
   CANCELADA: 'cancelada',
 };
 
+/** Cuántos folios conciliados ofrece la hoja de despachar: los más recientes (P-053). */
+const FOLIOS_VINCULABLES = 50;
+
 /** C12 Remisiones (RF-MOT-008): crear a mano, listar, ver y editar un borrador. */
 @Injectable()
 export class RemisionesService {
@@ -221,7 +224,7 @@ export class RemisionesService {
         422,
       );
     }
-    const vinculos = await this.foliosVinculables(r.acopio_origen_id, folios);
+    const vinculos = await this.validarFolios(r.acopio_origen_id, folios);
     return this.transacciones.ejecutar(
       async (tx) => {
         // Saldo primero, en orden de categoría, y remisión después: el mismo orden que
@@ -271,8 +274,25 @@ export class RemisionesService {
     );
   }
 
+  /** Los folios conciliados que se pueden vincular al despachar (RF-CMP-007). */
+  async foliosVinculables(usuario: UsuarioAutenticado, codigo: string) {
+    const r = await this.encontrar(codigo);
+    await this.alcance.exigir(usuario, 'ACOPIO', r.acopio_origen_id);
+    const filas = await this.comprobantes.conciliadosDeAcopio(
+      r.acopio_origen_id,
+      FOLIOS_VINCULABLES,
+    );
+    return filas.map((c) => ({
+      folio: c.folio,
+      conciliadoEn: c.verificado_en?.toISOString() ?? null,
+      categorias: [...new Set(c.lineas.map((l) => l.categoria.nombre))].sort((x, y) =>
+        x.localeCompare(y, 'es'),
+      ),
+    }));
+  }
+
   /** Solo folios CONCILIADO del mismo acopio (§6 de la especificación). */
-  private async foliosVinculables(acopioId: string, folios: string[]) {
+  private async validarFolios(acopioId: string, folios: string[]) {
     // Por comprobante, no por texto: «ACO-…» y «aco-…» son el mismo folio
     const porId = new Map<string, string>();
     for (const texto of folios) {
