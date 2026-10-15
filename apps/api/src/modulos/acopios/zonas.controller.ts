@@ -40,20 +40,21 @@ const errores = {
   description: 'Error con forma { estado, codigo, mensaje, detalles? }',
 };
 
-/** C9 Zonas (RF-MOT-001). Solo el Administrador. */
+/** C9 Zonas (RF-MOT-001). Escribe el Administrador; el Operador las lista para sus remisiones. */
 @ApiTags('red')
 @ApiBearerAuth()
-@Roles('ADMIN')
 @Controller('zonas')
 export class ZonasController {
   constructor(private readonly zonas: ZonasService) {}
 
+  @Roles('ADMIN', 'OPERADOR')
   @Get()
   @ApiOkResponse({ type: ZonaDto, isArray: true })
   listar(@Query() filtro: FiltroZonasDto) {
     return this.zonas.listar(filtro.emergencia);
   }
 
+  @Roles('ADMIN')
   @Post()
   @ApiCreatedResponse({ type: ZonaDto })
   @ApiResponse(errores)
@@ -61,6 +62,7 @@ export class ZonasController {
     return this.zonas.crear(admin, datos);
   }
 
+  @Roles('ADMIN')
   @Patch(':id')
   @ApiOkResponse({ type: ZonaDto })
   @ApiResponse(errores)

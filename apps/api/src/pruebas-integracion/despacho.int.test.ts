@@ -1,5 +1,6 @@
 import {
   ACOPIO_A,
+  ACOPIO_B,
   ADMIN,
   EMERGENCIA_PRUEBA,
   ZONA_A,
@@ -282,5 +283,41 @@ describe('despacho y cancelación de remisiones', () => {
       where: { accion: 'remision.despachada', entidad_id: r.id },
     });
     expect(b.datos_despues).toMatchObject({ folios: [f] });
+  });
+
+  it('lista los folios conciliados del acopio de origen para vincular', async () => {
+    const cat = await categoria(10);
+    const r = await borrador(cat, 2, 'Conductor');
+    const conciliado = await folio('CONCILIADO');
+    const pendiente = await folio('PENDIENTE');
+    const res = await get(`/api/remisiones/${r.codigo}/folios-vinculables`, operador).expect(200);
+    const folios = (res.body as { folio: string }[]).map((f) => f.folio);
+    expect(folios).toContain(conciliado);
+    expect(folios).not.toContain(pendiente);
+    expect((res.body as { folio: string }[]).find((f) => f.folio === conciliado)).toMatchObject({
+      categorias: [],
+    });
+  });
+
+  it('los folios de un acopio ajeno no se listan y el Operador de otro acopio recibe 403', async () => {
+    const cat = await categoria(10);
+    const r = await borrador(cat, 2, 'Conductor');
+    const otro = (
+      await crearUsuarioActivo(a, admin, {
+        rol: 'OPERADOR',
+        asignaciones: [{ tipo: 'ACOPIO', ubicacionId: ACOPIO_B }],
+      })
+    ).token;
+    await get(`/api/remisiones/${r.codigo}/folios-vinculables`, otro).expect(403);
+    const ajeno = await a.prisma.comprobante.create({
+      data: {
+        folio: generarFolio(2026),
+        donador_id: adminId,
+        acopio_id: ACOPIO_B,
+        estado: 'CONCILIADO',
+      },
+    });
+    const res = await get(`/api/remisiones/${r.codigo}/folios-vinculables`, operador).expect(200);
+    expect((res.body as { folio: string }[]).map((f) => f.folio)).not.toContain(ajeno.folio);
   });
 });

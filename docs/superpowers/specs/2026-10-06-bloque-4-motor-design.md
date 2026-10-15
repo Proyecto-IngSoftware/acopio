@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-4]
 estado: vigente
 bloque: 4
-actualizado: 2026-10-14
+actualizado: 2026-10-15
 ---
 
 # Bloque 4 · Motor · especificación
@@ -294,6 +294,10 @@ Funciones puras. La fecha de hoy entra como parámetro.
   bajo el candado de inventario, recorriendo las líneas ordenadas por categoría. Solo
   acepta folios `CONCILIADO` del mismo acopio.
 - `POST /remisiones/:codigo/cancelar` con `{ motivo }`.
+- `GET /remisiones/:codigo/folios-vinculables`: los comprobantes `CONCILIADO` del acopio de
+  origen, con la fecha de conciliación y sus categorías, para elegirlos al despachar.
+- `GET /zonas` también responde al Operador, que elige la zona de sus remisiones. Crear y
+  editar zonas sigue siendo del Administrador.
 
 ### Receptor
 
@@ -469,3 +473,9 @@ Cada etapa tiene su plan, escrito al empezarla.
 | La bitácora tiene frases para las acciones del motor y de las remisiones (`sugerencia.*`, `remision.*`, `necesidad.manual`, `reporte.necesidad`, `motor.configuracion`, `movimiento.recepcion`) | La etapa 2 las registraba sin frase y la bitácora mostraba el código; lo encontró `validacion-general.mjs` |
 | En C9 cada zona es un enlace a su ficha; editar la zona pasa a un botón en la fila | La ficha necesitaba una entrada desde C9 sin perder la edición |
 
+**2026-10-15 · Interfaz, ciclo 2.** Según el [plan](../../05-planes/2026-10-15-bloque-4-interfaz-ciclo-2.md).
+
+| Qué | Por qué |
+|---|---|
+| `GET /zonas` acepta `OPERADOR` (I2-05) | El Operador crea remisiones con zona (M-07) y no tenía de dónde sacar la lista |
+| Endpoint nuevo `GET /remisiones/:codigo/folios-vinculables` (I2-06). `conciliadoEn` puede ser `null` | `GET /comprobantes` es de `AUDITOR` y `ADMIN`. La base no exige la fecha de conciliación, aunque `conciliar` siempre la pone |
