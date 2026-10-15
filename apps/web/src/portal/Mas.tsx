@@ -74,6 +74,13 @@ const HERRAMIENTAS: Herramienta[] = [
     descripcion: 'Comunidades de cada emergencia',
     roles: ['ADMIN'],
   },
+  {
+    a: '/consola/motor',
+    icono: 'local_shipping',
+    titulo: 'Motor de sugerencias',
+    descripcion: 'Traslados que propone el motor',
+    roles: ['ADMIN'],
+  },
 ];
 
 /** Las herramientas del acopio donde opera la persona, según su rol (J-04, E-07). */

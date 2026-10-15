@@ -151,3 +151,34 @@ describe('rutas de comprobantes (Bloque 3, ciclo 2)', () => {
     expect(await screen.findByRole('heading', { name: 'No tienes acceso' })).toBeInTheDocument();
   });
 });
+
+describe('rutas del motor (Bloque 4, ciclo 1)', () => {
+  const persona = (rol: 'OPERADOR' | 'RECEPTOR' | 'ADMIN') => ({
+    id: 'u1',
+    username: 'j.quintero',
+    nombre: 'Joseph Quintero',
+    rol,
+  });
+
+  it.each([
+    ['/consola/zonas/z1', 'ADMIN', 'Ficha de zona'],
+    ['/consola/zonas/z1', 'RECEPTOR', 'Ficha de zona'],
+    ['/consola/motor', 'ADMIN', 'Motor de sugerencias'],
+    ['/consola/motor/pesos', 'ADMIN', 'Pesos'],
+    ['/consola/motor/descartes', 'ADMIN', 'Descartes'],
+  ] as const)('%s abre su pantalla para %s', async (ruta, rol, titulo) => {
+    render(envolver(<Rutas />, ruta, clienteFalso(persona(rol))));
+    expect(await screen.findByRole('heading', { level: 1, name: titulo })).toBeInTheDocument();
+  });
+
+  it.each([
+    ['/consola/zonas/z1', 'OPERADOR'],
+    ['/consola/motor', 'OPERADOR'],
+    ['/consola/motor', 'RECEPTOR'],
+    ['/consola/motor/pesos', 'RECEPTOR'],
+    ['/consola/motor/descartes', 'OPERADOR'],
+  ] as const)('%s rechaza a %s', async (ruta, rol) => {
+    render(envolver(<Rutas />, ruta, clienteFalso(persona(rol))));
+    expect(await screen.findByRole('heading', { name: 'No tienes acceso' })).toBeInTheDocument();
+  });
+});
