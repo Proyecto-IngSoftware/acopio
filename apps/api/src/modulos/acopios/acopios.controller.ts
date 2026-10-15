@@ -7,7 +7,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Publico, Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -28,7 +28,7 @@ const horario = z.object({
 });
 const texto = (max: number) => z.string().trim().min(1).max(max);
 
-class FiltroPublicoDto extends createZodDto(
+class FiltroPublicoDto extends crearDto(
   z.object({
     abiertoAhora: z.stringbool().default(false),
     cerca: z
@@ -42,7 +42,7 @@ class FiltroPublicoDto extends createZodDto(
       .optional(),
   }),
 ) {}
-class CrearAcopioDto extends createZodDto(
+class CrearAcopioDto extends crearDto(
   z.object({
     entidadId: z.uuid(),
     nombre: texto(120),
@@ -56,8 +56,8 @@ class CrearAcopioDto extends createZodDto(
     estado: z.enum(['ACTIVO', 'PAUSADO', 'CERRADO']).optional(),
   }),
 ) {}
-class ActualizarAcopioDto extends createZodDto(CrearAcopioDto.schema.partial()) {}
-class OperacionDto extends createZodDto(
+class ActualizarAcopioDto extends crearDto(CrearAcopioDto.schema.partial()) {}
+class OperacionDto extends crearDto(
   z.object({
     estado: z.enum(['ACTIVO', 'PAUSADO']).optional(),
     horario: horario.optional(),

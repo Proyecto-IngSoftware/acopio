@@ -3,7 +3,7 @@ title: "Patrones y prácticas de código"
 type: arquitectura
 tags: [arquitectura, patrones, buenas-practicas]
 estado: vigente
-actualizado: 2026-10-10
+actualizado: 2026-10-14
 ---
 
 # Patrones y prácticas de código
@@ -95,6 +95,7 @@ Cada sección lista lo que hay, por archivo. Cuando se agrega una pieza reutiliz
 | `autorizacion/decoradores.ts` | `Publico`, `Roles`, `TambienDonador`, `UsuarioActual` |
 | `autorizacion/usuario-autenticado.ts` | Tipo `UsuarioAutenticado` que entrega `@UsuarioActual()` |
 | `cookie-sesion.ts` | `COOKIE_SESION`, `leerCookie`, `opcionesCookie` |
+| `dto.ts` | `crearDto(esquema)`: declara todo DTO de la API. Escribe bien en el contrato los campos que admiten nulo (#38); ESLint prohíbe `createZodDto` directo |
 | `errores/error-dominio.ts` | `ErrorDominio` para reglas de negocio incumplidas |
 | `errores/filtro-errores.ts` | `FiltroErrores` y el tipo `RespuestaError` |
 | `limite-intentos.guard.ts` | `LimiteIntentosGuard`, límite por IP que las pruebas pueden reemplazar |

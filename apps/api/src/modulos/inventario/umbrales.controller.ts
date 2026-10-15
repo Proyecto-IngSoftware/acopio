@@ -6,7 +6,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -17,7 +17,7 @@ import { UmbralesService } from './umbrales.service';
 
 const valor = cantidadNoNegativa;
 
-class FijarUmbralDto extends createZodDto(
+class FijarUmbralDto extends crearDto(
   z.object({ minimo: valor, maximo: valor }).refine((u) => u.minimo <= u.maximo, {
     message: 'El mínimo no puede ser mayor que el máximo',
     path: ['minimo'],

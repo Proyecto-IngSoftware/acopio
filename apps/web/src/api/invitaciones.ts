@@ -15,13 +15,12 @@ export function useInvitacion(token: string) {
 }
 
 /** Define la contraseña y activa la cuenta. Devuelve el nombre de usuario. */
-export async function canjearInvitacion(token: string, contrasena: string): Promise<string> {
+export async function canjearInvitacion(token: string, contrasena: string): Promise<string | null> {
   const r = await desenvolver(
     api.POST('/api/invitaciones/{token}/canje', {
       params: { path: { token } },
       body: { contrasena },
     }),
   );
-  // El contrato tipa username como arreglo (P-031); en la respuesta es un texto
-  return r.username as unknown as string;
+  return r.username;
 }

@@ -27,7 +27,7 @@ import {
   ResultadoBusquedaDto,
   VersionCanastaRespuestaDto,
 } from '../../comun/respuestas';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import {
   Publico,
@@ -56,16 +56,16 @@ const nombre = z.string().trim().min(1).max(80);
 const sinonimos = z.array(z.string().trim().min(1).max(60)).max(30);
 const fecha = z.iso.date().transform((d) => new Date(`${d}T00:00:00Z`));
 
-class FiltroCategoriasDto extends createZodDto(
+class FiltroCategoriasDto extends crearDto(
   z.object({ grupo: grupo.optional(), incluirArchivadas: z.stringbool().default(false) }),
 ) {}
-class BuscarDto extends createZodDto(
+class BuscarDto extends crearDto(
   z.object({
     q: z.string().trim().min(1).max(60),
     limite: z.coerce.number().int().min(1).max(30).default(10),
   }),
 ) {}
-class CrearCategoriaDto extends createZodDto(
+class CrearCategoriaDto extends crearDto(
   z.object({
     nombre,
     grupo,
@@ -74,7 +74,7 @@ class CrearCategoriaDto extends createZodDto(
     sinonimos: sinonimos.default([]),
   }),
 ) {}
-class ActualizarCategoriaDto extends createZodDto(
+class ActualizarCategoriaDto extends crearDto(
   z.object({
     nombre: nombre.optional(),
     grupo: grupo.optional(),
@@ -82,7 +82,7 @@ class ActualizarCategoriaDto extends createZodDto(
     sinonimos: sinonimos.optional(),
   }),
 ) {}
-class VersionCanastaDto extends createZodDto(
+class VersionCanastaDto extends crearDto(
   z.object({
     cantidadPersonaDia: z.number().positive(),
     fuente: z
@@ -94,10 +94,10 @@ class VersionCanastaDto extends createZodDto(
     vigenteDesde: fecha.optional(),
   }),
 ) {}
-class FiltroEmergenciasDto extends createZodDto(
+class FiltroEmergenciasDto extends crearDto(
   z.object({ estado: z.enum(['ACTIVA', 'EN_SEGUIMIENTO', 'CERRADA']).optional() }),
 ) {}
-class CrearEmergenciaDto extends createZodDto(
+class CrearEmergenciaDto extends crearDto(
   z.object({
     nombre: z.string().trim().min(1).max(120),
     tipo: z.string().trim().min(1).max(60),
@@ -106,8 +106,8 @@ class CrearEmergenciaDto extends createZodDto(
     destacadaHasta: fecha,
   }),
 ) {}
-class ActualizarEmergenciaDto extends createZodDto(CrearEmergenciaDto.schema.partial()) {}
-class CerrarEmergenciaDto extends createZodDto(
+class ActualizarEmergenciaDto extends crearDto(CrearEmergenciaDto.schema.partial()) {}
+class CerrarEmergenciaDto extends crearDto(
   z.object({ motivo: z.string().trim().min(10).max(500) }),
 ) {}
 

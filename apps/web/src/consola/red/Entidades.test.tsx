@@ -17,17 +17,17 @@ const entidad = (datos: Record<string, unknown>) => ({
   nombre: 'Fundación Manos Unidas',
   tipo: 'Fundación',
   nit: '900123456-7',
-  sitioWeb: [],
-  telefono: [],
-  correo: [],
-  descripcion: [],
+  sitioWeb: null,
+  telefono: null,
+  correo: null,
+  descripcion: null,
   verificacion: 'SIN_VERIFICAR',
   ...datos,
 });
 const RESPUESTAS = {
   'GET /api/entidades': [
     entidad({}),
-    entidad({ id: 'e2', nombre: 'Parroquia San José', tipo: 'Iglesia', nit: [] }),
+    entidad({ id: 'e2', nombre: 'Parroquia San José', tipo: 'Iglesia', nit: null }),
   ],
   'GET /api/acopios/gestion': [
     acopioDePrueba({ id: 'x1', entidad: { id: 'e1', nombre: 'Fundación Manos Unidas' } }),

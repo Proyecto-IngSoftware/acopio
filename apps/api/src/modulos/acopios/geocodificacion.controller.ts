@@ -1,13 +1,13 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Publico } from '../../comun/autorizacion/decoradores';
 import { ErrorDto, ResultadoGeoDto } from '../../comun/respuestas';
 import { GeocodificacionService } from './geocodificacion';
 
-class GeocodificarDto extends createZodDto(z.object({ q: z.string().trim().min(3).max(200) })) {}
+class GeocodificarDto extends crearDto(z.object({ q: z.string().trim().min(3).max(200) })) {}
 
 @ApiTags('red')
 @Controller('geocodificar')

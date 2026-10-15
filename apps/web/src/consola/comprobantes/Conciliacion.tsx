@@ -4,12 +4,11 @@ import { Link, useLocation, useParams } from 'react-router';
 import {
   enBase,
   MOTIVOS_RECHAZO,
-  motivoDe,
-  notaDe,
   useConciliacion,
   useConciliar,
   useRevertirRechazo,
   type Conciliacion as Detalle,
+  type MotivoRechazo,
 } from '../../api/comprobantes';
 import { ESTADOS_DONACION, useUrlFactura } from '../../api/donaciones';
 import { Boton } from '../../componentes/Boton';
@@ -121,8 +120,8 @@ export function Conciliacion() {
   const abierto = d.estado === 'PENDIENTE' || d.estado === 'PREPARADO';
   const sinRecibir = d.estado === 'PREPARADO' && d.entradas.length === 0;
   const errorConciliar = conciliar.error;
-  const motivo = motivoDe(d);
-  const nota = notaDe(d);
+  const motivo = d.motivoRechazo;
+  const nota = d.notaRechazo;
 
   return marco(
     <>
@@ -304,7 +303,11 @@ export function Conciliacion() {
           aria-label="Rechazo"
           className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-low p-space-md"
         >
-          {motivo && <p className="font-bold text-on-surface">{MOTIVOS_RECHAZO[motivo]}</p>}
+          {motivo && (
+            <p className="font-bold text-on-surface">
+              {MOTIVOS_RECHAZO[motivo as MotivoRechazo] ?? motivo}
+            </p>
+          )}
           {nota && <p className="text-body-md text-on-surface-variant">{nota}</p>}
           {revertir.error && (
             <p role="alert" className="text-body-sm text-error">

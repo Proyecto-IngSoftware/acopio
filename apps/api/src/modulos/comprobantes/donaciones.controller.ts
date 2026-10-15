@@ -6,7 +6,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -24,7 +24,7 @@ const ean = z
   .string()
   .regex(/^\d{8}$|^\d{12,14}$/, 'El código de barras tiene 8, 12, 13 o 14 dígitos');
 
-class CrearDonacionDto extends createZodDto(
+class CrearDonacionDto extends crearDto(
   z.object({
     acopioId: z.uuid(),
     lineas: z
@@ -45,7 +45,7 @@ class CrearDonacionDto extends createZodDto(
   }),
 ) {}
 
-class SugerenciasDto extends createZodDto(
+class SugerenciasDto extends crearDto(
   z.object({
     lineas: z
       .array(z.object({ categoriaId: z.uuid() }))
@@ -56,7 +56,7 @@ class SugerenciasDto extends createZodDto(
   }),
 ) {}
 
-class ListarDonacionesDto extends createZodDto(
+class ListarDonacionesDto extends crearDto(
   z.object({
     estado: z.enum(['PREPARADO', 'PENDIENTE', 'CONCILIADO', 'RECHAZADO', 'CANCELADO']).optional(),
   }),

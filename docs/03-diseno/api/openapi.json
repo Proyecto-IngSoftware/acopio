@@ -5475,10 +5475,8 @@
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
           },
           "username": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "nombre": {
             "type": "string"
@@ -5625,10 +5623,8 @@
         "type": "object",
         "properties": {
           "username": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "nombre": {
             "type": "string"
@@ -5702,10 +5698,8 @@
         "type": "object",
         "properties": {
           "username": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
@@ -5736,10 +5730,10 @@
             ]
           },
           "correo": {
+            "description": "Sin correo no hay recuperación de contraseña",
             "type": "string",
             "format": "email",
             "pattern": "^(?:[A-Za-z0-9_'+\\-]+\\.)*[A-Za-z0-9_'+\\-]*[A-Za-z0-9_+-]@(?:[A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
-            "description": "Sin correo no hay recuperación de contraseña",
             "nullable": true
           },
           "asignaciones": {
@@ -5939,20 +5933,16 @@
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
           },
           "username": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "nombre": {
             "type": "string"
           },
           "correo": {
             "description": "Nulo si no tiene correo real",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "sinCorreoReal": {
             "type": "boolean"
@@ -6018,6 +6008,9 @@
           },
           "invitacionPendiente": {
             "type": "object",
+            "required": [
+              "venceEn"
+            ],
             "properties": {
               "venceEn": {
                 "type": "string",
@@ -6025,13 +6018,13 @@
                 "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
               }
             },
-            "required": [
-              "venceEn"
-            ],
             "nullable": true
           },
           "restablecimientoPendiente": {
             "type": "object",
+            "required": [
+              "venceEn"
+            ],
             "properties": {
               "venceEn": {
                 "type": "string",
@@ -6039,9 +6032,6 @@
                 "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
               }
             },
-            "required": [
-              "venceEn"
-            ],
             "nullable": true
           }
         },
@@ -6054,9 +6044,7 @@
           "rol",
           "estado",
           "creadoEn",
-          "asignaciones",
-          "invitacionPendiente",
-          "restablecimientoPendiente"
+          "asignaciones"
         ]
       },
       "ActualizarUsuarioDto": {
@@ -6482,10 +6470,8 @@
             "nullable": true
           },
           "motivoCierre": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
@@ -6603,16 +6589,12 @@
           },
           "contenido": {
             "description": "Unidad base que trae una presentación",
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
+            "type": "number",
+            "nullable": true
           },
           "descripcion": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "revisado": {
             "type": "boolean"
@@ -6637,10 +6619,8 @@
           },
           "creadoPor": {
             "description": "Nombre de quien lo asoció",
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "creadoEn": {
             "type": "string",
@@ -6676,8 +6656,9 @@
           },
           "contenido": {
             "type": "number",
-            "exclusiveMaximum": 1000000000,
-            "nullable": true
+            "exclusiveMaximum": true,
+            "nullable": true,
+            "maximum": 1000000000
           },
           "descripcion": {
             "type": "string",
@@ -6700,8 +6681,9 @@
           },
           "contenido": {
             "type": "number",
-            "exclusiveMaximum": 1000000000,
-            "nullable": true
+            "exclusiveMaximum": true,
+            "nullable": true,
+            "maximum": 1000000000
           },
           "descripcion": {
             "type": "string",
@@ -6728,34 +6710,24 @@
             "type": "string"
           },
           "nit": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "sitioWeb": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "telefono": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "correo": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "descripcion": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "verificacion": {
             "type": "string",
@@ -6913,16 +6885,12 @@
             "type": "number"
           },
           "telefono": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "indicacionesAcceso": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "horario": {
             "type": "object",
@@ -7141,16 +7109,12 @@
             "type": "number"
           },
           "telefono": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "indicacionesAcceso": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "horario": {
             "type": "object",
@@ -8202,10 +8166,10 @@
         "type": "object",
         "properties": {
           "hasta": {
+            "description": "Fecha de reapertura; sin ella, hasta que se desmarque",
             "type": "string",
             "format": "date",
             "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
-            "description": "Fecha de reapertura; sin ella, hasta que se desmarque",
             "nullable": true
           }
         }
@@ -8453,6 +8417,10 @@
           },
           "umbral": {
             "type": "object",
+            "required": [
+              "minimo",
+              "maximo"
+            ],
             "properties": {
               "minimo": {
                 "type": "number"
@@ -8461,10 +8429,6 @@
                 "type": "number"
               }
             },
-            "required": [
-              "minimo",
-              "maximo"
-            ],
             "nullable": true
           },
           "semaforo": {
@@ -8513,7 +8477,6 @@
           "unidad",
           "perecedero",
           "cantidad",
-          "umbral",
           "semaforo",
           "ultimoMovimiento",
           "vencimientos"
@@ -8633,10 +8596,8 @@
             }
           },
           "siguiente": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
@@ -8791,16 +8752,12 @@
             "nullable": true
           },
           "motivoRechazo": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "notaRechazo": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "tieneFactura": {
             "type": "boolean"
@@ -8949,10 +8906,8 @@
             "type": "boolean"
           },
           "distanciaKm": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
+            "type": "number",
+            "nullable": true
           },
           "noRecibe": {
             "type": "array",
@@ -9020,10 +8975,8 @@
             "type": "boolean"
           },
           "contenido": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
+            "type": "number",
+            "nullable": true
           }
         },
         "required": [
@@ -9310,16 +9263,12 @@
             "nullable": true
           },
           "motivoRechazo": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "notaRechazo": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "tieneFactura": {
             "type": "boolean"
@@ -10110,13 +10059,16 @@
             }
           },
           "coberturaGlobal": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
+            "type": "number",
+            "nullable": true
           },
           "categoriaMasBaja": {
             "type": "object",
+            "required": [
+              "categoriaId",
+              "categoria",
+              "cobertura"
+            ],
             "properties": {
               "categoriaId": {
                 "type": "string",
@@ -10130,11 +10082,6 @@
                 "type": "number"
               }
             },
-            "required": [
-              "categoriaId",
-              "categoria",
-              "cobertura"
-            ],
             "nullable": true
           },
           "reportes": {
@@ -10175,7 +10122,6 @@
           "zona",
           "categorias",
           "coberturaGlobal",
-          "categoriaMasBaja",
           "reportes"
         ]
       },
@@ -10185,8 +10131,9 @@
           "cantidad": {
             "type": "number",
             "minimum": 0,
-            "exclusiveMaximum": 1000000000,
-            "nullable": true
+            "exclusiveMaximum": true,
+            "nullable": true,
+            "maximum": 1000000000
           },
           "motivo": {
             "type": "string",
@@ -10208,10 +10155,8 @@
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
           },
           "cantidad": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
+            "type": "number",
+            "nullable": true
           },
           "motivo": {
             "type": "string"
@@ -10253,6 +10198,10 @@
           },
           "umbral": {
             "type": "object",
+            "required": [
+              "minimo",
+              "maximo"
+            ],
             "properties": {
               "minimo": {
                 "type": "number"
@@ -10261,10 +10210,6 @@
                 "type": "number"
               }
             },
-            "required": [
-              "minimo",
-              "maximo"
-            ],
             "nullable": true
           },
           "noRecibe": {
@@ -10291,8 +10236,7 @@
           "aviso": {
             "type": "string",
             "enum": [
-              "SIN_UMBRAL",
-              null
+              "SIN_UMBRAL"
             ],
             "nullable": true
           }
@@ -10302,7 +10246,6 @@
           "categoria",
           "unidad",
           "saldo",
-          "umbral",
           "noRecibe",
           "superavit",
           "comprometido",
@@ -10703,28 +10646,20 @@
             "type": "string"
           },
           "cantidadAprobada": {
-            "type": "array",
-            "items": {
-              "type": "number"
-            }
+            "type": "number",
+            "nullable": true
           },
           "remisionCodigo": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "motivoDescarte": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "decididaPor": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "decididaEn": {
             "type": "string",
@@ -10889,10 +10824,8 @@
             "nullable": true
           },
           "actualizadoPor": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           }
         },
         "required": [
@@ -11026,10 +10959,10 @@
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
           },
           "zonaId": {
+            "description": "null: despacho general",
             "type": "string",
             "format": "uuid",
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
-            "description": "null: despacho general",
             "nullable": true
           },
           "responsable": {
@@ -11107,7 +11040,12 @@
             ]
           },
           "zona": {
+            "description": "null: despacho general",
             "type": "object",
+            "required": [
+              "id",
+              "nombre"
+            ],
             "properties": {
               "id": {
                 "type": "string",
@@ -11118,18 +11056,11 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id",
-              "nombre"
-            ],
-            "description": "null: despacho general",
             "nullable": true
           },
           "responsable": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "qrToken": {
             "type": "string"
@@ -11158,16 +11089,12 @@
             "nullable": true
           },
           "motivoCancelacion": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "notaRecepcion": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "evidencias": {
             "type": "integer",
@@ -11227,7 +11154,6 @@
           "codigo",
           "estado",
           "acopio",
-          "zona",
           "responsable",
           "qrToken",
           "creadaEn",
@@ -11390,10 +11316,8 @@
             "type": "string"
           },
           "nota": {
-            "type": "array",
-            "items": {
-              "type": "string"
-            }
+            "type": "string",
+            "nullable": true
           },
           "resuelta": {
             "type": "boolean"

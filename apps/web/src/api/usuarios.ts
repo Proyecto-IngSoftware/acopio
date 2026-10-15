@@ -3,11 +3,7 @@ import { api, desenvolver, type ErrorApi } from './cliente';
 import type { components } from './esquema';
 
 type S = components['schemas'];
-export type Usuario = Omit<S['UsuarioDto'], 'username' | 'correo'> & {
-  // El contrato tipa estos campos como arreglos (P-031); llegan como texto o null
-  username: string | null;
-  correo: string | null;
-};
+export type Usuario = S['UsuarioDto'];
 export type EstadoUsuario = Usuario['estado'];
 export type RolInterno = S['CrearUsuarioDto']['rol'];
 export type Enlace = S['EnlaceInvitacionDto'];
@@ -18,11 +14,11 @@ export function useUsuarios(filtro: { rol?: RolInterno; estado?: EstadoUsuario; 
   return useQuery<Usuario[], ErrorApi>({
     queryKey: ['usuarios', filtro.rol, filtro.estado, q],
     queryFn: async () =>
-      (await desenvolver(
+      await desenvolver(
         api.GET('/api/usuarios', {
           params: { query: { rol: filtro.rol, estado: filtro.estado, q: q || undefined } as never },
         }),
-      )) as unknown as Usuario[],
+      ),
   });
 }
 
@@ -30,9 +26,7 @@ export function useUsuario(id: string) {
   return useQuery<Usuario, ErrorApi>({
     queryKey: ['usuarios', id],
     queryFn: async () =>
-      (await desenvolver(
-        api.GET('/api/usuarios/{id}', { params: { path: { id } } }),
-      )) as unknown as Usuario,
+      await desenvolver(api.GET('/api/usuarios/{id}', { params: { path: { id } } })),
   });
 }
 

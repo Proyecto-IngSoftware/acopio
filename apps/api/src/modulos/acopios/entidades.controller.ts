@@ -6,7 +6,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -15,7 +15,7 @@ import { EntidadesService } from './entidades.service';
 
 const opcional = (max: number) => z.string().trim().min(1).max(max).nullable().optional();
 
-class CrearEntidadDto extends createZodDto(
+class CrearEntidadDto extends crearDto(
   z.object({
     nombre: z.string().trim().min(2).max(120),
     tipo: z.string().trim().min(2).max(60).describe('Fundación, ONG, alcaldía, iglesia…'),
@@ -26,7 +26,7 @@ class CrearEntidadDto extends createZodDto(
     descripcion: opcional(1000),
   }),
 ) {}
-class ActualizarEntidadDto extends createZodDto(CrearEntidadDto.schema.partial()) {}
+class ActualizarEntidadDto extends crearDto(CrearEntidadDto.schema.partial()) {}
 
 const errores = {
   status: 'default' as const,

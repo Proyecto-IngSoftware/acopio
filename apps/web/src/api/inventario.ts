@@ -6,8 +6,7 @@ type S = components['schemas'];
 export type Saldo = S['SaldoDto'];
 export type FilaHistorial = S['PaginaHistorialDto']['filas'][number];
 export type ResultadoMovimiento = S['ResultadoMovimientoDto'];
-// El contrato tipa `siguiente` como arreglo (P-031); llega como texto o null
-type PaginaHistorial = { filas: FilaHistorial[]; siguiente: string | null };
+type PaginaHistorial = S['PaginaHistorialDto'];
 
 const ruta = (id: string) => ({ params: { path: { id } } });
 
@@ -25,11 +24,11 @@ export function useHistorial(acopioId: string, categoriaId: string) {
     queryKey: ['historial', acopioId, categoriaId],
     initialPageParam: undefined as string | undefined,
     queryFn: async ({ pageParam }): Promise<PaginaHistorial> =>
-      (await desenvolver(
+      await desenvolver(
         api.GET('/api/acopios/{id}/movimientos', {
           params: { path: { id: acopioId }, query: { categoriaId, cursor: pageParam } as never },
         }),
-      )) as unknown as PaginaHistorial,
+      ),
     getNextPageParam: (ultima) => ultima.siguiente ?? undefined,
   });
 }

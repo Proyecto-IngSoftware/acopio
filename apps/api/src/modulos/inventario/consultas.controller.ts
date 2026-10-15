@@ -1,6 +1,6 @@
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -8,7 +8,7 @@ import { PaginaHistorialDto, SaldoDto } from '../../comun/respuestas';
 import { ConsultasService } from './consultas.service';
 import { errores } from './movimientos.controller';
 
-class FiltroHistorialDto extends createZodDto(
+class FiltroHistorialDto extends crearDto(
   z.object({
     categoriaId: z.uuid(),
     cursor: z.string().max(100).optional(),

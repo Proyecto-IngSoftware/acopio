@@ -1,13 +1,13 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { UbicacionDto } from '../../comun/respuestas';
 import { UbicacionesService } from './ubicaciones.service';
 
-class BuscarUbicacionesDto extends createZodDto(
+class BuscarUbicacionesDto extends crearDto(
   z.object({ q: z.string().trim().min(1).max(60).optional() }),
 ) {}
 

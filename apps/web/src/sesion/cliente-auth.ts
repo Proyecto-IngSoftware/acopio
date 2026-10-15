@@ -26,8 +26,6 @@ export interface ClienteAuth {
   iniciarSesionDonador(correo: string, contrasena: string): Promise<UsuarioSesion>;
 }
 
-// El contrato tipa username como string[] por cómo nestjs-zod exporta los campos
-// nullable (P-031); en la respuesta real es string o null.
 const soloUsuario = ({ id, username, nombre, rol }: UsuarioSesion): UsuarioSesion => ({
   id,
   username: username ?? null,
@@ -41,7 +39,7 @@ export const clienteAuthLocal: ClienteAuth = {
     const sesion = await desenvolver(
       api.POST('/api/auth/sesion', { body: { usuario, contrasena } }),
     );
-    return soloUsuario(sesion.usuario as unknown as UsuarioSesion);
+    return soloUsuario(sesion.usuario);
   },
 
   async cerrarSesion() {
@@ -51,7 +49,7 @@ export const clienteAuthLocal: ClienteAuth = {
 
   async usuarioActual() {
     try {
-      return soloUsuario((await desenvolver(api.GET('/api/auth/yo'))) as unknown as UsuarioSesion);
+      return soloUsuario(await desenvolver(api.GET('/api/auth/yo')));
     } catch (e) {
       if (e instanceof ErrorApi && e.estado === 401) return null;
       throw e;
@@ -78,13 +76,13 @@ export const clienteAuthLocal: ClienteAuth = {
     const sesion = await desenvolver(
       api.POST('/api/auth/registro/confirmar', { body: { token, contrasena, nombre } }),
     );
-    return soloUsuario(sesion.usuario as unknown as UsuarioSesion);
+    return soloUsuario(sesion.usuario);
   },
 
   async iniciarSesionDonador(correo, contrasena) {
     const sesion = await desenvolver(
       api.POST('/api/auth/donador/sesion', { body: { correo, contrasena } }),
     );
-    return soloUsuario(sesion.usuario as unknown as UsuarioSesion);
+    return soloUsuario(sesion.usuario);
   },
 };

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -12,7 +12,7 @@ import { CodigosBarrasService } from './codigos-barras.service';
 const ean = z.string().regex(/^(\d{8}|\d{12,14})$/, 'El código debe tener 8, 12, 13 o 14 dígitos');
 const contenido = cantidadPositiva.nullable().optional();
 
-class AsociarDto extends createZodDto(
+class AsociarDto extends crearDto(
   z.object({
     ean,
     categoriaId: z.uuid(),
@@ -20,7 +20,7 @@ class AsociarDto extends createZodDto(
     descripcion: z.string().trim().max(120).nullable().optional(),
   }),
 ) {}
-class EditarDto extends createZodDto(
+class EditarDto extends crearDto(
   z.object({
     categoriaId: z.uuid().optional(),
     contenido,
@@ -28,7 +28,7 @@ class EditarDto extends createZodDto(
     revisado: z.boolean().optional(),
   }),
 ) {}
-class FiltroDto extends createZodDto(
+class FiltroDto extends crearDto(
   z.object({
     revisado: z
       .enum(['true', 'false'])
@@ -36,7 +36,7 @@ class FiltroDto extends createZodDto(
       .optional(),
   }),
 ) {}
-class EanDto extends createZodDto(z.object({ ean })) {}
+class EanDto extends crearDto(z.object({ ean })) {}
 
 /** C4 (escáner) y la pestaña «Códigos de barras» de C18. */
 @ApiTags('catalogo')

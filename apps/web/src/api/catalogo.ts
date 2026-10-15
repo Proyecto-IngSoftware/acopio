@@ -155,8 +155,7 @@ export const useCerrarEmergencia = () =>
 export function useCategoriasVigentes() {
   return useQuery<Categoria[], ErrorApi>({
     queryKey: ['categorias', 'vigentes'],
-    queryFn: async () =>
-      (await desenvolver(api.GET('/api/categorias/vigentes'))) as unknown as Categoria[],
+    queryFn: async () => await desenvolver(api.GET('/api/categorias/vigentes')),
   });
 }
 
@@ -173,17 +172,13 @@ export function useBuscarCategorias(q: string) {
   });
 }
 
-export type CodigoBarras = Omit<S['CodigoBarrasDto'], 'contenido' | 'creadoPor'> & {
-  // El contrato tipa los campos nullable como arreglos (P-031)
-  contenido: number | null;
-  creadoPor: string | null;
-};
+export type CodigoBarras = S['CodigoBarrasDto'];
 
 /** Escáner: la categoría de un código, o un ErrorApi 404 `EAN_DESCONOCIDO` (RF-INV-002). */
 export async function consultarCodigo(ean: string) {
-  const codigo = (await desenvolver(
+  const codigo = await desenvolver(
     api.GET('/api/codigos-barras/{ean}', { params: { path: { ean } } }),
-  )) as unknown as CodigoBarras;
+  );
   // Sin red, el escáner reconoce los códigos que ya vio este teléfono (O-08)
   await guardarCodigoVisto(codigo);
   return codigo;
@@ -200,9 +195,7 @@ export function useAsociarCodigo() {
   const consultas = useQueryClient();
   return useMutation<CodigoBarras, ErrorApi, DatosAsociar>({
     mutationFn: async (datos) =>
-      (await desenvolver(
-        api.POST('/api/codigos-barras', { body: datos }),
-      )) as unknown as CodigoBarras,
+      await desenvolver(api.POST('/api/codigos-barras', { body: datos })),
     onSuccess: () => void consultas.invalidateQueries({ queryKey: ['codigos-barras'] }),
   });
 }
@@ -211,8 +204,7 @@ export function useAsociarCodigo() {
 export function useCodigos() {
   return useQuery<CodigoBarras[], ErrorApi>({
     queryKey: ['codigos-barras'],
-    queryFn: async () =>
-      (await desenvolver(api.GET('/api/codigos-barras', {}))) as unknown as CodigoBarras[],
+    queryFn: async () => await desenvolver(api.GET('/api/codigos-barras', {})),
   });
 }
 
@@ -227,9 +219,9 @@ export function useEditarCodigo() {
   const consultas = useQueryClient();
   return useMutation<CodigoBarras, ErrorApi, { ean: string; cambios: CambiosCodigo }>({
     mutationFn: async ({ ean, cambios }) =>
-      (await desenvolver(
+      await desenvolver(
         api.PATCH('/api/codigos-barras/{ean}', { params: { path: { ean } }, body: cambios }),
-      )) as unknown as CodigoBarras,
+      ),
     onSuccess: () => void consultas.invalidateQueries({ queryKey: ['codigos-barras'] }),
   });
 }

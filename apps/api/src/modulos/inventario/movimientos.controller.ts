@@ -7,7 +7,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import type { Response } from 'express';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -19,7 +19,7 @@ export const cantidad = cantidadPositiva;
 
 const dia = z.iso.date().transform((d) => new Date(`${d}T00:00:00Z`));
 
-class EntradaDto extends createZodDto(
+class EntradaDto extends crearDto(
   z.object({
     id: z.uuid().optional(),
     categoriaId: z.uuid(),
@@ -33,7 +33,7 @@ class EntradaDto extends createZodDto(
   }),
 ) {}
 
-class SalidaDto extends createZodDto(
+class SalidaDto extends crearDto(
   z.object({
     categoriaId: z.uuid(),
     cantidad,
@@ -42,7 +42,7 @@ class SalidaDto extends createZodDto(
   }),
 ) {}
 
-class AjusteDto extends createZodDto(
+class AjusteDto extends crearDto(
   z.object({
     categoriaId: z.uuid(),
     cantidadContada: cantidadNoNegativa,

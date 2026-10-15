@@ -21,7 +21,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -30,7 +30,7 @@ import { ErrorDto, RemisionDto } from '../../comun/respuestas';
 import { TAMANO_MAXIMO } from '../almacenamiento/imagenes';
 import { RecepcionesService } from './recepciones.service';
 
-class RecibirRemisionDto extends createZodDto(
+class RecibirRemisionDto extends crearDto(
   z.object({
     zonaId: z.uuid().optional().describe('Solo en un despacho general: una zona del Receptor'),
     nota: z.string().trim().max(280).optional(),

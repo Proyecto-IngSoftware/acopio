@@ -1533,7 +1533,7 @@ export interface components {
         YoDto: {
             /** Format: uuid */
             id: string;
-            username: string[];
+            username: string | null;
             nombre: string;
             /** @enum {string} */
             rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
@@ -1568,7 +1568,7 @@ export interface components {
             contrasena: string;
         };
         InvitacionPublicaDto: {
-            username: string[];
+            username: string | null;
             nombre: string;
             /** @enum {string} */
             rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
@@ -1586,7 +1586,7 @@ export interface components {
             contrasena: string;
         };
         CanjeDto: {
-            username: string[];
+            username: string | null;
         };
         CrearUsuarioDto: {
             username: string;
@@ -1650,10 +1650,10 @@ export interface components {
         UsuarioDto: {
             /** Format: uuid */
             id: string;
-            username: string[];
+            username: string | null;
             nombre: string;
             /** @description Nulo si no tiene correo real */
-            correo: string[];
+            correo: string | null;
             sinCorreoReal: boolean;
             /** @enum {string} */
             rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
@@ -1671,11 +1671,11 @@ export interface components {
                 /** Format: date-time */
                 asignadoEn: string;
             }[];
-            invitacionPendiente: {
+            invitacionPendiente?: {
                 /** Format: date-time */
                 venceEn: string;
             } | null;
-            restablecimientoPendiente: {
+            restablecimientoPendiente?: {
                 /** Format: date-time */
                 venceEn: string;
             } | null;
@@ -1787,7 +1787,7 @@ export interface components {
             destacadaHasta: string;
             /** Format: date-time */
             cerradaEn: string | null;
-            motivoCierre: string[];
+            motivoCierre: string | null;
         };
         CrearEmergenciaDto: {
             nombre: string;
@@ -1818,14 +1818,14 @@ export interface components {
             /** @enum {string} */
             unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
             /** @description Unidad base que trae una presentación */
-            contenido: number[];
-            descripcion: string[];
+            contenido: number | null;
+            descripcion: string | null;
             revisado: boolean;
             /** @enum {string} */
             grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
             perecedero: boolean;
             /** @description Nombre de quien lo asoció */
-            creadoPor: string[];
+            creadoPor: string | null;
             /** Format: date-time */
             creadoEn: string;
         };
@@ -1848,11 +1848,11 @@ export interface components {
             id: string;
             nombre: string;
             tipo: string;
-            nit: string[];
-            sitioWeb: string[];
-            telefono: string[];
-            correo: string[];
-            descripcion: string[];
+            nit: string | null;
+            sitioWeb: string | null;
+            telefono: string | null;
+            correo: string | null;
+            descripcion: string | null;
             /** @enum {string} */
             verificacion: "SIN_VERIFICAR" | "VERIFICADA" | "RECHAZADA";
         };
@@ -1893,8 +1893,8 @@ export interface components {
             municipio: string;
             lat: number;
             lng: number;
-            telefono: string[];
-            indicacionesAcceso: string[];
+            telefono: string | null;
+            indicacionesAcceso: string | null;
             horario: {
                 dom: {
                     abre: string;
@@ -1945,8 +1945,8 @@ export interface components {
             municipio: string;
             lat: number;
             lng: number;
-            telefono: string[];
-            indicacionesAcceso: string[];
+            telefono: string | null;
+            indicacionesAcceso: string | null;
             horario: {
                 dom: {
                     abre: string;
@@ -2252,7 +2252,7 @@ export interface components {
             unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
             perecedero: boolean;
             cantidad: number;
-            umbral: {
+            umbral?: {
                 minimo: number;
                 maximo: number;
             } | null;
@@ -2292,7 +2292,7 @@ export interface components {
                 usuario: string;
                 saldoDespues: number;
             }[];
-            siguiente: string[];
+            siguiente: string | null;
         };
         FijarUmbralDto: {
             minimo: number;
@@ -2334,8 +2334,8 @@ export interface components {
             recibidoEn: string | null;
             /** Format: date-time */
             verificadoEn: string | null;
-            motivoRechazo: string[];
-            notaRechazo: string[];
+            motivoRechazo: string | null;
+            notaRechazo: string | null;
             tieneFactura: boolean;
             lineas: {
                 /** Format: uuid */
@@ -2370,7 +2370,7 @@ export interface components {
             nombre: string;
             direccion: string;
             abiertoAhora: boolean;
-            distanciaKm: number[];
+            distanciaKm: number | null;
             /** @description Categorías de la donación que este acopio no recibe */
             noRecibe: string[];
             lineasAceptadas: number;
@@ -2385,7 +2385,7 @@ export interface components {
             /** @enum {string} */
             grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
             perecedero: boolean;
-            contenido: number[];
+            contenido: number | null;
         };
         UrlFacturaDto: {
             /** @description URL firmada de la foto */
@@ -2461,8 +2461,8 @@ export interface components {
             recibidoEn: string | null;
             /** Format: date-time */
             verificadoEn: string | null;
-            motivoRechazo: string[];
-            notaRechazo: string[];
+            motivoRechazo: string | null;
+            notaRechazo: string | null;
             tieneFactura: boolean;
             lineas: {
                 /** Format: uuid */
@@ -2659,8 +2659,8 @@ export interface components {
                 deficit: number;
                 cobertura: number | null;
             }[];
-            coberturaGlobal: number[];
-            categoriaMasBaja: {
+            coberturaGlobal: number | null;
+            categoriaMasBaja?: {
                 /** Format: uuid */
                 categoriaId: string;
                 categoria: string;
@@ -2682,7 +2682,7 @@ export interface components {
         NecesidadManualDto: {
             /** Format: uuid */
             categoriaId: string;
-            cantidad: number[];
+            cantidad: number | null;
             motivo: string;
             /** Format: date-time */
             puestaEn: string;
@@ -2694,7 +2694,7 @@ export interface components {
             /** @enum {string} */
             unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
             saldo: number;
-            umbral: {
+            umbral?: {
                 minimo: number;
                 maximo: number;
             } | null;
@@ -2805,10 +2805,10 @@ export interface components {
                 magnitud: number;
             };
             justificacion: string;
-            cantidadAprobada: number[];
-            remisionCodigo: string[];
-            motivoDescarte: string[];
-            decididaPor: string[];
+            cantidadAprobada: number | null;
+            remisionCodigo: string | null;
+            motivoDescarte: string | null;
+            decididaPor: string | null;
             /** Format: date-time */
             decididaEn: string | null;
         };
@@ -2850,7 +2850,7 @@ export interface components {
             cantidadMinima: number;
             /** Format: date-time */
             actualizadoEn: string | null;
-            actualizadoPor: string[];
+            actualizadoPor: string | null;
         };
         GuardarConfiguracionDto: {
             pesos: {
@@ -2905,12 +2905,12 @@ export interface components {
                 nombre: string;
             };
             /** @description null: despacho general */
-            zona: {
+            zona?: {
                 /** Format: uuid */
                 id: string;
                 nombre: string;
             } | null;
-            responsable: string[];
+            responsable: string | null;
             qrToken: string;
             /** Format: date-time */
             creadaEn: string;
@@ -2920,8 +2920,8 @@ export interface components {
             recibidaEn: string | null;
             /** Format: date-time */
             canceladaEn: string | null;
-            motivoCancelacion: string[];
-            notaRecepcion: string[];
+            motivoCancelacion: string | null;
+            notaRecepcion: string | null;
             /** @description Fotos de evidencia subidas */
             evidencias: number;
             folios: string[];
@@ -2976,7 +2976,7 @@ export interface components {
             /** Format: uuid */
             categoriaId: string;
             categoria: string;
-            nota: string[];
+            nota: string | null;
             resuelta: boolean;
             reportadoPor: string;
             /** Format: date-time */

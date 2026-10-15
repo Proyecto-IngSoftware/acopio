@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -9,7 +9,7 @@ import { cantidadNoNegativa } from '../../comun/validacion/cantidades';
 import { ConfiguracionService } from './configuracion.service';
 
 const peso = z.number().min(0).max(1);
-class GuardarConfiguracionDto extends createZodDto(
+class GuardarConfiguracionDto extends crearDto(
   z.object({
     pesos: z.object({ criticidad: peso, urgencia: peso, proximidad: peso, magnitud: peso }),
     cantidadMinima: cantidadNoNegativa,

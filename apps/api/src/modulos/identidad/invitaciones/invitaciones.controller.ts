@@ -2,12 +2,12 @@ import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { CanjeDto, ErrorDto, InvitacionPublicaDto } from '../../../comun/respuestas';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../../comun/dto';
 import { z } from 'zod';
 import { Publico } from '../../../comun/autorizacion/decoradores';
 import { InvitacionesService } from './invitaciones.service';
 
-class CanjearDto extends createZodDto(z.object({ contrasena: z.string().min(1).max(256) })) {}
+class CanjearDto extends crearDto(z.object({ contrasena: z.string().min(1).max(256) })) {}
 
 /** Enlace de invitación y de restablecimiento. Público y con límite por IP (RNF-08). */
 @ApiTags('invitaciones')

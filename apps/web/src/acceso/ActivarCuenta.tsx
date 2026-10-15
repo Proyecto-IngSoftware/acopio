@@ -60,7 +60,9 @@ export function ActivarCuenta() {
     fijarFallo(null);
     try {
       const username = await canjearInvitacion(token, contrasena);
-      navegar(`/entrar?usuario=${encodeURIComponent(username)}`, { replace: true });
+      navegar(username ? `/entrar?usuario=${encodeURIComponent(username)}` : '/entrar', {
+        replace: true,
+      });
     } catch (err) {
       fijarFallo(err instanceof ErrorApi ? err.message : 'No se pudo activar la cuenta.');
       fijarEnviando(false);
@@ -105,7 +107,7 @@ export function ActivarCuenta() {
                 Datos de la invitación
               </h2>
               <dl>
-                <Dato etiqueta="Usuario" valor={(invitacion.username as unknown as string) ?? ''} />
+                <Dato etiqueta="Usuario" valor={invitacion.username ?? ''} />
                 <Dato etiqueta="Nombre" valor={invitacion.nombre} />
                 <Dato etiqueta="Rol" valor={nombreRol(invitacion.rol as Rol)} />
                 <Dato etiqueta="Ubicaciones" valor={ubicaciones(invitacion)} />

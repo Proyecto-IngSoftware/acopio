@@ -1,13 +1,13 @@
 import { Body, Controller, Get, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Publico, Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDto, ReporteNecesidadDto, ZonaPublicaDto } from '../../comun/respuestas';
 import { ReportesService } from './reportes.service';
 
-class ReportarDto extends createZodDto(
+class ReportarDto extends crearDto(
   z.object({
     categorias: z.array(z.uuid()).min(1).max(20),
     nota: z
@@ -19,7 +19,7 @@ class ReportarDto extends createZodDto(
     resuelta: z.boolean(),
   }),
 ) {}
-class ReportesCreadosDto extends createZodDto(z.object({ creados: z.array(z.uuid()) })) {}
+class ReportesCreadosDto extends crearDto(z.object({ creados: z.array(z.uuid()) })) {}
 
 const errores = { status: 'default' as const, type: ErrorDto, description: 'Error' };
 
