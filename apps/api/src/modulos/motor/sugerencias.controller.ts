@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -15,7 +15,7 @@ import {
 import { cantidadPositiva } from '../../comun/validacion/cantidades';
 import { SugerenciasService } from './sugerencias.service';
 
-class FiltroSugerenciasDto extends createZodDto(
+class FiltroSugerenciasDto extends crearDto(
   z.object({
     zona: z.uuid().optional(),
     acopio: z.uuid().optional(),
@@ -24,13 +24,11 @@ class FiltroSugerenciasDto extends createZodDto(
   }),
 ) {}
 
-class AprobarDto extends createZodDto(z.object({ cantidad: cantidadPositiva.optional() })) {}
-class DescartarDto extends createZodDto(z.object({ motivo: z.string().trim().min(10).max(280) })) {}
+class AprobarDto extends crearDto(z.object({ cantidad: cantidadPositiva.optional() })) {}
+class DescartarDto extends crearDto(z.object({ motivo: z.string().trim().min(10).max(280) })) {}
 const dia = z.iso.date().transform((d) => new Date(`${d}T00:00:00Z`));
 const finDelDia = z.iso.date().transform((d) => new Date(`${d}T23:59:59.999Z`));
-class RangoDto extends createZodDto(
-  z.object({ desde: dia.optional(), hasta: finDelDia.optional() }),
-) {}
+class RangoDto extends crearDto(z.object({ desde: dia.optional(), hasta: finDelDia.optional() })) {}
 
 const errores = { status: 'default' as const, type: ErrorDto, description: 'Error' };
 

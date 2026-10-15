@@ -3,7 +3,7 @@ import type { Response } from 'express';
 import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ErrorDto, SesionDto, YoDto } from '../../../comun/respuestas';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../../comun/dto';
 import { z } from 'zod';
 import { Publico, TambienDonador, UsuarioActual } from '../../../comun/autorizacion/decoradores';
 import { COOKIE_SESION, opcionesCookie } from '../../../comun/cookie-sesion';
@@ -12,7 +12,7 @@ import type { UsuarioAutenticado } from '../../../comun/autorizacion/usuario-aut
 import { PROVEEDOR_IDENTIDAD, type ProveedorIdentidad } from '../proveedor/proveedor-identidad';
 import { SesionService } from './sesion.service';
 
-class IniciarSesionDto extends createZodDto(
+class IniciarSesionDto extends crearDto(
   z.object({
     usuario: z.string().trim().min(1).max(64).describe('Nombre de usuario, no correo'),
     contrasena: z.string().min(1).max(256),

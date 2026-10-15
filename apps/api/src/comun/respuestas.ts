@@ -1,4 +1,4 @@
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from './dto';
 import { z } from 'zod';
 
 /**
@@ -10,7 +10,7 @@ const rol = z.enum(['ADMIN', 'OPERADOR', 'AUDITOR', 'RECEPTOR', 'DONADOR']);
 const tipoUbicacion = z.enum(['ACOPIO', 'ZONA']);
 const fecha = z.iso.datetime();
 
-export class ErrorDto extends createZodDto(
+export class ErrorDto extends crearDto(
   z.object({
     estado: z.number().int(),
     codigo: z.string().describe('Código estable para la interfaz, por ejemplo ULTIMO_ADMIN'),
@@ -27,16 +27,16 @@ export class ErrorDto extends createZodDto(
   }),
 ) {}
 
-export class SesionDto extends createZodDto(
+export class SesionDto extends crearDto(
   z.object({
     expiraEn: fecha,
     usuario: z.object({ id: z.uuid(), username: z.string().nullable(), nombre: z.string(), rol }),
   }),
 ) {}
 
-export class MensajeDto extends createZodDto(z.object({ mensaje: z.string() })) {}
+export class MensajeDto extends crearDto(z.object({ mensaje: z.string() })) {}
 
-export class YoDto extends createZodDto(
+export class YoDto extends crearDto(
   z.object({
     id: z.uuid(),
     username: z.string().nullable(),
@@ -67,19 +67,19 @@ export const esquemaUsuario = z.object({
   invitacionPendiente: z.object({ venceEn: fecha }).nullable(),
   restablecimientoPendiente: z.object({ venceEn: fecha }).nullable(),
 });
-export class UsuarioDto extends createZodDto(esquemaUsuario) {}
+export class UsuarioDto extends crearDto(esquemaUsuario) {}
 
 export const esquemaEnlace = z.object({
   enlace: z.string().describe('APP_URL/invitacion/<token>. Copiable para WhatsApp'),
   venceEn: fecha,
 });
-export class EnlaceInvitacionDto extends createZodDto(esquemaEnlace) {}
+export class EnlaceInvitacionDto extends crearDto(esquemaEnlace) {}
 
-export class UsuarioCreadoDto extends createZodDto(
+export class UsuarioCreadoDto extends crearDto(
   z.object({ usuario: esquemaUsuario, invitacion: esquemaEnlace }),
 ) {}
 
-export class InvitacionPublicaDto extends createZodDto(
+export class InvitacionPublicaDto extends crearDto(
   z.object({
     username: z.string().nullable(),
     nombre: z.string(),
@@ -90,9 +90,9 @@ export class InvitacionPublicaDto extends createZodDto(
   }),
 ) {}
 
-export class CanjeDto extends createZodDto(z.object({ username: z.string().nullable() })) {}
+export class CanjeDto extends crearDto(z.object({ username: z.string().nullable() })) {}
 
-export class RevocadasDto extends createZodDto(z.object({ revocadas: z.number().int() })) {}
+export class RevocadasDto extends crearDto(z.object({ revocadas: z.number().int() })) {}
 
 const grupo = z.enum([
   'ALIMENTOS',
@@ -108,7 +108,7 @@ const grupo = z.enum([
 ]);
 const unidad = z.enum(['LITRO', 'KILOGRAMO', 'UNIDAD']);
 
-export class CategoriaDto extends createZodDto(
+export class CategoriaDto extends crearDto(
   z.object({
     id: z.uuid(),
     nombre: z.string(),
@@ -120,7 +120,7 @@ export class CategoriaDto extends createZodDto(
   }),
 ) {}
 
-export class ResultadoBusquedaDto extends createZodDto(
+export class ResultadoBusquedaDto extends crearDto(
   z.object({
     id: z.uuid(),
     nombre: z.string(),
@@ -131,7 +131,7 @@ export class ResultadoBusquedaDto extends createZodDto(
   }),
 ) {}
 
-export class CanastaVigenteDto extends createZodDto(
+export class CanastaVigenteDto extends crearDto(
   z.object({
     categoriaId: z.uuid(),
     categoria: z.string(),
@@ -142,7 +142,7 @@ export class CanastaVigenteDto extends createZodDto(
   }),
 ) {}
 
-export class VersionCanastaRespuestaDto extends createZodDto(
+export class VersionCanastaRespuestaDto extends crearDto(
   z.object({
     id: z.uuid(),
     cantidadPersonaDia: z.number(),
@@ -151,7 +151,7 @@ export class VersionCanastaRespuestaDto extends createZodDto(
   }),
 ) {}
 
-export class EmergenciaDto extends createZodDto(
+export class EmergenciaDto extends crearDto(
   z.object({
     id: z.uuid(),
     nombre: z.string(),
@@ -165,7 +165,7 @@ export class EmergenciaDto extends createZodDto(
   }),
 ) {}
 
-export class PaginaBitacoraDto extends createZodDto(
+export class PaginaBitacoraDto extends crearDto(
   z.object({
     total: z.number().int(),
     pagina: z.number().int(),
@@ -190,11 +190,11 @@ export class PaginaBitacoraDto extends createZodDto(
   }),
 ) {}
 
-export class SaludDto extends createZodDto(
+export class SaludDto extends crearDto(
   z.object({ estado: z.literal('ok'), base: z.literal('ok') }),
 ) {}
 
-export class EntidadDto extends createZodDto(
+export class EntidadDto extends crearDto(
   z.object({
     id: z.uuid(),
     nombre: z.string(),
@@ -220,7 +220,7 @@ const horario = z.object({
 });
 const estadoAcopio = z.enum(['ACTIVO', 'PAUSADO', 'CERRADO']);
 
-export class AcopioPublicoDto extends createZodDto(
+export class AcopioPublicoDto extends crearDto(
   z.object({
     id: z.uuid(),
     nombre: z.string(),
@@ -239,9 +239,9 @@ export class AcopioPublicoDto extends createZodDto(
   }),
 ) {}
 
-export class AcopioDto extends createZodDto(AcopioPublicoDto.schema.extend({ creadoEn: fecha })) {}
+export class AcopioDto extends crearDto(AcopioPublicoDto.schema.extend({ creadoEn: fecha })) {}
 
-export class ZonaDto extends createZodDto(
+export class ZonaDto extends crearDto(
   z.object({
     id: z.uuid(),
     emergenciaId: z.uuid(),
@@ -257,7 +257,7 @@ export class ZonaDto extends createZodDto(
   }),
 ) {}
 
-export class UbicacionDto extends createZodDto(
+export class UbicacionDto extends crearDto(
   z.object({
     tipo: tipoUbicacion,
     id: z.uuid(),
@@ -267,13 +267,13 @@ export class UbicacionDto extends createZodDto(
   }),
 ) {}
 
-export class ResultadoGeoDto extends createZodDto(
+export class ResultadoGeoDto extends crearDto(
   z.object({ etiqueta: z.string(), lat: z.number(), lng: z.number() }),
 ) {}
 
 const dia = z.iso.date();
 
-export class NoRecibirDto extends createZodDto(
+export class NoRecibirDto extends crearDto(
   z.object({
     categoriaId: z.uuid(),
     categoria: z.string(),
@@ -282,14 +282,14 @@ export class NoRecibirDto extends createZodDto(
   }),
 ) {}
 
-export class AcopioNoRecibeDto extends createZodDto(
+export class AcopioNoRecibeDto extends crearDto(
   z.object({ acopioId: z.uuid(), hasta: dia.nullable() }),
 ) {}
 
 const tipoMovimiento = z.enum(['ENTRADA', 'SALIDA', 'AJUSTE']);
 const motivoSalida = z.enum(['ENTREGA_FAMILIAS', 'TRASLADO', 'VENCIDO', 'OTRO']);
 
-export class MovimientoDto extends createZodDto(
+export class MovimientoDto extends crearDto(
   z.object({
     id: z.uuid(),
     tipo: tipoMovimiento,
@@ -306,7 +306,7 @@ export class MovimientoDto extends createZodDto(
   }),
 ) {}
 
-export class ResultadoMovimientoDto extends createZodDto(
+export class ResultadoMovimientoDto extends crearDto(
   z.object({
     movimiento: MovimientoDto.schema,
     saldo: z.number().describe('Saldo de la categoría en el acopio después del movimiento'),
@@ -314,7 +314,7 @@ export class ResultadoMovimientoDto extends createZodDto(
   }),
 ) {}
 
-export class SaldoDto extends createZodDto(
+export class SaldoDto extends crearDto(
   z.object({
     categoriaId: z.uuid(),
     categoria: z.string(),
@@ -333,19 +333,19 @@ export class SaldoDto extends createZodDto(
   }),
 ) {}
 
-export class FilaHistorialDto extends createZodDto(
+export class FilaHistorialDto extends crearDto(
   MovimientoDto.schema.extend({ usuario: z.string(), saldoDespues: z.number() }),
 ) {}
 
-export class PaginaHistorialDto extends createZodDto(
+export class PaginaHistorialDto extends crearDto(
   z.object({ filas: z.array(FilaHistorialDto.schema), siguiente: z.string().nullable() }),
 ) {}
 
-export class UmbralDto extends createZodDto(
+export class UmbralDto extends crearDto(
   z.object({ categoriaId: z.uuid(), minimo: z.number(), maximo: z.number(), actualizadoEn: fecha }),
 ) {}
 
-export class CodigoBarrasDto extends createZodDto(
+export class CodigoBarrasDto extends crearDto(
   z.object({
     ean: z.string(),
     categoriaId: z.uuid(),
@@ -361,7 +361,7 @@ export class CodigoBarrasDto extends createZodDto(
   }),
 ) {}
 
-export class ComprobanteDto extends createZodDto(
+export class ComprobanteDto extends crearDto(
   z.object({
     folio: z.string().describe('ACO-AAAA-XXXXX'),
     estado: z.enum(['PREPARADO', 'PENDIENTE', 'CONCILIADO', 'RECHAZADO', 'CANCELADO']),
@@ -392,7 +392,7 @@ export class ComprobanteDto extends createZodDto(
 
 const esquemaBandeja = ComprobanteDto.schema.extend({ conDiferencia: z.boolean() });
 
-export class BandejaRespuestaDto extends createZodDto(
+export class BandejaRespuestaDto extends crearDto(
   z.object({
     comprobantes: z.array(esquemaBandeja),
     porAcopio: z.array(
@@ -401,7 +401,7 @@ export class BandejaRespuestaDto extends createZodDto(
   }),
 ) {}
 
-export class ConciliacionDto extends createZodDto(
+export class ConciliacionDto extends crearDto(
   esquemaBandeja.extend({
     entradas: z.array(
       z.object({
@@ -428,7 +428,7 @@ export class ConciliacionDto extends createZodDto(
   }),
 ) {}
 
-export class EntradaVinculableDto extends createZodDto(
+export class EntradaVinculableDto extends crearDto(
   z.object({
     id: z.uuid(),
     categoriaId: z.uuid(),
@@ -441,7 +441,7 @@ export class EntradaVinculableDto extends createZodDto(
   }),
 ) {}
 
-export class RecepcionDto extends createZodDto(
+export class RecepcionDto extends crearDto(
   z.object({
     comprobante: ComprobanteDto.schema,
     noRecibe: z
@@ -450,7 +450,7 @@ export class RecepcionDto extends createZodDto(
   }),
 ) {}
 
-export class UrlFacturaDto extends createZodDto(
+export class UrlFacturaDto extends crearDto(
   z.object({
     url: z.string().describe('URL firmada de la foto'),
     miniaturaUrl: z.string().describe('URL firmada de la miniatura'),
@@ -458,7 +458,7 @@ export class UrlFacturaDto extends createZodDto(
   }),
 ) {}
 
-export class SugerenciaEntregaDto extends createZodDto(
+export class SugerenciaEntregaDto extends crearDto(
   z.object({
     acopioId: z.uuid(),
     nombre: z.string(),
@@ -470,7 +470,7 @@ export class SugerenciaEntregaDto extends createZodDto(
   }),
 ) {}
 
-export class CodigoDonadorDto extends createZodDto(
+export class CodigoDonadorDto extends crearDto(
   z.object({
     ean: z.string(),
     categoriaId: z.uuid(),
@@ -482,7 +482,7 @@ export class CodigoDonadorDto extends createZodDto(
   }),
 ) {}
 
-export class SeguimientoDto extends createZodDto(
+export class SeguimientoDto extends crearDto(
   z.object({
     folio: z.string(),
     estado: z.string().describe('Etiqueta para mostrar, por ejemplo «Recibida en el acopio»'),
@@ -517,7 +517,7 @@ export class SeguimientoDto extends createZodDto(
 
 // ── Motor (Bloque 4) ────────────────────────────────────────────────────────
 
-export class FichaZonaDto extends createZodDto(
+export class FichaZonaDto extends crearDto(
   z.object({
     zona: z.object({
       id: z.uuid(),
@@ -571,7 +571,7 @@ export class FichaZonaDto extends createZodDto(
   }),
 ) {}
 
-export class NecesidadManualDto extends createZodDto(
+export class NecesidadManualDto extends crearDto(
   z.object({
     categoriaId: z.uuid(),
     cantidad: z.number().nullable(),
@@ -580,7 +580,7 @@ export class NecesidadManualDto extends createZodDto(
   }),
 ) {}
 
-export class ExcedenteDto extends createZodDto(
+export class ExcedenteDto extends crearDto(
   z.object({
     categoriaId: z.uuid(),
     categoria: z.string(),
@@ -605,7 +605,7 @@ const componentes = z.object({
 });
 const referencia = z.object({ id: z.uuid(), nombre: z.string() });
 
-export class SugerenciaDto extends createZodDto(
+export class SugerenciaDto extends crearDto(
   z.object({
     id: z.uuid(),
     ronda: fecha,
@@ -626,11 +626,11 @@ export class SugerenciaDto extends createZodDto(
   }),
 ) {}
 
-export class RecalculoDto extends createZodDto(
+export class RecalculoDto extends crearDto(
   z.object({ ronda: fecha, generadas: z.number().int() }),
 ) {}
 
-export class ConfiguracionMotorDto extends createZodDto(
+export class ConfiguracionMotorDto extends crearDto(
   z.object({
     pesos: componentes,
     cantidadMinima: z.number(),
@@ -646,11 +646,11 @@ const filaVistaPrevia = z.object({
   cantidad: z.number(),
   puntaje: z.number(),
 });
-export class VistaPreviaMotorDto extends createZodDto(
+export class VistaPreviaMotorDto extends crearDto(
   z.object({ actual: z.array(filaVistaPrevia), propuesta: z.array(filaVistaPrevia) }),
 ) {}
 
-export class AprobacionDto extends createZodDto(
+export class AprobacionDto extends crearDto(
   z.object({
     sugerenciaId: z.uuid(),
     cantidad: z.number(),
@@ -658,12 +658,12 @@ export class AprobacionDto extends createZodDto(
   }),
 ) {}
 
-export class DescarteDto extends createZodDto(
+export class DescarteDto extends crearDto(
   z.object({ id: z.uuid(), estado: z.literal('DESCARTADA') }),
 ) {}
 
 const conteo = z.array(z.object({ nombre: z.string(), veces: z.number().int() }));
-export class InformeDescartesDto extends createZodDto(
+export class InformeDescartesDto extends crearDto(
   z.object({
     total: z.number().int(),
     porMotivo: conteo,
@@ -681,7 +681,7 @@ const lineaRemision = z.object({
   cantidadRecibida: z.number().nullable(),
 });
 
-export class RemisionDto extends createZodDto(
+export class RemisionDto extends crearDto(
   z.object({
     id: z.uuid(),
     codigo: z.string().describe('R-AAAA-XXXXX'),
@@ -702,7 +702,7 @@ export class RemisionDto extends createZodDto(
   }),
 ) {}
 
-export class ReporteNecesidadDto extends createZodDto(
+export class ReporteNecesidadDto extends crearDto(
   z.object({
     id: z.uuid(),
     categoriaId: z.uuid(),
@@ -714,7 +714,7 @@ export class ReporteNecesidadDto extends createZodDto(
   }),
 ) {}
 
-export class ZonaPublicaDto extends createZodDto(
+export class ZonaPublicaDto extends crearDto(
   z.object({
     zonaId: z.uuid(),
     centro: z.object({ lat: z.number(), lng: z.number() }).describe('Redondeado a dos decimales'),

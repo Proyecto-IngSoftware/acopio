@@ -6,7 +6,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -16,8 +16,8 @@ import { ZonasService } from './zonas.service';
 const fecha = z.iso.date().transform((d) => new Date(`${d}T00:00:00Z`));
 const texto = (max: number) => z.string().trim().min(1).max(max);
 
-class FiltroZonasDto extends createZodDto(z.object({ emergencia: z.uuid().optional() })) {}
-class CrearZonaDto extends createZodDto(
+class FiltroZonasDto extends crearDto(z.object({ emergencia: z.uuid().optional() })) {}
+class CrearZonaDto extends crearDto(
   z.object({
     emergenciaId: z.uuid(),
     nombre: texto(120),
@@ -30,7 +30,7 @@ class CrearZonaDto extends createZodDto(
     estado: z.enum(['SIN_ATENDER', 'EN_ATENCION', 'CUBIERTA']).optional(),
   }),
 ) {}
-class ActualizarZonaDto extends createZodDto(
+class ActualizarZonaDto extends crearDto(
   CrearZonaDto.schema.omit({ emergenciaId: true }).partial(),
 ) {}
 

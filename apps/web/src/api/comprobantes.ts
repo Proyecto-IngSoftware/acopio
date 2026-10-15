@@ -20,11 +20,6 @@ export const MOTIVOS_RECHAZO: Record<MotivoRechazo, string> = {
   OTRO: 'Otro',
 };
 
-// P-031: el esquema genera estos campos como arreglos, pero la API manda texto o null
-type ConRechazo = { motivoRechazo: unknown; notaRechazo: unknown };
-export const motivoDe = (c: ConRechazo) => (c.motivoRechazo as MotivoRechazo | null) ?? null;
-export const notaDe = (c: ConRechazo) => (c.notaRechazo as string | null) ?? null;
-
 /** Lo que suman las presentaciones en unidad base: 12 × 0,5 L = 6 L. */
 export const enBase = (cantidad: number, contenidoUnitario: number) =>
   Math.round(cantidad * contenidoUnitario * 1000) / 1000;

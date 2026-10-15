@@ -17,8 +17,6 @@ import type { Linea } from './preparacion';
 
 type Punto = { lat: number; lng: number };
 
-const km = (d: number[] | number | null | undefined) => (Array.isArray(d) ? d[0] : d) ?? null;
-
 /** Miniatura local del archivo elegido; libera la URL al cambiar. */
 function Miniatura({ archivo }: { archivo: File }) {
   const [url, fijarUrl] = useState<string | null>(null);
@@ -130,7 +128,7 @@ export function PasoEntrega({ lineas, acopioId, factura, alElegir, alFactura, al
         <legend className="sr-only">Acopios sugeridos</legend>
         {lista.map((s) => {
           const marcado = s.acopioId === elegido;
-          const distancia = km(s.distanciaKm);
+          const distancia = s.distanciaKm ?? null;
           return (
             <label
               key={s.acopioId}

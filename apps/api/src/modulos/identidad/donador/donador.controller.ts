@@ -2,7 +2,7 @@ import { Body, Controller, Get, HttpCode, Inject, Param, Post, Res } from '@nest
 import { ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import type { Response } from 'express';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../../comun/dto';
 import { z } from 'zod';
 import { Publico } from '../../../comun/autorizacion/decoradores';
 import { COOKIE_SESION, opcionesCookie } from '../../../comun/cookie-sesion';
@@ -11,7 +11,7 @@ import { ENTORNO, type Entorno } from '../../../config/entorno';
 import { LONGITUD_MINIMA } from '../invitaciones/politica-contrasena';
 import { DonadorService } from './donador.service';
 
-class RegistroDto extends createZodDto(
+class RegistroDto extends crearDto(
   z
     .object({
       correo: z.email().max(254),
@@ -19,15 +19,15 @@ class RegistroDto extends createZodDto(
     })
     .strict(),
 ) {}
-class ConfirmarDto extends createZodDto(
+class ConfirmarDto extends crearDto(
   z.object({
     token: z.string().min(1).max(200),
     contrasena: z.string().min(LONGITUD_MINIMA).max(256),
     nombre: z.string().trim().min(2).max(120).optional(),
   }),
 ) {}
-class EnlaceDonadorDto extends createZodDto(z.object({ nombre: z.string(), correo: z.string() })) {}
-class SesionDonadorDto extends createZodDto(
+class EnlaceDonadorDto extends crearDto(z.object({ nombre: z.string(), correo: z.string() })) {}
+class SesionDonadorDto extends crearDto(
   z.object({ correo: z.string().trim().min(3).max(254), contrasena: z.string().min(1).max(256) }),
 ) {}
 

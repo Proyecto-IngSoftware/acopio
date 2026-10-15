@@ -6,8 +6,6 @@ import { cuerpoDe, peticiones, responderSegun } from '../pruebas/utilidades';
 import {
   enBase,
   MOTIVOS_RECHAZO,
-  motivoDe,
-  notaDe,
   useBandeja,
   useComprobante,
   useConciliacion,
@@ -17,7 +15,6 @@ import {
   useRecibir,
   useRevertirRechazo,
   useVincular,
-  type Comprobante,
 } from './comprobantes';
 
 const FOLIO = 'ACO-2026-7KQ4M';
@@ -43,15 +40,6 @@ it('los motivos de rechazo llevan las etiquetas de la maqueta', () => {
     DIFERENCIA_SIN_EXPLICAR: 'Diferencia sin explicar',
     OTRO: 'Otro',
   });
-});
-
-it('motivoDe y notaDe leen el texto que manda la API (P-031)', () => {
-  const c = { motivoRechazo: 'OTRO', notaRechazo: 'Faltó el arroz' } as unknown as Comprobante;
-  expect(motivoDe(c)).toBe('OTRO');
-  expect(notaDe(c)).toBe('Faltó el arroz');
-  const sin = { motivoRechazo: null, notaRechazo: null } as unknown as Comprobante;
-  expect(motivoDe(sin)).toBeNull();
-  expect(notaDe(sin)).toBeNull();
 });
 
 it('enBase multiplica presentaciones por su contenido, a milésimas', () => {

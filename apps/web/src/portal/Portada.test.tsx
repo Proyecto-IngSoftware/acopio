@@ -16,7 +16,7 @@ const emergencia = (datos: Partial<Emergencia>): Emergencia => ({
   estado: 'ACTIVA',
   destacadaHasta: '2026-12-31T00:00:00.000Z',
   cerradaEn: null,
-  motivoCierre: [],
+  motivoCierre: null,
   ...datos,
 });
 const DOS = [

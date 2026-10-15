@@ -9,8 +9,8 @@ function Lista() {
   return <p>{data?.map((a) => `${a.nombre}:${a.telefono ?? 'sin teléfono'}`).join(', ')}</p>;
 }
 
-it('pide los acopios con sus filtros y entrega los campos vacíos como null (P-031)', async () => {
-  responderSegun({ 'GET /api/acopios': [acopioDePrueba({ telefono: [] as never })] });
+it('pide los acopios con sus filtros y entrega los campos vacíos como null', async () => {
+  responderSegun({ 'GET /api/acopios': [acopioDePrueba({ telefono: null })] });
   render(envolver(<Lista />));
   expect(await screen.findByText('Acopio Chapinero:sin teléfono')).toBeInTheDocument();
   expect(peticiones()[0]).toBe('GET /api/acopios?abiertoAhora=true&cerca=4.6%2C-74.08');

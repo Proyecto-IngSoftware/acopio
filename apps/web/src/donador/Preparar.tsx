@@ -21,8 +21,7 @@ const LIMITE_PREPARADAS = 5;
 const resolverCodigo: ResolverCodigo = async (ean) => {
   const c = await consultarCodigoDonador(ean);
   if (!c) return null;
-  // El contrato tipa el contenido nullable como arreglo (P-031)
-  const contenido = Array.isArray(c.contenido) ? (c.contenido[0] ?? null) : (c.contenido ?? null);
+  const contenido = c.contenido ?? null;
   return {
     categoria: {
       id: c.categoriaId,

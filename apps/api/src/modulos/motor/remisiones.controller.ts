@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, Param, Patch, Post, Put, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -14,7 +14,7 @@ const lineas = z
   .max(40);
 const responsable = z.string().trim().max(120).nullable();
 
-class CrearRemisionDto extends createZodDto(
+class CrearRemisionDto extends crearDto(
   z.object({
     acopioId: z.uuid(),
     zonaId: z.uuid().nullable().describe('null: despacho general'),
@@ -22,15 +22,15 @@ class CrearRemisionDto extends createZodDto(
     lineas,
   }),
 ) {}
-class LineasDto extends createZodDto(z.object({ lineas })) {}
-class EditarRemisionDto extends createZodDto(
+class LineasDto extends crearDto(z.object({ lineas })) {}
+class EditarRemisionDto extends crearDto(
   z.object({ responsable: responsable.optional(), zonaId: z.uuid().nullable().optional() }),
 ) {}
-class DespacharDto extends createZodDto(
+class DespacharDto extends crearDto(
   z.object({ folios: z.array(z.string().trim().min(1)).max(20).optional() }),
 ) {}
-class CancelarDto extends createZodDto(z.object({ motivo: z.string().trim().min(10).max(280) })) {}
-class FiltroRemisionesDto extends createZodDto(
+class CancelarDto extends crearDto(z.object({ motivo: z.string().trim().min(10).max(280) })) {}
+class FiltroRemisionesDto extends crearDto(
   z.object({
     estado: z.enum(['BORRADOR', 'EN_TRANSITO', 'RECIBIDA', 'CANCELADA']).optional(),
     zona: z.uuid().optional(),

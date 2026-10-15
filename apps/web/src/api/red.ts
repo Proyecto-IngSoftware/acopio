@@ -5,38 +5,16 @@ import type { components } from './esquema';
 
 type S = components['schemas'];
 
-// El contrato tipa los campos que aceptan null como arreglos (P-031); llegan como
-// texto o null. Estos tipos dicen lo que de verdad llega.
-type ConNulos<T, K extends keyof T> = Omit<T, K> & { [P in K]: string | null };
-
-export type AcopioPublico = ConNulos<
-  Omit<S['AcopioPublicoDto'], 'horario'>,
-  'telefono' | 'indicacionesAcceso'
-> & { horario: Horario };
+export type AcopioPublico = Omit<S['AcopioPublicoDto'], 'horario'> & { horario: Horario };
 export type Acopio = AcopioPublico & { creadoEn: string };
 export type EstadoAcopio = AcopioPublico['estado'];
-export type Entidad = ConNulos<
-  S['EntidadDto'],
-  'nit' | 'sitioWeb' | 'telefono' | 'correo' | 'descripcion'
->;
+export type Entidad = S['EntidadDto'];
 export type Zona = S['ZonaDto'];
 export type EstadoZona = Zona['estado'];
 export type Ubicacion = S['UbicacionDto'];
 export type ResultadoGeo = S['ResultadoGeoDto'];
-export type NoRecibe = ConNulos<S['NoRecibirDto'], 'hasta'>;
+export type NoRecibe = S['NoRecibirDto'];
 export type Punto = { lat: number; lng: number };
-
-/** Convierte a null los arreglos vacíos que el contrato pone en lugar de null (P-031). */
-function sinArreglos<T>(fila: T): T {
-  const copia = { ...fila } as Record<string, unknown>;
-  for (const [k, v] of Object.entries(copia)) if (Array.isArray(v)) copia[k] = v[0] ?? null;
-  return copia as T;
-}
-// El horario sí es un objeto con arreglos: se deja tal cual
-const acopio = <T extends { horario: unknown }>(a: T): T => ({
-  ...sinArreglos(a),
-  horario: a.horario,
-});
 
 function useCambio<T, R>(hacer: (datos: T) => Promise<R>, claves: string[][]) {
   const consultas = useQueryClient();
@@ -65,7 +43,7 @@ export function opcionesAcopiosPublicos(filtro: FiltroPublico) {
           },
         }),
       );
-      return (filas as unknown as AcopioPublico[]).map(acopio);
+      return filas as unknown as AcopioPublico[];
     },
   });
 }
@@ -78,11 +56,7 @@ export function useAcopio(id: string) {
   return useQuery<AcopioPublico, ErrorApi>({
     queryKey: ['acopios', id],
     queryFn: async () =>
-      acopio(
-        (await desenvolver(
-          api.GET('/api/acopios/{id}', { params: { path: { id } } }),
-        )) as unknown as AcopioPublico,
-      ),
+      await desenvolver(api.GET('/api/acopios/{id}', { params: { path: { id } } })),
   });
 }
 
@@ -91,8 +65,7 @@ export function useAcopiosGestion(activo = true) {
   return useQuery<Acopio[], ErrorApi>({
     queryKey: ['acopios', 'gestion'],
     enabled: activo,
-    queryFn: async () =>
-      ((await desenvolver(api.GET('/api/acopios/gestion'))) as unknown as Acopio[]).map(acopio),
+    queryFn: async () => await desenvolver(api.GET('/api/acopios/gestion')),
   });
 }
 
@@ -112,12 +85,10 @@ export interface DatosAcopio {
 export const useGuardarAcopio = () =>
   useCambio(
     async ({ id, datos }: { id?: string; datos: Partial<DatosAcopio> }) =>
-      acopio(
-        (await desenvolver(
-          id
-            ? api.PATCH('/api/acopios/{id}', { params: { path: { id } }, body: datos as never })
-            : api.POST('/api/acopios', { body: datos as never }),
-        )) as unknown as Acopio,
+      await desenvolver(
+        id
+          ? api.PATCH('/api/acopios/{id}', { params: { path: { id } }, body: datos as never })
+          : api.POST('/api/acopios', { body: datos as never }),
       ),
     [['acopios'], ['ubicaciones']],
   );
@@ -129,13 +100,11 @@ export type DatosOperacion = Pick<DatosAcopio, 'horario' | 'telefono' | 'indicac
 export const useOperarAcopio = (id: string) =>
   useCambio(
     async (datos: Partial<DatosOperacion>) =>
-      acopio(
-        (await desenvolver(
-          api.PATCH('/api/acopios/{id}/operacion', {
-            params: { path: { id } },
-            body: datos as never,
-          }),
-        )) as unknown as Acopio,
+      await desenvolver(
+        api.PATCH('/api/acopios/{id}/operacion', {
+          params: { path: { id } },
+          body: datos as never,
+        }),
       ),
     [['acopios']],
   );
@@ -145,8 +114,7 @@ export const useOperarAcopio = (id: string) =>
 export function useEntidades() {
   return useQuery<Entidad[], ErrorApi>({
     queryKey: ['entidades'],
-    queryFn: async () =>
-      ((await desenvolver(api.GET('/api/entidades'))) as unknown as Entidad[]).map(sinArreglos),
+    queryFn: async () => await desenvolver(api.GET('/api/entidades')),
   });
 }
 
@@ -155,12 +123,10 @@ export type DatosEntidad = Omit<Entidad, 'id' | 'verificacion'>;
 export const useGuardarEntidad = () =>
   useCambio(
     async ({ id, datos }: { id?: string; datos: Partial<DatosEntidad> }) =>
-      sinArreglos(
-        (await desenvolver(
-          id
-            ? api.PATCH('/api/entidades/{id}', { params: { path: { id } }, body: datos as never })
-            : api.POST('/api/entidades', { body: datos as never }),
-        )) as unknown as Entidad,
+      desenvolver(
+        id
+          ? api.PATCH('/api/entidades/{id}', { params: { path: { id } }, body: datos as never })
+          : api.POST('/api/entidades', { body: datos as never }),
       ),
     [['entidades'], ['acopios']],
   );
@@ -172,9 +138,9 @@ export function useZonas(emergenciaId: string | null) {
     queryKey: ['zonas', emergenciaId],
     enabled: emergenciaId !== null,
     queryFn: async () =>
-      (await desenvolver(
+      await desenvolver(
         api.GET('/api/zonas', { params: { query: { emergencia: emergenciaId! } as never } }),
-      )) as unknown as Zona[],
+      ),
   });
 }
 
@@ -195,13 +161,11 @@ export const useGuardarZona = () =>
     async ({ id, datos }: { id?: string; datos: Partial<DatosZona> }) => {
       if (id) {
         const { emergenciaId: _, ...cambios } = datos;
-        return (await desenvolver(
+        return await desenvolver(
           api.PATCH('/api/zonas/{id}', { params: { path: { id } }, body: cambios as never }),
-        )) as unknown as Zona;
+        );
       }
-      return (await desenvolver(
-        api.POST('/api/zonas', { body: datos as never }),
-      )) as unknown as Zona;
+      return await desenvolver(api.POST('/api/zonas', { body: datos as never }));
     },
     [['zonas'], ['ubicaciones']],
   );
@@ -213,8 +177,7 @@ export function useUbicacionesMias(activo = true) {
   return useQuery<Ubicacion[], ErrorApi>({
     queryKey: ['ubicaciones', 'mias'],
     enabled: activo,
-    queryFn: async () =>
-      (await desenvolver(api.GET('/api/ubicaciones/mias'))) as unknown as Ubicacion[],
+    queryFn: async () => await desenvolver(api.GET('/api/ubicaciones/mias')),
   });
 }
 
@@ -223,9 +186,9 @@ export function useBuscarUbicaciones(q: string) {
   return useQuery<Ubicacion[], ErrorApi>({
     queryKey: ['ubicaciones', 'buscar', texto],
     queryFn: async () =>
-      (await desenvolver(
+      await desenvolver(
         api.GET('/api/ubicaciones', { params: { query: { q: texto || undefined } as never } }),
-      )) as unknown as Ubicacion[],
+      ),
   });
 }
 
@@ -234,9 +197,7 @@ export function useBuscarUbicaciones(q: string) {
 export const useGeocodificar = () =>
   useMutation<ResultadoGeo[], ErrorApi, string>({
     mutationFn: async (q) =>
-      (await desenvolver(
-        api.GET('/api/geocodificar', { params: { query: { q } as never } }),
-      )) as unknown as ResultadoGeo[],
+      await desenvolver(api.GET('/api/geocodificar', { params: { query: { q } as never } })),
   });
 
 // ── No recibir (módulo inventario) ──
@@ -245,11 +206,7 @@ export function useNoRecibir(acopioId: string) {
   return useQuery<NoRecibe[], ErrorApi>({
     queryKey: ['no-recibir', acopioId],
     queryFn: async () =>
-      (
-        (await desenvolver(
-          api.GET('/api/acopios/{id}/no-recibir', { params: { path: { id: acopioId } } }),
-        )) as unknown as NoRecibe[]
-      ).map(sinArreglos),
+      desenvolver(api.GET('/api/acopios/{id}/no-recibir', { params: { path: { id: acopioId } } })),
   });
 }
 

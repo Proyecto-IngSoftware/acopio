@@ -1,6 +1,6 @@
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -18,7 +18,7 @@ import { RecepcionService } from './recepcion.service';
 
 const dia = z.iso.date().transform((d) => new Date(`${d}T00:00:00Z`));
 
-class RecibirDto extends createZodDto(
+class RecibirDto extends crearDto(
   z.object({
     acopioId: z.uuid(),
     lineas: z
@@ -37,7 +37,7 @@ class RecibirDto extends createZodDto(
 
 const finDelDia = z.iso.date().transform((d) => new Date(`${d}T23:59:59.999Z`));
 
-class BandejaDto extends createZodDto(
+class BandejaDto extends crearDto(
   z.object({
     estado: z.enum(['PENDIENTE', 'CONCILIADO', 'RECHAZADO']).optional(),
     acopioId: z.uuid().optional(),
@@ -45,10 +45,8 @@ class BandejaDto extends createZodDto(
     hasta: finDelDia.optional(),
   }),
 ) {}
-class VincularDto extends createZodDto(
-  z.object({ movimientoIds: z.array(z.uuid()).min(1).max(50) }),
-) {}
-class RechazarDto extends createZodDto(
+class VincularDto extends crearDto(z.object({ movimientoIds: z.array(z.uuid()).min(1).max(50) })) {}
+class RechazarDto extends crearDto(
   z
     .object({
       motivo: z.enum(['DUPLICADO', 'NO_CUADRA_MOVIMIENTOS', 'DIFERENCIA_SIN_EXPLICAR', 'OTRO']),

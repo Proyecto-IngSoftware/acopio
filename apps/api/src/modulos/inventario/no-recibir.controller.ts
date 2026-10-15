@@ -17,14 +17,14 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Publico, Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { AcopioNoRecibeDto, ErrorDto, NoRecibirDto } from '../../comun/respuestas';
 import { NoRecibirService } from './no-recibir.service';
 
-class MarcarDto extends createZodDto(
+class MarcarDto extends crearDto(
   z.object({
     hasta: z.iso
       .date()
@@ -34,7 +34,7 @@ class MarcarDto extends createZodDto(
       .describe('Fecha de reapertura; sin ella, hasta que se desmarque'),
   }),
 ) {}
-class FiltroCategoriaDto extends createZodDto(z.object({ categoria: z.uuid() })) {}
+class FiltroCategoriaDto extends crearDto(z.object({ categoria: z.uuid() })) {}
 
 const errores = {
   status: 'default' as const,

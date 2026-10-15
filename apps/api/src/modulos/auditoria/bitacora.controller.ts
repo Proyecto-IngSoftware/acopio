@@ -1,7 +1,7 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { PaginaBitacoraDto } from '../../comun/respuestas';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles } from '../../comun/autorizacion/decoradores';
 import { BitacoraService } from './bitacora.service';
@@ -11,7 +11,7 @@ const fechaHora = z
   .union([z.iso.datetime({ offset: true }), z.iso.date()])
   .transform((v) => new Date(v));
 
-class FiltroBitacoraDto extends createZodDto(
+class FiltroBitacoraDto extends crearDto(
   z.object({
     usuarioId: z.uuid().optional(),
     ubicacionId: z.uuid().optional(),

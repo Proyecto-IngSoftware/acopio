@@ -37,6 +37,25 @@ export default tseslint.config(
     rules: { '@typescript-eslint/no-require-imports': 'off' },
   },
   {
+    files: ['apps/api/src/**/*.ts'],
+    ignores: ['apps/api/src/comun/dto.ts'],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            {
+              name: 'nestjs-zod',
+              importNames: ['createZodDto'],
+              message:
+                'Usa crearDto de comun/dto: createZodDto escribe mal los nulos en el contrato (#38)',
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     files: ['apps/web/**/*.{ts,tsx}'],
     plugins: { 'react-hooks': reactHooks },
     languageOptions: { globals: globals.browser },

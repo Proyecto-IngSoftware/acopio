@@ -23,7 +23,7 @@ import {
   UsuarioCreadoDto,
   UsuarioDto,
 } from '../../../comun/respuestas';
-import { createZodDto } from 'nestjs-zod';
+import { crearDto } from '../../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../../comun/autorizacion/usuario-autenticado';
@@ -32,7 +32,7 @@ import { UsuariosService } from './usuarios.service';
 const rolInterno = z.enum(['ADMIN', 'OPERADOR', 'AUDITOR', 'RECEPTOR']);
 const asignacion = z.object({ tipo: z.enum(['ACOPIO', 'ZONA']), ubicacionId: z.uuid() });
 
-class CrearUsuarioDto extends createZodDto(
+class CrearUsuarioDto extends crearDto(
   z.object({
     username: z
       .string()
@@ -47,7 +47,7 @@ class CrearUsuarioDto extends createZodDto(
   }),
 ) {}
 
-class ActualizarUsuarioDto extends createZodDto(
+class ActualizarUsuarioDto extends crearDto(
   z.object({
     nombre: z.string().trim().min(1).max(120).optional(),
     rol: rolInterno.optional(),
@@ -55,7 +55,7 @@ class ActualizarUsuarioDto extends createZodDto(
   }),
 ) {}
 
-class FiltroUsuariosDto extends createZodDto(
+class FiltroUsuariosDto extends crearDto(
   z.object({
     rol: z.enum(['ADMIN', 'OPERADOR', 'AUDITOR', 'RECEPTOR', 'DONADOR']).optional(),
     estado: z.enum(['INVITADO', 'ACTIVO', 'SUSPENDIDO']).optional(),
@@ -63,11 +63,11 @@ class FiltroUsuariosDto extends createZodDto(
   }),
 ) {}
 
-class AsignacionDto extends createZodDto(asignacion) {}
+class AsignacionDto extends crearDto(asignacion) {}
 
-class DesasignarDto extends createZodDto(z.object({ confirmar: z.stringbool().default(false) })) {}
+class DesasignarDto extends crearDto(z.object({ confirmar: z.stringbool().default(false) })) {}
 
-class RestablecerDto extends createZodDto(
+class RestablecerDto extends crearDto(
   z.object({
     motivo: z.string().trim().min(20, 'El motivo necesita al menos 20 caracteres').max(500),
   }),

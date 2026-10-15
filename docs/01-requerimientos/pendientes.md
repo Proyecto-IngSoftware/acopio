@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-10
+actualizado: 2026-10-14
 ---
 
 # Pendientes — bandeja de entrada
@@ -590,10 +590,17 @@ más.
 `motivoCierre` de `EmergenciaDto`.
 **Por qué:** los tipos que genera la web quedan mal, y hoy `cliente-auth.ts` los
 convierte a mano (`as unknown as`).
-**Estado:** ABIERTO. Revisar cómo exporta nestjs-zod los campos nullable y corregir el
-contrato en la API.
+**Estado:** RESUELTO el 2026-10-14 → `apps/api/src/comun/dto.ts` (#38)
 **Avance 2026-09-30:** en el Bloque 1 pasa lo mismo con los campos opcionales nuevos
 (`telefono`, `indicacionesAcceso` de acopio y los de entidad).
+**Causa:** nestjs-zod le pasa a Swagger cada propiedad de primer nivel del DTO por separado,
+y un campo nullable llega como `type: ['string', 'null']`. Swagger lee un `type` en arreglo
+como «arreglo de string». Los nulos anidados no pasan por Swagger y salían bien. Ninguna
+opción de `cleanupOpenApiDoc` lo corrige, y la 5.5.0 es la última versión de nestjs-zod.
+**Arreglo:** `crearDto` envuelve `createZodDto` y reescribe esos campos con
+`nullable: true`. Una regla de ESLint prohíbe `createZodDto` fuera de `comun/dto.ts`. La web
+dejó de convertir a mano (`ConNulos`, `sinArreglos`, `motivoDe`, `notaDe` y los
+`as unknown as`).
 
 ### P-032 · Todo en local hasta el mínimo viable
 **Fecha:** 2026-09-30 · **Propuesto por:** Joseph
