@@ -68,6 +68,7 @@ it('el Administrador ve su cuenta y sus herramientas, también las de la red', a
     ['Acopios', '/consola/acopios'],
     ['Entidades', '/consola/entidades'],
     ['Zonas afectadas', '/consola/zonas'],
+    ['Motor de sugerencias', '/consola/motor'],
   ]) {
     expect(within(admin).getByRole('link', { name: new RegExp(nombre!) })).toHaveAttribute(
       'href',

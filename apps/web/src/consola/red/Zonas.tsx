@@ -113,20 +113,28 @@ function ZonasDe({ emergencia }: { emergencia: Emergencia }) {
                   {z.poblacionFuente} · {diaLargo(z.poblacionFecha)}
                 </span>
               </span>
-              {!cerrada && (
-                <Icono nombre="chevron_right" className="text-[22px] text-on-surface-variant" />
-              )}
+              <Icono nombre="chevron_right" className="text-[22px] text-on-surface-variant" />
             </>
           );
-          const clases =
-            'flex w-full items-center gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md text-left';
           return (
-            <li key={z.id}>
-              {cerrada ? (
-                <div className={clases}>{contenido}</div>
-              ) : (
-                <button type="button" className={clases} onClick={() => fijarEditando(z)}>
-                  {contenido}
+            <li
+              key={z.id}
+              className="flex items-stretch rounded-xl border border-outline-variant bg-surface-container-lowest"
+            >
+              <Link
+                to={`/consola/zonas/${z.id}`}
+                className="flex min-w-0 flex-1 items-center gap-space-sm p-space-md text-left"
+              >
+                {contenido}
+              </Link>
+              {!cerrada && (
+                <button
+                  type="button"
+                  aria-label={`Editar ${z.nombre}`}
+                  className="grid min-w-[48px] place-items-center border-l border-outline-variant text-on-surface-variant"
+                  onClick={() => fijarEditando(z)}
+                >
+                  <Icono nombre="edit" className="text-[22px]" />
                 </button>
               )}
             </li>

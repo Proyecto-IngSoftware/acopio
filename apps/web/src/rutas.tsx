@@ -36,6 +36,14 @@ const SinSincronizar = lazy(() =>
 const MatrizAcceso = lazy(() =>
   import('./consola/accesos/MatrizAcceso').then((m) => ({ default: m.MatrizAcceso })),
 );
+const FichaZona = lazy(() =>
+  import('./consola/motor/FichaZona').then((m) => ({ default: m.FichaZona })),
+);
+const Motor = lazy(() => import('./consola/motor/Motor').then((m) => ({ default: m.Motor })));
+const PesosMotor = lazy(() => import('./consola/motor/Pesos').then((m) => ({ default: m.Pesos })));
+const Descartes = lazy(() =>
+  import('./consola/motor/Descartes').then((m) => ({ default: m.Descartes })),
+);
 const Bitacora = lazy(() => import('./consola/Bitacora').then((m) => ({ default: m.Bitacora })));
 const Catalogo = lazy(() =>
   import('./consola/catalogo/Catalogo').then((m) => ({ default: m.Catalogo })),
@@ -195,6 +203,27 @@ export function Rutas() {
             key={ruta}
             path={ruta}
             element={<RequiereRol roles={['ADMIN', 'OPERADOR']}>{pantalla}</RequiereRol>}
+          />
+        ))}
+        <Route
+          path="consola/zonas/:id"
+          element={
+            <RequiereRol roles={['ADMIN', 'RECEPTOR']}>
+              <FichaZona />
+            </RequiereRol>
+          }
+        />
+        {(
+          [
+            ['consola/motor', <Motor key="m" />],
+            ['consola/motor/pesos', <PesosMotor key="mp" />],
+            ['consola/motor/descartes', <Descartes key="md" />],
+          ] as const
+        ).map(([ruta, pantalla]) => (
+          <Route
+            key={ruta}
+            path={ruta}
+            element={<RequiereRol roles={['ADMIN']}>{pantalla}</RequiereRol>}
           />
         ))}
         <Route

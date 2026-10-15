@@ -52,11 +52,11 @@ const pantalla = () => render(envolver(<Zonas />, '/consola/zonas', clienteFalso
 it('lista las zonas de la emergencia activa con población, fuente y estado', async () => {
   responderSegun(RESPUESTAS);
   pantalla();
-  const vereda = await screen.findByRole('button', { name: /Vereda La Esperanza/ });
+  const vereda = await screen.findByRole('link', { name: /Vereda La Esperanza/ });
   expect(vereda).toHaveTextContent('1.250 personas');
   expect(vereda).toHaveTextContent('Junta de acción comunal · 20 de septiembre');
   expect(vereda).toHaveTextContent('Sin atender');
-  expect(screen.getByRole('button', { name: /Barrio Cervantes/ })).toHaveTextContent('Cubierta');
+  expect(screen.getByRole('link', { name: /Barrio Cervantes/ })).toHaveTextContent('Cubierta');
   expect(peticiones()).toContain('GET /api/zonas?emergencia=em1');
 });
 
@@ -69,7 +69,10 @@ it('con la emergencia cerrada avisa, no deja crear y las zonas quedan en solo le
   expect(await screen.findByText(/Esta emergencia está cerrada/)).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: 'Nueva zona' })).not.toBeInTheDocument();
   expect(await screen.findByText('Vereda La Esperanza')).toBeInTheDocument();
-  expect(screen.queryByRole('button', { name: /Vereda La Esperanza/ })).not.toBeInTheDocument();
+  expect(await screen.findByRole('link', { name: /Vereda La Esperanza/ })).toBeInTheDocument();
+  expect(
+    screen.queryByRole('button', { name: 'Editar Vereda La Esperanza' }),
+  ).not.toBeInTheDocument();
   expect(peticiones()).toContain('GET /api/zonas?emergencia=em2');
 });
 
@@ -108,9 +111,18 @@ it('crea una zona con su población y su fuente', async () => {
   });
 });
 
+it('cada zona lleva a su ficha y se edita con su botón', async () => {
+  responderSegun(RESPUESTAS);
+  pantalla();
+  const vereda = await screen.findByRole('link', { name: /Vereda La Esperanza/ });
+  expect(vereda).toHaveAttribute('href', '/consola/zonas/z1');
+  await userEvent.click(screen.getByRole('button', { name: 'Editar Vereda La Esperanza' }));
+  expect(screen.getByRole('dialog', { name: 'Editar Vereda La Esperanza' })).toBeInTheDocument();
+});
+
 it('no tiene violaciones graves de accesibilidad', async () => {
   responderSegun(RESPUESTAS);
   const { container } = pantalla();
-  await screen.findByRole('button', { name: /Vereda La Esperanza/ });
+  await screen.findByRole('link', { name: /Vereda La Esperanza/ });
   expect(await violacionesGraves(container)).toEqual([]);
 });
