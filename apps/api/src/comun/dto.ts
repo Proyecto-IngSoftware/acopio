@@ -3,6 +3,9 @@ import type { ZodType } from 'zod';
 
 type Propiedad = Record<string, unknown>;
 
+/** La marca con la que nestjs-zod le dice a cleanupOpenApiDoc si un objeto es obligatorio. */
+const SELF_REQUIRED = 'x-nestjs_zod-self-required';
+
 /** `{ type: ['string', 'null'] }` o `{ anyOf: [X, { type: 'null' }] }` → X con nullable (#38). */
 function sinNuloEnTipo(p: Propiedad): Propiedad {
   if (Array.isArray(p.type) && p.type.includes('null')) {
@@ -19,7 +22,16 @@ function sinNuloEnTipo(p: Propiedad): Propiedad {
     const opciones = (p.anyOf as Propiedad[]).filter((o) => o.type !== 'null');
     if (opciones.length === 1 && opciones.length < p.anyOf.length) {
       const { anyOf: _anyOf, ...resto } = p;
-      return { ...resto, ...opciones[0], nullable: true };
+      const unido: Propiedad = { ...resto, ...opciones[0], nullable: true };
+      // En un objeto, `required` es la lista de sus campos; si es obligatorio en el padre
+      // lo dice `selfRequired`, como hace nestjs-zod con los objetos que no admiten nulo
+      if (unido.type === 'object') {
+        const obligatorio = p.required === true;
+        unido.selfRequired = obligatorio;
+        unido[SELF_REQUIRED] = obligatorio;
+        if (!Array.isArray(unido.required)) delete unido.required;
+      }
+      return unido;
     }
   }
   return p;

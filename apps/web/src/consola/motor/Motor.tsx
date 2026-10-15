@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { Link, useSearchParams } from 'react-router';
 import {
   ultimaRonda,
@@ -56,6 +56,28 @@ export function Motor() {
     [consulta.data],
   );
   const ronda = recalcular.data?.ronda ?? ultimaRonda(lista);
+
+  function yaNoSePuede(codigo: string) {
+    fijarAviso(
+      codigo === 'SUGERENCIA_NO_ENCONTRADA'
+        ? 'Esa sugerencia ya no está: el motor recalculó'
+        : 'Otra persona ya decidió esta sugerencia',
+    );
+    void consulta.refetch();
+  }
+
+  // Los nombres vistos, para que un filtro siga visible aunque la lista nueva no lo traiga
+  const conocidos = useRef(new Map<string, string>());
+  for (const s of consulta.data ?? []) {
+    for (const o of [s.zona, s.acopio, s.categoria]) conocidos.current.set(o.id, o.nombre);
+  }
+  const hayFiltros = Boolean(filtro.zona || filtro.acopio || filtro.categoria);
+
+  function quitarFiltros() {
+    const nuevos = new URLSearchParams(params);
+    for (const clave of ['zona', 'acopio', 'categoria']) nuevos.delete(clave);
+    fijarParams(nuevos, { replace: true });
+  }
 
   function cambiar(clave: keyof FiltroSugerencias, valor: string | undefined) {
     const nuevos = new URLSearchParams(params);
@@ -133,7 +155,17 @@ export function Motor() {
           />
         ))}
       </div>
-      <Filtros lista={consulta.data ?? []} filtro={filtro} alCambiar={cambiar} />
+      <Filtros
+        lista={consulta.data ?? []}
+        filtro={filtro}
+        conocidos={conocidos.current}
+        alCambiar={cambiar}
+      />
+      {hayFiltros && (
+        <Boton variante="terciario" className="w-fit" onClick={quitarFiltros}>
+          Quitar filtros
+        </Boton>
+      )}
 
       {consulta.isPending && <Esqueleto etiqueta="Cargando sugerencias" />}
       {consulta.error && (
@@ -170,10 +202,9 @@ export function Motor() {
                 : `Sumado a ${r.remision.codigo}`,
             );
           }}
-          alDecidida={() => {
+          alDecidida={(codigo) => {
             fijarAprobando(null);
-            fijarAviso('Otra persona ya decidió esta sugerencia');
-            void consulta.refetch();
+            yaNoSePuede(codigo);
           }}
         />
       )}
@@ -185,6 +216,10 @@ export function Motor() {
             fijarDescartando(null);
             fijarAviso('Sugerencia descartada. Este par no se vuelve a sugerir en 24 horas');
           }}
+          alDecidida={(codigo) => {
+            fijarDescartando(null);
+            yaNoSePuede(codigo);
+          }}
         />
       )}
     </div>
@@ -194,10 +229,12 @@ export function Motor() {
 function Filtros({
   lista,
   filtro,
+  conocidos,
   alCambiar,
 }: {
   lista: Sugerencia[];
   filtro: FiltroSugerencias;
+  conocidos: Map<string, string>;
   alCambiar: (clave: keyof FiltroSugerencias, valor: string | undefined) => void;
 }) {
   const grupos = [
@@ -207,22 +244,30 @@ function Filtros({
   ] as const;
   return (
     <div className="grid grid-cols-1 gap-space-sm sm:grid-cols-3">
-      {grupos.map(([clave, etiqueta, opciones]) => (
-        <Selector
-          key={clave}
-          id={`filtro-${clave}`}
-          etiqueta={etiqueta}
-          value={filtro[clave] ?? ''}
-          onChange={(e) => alCambiar(clave, e.target.value || undefined)}
-        >
-          <option value="">Todas</option>
-          {opciones.map((o) => (
-            <option key={o.id} value={o.id}>
-              {o.nombre}
-            </option>
-          ))}
-        </Selector>
-      ))}
+      {grupos.map(([clave, etiqueta, deLaLista]) => {
+        const elegido = filtro[clave];
+        // El elegido sigue como opción aunque la lista filtrada ya no lo traiga
+        const opciones =
+          elegido && !deLaLista.some((o) => o.id === elegido)
+            ? [...deLaLista, { id: elegido, nombre: conocidos.get(elegido) ?? 'Filtro activo' }]
+            : deLaLista;
+        return (
+          <Selector
+            key={clave}
+            id={`filtro-${clave}`}
+            etiqueta={etiqueta}
+            value={filtro[clave] ?? ''}
+            onChange={(e) => alCambiar(clave, e.target.value || undefined)}
+          >
+            <option value="">Todas</option>
+            {opciones.map((o) => (
+              <option key={o.id} value={o.id}>
+                {o.nombre}
+              </option>
+            ))}
+          </Selector>
+        );
+      })}
     </div>
   );
 }
