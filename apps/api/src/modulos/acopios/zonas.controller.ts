@@ -43,6 +43,9 @@ const errores = {
 /** C9 Zonas (RF-MOT-001). Escribe el Administrador; el Operador las lista para sus remisiones. */
 @ApiTags('red')
 @ApiBearerAuth()
+// Todo es del Administrador salvo lo que diga otra cosa en el método: el guard lee primero
+// el decorador del método (getAllAndOverride)
+@Roles('ADMIN')
 @Controller('zonas')
 export class ZonasController {
   constructor(private readonly zonas: ZonasService) {}
@@ -54,7 +57,6 @@ export class ZonasController {
     return this.zonas.listar(filtro.emergencia);
   }
 
-  @Roles('ADMIN')
   @Post()
   @ApiCreatedResponse({ type: ZonaDto })
   @ApiResponse(errores)
@@ -62,7 +64,6 @@ export class ZonasController {
     return this.zonas.crear(admin, datos);
   }
 
-  @Roles('ADMIN')
   @Patch(':id')
   @ApiOkResponse({ type: ZonaDto })
   @ApiResponse(errores)

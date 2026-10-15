@@ -43,6 +43,9 @@ const ESTADO: Record<EstadoRemision, string> = {
   CANCELADA: 'cancelada',
 };
 
+/** Cuántos folios conciliados ofrece la hoja de despachar: los más recientes (P-053). */
+const FOLIOS_VINCULABLES = 50;
+
 /** C12 Remisiones (RF-MOT-008): crear a mano, listar, ver y editar un borrador. */
 @Injectable()
 export class RemisionesService {
@@ -275,7 +278,10 @@ export class RemisionesService {
   async foliosVinculables(usuario: UsuarioAutenticado, codigo: string) {
     const r = await this.encontrar(codigo);
     await this.alcance.exigir(usuario, 'ACOPIO', r.acopio_origen_id);
-    const filas = await this.comprobantes.conciliadosDeAcopio(r.acopio_origen_id);
+    const filas = await this.comprobantes.conciliadosDeAcopio(
+      r.acopio_origen_id,
+      FOLIOS_VINCULABLES,
+    );
     return filas.map((c) => ({
       folio: c.folio,
       conciliadoEn: c.verificado_en?.toISOString() ?? null,

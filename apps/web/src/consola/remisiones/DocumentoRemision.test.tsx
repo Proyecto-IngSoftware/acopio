@@ -66,6 +66,7 @@ it('un borrador no tiene documento', async () => {
   expect(
     await screen.findByText('Esta remisión no tiene documento: se imprime al despacharla.'),
   ).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Reintentar' })).not.toBeInTheDocument();
 });
 
 it('«Imprimir» abre la impresión del navegador', async () => {

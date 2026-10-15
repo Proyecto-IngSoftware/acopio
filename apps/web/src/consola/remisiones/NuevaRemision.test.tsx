@@ -139,3 +139,10 @@ it('no tiene violaciones graves de accesibilidad', async () => {
   await screen.findByLabelText('Cantidad de Arroz (kg)');
   expect(await violacionesGraves(container)).toEqual([]);
 });
+
+it('un Operador sin acopio activo sabe por qué no ve el editor', async () => {
+  responderSegun({ ...BASE, 'GET /api/ubicaciones/mias': [] });
+  pantalla('OPERADOR');
+  expect(await screen.findByText('Elige un acopio para armar la remisión')).toBeInTheDocument();
+  expect(screen.queryByLabelText(/Cantidad de/)).not.toBeInTheDocument();
+});

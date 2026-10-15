@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { focusManager } from '@tanstack/react-query';
 import { Route, Routes } from 'react-router';
 import { vi } from 'vitest';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
@@ -105,6 +106,10 @@ it('una recibida no tiene acciones y muestra sus fotos', async () => {
   expect(fotos[0]!.getAttribute('src')).toMatch(/\/evidencia\/0$/);
   expect(screen.getByText(/Llegó completo al coliseo/)).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: 'Cancelar remisión' })).not.toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Imprimir documento' })).toHaveAttribute(
+    'href',
+    '/consola/remisiones/R-2026-K4P7Q/documento',
+  );
 });
 
 it('una cancelada muestra el motivo', async () => {
@@ -343,5 +348,50 @@ describe('hallazgos de la revisión final', () => {
         'No se pudieron cargar los folios. Puedes despachar sin vincular.',
       ),
     ).toBeInTheDocument();
+  });
+
+  it('el aviso de cambio se quita cuando la remisión vuelve a cargar sola', async () => {
+    responderSegun({
+      ...BASE,
+      'GET /api/remisiones/*': remision({}),
+      'PUT /api/remisiones/*/lineas': conEstado(409, {
+        estado: 409,
+        codigo: 'REMISION_ESTADO_INVALIDO',
+        mensaje: 'La remisión está EN_TRANSITO',
+      }),
+    });
+    pantalla();
+    const campo = await screen.findByLabelText('Cantidad de Arroz (kg)');
+    await userEvent.clear(campo);
+    await userEvent.type(campo, '30');
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar líneas' }));
+    await screen.findByText('La remisión cambió mientras la editabas');
+    // Volver a la pestaña recarga la remisión (refetchOnWindowFocus)
+    focusManager.setFocused(false);
+    focusManager.setFocused(true);
+    await vi.waitFor(() =>
+      expect(screen.queryByText('La remisión cambió mientras la editabas')).not.toBeInTheDocument(),
+    );
+    focusManager.setFocused(undefined);
+  });
+
+  it('con muchos folios, la hoja deja buscarlos por folio o categoría', async () => {
+    const muchos = Array.from({ length: 12 }, (_, i) => ({
+      folio: `ACO-2026-F${String(i).padStart(4, '0')}`,
+      conciliadoEn: '2026-10-14T15:00:00.000Z',
+      categorias: [i === 7 ? 'Pañales' : 'Arroz'],
+    }));
+    responderSegun({
+      ...BASE,
+      'GET /api/remisiones/*': remision({ responsable: 'Pedro' }),
+      'GET /api/remisiones/*/folios-vinculables': muchos,
+    });
+    pantalla();
+    await userEvent.click(await screen.findByRole('button', { name: 'Despachar' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Despachar R-2026-K4P7Q' });
+    await within(hoja).findAllByRole('checkbox');
+    await userEvent.type(within(hoja).getByLabelText('Buscar folio'), 'pañales');
+    expect(within(hoja).getAllByRole('checkbox')).toHaveLength(1);
+    expect(within(hoja).getByRole('checkbox', { name: /ACO-2026-F0007/ })).toBeInTheDocument();
   });
 });

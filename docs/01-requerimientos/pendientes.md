@@ -920,8 +920,9 @@ conciliados del acopio de origen, de toda su historia, sin límite ni búsqueda.
 donaciones, la hoja de despachar de C12 será una lista larga de casillas.
 **Por qué:** el Operador tiene que encontrar entre todos los folios los dos o tres que van
 en el envío.
-**Estado:** ABIERTO. Opciones: los últimos N, solo los que tienen categorías de la
-remisión, o un buscador por folio
+**Estado:** RESUELTO el 2026-10-15 → el endpoint devuelve los 50 conciliados más
+recientes (los que no tienen fecha van al final) y la hoja ofrece «Buscar folio», por folio
+o categoría, cuando hay más de 8 (`remisiones.service.ts`, `HojaDespachar.tsx`, PR #89)
 
 ---
 

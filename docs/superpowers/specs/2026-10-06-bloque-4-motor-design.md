@@ -482,3 +482,6 @@ Cada etapa tiene su plan, escrito al empezarla.
 | El editor de líneas se comparte entre «nueva» y el borrador. El tope de una categoría es el movible más lo que esa remisión ya tiene (I2-08) | `comprometido` cuenta todos los borradores, también el que se edita |
 | El filtro de zona de la lista se aplica en la web; la API solo recibe el estado | Las opciones del selector no se reducen al filtrar, y «Despacho general» no tiene filtro en la API |
 | Las acciones del detalle salen de `puedeRemision` de `@acopio/shared` | La web y la API leen la misma tabla de transiciones |
+| `folios-vinculables` devuelve los 50 conciliados más recientes, con los que no tienen fecha al final, y la hoja de despachar busca por folio o categoría cuando hay más de 8 (P-053) | La lista crecía con toda la historia del acopio |
+| Una remisión recibida también enlaza su documento, para reimprimirlo | El documento ya admitía `RECIBIDA` y no había cómo llegar a él |
+| `ZonasController` vuelve a llevar `@Roles('ADMIN')` en la clase y abre solo el `GET` | Un método nuevo sin decorador quedaba abierto a cualquier sesión |

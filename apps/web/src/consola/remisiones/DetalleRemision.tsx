@@ -33,7 +33,8 @@ export function DetalleRemision() {
   const consulta = useRemision(codigo);
   const inicial = (useLocation().state as { aviso?: string } | null)?.aviso ?? null;
   const [aviso, fijarAviso] = useState<string | null>(inicial);
-  const [cambio, fijarCambio] = useState(false);
+  // Cuándo se cargó la versión que la API rechazó: el aviso se va sola cuando llega otra
+  const [cambioEn, fijarCambioEn] = useState<number | null>(null);
   const [hoja, fijarHoja] = useState<'despachar' | 'cancelar' | null>(null);
   const [sinGuardar, fijarSinGuardar] = useState(false);
 
@@ -75,7 +76,7 @@ export function DetalleRemision() {
   const r = consulta.data;
   const alConflicto = () => {
     fijarHoja(null);
-    fijarCambio(true);
+    fijarCambioEn(consulta.dataUpdatedAt);
   };
   return (
     <div className="flex flex-col gap-space-md">
@@ -90,7 +91,7 @@ export function DetalleRemision() {
           {aviso}
         </p>
       )}
-      {cambio && (
+      {cambioEn !== null && cambioEn === consulta.dataUpdatedAt && (
         <div
           role="alert"
           className="flex flex-col gap-space-xs rounded-xl bg-error-container p-space-sm text-body-md text-on-error-container"
@@ -99,7 +100,6 @@ export function DetalleRemision() {
           <Boton
             variante="secundario"
             onClick={() => {
-              fijarCambio(false);
               void consulta.refetch();
             }}
           >
@@ -119,8 +119,11 @@ export function DetalleRemision() {
         <Lectura r={r} />
       )}
 
-      {r.estado === 'EN_TRANSITO' && (
-        <EnlaceBoton a={`/consola/remisiones/${r.codigo}/documento`}>
+      {(r.estado === 'EN_TRANSITO' || r.estado === 'RECIBIDA') && (
+        <EnlaceBoton
+          a={`/consola/remisiones/${r.codigo}/documento`}
+          variante={r.estado === 'RECIBIDA' ? 'secundario' : 'primario'}
+        >
           Imprimir documento
         </EnlaceBoton>
       )}

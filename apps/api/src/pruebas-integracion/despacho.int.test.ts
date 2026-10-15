@@ -320,4 +320,26 @@ describe('despacho y cancelación de remisiones', () => {
     const res = await get(`/api/remisiones/${r.codigo}/folios-vinculables`, operador).expect(200);
     expect((res.body as { folio: string }[]).map((f) => f.folio)).not.toContain(ajeno.folio);
   });
+
+  it('lista como mucho los 50 folios conciliados más recientes', async () => {
+    const cat = await categoria(10);
+    const r = await borrador(cat, 2, 'Conductor');
+    // Fechas en el futuro: son los más recientes aunque otras suites dejen conciliados
+    const base = Date.UTC(2099, 0, 1);
+    const folios = Array.from({ length: 51 }, () => generarFolio(2026));
+    await a.prisma.comprobante.createMany({
+      data: folios.map((folio, i) => ({
+        folio,
+        donador_id: adminId,
+        acopio_id: ACOPIO_A,
+        estado: 'CONCILIADO' as const,
+        verificado_en: new Date(base + i * 60_000),
+      })),
+    });
+    const res = await get(`/api/remisiones/${r.codigo}/folios-vinculables`, operador).expect(200);
+    const listados = (res.body as { folio: string }[]).map((f) => f.folio);
+    expect(listados).toHaveLength(50);
+    expect(listados[0]).toBe(folios[50]);
+    expect(listados).not.toContain(folios[0]);
+  });
 });

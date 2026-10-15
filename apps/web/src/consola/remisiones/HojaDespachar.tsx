@@ -5,6 +5,7 @@ import {
   useDespachar,
   useEditarRemision,
   useFoliosVinculables,
+  type FolioVinculable,
   type Remision,
 } from '../../api/remisiones';
 import { Boton } from '../../componentes/Boton';
@@ -12,6 +13,16 @@ import { Campo } from '../../componentes/Campo';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { Hoja } from '../../componentes/Hoja';
 import { diaLargo } from '../../formato';
+
+/** Con más de estos folios la hoja ofrece buscar (P-053). */
+const MUCHOS_FOLIOS = 8;
+
+/** Por folio o por categoría, sin distinguir mayúsculas. */
+function coincide(f: FolioVinculable, busqueda: string) {
+  const texto = busqueda.trim().toLocaleLowerCase('es');
+  if (!texto) return true;
+  return [f.folio, ...f.categorias].some((t) => t.toLocaleLowerCase('es').includes(texto));
+}
 
 /** DespacharDto acepta hasta 20 folios. */
 const MAXIMO_FOLIOS = 20;
@@ -30,6 +41,7 @@ export function HojaDespachar({ remision, alCerrar, alDespachar, alError }: Prop
   const despachar = useDespachar(remision.codigo);
   const faltaResponsable = !remision.responsable?.trim();
   const [responsable, fijarResponsable] = useState('');
+  const [busqueda, fijarBusqueda] = useState('');
   const [elegidos, fijarElegidos] = useState<Set<string>>(new Set());
   const [sinResponsable, fijarSinResponsable] = useState(false);
   const [fallo, fijarFallo] = useState<string | null>(null);
@@ -112,26 +124,37 @@ export function HojaDespachar({ remision, alCerrar, alDespachar, alError }: Prop
             No hay folios conciliados en este acopio. Puedes despachar sin vincular.
           </p>
         )}
-        {folios.data?.map((f) => {
-          const marcado = elegidos.has(f.folio);
-          const lleno = !marcado && elegidos.size >= MAXIMO_FOLIOS;
-          return (
-            <label key={f.folio} className="flex min-h-[48px] items-center gap-space-sm">
-              <input
-                type="checkbox"
-                checked={marcado}
-                disabled={lleno}
-                onChange={() => alternar(f.folio)}
-                className="h-5 w-5 accent-primary-container"
-              />
-              <span className="text-body-md text-on-surface">
-                <b className="font-mono">{f.folio}</b>
-                {f.categorias.length > 0 && ` · ${f.categorias.join(', ')}`}
-                {f.conciliadoEn && ` · conciliado el ${diaLargo(f.conciliadoEn)}`}
-              </span>
-            </label>
-          );
-        })}
+        {(folios.data?.length ?? 0) > MUCHOS_FOLIOS && (
+          <Campo
+            id="buscar-folio"
+            etiqueta="Buscar folio"
+            type="search"
+            value={busqueda}
+            onChange={(e) => fijarBusqueda(e.target.value)}
+          />
+        )}
+        {folios.data
+          ?.filter((f) => coincide(f, busqueda))
+          .map((f) => {
+            const marcado = elegidos.has(f.folio);
+            const lleno = !marcado && elegidos.size >= MAXIMO_FOLIOS;
+            return (
+              <label key={f.folio} className="flex min-h-[48px] items-center gap-space-sm">
+                <input
+                  type="checkbox"
+                  checked={marcado}
+                  disabled={lleno}
+                  onChange={() => alternar(f.folio)}
+                  className="h-5 w-5 accent-primary-container"
+                />
+                <span className="text-body-md text-on-surface">
+                  <b className="font-mono">{f.folio}</b>
+                  {f.categorias.length > 0 && ` · ${f.categorias.join(', ')}`}
+                  {f.conciliadoEn && ` · conciliado el ${diaLargo(f.conciliadoEn)}`}
+                </span>
+              </label>
+            );
+          })}
       </fieldset>
       <p className="rounded-xl bg-surface-container-low p-space-sm text-body-sm text-on-surface">
         Al despachar, estas cantidades salen del inventario del acopio.

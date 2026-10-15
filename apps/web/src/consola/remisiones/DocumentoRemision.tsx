@@ -4,6 +4,7 @@ import { urlRecepcion, useRemision, type Remision } from '../../api/remisiones';
 import { Boton } from '../../componentes/Boton';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
+import { EstadoVacio } from '../../componentes/EstadoVacio';
 import { Icono } from '../../componentes/Icono';
 import { Qr } from '../../componentes/Qr';
 import { diaLargo } from '../../formato';
@@ -55,10 +56,9 @@ export function DocumentoRemision() {
         />
       )}
       {consulta.data && !conDocumento && (
-        <EstadoError
-          mensaje="Esta remisión no tiene documento: se imprime al despacharla."
-          alReintentar={() => void consulta.refetch()}
-        />
+        <EstadoVacio titulo="Esta remisión no tiene documento: se imprime al despacharla.">
+          Vuelve a la remisión para despacharla.
+        </EstadoVacio>
       )}
       {r && conDocumento && <Cuerpo r={r} />}
     </main>

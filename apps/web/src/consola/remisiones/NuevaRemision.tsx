@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { useCrearRemision } from '../../api/remisiones';
+import { EstadoVacio } from '../../componentes/EstadoVacio';
 import { useSesion } from '../../sesion/Sesion';
 import { useUbicacionActiva } from '../../sesion/ubicacion-activa';
 import { useEnLinea } from '../../sin-conexion/en-linea';
@@ -49,6 +50,11 @@ export function NuevaRemision() {
         conAcopio={admin}
         error={crear.error}
       />
+      {!admin && !acopioId && (
+        <EstadoVacio titulo="Elige un acopio para armar la remisión">
+          Las remisiones salen de un acopio. Cambia la ubicación activa en la cabecera.
+        </EstadoVacio>
+      )}
       {acopioId && (
         <section aria-labelledby="que-se-manda" className="flex flex-col gap-space-sm">
           <h2 id="que-se-manda" className="text-title-md text-on-surface">

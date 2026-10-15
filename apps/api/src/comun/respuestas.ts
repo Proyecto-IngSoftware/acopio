@@ -702,6 +702,7 @@ export class RemisionDto extends crearDto(
   }),
 ) {}
 
+/** Uno de los 50 conciliados más recientes del acopio de origen (P-053). */
 export class FolioVinculableDto extends crearDto(
   z.object({
     folio: z.string().describe('ACO-AAAA-XXXXX'),
