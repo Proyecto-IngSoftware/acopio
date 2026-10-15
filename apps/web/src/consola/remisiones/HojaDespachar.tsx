@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { formatearCantidad } from '@acopio/shared';
 import { ErrorApi } from '../../api/cliente';
 import {
   useDespachar,
@@ -44,8 +45,12 @@ export function HojaDespachar({ remision, alCerrar, alDespachar, alError }: Prop
       if (faltaResponsable) await editar.mutateAsync({ responsable: responsable.trim() });
       alDespachar(await despachar.mutateAsync([...elegidos]));
     } catch (e) {
-      if (e instanceof ErrorApi && e.codigo === 'REMISION_ESTADO_INVALIDO') alError(e);
-      else fijarFallo(e instanceof Error ? e.message : 'No se pudo despachar');
+      if (
+        e instanceof ErrorApi &&
+        (e.codigo === 'REMISION_ESTADO_INVALIDO' || e.codigo === 'REMISION_CAMBIO')
+      ) {
+        alError(e);
+      } else fijarFallo(e instanceof Error ? e.message : 'No se pudo despachar');
     }
   }
 
@@ -65,8 +70,14 @@ export function HojaDespachar({ remision, alCerrar, alDespachar, alError }: Prop
         <b>
           {remision.acopio.nombre} → {destino}
         </b>{' '}
-        · {remision.lineas.length} {remision.lineas.length === 1 ? 'categoría' : 'categorías'}
       </p>
+      <ul className="flex flex-col gap-1 rounded-xl bg-surface-container-low p-space-sm text-body-md text-on-surface tabular-nums">
+        {remision.lineas.map((l) => (
+          <li key={l.categoriaId}>
+            {l.categoria} · {formatearCantidad(l.cantidadPlaneada, l.unidad)}
+          </li>
+        ))}
+      </ul>
       {faltaResponsable && (
         <div className="flex flex-col gap-space-xs">
           <Campo
@@ -91,6 +102,11 @@ export function HojaDespachar({ remision, alCerrar, alDespachar, alError }: Prop
           Folios que van en este envío
         </legend>
         {folios.isPending && <Esqueleto etiqueta="Cargando folios" className="h-12" />}
+        {folios.error && (
+          <p className="text-body-sm text-on-surface-variant">
+            No se pudieron cargar los folios. Puedes despachar sin vincular.
+          </p>
+        )}
         {folios.data?.length === 0 && (
           <p className="text-body-sm text-on-surface-variant">
             No hay folios conciliados en este acopio. Puedes despachar sin vincular.

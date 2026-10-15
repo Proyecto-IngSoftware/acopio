@@ -107,3 +107,43 @@ it('el buscador filtra por nombre', async () => {
   expect(screen.queryByLabelText('Cantidad de Arroz (kg)')).not.toBeInTheDocument();
   expect(screen.getByLabelText('Cantidad de Agua potable (L)')).toBeInTheDocument();
 });
+
+it('en una categoría por unidades pide números enteros', async () => {
+  responderSegun({
+    'GET /api/acopios/*/excedentes': [
+      excedente({ categoriaId: 'c-panal', categoria: 'Pañales', unidad: 'UNIDAD', movible: 50 }),
+    ],
+  });
+  editor();
+  await userEvent.type(await screen.findByLabelText('Cantidad de Pañales (und.)'), '2.5');
+  expect(screen.getByText('Usa números enteros')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Crear borrador' })).toBeDisabled();
+});
+
+it('acepta hasta tres decimales', async () => {
+  responderSegun({ 'GET /api/acopios/*/excedentes': EXCEDENTE_KENNEDY });
+  editor();
+  await userEvent.type(await screen.findByLabelText('Cantidad de Arroz (kg)'), '1.2345');
+  expect(screen.getByText('Hasta 3 decimales')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Crear borrador' })).toBeDisabled();
+});
+
+it('avisa cuando las cantidades cambiaron sin guardar', async () => {
+  responderSegun({ 'GET /api/acopios/*/excedentes': EXCEDENTE_KENNEDY });
+  const alCambiar = vi.fn();
+  render(
+    envolver(
+      <EditorLineas
+        acopioId="a-kennedy"
+        propias={[]}
+        error={null}
+        alGuardar={vi.fn()}
+        etiqueta="Guardar líneas"
+        ocupado={false}
+        alCambiarSucio={alCambiar}
+      />,
+    ),
+  );
+  await userEvent.type(await screen.findByLabelText('Cantidad de Arroz (kg)'), '5');
+  expect(alCambiar).toHaveBeenLastCalledWith(true);
+});

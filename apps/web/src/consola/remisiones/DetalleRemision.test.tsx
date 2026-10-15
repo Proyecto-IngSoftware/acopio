@@ -215,3 +215,133 @@ it('no tiene violaciones graves de accesibilidad', async () => {
   await screen.findByLabelText('Cantidad de Arroz (kg)');
   expect(await violacionesGraves(container)).toEqual([]);
 });
+
+describe('hallazgos de la revisión final', () => {
+  const CERRADA = {
+    ...BASE,
+    'GET /api/emergencias': [
+      { id: 'e-activa', estado: 'ACTIVA' },
+      { id: 'e-cerrada', estado: 'CERRADA' },
+    ],
+    'GET /api/zonas': [
+      {
+        id: 'z-agustin',
+        emergenciaId: 'e-activa',
+        nombre: 'Barrio San Agustín',
+        municipio: 'Mocoa',
+      },
+      { id: 'z-vieja', emergenciaId: 'e-cerrada', nombre: 'Vereda Vieja', municipio: 'Mocoa' },
+    ],
+  };
+
+  it('con la zona de una emergencia cerrada, la muestra y guarda solo lo que cambió', async () => {
+    responderSegun({
+      ...CERRADA,
+      'GET /api/remisiones/*': remision({ zona: { id: 'z-vieja', nombre: 'Vereda Vieja' } }),
+      'PATCH /api/remisiones/*': remision({ responsable: 'Pedro Gómez' }),
+    });
+    pantalla();
+    const destino = await screen.findByLabelText('Destino');
+    await screen.findByRole('option', { name: 'Vereda Vieja (emergencia cerrada)' });
+    expect(destino).toHaveValue('z-vieja');
+    await userEvent.type(screen.getByLabelText('Quién lleva el envío'), 'Pedro Gómez');
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar destino' }));
+    await screen.findByText('Destino guardado');
+    expect(await cuerpoDe('PATCH /api/remisiones/R-2026-K4P7Q')).toEqual({
+      responsable: 'Pedro Gómez',
+    });
+  });
+
+  it('un error al guardar las líneas se muestra', async () => {
+    responderSegun({
+      ...BASE,
+      'GET /api/remisiones/*': remision({}),
+      'PUT /api/remisiones/*/lineas': conEstado(500, {
+        estado: 500,
+        codigo: 'ERROR_INTERNO',
+        mensaje: 'Algo falló en el servidor',
+      }),
+    });
+    pantalla();
+    const campo = await screen.findByLabelText('Cantidad de Arroz (kg)');
+    await userEvent.clear(campo);
+    await userEvent.type(campo, '30');
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar líneas' }));
+    expect(await screen.findByText('Algo falló en el servidor')).toBeInTheDocument();
+  });
+
+  it('las cantidades escritas sobreviven a «Guardar destino»', async () => {
+    responderSegun({ ...BASE, 'GET /api/remisiones/*': remision({}) });
+    pantalla();
+    const campo = await screen.findByLabelText('Cantidad de Arroz (kg)');
+    await userEvent.clear(campo);
+    await userEvent.type(campo, '30');
+    responderSegun({
+      ...BASE,
+      'GET /api/remisiones/*': remision({ responsable: 'Pedro Gómez' }),
+      'PATCH /api/remisiones/*': remision({ responsable: 'Pedro Gómez' }),
+    });
+    await userEvent.type(screen.getByLabelText('Quién lleva el envío'), 'Pedro Gómez');
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar destino' }));
+    await screen.findByText('Destino guardado');
+    await vi.waitFor(() =>
+      expect(screen.getByLabelText('Quién lleva el envío')).toHaveValue('Pedro Gómez'),
+    );
+    expect(screen.getByLabelText('Cantidad de Arroz (kg)')).toHaveValue(30);
+  });
+
+  it('con cantidades sin guardar no deja despachar', async () => {
+    responderSegun({ ...BASE, 'GET /api/remisiones/*': remision({}) });
+    pantalla();
+    const campo = await screen.findByLabelText('Cantidad de Arroz (kg)');
+    await userEvent.clear(campo);
+    await userEvent.type(campo, '30');
+    expect(screen.getByRole('button', { name: 'Despachar' })).toBeDisabled();
+    expect(screen.getByText('Guarda las líneas antes de despachar')).toBeInTheDocument();
+  });
+
+  it('la hoja de despachar lista lo que sale', async () => {
+    responderSegun({ ...BASE, 'GET /api/remisiones/*': remision({ responsable: 'Pedro' }) });
+    pantalla();
+    await userEvent.click(await screen.findByRole('button', { name: 'Despachar' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Despachar R-2026-K4P7Q' });
+    expect(within(hoja).getByText('Arroz · 40 kg')).toBeInTheDocument();
+  });
+
+  it('REMISION_CAMBIO al despachar ofrece ver cómo quedó', async () => {
+    responderSegun({
+      ...BASE,
+      'GET /api/remisiones/*': remision({ responsable: 'Pedro' }),
+      'POST /api/remisiones/*/despachar': conEstado(409, {
+        estado: 409,
+        codigo: 'REMISION_CAMBIO',
+        mensaje: 'La remisión cambió; vuelve a cargarla',
+      }),
+    });
+    pantalla();
+    await userEvent.click(await screen.findByRole('button', { name: 'Despachar' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Despachar R-2026-K4P7Q' });
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Despachar' }));
+    expect(await screen.findByText('La remisión cambió mientras la editabas')).toBeInTheDocument();
+  });
+
+  it('si los folios no cargan, la hoja lo dice', async () => {
+    responderSegun({
+      ...BASE,
+      'GET /api/remisiones/*': remision({ responsable: 'Pedro' }),
+      'GET /api/remisiones/*/folios-vinculables': conEstado(500, {
+        estado: 500,
+        codigo: 'ERROR_INTERNO',
+        mensaje: 'Falla',
+      }),
+    });
+    pantalla();
+    await userEvent.click(await screen.findByRole('button', { name: 'Despachar' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Despachar R-2026-K4P7Q' });
+    expect(
+      await within(hoja).findByText(
+        'No se pudieron cargar los folios. Puedes despachar sin vincular.',
+      ),
+    ).toBeInTheDocument();
+  });
+});

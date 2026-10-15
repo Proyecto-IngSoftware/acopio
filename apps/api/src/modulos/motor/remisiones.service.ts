@@ -271,7 +271,6 @@ export class RemisionesService {
     );
   }
 
-  /** Solo folios CONCILIADO del mismo acopio (§6 de la especificación). */
   /** Los folios conciliados que se pueden vincular al despachar (RF-CMP-007). */
   async foliosVinculables(usuario: UsuarioAutenticado, codigo: string) {
     const r = await this.encontrar(codigo);
@@ -286,6 +285,7 @@ export class RemisionesService {
     }));
   }
 
+  /** Solo folios CONCILIADO del mismo acopio (§6 de la especificación). */
   private async validarFolios(acopioId: string, folios: string[]) {
     // Por comprobante, no por texto: «ACO-…» y «aco-…» son el mismo folio
     const porId = new Map<string, string>();

@@ -35,6 +35,7 @@ export function DetalleRemision() {
   const [aviso, fijarAviso] = useState<string | null>(inicial);
   const [cambio, fijarCambio] = useState(false);
   const [hoja, fijarHoja] = useState<'despachar' | 'cancelar' | null>(null);
+  const [sinGuardar, fijarSinGuardar] = useState(false);
 
   const encabezado = <Encabezado titulo={codigo} volverA="/consola/remisiones" />;
   if (!enLinea) {
@@ -109,10 +110,10 @@ export function DetalleRemision() {
 
       {puedeRemision(r.estado, 'editar') ? (
         <Borrador
-          key={firma(r)}
           r={r}
           alConflicto={alConflicto}
           alGuardar={(texto) => fijarAviso(texto)}
+          alCambiarSucio={fijarSinGuardar}
         />
       ) : (
         <Lectura r={r} />
@@ -124,7 +125,16 @@ export function DetalleRemision() {
         </EnlaceBoton>
       )}
       {puedeRemision(r.estado, 'despachar') && (
-        <Boton onClick={() => fijarHoja('despachar')}>Despachar</Boton>
+        <>
+          {sinGuardar && (
+            <p className="text-body-sm text-on-surface-variant">
+              Guarda las líneas antes de despachar
+            </p>
+          )}
+          <Boton disabled={sinGuardar} onClick={() => fijarHoja('despachar')}>
+            Despachar
+          </Boton>
+        </>
       )}
       {puedeRemision(r.estado, 'cancelar') && (
         <Boton variante="terciario" onClick={() => fijarHoja('cancelar')}>
@@ -158,13 +168,15 @@ export function DetalleRemision() {
   );
 }
 
-/** Cambia cuando la API devuelve otras líneas o otro destino: el borrador se rearma. */
-const firma = (r: Remision) =>
-  JSON.stringify([
-    r.zona?.id ?? null,
-    r.responsable,
-    r.lineas.map((l) => [l.categoriaId, l.cantidadPlaneada]),
-  ]);
+/** Cada sección del borrador se rearma solo cuando la API devuelve otra versión de lo suyo:
+ *  guardar el destino no borra las cantidades escritas, ni al revés. */
+const firmaDestino = (r: Remision) => JSON.stringify([r.zona?.id ?? null, r.responsable]);
+const firmaLineas = (r: Remision) =>
+  JSON.stringify(r.lineas.map((l) => [l.categoriaId, l.cantidadPlaneada]));
+
+/** El mensaje de un error que la sección no explica en otro lugar. */
+const otroError = (e: ErrorApi | null, propios: string[]) =>
+  e && !conflicto(e) && !propios.includes(e.codigo) ? e.message : null;
 
 function Cabecera({ r }: { r: Remision }) {
   return (
@@ -187,62 +199,96 @@ function Borrador({
   r,
   alConflicto,
   alGuardar,
+  alCambiarSucio,
+}: {
+  r: Remision;
+  alConflicto: () => void;
+  alGuardar: (aviso: string) => void;
+  alCambiarSucio: (sucio: boolean) => void;
+}) {
+  const lineas = useGuardarLineas(r.codigo);
+  const fallo = otroError(lineas.error, ['LINEA_EXCEDE_MOVIBLE']);
+  return (
+    <>
+      <SeccionDestino key={firmaDestino(r)} r={r} alConflicto={alConflicto} alGuardar={alGuardar} />
+      <section aria-labelledby="que-se-manda" className="flex flex-col gap-space-sm">
+        <h2 id="que-se-manda" className="text-title-md text-on-surface">
+          Qué se manda
+        </h2>
+        <EditorLineas
+          key={firmaLineas(r)}
+          acopioId={r.acopio.id}
+          propias={r.lineas}
+          error={lineas.error}
+          etiqueta="Guardar líneas"
+          ocupado={lineas.isPending}
+          alCambiarSucio={alCambiarSucio}
+          alGuardar={(nuevas) =>
+            lineas.mutate(nuevas, {
+              onSuccess: () => alGuardar('Líneas guardadas'),
+              onError: (e) => conflicto(e) && alConflicto(),
+            })
+          }
+        />
+        {fallo && (
+          <p role="alert" className="text-body-sm text-error">
+            {fallo}
+          </p>
+        )}
+      </section>
+    </>
+  );
+}
+
+function SeccionDestino({
+  r,
+  alConflicto,
+  alGuardar,
 }: {
   r: Remision;
   alConflicto: () => void;
   alGuardar: (aviso: string) => void;
 }) {
   const editar = useEditarRemision(r.codigo);
-  const lineas = useGuardarLineas(r.codigo);
   const [destino, fijarDestino] = useState<Destino>({
     acopioId: r.acopio.id,
     zonaId: r.zona?.id ?? null,
     responsable: r.responsable ?? '',
   });
-  const alError = (e: ErrorApi) => {
-    if (conflicto(e)) alConflicto();
-  };
+  // Solo lo que cambió: reenviar una zona que se cerró daría ZONA_SOLO_LECTURA (foco 4)
+  const cambios: { zonaId?: string | null; responsable?: string | null } = {};
+  if (destino.zonaId !== (r.zona?.id ?? null)) cambios.zonaId = destino.zonaId;
+  const responsable = destino.responsable.trim() || null;
+  if (responsable !== (r.responsable ?? null)) cambios.responsable = responsable;
+  const hayCambios = Object.keys(cambios).length > 0;
+  const fallo = otroError(editar.error, ['ZONA_SOLO_LECTURA', 'ZONA_NO_ENCONTRADA']);
   return (
-    <>
-      <section className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md">
-        <CamposDestino
-          valor={destino}
-          alCambiar={fijarDestino}
-          conAcopio={false}
-          error={editar.error}
-        />
-        <Boton
-          variante="secundario"
-          disabled={editar.isPending}
-          onClick={() =>
-            editar.mutate(
-              { zonaId: destino.zonaId, responsable: destino.responsable.trim() || null },
-              { onSuccess: () => alGuardar('Destino guardado'), onError: alError },
-            )
-          }
-        >
-          Guardar destino
-        </Boton>
-      </section>
-      <section aria-labelledby="que-se-manda" className="flex flex-col gap-space-sm">
-        <h2 id="que-se-manda" className="text-title-md text-on-surface">
-          Qué se manda
-        </h2>
-        <EditorLineas
-          acopioId={r.acopio.id}
-          propias={r.lineas}
-          error={lineas.error}
-          etiqueta="Guardar líneas"
-          ocupado={lineas.isPending}
-          alGuardar={(nuevas) =>
-            lineas.mutate(nuevas, {
-              onSuccess: () => alGuardar('Líneas guardadas'),
-              onError: alError,
-            })
-          }
-        />
-      </section>
-    </>
+    <section className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md">
+      <CamposDestino
+        valor={destino}
+        alCambiar={fijarDestino}
+        conAcopio={false}
+        error={editar.error}
+        zonaActual={r.zona}
+      />
+      {fallo && (
+        <p role="alert" className="text-body-sm text-error">
+          {fallo}
+        </p>
+      )}
+      <Boton
+        variante="secundario"
+        disabled={editar.isPending || !hayCambios}
+        onClick={() =>
+          editar.mutate(cambios, {
+            onSuccess: () => alGuardar('Destino guardado'),
+            onError: (e) => conflicto(e) && alConflicto(),
+          })
+        }
+      >
+        Guardar destino
+      </Boton>
+    </section>
   );
 }
 

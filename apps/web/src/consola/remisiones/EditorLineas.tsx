@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { formatearCantidad, formatearNumero, SIMBOLO_UNIDAD } from '@acopio/shared';
 import type { ErrorApi } from '../../api/cliente';
 import {
@@ -26,6 +26,8 @@ interface Props {
   alGuardar: (lineas: LineaNueva[]) => void;
   etiqueta: string;
   ocupado: boolean;
+  /** Avisa si hay cantidades distintas de las guardadas, para no despachar sin guardarlas. */
+  alCambiarSucio?: (sucio: boolean) => void;
 }
 
 interface Fila {
@@ -72,12 +74,25 @@ function maximoDe(error: ErrorApi | null): { categoriaId: string; maximo: number
 }
 
 /** C12: qué se manda, contra lo que el acopio puede mover hoy. Lo usan «nueva» y el borrador. */
-export function EditorLineas({ acopioId, propias, error, alGuardar, etiqueta, ocupado }: Props) {
+export function EditorLineas({
+  acopioId,
+  propias,
+  error,
+  alGuardar,
+  etiqueta,
+  ocupado,
+  alCambiarSucio,
+}: Props) {
   const excedentes = useExcedentes(acopioId);
   const [cantidades, fijarCantidades] = useState<Record<string, string>>(() =>
     Object.fromEntries(propias.map((l) => [l.categoriaId, String(l.cantidadPlaneada)])),
   );
   const [busqueda, fijarBusqueda] = useState('');
+  const guardadas = new Map(propias.map((l) => [l.categoriaId, l.cantidadPlaneada]));
+  const sucio = Object.entries(cantidades).some(
+    ([id, texto]) => Number(texto.replace(',', '.') || 0) !== (guardadas.get(id) ?? 0),
+  );
+  useEffect(() => alCambiarSucio?.(sucio), [sucio, alCambiarSucio]);
 
   if (excedentes.isPending) return <Esqueleto etiqueta="Cargando el excedente" />;
   if (excedentes.error) {
@@ -105,11 +120,25 @@ export function EditorLineas({ acopioId, propias, error, alGuardar, etiqueta, oc
   const pasadas = new Set(
     filas.filter((f) => valor(f.categoriaId) > f.tope).map((f) => f.categoriaId),
   );
+  // Lo que la API rechazaría: CANTIDAD_ENTERA en unidades y más de 3 decimales
+  const problema = (f: Fila): string | null => {
+    const v = valor(f.categoriaId);
+    if (!(v > 0)) return null;
+    if (f.unidad === 'UNIDAD' && !Number.isInteger(v)) return 'Usa números enteros';
+    if (Math.round(v * 1000) !== v * 1000) return 'Hasta 3 decimales';
+    return null;
+  };
+  const invalidas = filas.filter((f) => problema(f) !== null).length;
   const demasiadas = lineas.length > MAXIMO_LINEAS;
   const maximo = maximoDe(error);
   const texto = busqueda.trim().toLocaleLowerCase('es');
+  // La fila que la API rechazó se ve aunque el buscador la oculte
   const visibles = texto
-    ? filas.filter((f) => f.categoria.toLocaleLowerCase('es').includes(texto))
+    ? filas.filter(
+        (f) =>
+          f.categoria.toLocaleLowerCase('es').includes(texto) ||
+          f.categoriaId === maximo?.categoriaId,
+      )
     : filas;
 
   return (
@@ -164,6 +193,7 @@ export function EditorLineas({ acopioId, propias, error, alGuardar, etiqueta, oc
                 </div>
               </div>
               {pasada && <p className="text-body-sm text-error">Pasa de lo que se puede mandar</p>}
+              {!pasada && problema(f) && <p className="text-body-sm text-error">{problema(f)}</p>}
               {sugerido !== null && (
                 <div className="flex flex-wrap items-center gap-space-xs rounded-xl bg-error-container p-space-sm text-body-sm text-on-error-container">
                   <span>Hoy se pueden mandar hasta {formatearCantidad(sugerido, f.unidad)}</span>
@@ -185,7 +215,7 @@ export function EditorLineas({ acopioId, propias, error, alGuardar, etiqueta, oc
         <p className="text-body-sm text-error">Una remisión lleva hasta 40 categorías</p>
       )}
       <Boton
-        disabled={ocupado || lineas.length === 0 || demasiadas || pasadas.size > 0}
+        disabled={ocupado || lineas.length === 0 || demasiadas || pasadas.size > 0 || invalidas > 0}
         onClick={() => alGuardar(lineas)}
       >
         {etiqueta}

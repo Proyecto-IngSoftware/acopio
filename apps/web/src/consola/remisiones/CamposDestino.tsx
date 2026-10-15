@@ -21,13 +21,17 @@ interface Props {
   /** Solo el Administrador elige el acopio de origen. */
   conAcopio: boolean;
   error: ErrorApi | null;
+  /** La zona que ya tiene la remisión: se muestra aunque su emergencia se haya cerrado. */
+  zonaActual?: { id: string; nombre: string } | null;
 }
 
 /** C12: de dónde sale, a dónde va y quién lo lleva (I2-05). */
-export function CamposDestino({ valor, alCambiar, conAcopio, error }: Props) {
+export function CamposDestino({ valor, alCambiar, conAcopio, error, zonaActual }: Props) {
   const acopios = useAcopiosGestion(conAcopio);
   const zonas = useZonasVigentes();
   const deZona = errorDeZona(error);
+  const actualCerrada =
+    zonaActual && zonas.data && !zonas.data.some((z) => z.id === zonaActual.id) ? zonaActual : null;
   return (
     <div className="flex flex-col gap-space-sm">
       {conAcopio && (
@@ -53,6 +57,9 @@ export function CamposDestino({ valor, alCambiar, conAcopio, error }: Props) {
         onChange={(e) => alCambiar({ ...valor, zonaId: e.target.value || null })}
       >
         <option value="">Despacho general</option>
+        {actualCerrada && (
+          <option value={actualCerrada.id}>{actualCerrada.nombre} (emergencia cerrada)</option>
+        )}
         {zonas.data?.map((z) => (
           <option key={z.id} value={z.id}>
             {z.nombre} · {z.municipio}

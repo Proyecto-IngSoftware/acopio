@@ -116,6 +116,10 @@ export function useCrearRemision() {
   return useMutation<Remision, ErrorApi, DatosRemision>({
     mutationFn: (datos) => desenvolver(api.POST('/api/remisiones', { body: datos })),
     onSuccess: () => invalidar(['remisiones'], ['excedentes']),
+    onError: (e) => {
+      // El tope que muestra el editor quedó viejo: se vuelve a pedir
+      if (e.codigo === 'LINEA_EXCEDE_MOVIBLE') invalidar(['excedentes']);
+    },
   });
 }
 
@@ -127,6 +131,10 @@ export function useGuardarLineas(codigo: string) {
         api.PUT('/api/remisiones/{codigo}/lineas', { ...ruta(codigo), body: { lineas } }),
       ),
     onSuccess: () => invalidar(['remision', codigo], ['remisiones'], ['excedentes']),
+    onError: (e) => {
+      // El tope que muestra el editor quedó viejo: se vuelve a pedir
+      if (e.codigo === 'LINEA_EXCEDE_MOVIBLE') invalidar(['excedentes']);
+    },
   });
 }
 

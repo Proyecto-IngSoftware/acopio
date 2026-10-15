@@ -44,7 +44,7 @@ Joseph el 2026-10-15 y queda en «Decisiones al planear». La maqueta sale de la
 | 6 Detalle, despacho y cancelación | ✅ `b60fc9d` | |
 | 7 Lista de remisiones | ✅ `b60fc9d` | |
 | 8 Documento imprimible | ✅ `b60fc9d` | |
-| 9 Recorrido y cierre del ciclo | ✅ | `consola-remisiones.mjs` 6/6, `consola-motor.mjs` 9/9 y `validacion-general.mjs` 59/59 contra el Compose el 2026-10-15 |
+| 9 Recorrido y cierre del ciclo | ✅ | `consola-remisiones.mjs` 7/7 (dos corridas seguidas), `consola-motor.mjs` 9/9 y `validacion-general.mjs` 59/59 contra el Compose el 2026-10-15. La revisión final pidió tres arreglos importantes; están en el último commit con sus pruebas |
 
 ## Decisiones al planear
 

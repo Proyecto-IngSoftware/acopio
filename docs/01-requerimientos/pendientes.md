@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-14
+actualizado: 2026-10-15
 ---
 
 # Pendientes — bandeja de entrada
@@ -910,6 +910,18 @@ campos. Se renombró a `RecibirRemisionDto`, pero nada impide que vuelva a pasar
 y en otro caso podría pasar sin que nada compile mal.
 **Estado:** ABIERTO. Una prueba unitaria en `apps/api` que busque nombres de clase
 `*Dto` repetidos en `src/` o que revise el contrato generado
+
+---
+
+### P-053 · La hoja de despachar lista todos los folios conciliados del acopio
+**Fecha:** 2026-10-15 · **Propuesto por:** Claude, en la revisión final del ciclo 2 del Bloque 4
+**Qué:** `GET /remisiones/:codigo/folios-vinculables` devuelve todos los comprobantes
+conciliados del acopio de origen, de toda su historia, sin límite ni búsqueda. Con meses de
+donaciones, la hoja de despachar de C12 será una lista larga de casillas.
+**Por qué:** el Operador tiene que encontrar entre todos los folios los dos o tres que van
+en el envío.
+**Estado:** ABIERTO. Opciones: los últimos N, solo los que tienen categorías de la
+remisión, o un buscador por folio
 
 ---
 

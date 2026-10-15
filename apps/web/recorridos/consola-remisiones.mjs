@@ -1,7 +1,8 @@
 // Recorrido del cierre del ciclo 2 del Bloque 4: remisiones para el Operador, a 360 × 640,
 // contra la API del Compose con el seed:demo. Sigue los pasos 4 y 6 del §1 de la
 // especificación: un borrador aprobado en el motor, la fila de «Más», editar la línea,
-// despachar con responsable y folio, imprimir el documento y cancelar un despacho general.
+// despachar con responsable y folio, imprimir el documento, cancelar lo despachado y un
+// despacho general.
 //
 // Necesita el Compose con la API reconstruida, seed y seed:demo corridos, y el build servido:
 //   bun run --filter @acopio/web build && (cd apps/web && bunx vite preview)
@@ -176,6 +177,26 @@ await paso('el documento muestra el código y el QR', async () => {
   await p.getByRole('heading', { level: 1, name: `Remisión ${codigo}` }).waitFor();
   await p.getByRole('img', { name: `Código QR para recibir la remisión ${codigo}` }).waitFor();
   await revisar(p, 'documento', 'C12-remisiones/construida-documento.png');
+});
+
+// El despacho sacó inventario de Kennedy: cancelarlo lo devuelve con un ajuste (M-07) y deja
+// la demo lista para la corrida siguiente y para consola-motor.mjs
+await paso('cancela la despachada y el saldo vuelve', async () => {
+  const antes = await saldos();
+  await p.goto(`${WEB}/consola/remisiones/${codigo}`);
+  await p.getByRole('button', { name: 'Cancelar remisión' }).click();
+  const hoja = p.getByRole('dialog', { name: `Cancelar ${codigo}` });
+  await hoja.getByText('Lo despachado vuelve al inventario del acopio con un ajuste.').waitFor();
+  await hoja.getByLabel('Motivo').fill('La vía a Mocoa está cerrada');
+  await hoja.getByRole('button', { name: 'Cancelar remisión' }).click();
+  await p.getByText(`Se canceló ${codigo}`).waitFor();
+  const despues = await saldos();
+  for (const l of lineas) {
+    const subio = (despues.get(l.categoriaId) ?? 0) - (antes.get(l.categoriaId) ?? 0);
+    if (Math.abs(subio - l.cantidadPlaneada) > 0.001) {
+      throw new Error(`${l.categoria} subió ${subio}, se habían despachado ${l.cantidadPlaneada}`);
+    }
+  }
 });
 
 await paso('crea un despacho general a mano y lo cancela', async () => {
