@@ -51,6 +51,38 @@ node apps/web/recorridos/sin-conexion.mjs
 - Para detener el servidor de `vite preview` sin el PID: `ss -ltnp | grep 5173` y matar ese
   proceso.
 
+### La demo se gasta
+
+Algunos recorridos cambian la demo, y repetirlos el mismo día puede dejarla sin datos:
+
+- `consola-motor.mjs` aprueba una sugerencia y descarta otra en cada corrida. El par
+  descartado no se vuelve a proponer en 24 horas, y la sugerencia aprobada deja un borrador
+  que compromete el excedente del acopio. Tras unas tres corridas en el mismo día quedan
+  menos de dos propuestas, y el paso «C11 recalcula» falla con «hay menos de dos
+  sugerencias». La causa está en los datos.
+- `consola-remisiones.mjs` despacha y después cancela lo despachado: el inventario de
+  Kennedy vuelve con un ajuste y se puede repetir. Si una corrida se corta a la mitad, la
+  remisión queda en tránsito y el excedente de Kennedy no vuelve hasta cancelarla.
+- La API acepta 5 inicios de sesión por minuto desde la misma IP, y cada recorrido entra
+  al menos una vez (`validacion-general.mjs`, con varios roles). Correr varios seguidos hace
+  fallar el paso de entrar; entre uno y otro hay que dejar un minuto.
+
+Para volver a la demo del seed se borra solo el volumen de la base. Garage y las llaves no se
+tocan, así que no hace falta `almacenamiento:iniciar`:
+
+```bash
+docker stop acopio-api-1 acopio-db-1 && docker rm acopio-db-1
+docker volume rm acopio_pgdata                 # solo la base: se pierde lo que tenga
+bun run servicios:todo                         # crea la base vacía con sus roles
+bun run --filter @acopio/api db:migrar
+bun run --filter @acopio/api seed
+bun run --filter @acopio/api seed:demo
+docker restart acopio-api-1                    # arrancó antes de las migraciones
+```
+
+Con la demo recién sembrada, conviene correr `consola-motor.mjs` antes que
+`consola-remisiones.mjs`.
+
 ## Qué cubre cada uno
 
 | Script | Cubre | Pasos | Captura en |
