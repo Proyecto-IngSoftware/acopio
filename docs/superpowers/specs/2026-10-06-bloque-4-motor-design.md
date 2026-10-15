@@ -456,3 +456,16 @@ Cada etapa tiene su plan, escrito al empezarla.
 | El simulador vive en `packages/shared/src/motor/simulador.ts`; con la semilla 42 el motor deja la cobertura más pareja entre zonas que repartir en partes iguales o al más cercano ([informe](../../03-diseno/motor/simulacion.md)) | M-08 |
 | Un despacho general es del Receptor que sube la primera foto: otro Receptor recibe 409 `REMISION_TOMADA` al subir o al recibir y no ve la evidencia. La clave de cada foto lleva el id de quien la subió | Menor de la revisión final: cualquier Receptor veía y llenaba la evidencia de un despacho general |
 | `reportar` valida la zona (404 `ZONA_NO_ENCONTRADA`, 409 `ZONA_SOLO_LECTURA`) y cada categoría (404 `CATEGORIA_NO_ENCONTRADA`, 422 `CATEGORIA_ARCHIVADA`) | Una categoría inexistente daba 500 y una archivada llegaba a la capa pública |
+
+**2026-10-14 · Interfaz, ciclo 1.** Según el [plan](../../05-planes/2026-10-14-bloque-4-interfaz-ciclo-1.md).
+
+| Qué | Por qué |
+|---|---|
+| Antes de la interfaz se corrigió el contrato: los campos que admiten nulo salían como arreglos (#38, P-031). Todo DTO se declara con `crearDto` | La web los convertía a mano y los tipos de la ficha y de las sugerencias salían mal |
+| La hoja de aprobar no anticipa la remisión; el aviso de éxito dice «Se creó la remisión R-…» o «Sumado a R-…» | La API no expone el borrador del par antes de aprobar |
+| El tope para aprobar se conoce con el 409 `SUGERENCIA_DESACTUALIZADA` y su `maximo`; la hoja ofrece «Usar N» | `SugerenciaDto` no trae el movible |
+| «Última ronda» sale de la ronda más reciente de las sugerencias listadas | No hay endpoint de la última ronda |
+| El informe de descartes cubre los últimos 30 días | La maqueta lo dice así y el endpoint acepta `desde` |
+| La bitácora tiene frases para las acciones del motor y de las remisiones (`sugerencia.*`, `remision.*`, `necesidad.manual`, `reporte.necesidad`, `motor.configuracion`, `movimiento.recepcion`) | La etapa 2 las registraba sin frase y la bitácora mostraba el código; lo encontró `validacion-general.mjs` |
+| En C9 cada zona es un enlace a su ficha; editar la zona pasa a un botón en la fila | La ficha necesitaba una entrada desde C9 sin perder la edición |
+

@@ -48,8 +48,8 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 | C8 Comprobantes | [C08-comprobantes](C08-comprobantes/README.md) | Bloque 3, ciclo 2 |
 | C8 Conciliación | [C08-conciliacion](C08-conciliacion/README.md) | Bloque 3, ciclo 2 |
 | C9 Zonas afectadas | [C09-zonas](C09-zonas/README.md) | Bloque 1 |
-| C10 Ficha de zona | [C10-ficha-zona](C10-ficha-zona/README.md) | Bloque 4, ciclo 1 (pendiente) |
-| C11 Motor de sugerencias | [C11-motor](C11-motor/README.md) | Bloque 4, ciclo 1 (pendiente) |
+| C10 Ficha de zona | [C10-ficha-zona](C10-ficha-zona/README.md) | Bloque 4, ciclo 1 |
+| C11 Motor de sugerencias | [C11-motor](C11-motor/README.md) | Bloque 4, ciclo 1 |
 | C15 Entidades | [C15-entidades](C15-entidades/README.md) | Bloque 1 |
 | C16 Usuarios y accesos | [C16-usuarios](C16-usuarios/) (lista, detalle, invitar y matriz) | Bloque 0 y Bloque 1 |
 | C17 Bitácora | [C17-bitacora](C17-bitacora/README.md) | Bloque 0 |

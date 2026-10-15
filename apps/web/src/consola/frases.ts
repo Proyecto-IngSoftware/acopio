@@ -12,6 +12,9 @@ function nombreDe(d: Datos): string {
   return '';
 }
 
+const conCodigo = (verbo: string, d: Datos) =>
+  typeof d?.codigo === 'string' ? `${verbo} ${d.codigo}` : verbo;
+
 /** La acción de un registro de la bitácora, en lenguaje llano. */
 export function frase(r: RegistroBitacora): string {
   const antes = datos(r.datos_antes);
@@ -137,6 +140,31 @@ export function frase(r: RegistroBitacora): string {
       return 'Rechazó una donación';
     case 'comprobante.rechazo_revertido':
       return 'Revirtió el rechazo de una donación';
+    case 'movimiento.recepcion':
+      return categoria ? `Recibió ${categoria} en la zona` : 'Recibió una entrega en la zona';
+    case 'motor.configuracion':
+      return 'Cambió los pesos del motor';
+    case 'necesidad.manual':
+      return categoria ? `Corrigió la necesidad de ${categoria}` : 'Corrigió una necesidad';
+    case 'reporte.necesidad':
+      return categoria ? `Reportó necesidad de ${categoria}` : 'Reportó una necesidad';
+    case 'sugerencia.aprobada':
+      return 'Aprobó una sugerencia del motor';
+    case 'sugerencia.descartada':
+      return 'Descartó una sugerencia del motor';
+    case 'remision.creada':
+      return conCodigo('Creó la remisión', despues);
+    case 'remision.editada':
+    case 'remision.linea':
+      return conCodigo('Editó la remisión', despues ?? antes);
+    case 'remision.despachada':
+      return conCodigo('Despachó la remisión', despues);
+    case 'remision.cancelada':
+      return conCodigo('Canceló la remisión', despues ?? antes);
+    case 'remision.evidencia':
+      return 'Subió una foto de evidencia';
+    case 'remision.recibida':
+      return 'Confirmó la recepción de una remisión';
     default:
       return r.accion;
   }

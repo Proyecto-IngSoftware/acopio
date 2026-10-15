@@ -2,7 +2,7 @@
 title: "Bloque 4 · interfaz, ciclo 1: el motor para el Administrador · plan"
 type: plan
 tags: [plan, bloque-4, web, consola, motor]
-estado: propuesto
+estado: aprobado
 bloque: 4
 actualizado: 2026-10-14
 ---
@@ -36,14 +36,14 @@ y las notas de [C10](../03-diseno/stitch/C10-ficha-zona/README.md) y
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 Contrato: los campos que admiten nulo (#38) | ⬜ | |
-| 2 Cliente de la API del motor | ⬜ | |
-| 3 Rutas, «Más» y el enlace desde C9 | ⬜ | |
-| 4 C10 Ficha de zona | ⬜ | |
-| 5 C11 Motor de sugerencias | ⬜ | |
-| 6 Pesos con vista previa | ⬜ | |
-| 7 Informe de descartes | ⬜ | |
-| 8 Recorrido y cierre del ciclo | ⬜ | |
+| 1 Contrato: los campos que admiten nulo (#38) | ✅ `c9dec2b` | |
+| 2 Cliente de la API del motor | ✅ `085ed5a` | |
+| 3 Rutas, «Más» y el enlace desde C9 | ✅ `8392502` | |
+| 4 C10 Ficha de zona | ✅ `b78bc36` | |
+| 5 C11 Motor de sugerencias | ✅ `d6e7d35` | |
+| 6 Pesos con vista previa | ✅ `79ff24b` | |
+| 7 Informe de descartes | ✅ `7e2eaeb` | |
+| 8 Recorrido y cierre del ciclo | ✅ | `consola-motor.mjs` 9/9 y `validacion-general.mjs` 59/59 contra el Compose el 2026-10-14 |
 
 ## Decisiones al planear
 

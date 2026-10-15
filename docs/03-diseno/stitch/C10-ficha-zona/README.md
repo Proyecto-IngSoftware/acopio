@@ -16,7 +16,7 @@ actualizado: 2026-10-14
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | [Maqueta del ciclo 1](maqueta.html) (<https://claude.ai/artifact/WWwc7dGhbvLUxgKj3AycUb>), con C11, los pesos, el informe de descartes y el ajuste de población de C9 |
 | Aprobación | Joseph la aprobó el 2026-10-14 |
-| Construida | Pendiente, ciclo 1 de la interfaz del Bloque 4 |
+| Construida | [construida.png](construida.png) · [construida-hoja.png](construida-hoja.png), en Chromium a 360 × 640 (`consola-motor.mjs`) |
 
 ## Qué muestra
 

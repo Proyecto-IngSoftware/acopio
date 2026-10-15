@@ -122,3 +122,32 @@ it('las marcas de un acopio dicen la categoría', () => {
     'Creó el acopio Acopio Suba',
   );
 });
+
+it('las acciones del motor y de las remisiones se leen en español, no como código', () => {
+  const acciones = [
+    'motor.configuracion',
+    'movimiento.recepcion',
+    'necesidad.manual',
+    'remision.cancelada',
+    'remision.creada',
+    'remision.despachada',
+    'remision.editada',
+    'remision.evidencia',
+    'remision.linea',
+    'remision.recibida',
+    'reporte.necesidad',
+    'sugerencia.aprobada',
+    'sugerencia.descartada',
+  ];
+  const crudas = acciones.filter((accion) =>
+    /^[a-z_]+\.[a-z_]+$/.test(
+      frase({
+        ...base,
+        accion,
+        datos_antes: null,
+        datos_despues: null,
+      } as unknown as Parameters<typeof frase>[0]),
+    ),
+  );
+  expect(crudas).toEqual([]);
+});
