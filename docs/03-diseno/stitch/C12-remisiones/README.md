@@ -16,7 +16,7 @@ actualizado: 2026-10-15
 | Archivos | [captura-lista.png](captura-lista.png) · [lista.html](lista.html) · [captura-borrador.png](captura-borrador.png) · [borrador.html](borrador.html) · [captura-documento.png](captura-documento.png) · [documento.html](documento.html) |
 | Maqueta | [maqueta.html](maqueta.html) (<https://claude.ai/artifact/EPL5kAQSdgTLx18oRmLT2F>) |
 | Aprobación | Joseph la aprobó el 2026-10-15 |
-| Construida | Pendiente (ciclo 2 del Bloque 4) |
+| Construida | [construida-lista.png](construida-lista.png) · [construida-borrador.png](construida-borrador.png) · [construida-despachar.png](construida-despachar.png) · [construida-documento.png](construida-documento.png), en Chromium a 360 × 640 (`consola-remisiones.mjs`) |
 
 ## Qué muestra
 
@@ -48,5 +48,6 @@ C12 Remisiones, para el Operador del acopio de origen y el Administrador, según
   Stitch inventó para quien entrega. El QR va a unos 3 cm para que se lea impreso.
 - Sin Stitch, armadas con los tokens en la maqueta: nueva remisión, la hoja de despachar,
   en tránsito, cancelar, recibida y la fila de «Más».
+- Al construir, el número de borradores de «Más» va en el recuadro del ícono de la fila (la prop `distintivo` de `FilaMenu`), no a la derecha como en la maqueta.
 - El QR guarda la dirección de recepción de Acopio con el token de la remisión. Hasta el
   ciclo 3 esa dirección muestra la página de no encontrada.

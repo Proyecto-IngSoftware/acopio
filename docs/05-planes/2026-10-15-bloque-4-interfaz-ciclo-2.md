@@ -2,7 +2,7 @@
 title: "Bloque 4 · interfaz, ciclo 2: remisiones para el Operador · plan"
 type: plan
 tags: [plan, bloque-4, web, consola, motor, remisiones]
-estado: aprobado
+estado: ejecutado
 bloque: 4
 actualizado: 2026-10-15
 ---
@@ -38,13 +38,13 @@ Joseph el 2026-10-15 y queda en «Decisiones al planear». La maqueta sale de la
 |---|---|---|
 | 1 Diseño: Stitch y maqueta de C12 | ✅ | Joseph aprobó la [maqueta](../03-diseno/stitch/C12-remisiones/maqueta.html) el 2026-10-15 |
 | 2 API: zonas y folios para el Operador | ✅ `8ea92a4` | |
-| 3 Cliente de remisiones y `Qr` compartido | ⬜ | |
-| 4 Rutas y «Más» | ⬜ | |
-| 5 Editor de líneas y nueva remisión | ⬜ | |
-| 6 Detalle, despacho y cancelación | ⬜ | |
-| 7 Lista de remisiones | ⬜ | |
-| 8 Documento imprimible | ⬜ | |
-| 9 Recorrido y cierre del ciclo | ⬜ | |
+| 3 Cliente de remisiones y `Qr` compartido | ✅ `b60fc9d` | |
+| 4 Rutas y «Más» | ✅ `b60fc9d` | |
+| 5 Editor de líneas y nueva remisión | ✅ `b60fc9d` | |
+| 6 Detalle, despacho y cancelación | ✅ `b60fc9d` | |
+| 7 Lista de remisiones | ✅ `b60fc9d` | |
+| 8 Documento imprimible | ✅ `b60fc9d` | |
+| 9 Recorrido y cierre del ciclo | ✅ | `consola-remisiones.mjs` 6/6, `consola-motor.mjs` 9/9 y `validacion-general.mjs` 59/59 contra el Compose el 2026-10-15 |
 
 ## Decisiones al planear
 

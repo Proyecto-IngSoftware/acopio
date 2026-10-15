@@ -479,3 +479,6 @@ Cada etapa tiene su plan, escrito al empezarla.
 |---|---|
 | `GET /zonas` acepta `OPERADOR` (I2-05) | El Operador crea remisiones con zona (M-07) y no tenía de dónde sacar la lista |
 | Endpoint nuevo `GET /remisiones/:codigo/folios-vinculables` (I2-06). `conciliadoEn` puede ser `null` | `GET /comprobantes` es de `AUDITOR` y `ADMIN`. La base no exige la fecha de conciliación, aunque `conciliar` siempre la pone |
+| El editor de líneas se comparte entre «nueva» y el borrador. El tope de una categoría es el movible más lo que esa remisión ya tiene (I2-08) | `comprometido` cuenta todos los borradores, también el que se edita |
+| El filtro de zona de la lista se aplica en la web; la API solo recibe el estado | Las opciones del selector no se reducen al filtrar, y «Despacho general» no tiene filtro en la API |
+| Las acciones del detalle salen de `puedeRemision` de `@acopio/shared` | La web y la API leen la misma tabla de transiciones |
