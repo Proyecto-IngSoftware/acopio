@@ -179,7 +179,12 @@ await paso('los pesos muestran la vista previa sin guardar y se descartan', asyn
   const magnitud = Math.round((guardados.magnitud + 0.05) * 100) / 100;
   await p.getByRole('slider', { name: 'Criticidad' }).fill(String(criticidad));
   await p.getByRole('slider', { name: 'Magnitud' }).fill(String(magnitud));
-  await p.getByRole('list', { name: 'Con los pesos nuevos' }).waitFor();
+  // Tras varias corridas puede no quedar nada que sugerir: cualquiera de las dos respuestas
+  // prueba que la vista previa se pidió sin guardar
+  await p
+    .getByRole('list', { name: 'Con los pesos nuevos' })
+    .or(p.getByText('Con estos pesos el motor no sugiere ningún traslado'))
+    .waitFor();
   await revisar(p, 'pesos', 'C11-motor/construida-pesos.png');
   await p.getByRole('button', { name: 'Descartar cambios' }).click();
   const despues = (await api('GET', '/api/motor/configuracion', await cookie())).pesos;
