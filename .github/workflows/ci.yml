@@ -28,13 +28,13 @@ jobs:
     env:
       PRUEBAS_PG_URL: postgresql://acopio_owner:acopio@localhost:5432
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # D-01: Bun instala y corre los scripts; Node 22 ejecuta el código y las pruebas
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.11
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version-file: .nvmrc
 
@@ -63,6 +63,6 @@ jobs:
     name: Imagen de la API
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Construir sin publicar
         run: docker build -f apps/api/Dockerfile -t acopio-api:ci .
