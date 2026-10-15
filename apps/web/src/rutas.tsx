@@ -1,4 +1,4 @@
-import { lazy } from 'react';
+import { lazy, Suspense } from 'react';
 import { Route, Routes } from 'react-router';
 import { MarcoAcceso } from './portal/MarcoAcceso';
 import { RequiereDonador } from './donador/RequiereDonador';
@@ -43,6 +43,20 @@ const Motor = lazy(() => import('./consola/motor/Motor').then((m) => ({ default:
 const PesosMotor = lazy(() => import('./consola/motor/Pesos').then((m) => ({ default: m.Pesos })));
 const Descartes = lazy(() =>
   import('./consola/motor/Descartes').then((m) => ({ default: m.Descartes })),
+);
+const Remisiones = lazy(() =>
+  import('./consola/remisiones/Remisiones').then((m) => ({ default: m.Remisiones })),
+);
+const NuevaRemision = lazy(() =>
+  import('./consola/remisiones/NuevaRemision').then((m) => ({ default: m.NuevaRemision })),
+);
+const DetalleRemision = lazy(() =>
+  import('./consola/remisiones/DetalleRemision').then((m) => ({ default: m.DetalleRemision })),
+);
+const DocumentoRemision = lazy(() =>
+  import('./consola/remisiones/DocumentoRemision').then((m) => ({
+    default: m.DocumentoRemision,
+  })),
 );
 const Bitacora = lazy(() => import('./consola/Bitacora').then((m) => ({ default: m.Bitacora })));
 const Catalogo = lazy(() =>
@@ -226,6 +240,19 @@ export function Rutas() {
             element={<RequiereRol roles={['ADMIN']}>{pantalla}</RequiereRol>}
           />
         ))}
+        {(
+          [
+            ['consola/remisiones', <Remisiones key="r" />],
+            ['consola/remisiones/nueva', <NuevaRemision key="rn" />],
+            ['consola/remisiones/:codigo', <DetalleRemision key="rd" />],
+          ] as const
+        ).map(([ruta, pantalla]) => (
+          <Route
+            key={ruta}
+            path={ruta}
+            element={<RequiereRol roles={['ADMIN', 'OPERADOR']}>{pantalla}</RequiereRol>}
+          />
+        ))}
         <Route
           path="consola/catalogo"
           element={
@@ -239,6 +266,17 @@ export function Rutas() {
         ))}
         <Route path="*" element={<NoEncontrada />} />
       </Route>
+      {/* El documento se imprime: sin la cabecera ni la barra del portal (I2-02) */}
+      <Route
+        path="consola/remisiones/:codigo/documento"
+        element={
+          <RequiereRol roles={['ADMIN', 'OPERADOR']}>
+            <Suspense fallback={null}>
+              <DocumentoRemision />
+            </Suspense>
+          </RequiereRol>
+        }
+      />
       <Route element={<MarcoAcceso />}>
         <Route path="entrar" element={<Entrar />} />
         <Route path="invitacion/:token" element={<ActivarCuenta />} />

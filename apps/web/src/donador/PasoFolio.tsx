@@ -1,34 +1,12 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link } from 'react-router';
 import { useQueryClient } from '@tanstack/react-query';
-import QRCode from 'qrcode';
 import { ErrorApi } from '../api/cliente';
 import { subirFactura, type Donacion } from '../api/donaciones';
 import { Boton, EnlaceBoton } from '../componentes/Boton';
 import { Icono } from '../componentes/Icono';
+import { Qr } from '../componentes/Qr';
 import { resumen } from './MisDonaciones';
-
-/** El QR del folio como imagen `data:` de un SVG: no se inserta HTML. */
-function Qr({ folio }: { folio: string }) {
-  const [src, fijarSrc] = useState<string | null>(null);
-  useEffect(() => {
-    let vivo = true;
-    void QRCode.toString(folio, { type: 'svg', margin: 1 }).then((svg) => {
-      if (vivo) fijarSrc(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`);
-    });
-    return () => {
-      vivo = false;
-    };
-  }, [folio]);
-  if (!src) return <div className="h-48 w-48 self-center" />;
-  return (
-    <img
-      src={src}
-      alt="Código QR del folio"
-      className="h-48 w-48 self-center rounded-xl border border-outline-variant bg-surface-container-lowest p-space-xs"
-    />
-  );
-}
 
 export interface FalloFactura {
   mensaje: string;
@@ -96,7 +74,7 @@ export function PasoFolio({ donacion: inicial, archivo = null, falloInicial = nu
   return (
     <>
       <h2 className="text-headline-sm text-on-surface">Tu donación está preparada</h2>
-      <Qr folio={donacion.folio} />
+      <Qr texto={donacion.folio} alt="Código QR del folio" className="h-48 w-48 self-center" />
       <span
         ref={folioRef}
         className="select-all self-center font-mono text-headline-md text-on-surface"

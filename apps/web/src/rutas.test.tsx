@@ -182,3 +182,43 @@ describe('rutas del motor (Bloque 4, ciclo 1)', () => {
     expect(await screen.findByRole('heading', { name: 'No tienes acceso' })).toBeInTheDocument();
   });
 });
+
+describe('rutas de remisiones (Bloque 4, ciclo 2)', () => {
+  const persona = (rol: 'OPERADOR' | 'RECEPTOR' | 'ADMIN') => ({
+    id: 'u1',
+    username: 'j.quintero',
+    nombre: 'Joseph Quintero',
+    rol,
+  });
+
+  it.each([
+    ['/consola/remisiones', 'ADMIN', 'Remisiones'],
+    ['/consola/remisiones', 'OPERADOR', 'Remisiones'],
+    ['/consola/remisiones/nueva', 'OPERADOR', 'Nueva remisión'],
+    ['/consola/remisiones/R-2026-K4P7Q', 'OPERADOR', 'R-2026-K4P7Q'],
+    ['/consola/remisiones/R-2026-K4P7Q/documento', 'ADMIN', 'Remisión R-2026-K4P7Q'],
+  ] as const)('%s abre su pantalla para %s', async (ruta, rol, titulo) => {
+    render(envolver(<Rutas />, ruta, clienteFalso(persona(rol))));
+    expect(await screen.findByRole('heading', { level: 1, name: titulo })).toBeInTheDocument();
+  });
+
+  it('el documento se abre sin la barra del portal', async () => {
+    render(
+      envolver(
+        <Rutas />,
+        '/consola/remisiones/R-2026-K4P7Q/documento',
+        clienteFalso(persona('OPERADOR')),
+      ),
+    );
+    await screen.findByRole('heading', { level: 1, name: 'Remisión R-2026-K4P7Q' });
+    expect(screen.queryByRole('navigation', { name: 'Secciones' })).not.toBeInTheDocument();
+  });
+
+  it.each([
+    ['/consola/remisiones', 'RECEPTOR'],
+    ['/consola/remisiones/R-2026-K4P7Q/documento', 'RECEPTOR'],
+  ] as const)('%s rechaza a %s', async (ruta, rol) => {
+    render(envolver(<Rutas />, ruta, clienteFalso(persona(rol))));
+    expect(await screen.findByRole('heading', { name: 'No tienes acceso' })).toBeInTheDocument();
+  });
+});
