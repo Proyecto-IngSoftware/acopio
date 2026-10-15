@@ -32,6 +32,11 @@ describe('crearDto', () => {
     expect(meta.objeto!.properties!.a).toMatchObject({ type: 'string' });
   });
 
+  it('un objeto que admite nulo sigue obligatorio en el padre y conserva sus obligatorios', () => {
+    expect(meta.objeto).toMatchObject({ selfRequired: true, required: ['a'] });
+    expect(meta.objeto!['x-nestjs_zod-self-required']).toBe(true);
+  });
+
   it('un arreglo de verdad sigue siendo arreglo y lo demás no cambia', () => {
     expect(meta.lista).toMatchObject({ type: 'array', items: { type: 'string' } });
     expect(meta.obligatorio).toMatchObject({ type: 'string' });

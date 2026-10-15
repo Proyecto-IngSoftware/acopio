@@ -208,6 +208,24 @@ it('ajustar la población manda los tres campos y explica la fecha repetida', as
   ).toBeInTheDocument();
 });
 
+it('ajustar la población no manda un número vacío y acepta el punto de miles', async () => {
+  responderSegun({
+    'GET /api/zonas/*/necesidad': ficha(),
+    'PATCH /api/zonas/*': { id: 'z1' },
+  });
+  pantalla();
+  await userEvent.click(await screen.findByRole('button', { name: 'Ajustar población' }));
+  const hoja = screen.getByRole('dialog', { name: 'Ajustar población' });
+  await userEvent.clear(within(hoja).getByLabelText('Personas'));
+  await userEvent.type(within(hoja).getByLabelText('Fecha de la estimación'), '2026-10-14');
+  await userEvent.click(within(hoja).getByRole('button', { name: 'Guardar población' }));
+  expect(within(hoja).getByText('Escribe un número entero de personas')).toBeInTheDocument();
+  expect(peticiones()).not.toContain('PATCH /api/zonas/z1');
+  await userEvent.type(within(hoja).getByLabelText('Personas'), '1.500');
+  await userEvent.click(within(hoja).getByRole('button', { name: 'Guardar población' }));
+  expect(await cuerpoDe('PATCH /api/zonas/z1')).toMatchObject({ poblacionEstimada: 1500 });
+});
+
 it('con la emergencia cerrada la ficha queda en solo lectura', async () => {
   responderSegun({ 'GET /api/zonas/*/necesidad': ficha('CERRADA') });
   pantalla();

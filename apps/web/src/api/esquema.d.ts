@@ -1671,11 +1671,11 @@ export interface components {
                 /** Format: date-time */
                 asignadoEn: string;
             }[];
-            invitacionPendiente?: {
+            invitacionPendiente: {
                 /** Format: date-time */
                 venceEn: string;
             } | null;
-            restablecimientoPendiente?: {
+            restablecimientoPendiente: {
                 /** Format: date-time */
                 venceEn: string;
             } | null;
@@ -2252,7 +2252,7 @@ export interface components {
             unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
             perecedero: boolean;
             cantidad: number;
-            umbral?: {
+            umbral: {
                 minimo: number;
                 maximo: number;
             } | null;
@@ -2660,7 +2660,7 @@ export interface components {
                 cobertura: number | null;
             }[];
             coberturaGlobal: number | null;
-            categoriaMasBaja?: {
+            categoriaMasBaja: {
                 /** Format: uuid */
                 categoriaId: string;
                 categoria: string;
@@ -2694,7 +2694,7 @@ export interface components {
             /** @enum {string} */
             unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
             saldo: number;
-            umbral?: {
+            umbral: {
                 minimo: number;
                 maximo: number;
             } | null;
@@ -2905,7 +2905,7 @@ export interface components {
                 nombre: string;
             };
             /** @description null: despacho general */
-            zona?: {
+            zona: {
                 /** Format: uuid */
                 id: string;
                 nombre: string;

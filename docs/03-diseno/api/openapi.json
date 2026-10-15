@@ -6044,7 +6044,9 @@
           "rol",
           "estado",
           "creadoEn",
-          "asignaciones"
+          "asignaciones",
+          "invitacionPendiente",
+          "restablecimientoPendiente"
         ]
       },
       "ActualizarUsuarioDto": {
@@ -8477,6 +8479,7 @@
           "unidad",
           "perecedero",
           "cantidad",
+          "umbral",
           "semaforo",
           "ultimoMovimiento",
           "vencimientos"
@@ -10122,6 +10125,7 @@
           "zona",
           "categorias",
           "coberturaGlobal",
+          "categoriaMasBaja",
           "reportes"
         ]
       },
@@ -10246,6 +10250,7 @@
           "categoria",
           "unidad",
           "saldo",
+          "umbral",
           "noRecibe",
           "superavit",
           "comprometido",
@@ -11154,6 +11159,7 @@
           "codigo",
           "estado",
           "acopio",
+          "zona",
           "responsable",
           "qrToken",
           "creadaEn",

@@ -16,7 +16,7 @@ actualizado: 2026-10-14
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | En la [maqueta del ciclo 1](../C10-ficha-zona/maqueta.html) (<https://claude.ai/artifact/WWwc7dGhbvLUxgKj3AycUb>) |
 | Aprobación | Joseph la aprobó el 2026-10-14 |
-| Construida | Pendiente, ciclo 1 de la interfaz del Bloque 4 |
+| Construida | [construida.png](construida.png) · [construida-aprobar.png](construida-aprobar.png) · [construida-pesos.png](construida-pesos.png), en Chromium a 360 × 640 (`consola-motor.mjs`) |
 
 ## Qué muestra
 
@@ -36,4 +36,5 @@ En la misma maqueta están los pesos (`/consola/motor/pesos`), con cuatro desliz
 - La tercera tarjeta lleva la justificación real del motor. Stitch había puesto una frase inventada.
 - La cabecera y la barra inferior son las de la consola.
 - Las hojas de aprobar y descartar, los pesos y el informe de descartes no salieron de Stitch. Los armé con los tokens.
+- La hoja de aprobar no dice de antemano a qué remisión se suma: la API lo responde al aprobar y el aviso lo muestra. Tampoco muestra el máximo hasta que la API responde que la cantidad lo pasa; entonces ofrece «Usar N».
 - La especificación no pide los atajos de motivo. Los agregué para que el informe agrupe motivos iguales, y el texto sigue siendo libre.

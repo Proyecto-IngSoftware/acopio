@@ -7,6 +7,9 @@ import { Boton } from '../../componentes/Boton';
 import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
 
+/** Otra persona la decidió o el motor recalculó: la hoja se cierra y la lista se recarga. */
+export const YA_NO_SE_PUEDE = ['SUGERENCIA_DECIDIDA', 'SUGERENCIA_NO_ENCONTRADA'];
+
 const maximoDe = (e: ErrorApi | null) =>
   e?.codigo === 'SUGERENCIA_DESACTUALIZADA'
     ? ((e.detalles as { maximo?: number } | undefined)?.maximo ?? null)
@@ -21,7 +24,7 @@ export function HojaAprobar({
 }: {
   sugerencia: Sugerencia;
   alAprobar: (r: Aprobacion) => void;
-  alDecidida: () => void;
+  alDecidida: (codigo: string) => void;
   alCerrar: () => void;
 }) {
   const aprobar = useAprobar();
@@ -34,7 +37,8 @@ export function HojaAprobar({
 
   function mover(delta: number) {
     const base = Number.isFinite(cantidad) ? cantidad : 0;
-    fijarTexto(String(Math.max(0, base + delta)).replace('.', ','));
+    const nuevo = Math.round(Math.max(0, base + delta) * 1000) / 1000;
+    fijarTexto(String(nuevo).replace('.', ','));
   }
 
   function enviar(e: FormEvent) {
@@ -45,7 +49,7 @@ export function HojaAprobar({
       {
         onSuccess: alAprobar,
         onError: (err) => {
-          if (err.codigo === 'SUGERENCIA_DECIDIDA') alDecidida();
+          if (YA_NO_SE_PUEDE.includes(err.codigo)) alDecidida(err.codigo);
         },
       },
     );
@@ -95,7 +99,7 @@ export function HojaAprobar({
           Se suma a la remisión en borrador de este acopio a esta zona, o se crea una. El Operador
           la revisa y la despacha.
         </p>
-        {aprobar.error && aprobar.error.codigo !== 'SUGERENCIA_DECIDIDA' && (
+        {aprobar.error && !YA_NO_SE_PUEDE.includes(aprobar.error.codigo) && (
           <div role="alert" className="flex flex-col gap-space-xs text-body-sm text-error">
             <p>{aprobar.error.message}</p>
             {maximo !== null && (

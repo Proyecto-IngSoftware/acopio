@@ -23,7 +23,9 @@ export function HojaPoblacion({
 
   function enviar(e: FormEvent) {
     e.preventDefault();
-    const n = Number(personas);
+    // «1.500» como se escribe en Colombia; un campo vacío no es cero
+    const limpio = personas.trim().replace(/\./g, '');
+    const n = limpio === '' ? Number.NaN : Number(limpio);
     if (!Number.isInteger(n) || n < 0) return fijarFalta('Escribe un número entero de personas');
     if (!fuente.trim()) return fijarFalta('Escribe la fuente');
     if (!fecha) return fijarFalta('Escribe la fecha de la estimación');

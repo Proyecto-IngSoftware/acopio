@@ -3,7 +3,7 @@ title: "Recorridos de punta a punta"
 type: operacion
 tags: [operacion, pruebas, web]
 estado: vigente
-actualizado: 2026-10-07
+actualizado: 2026-10-14
 ---
 
 # Recorridos de punta a punta
@@ -36,6 +36,7 @@ bun run --filter @acopio/web build
 node apps/web/recorridos/validacion-general.mjs
 node apps/web/recorridos/donador.mjs
 node apps/web/recorridos/consola-comprobantes.mjs
+node apps/web/recorridos/consola-motor.mjs
 node apps/web/recorridos/sin-conexion.mjs
 ```
 
@@ -56,6 +57,7 @@ node apps/web/recorridos/sin-conexion.mjs
 | `validacion-general.mjs` | Cada pantalla con cada rol, accesos negados, invitar y activar, salida, conteo y bitácora | 59 | No guarda capturas |
 | `donador.mjs` | El Donador de punta a punta (Bloque 3, ciclo 1) | 8 | P09, P10, P12 y P13 |
 | `consola-comprobantes.mjs` | Recibir, conciliar, rechazar y vincular (Bloque 3, ciclo 2) | 10 | C04-recibir-folio, C08-comprobantes y C08-conciliacion |
+| `consola-motor.mjs` | El motor para el Administrador: ficha de zona, recálculo, aprobar con la cantidad editada, descartar con motivo, pesos con vista previa e informe de descartes (Bloque 4, interfaz ciclo 1) | 9 | C10-ficha-zona y C11-motor |
 | `sin-conexion.mjs` | La captura sin conexión de C4 (Bloque 2, ciclo 3) | 12 | C04-sin-conexion y C04-pendientes |
 
 ### `validacion-general.mjs`

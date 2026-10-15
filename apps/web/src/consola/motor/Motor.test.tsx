@@ -226,3 +226,64 @@ it('no tiene violaciones graves de accesibilidad', async () => {
   await tarjetas();
   expect(await violacionesGraves(container)).toEqual([]);
 });
+
+it('un filtro que ya no tiene sugerencias se ve y se puede quitar', async () => {
+  responderSegun({ 'GET /api/sugerencias': [] });
+  pantalla('/consola/motor?estado=APROBADA&zona=z-otra');
+  await userEvent.click(await screen.findByRole('button', { name: 'Quitar filtros' }));
+  await waitFor(() => expect(peticiones()).toContain('GET /api/sugerencias?estado=APROBADA'));
+  expect(screen.getByLabelText('Zona')).toHaveValue('');
+});
+
+it('al descartar algo que otra persona ya decidió, cierra la hoja y recarga', async () => {
+  responderSegun({
+    'GET /api/sugerencias': LISTA,
+    'POST /api/sugerencias/*/descartar': conEstado(409, {
+      estado: 409,
+      codigo: 'SUGERENCIA_DECIDIDA',
+      mensaje: 'Esta sugerencia ya se decidió',
+    }),
+  });
+  pantalla();
+  const [, kennedy] = await tarjetas();
+  await userEvent.click(within(kennedy!).getByRole('button', { name: 'Descartar' }));
+  const hoja = screen.getByRole('dialog', { name: 'Descartar traslado' });
+  await userEvent.click(within(hoja).getByRole('button', { name: 'La vía está cerrada' }));
+  await userEvent.click(within(hoja).getByRole('button', { name: 'Descartar' }));
+  expect(await screen.findByText('Otra persona ya decidió esta sugerencia')).toBeInTheDocument();
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  await waitFor(() =>
+    expect(peticiones().filter((p) => p === 'GET /api/sugerencias?estado=PROPUESTA')).toHaveLength(
+      2,
+    ),
+  );
+});
+
+it('si la sugerencia ya no existe porque el motor recalculó, lo dice y recarga', async () => {
+  responderSegun({
+    'GET /api/sugerencias': LISTA,
+    'POST /api/sugerencias/*/aprobar': conEstado(404, {
+      estado: 404,
+      codigo: 'SUGERENCIA_NO_ENCONTRADA',
+      mensaje: 'La sugerencia no existe. Revisa la lista nueva',
+    }),
+  });
+  pantalla();
+  const [suba] = await tarjetas();
+  await userEvent.click(within(suba!).getByRole('button', { name: 'Aprobar' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Aprobar 560 kg' }));
+  expect(
+    await screen.findByText('Esa sugerencia ya no está: el motor recalculó'),
+  ).toBeInTheDocument();
+  expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+});
+
+it('quitar uno a una cantidad con decimales no deja ruido de coma flotante', async () => {
+  responderSegun({ 'GET /api/sugerencias': [sugerencia({ cantidad: 1.4 })] });
+  pantalla();
+  const [tarjeta] = await tarjetas();
+  await userEvent.click(within(tarjeta!).getByRole('button', { name: 'Aprobar' }));
+  const hoja = screen.getByRole('dialog', { name: 'Aprobar traslado' });
+  await userEvent.click(within(hoja).getByRole('button', { name: 'Quitar uno' }));
+  expect(within(hoja).getByLabelText('Cantidad (kg)')).toHaveValue('0,4');
+});

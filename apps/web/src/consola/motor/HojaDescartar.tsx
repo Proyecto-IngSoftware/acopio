@@ -4,6 +4,7 @@ import type { FormEvent } from 'react';
 import { useDescartar, type Sugerencia } from '../../api/motor';
 import { Campo } from '../../componentes/Campo';
 import { Hoja } from '../../componentes/Hoja';
+import { YA_NO_SE_PUEDE } from './HojaAprobar';
 
 const ATAJOS = [
   'La vía está cerrada',
@@ -15,10 +16,12 @@ const ATAJOS = [
 export function HojaDescartar({
   sugerencia: s,
   alDescartar,
+  alDecidida,
   alCerrar,
 }: {
   sugerencia: Sugerencia;
   alDescartar: () => void;
+  alDecidida: (codigo: string) => void;
   alCerrar: () => void;
 }) {
   const descartar = useDescartar();
@@ -30,7 +33,15 @@ export function HojaDescartar({
     const texto = motivo.trim();
     if (texto.length < 10) return fijarCorto(true);
     fijarCorto(false);
-    descartar.mutate({ id: s.id, motivo: texto }, { onSuccess: alDescartar });
+    descartar.mutate(
+      { id: s.id, motivo: texto },
+      {
+        onSuccess: alDescartar,
+        onError: (err) => {
+          if (YA_NO_SE_PUEDE.includes(err.codigo)) alDecidida(err.codigo);
+        },
+      },
+    );
   }
 
   return (
