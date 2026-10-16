@@ -73,6 +73,9 @@ services:
       SEED_ADMIN_NOMBRE: ${SEED_ADMIN_NOMBRE:-Administrador}
       SEED_ADMIN_CORREO: ${SEED_ADMIN_CORREO:-}
       SEED_ADMIN_CONTRASENA: ${SEED_ADMIN_CONTRASENA:-}
+      # Antes de levantar la API (apps/api/arrancar.sh). En el servidor, true
+      MIGRAR_AL_ARRANCAR: ${MIGRAR_AL_ARRANCAR:-false}
+      SEMBRAR_AL_ARRANCAR: ${SEMBRAR_AL_ARRANCAR:-false}
     volumes:
       - llaves:/llaves
 
