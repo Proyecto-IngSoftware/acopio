@@ -60,9 +60,11 @@ jobs:
         run: bun run test:int
 
   imagen:
-    name: Imagen de la API
+    name: Imágenes de la API y la web
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
       - name: Construir sin publicar
         run: docker build -f apps/api/Dockerfile -t acopio-api:ci .
+      - name: Construir la web sin publicar
+        run: docker build -f apps/web/Dockerfile -t acopio-web:ci .
