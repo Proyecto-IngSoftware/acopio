@@ -173,7 +173,8 @@ S3_REGION=garage
 S3_BUCKET=comprobantes
 S3_ACCESS_KEY=                 # echo GK$(openssl rand -hex 12) (GK y 24 hexadecimales)
 S3_SECRET_KEY=                 # openssl rand -hex 32 (64 hexadecimales)
-SMTP_HOST=
+CORREO_ACTIVO=false            # sin correo mientras dure el desarrollo (P-055)
+SMTP_HOST=                     # solo con CORREO_ACTIVO=true, igual que las cinco de abajo
 SMTP_PORT=587
 SMTP_USER=
 SMTP_PASSWORD=
@@ -186,6 +187,10 @@ SEED_ADMIN_CONTRASENA=         # cambiarla al primer ingreso
 MIGRAR_AL_ARRANCAR=true        # migraciones antes de levantar la API
 SEMBRAR_AL_ARRANCAR=true       # seed base antes de levantar la API
 ```
+
+Con `CORREO_ACTIVO=false` la API no encola ni envía correo, y al arrancar lo avisa en el log.
+Las invitaciones y los restablecimientos se comparten con el enlace que muestra la consola.
+Un Donador que se registra solo no recibe el enlace para confirmar su correo.
 
 Garage no arranca con un `GARAGE_RPC_SECRET` más corto (`Invalid RPC secret key: expected
 32 bytes of random hex`). Las dos llaves de S3 no fallan al arrancar sino en `iniciar.sh`.

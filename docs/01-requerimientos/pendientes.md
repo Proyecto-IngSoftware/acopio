@@ -936,6 +936,18 @@ migración nueva necesitaría ese paso a mano.
 API. Las dos valen `false` por defecto; en Dokploy van en `true`
 ([despliegue.md](../06-operacion/despliegue.md#primer-arranque)).
 
+### P-055 · Correo apagado mientras dure el desarrollo
+**Fecha:** 2026-10-16 · **Propuesto por:** Joseph
+**Qué:** durante el desarrollo el servidor de pruebas no manda correo. Las invitaciones, las
+reinvitaciones y los restablecimientos se comparten a mano con el enlace que muestra la
+consola, que ya trae «Copiar enlace» y «Compartir por WhatsApp».
+**Por qué:** todavía no hay un remitente de producción probado (#26), y el equipo prefiere
+pegar los enlaces que depender de un SMTP en estas semanas de pruebas.
+**Estado:** RESUELTO el 2026-10-16 → `CORREO_ACTIVO=false` hace que `NotificacionService` no
+encole ni envíe nada, y el SMTP deja de ser obligatorio. Vale `true` por defecto. Con el correo
+apagado no llegan el aviso de rechazo de una donación, los avisos de asignación ni la
+confirmación del registro de un Donador: un Donador nuevo no puede confirmar su correo.
+
 ---
 
 ## Resueltos
