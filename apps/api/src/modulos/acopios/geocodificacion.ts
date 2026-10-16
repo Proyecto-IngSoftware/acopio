@@ -113,7 +113,7 @@ export class GeocodificadorNominatim implements Geocodificador {
     try {
       respuesta = await fetch(url, {
         headers: {
-          'User-Agent': `Acopio/0.1 (${this.entorno.CORREO_REMITENTE})`,
+          'User-Agent': `Acopio/0.1 (${this.entorno.CORREO_REMITENTE ?? this.entorno.APP_URL})`,
           'Accept-Language': 'es',
         },
         signal: AbortSignal.timeout(5000),

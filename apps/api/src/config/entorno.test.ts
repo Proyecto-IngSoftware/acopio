@@ -36,6 +36,20 @@ describe('leerEntorno', () => {
     );
   });
 
+  it('el correo viene encendido si no se dice otra cosa', () => {
+    expect(leerEntorno(valido).CORREO_ACTIVO).toBe(true);
+  });
+
+  it('con el correo apagado no exige SMTP ni remitente (P-055)', () => {
+    const { SMTP_HOST: _h, SMTP_PORT: _p, CORREO_REMITENTE: _r, ...sinCorreo } = valido;
+    expect(leerEntorno({ ...sinCorreo, CORREO_ACTIVO: 'false' }).CORREO_ACTIVO).toBe(false);
+  });
+
+  it('con el correo encendido exige SMTP_HOST y CORREO_REMITENTE', () => {
+    const { SMTP_HOST: _h, CORREO_REMITENTE: _r, ...sinCorreo } = valido;
+    expect(() => leerEntorno(sinCorreo)).toThrow(/CORREO_ACTIVO=true exige SMTP_HOST/);
+  });
+
   it('nombra la variable que falta', () => {
     const { DATABASE_URL: _omitida, ...incompleto } = valido;
     expect(() => leerEntorno(incompleto)).toThrow(/DATABASE_URL/);
