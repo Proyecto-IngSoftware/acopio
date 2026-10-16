@@ -948,6 +948,27 @@ encole ni envíe nada, y el SMTP deja de ser obligatorio. Vale `true` por defect
 apagado no llegan el aviso de rechazo de una donación, los avisos de asignación ni la
 confirmación del registro de un Donador: un Donador nuevo no puede confirmar su correo.
 
+### P-056 · Registro de Donadores mientras el correo está apagado
+**Fecha:** 2026-10-16 · **Propuesto por:** Claude, al apagar el correo (P-055)
+**Qué:** con `CORREO_ACTIVO=false`, quien se registra como Donador en el portal nunca recibe
+el enlace de `/donador/confirmar/:token`, y su cuenta se queda sin confirmar. Hay dos
+salidas: que la API escriba ese enlace en su log mientras el correo esté apagado, para
+pegarlo a mano como las invitaciones, o esperar a que vuelva el correo y probar con
+`donador1@demo.acopio.local` de la demo.
+**Por qué:** la ronda de pruebas del equipo (#58) puede querer probar el registro de punta a
+punta en el servidor.
+**Estado:** ABIERTO. Decide Joseph ([plan del servidor de pruebas](../05-planes/2026-10-16-servidor-de-pruebas.md), tarea 6)
+
+### P-057 · `net::ERR_FAILED` intermitente en el servidor de pruebas
+**Fecha:** 2026-10-16 · **Propuesto por:** Claude, en el recorrido contra el servidor
+**Qué:** en dos recorridos largos con Playwright contra https://acopio.josephqaz.dev apareció
+un `Failed to load resource: net::ERR_FAILED` en la consola del navegador. No se repitió al
+registrar cada petición en todas las pantallas, la API no respondió ningún 5xx y la página
+no lanzó errores. Puede ser el service worker descargando su caché cuando el recorrido
+cambia de página, pero no se confirmó.
+**Por qué:** si es una petición real que falla, alguien la va a ver en la ronda de pruebas.
+**Estado:** ABIERTO. Se vigila en #58; si aparece, se anota la URL con la pestaña Red
+
 ---
 
 ## Resueltos
