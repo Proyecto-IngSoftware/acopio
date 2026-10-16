@@ -3,7 +3,7 @@ title: "Despliegue"
 type: operacion
 tags: [operacion]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-16
 ---
 
 # Despliegue
@@ -23,11 +23,14 @@ services:
                                   (Bloque 0, D-01) · volumen: llaves
   storage:   dxflrs/garage        volúmenes: garagemeta, garagedata · compatible con S3
                                   (ADR-0012)
-  web:       build apps/web       nginx sirviendo el build de Vite · llega con la interfaz
-  proxy:     nginx:alpine         puerto 80/443 · solo en local; en el VPS lo
-                                  reemplaza Traefik, incluido en Dokploy — ver
-                                  «Producción» más abajo · llega con la interfaz
+  web:       apps/web/Dockerfile  oven/bun construye, nginx:1.28-alpine sirve el build
+                                  de Vite y reenvía /api a la API (apps/web/nginx.conf)
 ```
+
+No hay un servicio `proxy`. En el VPS, Traefik (incluido en Dokploy) recibe el dominio y
+lo entrega a `web`; `web` sirve la interfaz y pasa `/api` a `api` por la red interna. Así
+la web y la API comparten origen, que es lo que piden la cookie `SameSite=Strict` y el
+control de `Origin` ([ADR-0014](../02-arquitectura/adr/ADR-0014-sesion-en-cookie.md)).
 
 **Dos roles de base de datos.** `acopio_owner` es el dueño: corre las migraciones y el
 *seed*. `acopio_app` es el de la API: no puede modificar ni borrar la bitácora. La API
@@ -35,13 +38,17 @@ recibe `DATABASE_URL` con `acopio_app`; las migraciones, `DATABASE_URL_OWNER`.
 
 **Supabase Auth es externo**, en la nube. No hay contenedor para él.
 
-## Enrutamiento del proxy
+## Enrutamiento
 
 ```
-/          → web
-/api/*     → api
-/files/*   → api      (nunca directo al almacenamiento)
+/          → web (nginx, con index.html para cualquier ruta de la SPA)
+/api/*     → web → api:3000
 ```
+
+nginx resuelve `api` con el DNS de Docker en cada petición. Al volver a desplegar, la API
+cambia de IP y nginx la sigue encontrando. También reenvía a la API la IP del cliente que
+puso Traefik, para que el límite de intentos por IP cuente a cada cliente por separado.
+Acepta cuerpos de hasta 9 MB porque las fotos llegan a 8 MB.
 
 **El almacenamiento no se expone jamás.** Todo archivo pasa por la API, que valida
 permisos y entrega URLs firmadas de cinco minutos. Garage escucha solo en la red
@@ -132,13 +139,56 @@ funciona, pero con riesgo real de quedarse sin memoria al construir la imagen de
 ```
 1  Aprovisionar el servidor y el dominio          (P-005, resuelto: servidor de pruebas propio)
 2  Instalar Dokploy con su script oficial          <10 min, servidor en blanco
-3  Crear un proyecto tipo Compose, apuntado a
-   infra/docker-compose.yml
+3  Crear un servicio tipo Compose: repositorio del proyecto, rama main,
+   Compose Path ./infra/docker-compose.yml (sin docker-compose.dev.yml)
 4  Cargar las variables de entorno desde el panel de Dokploy,
-   no en un .env versionado
-5  Agregar el dominio a web y a api; Dokploy emite el certificado
+   no en un .env versionado (ver «Variables en Dokploy»)
+5  Agregar un dominio al servicio web, puerto 80, path /, HTTPS con
+   Let's Encrypt. La API no necesita dominio propio: le llega por web
 6  Ejecutar el «Primer arranque» de abajo, una sola vez
 ```
+
+### Variables en Dokploy
+
+El panel guarda las variables en `infra/.env` dentro del clon y Dokploy despliega con
+`docker compose -p <appName> --env-file infra/.env -f ./infra/docker-compose.yml`. Solo
+hacen falta las que lee `infra/docker-compose.yml`. `DATABASE_URL`, `DATABASE_URL_OWNER`,
+`S3_ENDPOINT`, `AUTH_LLAVES_DIR` y `API_PUERTO` las arma el propio Compose.
+
+```bash
+POSTGRES_USER=acopio_owner
+POSTGRES_PASSWORD=             # openssl rand -hex 24 (va dentro de una URL: solo hexadecimal)
+POSTGRES_DB=acopio
+APP_DB_PASSWORD=               # openssl rand -hex 24; el rol se crea una vez, con el volumen
+NODE_ENV=production
+APP_URL=https://<dominio>      # origen exacto, sin / al final
+AUTH_PROVEEDOR=supabase
+SUPABASE_URL=https://<ref>.supabase.co          # sin / al final: con ella se valida el emisor
+SUPABASE_JWKS_URL=https://<ref>.supabase.co/auth/v1/.well-known/jwks.json
+SUPABASE_ANON_KEY=             # la publicable (sb_publishable_...)
+SUPABASE_SERVICE_ROLE_KEY=     # secreta; solo en este panel
+GARAGE_RPC_SECRET=             # openssl rand -hex 32 (64 hexadecimales)
+GARAGE_ADMIN_TOKEN=            # openssl rand -base64 32
+S3_REGION=garage
+S3_BUCKET=comprobantes
+S3_ACCESS_KEY=                 # echo GK$(openssl rand -hex 12) (GK y 24 hexadecimales)
+S3_SECRET_KEY=                 # openssl rand -hex 32 (64 hexadecimales)
+SMTP_HOST=
+SMTP_PORT=587
+SMTP_USER=
+SMTP_PASSWORD=
+SMTP_SEGURO=false              # true solo con el puerto 465
+CORREO_REMITENTE="Acopio <no-responder@<dominio>>"
+SEED_ADMIN_USUARIO=admin
+SEED_ADMIN_NOMBRE=Administrador
+SEED_ADMIN_CORREO=
+SEED_ADMIN_CONTRASENA=         # cambiarla al primer ingreso
+```
+
+Garage no arranca con un `GARAGE_RPC_SECRET` más corto (`Invalid RPC secret key: expected
+32 bytes of random hex`). Las dos llaves de S3 no fallan al arrancar sino en `iniciar.sh`.
+Si la API se reinicia en bucle, su log empieza por `Variables de entorno inválidas:` y
+nombra la que falta.
 
 ## Perfil de desarrollo
 
@@ -147,6 +197,7 @@ Los comandos, desde la raíz del repositorio:
 ```bash
 bun run servicios          # db, storage y mailpit
 bun run servicios:todo     # además construye y levanta la api
+bun run servicios:web      # el build de la web en nginx, en el 5173 (sin Vite corriendo)
 bun run servicios:parar
 bun run servicios:logs
 ```
@@ -163,8 +214,9 @@ el cambio solo afecta a lo que corre en el anfitrión: migraciones, seed y la AP
 recarga.
 
 `infra/docker-compose.dev.yml` sobrescribe:
-- `api` con `npm run start:dev` y volumen montado
-- `web` con el servidor de Vite en lugar de nginx
+- `api` con el puerto 3000 publicado y el correo hacia Mailpit
+- `web` en el perfil `web`, publicado en el 5173: `servicios:todo` no lo levanta, porque ese
+  puerto es el de Vite y el de `vite preview` en los recorridos
 - Puertos de la base de datos y de la API S3 de Garage expuestos al anfitrión
 - `mailpit`, que atrapa todo el correo SMTP y lo muestra en una bandeja web
 - `AUTH_PROVEEDOR=local`
@@ -204,6 +256,20 @@ URL.
 
 ## Primer arranque
 
+En Dokploy, después del primer despliegue, por SSH en el VPS. `<appName>` sale en el panel;
+el `-p` hace falta porque Dokploy usa ese nombre de proyecto y no el `name: acopio` del
+archivo.
+
+```bash
+cd /etc/dokploy/compose/<appName>/code
+DC="docker compose -p <appName> --env-file infra/.env -f infra/docker-compose.yml" \
+  ./infra/garage/iniciar.sh                              # capacidad, llave y bucket privado
+docker exec <appName>-api-1 npm run db:migrar          # migraciones, como dueño
+docker exec <appName>-api-1 npm run seed:dist          # catálogo, canasta y primer admin
+```
+
+Sin Dokploy, desde la raíz del repositorio:
+
 ```bash
 1  cp .env.example .env         # y llenarlo
 2  docker compose up -d db storage
@@ -216,7 +282,7 @@ URL.
 El script de Garage y el *seed* son idempotentes: correrlos de nuevo no duplica nada ni
 pisa lo que se editó.
 
-El paso 5 crea el catálogo inicial de categorías y **el primer administrador**, que
+El *seed* crea el catálogo inicial de categorías y **el primer administrador**, que
 es el único usuario que no nace de una invitación. Su contraseña se define por
 variable de entorno en ese único arranque y debe cambiarse de inmediato.
 
