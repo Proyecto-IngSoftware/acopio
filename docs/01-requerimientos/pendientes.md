@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-15
+actualizado: 2026-10-16
 ---
 
 # Pendientes — bandeja de entrada
@@ -923,6 +923,18 @@ en el envío.
 **Estado:** RESUELTO el 2026-10-15 → el endpoint devuelve los 50 conciliados más
 recientes (los que no tienen fecha van al final) y la hoja ofrece «Buscar folio», por folio
 o categoría, cuando hay más de 8 (`remisiones.service.ts`, `HojaDespachar.tsx`, PR #89)
+
+### P-054 · Migraciones y seed al arrancar el contenedor de la API
+**Fecha:** 2026-10-16 · **Propuesto por:** Joseph
+**Qué:** el primer despliegue en Dokploy quedó con la API arriba y sin tablas: toda consulta
+a la base daba 500, mientras `/api/salud` seguía en `ok` porque solo prueba la conexión.
+Faltaba correr `db:migrar` y `seed:dist` por SSH.
+**Por qué:** en las próximas semanas se va a redesplegar seguido para las pruebas, y cada
+migración nueva necesitaría ese paso a mano.
+**Estado:** RESUELTO el 2026-10-16 → `apps/api/arrancar.sh` aplica las migraciones con
+`MIGRAR_AL_ARRANCAR=true` y el seed base con `SEMBRAR_AL_ARRANCAR=true` antes de levantar la
+API. Las dos valen `false` por defecto; en Dokploy van en `true`
+([despliegue.md](../06-operacion/despliegue.md#primer-arranque)).
 
 ---
 

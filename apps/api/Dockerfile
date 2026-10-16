@@ -32,6 +32,7 @@ COPY --from=construccion /app/packages/shared packages/shared
 COPY --from=construccion /app/apps/api/package.json /app/apps/api/prisma.config.ts apps/api/
 COPY --from=construccion /app/apps/api/node_modules apps/api/node_modules
 COPY --from=construccion /app/apps/api/dist apps/api/dist
+COPY --chmod=755 apps/api/arrancar.sh apps/api/arrancar.sh
 WORKDIR /app/apps/api
 # Carpeta de las llaves del adaptador local; el volumen hereda el dueño
 RUN mkdir /llaves && chown node:node /llaves
@@ -39,4 +40,6 @@ USER node
 EXPOSE 3000
 HEALTHCHECK --interval=15s --timeout=3s --retries=5 \
   CMD node -e "fetch('http://127.0.0.1:3000/api/salud').then(r=>process.exit(r.ok?0:1),()=>process.exit(1))"
+# Migraciones y seed opcionales antes de levantar (MIGRAR_AL_ARRANCAR, SEMBRAR_AL_ARRANCAR)
+ENTRYPOINT ["./arrancar.sh"]
 CMD ["node", "dist/main.js"]

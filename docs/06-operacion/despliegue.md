@@ -183,6 +183,8 @@ SEED_ADMIN_USUARIO=admin
 SEED_ADMIN_NOMBRE=Administrador
 SEED_ADMIN_CORREO=
 SEED_ADMIN_CONTRASENA=         # cambiarla al primer ingreso
+MIGRAR_AL_ARRANCAR=true        # migraciones antes de levantar la API
+SEMBRAR_AL_ARRANCAR=true       # seed base antes de levantar la API
 ```
 
 Garage no arranca con un `GARAGE_RPC_SECRET` más corto (`Invalid RPC secret key: expected
@@ -256,17 +258,26 @@ URL.
 
 ## Primer arranque
 
-En Dokploy, después del primer despliegue, por SSH en el VPS. `<appName>` sale en el panel;
-el `-p` hace falta porque Dokploy usa ese nombre de proyecto y no el `name: acopio` del
-archivo.
+El contenedor de la API arranca con `apps/api/arrancar.sh`. Con `MIGRAR_AL_ARRANCAR=true`
+aplica las migraciones pendientes como `acopio_owner` antes de levantar la API, y con
+`SEMBRAR_AL_ARRANCAR=true` corre el seed base. Los dos pasos se repiten en cada arranque sin
+cambiar nada cuando no hay trabajo pendiente: `No pending migrations to apply` y «el
+administrador ya existía». Si un paso falla, la API no levanta, el contenedor se reinicia y
+el error queda en su log. Por defecto las dos variables valen `false`, y en desarrollo se
+corren a mano.
+
+En Dokploy se dejan las dos en `true`. Garage es lo único que se prepara a mano, una vez,
+por SSH en el VPS. `<appName>` sale en el panel; el `-p` hace falta porque Dokploy usa ese
+nombre de proyecto y no el `name: acopio` del archivo.
 
 ```bash
 cd /etc/dokploy/compose/<appName>/code
 DC="docker compose -p <appName> --env-file infra/.env -f infra/docker-compose.yml" \
   ./infra/garage/iniciar.sh                              # capacidad, llave y bucket privado
-docker exec <appName>-api-1 npm run db:migrar          # migraciones, como dueño
-docker exec <appName>-api-1 npm run seed:dist          # catálogo, canasta y primer admin
 ```
+
+Sin las variables, las migraciones y el seed se corren dentro del contenedor:
+`docker exec <appName>-api-1 npm run db:migrar` y `docker exec <appName>-api-1 npm run seed:dist`.
 
 Sin Dokploy, desde la raíz del repositorio:
 
