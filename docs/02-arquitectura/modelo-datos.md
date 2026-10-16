@@ -3,7 +3,7 @@ title: "Modelo de datos"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-07
+actualizado: 2026-10-16
 ---
 
 # Modelo de datos
@@ -330,8 +330,8 @@ insertar y actualizar, sin `DELETE` ni `TRUNCATE`; un comprobante se cancela o s
 no se borra. `comprobante_movimiento`: solo leer e insertar. `verificacion_correo`: leer,
 insertar y actualizar (para marcar `usado_en`), sin `DELETE` ni `TRUNCATE`.
 
-Los archivos guardan **claves del objeto en el almacenamiento (Garage), nunca URLs**. Las URLs son firmadas y de
-vida corta; almacenarlas sería guardar algo ya vencido.
+Los archivos guardan **claves del objeto en el almacenamiento (Garage), nunca URLs**. La API lee el objeto
+por su clave y entrega los bytes ([ADR-0017](adr/ADR-0017-factura-servida-por-la-api.md)).
 
 **Ciclo de vida del comprobante (2026-09-12, P-018).** `PREPARADO` lo crea el
 Donador y todavía no llega al acopio; `PENDIENTE` ya lo recibió un Operador y espera

@@ -95,7 +95,7 @@ describe('foto de factura (RF-CMP-002)', () => {
       .expect(404);
   });
 
-  it('el dueño y el Auditor del acopio ven una URL firmada; el de otro acopio no', async () => {
+  it('el dueño y el Auditor del acopio reciben la imagen; el de otro acopio no', async () => {
     const admin = await iniciarSesion(a, ADMIN.username, ADMIN.contrasena);
     const auditorA = await crearUsuarioActivo(a, admin, {
       rol: 'AUDITOR',
@@ -110,14 +110,38 @@ describe('foto de factura (RF-CMP-002)', () => {
         .http()
         .get(`/api/comprobantes/${folio}/factura`)
         .set('authorization', `Bearer ${token}`)
+        .buffer(true)
+        .parse((res, fin) => {
+          const partes: Buffer[] = [];
+          res.on('data', (c: Buffer) => partes.push(c));
+          res.on('end', () => fin(null, Buffer.concat(partes)));
+        })
         .expect(200);
-      expect(r.body.url).toMatch(/^memoria:\/\/facturas\//);
+      expect(r.headers['content-type']).toBe('image/webp');
+      expect(r.headers['cache-control']).toBe('private, no-store');
+      expect((await sharp(r.body as Buffer).metadata()).format).toBe('webp');
     }
     await a
       .http()
       .get(`/api/comprobantes/${folio}/factura`)
       .set('authorization', `Bearer ${auditorB.token}`)
       .expect(403);
+  });
+
+  it('una donación sin foto responde 404 SIN_FACTURA', async () => {
+    const arroz = (await a.prisma.categoria.findFirstOrThrow({ where: { nombre: 'Arroz' } })).id;
+    const sinFoto = await a
+      .http()
+      .post('/api/donaciones')
+      .set('authorization', `Bearer ${donador.token}`)
+      .send({ acopioId: ACOPIO_A, lineas: [{ categoriaId: arroz, cantidad: 1 }] })
+      .expect(201);
+    const r = await a
+      .http()
+      .get(`/api/comprobantes/${sinFoto.body.folio}/factura`)
+      .set('authorization', `Bearer ${donador.token}`)
+      .expect(404);
+    expect(r.body.codigo).toBe('SIN_FACTURA');
   });
 
   it('si la donación ya no está preparada, responde 409 y no deja objetos huérfanos', async () => {

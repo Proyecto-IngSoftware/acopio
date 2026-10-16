@@ -50,13 +50,11 @@ cambia de IP y nginx la sigue encontrando. También reenvía a la API la IP del 
 puso Traefik, para que el límite de intentos por IP cuente a cada cliente por separado.
 Acepta cuerpos de hasta 9 MB porque las fotos llegan a 8 MB.
 
-**El almacenamiento no se expone jamás.** Todo archivo pasa por la API, que valida
-permisos y entrega URLs firmadas de cinco minutos. Garage escucha solo en la red
-interna de Docker; el puerto 3900 se publica únicamente en el perfil de desarrollo.
-Esas URL las abre el navegador, así que tienen que apuntar a un host que el navegador
-alcance: en desarrollo la API firma con `S3_URL_PUBLICA=http://localhost:3900`. Cómo
-se da esa lectura en producción sin exponer el resto de Garage sigue abierto en P-041
-([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)).
+**El almacenamiento no se expone jamás.** Todo archivo pasa por la API, que revisa el
+permiso, lee el objeto de Garage y entrega los bytes
+([ADR-0017](../02-arquitectura/adr/ADR-0017-factura-servida-por-la-api.md)). Garage escucha
+solo en la red interna de Docker; el puerto 3900 se publica únicamente en el perfil de
+desarrollo.
 
 ## Variables de entorno
 
@@ -83,7 +81,6 @@ S3_REGION=garage
 S3_BUCKET=comprobantes
 S3_ACCESS_KEY=              # GK + 24 hexadecimales: echo GK$(openssl rand -hex 12)
 S3_SECRET_KEY=              # openssl rand -hex 32
-S3_URL_PUBLICA=             # host con el que se firman las URL que abre el navegador (P-041)
 
 # Custodia (Bloque 3), con sus valores por defecto
 PREPARADA_VIGENCIA_DIAS=7

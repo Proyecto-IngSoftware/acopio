@@ -3,7 +3,7 @@ title: "Runbook"
 type: operacion
 tags: [operacion]
 estado: vigente
-actualizado: 2026-09-12
+actualizado: 2026-10-16
 ---
 
 # Runbook
@@ -94,7 +94,8 @@ sincronizarse o ser rechazados explícitamente.
 1. ¿El contenedor `storage` está arriba?
 2. ¿La API puede alcanzar a Garage por la red interna? `docker compose exec storage /garage status`
 3. ¿El bucket existe y la llave de la API tiene permiso? `docker compose exec storage /garage bucket info comprobantes`
-4. Las URLs firmadas vencen: si la pestaña llevaba horas abierta, recargar
+4. ¿La API responde a `GET /api/comprobantes/<folio>/factura`? Un 404 `SIN_FACTURA` es una
+   donación sin foto; un 500 suele ser un objeto que falta en el bucket
 5. **Nunca hagas público el bucket para arreglar esto.** Contiene facturas con
    nombre, cédula y dirección
 

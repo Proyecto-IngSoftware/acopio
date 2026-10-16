@@ -3,7 +3,7 @@ title: "Patrones y prácticas de código"
 type: arquitectura
 tags: [arquitectura, patrones, buenas-practicas]
 estado: vigente
-actualizado: 2026-10-15
+actualizado: 2026-10-16
 ---
 
 # Patrones y prácticas de código
@@ -24,7 +24,7 @@ Los patrones no se eligieron por adelantado. La arquitectura sí ([ADR-0008](adr
 | Proxy | `GeocodificacionService` en `modulos/acopios/geocodificacion.ts`, delante del puerto `GEOCODIFICADOR` | El endpoint de geocodificación es público y Nominatim pide una consulta por segundo como máximo: el proxy guarda en caché 24 horas, pone las consultas en una cola con tope y hace que las iguales que llegan juntas compartan una llamada | Cuando un servicio externo tenga cuota o sea lento y se consulte desde un endpoint público |
 | State (tabla de transiciones) | `TRANSICIONES_REMISION`, `puedeRemision` y `estadoTras` en `packages/shared/src/motor/remision.ts`; `RemisionesService.exigirAccion` | La remisión tiene cinco acciones y cuatro estados, y la API y la web tienen que estar de acuerdo en qué vale desde dónde | Cuando otro ciclo de vida tenga acciones del usuario: el comprobante, la zona o las reservas de turnos |
 | Builder | `PlanRemision` en `modulos/motor/plan-remision.ts` | Las líneas de un borrador llegan en pasos (aprobar, crear, reemplazar); el plan suma lo repetido y valida todo contra el movible antes de que el DAO escriba | Cuando un objeto se arme en varios pasos con validación, como los datos de las pruebas de integración |
-| Fachada | `AlmacenamientoService`: `guardarImagen` y `urlFirmada` | Quien guarda una foto no sabe de sharp, miniaturas ni S3 | Cuando un servicio externo pida varios pasos para una sola operación del dominio |
+| Fachada | `AlmacenamientoService`: `guardarImagen` y `leerImagen` | Quien guarda una foto no sabe de sharp, miniaturas ni S3 | Cuando un servicio externo pida varios pasos para una sola operación del dominio |
 | Cadena de responsabilidad | Guards globales en `app.module.ts`: `OrigenGuard`, `LimiteIntentosGuard`, `AutenticacionGuard`; luego el pipe de validación y `FiltroErrores` | Cada revisión de la petición es independiente y puede cortarla | Una revisión nueva que aplique a toda petición es un guard más en ese arreglo, en el lugar que le toca |
 | Puertos y adaptadores (estrategia elegida por inyección de dependencias) | `ProveedorIdentidad` con `local` y `supabase`; el almacén de archivos (`almacen.ts`) con `almacen-s3.ts` para Garage ([ADR-0012](adr/ADR-0012-almacenamiento-garage.md)) y `almacen-memoria.ts`; geocodificación con Nominatim y un adaptador falso en las pruebas | Cambiar un servicio externo sin tocar el dominio y probar sin red | Cuando un servicio externo tiene dos implementaciones reales, o una real y una de prueba. `importacion` llevará un adaptador por fuente |
 | Inversión de dependencias | `VerificadorUbicaciones` en `comun/ubicaciones`, que implementa `acopios` y usa `identidad` | Rompe el ciclo entre `identidad` y `acopios` | Cuando dos módulos se necesitan entre sí: el contrato va a `comun/` y lo implementa el módulo que tiene los datos |

@@ -743,7 +743,9 @@ registrarlo en un ADR.
 publica en ningún entorno ([ADR-0017](../02-arquitectura/adr/ADR-0017-factura-servida-por-la-api.md)).
 El cambio de código va en [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26),
 antes del primer despliegue.
-**Estado:** RESUELTO el 2026-10-06 (decisión; falta el código).
+**Código (2026-10-16):** la API entrega la imagen y se retiraron `S3_URL_PUBLICA` y las URL
+firmadas (rama `servidor-de-pruebas`).
+**Estado:** RESUELTO el 2026-10-16.
 
 ### P-042 · Correo de contacto para los datos personales
 **Fecha:** 2026-10-06 · **Propuesto por:** Joseph

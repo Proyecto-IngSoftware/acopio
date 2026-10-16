@@ -3,7 +3,7 @@ title: "Requerimientos no funcionales"
 type: requerimientos
 tags: [requerimientos, rnf]
 estado: vigente
-actualizado: 2026-09-12
+actualizado: 2026-10-16
 ---
 
 # Requerimientos no funcionales
@@ -88,7 +88,7 @@ nunca `1.240 L` a secas.
 
 | | |
 |---|---|
-| Buckets de almacenamiento (Garage) privados sin excepción; acceso solo por URL firmada de expiración corta | |
+| Buckets de almacenamiento (Garage) privados sin excepción; solo la API lee los objetos y entrega los bytes (ADR-0017) | |
 | `service_role` de Supabase jamás en el frontend, ni en variables `VITE_*` | |
 | Tokens de invitación almacenados hasheados con SHA-256; comparación en tiempo constante | |
 | Límite de intentos por IP en login, canje de invitación, auto-registro de Donador y consulta de folio | |

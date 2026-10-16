@@ -91,9 +91,8 @@ importar puntos referenciados. Supabase usa el mismo servidor SMTP para sus corr
 ([ADR-0012](adr/ADR-0012-almacenamiento-garage.md)); la API le habla por la API de
 S3, así que cambiar de servidor es configuración. Todo archivo pasa por la API: la
 foto de la factura la entrega la propia API, que revisa el permiso y lee el objeto de
-Garage ([ADR-0017](adr/ADR-0017-factura-servida-por-la-api.md)). Hasta que ese cambio
-entre (#26), la API devuelve URL firmadas de cinco minutos, y en desarrollo las firma
-con `S3_URL_PUBLICA` (`http://localhost:3900`) para que el navegador las abra.
+Garage ([ADR-0017](adr/ADR-0017-factura-servida-por-la-api.md)). La evidencia de las
+remisiones se sirve igual.
 
 **Lo que corre hoy.** Mientras el desarrollo es local (P-032), todo se levanta con
 Docker Compose: `db`, `storage` (Garage), `mailpit` para ver los correos, la `api` y
@@ -128,7 +127,7 @@ llegan en la segunda). Faltan `turnos` (Bloque 5) e `importacion`.
 | `turnos` | Jornadas, reservas, cupos | `JornadaService` |
 | `auditoria` | Bitácora. Cada servicio la escribe en la misma transacción que el cambio; no hay interceptor | `BitacoraService` |
 | `notificaciones` | Correo por SMTP: invitaciones, reservas, avisos de folio y de acopio cerrado. Envío con reintentos | `NotificacionService` |
-| `almacenamiento` | Archivos en Garage, por la API de S3: facturas, evidencias de remisión, documentos de verificación, logotipos. URLs firmadas | `AlmacenamientoService` |
+| `almacenamiento` | Archivos en Garage, por la API de S3: facturas, evidencias de remisión, documentos de verificación, logotipos. La API lee el objeto y entrega los bytes | `AlmacenamientoService` |
 | `importacion` | Puntos referenciados desde fuentes externas, un adaptador por fuente ([RF-RED-011](../01-requerimientos/funcionales/red.md#rf-red-011--importar-acopios-de-una-fuente-externa)) | `ImportadorService` |
 
 **Validación del 2026-09-14 ([P-023](../01-requerimientos/pendientes.md)):**
