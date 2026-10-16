@@ -63,12 +63,14 @@ services:
       S3_BUCKET: ${S3_BUCKET:-comprobantes}
       S3_ACCESS_KEY: ${S3_ACCESS_KEY:?falta S3_ACCESS_KEY}
       S3_SECRET_KEY: ${S3_SECRET_KEY:?falta S3_SECRET_KEY}
-      SMTP_HOST: ${SMTP_HOST:?falta SMTP_HOST}
+      # false: sin correo; las invitaciones se comparten con el enlace de la consola (P-055)
+      CORREO_ACTIVO: ${CORREO_ACTIVO:-true}
+      SMTP_HOST: ${SMTP_HOST:-}
       SMTP_PORT: ${SMTP_PORT:-587}
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASSWORD: ${SMTP_PASSWORD:-}
       SMTP_SEGURO: ${SMTP_SEGURO:-false}
-      CORREO_REMITENTE: ${CORREO_REMITENTE:?falta CORREO_REMITENTE}
+      CORREO_REMITENTE: ${CORREO_REMITENTE:-}
       SEED_ADMIN_USUARIO: ${SEED_ADMIN_USUARIO:-admin}
       SEED_ADMIN_NOMBRE: ${SEED_ADMIN_NOMBRE:-Administrador}
       SEED_ADMIN_CORREO: ${SEED_ADMIN_CORREO:-}

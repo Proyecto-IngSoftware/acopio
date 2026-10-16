@@ -15,12 +15,14 @@ const esquema = z
     SUPABASE_ANON_KEY: z.string().optional(),
     SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
 
-    SMTP_HOST: z.string().min(1),
-    SMTP_PORT: z.coerce.number().int().positive(),
+    // P-055: apagado, la API no encola ni envía correo; los enlaces se comparten a mano
+    CORREO_ACTIVO: z.stringbool().default(true),
+    SMTP_HOST: z.string().optional(),
+    SMTP_PORT: z.coerce.number().int().positive().default(587),
     SMTP_USER: z.string().optional(),
     SMTP_PASSWORD: z.string().optional(),
     SMTP_SEGURO: z.stringbool().default(false),
-    CORREO_REMITENTE: z.string().min(1),
+    CORREO_REMITENTE: z.string().optional(),
     // Geocodificación de direcciones (RF-RED-002)
     NOMINATIM_URL: z.url().default('https://nominatim.openstreetmap.org'),
     // Custodia (Bloque 3, C-10)
@@ -40,6 +42,10 @@ const esquema = z
   .refine((e) => !(e.NODE_ENV === 'production' && e.AUTH_PROVEEDOR === 'local'), {
     message: 'AUTH_PROVEEDOR=local no está permitido con NODE_ENV=production',
     path: ['AUTH_PROVEEDOR'],
+  })
+  .refine((e) => !e.CORREO_ACTIVO || (e.SMTP_HOST && e.CORREO_REMITENTE), {
+    message: 'CORREO_ACTIVO=true exige SMTP_HOST y CORREO_REMITENTE',
+    path: ['CORREO_ACTIVO'],
   })
   .refine(
     (e) =>
