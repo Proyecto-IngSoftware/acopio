@@ -1,5 +1,5 @@
 # Acopio · servicios base. Desarrollo: combinar con docker-compose.dev.yml.
-# `api` entra en T04; `web` y `proxy` en la fase de interfaz.
+# En el servidor, Traefik (Dokploy) enruta el dominio hacia `web`, que reenvía /api a `api`.
 name: acopio
 
 services:
@@ -75,6 +75,15 @@ services:
       SEED_ADMIN_CONTRASENA: ${SEED_ADMIN_CONTRASENA:-}
     volumes:
       - llaves:/llaves
+
+  web:
+    # nginx con el build de Vite; /api va a la API por la red interna (ADR-0014)
+    build:
+      context: ..
+      dockerfile: apps/web/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - api
 
 volumes:
   llaves:

@@ -20,6 +20,7 @@
     "servicios:parar": "docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.dev.yml down",
     "servicios:logs": "docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.dev.yml logs -f",
     "servicios:todo": "docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.dev.yml up -d --build",
+    "servicios:web": "docker compose --env-file .env -f infra/docker-compose.yml -f infra/docker-compose.dev.yml --profile web up -d --build web",
     "almacenamiento:iniciar": "./infra/garage/iniciar.sh"
   },
   "devDependencies": {

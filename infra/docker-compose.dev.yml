@@ -28,3 +28,10 @@ services:
       S3_URL_PUBLICA: ${S3_URL_PUBLICA:-http://localhost:3900}
       SMTP_HOST: mailpit
       SMTP_PORT: 1025
+
+  # El build de la web servido por nginx, como en el servidor. No arranca con servicios:todo
+  # porque ocupa el 5173 de Vite: bun run servicios:web
+  web:
+    profiles: ['web']
+    ports:
+      - '5173:80'

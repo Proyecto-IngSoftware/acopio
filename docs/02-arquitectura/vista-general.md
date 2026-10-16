@@ -3,7 +3,7 @@ title: "Vista general de arquitectura"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-09
+actualizado: 2026-10-16
 ---
 
 # Vista general de arquitectura
@@ -65,8 +65,8 @@ flowchart TB
         DB[("db<br/>PostgreSQL 16")]
         Storage[("storage<br/>Garage, S3 privado")]
 
-        Traefik -->|"/"| Web
-        Traefik -->|"/api · /files"| API
+        Traefik --> Web
+        Web -->|"/api"| API
         API --> DB
         API --> Storage
     end
@@ -79,7 +79,8 @@ flowchart TB
 ```
 
 **Cómo leer el diagrama.** El navegador descarga la SPA desde `web` y habla con
-la API por HTTPS a través de Traefik; solo va directo a Supabase para iniciar
+la API por HTTPS en el mismo origen: Traefik entrega el dominio a `web`, y su nginx
+pasa `/api` a la API; solo va directo a Supabase para iniciar
 sesión y a OpenStreetMap por los mosaicos del mapa. La API es un único proceso con
 once módulos —ocho de dominio y tres transversales— y sus tareas programadas; es la
 única pieza que toca la base de datos, los archivos y los servicios externos: el
@@ -95,14 +96,14 @@ entre (#26), la API devuelve URL firmadas de cinco minutos, y en desarrollo las 
 con `S3_URL_PUBLICA` (`http://localhost:3900`) para que el navegador las abra.
 
 **Lo que corre hoy.** Mientras el desarrollo es local (P-032), todo se levanta con
-Docker Compose: `db`, `storage` (Garage), `mailpit` para ver los correos y la `api`.
-La web corre con Vite y todavía no tiene servicio en el Compose. El inicio de sesión
+Docker Compose: `db`, `storage` (Garage), `mailpit` para ver los correos, la `api` y
+la `web` (nginx con el build, en el perfil `web`). Para trabajar en la interfaz se usa
+Vite. El inicio de sesión
 usa el adaptador `local` de `ProveedorIdentidad` (P-025); Supabase Auth entra con el
 primer despliegue.
 
-**El `proxy: nginx` de antes lo reemplaza Traefik.** Dokploy lo trae incluido:
-mismas reglas de enrutamiento (`/` a `web`, `/api` y `/files` a `api`), y encima
-resuelve el certificado HTTPS sin configurarlo a mano. Detalle completo en
+**No hay servicio `proxy`.** Traefik viene con Dokploy, recibe el dominio y emite el
+certificado HTTPS. Lo entrega todo a `web`, y el nginx de `web` reenvía `/api` a la API. Detalle completo en
 [despliegue.md](../06-operacion/despliegue.md#producción--vps-con-dokploy).
 
 ## Módulos del backend
