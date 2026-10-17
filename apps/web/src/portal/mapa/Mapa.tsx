@@ -25,6 +25,7 @@ import MapaAcopios from './MapaAcopios';
 import { filtroDelMapa } from './filtro';
 import { TarjetaAcopio, aperturaPublica, km } from './TarjetaAcopio';
 import { TarjetaZona } from './TarjetaZona';
+import { useLlevarALaVista } from './llevarALaVista';
 
 const SIN_ZONAS: ZonaPublica[] = [];
 
@@ -217,10 +218,13 @@ export function Mapa() {
 /** Tarjeta del acopio tocado en el mapa, con lo que no reciben y el paso a la ficha. */
 function Elegido({ acopio, enlace }: { acopio: AcopioPublico; enlace: string }) {
   const { data: marcas } = useNoRecibir(acopio.id);
+  const ref = useLlevarALaVista<HTMLElement>(acopio.id);
   return (
     <section
+      ref={ref}
+      tabIndex={-1}
       aria-label={`Acopio elegido: ${acopio.nombre}`}
-      className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md shadow-md"
+      className="flex scroll-mt-24 flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md shadow-md outline-none"
     >
       <div className="flex items-start justify-between gap-space-sm">
         <p className="text-body-sm text-on-surface">{aperturaPublica(acopio)}</p>

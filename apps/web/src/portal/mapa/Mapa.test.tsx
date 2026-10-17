@@ -174,6 +174,18 @@ describe('zonas con necesidad (HU-13.1)', () => {
     expect(screen.queryByRole('region', { name: 'Zona con necesidad' })).not.toBeInTheDocument();
   });
 
+  it('al tocar una zona baja hasta su tarjeta y le pasa el foco', async () => {
+    const bajar = vi.fn();
+    Element.prototype.scrollIntoView = bajar;
+    conZonas([ZONA_CON_NECESIDAD]);
+    pantalla('/mapa');
+    await userEvent.click(await screen.findByRole('button', { name: 'zona z1' }));
+    const tarjeta = screen.getByRole('region', { name: 'Zona con necesidad' });
+    await waitFor(() => expect(bajar).toHaveBeenCalled());
+    expect(bajar.mock.contexts[0]).toBe(tarjeta);
+    expect(tarjeta).toHaveFocus();
+  });
+
   it('en la lista, las zonas van antes de los acopios', async () => {
     conZonas([ZONA_CON_NECESIDAD]);
     pantalla('/mapa?vista=lista');
