@@ -72,9 +72,12 @@ demo, y los recorridos pasan allá. El último informe de sesión está en
 2. La ronda de pruebas del equipo en el servidor
    ([#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58)). Lo que reporten entra
    como issue con la etiqueta `hallazgo`.
-3. Después de la presentación: P-060, que vence el usuario recordado. Cuando se sume otra
+3. Lo que depende de Joseph: cambiar la contraseña de las seis cuentas de la demo en
+   Supabase. Cambiar `DEMO_CONTRASENA` en Dokploy no las toca
+   ([P-062](../01-requerimientos/pendientes.md)).
+4. Después de la presentación: P-060, que vence el usuario recordado. Cuando se sume otra
    persona, P-063, el hook fuera del repositorio.
-4. En paralelo, cuando haga falta, la deuda técnica
+5. En paralelo, cuando haga falta, la deuda técnica
    ([etiqueta `deuda`](https://github.com/Proyecto-IngSoftware/acopio/issues?q=is%3Aopen+label%3Adeuda))
    y el despliegue definitivo ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)).
 
