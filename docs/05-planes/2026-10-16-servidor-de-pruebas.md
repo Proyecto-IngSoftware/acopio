@@ -47,7 +47,7 @@ domingo 18 de octubre) y [#26](https://github.com/Proyecto-IngSoftware/acopio/is
 | 3 Sembrar la demo en el servidor | ⬜ | Fijar `DEMO_CONTRASENA` y `SEMBRAR_DEMO_AL_ARRANCAR=true` en Dokploy y desplegar |
 | 4 Recorridos y pruebas manuales contra el servidor | ⬜ | Espera a 3 |
 | 5 Runbook con el proyecto de Supabase | ✅ | El cambio no estaba en ningún lado; se escribió el 2026-10-16 con el proyecto verificado (`ACTIVE_HEALTHY`) |
-| 6 Decisiones abiertas (P-056, P-057) | ⬜ | Joseph decide P-056; P-057 se vigila en #58 |
+| 6 Decisiones abiertas (P-056, P-057) | 🟡 | P-056 resuelto: la ronda usa `donador1@demo.acopio.local`. P-057 se vigila en #58 |
 
 ### Task 1: Factura servida por la API
 
@@ -159,6 +159,37 @@ casilla RTA-03 de #26.
   puede confirmar su cuenta. Decide Joseph.
 - [P-057](../01-requerimientos/pendientes.md): `net::ERR_FAILED` intermitente en la consola
   del navegador. Se vigila en la ronda de pruebas (#58).
+
+## Siguiente sesión (acordado el 2026-10-16)
+
+La meta es que todo funcione el domingo 18 de octubre: la sustentación llega antes de lo que
+parece. Orden:
+
+1. **Joseph, en Dokploy:** fijar `DEMO_CONTRASENA` (un valor nuevo, fuera del repositorio) y
+   `SEMBRAR_DEMO_AL_ARRANCAR=true`, y redesplegar. El 2026-10-16, Supabase solo tenía
+   `admin@acopio.co`. Después, verificar las cinco cuentas en `auth.users`, entrar con una y
+   subir y ver una factura en el servidor (tarea 3).
+2. **Maquetas del ciclo 3 del motor en Stitch** (Receptor y público,
+   [especificación](../superpowers/specs/2026-10-06-bloque-4-motor-design.md) §7): C13
+   Recepción con escáner y foto obligatoria (HU-12), C20 Reportar necesidad con el aviso de
+   que la nota es pública (HU-13), «Mi zona» como inicio del Receptor y la capa de zonas en
+   P05. La API ya existe; hoy el Receptor solo tiene C10. Ninguna pantalla se escribe sin la
+   maqueta aprobada por Joseph, así que esto va primero.
+3. **Mientras Joseph revisa las maquetas, los escenarios de prueba por rol**
+   ([#55](https://github.com/Proyecto-IngSoftware/acopio/issues/55)), en la bóveda: «entro
+   como…, hago…, debería ver…», tomados de los criterios del
+   [Avance 2](../entregas/avance-02-requisitos.md#historias), con las cuentas de la demo y
+   `donador1@demo.acopio.local` para el Donador (P-056). Quedan como «no probar todavía»
+   HU-02, HU-03, HU-15, el criterio de RedAcopio de HU-01, y HU-12 y HU-13 si el ciclo 3 no
+   llega.
+4. **Construir el ciclo 3** con las maquetas aprobadas: plan en `docs/05-planes/`, una rama y
+   un PR.
+5. **Con la demo sembrada, todo contra el servidor (tarea 4):** `pruebas-manuales.sh`, los
+   recorridos sin los pasos de Mailpit y `consola-remisiones.mjs` con la demo recién
+   sembrada.
+
+Queda una decisión de la sesión anterior sin tomar: si el ciclo 3 entra en lo que debe
+funcionar el domingo o si HU-12 y HU-13 quedan fuera de la sustentación.
 
 ## Después de este plan
 
