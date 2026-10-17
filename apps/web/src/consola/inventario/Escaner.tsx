@@ -11,15 +11,20 @@ import { leerContenido } from './contenido';
 import { limpiarCantidad } from './TecladoCantidad';
 
 /** La cámara a pantalla completa (RF-INV-002). Entrega el primer código que lee. Si el
- *  navegador niega el permiso o no hay cámara, avisa con `alFallar`. */
+ *  navegador niega el permiso o no hay cámara, avisa con `alFallar`. C13 la usa para el QR
+ *  con otros textos. */
 export function VistaCamara({
   alLeer,
   alCerrar,
   alFallar,
+  indicacion = 'Apunta al código de barras del producto',
+  textoSalir = 'Buscar por nombre',
 }: {
   alLeer: (codigo: string) => void;
   alCerrar: () => void;
   alFallar: (error: unknown) => void;
+  indicacion?: string;
+  textoSalir?: string;
 }) {
   const video = useRef<HTMLVideoElement>(null);
   const cerrar = useRef<HTMLButtonElement>(null);
@@ -83,15 +88,13 @@ export function VistaCamara({
         aria-hidden="true"
         className="relative mx-auto mt-[25vh] h-32 w-64 max-w-full rounded-xl border-[3px] border-inverse-on-surface"
       />
-      <p className="relative mt-space-md text-center text-body-lg font-bold">
-        Apunta al código de barras del producto
-      </p>
+      <p className="relative mt-space-md text-center text-body-lg font-bold">{indicacion}</p>
       <button
         type="button"
         onClick={alCerrar}
         className="relative mt-auto min-h-[48px] rounded-xl border-[1.5px] border-inverse-on-surface font-bold"
       >
-        Buscar por nombre
+        {textoSalir}
       </button>
     </div>,
     document.body,

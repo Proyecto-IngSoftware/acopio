@@ -266,3 +266,41 @@ it('no tiene violaciones graves de accesibilidad', async () => {
   await screen.findByText('18 %');
   expect(await violacionesGraves(container)).toEqual([]);
 });
+
+describe('C20 desde la ficha (I3-06)', () => {
+  const enRuta = (ruta: string) =>
+    render(
+      envolver(
+        <Routes>
+          <Route path="/consola/zonas/:id" element={<FichaZona />} />
+        </Routes>,
+        ruta,
+        clienteFalso(RECEPTOR),
+      ),
+    );
+
+  it('el Receptor ve «Reportar necesidad»', async () => {
+    responderSegun({ 'GET /api/zonas/*/necesidad': ficha() });
+    enRuta('/consola/zonas/z1');
+    expect(await screen.findByRole('link', { name: /Reportar necesidad/ })).toHaveAttribute(
+      'href',
+      '/consola/zonas/z1/reportar',
+    );
+  });
+
+  it('al volver de reportar muestra cuántas categorías se reportaron', async () => {
+    responderSegun({ 'GET /api/zonas/*/necesidad': ficha() });
+    enRuta('/consola/zonas/z1?reportado=2');
+    expect(
+      await screen.findByText(
+        'Reportaste 2 categorías. El motor las tiene en cuenta en el próximo cálculo.',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('al volver de resolver lo dice en singular', async () => {
+    responderSegun({ 'GET /api/zonas/*/necesidad': ficha() });
+    enRuta('/consola/zonas/z1?resuelto=1');
+    expect(await screen.findByText('Marcaste 1 categoría como resuelta.')).toBeInTheDocument();
+  });
+});

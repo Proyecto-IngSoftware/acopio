@@ -176,6 +176,57 @@ describe('la fila «Remisiones» del Operador', () => {
   });
 });
 
+describe('«Mi zona» del Receptor (I3-05)', () => {
+  const ZONA = 'd0000000-0000-4000-8000-000000000031';
+  const zonas = [
+    {
+      tipo: 'ZONA',
+      id: ZONA,
+      nombre: 'Barrio San Agustín (prueba)',
+      municipio: 'Mocoa',
+      estado: 'ACTIVA',
+    },
+  ];
+
+  it('lleva a lo que está por recibir y a la ficha de cada zona', async () => {
+    responderSegun({
+      'GET /api/ubicaciones/mias': zonas,
+      'GET /api/recepciones': [{ codigo: 'R-1' }, { codigo: 'R-2' }],
+    });
+    pantalla(persona('RECEPTOR'));
+    const zona = await screen.findByRole('region', { name: 'Mi zona' });
+    const fila = await within(zona).findByRole('link', { name: /2 remisiones en camino/ });
+    expect(fila).toHaveAttribute('href', '/consola/recepciones');
+    expect(within(fila).getByText('2')).toBeInTheDocument();
+    expect(
+      await within(zona).findByRole('link', { name: /Barrio San Agustín \(prueba\)/ }),
+    ).toHaveAttribute('href', `/consola/zonas/${ZONA}`);
+  });
+
+  it('sin remisiones dice que no hay nada en camino', async () => {
+    responderSegun({ 'GET /api/ubicaciones/mias': zonas, 'GET /api/recepciones': [] });
+    pantalla(persona('RECEPTOR'));
+    const fila = await screen.findByRole('link', { name: /Nada en camino por ahora/ });
+    expect(within(fila).queryByText('0')).not.toBeInTheDocument();
+  });
+
+  it('una remisión se dice en singular', async () => {
+    responderSegun({
+      'GET /api/ubicaciones/mias': zonas,
+      'GET /api/recepciones': [{ codigo: 'R-1' }],
+    });
+    pantalla(persona('RECEPTOR'));
+    expect(await screen.findByRole('link', { name: /1 remisión en camino/ })).toBeInTheDocument();
+  });
+
+  it('un Operador no la ve', async () => {
+    responderSegun({ 'GET /api/ubicaciones/mias': [], 'GET /api/remisiones': [] });
+    pantalla(persona('OPERADOR'));
+    await screen.findByRole('region', { name: 'Tu cuenta' });
+    expect(screen.queryByRole('region', { name: 'Mi zona' })).not.toBeInTheDocument();
+  });
+});
+
 it('el Auditor ve solo el inventario de su ubicación activa', async () => {
   responderSegun({
     'GET /api/ubicaciones/mias': [

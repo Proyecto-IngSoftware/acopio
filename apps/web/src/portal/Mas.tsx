@@ -1,3 +1,4 @@
+import { useRecepciones } from '../api/recepciones';
 import { useRemisiones } from '../api/remisiones';
 import { Boton } from '../componentes/Boton';
 import { Icono } from '../componentes/Icono';
@@ -160,6 +161,47 @@ function MiAcopio() {
   );
 }
 
+/** C13 para el Receptor: lo que viene en camino y la ficha de cada zona asignada (I3-05). */
+function MiZona() {
+  const { usuario } = useSesion();
+  const { ubicaciones } = useUbicacionActiva();
+  if (usuario?.rol !== 'RECEPTOR') return null;
+  return (
+    <SeccionMenu id="mi-zona" titulo="Mi zona">
+      <FilaPorRecibir />
+      {ubicaciones
+        .filter((u) => u.tipo === 'ZONA')
+        .map((z) => (
+          <FilaMenu
+            key={z.id}
+            a={`/consola/zonas/${z.id}`}
+            icono="location_on"
+            titulo={z.nombre}
+            descripcion={`${z.municipio} · cobertura y reportes`}
+          />
+        ))}
+    </SeccionMenu>
+  );
+}
+
+function FilaPorRecibir() {
+  const { data } = useRecepciones();
+  const n = data?.length ?? 0;
+  return (
+    <FilaMenu
+      a="/consola/recepciones"
+      icono="local_shipping"
+      titulo="Por recibir"
+      descripcion={
+        n === 0
+          ? 'Nada en camino por ahora'
+          : `${n} ${n === 1 ? 'remisión' : 'remisiones'} en camino`
+      }
+      distintivo={n > 0 ? <span className="text-label-md font-bold">{n}</span> : undefined}
+    />
+  );
+}
+
 function descripcionCuenta(rol: Rol, asignadas: number): string {
   if (rol === 'ADMIN') return 'Administrador · todas las ubicaciones';
   if (asignadas < 2) return nombreRol(rol);
@@ -192,6 +234,7 @@ export function Mas() {
       )}
 
       <MiAcopio />
+      <MiZona />
 
       {herramientas.length > 0 && (
         <SeccionMenu id="administracion" titulo="Administración">

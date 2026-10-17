@@ -38,11 +38,11 @@ recortado para el domingo 18, según la decisión del 2026-10-16 en el
 | Tarea | Estado | Qué falta |
 |---|---|---|
 | 1 Diseño, plan y escenarios | ✅ | Joseph aprobó la maqueta el 2026-10-16 |
-| 2 Cliente de recepciones y reportes | ⬜ | |
-| 3 Rutas, «Más» y cámara configurable | ⬜ | |
-| 4 C13 Por recibir | ⬜ | |
-| 5 C13 Recibir remisión | ⬜ | |
-| 6 C20 Reportar necesidad | ⬜ | |
+| 2 Cliente de recepciones y reportes | ✅ | |
+| 3 Rutas, «Más» y cámara configurable | ✅ | |
+| 4 C13 Por recibir | ✅ | |
+| 5 C13 Recibir remisión | ✅ | |
+| 6 C20 Reportar necesidad | ✅ | |
 | 7 Recorrido y cierre | ⬜ | |
 | 8 Capa de zonas en P05 (si alcanza) | ⬜ | |
 
@@ -127,7 +127,7 @@ recortado para el domingo 18, según la decisión del 2026-10-16 en el
   - `useRecepciones(): UseQueryResult<Remision[], ErrorApi>`, clave `['recepciones']`.
   - `useRemisionPorQr(token: string): UseQueryResult<Remision, ErrorApi>`, clave `['recepcion-qr', token]`, `retry: false`.
   - `useSubirEvidencia(codigo: string): UseMutationResult<Remision, ErrorApi, File>`: multipart con el campo `foto`, como `subirFactura` en `api/donaciones.ts`.
-  - `useRecibir(codigo: string): UseMutationResult<Remision, ErrorApi, { zonaId?: string; nota?: string }>`. Al terminar invalida `['recepciones']` y `['ficha-zona']`.
+  - `useRecibirRemision(codigo: string): UseMutationResult<Remision, ErrorApi, { zonaId?: string; nota?: string }>`. Al terminar invalida `['recepciones']` y `['ficha-zona']`.
   - `useReportesZona(zonaId: string): UseQueryResult<ReporteNecesidad[], ErrorApi>`, clave `['reportes-zona', zonaId]`.
   - `useReportar(zonaId: string): UseMutationResult<{ creados: string[] }, ErrorApi, { categorias: string[]; nota?: string; resuelta: boolean }>`. Invalida `['reportes-zona', zonaId]` y `['ficha-zona', zonaId]`.
   - `pendientesDeResolver(reportes: ReporteNecesidad[]): ReporteNecesidad[]`: el más reciente por `categoriaId` y, de esos, los que tienen `resuelta: false` (I3-07).
@@ -213,7 +213,7 @@ recortado para el domingo 18, según la decisión del 2026-10-16 en el
 - Crear: `apps/web/src/consola/recepciones/RecibirRemision.test.tsx`
 
 **Interfaces:**
-- Consume: `useRecepciones`, `useRemisionPorQr`, `useSubirEvidencia` y `useRecibir` (tarea 2);
+- Consume: `useRecepciones`, `useRemisionPorQr`, `useSubirEvidencia` y `useRecibirRemision` (tarea 2);
   `useUbicacionesMias` de `api/red.ts`; `urlEvidencia` de `api/remisiones.ts`;
   `MAXIMO_EVIDENCIAS` de `@acopio/shared`.
 - Produce: `RecibirRemision.tsx` exporta `RecibirPorCodigo` (lee `:codigo`) y `RecibirPorQr`
