@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Pendientes — bandeja de entrada
@@ -998,6 +998,21 @@ tiempo: un `findBy` que no encuentra la pantalla cargada en diferido o un timeou
 pasar igual.
 **Estado:** ABIERTO. Probar con menos workers en `vitest.config` o con más tiempo en los
 `findBy` de las rutas con carga diferida
+
+### P-060 · El usuario recordado en localStorage no vence y abre menús sin red
+**Fecha:** 2026-10-17 · **Propuesto por:** Joseph, al revisar el almacenamiento del navegador
+**Qué:** `acopio.ultimo-usuario` (`apps/web/src/sesion/recordada.ts`) guarda el id, el
+usuario, el nombre y el rol para capturar sin red (O-05). No guarda el token, que va en la
+cookie `HttpOnly`, y la API decide los permisos con el rol de la base en cada petición: con
+la sesión de `receptor1`, listar usuarios y crear un acopio dan 403. Con red, la web
+sobrescribe el registro con `/api/auth/yo`. Quedan dos cosas. El registro no vence, así que
+en un celular compartido el nombre y el rol se quedan hasta que alguien cierre sesión. Y sin
+red, quien edite el rol ve los menús de ese rol, aunque no le sirvan.
+**Por qué:** no da permisos, pero deja datos personales en equipos compartidos y muestra
+pantallas que no corresponden.
+**Estado:** ABIERTO, para después de la presentación. Que el registro venza con la misma
+duración de la sesión, y que sin red solo se muestren las herramientas que funcionan sin
+conexión
 
 ---
 
