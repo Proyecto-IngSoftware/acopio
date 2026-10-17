@@ -3,7 +3,7 @@ title: "Recorridos de punta a punta"
 type: operacion
 tags: [operacion, pruebas, web]
 estado: vigente
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Recorridos de punta a punta
@@ -51,6 +51,12 @@ node apps/web/recorridos/sin-conexion.mjs
   contraseña del administrador del seed.
 - Las cuentas de la demo entran con `DEMO_CONTRASENA`, y si falta, con `demo-acopio-2026`.
   Contra el servidor de pruebas hay que exportarla con el valor que tiene Dokploy.
+- Contra el servidor de pruebas va `SIN_CORREO=1`, porque allá no hay Mailpit y el correo
+  está apagado (P-055). `validacion-general.mjs` omite invitar y activar un Administrador, que
+  además quedaría en el servidor con una contraseña escrita en el script.
+  `consola-comprobantes.mjs` dona con `donador1@demo.acopio.local` y omite el correo del
+  rechazo. `donador.mjs` no corre allá, porque registra una cuenta nueva. `ADMIN_CONTRASENA`
+  lleva la del administrador del servidor.
 - Para detener el servidor de `vite preview` sin el PID: `ss -ltnp | grep 5173` y matar ese
   proceso.
 
@@ -157,6 +163,25 @@ señal las tres se envían solas, y el historial muestra la entrada de arroz con
 ocurrió y la hora en que llegó.
 
 ## Últimos resultados
+
+**2026-10-17, contra el servidor de pruebas** (`https://acopio.josephqaz.dev`, con
+`SIN_CORREO=1`), después de desplegar #99 y #100:
+
+| Script | Resultado |
+|---|---|
+| `validacion-general.mjs` | 56 de 56 (omite los 3 pasos de la invitación), sin 5xx ni errores de página |
+| `consola-comprobantes.mjs` | 9 de 9 (omite el correo del rechazo) |
+| `consola-motor.mjs` | 9 de 9 |
+| `consola-remisiones.mjs` | 7 de 7 |
+| `consola-recepciones.mjs` | 6 de 6 |
+| `sin-conexion.mjs` | 12 de 12 |
+| `scripts/pruebas-manuales.sh` | 11 de 11 con el código esperado |
+| `donador.mjs` | No corre allá |
+
+`consola-remisiones.mjs` pasó en el servidor, donde la demo está recién sembrada. En local
+sigue fallando por los borradores viejos de Kennedy (ver «Problemas conocidos»). El primer
+intento de `consola-recepciones.mjs` dejó en camino `R-2026-RF4J7`, con 1 L de agua y una
+foto, que sirve para practicar la recepción en la ronda del equipo.
 
 **2026-10-07**, sobre `2af3b47`, con la API reconstruida y los dos seeds recién corridos:
 

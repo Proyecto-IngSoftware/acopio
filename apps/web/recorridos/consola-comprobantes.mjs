@@ -20,7 +20,11 @@ const DISENO = fileURLToPath(new URL('../../../docs/03-diseno/stitch/', import.m
 const axe = createRequire(import.meta.url).resolve('axe-core/axe.min.js');
 const CHAPINERO = 'd0000000-0000-4000-8000-000000000011';
 const CONTRASENA_DEMO = process.env.DEMO_CONTRASENA ?? 'demo-acopio-2026';
-const CORREO = `donador-consola-${Date.now()}@demo.acopio.local`;
+// SIN_CORREO=1 en el servidor de pruebas: sin Mailpit, dona el Donador de la demo
+const SIN_CORREO = process.env.SIN_CORREO === '1';
+const CORREO = SIN_CORREO
+  ? 'donador1@demo.acopio.local'
+  : `donador-consola-${Date.now()}@demo.acopio.local`;
 
 let bien = 0;
 let mal = 0;
@@ -119,6 +123,19 @@ async function recibir(p, folio, { conDiferencia }) {
   }
 }
 
+/** Cuenta nueva confirmada con el enlace que llega a Mailpit. */
+async function registrarDonador() {
+  await api('POST', '/api/auth/registro', { nombre: 'Camila Consola', correo: CORREO });
+  const [mensaje] = await esperarCorreos(CORREO, 1);
+  const m = await (await fetch(`${MAILPIT}/api/v1/message/${mensaje.ID}`)).json();
+  const token = /\/donador\/confirmar\/([\w-]+)/.exec(`${m.Text}\n${m.HTML}`)?.[1];
+  if (!token) throw new Error('no se leyó el enlace de confirmación');
+  ({ cookie: donador } = await api('POST', '/api/auth/registro/confirmar', {
+    token,
+    contrasena: 'recorrido-consola-2026',
+  }));
+}
+
 const b = await chromium.launch();
 const ctxOperador = await b.newContext({
   viewport: { width: 360, height: 640 },
@@ -141,16 +158,15 @@ cerrar = async () => {
 
 let donador = '';
 const folios = [];
-await paso('un Donador nuevo prepara dos donaciones para Acopio Chapinero', async () => {
-  await api('POST', '/api/auth/registro', { nombre: 'Camila Consola', correo: CORREO });
-  const [mensaje] = await esperarCorreos(CORREO, 1);
-  const m = await (await fetch(`${MAILPIT}/api/v1/message/${mensaje.ID}`)).json();
-  const token = /\/donador\/confirmar\/([\w-]+)/.exec(`${m.Text}\n${m.HTML}`)?.[1];
-  if (!token) throw new Error('no se leyó el enlace de confirmación');
-  ({ cookie: donador } = await api('POST', '/api/auth/registro/confirmar', {
-    token,
-    contrasena: 'recorrido-consola-2026',
-  }));
+await paso('un Donador prepara dos donaciones para Acopio Chapinero', async () => {
+  if (SIN_CORREO) {
+    ({ cookie: donador } = await api('POST', '/api/auth/donador/sesion', {
+      correo: CORREO,
+      contrasena: CONTRASENA_DEMO,
+    }));
+  } else {
+    await registrarDonador();
+  }
   const arroz = await categoria('arroz', 'Arroz', donador);
   const agua = await categoria('agua', 'Agua potable', donador);
   for (const lineas of [
@@ -224,9 +240,13 @@ await paso('rechaza el segundo con «Otro» y una nota', async () => {
   await aud.getByRole('button', { name: 'Revertir rechazo' }).waitFor();
 });
 
-await paso('el Donador recibe el correo del rechazo', async () => {
-  await esperarCorreos(CORREO, 2);
-});
+if (SIN_CORREO) {
+  console.log('omite  el Donador recibe el correo del rechazo (SIN_CORREO=1)');
+} else {
+  await paso('el Donador recibe el correo del rechazo', async () => {
+    await esperarCorreos(CORREO, 2);
+  });
+}
 
 await paso('revierte el rechazo', async () => {
   await aud.getByRole('button', { name: 'Revertir rechazo' }).click();

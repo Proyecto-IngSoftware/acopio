@@ -19,6 +19,9 @@ const axe = createRequire(import.meta.url).resolve('axe-core/axe.min.js');
 const CHAPINERO = 'd0000000-0000-4000-8000-000000000011';
 const DEMO = process.env.DEMO_CONTRASENA ?? 'demo-acopio-2026';
 const ADMIN = process.env.ADMIN_CONTRASENA ?? 'cambiar-antes-de-usar';
+// SIN_CORREO=1 en el servidor de pruebas: no hay Mailpit, y el Administrador invitado quedaría
+// allá con una contraseña escrita en este archivo. Se omiten invitar y activar
+const SIN_CORREO = process.env.SIN_CORREO === '1';
 const SELLO = Date.now().toString(36);
 
 let bien = 0;
@@ -152,46 +155,50 @@ await paso('admin no registra movimientos (C4 es del Operador)', () =>
 );
 
 const usuarioNuevo = `val.${SELLO}`;
-const correoNuevo = `val-${SELLO}@demo.acopio.local`;
-await paso('admin invita a un Administrador con correo', async () => {
-  await admin.goto(`${WEB}/consola/usuarios/invitar`);
-  await admin.getByLabel('Nombre completo').fill('Valeria Validación');
-  await admin.getByLabel('Nombre de usuario').fill(usuarioNuevo);
-  await admin.getByRole('radio', { name: /Administrador/ }).check();
-  await admin.getByLabel(/Correo/).fill(correoNuevo);
-  await admin.getByRole('button', { name: 'Crear e invitar' }).click();
-  await admin.getByRole('button', { name: 'Copiar enlace' }).waitFor();
-});
+if (SIN_CORREO) {
+  console.log('omite  invitar y activar un Administrador (SIN_CORREO=1)');
+} else {
+  const correoNuevo = `val-${SELLO}@demo.acopio.local`;
+  await paso('admin invita a un Administrador con correo', async () => {
+    await admin.goto(`${WEB}/consola/usuarios/invitar`);
+    await admin.getByLabel('Nombre completo').fill('Valeria Validación');
+    await admin.getByLabel('Nombre de usuario').fill(usuarioNuevo);
+    await admin.getByRole('radio', { name: /Administrador/ }).check();
+    await admin.getByLabel(/Correo/).fill(correoNuevo);
+    await admin.getByRole('button', { name: 'Crear e invitar' }).click();
+    await admin.getByRole('button', { name: 'Copiar enlace' }).waitFor();
+  });
 
-let enlace = '';
-await paso('el correo de la invitación llega a Mailpit', async () => {
-  // La cola de correo sale cada minuto
-  for (let i = 0; i < 120 && !enlace; i++) {
-    const lista = await (
-      await fetch(`${MAILPIT}/api/v1/search?query=${encodeURIComponent(`to:${correoNuevo}`)}`)
-    ).json();
-    const id = lista.messages?.[0]?.ID;
-    if (id) {
-      const m = await (await fetch(`${MAILPIT}/api/v1/message/${id}`)).json();
-      enlace = /https?:\/\/[^\s"<>]*\/invitacion\/[\w-]+/.exec(`${m.Text}\n${m.HTML}`)?.[0] ?? '';
+  let enlace = '';
+  await paso('el correo de la invitación llega a Mailpit', async () => {
+    // La cola de correo sale cada minuto
+    for (let i = 0; i < 120 && !enlace; i++) {
+      const lista = await (
+        await fetch(`${MAILPIT}/api/v1/search?query=${encodeURIComponent(`to:${correoNuevo}`)}`)
+      ).json();
+      const id = lista.messages?.[0]?.ID;
+      if (id) {
+        const m = await (await fetch(`${MAILPIT}/api/v1/message/${id}`)).json();
+        enlace = /https?:\/\/[^\s"<>]*\/invitacion\/[\w-]+/.exec(`${m.Text}\n${m.HTML}`)?.[0] ?? '';
+      }
+      if (!enlace) await new Promise((r) => setTimeout(r, 1000));
     }
-    if (!enlace) await new Promise((r) => setTimeout(r, 1000));
-  }
-  if (!enlace) throw new Error('no llegó el enlace');
-});
+    if (!enlace) throw new Error('no llegó el enlace');
+  });
 
-const nuevo = await contexto('nuevo');
-await paso('la persona invitada activa su cuenta y entra', async () => {
-  await nuevo.goto(`${WEB}${new URL(enlace).pathname}`);
-  await nuevo.getByLabel('Contraseña', { exact: true }).waitFor();
-  await revisar(nuevo, 'activar');
-  await nuevo.getByLabel('Contraseña', { exact: true }).fill('cielo-azul-de-mocoa-2026');
-  await nuevo.getByLabel('Repite la contraseña').fill('cielo-azul-de-mocoa-2026');
-  await nuevo.getByRole('button', { name: 'Activar mi cuenta' }).click();
-  await nuevo.waitForURL(/\/entrar/);
-  await entrar(nuevo, usuarioNuevo, 'cielo-azul-de-mocoa-2026');
-  await visitar(nuevo, '/consola/usuarios');
-});
+  const nuevo = await contexto('nuevo');
+  await paso('la persona invitada activa su cuenta y entra', async () => {
+    await nuevo.goto(`${WEB}${new URL(enlace).pathname}`);
+    await nuevo.getByLabel('Contraseña', { exact: true }).waitFor();
+    await revisar(nuevo, 'activar');
+    await nuevo.getByLabel('Contraseña', { exact: true }).fill('cielo-azul-de-mocoa-2026');
+    await nuevo.getByLabel('Repite la contraseña').fill('cielo-azul-de-mocoa-2026');
+    await nuevo.getByRole('button', { name: 'Activar mi cuenta' }).click();
+    await nuevo.waitForURL(/\/entrar/);
+    await entrar(nuevo, usuarioNuevo, 'cielo-azul-de-mocoa-2026');
+    await visitar(nuevo, '/consola/usuarios');
+  });
+}
 
 // ── Operador ──
 const op = await contexto('operador1');
@@ -288,8 +295,10 @@ for (const ruta of [
 }
 await paso('la bitácora del Administrador muestra la invitación y la activación', async () => {
   await admin.goto(`${WEB}/consola/bitacora`);
-  await admin.getByText(`Invitó a @${usuarioNuevo} como Administrador`).first().waitFor();
-  await admin.getByText('Activó su cuenta').first().waitFor();
+  if (!SIN_CORREO) {
+    await admin.getByText(`Invitó a @${usuarioNuevo} como Administrador`).first().waitFor();
+    await admin.getByText('Activó su cuenta').first().waitFor();
+  }
   await admin.getByText('Registró una salida de Arroz').first().waitFor();
   const crudos = await admin
     .locator('main')

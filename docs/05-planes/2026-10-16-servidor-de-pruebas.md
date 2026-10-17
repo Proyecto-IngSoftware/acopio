@@ -45,7 +45,7 @@ domingo 18 de octubre) y [#26](https://github.com/Proyecto-IngSoftware/acopio/is
 | 1 Factura servida por la API (P-041, ADR-0017) | ✅ | Hecha en local ([plan](2026-10-16-servidor-de-pruebas-factura-y-demo.md)). El 2026-10-17 el Donador de la demo subió una factura en el servidor, y la vieron él y el Auditor (`image/webp`) |
 | 2 Demo con contraseña por variable y cuentas en Supabase | ✅ | Desplegada el 2026-10-17 |
 | 3 Sembrar la demo en el servidor | ✅ | Sembrada el 2026-10-17: seis cuentas en Supabase y los cuatro acopios. Los cuatro roles del equipo entran con su rol y su ubicación |
-| 4 Recorridos y pruebas manuales contra el servidor | 🟡 | `consola-recepciones.mjs` pasó 6/6 contra el servidor el 2026-10-17, después de dos arreglos: nginx llega a la API por `acopio-api` (#99) y la API prepara Garage al arrancar (#100). Faltan `pruebas-manuales.sh` y los demás recorridos; `donador.mjs` necesita Mailpit y no corre allá |
+| 4 Recorridos y pruebas manuales contra el servidor | ✅ | El 2026-10-17, con `SIN_CORREO=1`, pasaron todos los recorridos que pueden correr allá y `pruebas-manuales.sh` (resultados en [recorridos](../06-operacion/recorridos.md)). Antes hubo que arreglar nginx (#99) y Garage (#100). `donador.mjs` no corre allá porque registra una cuenta nueva |
 | 5 Runbook con el proyecto de Supabase | ✅ | El cambio no estaba en ningún lado; se escribió el 2026-10-16 con el proyecto verificado (`ACTIVE_HEALTHY`) |
 | 6 Decisiones abiertas (P-056, P-057) | 🟡 | P-056 resuelto: la ronda usa `donador1@demo.acopio.local`. P-057 se vigila en #58 |
 
