@@ -119,9 +119,9 @@ configurado; en local, `seed:demo` con `DEMO_CONTRASENA` y los recorridos comple
 contraseña y en producción no corre sin `DEMO_CONTRASENA`. Las piezas nuevas están en
 `seed/credenciales.ts`, y `seed/main.ts` también elige el proveedor con ellas. Probado:
 unitarias de `credenciales`, `seed:demo` dos veces en local, y el Compose con la demo al
-arrancar y un reinicio sin errores. `consola-remisiones.mjs` falló en local porque la demo de
-esa base ya estaba gastada (ver [recorridos.md](../06-operacion/recorridos.md)); conviene
-correrlo contra el servidor recién sembrado.
+arrancar y un reinicio sin errores. `consola-remisiones.mjs` falló en local. Se creyó que era la
+demo gastada, pero el 2026-10-17 resultó ser el script, que tomaba el primer campo del editor
+en vez del de la línea; ya está corregido (ver [recorridos.md](../06-operacion/recorridos.md)).
 
 ### Task 3: Sembrar la demo en el servidor
 

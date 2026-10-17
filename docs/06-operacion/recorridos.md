@@ -55,8 +55,8 @@ node apps/web/recorridos/sin-conexion.mjs
   está apagado (P-055). `validacion-general.mjs` omite invitar y activar un Administrador, que
   además quedaría en el servidor con una contraseña escrita en el script.
   `consola-comprobantes.mjs` dona con `donador1@demo.acopio.local` y omite el correo del
-  rechazo. `donador.mjs` no corre allá, porque registra una cuenta nueva. `ADMIN_CONTRASENA`
-  lleva la del administrador del servidor.
+  rechazo. `donador.mjs` no crea cuenta: entra como `donador1@demo.acopio.local` y sigue con
+  la donación. `ADMIN_CONTRASENA` lleva la del administrador del servidor.
 - Para detener el servidor de `vite preview` sin el PID: `ss -ltnp | grep 5173` y matar ese
   proceso.
 
@@ -77,10 +77,12 @@ Algunos recorridos cambian la demo, y repetirlos el mismo día puede dejarla sin
   remisiones `R-2026-DEMA2` y `R-2026-DEMA3` de la demo no se tocan: quedan para la ronda de
   pruebas. El Operador entra por la API y no por la pantalla, para gastar dos inicios de
   sesión por corrida.
-- El 2026-10-16, `consola-remisiones.mjs` falló en «cambia la cantidad de una línea»: la
-  demo local tenía dos borradores de Kennedy (`R-2026-ZA4D9` y `R-2026-NKRKU`) que comprometen
-  999 kg de arroz con 740 en saldo, y la primera fila del editor era otra categoría, vacía.
-  Se arregla cancelando esos borradores o sembrando la demo de nuevo.
+- Entre el 2026-10-16 y el 2026-10-17, `consola-remisiones.mjs` falló en local en «cambia la
+  cantidad de una línea» con «la primera línea tiene 0». La causa no eran los borradores
+  viejos de Kennedy. El editor de C12 lista todas las categorías con excedente en orden
+  alfabético, con 0 las que no van en la remisión, y el script tomaba el primer campo. En
+  local el primero era «Aceite», con 0, y el arroz del borrador venía después. Desde el 2026-10-17 el script lee las
+  líneas de la remisión en la API y busca el campo por su categoría.
 - La API acepta 5 inicios de sesión por minuto desde la misma IP, y cada recorrido entra
   al menos una vez (`validacion-general.mjs`, con varios roles). Correr varios seguidos hace
   fallar el paso de entrar; entre uno y otro hay que dejar un minuto.
@@ -141,7 +143,9 @@ Con la demo recién sembrada, conviene correr `consola-motor.mjs` antes que
 ### `donador.mjs`
 
 Crea una cuenta con un correo nuevo y confirma el correo con el enlace de Mailpit, eligiendo la
-contraseña. Prepara una donación buscando una categoría, elige el primer acopio y adjunta una
+contraseña. Con `SIN_CORREO=1` se salta esos dos pasos y entra por la pestaña «Entrar» como
+`donador1@demo.acopio.local`; como esa cuenta ya tiene donaciones, el paso de cancelar busca la
+fila de su folio y no guarda la captura de «Mis donaciones». Prepara una donación buscando una categoría, elige el primer acopio y adjunta una
 foto válida. Ve el folio, abre su seguimiento y la privacidad, y cancela la donación desde «Mis
 donaciones».
 
@@ -164,6 +168,13 @@ ocurrió y la hora en que llegó.
 
 ## Últimos resultados
 
+**2026-10-17, en local**, con los arreglos de la rama `recorridos-robustos`:
+
+| Script | Resultado |
+|---|---|
+| `consola-remisiones.mjs` | 7 de 7 en tres corridas |
+| `donador.mjs` | 8 de 8; con `SIN_CORREO=1`, 7 de 7 |
+
 **2026-10-17, contra el servidor de pruebas** (`https://acopio.josephqaz.dev`, con
 `SIN_CORREO=1`), después de desplegar #99 y #100:
 
@@ -176,10 +187,10 @@ ocurrió y la hora en que llegó.
 | `consola-recepciones.mjs` | 6 de 6 |
 | `sin-conexion.mjs` | 12 de 12 |
 | `scripts/pruebas-manuales.sh` | 11 de 11 con el código esperado |
-| `donador.mjs` | No corre allá |
+| `donador.mjs` | No corría allá. Desde el 2026-10-17 tiene el modo `SIN_CORREO=1`, todavía sin correr contra el servidor |
 
 `consola-remisiones.mjs` pasó en el servidor, donde la demo está recién sembrada. En local
-sigue fallando por los borradores viejos de Kennedy (ver «Problemas conocidos»). El primer
+fallaba por el campo que tomaba el script, no por los datos (ver «Cómo se corren»). El primer
 intento de `consola-recepciones.mjs` dejó en camino `R-2026-RF4J7`, con 1 L de agua y una
 foto, que sirve para practicar la recepción en la ronda del equipo.
 

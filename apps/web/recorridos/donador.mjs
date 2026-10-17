@@ -3,6 +3,9 @@
 // correo con el enlace de Mailpit, prepara una donación, adjunta una foto, sigue el folio y
 // la cancela.
 //
+// Con SIN_CORREO=1 (el servidor de pruebas, sin Mailpit) no crea cuenta: entra como el Donador
+// de la demo, donador1@demo.acopio.local con DEMO_CONTRASENA.
+//
 // Necesita el Compose con la API reconstruida, seed y seed:demo corridos, y el build servido:
 //   bun run --filter @acopio/web build && (cd apps/web && bunx vite preview)
 //   node apps/web/recorridos/donador.mjs
@@ -19,8 +22,13 @@ const MAILPIT = process.env.MAILPIT ?? 'http://localhost:8025';
 const DISENO = fileURLToPath(new URL('../../../docs/03-diseno/stitch/', import.meta.url));
 const axe = createRequire(import.meta.url).resolve('axe-core/axe.min.js');
 
-const CORREO = `donador-${Date.now()}@demo.acopio.local`;
-const CONTRASENA = 'recorrido-donador-2026';
+const SIN_CORREO = process.env.SIN_CORREO === '1';
+const CORREO = SIN_CORREO
+  ? 'donador1@demo.acopio.local'
+  : `donador-${Date.now()}@demo.acopio.local`;
+const CONTRASENA = SIN_CORREO
+  ? (process.env.DEMO_CONTRASENA ?? 'demo-acopio-2026')
+  : 'recorrido-donador-2026';
 // JPEG válido generado con el sharp de la API: la API decodifica la foto y rechaza lo corrupto
 const sharp = createRequire(new URL('../../api/package.json', import.meta.url))('sharp');
 const FOTO = await sharp({
@@ -93,27 +101,40 @@ cerrar = async () => {
 };
 p.on('pageerror', (e) => errores.push(e.message));
 
-await paso('crear cuenta con un correo nuevo', async () => {
-  await p.goto(`${WEB}/donador`);
-  await p.getByRole('heading', { name: 'Tu cuenta de Donador' }).waitFor();
-  await revisar(p, 'P13 sin sesión', 'P13-mi-cuenta/construida-sin-sesion.png');
-  await p.getByLabel('Nombre').fill('Camila Recorrido');
-  await p.getByLabel('Correo').fill(CORREO);
-  await p.getByRole('button', { name: 'Crear cuenta' }).click();
-  await p.getByText(/Te enviamos un correo para confirmar/).waitFor();
-});
+if (SIN_CORREO) {
+  console.log('omite  crear cuenta y confirmar el correo (SIN_CORREO=1)');
+  await paso('entra con el Donador de la demo', async () => {
+    await p.goto(`${WEB}/donador`);
+    await p.getByRole('heading', { name: 'Tu cuenta de Donador' }).waitFor();
+    await p.getByRole('radiogroup', { name: 'Acceso' }).getByText('Entrar').click();
+    await p.getByLabel('Correo').fill(CORREO);
+    await p.getByLabel('Contraseña', { exact: true }).fill(CONTRASENA);
+    await p.getByRole('button', { name: 'Entrar' }).click();
+    await p.getByRole('heading', { name: 'Mis donaciones' }).waitFor();
+  });
+} else {
+  await paso('crear cuenta con un correo nuevo', async () => {
+    await p.goto(`${WEB}/donador`);
+    await p.getByRole('heading', { name: 'Tu cuenta de Donador' }).waitFor();
+    await revisar(p, 'P13 sin sesión', 'P13-mi-cuenta/construida-sin-sesion.png');
+    await p.getByLabel('Nombre').fill('Camila Recorrido');
+    await p.getByLabel('Correo').fill(CORREO);
+    await p.getByRole('button', { name: 'Crear cuenta' }).click();
+    await p.getByText(/Te enviamos un correo para confirmar/).waitFor();
+  });
 
-await paso('el enlace del correo pide la contraseña', async () => {
-  const enlace = await enlaceDelCorreo();
-  await p.goto(`${WEB}${new URL(enlace).pathname}`);
-  await p.getByRole('heading', { name: 'Elige tu contraseña' }).waitFor();
-  await revisar(p, 'P13 confirmar', 'P13-confirmar/construida.png');
-  await p.getByLabel('Contraseña', { exact: true }).fill(CONTRASENA);
-  await p.getByLabel('Repite la contraseña').fill(CONTRASENA);
-  await p.getByRole('button', { name: 'Guardar y entrar' }).click();
-  await p.getByRole('heading', { name: 'Mis donaciones' }).waitFor();
-  await revisar(p, 'P13 mis donaciones vacía');
-});
+  await paso('el enlace del correo pide la contraseña', async () => {
+    const enlace = await enlaceDelCorreo();
+    await p.goto(`${WEB}${new URL(enlace).pathname}`);
+    await p.getByRole('heading', { name: 'Elige tu contraseña' }).waitFor();
+    await revisar(p, 'P13 confirmar', 'P13-confirmar/construida.png');
+    await p.getByLabel('Contraseña', { exact: true }).fill(CONTRASENA);
+    await p.getByLabel('Repite la contraseña').fill(CONTRASENA);
+    await p.getByRole('button', { name: 'Guardar y entrar' }).click();
+    await p.getByRole('heading', { name: 'Mis donaciones' }).waitFor();
+    await revisar(p, 'P13 mis donaciones vacía');
+  });
+}
 
 await paso('preparar: buscar una categoría', async () => {
   await p.goto(`${WEB}/donar`);
@@ -173,11 +194,13 @@ await paso('privacidad', async () => {
 
 await paso('cancelar la donación desde «Mis donaciones»', async () => {
   await p.goto(`${WEB}/donador`);
-  await p.getByText(folio, { exact: true }).waitFor();
-  await revisar(p, 'P13 mis donaciones', 'P13-mi-cuenta/construida.png');
-  await p.getByRole('button', { name: 'Cancelar donación' }).click();
+  // El Donador de la demo tiene otras donaciones: todo se busca en la fila del folio
+  const fila = p.getByRole('listitem').filter({ hasText: folio });
+  await fila.waitFor();
+  await revisar(p, 'P13 mis donaciones', SIN_CORREO ? undefined : 'P13-mi-cuenta/construida.png');
+  await fila.getByRole('button', { name: 'Cancelar donación' }).click();
   await p.getByRole('button', { name: 'Sí, cancelar' }).click();
-  await p.getByText('Cancelada').first().waitFor();
+  await fila.getByText('Cancelada').waitFor();
 });
 
 await b.close();
