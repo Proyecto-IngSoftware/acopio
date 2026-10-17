@@ -50,6 +50,9 @@ node apps/web/recorridos/sin-conexion.mjs
   `WEB`, `MAILPIT` y `ADMIN_CONTRASENA` cambian la dirección de la web, la de Mailpit y la
   contraseña del administrador del seed.
 - Las cuentas de la demo entran con `DEMO_CONTRASENA`, y si falta, con `demo-acopio-2026`.
+  Desde el 2026-10-17 el `.env` local trae en `DEMO_CONTRASENA` la del servidor de pruebas
+  (P-062), y las cuentas de la demo local siguen con `demo-acopio-2026`. Si se carga el `.env`
+  antes de un recorrido local, hay que pasar `DEMO_CONTRASENA=demo-acopio-2026` en el comando.
   Contra el servidor de pruebas hay que exportarla con el valor que tiene Dokploy.
 - Contra el servidor de pruebas va `SIN_CORREO=1`, porque allá no hay Mailpit y el correo
   está apagado (P-055). `validacion-general.mjs` omite invitar y activar un Administrador, que
