@@ -2,7 +2,7 @@
 title: "Bloque 4 · interfaz, ciclo 3: recepción y reportes del Receptor · plan"
 type: plan
 tags: [plan, bloque-4, web, consola, motor, recepcion]
-estado: vigente
+estado: ejecutado
 bloque: 4
 actualizado: 2026-10-16
 ---
@@ -43,7 +43,7 @@ recortado para el domingo 18, según la decisión del 2026-10-16 en el
 | 4 C13 Por recibir | ✅ | |
 | 5 C13 Recibir remisión | ✅ | |
 | 6 C20 Reportar necesidad | ✅ | |
-| 7 Recorrido y cierre | ⬜ | |
+| 7 Recorrido y cierre | ✅ | `consola-recepciones.mjs` 6/6 en tres corridas, `validacion-general.mjs` 59/59 y `test:int` 369/369 el 2026-10-16. `consola-remisiones.mjs` falla por datos viejos de la demo local (ver [recorridos](../06-operacion/recorridos.md)) |
 | 8 Capa de zonas en P05 (si alcanza) | ⬜ | |
 
 ## Decisiones al planear

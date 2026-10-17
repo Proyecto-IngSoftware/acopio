@@ -1,5 +1,5 @@
 import { MAXIMO_EVIDENCIAS, formatearCantidad } from '@acopio/shared';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
   useRecepciones,
@@ -27,7 +27,7 @@ const VOLVER = '/consola/recepciones';
 export function RecibirPorCodigo() {
   const { codigo = '' } = useParams();
   const consulta = useRecepciones();
-  const remision = consulta.data?.find((r) => r.codigo === codigo);
+  const remision = useFijada(consulta.data?.find((r) => r.codigo === codigo));
   return (
     <Marco>
       {consulta.isPending && <Esqueleto etiqueta="Cargando la remisión" />}
@@ -47,7 +47,8 @@ export function RecibirPorCodigo() {
 export function RecibirPorQr() {
   const { token = '' } = useParams();
   const consulta = useRemisionPorQr(token);
-  const sinAcceso = consulta.error && [403, 404].includes(consulta.error.estado);
+  const enCamino = useFijada(consulta.data?.estado === 'EN_TRANSITO' ? consulta.data : undefined);
+  const sinAcceso = !enCamino && consulta.error && [403, 404].includes(consulta.error.estado);
   return (
     <Marco>
       {consulta.isPending && <Esqueleto etiqueta="Cargando la remisión" />}
@@ -57,10 +58,21 @@ export function RecibirPorQr() {
           alReintentar={() => void consulta.refetch()}
         />
       )}
-      {(sinAcceso || (consulta.data && consulta.data.estado !== 'EN_TRANSITO')) && <YaNoEsta />}
-      {consulta.data?.estado === 'EN_TRANSITO' && <FormularioRecepcion remision={consulta.data} />}
+      {enCamino ? (
+        <FormularioRecepcion remision={enCamino} />
+      ) : (
+        (sinAcceso || consulta.data) && <YaNoEsta />
+      )}
     </Marco>
   );
+}
+
+/** La remisión que se vio en camino al abrir. Al recibirla deja de estar en la lista, y el
+ *  formulario debe seguir montado para mostrar «recibida» (I3-04). */
+function useFijada(remision: Remision | undefined) {
+  const vista = useRef(remision);
+  if (remision) vista.current = remision;
+  return vista.current;
 }
 
 function Marco({ children }: { children: React.ReactNode }) {

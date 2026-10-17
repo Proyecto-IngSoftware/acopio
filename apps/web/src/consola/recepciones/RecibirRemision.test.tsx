@@ -112,6 +112,24 @@ it('confirma con la nota y muestra la remisión recibida', async () => {
   );
 });
 
+it('sigue mostrando «recibida» aunque la lista ya no traiga la remisión (I3-04)', async () => {
+  responderSegun({ ...LISTA, 'GET /api/recepciones': [{ ...HACIA_ZONA, evidencias: 1 }] });
+  porCodigo();
+  await screen.findByText('Agua potable');
+  // Después de recibir, la API ya no la lista como pendiente
+  responderSegun({
+    ...LISTA,
+    'GET /api/recepciones': [],
+    'POST /api/remisiones/*/recibir': { ...HACIA_ZONA, estado: 'RECIBIDA', evidencias: 1 },
+  });
+  await userEvent.click(confirmar());
+  expect(await screen.findByRole('heading', { name: 'R-2026-DEMA2 recibida' })).toBeInTheDocument();
+  // La lista se vuelve a pedir al recibir; la vista no cambia por eso
+  await new Promise((r) => setTimeout(r, 50));
+  expect(screen.getByRole('heading', { name: 'R-2026-DEMA2 recibida' })).toBeInTheDocument();
+  expect(screen.queryByText(AVISO)).not.toBeInTheDocument();
+});
+
 it('un despacho general pide la zona antes de confirmar', async () => {
   responderSegun({
     ...LISTA,

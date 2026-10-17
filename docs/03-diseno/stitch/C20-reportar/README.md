@@ -16,7 +16,7 @@ actualizado: 2026-10-16
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Maqueta | En la [maqueta de C13](../C13-recepcion/maqueta.html) (<https://claude.ai/artifact/6zQs3346hig6iEcbqiRLHF>), vistas «C20» |
 | Aprobación | Joseph la aprobó el 2026-10-16 |
-| Construida | Pendiente |
+| Construida | [construida.png](construida.png), en Chromium a 360 × 640 (`consola-recepciones.mjs`) |
 
 ## Qué muestra
 

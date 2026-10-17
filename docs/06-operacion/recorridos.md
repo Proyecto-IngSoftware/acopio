@@ -38,6 +38,7 @@ node apps/web/recorridos/donador.mjs
 node apps/web/recorridos/consola-comprobantes.mjs
 node apps/web/recorridos/consola-motor.mjs
 node apps/web/recorridos/consola-remisiones.mjs
+node apps/web/recorridos/consola-recepciones.mjs
 node apps/web/recorridos/sin-conexion.mjs
 ```
 
@@ -65,6 +66,15 @@ Algunos recorridos cambian la demo, y repetirlos el mismo día puede dejarla sin
 - `consola-remisiones.mjs` despacha y después cancela lo despachado: el inventario de
   Kennedy vuelve con un ajuste y se puede repetir. Si una corrida se corta a la mitad, la
   remisión queda en tránsito y el excedente de Kennedy no vuelve hasta cancelarla.
+- `consola-recepciones.mjs` despacha 1 L de agua de Kennedy a la zona de la demo en cada
+  corrida y la Receptora la recibe, así que el agua de Kennedy baja 1 L por corrida. Las
+  remisiones `R-2026-DEMA2` y `R-2026-DEMA3` de la demo no se tocan: quedan para la ronda de
+  pruebas. El Operador entra por la API y no por la pantalla, para gastar dos inicios de
+  sesión por corrida.
+- El 2026-10-16, `consola-remisiones.mjs` falló en «cambia la cantidad de una línea»: la
+  demo local tenía dos borradores de Kennedy (`R-2026-ZA4D9` y `R-2026-NKRKU`) que comprometen
+  999 kg de arroz con 740 en saldo, y la primera fila del editor era otra categoría, vacía.
+  Se arregla cancelando esos borradores o sembrando la demo de nuevo.
 - La API acepta 5 inicios de sesión por minuto desde la misma IP, y cada recorrido entra
   al menos una vez (`validacion-general.mjs`, con varios roles). Correr varios seguidos hace
   fallar el paso de entrar; entre uno y otro hay que dejar un minuto.
@@ -94,6 +104,7 @@ Con la demo recién sembrada, conviene correr `consola-motor.mjs` antes que
 | `consola-comprobantes.mjs` | Recibir, conciliar, rechazar y vincular (Bloque 3, ciclo 2) | 10 | C04-recibir-folio, C08-comprobantes y C08-conciliacion |
 | `consola-motor.mjs` | El motor para el Administrador: ficha de zona, recálculo, aprobar con la cantidad editada, descartar con motivo, pesos con vista previa e informe de descartes (Bloque 4, interfaz ciclo 1) | 9 | C10-ficha-zona y C11-motor |
 | `consola-remisiones.mjs` | Remisiones para el Operador de Kennedy: la fila de «Más», editar una línea, despachar con responsable y folio comprobando que el saldo baja lo despachado, el documento con QR, cancelar lo despachado comprobando que el saldo vuelve, y un despacho general creado a mano y cancelado (Bloque 4, interfaz ciclo 2). Entra como `operador2` con `DEMO_CONTRASENA`. Al cancelar lo despachado deja la demo como estaba, así se puede repetir | 7 | C12-remisiones |
+| `consola-recepciones.mjs` | El Receptor (Bloque 4, interfaz ciclo 3): la sección «Mi zona» de «Más», «Por recibir», confirmar deshabilitado sin foto, subir una foto y ver su miniatura, confirmar y comprobar en la API que la remisión quedó recibida con la nota y la foto, reportar una categoría en C20 y marcarla resuelta. Entra como `receptor1` con `DEMO_CONTRASENA`. El 2026-10-16 pasó 6/6 en tres corridas seguidas | 6 | C13-recepcion y C20-reportar |
 | `sin-conexion.mjs` | La captura sin conexión de C4 (Bloque 2, ciclo 3) | 12 | C04-sin-conexion y C04-pendientes |
 
 ### `validacion-general.mjs`

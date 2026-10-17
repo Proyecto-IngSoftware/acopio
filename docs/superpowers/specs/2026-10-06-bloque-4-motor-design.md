@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-4]
 estado: vigente
 bloque: 4
-actualizado: 2026-10-15
+actualizado: 2026-10-16
 ---
 
 # Bloque 4 · Motor · especificación
@@ -485,3 +485,12 @@ Cada etapa tiene su plan, escrito al empezarla.
 | `folios-vinculables` devuelve los 50 conciliados más recientes, con los que no tienen fecha al final, y la hoja de despachar busca por folio o categoría cuando hay más de 8 (P-053) | La lista crecía con toda la historia del acopio |
 | Una remisión recibida también enlaza su documento, para reimprimirlo | El documento ya admitía `RECIBIDA` y no había cómo llegar a él |
 | `ZonasController` vuelve a llevar `@Roles('ADMIN')` en la clase y abre solo el `GET` | Un método nuevo sin decorador quedaba abierto a cualquier sesión |
+
+**2026-10-16 · Interfaz, ciclo 3.** Según el [plan](../../05-planes/2026-10-16-bloque-4-interfaz-ciclo-3.md).
+
+| Qué | Por qué |
+|---|---|
+| El ciclo entra recortado: C13 y C20 con la sección «Mi zona» en «Más». «Mi zona» como pantalla propia queda para después, y la capa de zonas en P05 solo si alcanza (tarea 8) | La sustentación llega antes; decisión de Joseph del 2026-10-16 |
+| La API no cambió. `/consola/recepciones/:codigo` busca la remisión en `GET /recepciones` (I3-02) | El Receptor no puede leer `GET /remisiones/:codigo` |
+| Las fotos de evidencia no se pueden quitar en C13 | La API no tiene cómo borrar una evidencia |
+| C13 conserva la remisión que vio en camino aunque la lista ya no la traiga | Al recibir, la lista se vuelve a pedir y la remisión sale de ella; sin esto la pantalla mostraba «ya no está en camino» en vez de «recibida». Lo encontró el recorrido |

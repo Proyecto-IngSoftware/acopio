@@ -16,7 +16,7 @@ actualizado: 2026-10-16
 | Archivos | [captura-lista.png](captura-lista.png) · [lista.html](lista.html) · [captura-recibir.png](captura-recibir.png) · [recibir.html](recibir.html) |
 | Maqueta | [maqueta.html](maqueta.html) (<https://claude.ai/artifact/6zQs3346hig6iEcbqiRLHF>), compartida con [C20](../C20-reportar/README.md) |
 | Aprobación | Joseph la aprobó el 2026-10-16 |
-| Construida | Pendiente |
+| Construida | [construida-mas.png](construida-mas.png) · [construida-lista.png](construida-lista.png) · [construida-recibir.png](construida-recibir.png) · [construida-recibida.png](construida-recibida.png), en Chromium a 360 × 640 (`consola-recepciones.mjs`) |
 
 ## Qué muestra
 
