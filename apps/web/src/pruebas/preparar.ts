@@ -1,8 +1,12 @@
 import '@testing-library/jest-dom/vitest';
 import 'fake-indexeddb/auto';
-import { cleanup } from '@testing-library/react';
+import { cleanup, configure } from '@testing-library/react';
 import { IDBFactory } from 'fake-indexeddb';
 import { afterEach, beforeEach, vi } from 'vitest';
+
+// Un findBy espera hasta 3 s y no 1: la primera carga de una pantalla diferida (lazy) puede
+// tardar más con la máquina ocupada, y daba rojos que no dependían del cambio (P-059)
+configure({ asyncUtilTimeout: 3000 });
 
 // Cada prueba arranca con un IndexedDB vacío: la copia local no pasa de una a otra
 beforeEach(() => {
