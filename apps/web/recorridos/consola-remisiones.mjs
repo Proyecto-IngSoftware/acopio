@@ -129,11 +129,20 @@ await paso('el Operador de Kennedy ve en «Más» los borradores por despachar',
 
 let lineas = [];
 await paso('cambia la cantidad de una línea y la guarda', async () => {
+  // El editor lista todas las categorías con excedente en orden alfabético, con 0 las que no
+  // van en la remisión: la línea se busca por su categoría, no por la posición
+  const antes = await api('GET', `/api/remisiones/${codigo}`, await cookie());
+  const linea = antes.lineas.find((l) => l.cantidadPlaneada > 1);
+  if (!linea) throw new Error(`${codigo} no tiene una línea con más de 1`);
   await p.goto(`${WEB}/consola/remisiones/${codigo}`);
-  const campo = p.getByLabel(/^Cantidad de /).first();
+  const campo = p.getByLabel(`Cantidad de ${linea.categoria} (`);
   await campo.waitFor();
   const actual = Number(await campo.inputValue());
-  if (!(actual > 1)) throw new Error(`la primera línea tiene ${actual}`);
+  if (actual !== linea.cantidadPlaneada) {
+    throw new Error(
+      `el campo de ${linea.categoria} tiene ${actual}, la API ${linea.cantidadPlaneada}`,
+    );
+  }
   await campo.fill(String(actual - 1));
   await p.getByRole('button', { name: 'Guardar líneas' }).click();
   await p.getByText('Líneas guardadas').waitFor();
