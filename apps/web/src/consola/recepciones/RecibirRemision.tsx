@@ -1,5 +1,5 @@
 import { MAXIMO_EVIDENCIAS, formatearCantidad } from '@acopio/shared';
-import { useRef, useState } from 'react';
+import { useId, useState } from 'react';
 import { Link, useParams } from 'react-router';
 import {
   useRecepciones,
@@ -31,13 +31,19 @@ export function RecibirPorCodigo() {
   return (
     <Marco>
       {consulta.isPending && <Esqueleto etiqueta="Cargando la remisión" />}
-      {consulta.error && (
+      {/* Si falla una recarga con la remisión ya cargada, se sigue con el formulario */}
+      {consulta.error && !remision && (
         <EstadoError
           mensaje={consulta.error.message}
           alReintentar={() => void consulta.refetch()}
         />
       )}
-      {consulta.data && (remision ? <FormularioRecepcion remision={remision} /> : <YaNoEsta />)}
+      {consulta.data &&
+        (remision ? (
+          <FormularioRecepcion key={remision.codigo} remision={remision} />
+        ) : (
+          <YaNoEsta />
+        ))}
     </Marco>
   );
 }
@@ -52,14 +58,14 @@ export function RecibirPorQr() {
   return (
     <Marco>
       {consulta.isPending && <Esqueleto etiqueta="Cargando la remisión" />}
-      {consulta.error && !sinAcceso && (
+      {consulta.error && !sinAcceso && !enCamino && (
         <EstadoError
           mensaje={consulta.error.message}
           alReintentar={() => void consulta.refetch()}
         />
       )}
       {enCamino ? (
-        <FormularioRecepcion remision={enCamino} />
+        <FormularioRecepcion key={enCamino.codigo} remision={enCamino} />
       ) : (
         (sinAcceso || consulta.data) && <YaNoEsta />
       )}
@@ -70,9 +76,10 @@ export function RecibirPorQr() {
 /** La remisión que se vio en camino al abrir. Al recibirla deja de estar en la lista, y el
  *  formulario debe seguir montado para mostrar «recibida» (I3-04). */
 function useFijada(remision: Remision | undefined) {
-  const vista = useRef(remision);
-  if (remision) vista.current = remision;
-  return vista.current;
+  const [vista, fijarVista] = useState(remision);
+  // Guardar durante el render lo que llegó, como indica React para derivar de lo anterior
+  if (remision && remision !== vista) fijarVista(remision);
+  return remision ?? vista;
 }
 
 function Marco({ children }: { children: React.ReactNode }) {
@@ -124,6 +131,7 @@ function FormularioRecepcion({ remision }: { remision: Remision }) {
   const recibir = useRecibirRemision(actual.codigo);
   const general = actual.zona === null;
   const zonas = ubicaciones.filter((u) => u.tipo === 'ZONA');
+  const contador = useId();
 
   if (recibir.data) return <Recibida remision={recibir.data} />;
   const sinSalida = [recibir.error, subir.error].find((e) => e && SIN_SALIDA.includes(e.codigo));
@@ -244,6 +252,9 @@ function FormularioRecepcion({ remision }: { remision: Remision }) {
           </label>
         )}
       </div>
+      <p role="status" className="sr-only">
+        {subir.isPending ? 'Subiendo la foto…' : ''}
+      </p>
       <FormularioError mensaje={subir.error?.message} />
 
       <label className="flex flex-col gap-space-xs text-label-md text-on-surface">
@@ -253,11 +264,12 @@ function FormularioRecepcion({ remision }: { remision: Remision }) {
           maxLength={NOTA_MAXIMA}
           rows={3}
           placeholder="Por ejemplo: llegaron dos bultos mojados"
+          aria-describedby={contador}
           onChange={(e) => fijarNota(e.target.value)}
           className="rounded-xl border-[1.5px] border-outline-variant bg-surface-container-lowest p-space-sm text-body-md text-on-surface"
         />
       </label>
-      <p className="-mt-space-sm text-right text-body-sm text-on-surface-variant">
+      <p id={contador} className="-mt-space-sm text-right text-body-sm text-on-surface-variant">
         {nota.length} / {NOTA_MAXIMA}
       </p>
 

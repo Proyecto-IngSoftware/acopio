@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { useFichaZona } from '../../api/motor';
 import { pendientesDeResolver, useReportar, useReportesZona } from '../../api/recepciones';
@@ -14,6 +14,8 @@ import { Encabezado } from '../Encabezado';
 import { NecesitaRed } from '../inventario/NecesitaRed';
 
 const NOTA_MAXIMA = 280;
+/** Lo que acepta `POST /zonas/{id}/reportes` en una sola petición. */
+const MAXIMO_CATEGORIAS = 20;
 type Modo = 'falta' | 'resuelta';
 interface Opcion {
   id: string;
@@ -106,6 +108,8 @@ function Formulario({
     sinTildes(o.nombre).includes(sinTildes(busqueda.trim())),
   );
   const n = elegidas.length;
+  const lleno = n >= MAXIMO_CATEGORIAS;
+  const contador = useId();
 
   function cambiarModo(m: Modo) {
     fijarModo(m);
@@ -184,6 +188,7 @@ function Formulario({
                 type="checkbox"
                 aria-label={o.nombre}
                 checked={elegidas.includes(o.id)}
+                disabled={lleno && !elegidas.includes(o.id)}
                 onChange={() => alternar(o.id)}
                 className="h-5 w-5 accent-primary-container"
               />
@@ -199,6 +204,11 @@ function Formulario({
             </p>
           )}
         </fieldset>
+      )}
+      {lleno && (
+        <p className="text-body-sm text-on-surface-variant">
+          Puedes reportar hasta {MAXIMO_CATEGORIAS} categorías a la vez.
+        </p>
       )}
       {!falta && pendientes.length > 0 && (
         <p className="text-body-sm text-on-surface-variant">
@@ -220,11 +230,12 @@ function Formulario({
               maxLength={NOTA_MAXIMA}
               rows={3}
               placeholder="Por ejemplo: en el coliseo no hay agua desde ayer"
+              aria-describedby={contador}
               onChange={(e) => fijarNota(e.target.value)}
               className="rounded-xl border-[1.5px] border-outline-variant bg-surface-container-lowest p-space-sm text-body-md text-on-surface"
             />
           </label>
-          <p className="-mt-space-sm text-right text-body-sm text-on-surface-variant">
+          <p id={contador} className="-mt-space-sm text-right text-body-sm text-on-surface-variant">
             {nota.length} / {NOTA_MAXIMA}
           </p>
         </>

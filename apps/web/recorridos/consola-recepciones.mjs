@@ -122,7 +122,15 @@ await paso('el Operador de Kennedy despacha una remisión hacia la zona de la de
     responsable: 'Conductor del recorrido',
     lineas: [{ categoriaId: linea.categoriaId, cantidad: 1 }],
   });
-  await api('POST', `/api/remisiones/${r.codigo}/despachar`, c, { folios: [] });
+  try {
+    await api('POST', `/api/remisiones/${r.codigo}/despachar`, c, { folios: [] });
+  } catch (e) {
+    // Sin esto el borrador quedaría comprometiendo el agua de Kennedy en la demo
+    await api('POST', `/api/remisiones/${r.codigo}/cancelar`, c, {
+      motivo: 'El recorrido no pudo despacharla',
+    }).catch(() => {});
+    throw e;
+  }
   codigo = r.codigo;
 });
 

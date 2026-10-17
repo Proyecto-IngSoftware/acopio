@@ -186,3 +186,27 @@ it('desde «Mi zona», «Ya se resolvió algo» abre en ese modo', async () => {
   const grupo = await screen.findByRole('group', { name: 'Categorías' });
   expect(within(grupo).getAllByRole('checkbox')).toHaveLength(1);
 });
+
+it('no deja elegir más de 20 categorías, que es lo que acepta la API', async () => {
+  const muchas = Array.from({ length: 22 }, (_, i) =>
+    cat(`c-${i}`, `Categoría ${String(i + 1).padStart(2, '0')}`),
+  );
+  responderSegun({ ...BASE, 'GET /api/zonas/*/necesidad': { ...FICHA, categorias: muchas } });
+  pantalla();
+  const grupo = await screen.findByRole('group', { name: 'Categorías' });
+  const casillas = within(grupo).getAllByRole('checkbox');
+  for (const c of casillas.slice(0, 20)) await userEvent.click(c);
+  expect(screen.getByRole('button', { name: 'Reportar 20 categorías' })).toBeEnabled();
+  expect(casillas[20]).toBeDisabled();
+  expect(casillas[0]).toBeEnabled();
+  expect(screen.getByText('Puedes reportar hasta 20 categorías a la vez.')).toBeInTheDocument();
+  await userEvent.click(casillas[0]!);
+  expect(casillas[20]).toBeEnabled();
+});
+
+it('el contador de la nota pública describe el campo', async () => {
+  responderSegun(BASE);
+  pantalla();
+  const nota = await screen.findByLabelText('Nota pública (opcional)');
+  expect(nota).toHaveAccessibleDescription('0 / 280');
+});
