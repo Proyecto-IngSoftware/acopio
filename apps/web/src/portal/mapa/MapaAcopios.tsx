@@ -4,7 +4,7 @@ import 'leaflet.markercluster';
 import 'leaflet.markercluster/dist/MarkerCluster.css';
 import { useEffect } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-import type { AcopioPublico } from '../../api/red';
+import type { AcopioPublico, ZonaPublica } from '../../api/red';
 import { ATRIBUCION, CENTRO_INICIAL, MOSAICOS } from '../../componentes/mapa/MapaLeaflet';
 
 // Marcadores con el color del tema; los pausados en gris con su ícono, no solo color (RNF-11)
@@ -13,8 +13,8 @@ const marcador = (a: AcopioPublico, elegido: boolean) =>
     className: '',
     html:
       a.estado === 'PAUSADO'
-        ? `<div class="flex size-9 items-center justify-center rounded-full border-2 border-surface-container-lowest bg-outline text-on-primary shadow-md ${elegido ? 'ring-4 ring-primary' : ''}"><span class="material-symbols-outlined text-[18px]">pause_circle</span></div>`
-        : `<div class="flex size-9 items-center justify-center rounded-full border-2 border-surface-container-lowest bg-primary-container text-on-primary shadow-md ${elegido ? 'ring-4 ring-primary' : ''}"><span class="material-symbols-outlined text-[18px]">inventory_2</span></div>`,
+        ? `<div class="flex size-9 items-center justify-center rounded-full border-2 border-surface-container-lowest bg-outline text-on-primary shadow-md ${elegido ? 'ring-4 ring-primary' : ''}"><span aria-hidden="true" class="material-symbols-outlined text-[18px]">pause_circle</span></div>`
+        : `<div class="flex size-9 items-center justify-center rounded-full border-2 border-surface-container-lowest bg-primary-container text-on-primary shadow-md ${elegido ? 'ring-4 ring-primary' : ''}"><span aria-hidden="true" class="material-symbols-outlined text-[18px]">inventory_2</span></div>`,
     iconSize: [36, 36],
     iconAnchor: [18, 18],
   });
@@ -56,22 +56,75 @@ function Marcadores({
   return null;
 }
 
+// La zona: el círculo de su radio y un pin para tocarla. Los colores van en estilos.css
+// (.zona-necesidad), con tokens de la marca y no con los del inventario (ADR-0006)
+const pinZona = (elegida: boolean) =>
+  L.divIcon({
+    className: '',
+    html: `<div class="flex size-8 items-center justify-center rounded-full border-2 border-primary-container bg-surface-container-lowest text-primary-container shadow-md ${elegida ? 'ring-4 ring-primary' : ''}"><span aria-hidden="true" class="material-symbols-outlined text-[18px]">campaign</span></div>`,
+    iconSize: [32, 32],
+    iconAnchor: [16, 16],
+  });
+
+function Zonas({
+  zonas,
+  elegida,
+  alElegir,
+}: {
+  zonas: ZonaPublica[];
+  elegida: string | null;
+  alElegir: (id: string) => void;
+}) {
+  const mapa = useMap();
+  useEffect(() => {
+    const capa = L.layerGroup();
+    for (const z of zonas) {
+      const centro: [number, number] = [z.centro.lat, z.centro.lng];
+      L.circle(centro, {
+        radius: z.radioKm * 1000,
+        className: `zona-necesidad${z.zonaId === elegida ? ' zona-necesidad-elegida' : ''}`,
+      })
+        .on('click', () => alElegir(z.zonaId))
+        .addTo(capa);
+      L.marker(centro, {
+        icon: pinZona(z.zonaId === elegida),
+        title: 'Zona con necesidad',
+        alt: 'Zona con necesidad',
+        keyboard: true,
+      })
+        .on('click', () => alElegir(z.zonaId))
+        .addTo(capa);
+    }
+    mapa.addLayer(capa);
+    return () => {
+      mapa.removeLayer(capa);
+    };
+  }, [mapa, zonas, elegida, alElegir]);
+  return null;
+}
+
+/** Abarca los acopios y los centros de las zonas con necesidad, salvo con «Cerca de mí». */
 function Encuadre({
   acopios,
+  zonas,
   centro,
 }: {
   acopios: AcopioPublico[];
+  zonas: ZonaPublica[];
   centro: L.LatLngExpression | null;
 }) {
   const mapa = useMap();
   useEffect(() => {
-    if (centro) mapa.setView(centro, 14);
-    else if (acopios.length > 0)
-      mapa.fitBounds(L.latLngBounds(acopios.map((a) => [a.lat, a.lng] as [number, number])), {
-        padding: [32, 32],
-        maxZoom: 15,
-      });
-  }, [mapa, acopios, centro]);
+    const puntos = [
+      ...acopios.map((a) => [a.lat, a.lng] as [number, number]),
+      ...zonas.map((z) => [z.centro.lat, z.centro.lng] as [number, number]),
+    ];
+    // Sin animación: Leaflet descarta un zoom pedido mientras anima el anterior, y las zonas
+    // suelen llegar justo después de los acopios
+    if (centro) mapa.setView(centro, 14, { animate: false });
+    else if (puntos.length > 0)
+      mapa.fitBounds(L.latLngBounds(puntos), { padding: [32, 32], maxZoom: 15, animate: false });
+  }, [mapa, acopios, zonas, centro]);
   return null;
 }
 
@@ -80,10 +133,25 @@ interface Props {
   cerca: { lat: number; lng: number } | null;
   elegido: string | null;
   alElegir: (id: string) => void;
+  zonas?: ZonaPublica[];
+  zonaElegida?: string | null;
+  alElegirZona?: (id: string) => void;
 }
 
-/** Mapa público de acopios (P5), con marcadores agrupados (RF-RED-002). */
-export default function MapaAcopios({ acopios, cerca, elegido, alElegir }: Props) {
+const SIN_ZONAS: ZonaPublica[] = [];
+const nada = () => {};
+
+/** Mapa público de acopios (P5), con marcadores agrupados (RF-RED-002) y las zonas con
+ *  necesidad (HU-13.1). */
+export default function MapaAcopios({
+  acopios,
+  cerca,
+  elegido,
+  alElegir,
+  zonas = SIN_ZONAS,
+  zonaElegida = null,
+  alElegirZona = nada,
+}: Props) {
   return (
     <MapContainer
       center={[CENTRO_INICIAL.lat, CENTRO_INICIAL.lng]}
@@ -92,7 +160,8 @@ export default function MapaAcopios({ acopios, cerca, elegido, alElegir }: Props
       aria-label="Mapa de acopios. La misma información está en la vista de lista."
     >
       <TileLayer url={MOSAICOS} attribution={ATRIBUCION} />
-      <Encuadre acopios={acopios} centro={cerca ? [cerca.lat, cerca.lng] : null} />
+      <Encuadre acopios={acopios} zonas={zonas} centro={cerca ? [cerca.lat, cerca.lng] : null} />
+      <Zonas zonas={zonas} elegida={zonaElegida} alElegir={alElegirZona} />
       <Marcadores acopios={acopios} elegido={elegido} alElegir={alElegir} />
     </MapContainer>
   );

@@ -2,7 +2,7 @@
 // 360 × 640, contra la API del Compose con el seed:demo. El Operador de Kennedy despacha una
 // remisión nueva hacia la zona de la demo, así las de la demo (R-2026-DEMA2 y DEMA3) quedan
 // para la ronda de pruebas. La Receptora la ve en «Más», la abre, sube una foto, confirma, y
-// después reporta y resuelve una categoría en C20.
+// después reporta una categoría en C20, un visitante la ve en el mapa público y ella la resuelve.
 //
 // Necesita el Compose con seed y seed:demo corridos, y el build servido:
 //   bun run --filter @acopio/web build && (cd apps/web && bunx vite preview)
@@ -148,10 +148,19 @@ await paso('sin foto no deja confirmar; con una foto, sí', async () => {
   if (await confirmar.isEnabled()) throw new Error('confirmar está habilitado sin foto');
   await p.getByLabel('Tomar foto').setInputFiles(FOTO);
   await p.getByRole('img', { name: 'Foto 1 de lo que llegó' }).waitFor();
-  const cargada = await p
-    .getByRole('img', { name: 'Foto 1 de lo que llegó' })
-    .evaluate((img) => img.complete && img.naturalWidth > 0);
-  if (!cargada) throw new Error('la miniatura no cargó');
+  // La miniatura aparece antes de que lleguen sus bytes: se espera a que cargue
+  await p
+    .waitForFunction(
+      () => {
+        const img = document.querySelector('img[alt="Foto 1 de lo que llegó"]');
+        return Boolean(img?.complete && img.naturalWidth > 0);
+      },
+      null,
+      { timeout: 15000 },
+    )
+    .catch(() => {
+      throw new Error('la miniatura no cargó');
+    });
   if (!(await confirmar.isEnabled())) throw new Error('confirmar sigue deshabilitado');
   await p.getByLabel('Nota (opcional)').fill('Llegó completo');
   await revisar(p, 'recibir', 'C13-recepcion/construida-recibir.png');
@@ -190,6 +199,30 @@ await paso('desde la ficha reporta una categoría con nota pública', async () =
   await revisar(p, 'reportar', 'C20-reportar/construida.png');
   await p.getByRole('button', { name: 'Reportar 1 categoría' }).click();
   await p.getByText('Reportaste 1 categoría.', { exact: false }).waitFor();
+});
+
+await paso('un visitante ve la necesidad en el mapa público (HU-13.1)', async () => {
+  const visitante = await b.newContext({
+    viewport: { width: 360, height: 640 },
+    deviceScaleFactor: 2,
+  });
+  const v = await visitante.newPage();
+  v.on('pageerror', (e) => errores.push(e.message));
+  try {
+    await v.goto(`${WEB}/mapa`);
+    await v.locator('path.zona-necesidad').first().waitFor();
+    await v.getByRole('button', { name: 'Zona con necesidad' }).first().click();
+    const tarjeta = v.getByRole('region', { name: 'Zona con necesidad' });
+    await tarjeta.getByText(reportada, { exact: true }).waitFor();
+    await tarjeta.getByText('«Prueba del recorrido»').waitFor();
+    await revisar(v, 'mapa con zona', 'P05-mapa/construida-zona.png');
+    await v.goto(`${WEB}/mapa?vista=lista`);
+    const seccion = v.getByRole('region', { name: 'Lo que falta en zonas afectadas' });
+    await seccion.getByText(reportada, { exact: true }).waitFor();
+    await revisar(v, 'lista con zonas', 'P05-mapa/construida-zonas-lista.png');
+  } finally {
+    await visitante.close();
+  }
 });
 
 await paso('la marca resuelta y deja de estar pendiente', async () => {

@@ -4,7 +4,7 @@ type: plan
 tags: [plan, bloque-4, web, consola, motor, recepcion]
 estado: ejecutado
 bloque: 4
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Bloque 4 · interfaz, ciclo 3: recepción y reportes del Receptor · plan de implementación
@@ -44,7 +44,7 @@ recortado para el domingo 18, según la decisión del 2026-10-16 en el
 | 5 C13 Recibir remisión | ✅ | |
 | 6 C20 Reportar necesidad | ✅ | |
 | 7 Recorrido y cierre | ✅ | `consola-recepciones.mjs` 6/6 en tres corridas, `validacion-general.mjs` 59/59 y `test:int` 369/369 el 2026-10-16. `consola-remisiones.mjs` falla por datos viejos de la demo local (ver [recorridos](../06-operacion/recorridos.md)) |
-| 8 Capa de zonas en P05 (si alcanza) | ⬜ | |
+| 8 Capa de zonas en P05 (si alcanza) | ✅ | Maqueta aprobada el 2026-10-17. `consola-recepciones.mjs` comprueba en Chromium que un visitante ve la categoría reportada, con su nota, en el mapa y en la lista. Al construirla aparecieron dos fallas del mapa: el encuadre se perdía si las zonas llegaban mientras Leaflet animaba el de los acopios, y los marcadores se anunciaban con el nombre del ícono («inventory_2») en vez del suyo |
 
 ## Decisiones al planear
 

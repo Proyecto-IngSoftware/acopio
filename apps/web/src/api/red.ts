@@ -14,6 +14,7 @@ export type EstadoZona = Zona['estado'];
 export type Ubicacion = S['UbicacionDto'];
 export type ResultadoGeo = S['ResultadoGeoDto'];
 export type NoRecibe = S['NoRecibirDto'];
+export type ZonaPublica = S['ZonaPublicaDto'];
 export type Punto = { lat: number; lng: number };
 
 function useCambio<T, R>(hacer: (datos: T) => Promise<R>, claves: string[][]) {
@@ -23,6 +24,21 @@ function useCambio<T, R>(hacer: (datos: T) => Promise<R>, claves: string[][]) {
     onSuccess: () => {
       for (const c of claves) void consultas.invalidateQueries({ queryKey: c });
     },
+  });
+}
+
+// ── Zonas con necesidad (capa pública de P5, HU-13.1) ──
+
+// Fuera del hook: con una función nueva en cada render, React Query devolvería otro arreglo
+// cada vez y el mapa redibujaría la capa sin parar
+const conNecesidad = (zonas: ZonaPublica[]) => zonas.filter((z) => z.necesidades.length > 0);
+
+/** Las zonas con algo reportado como faltante; las demás no se dibujan. */
+export function useZonasConNecesidad() {
+  return useQuery<ZonaPublica[], ErrorApi>({
+    queryKey: ['zonas', 'publicas'],
+    queryFn: async () => await desenvolver(api.GET('/api/publico/zonas-necesidad')),
+    select: conNecesidad,
   });
 }
 

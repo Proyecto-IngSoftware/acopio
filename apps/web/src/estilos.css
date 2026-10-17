@@ -34,6 +34,22 @@ body {
   outline: none;
 }
 
+/* Zona con necesidad en el mapa de P5 (HU-13.1): el verde claro de la marca con borde
+   punteado, para no confundirla con un acopio ni con los colores del inventario */
+.leaflet-container path.zona-necesidad {
+  fill: var(--primary-fixed);
+  fill-opacity: 0.45;
+  stroke: var(--primary-container);
+  stroke-width: 2;
+  stroke-dasharray: 6 6;
+  stroke-opacity: 1;
+}
+.leaflet-container path.zona-necesidad-elegida {
+  fill-opacity: 0.65;
+  stroke-width: 3;
+  stroke-dasharray: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation: none !important;
