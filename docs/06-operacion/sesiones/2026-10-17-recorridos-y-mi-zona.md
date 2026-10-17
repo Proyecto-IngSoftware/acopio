@@ -83,5 +83,6 @@ Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)).
 ## Depende de Joseph
 
 - Cambiar `DEMO_CONTRASENA` por una más fuerte y borrar la primera descripción del PR #99
-  ([P-062](../../01-requerimientos/pendientes.md)). Si la contraseña cambia, los recorridos
-  contra el servidor necesitan la nueva.
+  ([P-062](../../01-requerimientos/pendientes.md)). Joseph las hizo al cierre de la sesión.
+  La descripción quedó comprobada en GitHub; la contraseña no, porque el servidor dejó de
+  responder: entre las 18:10 y las 18:13 no abrieron los puertos 80, 443 ni 22.
