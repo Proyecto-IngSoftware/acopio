@@ -7,7 +7,16 @@ import { useSesion } from '../sesion/Sesion';
 
 /** Guard de la consola (R-03): sin sesión lleva a Entrar; con otro rol lo dice. La API
  *  aplica los mismos permisos; esto solo evita mostrar una pantalla que daría 403. */
-export function RequiereRol({ roles, children }: { roles: Rol[]; children: ReactNode }) {
+export function RequiereRol({
+  roles,
+  margen = false,
+  children,
+}: {
+  roles: Rol[];
+  /** Para las pantallas que no ponen su propio margen lateral */
+  margen?: boolean;
+  children: ReactNode;
+}) {
   const { usuario, cargando } = useSesion();
   if (cargando) {
     return (
@@ -30,5 +39,5 @@ export function RequiereRol({ roles, children }: { roles: Rol[]; children: React
       </section>
     );
   }
-  return <>{children}</>;
+  return margen ? <div className="px-margin py-space-md">{children}</div> : <>{children}</>;
 }
