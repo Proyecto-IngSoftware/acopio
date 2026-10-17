@@ -188,8 +188,10 @@ parece. Orden:
    recorridos sin los pasos de Mailpit y `consola-remisiones.mjs` con la demo recién
    sembrada.
 
-Queda una decisión de la sesión anterior sin tomar: si el ciclo 3 entra en lo que debe
-funcionar el domingo o si HU-12 y HU-13 quedan fuera de la sustentación.
+Decisión del 2026-10-16 (Joseph): el ciclo 3 entra recortado. Para el domingo van C13
+Recepción (HU-12) y C20 Reportar necesidad (HU-13), con la entrada del Receptor desde «Más».
+«Mi zona» como pantalla propia y la capa de zonas en P05 quedan para después del domingo.
+Los escenarios por rol quedaron en [escenarios-por-rol.md](../06-operacion/escenarios-por-rol.md).
 
 ## Después de este plan
 

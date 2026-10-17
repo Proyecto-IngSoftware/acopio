@@ -3,7 +3,7 @@ title: "Diseños de Stitch — índice"
 type: moc
 tags: [moc, diseno, stitch]
 estado: vigente
-actualizado: 2026-10-15
+actualizado: 2026-10-16
 ---
 
 # Diseños de Stitch
@@ -51,11 +51,13 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 | C10 Ficha de zona | [C10-ficha-zona](C10-ficha-zona/README.md) | Bloque 4, ciclo 1 |
 | C11 Motor de sugerencias | [C11-motor](C11-motor/README.md) | Bloque 4, ciclo 1 |
 | C12 Remisiones | [C12-remisiones](C12-remisiones/README.md) | Bloque 4, ciclo 2 |
+| C13 Recepción en zona | [C13-recepcion](C13-recepcion/README.md) | Bloque 4, ciclo 3 (pendiente) |
 | C15 Entidades | [C15-entidades](C15-entidades/README.md) | Bloque 1 |
 | C16 Usuarios y accesos | [C16-usuarios](C16-usuarios/) (lista, detalle, invitar y matriz) | Bloque 0 y Bloque 1 |
 | C17 Bitácora | [C17-bitacora](C17-bitacora/README.md) | Bloque 0 |
 | C18 Catálogo maestro | [C18-catalogo](C18-catalogo/README.md) | Bloque 0 |
 | C18 Códigos de barras | [C18-codigos-barras](C18-codigos-barras/README.md) | Bloque 2 |
+| C20 Reportar necesidad | [C20-reportar](C20-reportar/README.md) | Bloque 4, ciclo 3 (pendiente) |
 | C21 Acopios | [C21-acopios](C21-acopios/) (lista y formulario) | Bloque 1 |
 | Mi acopio | [mi-acopio](mi-acopio/README.md) | Bloque 1 |
 

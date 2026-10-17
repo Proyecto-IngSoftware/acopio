@@ -1,0 +1,214 @@
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acopios - Por recibir</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-container": "#316c6c",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed": "#b2eded",
+            "surface-dim": "#e0d8d5",
+            "on-primary-fixed": "#002020",
+            "on-secondary-fixed": "#1e1b18",
+            "secondary-fixed": "#e9e1db",
+            "primary-fixed-dim": "#85d4d3",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "inverse-surface": "#33302d",
+            "on-surface": "#1e1b19",
+            "primary-fixed": "#a1f0ef",
+            "surface-tint": "#03696a",
+            "secondary": "#625e59",
+            "on-primary-container": "#9eedec",
+            "surface-container-high": "#eee7e3",
+            "on-secondary-container": "#68635f",
+            "on-secondary": "#ffffff",
+            "surface-variant": "#e9e1dd",
+            "surface-container-highest": "#e9e1dd",
+            "on-tertiary-container": "#afebea",
+            "on-primary": "#ffffff",
+            "primary": "#005454",
+            "outline-variant": "#bec9c8",
+            "on-secondary-fixed-variant": "#4a4642",
+            "secondary-fixed-dim": "#ccc5c0",
+            "surface": "#fff8f5",
+            "on-error-container": "#93000a",
+            "secondary-container": "#e9e1db",
+            "outline": "#6e7979",
+            "on-surface-variant": "#3e4948",
+            "surface-container": "#f4ece8",
+            "on-background": "#1e1b19",
+            "error": "#ba1a1a",
+            "background": "#fff8f5",
+            "inverse-primary": "#85d4d3",
+            "surface-container-low": "#faf2ee",
+            "tertiary": "#125454",
+            "on-primary-fixed-variant": "#004f50",
+            "on-error": "#ffffff",
+            "inverse-on-surface": "#f7efeb",
+            "error-container": "#ffdad6",
+            "primary-container": "#0f6e6e",
+            "tertiary-fixed-dim": "#96d1d0",
+            "on-tertiary": "#ffffff",
+            "surface-bright": "#fff8f5",
+            "on-tertiary-fixed": "#002020"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter"],
+            "display": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen flex flex-col justify-between">
+<!-- TopAppBar -->
+<header class="bg-surface-container-lowest flex justify-between items-center w-full px-4 h-14 max-w-md mx-auto sticky top-0 z-40">
+<div class="flex items-center gap-3">
+<button class="text-on-surface-variant hover:text-primary active:scale-95 transition-transform p-1">
+<span class="material-symbols-outlined text-xl">arrow_back</span>
+</button>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-2xl" style="font-variation-settings: 'FILL' 1;">hub</span>
+<h1 class="font-bold text-lg text-primary tracking-tight">Acopios</h1>
+</div>
+</div>
+<div class="flex items-center">
+<div class="w-9 h-9 rounded-full bg-surface-container flex items-center justify-center text-primary font-bold border border-outline-variant text-sm" title="Avatar de usuario con iniciales del administrador">
+        OP
+      </div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="w-full max-w-md mx-auto px-4 py-6 flex-1 pb-24">
+<!-- Header Section -->
+<div class="mb-6">
+<h2 class="text-2xl font-bold text-on-surface">Por recibir</h2>
+<p class="text-secondary text-sm mt-1">Remisiones en camino a tus zonas</p>
+</div>
+<!-- Primary Action: Scan QR -->
+<div class="mb-6">
+<button class="w-full bg-primary-container text-on-primary hover:opacity-95 active:scale-[0.98] transition-all rounded-[10px] h-14 px-4 flex items-center justify-center gap-3 shadow-sm">
+<span class="material-symbols-outlined text-2xl">qr_code_scanner</span>
+<span class="font-semibold text-base">Escanear QR de la remisión</span>
+</button>
+<div class="text-center mt-3">
+<button class="text-primary font-medium text-sm hover:underline">
+          Escribir el código
+        </button>
+</div>
+</div>
+<!-- Shipment Cards List -->
+<div class="space-y-4">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-[12px] p-4 shadow-sm hover:border-primary transition-colors">
+<div class="flex justify-between items-start mb-2">
+<span class="font-mono font-bold text-primary text-base">R-2026-K7Q2M</span>
+<span class="text-xs text-secondary bg-surface-container px-2 py-1 rounded-md">Despachada hace 2 h</span>
+</div>
+<div class="text-sm text-on-surface-variant mb-3 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base text-secondary">local_shipping</span>
+<span>Desde Acopios Parroquia San José</span>
+</div>
+<div class="mb-3">
+<span class="inline-flex items-center gap-1 text-xs font-medium bg-tertiary-fixed text-on-tertiary-fixed px-2.5 py-1 rounded-full">
+<span class="material-symbols-outlined text-xs">location_on</span>
+            Zona Norte · Bodega 3
+          </span>
+</div>
+<div class="border-t border-outline-variant/50 pt-2.5 text-xs text-secondary">
+          Agua potable 120 L · Arroz 50 kg · Pañales 3 paquetes
+        </div>
+</div>
+<!-- Card 2 (Sin zona) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-[12px] p-4 shadow-sm hover:border-primary transition-colors">
+<div class="flex justify-between items-start mb-2">
+<span class="font-mono font-bold text-primary text-base">R-2026-M9X1P</span>
+<span class="text-xs text-secondary bg-surface-container px-2 py-1 rounded-md">Despachada hace 4 h</span>
+</div>
+<div class="text-sm text-on-surface-variant mb-3 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base text-secondary">local_shipping</span>
+<span>Desde Acopios Parroquia San José</span>
+</div>
+<div class="mb-3">
+<span class="inline-flex items-center gap-1 text-xs font-medium bg-error-container text-on-error-container px-2.5 py-1 rounded-full">
+<span class="material-symbols-outlined text-xs">warning</span>
+            Sin zona: elige al recibir
+          </span>
+</div>
+<div class="border-t border-outline-variant/50 pt-2.5 text-xs text-secondary">
+          Kit de aseo 40 unidades · Cobijas 25 unidades
+        </div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-[12px] p-4 shadow-sm hover:border-primary transition-colors">
+<div class="flex justify-between items-start mb-2">
+<span class="font-mono font-bold text-primary text-base">R-2026-B4T8W</span>
+<span class="text-xs text-secondary bg-surface-container px-2 py-1 rounded-md">Despachada hace 5 h</span>
+</div>
+<div class="text-sm text-on-surface-variant mb-3 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base text-secondary">local_shipping</span>
+<span>Desde Acopios Parroquia San José</span>
+</div>
+<div class="mb-3">
+<span class="inline-flex items-center gap-1 text-xs font-medium bg-tertiary-fixed text-on-tertiary-fixed px-2.5 py-1 rounded-full">
+<span class="material-symbols-outlined text-xs">location_on</span>
+            Zona Sur · Sector Principal
+          </span>
+</div>
+<div class="border-t border-outline-variant/50 pt-2.5 text-xs text-secondary">
+          Atún en lata 200 latas · Fríjoles 80 kg
+        </div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-1 bg-surface-container-lowest max-w-md mx-auto right-0">
+<!-- Inicio -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">home</span>
+<span class="text-[10px] mt-1 font-medium">Inicio</span>
+</a>
+<!-- Acopios (Active) -->
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary rounded-xl px-3 py-1 shadow-sm" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">warehouse</span>
+<span class="text-[10px] mt-1 font-bold">Acopios</span>
+</a>
+<!-- Rutas -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">local_shipping</span>
+<span class="text-[10px] mt-1 font-medium">Rutas</span>
+</a>
+<!-- Alertas -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">warning</span>
+<span class="text-[10px] mt-1 font-medium">Alertas</span>
+</a>
+<!-- Más -->
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">more_horiz</span>
+<span class="text-[10px] mt-1 font-medium">Más</span>
+</a>
+</nav>
+</body></html>
