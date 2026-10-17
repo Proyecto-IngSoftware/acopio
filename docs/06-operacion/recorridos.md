@@ -176,6 +176,15 @@ ocurrió y la hora en que llegó.
 | `donador.mjs` | 8 de 8; con `SIN_CORREO=1`, 7 de 7 |
 | `consola-recepciones.mjs` | 7 de 7, ya con «Mi zona» (rama `mi-zona`) |
 
+**2026-10-17, contra el servidor de pruebas, después de desplegar #108 y #109** (con
+`SIN_CORREO=1`):
+
+| Script | Resultado |
+|---|---|
+| `consola-recepciones.mjs` | 7 de 7, entrando por «Más» → «Mi zona» |
+| `donador.mjs` | 7 de 7, la primera vez allá (entra como `donador1`) |
+| `consola-remisiones.mjs` | 7 de 7 |
+
 **2026-10-17, contra el servidor de pruebas** (`https://acopio.josephqaz.dev`, con
 `SIN_CORREO=1`), después de desplegar #99 y #100:
 
@@ -188,7 +197,7 @@ ocurrió y la hora en que llegó.
 | `consola-recepciones.mjs` | 6 de 6 |
 | `sin-conexion.mjs` | 12 de 12 |
 | `scripts/pruebas-manuales.sh` | 11 de 11 con el código esperado |
-| `donador.mjs` | No corría allá. Desde el 2026-10-17 tiene el modo `SIN_CORREO=1`, todavía sin correr contra el servidor |
+| `donador.mjs` | No corría allá (ver el bloque de arriba) |
 
 `consola-remisiones.mjs` pasó en el servidor, donde la demo está recién sembrada. En local
 fallaba por el campo que tomaba el script, no por los datos (ver «Cómo se corren»). El primer

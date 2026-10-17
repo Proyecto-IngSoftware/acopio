@@ -3,7 +3,7 @@ title: "Operación — índice"
 type: moc
 tags: [moc, operacion]
 estado: vigente
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Operación — índice
@@ -15,6 +15,7 @@ actualizado: 2026-10-16
 | [recorridos.md](recorridos.md) | Al cerrar un bloque, o cuando cambie una pantalla o un flujo |
 | [escenarios-por-rol.md](escenarios-por-rol.md) | En una ronda de pruebas del equipo en el servidor |
 | [github-projects.md](github-projects.md) | Al montar la organización de GitHub y el Project, o al cargar el backlog |
+| [sesiones/](sesiones/README.md) | Al retomar el trabajo (el último informe) y al cerrar cada sesión |
 
 ## Lo que no se puede olvidar
 
