@@ -205,20 +205,24 @@ export function Rutas() {
         />
         {(
           [
-            ['consola/usuarios', <Usuarios key="u" />],
-            ['consola/usuarios/invitar', <InvitarPersona key="i" />],
-            ['consola/usuarios/:id', <DetalleUsuario key="d" />],
-            ['consola/entidades', <Entidades key="e" />],
-            ['consola/acopios', <Acopios key="a" />],
-            ['consola/acopios/nuevo', <FormularioAcopio key="an" />],
-            ['consola/acopios/:id', <FormularioAcopio key="ae" />],
-            ['consola/zonas', <Zonas key="z" />],
+            ['consola/usuarios', <Usuarios key="u" />, false],
+            ['consola/usuarios/invitar', <InvitarPersona key="i" />, false],
+            ['consola/usuarios/:id', <DetalleUsuario key="d" />, false],
+            ['consola/entidades', <Entidades key="e" />, true],
+            ['consola/acopios', <Acopios key="a" />, true],
+            ['consola/acopios/nuevo', <FormularioAcopio key="an" />, true],
+            ['consola/acopios/:id', <FormularioAcopio key="ae" />, true],
+            ['consola/zonas', <Zonas key="z" />, true],
           ] as const
-        ).map(([ruta, pantalla]) => (
+        ).map(([ruta, pantalla, margen]) => (
           <Route
             key={ruta}
             path={ruta}
-            element={<RequiereRol roles={['ADMIN']}>{pantalla}</RequiereRol>}
+            element={
+              <RequiereRol roles={['ADMIN']} margen={margen}>
+                {pantalla}
+              </RequiereRol>
+            }
           />
         ))}
         {(
@@ -230,13 +234,17 @@ export function Rutas() {
           <Route
             key={ruta}
             path={ruta}
-            element={<RequiereRol roles={['ADMIN', 'OPERADOR']}>{pantalla}</RequiereRol>}
+            element={
+              <RequiereRol roles={['ADMIN', 'OPERADOR']} margen>
+                {pantalla}
+              </RequiereRol>
+            }
           />
         ))}
         <Route
           path="consola/zonas/:id"
           element={
-            <RequiereRol roles={['ADMIN', 'RECEPTOR']}>
+            <RequiereRol roles={['ADMIN', 'RECEPTOR']} margen>
               <FichaZona />
             </RequiereRol>
           }
@@ -244,7 +252,7 @@ export function Rutas() {
         <Route
           path="consola/zonas/:id/reportar"
           element={
-            <RequiereRol roles={['ADMIN', 'RECEPTOR']}>
+            <RequiereRol roles={['ADMIN', 'RECEPTOR']} margen>
               <ReportarNecesidad />
             </RequiereRol>
           }
@@ -259,7 +267,11 @@ export function Rutas() {
           <Route
             key={ruta}
             path={ruta}
-            element={<RequiereRol roles={['RECEPTOR']}>{pantalla}</RequiereRol>}
+            element={
+              <RequiereRol roles={['RECEPTOR']} margen>
+                {pantalla}
+              </RequiereRol>
+            }
           />
         ))}
         {(
@@ -272,7 +284,11 @@ export function Rutas() {
           <Route
             key={ruta}
             path={ruta}
-            element={<RequiereRol roles={['ADMIN']}>{pantalla}</RequiereRol>}
+            element={
+              <RequiereRol roles={['ADMIN']} margen>
+                {pantalla}
+              </RequiereRol>
+            }
           />
         ))}
         {(
@@ -285,7 +301,11 @@ export function Rutas() {
           <Route
             key={ruta}
             path={ruta}
-            element={<RequiereRol roles={['ADMIN', 'OPERADOR']}>{pantalla}</RequiereRol>}
+            element={
+              <RequiereRol roles={['ADMIN', 'OPERADOR']} margen>
+                {pantalla}
+              </RequiereRol>
+            }
           />
         ))}
         <Route

@@ -222,3 +222,40 @@ describe('rutas de remisiones (Bloque 4, ciclo 2)', () => {
     expect(await screen.findByRole('heading', { name: 'No tienes acceso' })).toBeInTheDocument();
   });
 });
+
+describe('margen lateral de la consola', () => {
+  const admin = { id: 'a', username: 'admin', nombre: 'Ana', rol: 'ADMIN' as const };
+  const operador = { id: 'o', username: 'o', nombre: 'Daniela', rol: 'OPERADOR' as const };
+  const receptor = { id: 'r', username: 'r', nombre: 'Alejandra', rol: 'RECEPTOR' as const };
+  // Una pantalla sin px-margin queda pegada al borde del teléfono; con dos, el margen se duplica
+  it.each([
+    ['/consola/acopios', admin],
+    ['/consola/acopios/nuevo', admin],
+    ['/consola/entidades', admin],
+    ['/consola/zonas', admin],
+    ['/consola/usuarios', admin],
+    ['/consola/catalogo', admin],
+    ['/consola/motor', admin],
+    ['/consola/motor/pesos', admin],
+    ['/consola/motor/descartes', admin],
+    ['/consola/remisiones', admin],
+    ['/consola/remisiones/nueva', admin],
+    ['/consola/zonas/z1', admin],
+    ['/consola/zonas/z1/reportar', admin],
+    ['/consola/acopios/x1/operacion', admin],
+    ['/consola/acopios/x1/no-recibir', admin],
+    ['/consola/acopios/x1/inventario', admin],
+    ['/consola/acopios/x1/salida', operador],
+    ['/consola/remisiones/R-1', operador],
+    ['/consola/recepciones', receptor],
+    ['/consola/recepciones/R-1', receptor],
+  ] as const)('%s deja margen a los lados', async (ruta, usuario) => {
+    render(envolver(<Rutas />, ruta, clienteFalso(usuario)));
+    const titulo = await screen.findByRole('heading', { level: 1 });
+    const margenes: Element[] = [];
+    for (let e: Element | null = titulo; e; e = e.parentElement) {
+      if (e.classList.contains('px-margin')) margenes.push(e);
+    }
+    expect(margenes).toHaveLength(1);
+  });
+});
