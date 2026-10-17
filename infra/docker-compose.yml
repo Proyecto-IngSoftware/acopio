@@ -83,6 +83,11 @@ services:
       DEMO_CONTRASENA: ${DEMO_CONTRASENA:-}
     volumes:
       - llaves:/llaves
+    # Nombre propio para el nginx de `web`. En Dokploy, `web` también está en la red compartida,
+    # donde otro servicio puede llamarse `api`. El alias solo existe en la red de este Compose
+    networks:
+      default:
+        aliases: [acopio-api]
 
   web:
     # nginx con el build de Vite; /api va a la API por la red interna (ADR-0014)
