@@ -195,7 +195,7 @@ Las invitaciones y los restablecimientos se comparten con el enlace que muestra 
 Un Donador que se registra solo no recibe el enlace para confirmar su correo.
 
 Garage no arranca con un `GARAGE_RPC_SECRET` más corto (`Invalid RPC secret key: expected
-32 bytes of random hex`). Las dos llaves de S3 no fallan al arrancar sino en `iniciar.sh`.
+32 bytes of random hex`). Si las dos llaves de S3 no sirven, la API no levanta y su log dice qué respondió Garage.
 Si la API se reinicia en bucle, su log empieza por `Variables de entorno inválidas:` y
 nombra la que falta.
 
@@ -283,9 +283,15 @@ de Supabase. Si una corrida se corta entre crear la cuenta en Supabase y guardar
 en la base, la siguiente falla nombrando el correo: se borra esa cuenta en el panel y se
 vuelve a desplegar.
 
+Garage también se prepara solo. Con `PREPARAR_ALMACEN_AL_ARRANCAR=true`, que el Compose deja
+encendida, la API usa la API de administración de Garage (`GARAGE_ADMIN_TOKEN`) para asignar
+la capacidad del nodo, registrar la llave de `S3_ACCESS_KEY` con su secreto, crear el bucket
+y darle permisos. En el log queda una línea `almacén:` por paso. Si la llave ya existe en
+Garage con otro secreto, falla en vez de cambiarlo.
+
 En Dokploy se dejan las dos primeras en `true`, y la de la demo solo en el servidor de
-pruebas. Garage es lo único que se prepara a mano, una vez,
-por SSH en el VPS. `<appName>` sale en el panel; el `-p` hace falta porque Dokploy usa ese
+pruebas. No hace falta SSH. `iniciar.sh` hace lo mismo desde afuera, con `docker compose
+exec`, para quien prefiera correrlo a mano: `<appName>` sale en el panel; el `-p` hace falta porque Dokploy usa ese
 nombre de proyecto y no el `name: acopio` del archivo.
 
 ```bash

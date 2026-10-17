@@ -46,6 +46,8 @@ services:
     depends_on:
       db:
         condition: service_healthy
+      storage:
+        condition: service_healthy
     environment:
       NODE_ENV: ${NODE_ENV:-production}
       API_PUERTO: 3000
@@ -63,6 +65,11 @@ services:
       S3_BUCKET: ${S3_BUCKET:-comprobantes}
       S3_ACCESS_KEY: ${S3_ACCESS_KEY:?falta S3_ACCESS_KEY}
       S3_SECRET_KEY: ${S3_SECRET_KEY:?falta S3_SECRET_KEY}
+      # Garage se prepara solo al arrancar la API (capacidad, llave y bucket), sin SSH
+      PREPARAR_ALMACEN_AL_ARRANCAR: ${PREPARAR_ALMACEN_AL_ARRANCAR:-true}
+      GARAGE_ADMIN_URL: http://storage:3903
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:?falta GARAGE_ADMIN_TOKEN}
+      GARAGE_CAPACIDAD: ${GARAGE_CAPACIDAD:-10G}
       # false: sin correo; las invitaciones se comparten con el enlace de la consola (P-055)
       CORREO_ACTIVO: ${CORREO_ACTIVO:-true}
       SMTP_HOST: ${SMTP_HOST:-}
