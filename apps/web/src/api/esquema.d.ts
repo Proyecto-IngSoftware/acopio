@@ -930,7 +930,7 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        get: operations["FacturasController_url"];
+        get: operations["FacturasController_factura"];
         put?: never;
         post?: never;
         delete?: never;
@@ -2402,17 +2402,6 @@ export interface components {
             grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
             perecedero: boolean;
             contenido: number | null;
-        };
-        UrlFacturaDto: {
-            /** @description URL firmada de la foto */
-            url: string;
-            /** @description URL firmada de la miniatura */
-            miniaturaUrl: string;
-            /**
-             * Format: date-time
-             * @description Cuándo dejan de servir las URL
-             */
-            venceEn: string;
         };
         BandejaRespuestaDto: {
             comprobantes: {
@@ -5096,7 +5085,7 @@ export interface operations {
             };
         };
     };
-    FacturasController_url: {
+    FacturasController_factura: {
         parameters: {
             query?: never;
             header?: never;
@@ -5112,7 +5101,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["UrlFacturaDto"];
+                    "image/webp": string;
                 };
             };
             /** @description Error */
@@ -5121,7 +5110,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["ErrorDto"];
+                    "image/webp": components["schemas"]["ErrorDto"];
                 };
             };
         };

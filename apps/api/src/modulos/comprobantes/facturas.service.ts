@@ -76,19 +76,15 @@ export class FacturasService {
   }
 
   /** El Donador dueño, y el Auditor o el Administrador con alcance sobre el acopio. */
-  async url(usuario: UsuarioAutenticado, texto: string) {
+  async leer(usuario: UsuarioAutenticado, texto: string) {
     const c = await buscarPorFolio(this.comprobantes, texto);
     if (usuario.rol === 'DONADOR' && c.donador_id !== usuario.id) throw NO_ENCONTRADO();
     if (usuario.rol !== 'DONADOR' && !(await this.alcance.puede(usuario, 'ACOPIO', c.acopio_id))) {
       throw new ForbiddenException('No tienes asignado este acopio');
     }
-    if (!c.factura_key || !c.miniatura_key) {
+    if (!c.factura_key) {
       throw new ErrorDominio('SIN_FACTURA', 'Esta donación no tiene foto de factura', 404);
     }
-    const [imagen, mini] = await Promise.all([
-      this.almacenamiento.urlFirmada(c.factura_key),
-      this.almacenamiento.urlFirmada(c.miniatura_key),
-    ]);
-    return { url: imagen.url, miniaturaUrl: mini.url, venceEn: imagen.venceEn };
+    return this.almacenamiento.leerImagen(c.factura_key);
   }
 }

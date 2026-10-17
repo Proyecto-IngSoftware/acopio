@@ -743,7 +743,9 @@ registrarlo en un ADR.
 publica en ningún entorno ([ADR-0017](../02-arquitectura/adr/ADR-0017-factura-servida-por-la-api.md)).
 El cambio de código va en [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26),
 antes del primer despliegue.
-**Estado:** RESUELTO el 2026-10-06 (decisión; falta el código).
+**Código (2026-10-16):** la API entrega la imagen y se retiraron `S3_URL_PUBLICA` y las URL
+firmadas (rama `servidor-de-pruebas`).
+**Estado:** RESUELTO el 2026-10-16.
 
 ### P-042 · Correo de contacto para los datos personales
 **Fecha:** 2026-10-06 · **Propuesto por:** Joseph
@@ -968,6 +970,31 @@ no lanzó errores. Puede ser el service worker descargando su caché cuando el r
 cambia de página, pero no se confirmó.
 **Por qué:** si es una petición real que falla, alguien la va a ver en la ronda de pruebas.
 **Estado:** ABIERTO. Se vigila en #58; si aparece, se anota la URL con la pestaña Red
+
+### P-058 · Imagen que falta en Garage y contrato de los endpoints de imagen
+**Fecha:** 2026-10-16 · **Propuesto por:** Claude, en la revisión de la rama `servidor-de-pruebas`
+**Qué:** dos detalles de `GET /api/comprobantes/{folio}/factura` y de
+`GET /api/remisiones/{codigo}/evidencia/{n}`. Si la fila tiene la clave pero el objeto ya no
+está en Garage (por ejemplo, la tarea que borra facturas vencidas borró el objeto y falló al
+limpiar la clave), la API responde 500 `ERROR_INTERNO` en vez de un 404 propio. Y el
+contrato OpenAPI declara `image/webp` también para la respuesta de error, que en realidad
+sale como JSON, porque `@ApiProduces` se aplica a todas las respuestas del método.
+**Por qué:** la web muestra «No se pudo cargar la factura» en los dos casos, así que nadie
+queda bloqueado, pero el 500 llena el log de errores y el contrato engaña a quien genere un
+cliente.
+**Estado:** ABIERTO. Deuda menor; se arregla traduciendo `NoSuchKey` a un `ErrorDominio` 404
+y declarando el `content` solo en la respuesta 200
+
+### P-059 · Pruebas de la web que fallan por tiempo con la máquina cargada
+**Fecha:** 2026-10-16 · **Propuesto por:** Claude, al verificar la rama `servidor-de-pruebas`
+**Qué:** `vitest run` de `apps/web` falló varias veces con una prueba distinta cada vez
+(`rutas.test.tsx`, `Acopios.test.tsx`, `Salida.test.tsx`, `selector.test.tsx`), todas por
+tiempo: un `findBy` que no encuentra la pantalla cargada en diferido o un timeout de 5 s. En
+`main` pasó lo mismo (una de dos corridas falló), y cada prueba pasa sola.
+**Por qué:** un rojo que no depende del cambio hace dudar de cada verificación, y en CI puede
+pasar igual.
+**Estado:** ABIERTO. Probar con menos workers en `vitest.config` o con más tiempo en los
+`findBy` de las rutas con carga diferida
 
 ---
 

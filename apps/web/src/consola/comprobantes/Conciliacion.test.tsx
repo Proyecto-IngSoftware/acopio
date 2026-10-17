@@ -1,4 +1,4 @@
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes } from 'react-router';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
@@ -102,11 +102,6 @@ const DETALLE = {
 const pantalla = (extra: Record<string, unknown> = {}, desde = '') => {
   const mapa: Record<string, unknown> = {
     'GET /api/comprobantes/*/conciliacion': DETALLE,
-    'GET /api/comprobantes/*/factura': {
-      url: 'https://storage/f.webp',
-      miniaturaUrl: 'https://storage/m.webp',
-      venceEn: '2026-10-04T16:00:00Z',
-    },
     'POST /api/comprobantes/*/conciliar': { ...DETALLE, estado: 'CONCILIADO' },
     'POST /api/comprobantes/*/rechazar': { ...DETALLE, estado: 'RECHAZADO' },
     'POST /api/comprobantes/*/revertir-rechazo': DETALLE,
@@ -146,13 +141,21 @@ it('cada entrada vinculada dice quién la registró y de dónde vino', async () 
 it('la factura se pide solo al abrirla', async () => {
   pantalla();
   await screen.findByRole('table', { name: 'Por categoría' });
-  expect(peticiones()).not.toContain(`GET /api/comprobantes/${FOLIO}/factura`);
+  expect(screen.queryByRole('img', { name: `Factura de ${FOLIO}` })).not.toBeInTheDocument();
   await userEvent.click(screen.getByRole('button', { name: 'Ver factura' }));
   const hoja = await screen.findByRole('dialog', { name: 'Factura' });
   expect(await within(hoja).findByRole('img', { name: `Factura de ${FOLIO}` })).toHaveAttribute(
     'src',
-    'https://storage/f.webp',
+    expect.stringMatching(new RegExp(`/api/comprobantes/${FOLIO}/factura$`)),
   );
+});
+
+it('si la imagen no carga, la hoja lo dice', async () => {
+  pantalla();
+  await userEvent.click(await screen.findByRole('button', { name: 'Ver factura' }));
+  const hoja = await screen.findByRole('dialog', { name: 'Factura' });
+  fireEvent.error(within(hoja).getByRole('img', { name: `Factura de ${FOLIO}` }));
+  expect(await within(hoja).findByRole('alert')).toHaveTextContent('No se pudo cargar la factura');
 });
 
 it('conciliar cierra el comprobante', async () => {

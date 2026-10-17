@@ -17,7 +17,7 @@ const WEB = process.env.WEB ?? 'http://localhost:5173';
 const MAILPIT = process.env.MAILPIT ?? 'http://localhost:8025';
 const axe = createRequire(import.meta.url).resolve('axe-core/axe.min.js');
 const CHAPINERO = 'd0000000-0000-4000-8000-000000000011';
-const DEMO = 'demo-acopio-2026';
+const DEMO = process.env.DEMO_CONTRASENA ?? 'demo-acopio-2026';
 const ADMIN = process.env.ADMIN_CONTRASENA ?? 'cambiar-antes-de-usar';
 const SELLO = Date.now().toString(36);
 

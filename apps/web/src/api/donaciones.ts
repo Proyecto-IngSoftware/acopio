@@ -9,7 +9,6 @@ export type DatosDonacion = S['CrearDonacionDto'];
 export type LineaSugerencia = S['SugerenciasDto']['lineas'][number];
 export type SugerenciaEntrega = S['SugerenciaEntregaDto'];
 export type CodigoDonador = S['CodigoDonadorDto'];
-export type UrlFactura = S['UrlFacturaDto'];
 export type Seguimiento = S['SeguimientoDto'];
 
 export const ESTADOS_DONACION: Record<EstadoComprobante, string> = {
@@ -90,15 +89,9 @@ export function subirFactura(folio: string, archivo: File): Promise<Donacion> {
   );
 }
 
-/** URL firmada de la foto de la factura; solo se pide cuando `activo`. */
-export function useUrlFactura(folio: string, activo: boolean) {
-  return useQuery<UrlFactura, ErrorApi>({
-    queryKey: ['urlFactura', folio],
-    queryFn: () =>
-      desenvolver(api.GET('/api/comprobantes/{folio}/factura', { params: { path: { folio } } })),
-    enabled: activo,
-  });
-}
+/** La foto de la factura; la API la sirve con la cookie de sesión (ADR-0017). */
+export const urlFactura = (folio: string) =>
+  `${import.meta.env.VITE_API_URL || window.location.origin}/api/comprobantes/${encodeURIComponent(folio)}/factura`;
 
 /** Seguimiento público por folio. Un folio que no existe da null, sin reintentos. */
 export function useSeguimiento(folio: string) {

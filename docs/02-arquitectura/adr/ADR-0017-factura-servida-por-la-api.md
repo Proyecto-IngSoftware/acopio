@@ -5,7 +5,7 @@ tags: [arquitectura, adr, almacenamiento, custodia]
 estado: vigente
 adr: 17
 decision: aceptada
-actualizado: 2026-10-10
+actualizado: 2026-10-16
 ---
 
 # ADR-0017 · La API sirve la foto de la factura y Garage no se expone
@@ -59,3 +59,10 @@ ningún entorno.**
 - **2026-10-10.** La evidencia de las remisiones nace así: `GET /remisiones/:codigo/evidencia/:n`
   entrega los bytes con `Cache-Control: private, no-store`, y el puerto `Almacen` gana
   `leer`. La factura puede reutilizar las dos piezas cuando se haga su cambio.
+- **2026-10-16.** Hecho. `GET /api/comprobantes/{folio}/factura` entrega los bytes con el
+  mismo permiso de antes, y responde 404 `SIN_FACTURA` si la donación no tiene foto. La web
+  pone la imagen en un `<img src>` contra `/api`, igual que la evidencia de remisiones, en
+  lugar de bajarla a un `blob:`: la web y la API comparten origen, así que la cookie viaja
+  con la petición de la imagen. La miniatura se sigue guardando, pero no tiene endpoint
+  porque ninguna pantalla la muestra. Se retiraron `S3_URL_PUBLICA`, el segundo cliente S3
+  y las URL firmadas.

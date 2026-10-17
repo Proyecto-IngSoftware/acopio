@@ -12,7 +12,7 @@ import {
   usePrepararDonacion,
   useSeguimiento,
   useSugerencias,
-  useUrlFactura,
+  urlFactura,
 } from './donaciones';
 
 const COMPROBANTE = { folio: 'ACO-2026-00001', estado: 'PREPARADO' };
@@ -109,18 +109,8 @@ it('subirFactura manda FormData con el campo factura', async () => {
   expect(cuerpo).toContain('Content-Type: image/jpeg');
 });
 
-describe('useUrlFactura', () => {
-  it('consulta solo si está activo', async () => {
-    responderSegun({ 'GET /api/comprobantes/*/factura': { url: 'u', miniaturaUrl: 'm' } });
-    const { envoltura } = conConsultas();
-    renderHook(() => useUrlFactura('ACO-2026-00001', false), { wrapper: envoltura });
-    expect(peticiones()).toEqual([]);
-
-    const { result } = renderHook(() => useUrlFactura('ACO-2026-00001', true), {
-      wrapper: envoltura,
-    });
-    await waitFor(() => expect(result.current.data).toMatchObject({ url: 'u' }));
-  });
+it('urlFactura apunta a la API con el folio codificado', () => {
+  expect(urlFactura('ACO-2026-00001')).toMatch(/\/api\/comprobantes\/ACO-2026-00001\/factura$/);
 });
 
 describe('useSeguimiento', () => {

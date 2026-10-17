@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: comprobantes
 bloque: 3
-actualizado: 2026-10-05
+actualizado: 2026-10-16
 ---
 
 # RF-CMP · Comprobantes y cadena de custodia
@@ -142,8 +142,8 @@ donación preparada entre al inventario con su folio (P-018).
 **Criterios de aceptación:**
 - [ ] Almacenamiento con **buckets privados, sin excepción** (Garage,
       [ADR-0012](../../02-arquitectura/adr/ADR-0012-almacenamiento-garage.md))
-- [ ] El navegador nunca habla con el almacenamiento directamente; la API entrega URLs firmadas
-      con expiración corta
+- [ ] El navegador nunca habla con el almacenamiento directamente; la API lee el objeto y
+      entrega los bytes ([ADR-0017](../../02-arquitectura/adr/ADR-0017-factura-servida-por-la-api.md))
 - [ ] Miniaturas generadas con `sharp` en la API
 - [ ] Se valida el tipo real del archivo, no la extensión
 - [ ] Se elimina metadata EXIF, incluida la geolocalización del teléfono. **2026-10-05
@@ -152,7 +152,8 @@ donación preparada entre al inventario con su folio (P-018).
 - [ ] Cada comprobante tiene una sola factura; subir otra reemplaza la anterior. Una
       imagen que no se puede decodificar (truncada, HEIC sin soporte) da 415
       `TIPO_NO_ADMITIDO`
-- [ ] La URL firmada de la foto y de la miniatura dura 5 minutos
+- [ ] La API entrega la foto con `Cache-Control: private, no-store`. **2026-10-16:** antes
+      eran URL firmadas de 5 minutos (ADR-0017)
 - [ ] La factura se conserva 12 meses desde el cierre del comprobante y después una
       tarea programada borra los objetos
 - [ ] **Las facturas contienen nombre, cédula y dirección: jamás se exponen en

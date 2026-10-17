@@ -1,9 +1,11 @@
 import {
   Controller,
   Get,
+  Header,
   HttpCode,
   Param,
   Post,
+  StreamableFile,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
@@ -13,13 +15,14 @@ import {
   ApiBody,
   ApiConsumes,
   ApiOkResponse,
+  ApiProduces,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
-import { ComprobanteDto, ErrorDto, UrlFacturaDto } from '../../comun/respuestas';
+import { ComprobanteDto, ErrorDto } from '../../comun/respuestas';
 import { TAMANO_MAXIMO } from '../almacenamiento/imagenes';
 import { FacturasService } from './facturas.service';
 
@@ -57,9 +60,12 @@ export class FacturasController {
 
   @Roles('DONADOR', 'AUDITOR', 'ADMIN')
   @Get('comprobantes/:folio/factura')
-  @ApiOkResponse({ type: UrlFacturaDto })
+  @Header('Cache-Control', 'private, no-store')
+  @ApiProduces('image/webp')
+  @ApiOkResponse({ schema: { type: 'string', format: 'binary' } })
   @ApiResponse(errores)
-  url(@UsuarioActual() u: UsuarioAutenticado, @Param('folio') folio: string) {
-    return this.facturas.url(u, folio);
+  async factura(@UsuarioActual() u: UsuarioAutenticado, @Param('folio') folio: string) {
+    const { datos, tipo } = await this.facturas.leer(u, folio);
+    return new StreamableFile(datos, { type: tipo });
   }
 }

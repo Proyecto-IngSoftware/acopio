@@ -42,11 +42,11 @@ domingo 18 de octubre) y [#26](https://github.com/Proyecto-IngSoftware/acopio/is
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 Factura servida por la API (P-041, ADR-0017) | ⬜ | Todo |
-| 2 Demo con contraseña por variable y cuentas en Supabase | ⬜ | Todo |
-| 3 Sembrar la demo en el servidor | ⬜ | Espera a 1 y 2 desplegadas |
+| 1 Factura servida por la API (P-041, ADR-0017) | ✅ | Hecha en local ([plan](2026-10-16-servidor-de-pruebas-factura-y-demo.md)); falta verla en el servidor tras desplegar |
+| 2 Demo con contraseña por variable y cuentas en Supabase | ✅ | Hecha en local con `SEMBRAR_DEMO_AL_ARRANCAR`; falta desplegar |
+| 3 Sembrar la demo en el servidor | ⬜ | Fijar `DEMO_CONTRASENA` y `SEMBRAR_DEMO_AL_ARRANCAR=true` en Dokploy y desplegar |
 | 4 Recorridos y pruebas manuales contra el servidor | ⬜ | Espera a 3 |
-| 5 Runbook con el proyecto de Supabase | ⬜ | Revisar si el cambio ya existe fuera del repositorio |
+| 5 Runbook con el proyecto de Supabase | ✅ | El cambio no estaba en ningún lado; se escribió el 2026-10-16 con el proyecto verificado (`ACTIVE_HEALTHY`) |
 | 6 Decisiones abiertas (P-056, P-057) | ⬜ | Joseph decide P-056; P-057 se vigila en #58 |
 
 ### Task 1: Factura servida por la API
@@ -76,6 +76,13 @@ misma forma, y el puerto `Almacen` ya tiene `leer`. La factura reutiliza las dos
 **Verificación:** integración con el permiso (dueño, Auditor con alcance, Auditor sin
 alcance, otro Donador); Vitest de la pantalla; `recorridos/consola-comprobantes.mjs` en
 local; en el servidor, subir una factura y verla desde la consola.
+
+**Cambios al construir (2026-10-16):** la web muestra la imagen con un `<img src>` contra
+`/api`, como la evidencia de remisiones, en lugar de un `blob:`. La miniatura no tiene
+endpoint porque ninguna pantalla la usa. Probado: integración con los cuatro permisos y la
+donación sin foto, Vitest de la hoja, y en el Compose la factura vista por nginx con curl y
+con Playwright. El recorrido `consola-comprobantes.mjs` no abre la factura, así que no la
+cubre. Un objeto que falta en Garage da 500 (P-058).
 
 ### Task 2: Demo con contraseña por variable y cuentas en Supabase
 
@@ -107,10 +114,20 @@ local; en el servidor, subir una factura y verla desde la consola.
 **Verificación:** prueba de integración o unitaria de que la demo usa el proveedor
 configurado; en local, `seed:demo` con `DEMO_CONTRASENA` y los recorridos completos.
 
+**Cambios al construir (2026-10-16):** se eligió sembrar al arrancar
+(`SEMBRAR_DEMO_AL_ARRANCAR`), no con `docker exec`. La demo es idempotente, no imprime la
+contraseña y en producción no corre sin `DEMO_CONTRASENA`. Las piezas nuevas están en
+`seed/credenciales.ts`, y `seed/main.ts` también elige el proveedor con ellas. Probado:
+unitarias de `credenciales`, `seed:demo` dos veces en local, y el Compose con la demo al
+arrancar y un reinicio sin errores. `consola-remisiones.mjs` falló en local porque la demo de
+esa base ya estaba gastada (ver [recorridos.md](../06-operacion/recorridos.md)); conviene
+correrlo contra el servidor recién sembrado.
+
 ### Task 3: Sembrar la demo en el servidor
 
 Con las tareas 1 y 2 fusionadas y desplegadas: definir `DEMO_CONTRASENA` en Dokploy con un
-valor nuevo, que no esté en el repositorio, y correr la demo una vez. Comprobar con el MCP de
+valor nuevo, que no esté en el repositorio, y `SEMBRAR_DEMO_AL_ARRANCAR=true`, y volver a
+desplegar. Comprobar con el MCP de
 Supabase que las cuentas por rol quedaron en `auth.users`, y entrar con una de ellas.
 
 ### Task 4: Recorridos y pruebas manuales contra el servidor

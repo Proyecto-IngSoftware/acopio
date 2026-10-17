@@ -50,7 +50,7 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 | 1 · Piezas C, D y E | pendientes: verificación y causas, contenido del home, importador | pendiente | ⬜ Quedaron fuera de la especificación del Bloque 1 y sin issue hasta el Sprint Review ([P-046](../01-requerimientos/pendientes.md)). [#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48) hasta el 1 nov, [#50](https://github.com/Proyecto-IngSoftware/acopio/issues/50) y [#49](https://github.com/Proyecto-IngSoftware/acopio/issues/49) hasta el 15 nov |
 | 5 · Turnos | pendiente | pendiente | ⬜ [#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36) |
 | 6 · Extras | pendiente | pendiente | ⬜ [#37](https://github.com/Proyecto-IngSoftware/acopio/issues/37) |
-| Servidor de pruebas | [despliegue.md](../06-operacion/despliegue.md) | [plan de trabajo](2026-10-16-servidor-de-pruebas.md) | 🟡 Arriba desde el 2026-10-16 (#91, #92, #93). Faltan la factura por la API, la demo con contraseña por variable y los recorridos contra el servidor. [#53](https://github.com/Proyecto-IngSoftware/acopio/issues/53), [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26) |
+| Servidor de pruebas | [despliegue.md](../06-operacion/despliegue.md) | [plan de trabajo](2026-10-16-servidor-de-pruebas.md) · [factura y demo](2026-10-16-servidor-de-pruebas-factura-y-demo.md) | 🟡 Arriba desde el 2026-10-16 (#91, #92, #93). Factura por la API y demo con `DEMO_CONTRASENA` hechas en local; faltan desplegarlas, sembrar la demo y los recorridos contra el servidor. [#53](https://github.com/Proyecto-IngSoftware/acopio/issues/53), [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26) |
 
 ## Lo que sigue
 

@@ -3376,7 +3376,7 @@
     },
     "/api/comprobantes/{folio}/factura": {
       "get": {
-        "operationId": "FacturasController_url",
+        "operationId": "FacturasController_factura",
         "parameters": [
           {
             "name": "folio",
@@ -3391,9 +3391,10 @@
           "200": {
             "description": "",
             "content": {
-              "application/json": {
+              "image/webp": {
                 "schema": {
-                  "$ref": "#/components/schemas/UrlFacturaDto"
+                  "type": "string",
+                  "format": "binary"
                 }
               }
             }
@@ -3401,7 +3402,7 @@
           "default": {
             "description": "Error",
             "content": {
-              "application/json": {
+              "image/webp": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorDto"
                 }
@@ -9038,30 +9039,6 @@
           "grupo",
           "perecedero",
           "contenido"
-        ]
-      },
-      "UrlFacturaDto": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "description": "URL firmada de la foto"
-          },
-          "miniaturaUrl": {
-            "type": "string",
-            "description": "URL firmada de la miniatura"
-          },
-          "venceEn": {
-            "type": "string",
-            "format": "date-time",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
-            "description": "Cuándo dejan de servir las URL"
-          }
-        },
-        "required": [
-          "url",
-          "miniaturaUrl",
-          "venceEn"
         ]
       },
       "BandejaRespuestaDto": {

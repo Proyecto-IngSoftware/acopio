@@ -10,7 +10,7 @@ import {
   type Conciliacion as Detalle,
   type MotivoRechazo,
 } from '../../api/comprobantes';
-import { ESTADOS_DONACION, useUrlFactura } from '../../api/donaciones';
+import { ESTADOS_DONACION, urlFactura } from '../../api/donaciones';
 import { Boton } from '../../componentes/Boton';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
@@ -347,23 +347,22 @@ export function Conciliacion() {
   );
 }
 
-/** La URL firmada vence a los 5 minutos: se pide al abrir. */
+/** La API entrega la imagen al abrir la hoja (ADR-0017). */
 function VerFactura({ folio, alCerrar }: { folio: string; alCerrar: () => void }) {
-  const factura = useUrlFactura(folio, true);
+  const [fallo, setFallo] = useState(false);
   return (
     <Hoja titulo="Factura" alCerrar={alCerrar}>
-      {factura.data ? (
-        <img
-          src={factura.data.url}
-          alt={`Factura de ${folio}`}
-          className="w-full rounded-lg border border-outline-variant"
-        />
-      ) : factura.error ? (
+      {fallo ? (
         <p role="alert" className="text-body-md text-error">
-          {factura.error.message}
+          No se pudo cargar la factura
         </p>
       ) : (
-        <Esqueleto etiqueta="Cargando la factura" className="h-64" />
+        <img
+          src={urlFactura(folio)}
+          alt={`Factura de ${folio}`}
+          onError={() => setFallo(true)}
+          className="w-full rounded-lg border border-outline-variant"
+        />
       )}
     </Hoja>
   );
