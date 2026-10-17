@@ -126,15 +126,23 @@ await paso('el Operador de Kennedy despacha una remisión hacia la zona de la de
   codigo = r.codigo;
 });
 
-await paso('la Receptora ve en «Más» lo que viene en camino y abre la lista', async () => {
+await paso('la Receptora entra a «Mi zona» desde «Más» y abre la lista', async () => {
   await entrar('receptor1', DEMO);
   await p.goto(`${WEB}/mas`);
-  const fila = p
-    .getByRole('region', { name: 'Mi zona' })
-    .getByRole('link', { name: /remisi(ón|ones) en camino/ });
+  const fila = p.getByRole('region', { name: 'Mi zona' }).getByRole('link', { name: /Mi zona/ });
   await fila.waitFor();
-  await revisar(p, 'más', 'C13-recepcion/construida-mas.png');
+  await revisar(p, 'más', 'mi-zona/construida-mas.png');
   await fila.click();
+  await p.waitForURL(`${WEB}/consola/mi-zona`);
+  const recibir = p.getByRole('region', { name: 'Por recibir' });
+  // Muestra solo las tres primeras: la de esta corrida puede quedar en «Ver todas»
+  await recibir
+    .getByRole('link', { name: /R-\d{4}-/ })
+    .first()
+    .waitFor();
+  await p.getByRole('region', { name: 'Tus reportes' }).getByRole('link').first().waitFor();
+  await revisar(p, 'mi zona', 'mi-zona/construida.png');
+  await recibir.getByRole('link', { name: 'Ver todas' }).click();
   await p.waitForURL(`${WEB}/consola/recepciones`);
   await p.getByRole('link', { name: new RegExp(codigo) }).waitFor();
   await revisar(p, 'lista', 'C13-recepcion/construida-lista.png');

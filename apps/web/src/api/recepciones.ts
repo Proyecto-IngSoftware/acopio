@@ -42,10 +42,12 @@ function useInvalidar() {
   };
 }
 
-/** C13: las remisiones en camino a las zonas del Receptor y los despachos generales. */
-export function useRecepciones() {
+/** C13: las remisiones en camino a las zonas del Receptor y los despachos generales.
+ *  Con `activo` en falso no consulta: solo el Receptor puede leerlas. */
+export function useRecepciones(activo = true) {
   return useQuery<Remision[], ErrorApi>({
     queryKey: ['recepciones'],
+    enabled: activo,
     queryFn: () => desenvolver(api.GET('/api/recepciones')),
   });
 }

@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-4]
 estado: vigente
 bloque: 4
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Bloque 4 · Motor · especificación
@@ -494,3 +494,12 @@ Cada etapa tiene su plan, escrito al empezarla.
 | La API no cambió. `/consola/recepciones/:codigo` busca la remisión en `GET /recepciones` (I3-02) | El Receptor no puede leer `GET /remisiones/:codigo` |
 | Las fotos de evidencia no se pueden quitar en C13 | La API no tiene cómo borrar una evidencia |
 | C13 conserva la remisión que vio en camino aunque la lista ya no la traiga | Al recibir, la lista se vuelve a pedir y la remisión sale de ella; sin esto la pantalla mostraba «ya no está en camino» en vez de «recibida». Lo encontró el recorrido |
+
+**2026-10-17 · «Mi zona».** Tarea 9 del mismo plan, con la [maqueta](../../03-diseno/stitch/mi-zona/README.md) aprobada ese día.
+
+| Qué | Por qué |
+|---|---|
+| «Mi zona» (`/consola/mi-zona`) es el inicio del Receptor, y en «Más» queda una sola fila hacia ella | Lo que el Receptor usa estaba repartido entre «Más», C13 y C10 |
+| «Lo que más falta» toma las tres de menor cobertura que aún tienen déficit, no las de mayor déficit | El déficit viene en litros, kilos o unidades y no se puede comparar entre categorías; la cobertura sí |
+| C20 abre en «Ya se resolvió» con `?modo=resuelta`, y la ficha de zona del Receptor vuelve a «Mi zona» | Para que «Ya se resolvió algo» y «Volver» lleven a donde el Receptor empezó |
+| La API no cambió | Todo sale de endpoints que el Receptor ya podía leer |

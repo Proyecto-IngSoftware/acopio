@@ -37,7 +37,7 @@ export function FichaZona() {
   const { usuario } = useSesion();
   const consulta = useFichaZona(id);
   const ficha = consulta.data?.zona ? consulta.data : undefined;
-  const volverA = usuario?.rol === 'ADMIN' ? '/consola/zonas' : '/mas';
+  const volverA = usuario?.rol === 'ADMIN' ? '/consola/zonas' : `/consola/mi-zona?zona=${id}`;
 
   if (!enLinea) {
     return (

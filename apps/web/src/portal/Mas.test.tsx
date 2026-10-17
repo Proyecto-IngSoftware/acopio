@@ -188,19 +188,19 @@ describe('«Mi zona» del Receptor (I3-05)', () => {
     },
   ];
 
-  it('lleva a lo que está por recibir y a la ficha de cada zona', async () => {
+  it('es una sola fila hacia «Mi zona», con lo que viene en camino', async () => {
     responderSegun({
       'GET /api/ubicaciones/mias': zonas,
       'GET /api/recepciones': [{ codigo: 'R-1' }, { codigo: 'R-2' }],
     });
     pantalla(persona('RECEPTOR'));
     const zona = await screen.findByRole('region', { name: 'Mi zona' });
-    const fila = await within(zona).findByRole('link', { name: /2 remisiones en camino/ });
-    expect(fila).toHaveAttribute('href', '/consola/recepciones');
+    const fila = await within(zona).findByRole('link', {
+      name: /2 en camino · Barrio San Agustín \(prueba\)/,
+    });
+    expect(fila).toHaveAttribute('href', '/consola/mi-zona');
     expect(within(fila).getByText('2')).toBeInTheDocument();
-    expect(
-      await within(zona).findByRole('link', { name: /Barrio San Agustín \(prueba\)/ }),
-    ).toHaveAttribute('href', `/consola/zonas/${ZONA}`);
+    expect(within(zona).getAllByRole('link')).toHaveLength(1);
   });
 
   it('sin remisiones dice que no hay nada en camino', async () => {
@@ -210,13 +210,16 @@ describe('«Mi zona» del Receptor (I3-05)', () => {
     expect(within(fila).queryByText('0')).not.toBeInTheDocument();
   });
 
-  it('una remisión se dice en singular', async () => {
+  it('con dos zonas las cuenta', async () => {
     responderSegun({
-      'GET /api/ubicaciones/mias': zonas,
+      'GET /api/ubicaciones/mias': [
+        ...zonas,
+        { ...zonas[0], id: 'd0000000-0000-4000-8000-000000000032', nombre: 'Vereda El Pepino' },
+      ],
       'GET /api/recepciones': [{ codigo: 'R-1' }],
     });
     pantalla(persona('RECEPTOR'));
-    expect(await screen.findByRole('link', { name: /1 remisión en camino/ })).toBeInTheDocument();
+    expect(await screen.findByRole('link', { name: /1 en camino · 2 zonas/ })).toBeInTheDocument();
   });
 
   it('un Operador no la ve', async () => {

@@ -53,14 +53,14 @@ function Ubicacion() {
   return <p data-testid="ruta">{l.pathname + l.search}</p>;
 }
 
-function pantalla() {
+function pantalla(ruta = '/consola/zonas/z1/reportar') {
   return render(
     envolver(
       <Routes>
         <Route path="/consola/zonas/:id/reportar" element={<ReportarNecesidad />} />
         <Route path="/consola/zonas/:id" element={<Ubicacion />} />
       </Routes>,
-      '/consola/zonas/z1/reportar',
+      ruta,
       clienteFalso(RECEPTORA),
     ),
   );
@@ -174,4 +174,15 @@ it('no tiene violaciones graves de accesibilidad', async () => {
   const { container } = pantalla();
   await screen.findByRole('group', { name: 'Categorías' });
   expect(await violacionesGraves(container)).toEqual([]);
+});
+
+it('desde «Mi zona», «Ya se resolvió algo» abre en ese modo', async () => {
+  responderSegun({
+    ...BASE,
+    'GET /api/zonas/*/reportes': [reporte('c-agua', 'Agua potable', false, 3)],
+  });
+  pantalla('/consola/zonas/z1/reportar?modo=resuelta');
+  expect(await screen.findByRole('radio', { name: 'Ya se resolvió' })).toBeChecked();
+  const grupo = await screen.findByRole('group', { name: 'Categorías' });
+  expect(within(grupo).getAllByRole('checkbox')).toHaveLength(1);
 });

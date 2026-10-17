@@ -45,6 +45,7 @@ recortado para el domingo 18, según la decisión del 2026-10-16 en el
 | 6 C20 Reportar necesidad | ✅ | |
 | 7 Recorrido y cierre | ✅ | `consola-recepciones.mjs` 6/6 en tres corridas, `validacion-general.mjs` 59/59 y `test:int` 369/369 el 2026-10-16. `consola-remisiones.mjs` fallaba en local porque tomaba el primer campo del editor, no el de la línea; desde el 2026-10-17 pasa 7/7 (ver [recorridos](../06-operacion/recorridos.md)) |
 | 8 Capa de zonas en P05 (si alcanza) | ✅ | Maqueta aprobada el 2026-10-17. `consola-recepciones.mjs` comprueba en Chromium que un visitante ve la categoría reportada, con su nota, en el mapa y en la lista. Al construirla aparecieron dos fallas del mapa: el encuadre se perdía si las zonas llegaban mientras Leaflet animaba el de los acopios, y los marcadores se anunciaban con el nombre del ícono («inventory_2») en vez del suyo |
+| 9 «Mi zona» como pantalla propia | ✅ | Maqueta aprobada el 2026-10-17. `consola-recepciones.mjs` 7/7 entrando por «Más» → «Mi zona» → «Ver todas» |
 
 ## Decisiones al planear
 
@@ -322,3 +323,25 @@ mapa»). Si no alcanza, se anota en el escenario 24 y en el issue #35.
   dirección.
 - [ ] Implementar con el mismo componente de mapa de P05, en un color neutro de la marca y no
   con los del inventario.
+
+### Task 9: «Mi zona» como pantalla propia
+
+Lo que el recorte del domingo dejó fuera. Diseño aprobado el 2026-10-17 en
+[mi-zona](../03-diseno/stitch/mi-zona/README.md).
+
+**Archivos:**
+- Crear: `apps/web/src/consola/recepciones/MiZona.tsx` y su prueba, y
+  `EscanearRemision.tsx`, el botón del escáner que antes vivía dentro de `Recepciones.tsx`
+- Modificar: `rutas.tsx` (`/consola/mi-zona`, solo `RECEPTOR`), `portal/Mas.tsx` (una fila),
+  `FichaZona.tsx` (el Receptor vuelve a `/consola/mi-zona?zona=:id`), `ReportarNecesidad.tsx`
+  (`?modo=resuelta` abre en «Ya se resolvió»), `Recepciones.tsx` (vuelve a «Mi zona») y
+  `api/recepciones.ts` (`useRecepciones(activo)`)
+
+**Interfaces:** consume `GET /api/ubicaciones/mias`, `GET /api/recepciones`,
+`GET /api/zonas/{id}/necesidad` y `GET /api/zonas/{id}/reportes`. La API no cambia.
+
+- [x] Pruebas de `MiZona`: cabecera de la zona, «Por recibir» filtrado por zona con los
+  despachos generales y un tope de tres, el escáner, las tres de menor cobertura con déficit,
+  los reportes abiertos, nada pendiente, dos zonas con `?zona=`, sin zonas y axe.
+- [x] Pruebas de «Más», de la ficha (Volver) y de C20 (`?modo=resuelta`).
+- [x] Implementar y correr `consola-recepciones.mjs` contra el Compose.

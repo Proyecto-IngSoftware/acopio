@@ -288,6 +288,15 @@ describe('C20 desde la ficha (I3-06)', () => {
     );
   });
 
+  it('«Volver» lleva al Receptor a «Mi zona» con esta zona elegida', async () => {
+    responderSegun({ 'GET /api/zonas/*/necesidad': ficha() });
+    enRuta('/consola/zonas/z1');
+    expect(await screen.findByRole('link', { name: 'Volver' })).toHaveAttribute(
+      'href',
+      '/consola/mi-zona?zona=z1',
+    );
+  });
+
   it('al volver de reportar muestra cuántas categorías se reportaron', async () => {
     responderSegun({ 'GET /api/zonas/*/necesidad': ficha() });
     enRuta('/consola/zonas/z1?reportado=2');
