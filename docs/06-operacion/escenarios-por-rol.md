@@ -36,6 +36,16 @@ Los datos de la demo se pueden gastar: una remisión recibida ya no vuelve a est
 una donación conciliada no vuelve a la bandeja. Antes de probar algo que cambia datos, avisar
 en el chat para que dos personas no tomen la misma remisión o el mismo folio.
 
+El servidor se despliega solo cada vez que algo entra a `main`. La app guarda una copia para
+funcionar sin conexión y no se actualiza sola: cuando hay una versión nueva, abajo aparece «Hay
+una versión nueva de Acopio» con el botón «Actualizar». Antes de reportar una falla, toca
+«Actualizar», o cierra todas las pestañas del sitio y vuelve a abrirlo. Si no, puedes estar
+probando la versión anterior.
+
+Además de `R-2026-DEMA2` y `R-2026-DEMA3`, hay una tercera remisión en camino hacia Barrio San
+Agustín, `R-2026-RF4J7`, con 1 L de agua y una foto ya subida. La dejó un recorrido y sirve para
+practicar la recepción.
+
 ## Portal, sin sesión
 
 1. HU-01.1. Entro sin sesión al mapa, filtro por «qué no recibe» y elijo una categoría
