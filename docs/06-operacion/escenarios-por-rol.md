@@ -3,7 +3,7 @@ title: "Escenarios de prueba por rol"
 type: guia
 tags: [pruebas, operacion, servidor]
 estado: vigente
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Escenarios de prueba por rol
@@ -108,8 +108,8 @@ desplegados, se saltan.
 24. HU-13.1. Desde la ficha de mi zona reporto que falta una categoría, con una nota sin
     datos de personas. Sin sesión, el mapa debería mostrar esa necesidad en un área
     aproximada de la zona, con su antigüedad y sin dirección exacta.
-    La parte del mapa depende de la capa de zonas en P05; si no está desplegada, se revisa
-    solo que el reporte aparezca en la ficha de la zona.
+    La capa de zonas está en P05 desde el 2026-10-17: el visitante toca el pin de la zona
+    para ver la tarjeta.
 25. HU-13.2. Marco esa categoría como resuelta. Debería dejar de verse como vigente en el
     mapa, y el reporte anterior sigue en la bitácora.
 

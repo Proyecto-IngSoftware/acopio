@@ -1,0 +1,186 @@
+<title>Zonas en el mapa</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap">
+<style>
+/* Tema «Acopio Field Command», el de packages/ui-tokens. Teléfonos a 360 px sobre el lienzo; un solo tema, claro, como la app. */
+:root {
+  --surface: #faf8ff; --lowest: #ffffff; --low: #f2f3ff; --container: #eaedff; --high: #e2e7ff;
+  --on-surface: #131b2e; --variant: #3f4946; --outline: #707976; --outline-variant: #bfc9c5;
+  --primary: #003730; --primary-container: #085046; --primary-fixed: #b0efe1; --on-primary: #ffffff;
+  --calle: #f6f2e8; --manzana: #e9e4d6; --via: #f3d58a; --rio: #b9d6ea;
+  --lienzo: #dae2fd;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: light;
+}
+body { background: var(--lienzo); color: var(--on-surface); font-family: var(--sans); font-size: 16px; }
+.pagina { padding-block: 24px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 32px; max-width: 1560px; margin: 0 auto; }
+.intro { max-width: 68ch; display: flex; flex-direction: column; gap: 8px; }
+.intro h1 { font-size: 1.625rem; line-height: 2.125rem; margin: 0; text-wrap: balance; }
+.intro p { margin: 0; color: var(--variant); line-height: 1.5; }
+.ms { font-family: 'Material Symbols Outlined', sans-serif; font-size: 22px; line-height: 1; font-weight: normal; display: inline-block; vertical-align: middle; width: 1em; overflow: hidden; }
+.telefonos { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.caso { display: flex; flex-direction: column; gap: 8px; width: 360px; max-width: 100%; min-width: 0; }
+.caso > h2 { font-size: .9375rem; font-weight: 700; margin: 0; }
+.caso > p { margin: 0; font-size: .875rem; color: var(--variant); line-height: 1.4; }
+.tel { background: var(--surface); border: 1px solid var(--outline-variant); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+.cabecera { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--lowest); border-bottom: 1px solid var(--outline-variant); min-height: 60px; box-sizing: border-box; }
+.logo { width: 36px; height: 36px; border-radius: 9px; background: var(--primary-container); color: var(--on-primary); display: grid; place-items: center; flex: none; }
+.marca { font-weight: 700; font-size: 1.125rem; }
+.co { font-size: .6875rem; font-weight: 700; background: var(--primary-fixed); color: var(--primary); padding: 2px 5px; border-radius: 4px; }
+.entrar { margin-left: auto; background: var(--container); color: var(--primary-container); font-weight: 600; padding: 10px 14px; border-radius: 10px; font-size: .9375rem; }
+.cuerpo { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.cuerpo h3 { margin: 0; font-size: 1.5rem; line-height: 1.2; }
+.ayuda { font-size: .875rem; color: var(--variant); line-height: 1.4; margin: 0; }
+.pestanas { display: grid; grid-template-columns: 1fr 1fr; background: var(--container); border-radius: 10px; padding: 4px; border: 1px solid var(--outline-variant); }
+.pestanas span { min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 6px; border-radius: 8px; font-weight: 600; color: var(--variant); }
+.pestanas .on { background: var(--primary-container); color: var(--on-primary); }
+.filtros { display: flex; flex-direction: column; gap: 6px; font-size: .8125rem; color: var(--variant); }
+.filtros span { min-height: 44px; display: flex; align-items: center; padding: 0 12px; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 8px; color: var(--on-surface); font-size: .9375rem; }
+
+/* Mapa simulado: calles, una vía principal y el río */
+.mapa { position: relative; height: 300px; border: 1px solid var(--outline-variant); border-radius: 12px; overflow: hidden;
+  background:
+    linear-gradient(118deg, transparent 47%, var(--rio) 47%, var(--rio) 51%, transparent 51%),
+    linear-gradient(28deg, transparent 58%, var(--via) 58%, var(--via) 60.5%, transparent 60.5%),
+    repeating-linear-gradient(0deg, var(--calle) 0 6px, transparent 6px 34px),
+    repeating-linear-gradient(90deg, var(--calle) 0 6px, transparent 6px 40px),
+    var(--manzana); }
+.zoom { position: absolute; top: 10px; left: 10px; display: flex; flex-direction: column; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 6px; }
+.zoom span { width: 32px; height: 32px; display: grid; place-items: center; font-weight: 700; font-size: 1.125rem; }
+.zoom span + span { border-top: 1px solid var(--outline-variant); }
+.acopio { position: absolute; width: 36px; height: 36px; margin: -18px 0 0 -18px; border-radius: 999px; background: var(--primary-container); color: var(--on-primary); border: 2px solid var(--lowest); display: grid; place-items: center; box-shadow: 0 1px 3px rgb(0 0 0 / .3); }
+.acopio .ms { font-size: 18px; }
+/* La zona: círculo del radio, en el verde claro de la marca y con borde punteado; no usa los colores del inventario */
+.zona { position: absolute; border-radius: 999px; background: color-mix(in srgb, var(--primary-fixed) 45%, transparent); border: 2px dashed var(--primary-container); transform: translate(-50%, -50%); display: grid; place-items: center; }
+.zona.sel { border-style: solid; border-width: 3px; background: color-mix(in srgb, var(--primary-fixed) 65%, transparent); }
+.zona .pin { width: 30px; height: 30px; border-radius: 999px; background: var(--lowest); color: var(--primary-container); border: 2px solid var(--primary-container); display: grid; place-items: center; }
+.zona .pin .ms { font-size: 18px; }
+.leyenda { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: .8125rem; color: var(--variant); }
+.leyenda span { display: inline-flex; align-items: center; gap: 6px; }
+.leyenda i { width: 16px; height: 16px; border-radius: 999px; flex: none; }
+.leyenda .z { background: color-mix(in srgb, var(--primary-fixed) 45%, transparent); border: 2px dashed var(--primary-container); }
+.leyenda .a { background: var(--primary-container); border: 2px solid var(--lowest); box-shadow: 0 0 0 1px var(--outline-variant); }
+
+/* Tarjeta de la zona elegida: la necesidad, la nota pública y la antigüedad; sin dirección */
+.tarjeta { padding: 14px; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 12px; display: flex; flex-direction: column; gap: 10px; }
+.tarjeta.sel { border: 2px solid var(--primary-container); }
+.cab { display: flex; align-items: flex-start; gap: 10px; }
+.cab .ico { width: 36px; height: 36px; border-radius: 999px; background: var(--primary-fixed); color: var(--primary-container); display: grid; place-items: center; flex: none; }
+.cab .t { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.cab b { font-size: 1.0625rem; }
+.cab small { color: var(--variant); font-size: .8125rem; }
+.cerrar { width: 40px; height: 40px; display: grid; place-items: center; color: var(--variant); flex: none; margin: -6px -6px 0 0; }
+.falta { display: flex; flex-direction: column; gap: 4px; padding-top: 10px; border-top: 1px solid var(--outline-variant); }
+.falta .fila { display: flex; align-items: baseline; gap: 8px; }
+.falta .fila b { font-size: .9375rem; }
+.falta .hace { margin-left: auto; font-size: .8125rem; color: var(--variant); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.falta q { font-style: italic; color: var(--on-surface); font-size: .9375rem; line-height: 1.4; }
+.falta .sin { font-size: .875rem; color: var(--variant); }
+.pie { font-size: .875rem; color: var(--variant); line-height: 1.4; display: flex; gap: 8px; }
+.pie .ms { font-size: 18px; flex: none; color: var(--primary-container); }
+.etiqueta { font-size: .75rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--variant); margin: 4px 0 0; }
+.acopio-t { padding: 14px; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 12px; display: flex; align-items: center; gap: 10px; }
+.acopio-t .t { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.acopio-t small { color: var(--variant); font-size: .875rem; }
+.barra { display: grid; grid-template-columns: repeat(5, 1fr); background: var(--lowest); border-top: 1px solid var(--outline-variant); padding: 6px 0; }
+.barra div { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .6875rem; color: var(--variant); }
+.barra .on { color: var(--primary-container); font-weight: 700; }
+.notas { max-width: 76ch; display: flex; flex-direction: column; gap: 8px; }
+.notas h2 { font-size: 1.25rem; margin: 0; }
+.notas ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; line-height: 1.5; color: var(--variant); }
+.notas li b { color: var(--on-surface); }
+code { font-size: .875em; }
+</style>
+
+<div class="pagina">
+<header class="intro">
+  <h1>P05 · Zonas con necesidad en el mapa público</h1>
+  <p>La tarea 8 del ciclo 3 del motor: lo que el Receptor reporta en C20 aparece en el mapa de acopios, para que un visitante vea qué falta y dónde (HU-13.1). Los datos salen de <code>GET /api/publico/zonas-necesidad</code>: el centro de la zona, su radio y, por cada categoría que falta, la nota pública y cuándo se reportó. La API no entrega el nombre ni la dirección de la zona. Los datos de ejemplo son los del <code>seed:demo</code> en Mocoa.</p>
+</header>
+
+<div class="telefonos">
+
+<section class="caso">
+  <h2>Mapa con una zona</h2>
+  <p>La zona es un círculo con su radio real, en el verde claro de la marca y con borde punteado, para que no se confunda con un acopio ni con los colores del inventario. Debajo del mapa, una leyenda.</p>
+  <div class="tel">
+    <div class="cabecera"><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span><span class="co">CO</span><span class="entrar">Entrar</span></div>
+    <div class="cuerpo">
+      <h3>Mapa de acopios</h3>
+      <p class="ayuda">Antes de salir, revisa qué no reciben.</p>
+      <div class="filtros">¿Qué vas a llevar?<span>Cualquier cosa</span></div>
+      <div class="pestanas"><span class="on"><span class="ms">map</span>Mapa</span><span><span class="ms">list</span>Lista</span></div>
+      <div class="mapa" role="img" aria-label="Mapa de ejemplo con dos acopios y una zona con necesidad">
+        <div class="zoom"><span>+</span><span>−</span></div>
+        <span class="zona" style="left:62%;top:42%;width:150px;height:150px"><span class="pin"><span class="ms">campaign</span></span></span>
+        <span class="acopio" style="left:24%;top:70%"><span class="ms">inventory_2</span></span>
+        <span class="acopio" style="left:36%;top:28%"><span class="ms">inventory_2</span></span>
+      </div>
+      <div class="leyenda"><span><i class="a"></i>Acopio</span><span><i class="z"></i>Zona con necesidad reportada</span></div>
+      <p class="ayuda">Toca una zona para ver qué falta.</p>
+    </div>
+    <div class="barra"><div><span class="ms">home</span>Inicio</div><div class="on"><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div><span class="ms">groups</span>Voluntariado</div><div><span class="ms">menu</span>Más</div></div>
+  </div>
+</section>
+
+<section class="caso">
+  <h2>Zona elegida</h2>
+  <p>Al tocar el círculo, una tarjeta debajo del mapa, como la del acopio elegido. Muestra cada categoría que falta, la nota tal como la escribió el Receptor, entre comillas, y «hace N h». No hay dirección ni nombre de personas.</p>
+  <div class="tel">
+    <div class="cuerpo">
+      <div class="mapa" role="img" aria-label="Mapa de ejemplo con la zona elegida" style="height:220px">
+        <div class="zoom"><span>+</span><span>−</span></div>
+        <span class="zona sel" style="left:55%;top:50%;width:170px;height:170px"><span class="pin"><span class="ms">campaign</span></span></span>
+        <span class="acopio" style="left:14%;top:78%"><span class="ms">inventory_2</span></span>
+      </div>
+      <div class="tarjeta sel" aria-label="Zona elegida">
+        <div class="cab">
+          <span class="ico"><span class="ms">campaign</span></span>
+          <span class="t"><b>Zona con necesidad</b><small>Radio de 3 km · lo reporta quien recibe las ayudas en la zona</small></span>
+          <span class="cerrar" aria-label="Cerrar"><span class="ms">close</span></span>
+        </div>
+        <div class="falta"><div class="fila"><b>Agua potable</b><span class="hace">hace 3 h</span></div><q>Las familias del coliseo no tienen agua desde ayer</q></div>
+        <div class="falta"><div class="fila"><b>Arroz</b><span class="hace">hace 3 h</span></div><q>Faltan alimentos para la olla comunitaria</q></div>
+        <div class="falta"><div class="fila"><b>Pañales</b><span class="hace">hace 20 min</span></div><span class="sin">Sin nota</span></div>
+        <p class="pie"><span class="ms">info</span><span>Las donaciones no se llevan a la zona. Llévalas a un acopio del mapa, y desde ahí salen hacia donde falta.</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="caso">
+  <h2>Vista de lista</h2>
+  <p>El mapa dice que la misma información está en la lista, así que las zonas también van allí, antes de los acopios y con la misma tarjeta. Si ninguna zona tiene necesidades, la sección no aparece.</p>
+  <div class="tel">
+    <div class="cuerpo">
+      <div class="pestanas"><span><span class="ms">map</span>Mapa</span><span class="on"><span class="ms">list</span>Lista</span></div>
+      <p class="etiqueta">Lo que falta en zonas afectadas</p>
+      <div class="tarjeta">
+        <div class="cab"><span class="ico"><span class="ms">campaign</span></span><span class="t"><b>Zona con necesidad</b><small>Radio de 3 km · 3 categorías</small></span></div>
+        <div class="falta"><div class="fila"><b>Agua potable</b><span class="hace">hace 3 h</span></div><q>Las familias del coliseo no tienen agua desde ayer</q></div>
+        <div class="falta"><div class="fila"><b>Arroz</b><span class="hace">hace 3 h</span></div><q>Faltan alimentos para la olla comunitaria</q></div>
+        <div class="falta"><div class="fila"><b>Pañales</b><span class="hace">hace 20 min</span></div><span class="sin">Sin nota</span></div>
+      </div>
+      <p class="etiqueta">Acopios</p>
+      <div class="acopio-t"><span class="t"><b>Acopio Chapinero (prueba)</b><small>Fundación Manos Unidas (prueba)</small></span><span class="ms">chevron_right</span></div>
+      <div class="acopio-t"><span class="t"><b>Acopio Kennedy (prueba)</b><small>Fundación Manos Unidas (prueba)</small></span><span class="ms">chevron_right</span></div>
+    </div>
+    <div class="barra"><div><span class="ms">home</span>Inicio</div><div class="on"><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div><span class="ms">groups</span>Voluntariado</div><div><span class="ms">menu</span>Más</div></div>
+  </div>
+</section>
+
+</div>
+
+<section class="notas">
+  <h2>Decisiones para aprobar</h2>
+  <ul>
+    <li><b>Sin nombre de la zona.</b> La API pública solo entrega centro, radio y necesidades, así que la tarjeta dice «Zona con necesidad». Mostrar el nombre del barrio pediría cambiar el contrato público.</li>
+    <li><b>Solo zonas con algo que falta.</b> Una zona sin necesidades no se dibuja. Cuando el Receptor marca algo como resuelto, deja de salir.</li>
+    <li><b>El encuadre incluye las zonas.</b> Al abrir el mapa, el encuadre abarca los acopios y los centros de las zonas. En la demo eso junta Bogotá y Mocoa, y el mapa abre muy alejado. La otra opción es encuadrar solo los acopios, como hoy, y que la zona aparezca al desplazarse.</li>
+    <li><b>Color.</b> Verde claro de la marca con borde punteado, y el ícono <i>campaign</i>, el mismo del botón «Reportar necesidad». Ni rojo, ni ámbar, ni verde de semáforo, que son del estado del inventario (ADR-0006).</li>
+    <li><b>El pie de la tarjeta</b> aclara que las donaciones van a un acopio y no a la zona, para que nadie salga a llevarlas a un barrio afectado.</li>
+    <li><b>El filtro «¿Qué vas a llevar?»</b> no oculta zonas: solo filtra acopios.</li>
+  </ul>
+</section>
+</div>

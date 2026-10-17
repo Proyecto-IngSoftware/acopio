@@ -6,7 +6,46 @@ import { acopioDePrueba } from '../../pruebas/datos-red';
 import { envolver, peticiones, responderSegun } from '../../pruebas/utilidades';
 import { Mapa } from './Mapa';
 
-vi.mock('./MapaAcopios', () => ({ default: () => <div>mapa de acopios</div> }));
+// Leaflet no corre en jsdom: el doble muestra un botón por cada zona que recibe
+vi.mock('./MapaAcopios', () => ({
+  default: ({
+    zonas = [],
+    alElegirZona,
+  }: {
+    zonas?: { zonaId: string }[];
+    alElegirZona?: (id: string) => void;
+  }) => (
+    <div>
+      mapa de acopios
+      {zonas.map((z) => (
+        <button key={z.zonaId} type="button" onClick={() => alElegirZona?.(z.zonaId)}>
+          zona {z.zonaId}
+        </button>
+      ))}
+    </div>
+  ),
+}));
+
+const haceHoras = (h: number) => new Date(Date.now() - h * 3_600_000).toISOString();
+const ZONA_CON_NECESIDAD = {
+  zonaId: 'z1',
+  centro: { lat: 1.15, lng: -76.65 },
+  radioKm: 3,
+  necesidades: [
+    {
+      categoria: 'Agua potable',
+      nota: 'Las familias del coliseo no tienen agua desde ayer',
+      reportadoEn: haceHoras(3),
+    },
+    { categoria: 'Pañales', nota: null, reportadoEn: haceHoras(1) },
+  ],
+};
+const ZONA_SIN_NECESIDAD = {
+  zonaId: 'z2',
+  centro: { lat: 1.13, lng: -76.66 },
+  radioKm: 3,
+  necesidades: [],
+};
 
 const ACOPIOS = [
   acopioDePrueba({ id: 'x1', nombre: 'Acopio Chapinero' }),
@@ -106,4 +145,65 @@ it('no tiene violaciones graves de accesibilidad', async () => {
   await screen.findByRole('link', { name: /Acopio Chapinero/ });
   expect(await violacionesGraves(container)).toEqual([]);
   expect(within(container).getByRole('heading', { level: 1 })).toHaveTextContent('Mapa de acopios');
+});
+
+describe('zonas con necesidad (HU-13.1)', () => {
+  const conZonas = (zonas: unknown[]) =>
+    responderSegun({ ...RESPUESTAS, 'GET /api/publico/zonas-necesidad': zonas });
+
+  it('el mapa recibe solo las zonas que tienen algo que falta', async () => {
+    conZonas([ZONA_CON_NECESIDAD, ZONA_SIN_NECESIDAD]);
+    pantalla('/mapa');
+    expect(await screen.findByRole('button', { name: 'zona z1' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'zona z2' })).not.toBeInTheDocument();
+  });
+
+  it('tocar una zona muestra cada categoría, la nota entre comillas y su antigüedad, sin dirección', async () => {
+    conZonas([ZONA_CON_NECESIDAD]);
+    pantalla('/mapa');
+    await userEvent.click(await screen.findByRole('button', { name: 'zona z1' }));
+    const tarjeta = screen.getByRole('region', { name: 'Zona con necesidad' });
+    expect(tarjeta).toHaveTextContent('Agua potable');
+    expect(tarjeta).toHaveTextContent('«Las familias del coliseo no tienen agua desde ayer»');
+    expect(tarjeta).toHaveTextContent('hace 3 h');
+    expect(tarjeta).toHaveTextContent('Pañales');
+    expect(tarjeta).toHaveTextContent('Sin nota');
+    expect(tarjeta).toHaveTextContent('Radio de 3 km');
+    expect(tarjeta).not.toHaveTextContent('Calle');
+    await userEvent.click(within(tarjeta).getByRole('button', { name: 'Cerrar' }));
+    expect(screen.queryByRole('region', { name: 'Zona con necesidad' })).not.toBeInTheDocument();
+  });
+
+  it('en la lista, las zonas van antes de los acopios', async () => {
+    conZonas([ZONA_CON_NECESIDAD]);
+    pantalla('/mapa?vista=lista');
+    const seccion = await screen.findByRole('region', { name: 'Lo que falta en zonas afectadas' });
+    expect(seccion).toHaveTextContent('Agua potable');
+    const acopio = await screen.findByRole('link', { name: /Acopio Chapinero/ });
+    expect(seccion.compareDocumentPosition(acopio) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
+  it('sin zonas con necesidad la lista no muestra la sección', async () => {
+    conZonas([ZONA_SIN_NECESIDAD]);
+    pantalla('/mapa?vista=lista');
+    await screen.findByRole('link', { name: /Acopio Chapinero/ });
+    expect(screen.queryByText('Lo que falta en zonas afectadas')).not.toBeInTheDocument();
+  });
+
+  it('si la capa de zonas falla, los acopios siguen', async () => {
+    responderSegun(RESPUESTAS);
+    pantalla('/mapa?vista=lista');
+    expect(await screen.findByRole('link', { name: /Acopio Chapinero/ })).toBeInTheDocument();
+    await waitFor(() =>
+      expect(peticiones().some((u) => u.includes('/api/publico/zonas-necesidad'))).toBe(true),
+    );
+    expect(screen.queryByRole('alert')).not.toBeInTheDocument();
+  });
+
+  it('la lista con zonas no tiene violaciones graves de accesibilidad', async () => {
+    conZonas([ZONA_CON_NECESIDAD]);
+    const { container } = pantalla('/mapa?vista=lista');
+    await screen.findByRole('region', { name: 'Lo que falta en zonas afectadas' });
+    expect(await violacionesGraves(container)).toEqual([]);
+  });
 });

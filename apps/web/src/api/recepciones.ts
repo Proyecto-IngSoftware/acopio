@@ -116,6 +116,7 @@ export function useReportar(zonaId: string) {
       desenvolver(
         api.POST('/api/zonas/{id}/reportes', { params: { path: { id: zonaId } }, body: d }),
       ),
-    onSuccess: () => invalidar(['reportes-zona', zonaId], ['ficha-zona', zonaId]),
+    onSuccess: () =>
+      invalidar(['reportes-zona', zonaId], ['ficha-zona', zonaId], ['zonas', 'publicas']),
   });
 }

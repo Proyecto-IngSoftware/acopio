@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useSearchParams } from 'react-router';
 import { useCategoriasVigentes } from '../../api/catalogo';
@@ -7,8 +7,10 @@ import {
   useAcopiosQueNoReciben,
   useGeocodificar,
   useNoRecibir,
+  useZonasConNecesidad,
   type AcopioPublico,
   type Punto,
+  type ZonaPublica,
 } from '../../api/red';
 import { Boton, EnlaceBoton } from '../../componentes/Boton';
 import { Campo, Selector } from '../../componentes/Campo';
@@ -22,6 +24,9 @@ import { Segmentado } from '../../componentes/Segmentado';
 import MapaAcopios from './MapaAcopios';
 import { filtroDelMapa } from './filtro';
 import { TarjetaAcopio, aperturaPublica, km } from './TarjetaAcopio';
+import { TarjetaZona } from './TarjetaZona';
+
+const SIN_ZONAS: ZonaPublica[] = [];
 
 /** P5 Mapa de acopios (RF-RED-002). Los filtros viven en la URL, así «Volver al mapa»
  *  los conserva. */
@@ -31,6 +36,16 @@ export function Mapa() {
   const { abiertoAhora: abierto, cerca } = filtroDelMapa(parametros);
   const lleva = parametros.get('lleva');
   const [elegido, fijarElegido] = useState<string | null>(null);
+  const [zonaElegida, fijarZonaElegida] = useState<string | null>(null);
+  // Elegir un acopio cierra la zona y al revés: debajo del mapa va una sola tarjeta
+  const elegirAcopio = useCallback((id: string) => {
+    fijarZonaElegida(null);
+    fijarElegido(id);
+  }, []);
+  const elegirZona = useCallback((id: string) => {
+    fijarElegido(null);
+    fijarZonaElegida(id);
+  }, []);
 
   const cambiar = (clave: string, valor: string | null) =>
     fijarParametros(
@@ -48,9 +63,16 @@ export function Mapa() {
   const noReciben = useAcopiosQueNoReciben(lleva);
   const categoria = categorias.data?.find((c) => c.id === lleva);
   const ocultos = (acopios.data ?? []).filter((a) => noReciben.data?.has(a.id)).length;
-  const visibles = (acopios.data ?? []).filter((a) => !noReciben.data?.has(a.id));
+  // Memorizado: un arreglo nuevo en cada render volvería a encuadrar el mapa al elegir algo
+  const visibles = useMemo(
+    () => (acopios.data ?? []).filter((a) => !noReciben.data?.has(a.id)),
+    [acopios.data, noReciben.data],
+  );
   const sufijo = cerca ? `?cerca=${encodeURIComponent(`${cerca.lat},${cerca.lng}`)}` : '';
   const seleccionado = visibles.find((a) => a.id === elegido);
+  // La capa de zonas es un extra: si falla, el mapa de acopios sigue igual
+  const zonas = useZonasConNecesidad().data ?? SIN_ZONAS;
+  const zona = zonas.find((z) => z.zonaId === zonaElegida);
 
   return (
     <div className="flex flex-col gap-space-md px-margin py-space-md">
@@ -123,13 +145,60 @@ export function Mapa() {
               acopios={visibles}
               cerca={cerca}
               elegido={elegido}
-              alElegir={fijarElegido}
+              alElegir={elegirAcopio}
+              zonas={zonas}
+              zonaElegida={zonaElegida}
+              alElegirZona={elegirZona}
             />
           </div>
+          {zonas.length > 0 && (
+            <div className="flex flex-col gap-space-xs">
+              <p className="flex flex-wrap gap-x-space-md gap-y-space-xs text-body-sm text-on-surface-variant">
+                <span className="inline-flex items-center gap-space-xs">
+                  <span className="size-4 rounded-full border-2 border-surface-container-lowest bg-primary-container shadow-sm" />
+                  Acopio
+                </span>
+                <span className="inline-flex items-center gap-space-xs">
+                  <span className="size-4 rounded-full border-2 border-dashed border-primary-container bg-primary-fixed/45" />
+                  Zona con necesidad reportada
+                </span>
+              </p>
+              {!zona && (
+                <p className="text-body-sm text-on-surface-variant">
+                  Toca una zona para ver qué falta.
+                </p>
+              )}
+            </div>
+          )}
           {seleccionado && (
             <Elegido acopio={seleccionado} enlace={`/acopios/${seleccionado.id}${sufijo}`} />
           )}
+          {zona && (
+            <TarjetaZona
+              zona={zona}
+              etiqueta="Zona con necesidad"
+              alCerrar={() => fijarZonaElegida(null)}
+            />
+          )}
         </>
+      )}
+
+      {vista === 'lista' && zonas.length > 0 && (
+        <section aria-labelledby="zonas-titulo" className="flex flex-col gap-space-sm">
+          <h2
+            id="zonas-titulo"
+            className="text-label-md tracking-wide text-on-surface-variant uppercase"
+          >
+            Lo que falta en zonas afectadas
+          </h2>
+          <ul className="flex flex-col gap-space-sm">
+            {zonas.map((z) => (
+              <li key={z.zonaId}>
+                <TarjetaZona zona={z} />
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
 
       {acopios.data && vista === 'lista' && (

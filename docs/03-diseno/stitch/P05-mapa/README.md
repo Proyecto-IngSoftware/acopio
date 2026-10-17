@@ -3,7 +3,7 @@ title: "P5 · Mapa de acopios · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portal]
 estado: vigente
-actualizado: 2026-10-01
+actualizado: 2026-10-17
 ---
 
 # P5 · Mapa de acopios · diseño en Stitch
@@ -16,6 +16,18 @@ actualizado: 2026-10-01
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Aprobación | Joseph la aprobó en Stitch el 2026-09-30, con las diferencias de abajo |
 | Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
+| Capa de zonas | [maqueta-zonas.html](maqueta-zonas.html) (<https://claude.ai/artifact/LL5E9aWJDeJfQ2f51sAwXu>), aprobada por Joseph el 2026-10-17. Construida: [construida-zona.png](construida-zona.png) · [construida-zonas-lista.png](construida-zonas-lista.png) (`consola-recepciones.mjs`) |
+
+## Capa de zonas con necesidad (HU-13.1)
+
+Lo que el Receptor reporta en C20 aparece en el mapa como un círculo con el radio de la zona,
+en el verde claro de la marca y con borde punteado. Un pin abre debajo del mapa una tarjeta
+con cada categoría, la nota pública entre comillas y su antigüedad. No lleva nombre ni
+dirección, porque la API pública no los entrega. En la vista de lista las zonas van antes de
+los acopios. Solo se dibujan las zonas con algo que falta.
+
+El encuadre abarca acopios y zonas. Con la demo, que junta Bogotá y Mocoa, el mapa abre muy
+alejado: se ve el pin, y el círculo aparece al acercarse.
 
 ## Diferencias
 
