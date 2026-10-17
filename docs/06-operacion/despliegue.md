@@ -3,7 +3,7 @@ title: "Despliegue"
 type: operacion
 tags: [operacion]
 estado: vigente
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Despliegue
@@ -42,11 +42,14 @@ recibe `DATABASE_URL` con `acopio_app`; las migraciones, `DATABASE_URL_OWNER`.
 
 ```
 /          → web (nginx, con index.html para cualquier ruta de la SPA)
-/api/*     → web → api:3000
+/api/*     → web → acopio-api:3000
 ```
 
-nginx resuelve `api` con el DNS de Docker en cada petición. Al volver a desplegar, la API
-cambia de IP y nginx la sigue encontrando. También reenvía a la API la IP del cliente que
+nginx resuelve `acopio-api` con el DNS de Docker en cada petición. Al volver a desplegar, la
+API cambia de IP y nginx la sigue encontrando. `acopio-api` es un alias que la API solo tiene
+en la red de este Compose. El nombre del servicio, `api`, no sirve: en Dokploy, `web` está
+también en la red compartida, donde otro servicio puede llamarse igual, y nginx terminaría
+reenviando allá. Con el alias, si la API de acopio no está, nginx responde 502. También reenvía a la API la IP del cliente que
 puso Traefik, para que el límite de intentos por IP cuente a cada cliente por separado.
 Acepta cuerpos de hasta 9 MB porque las fotos llegan a 8 MB.
 
