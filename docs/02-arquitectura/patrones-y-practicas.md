@@ -3,7 +3,7 @@ title: "Patrones y prácticas de código"
 type: arquitectura
 tags: [arquitectura, patrones, buenas-practicas]
 estado: vigente
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Patrones y prácticas de código
@@ -156,6 +156,7 @@ Servicios de otros módulos que se usan desde cualquier parte: `BitacoraService.
 | `sesion/ubicacion-activa.ts` | `useUbicacionActiva` |
 | `sesion/useSalida.tsx` | `useSalida`, cerrar sesión con la cola sin enviar |
 | `consola/RequiereRol.tsx` | `RequiereRol` para las rutas de `/consola` |
+| `consola/recepciones/EscanearRemision.tsx` | `EscanearRemision`, el botón que lee el QR de una remisión con la cámara de C04 y abre su recepción |
 | `pruebas/utilidades.tsx` | `envolver`, `clienteFalso`, `responderSegun`, `responderJson`, `conEstado`, `responderError`, `peticiones`, `cuerpoDe` |
 | `pruebas/accesibilidad.ts` | `violacionesGraves` |
 | `pruebas/datos-red.ts` | `acopioDePrueba` |

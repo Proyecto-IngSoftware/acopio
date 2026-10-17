@@ -1,9 +1,7 @@
 import { formatearCantidad } from '@acopio/shared';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router';
-import { tokenDeQr, useRecepciones } from '../../api/recepciones';
+import { Link } from 'react-router';
+import { useRecepciones } from '../../api/recepciones';
 import type { Remision } from '../../api/remisiones';
-import { Boton } from '../../componentes/Boton';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
 import { EstadoVacio } from '../../componentes/EstadoVacio';
@@ -11,23 +9,21 @@ import { Icono } from '../../componentes/Icono';
 import { haceCuanto } from '../../formato';
 import { useEnLinea } from '../../sin-conexion/en-linea';
 import { Encabezado } from '../Encabezado';
-import { VistaCamara } from '../inventario/Escaner';
 import { NecesitaRed } from '../inventario/NecesitaRed';
+import { EscanearRemision } from './EscanearRemision';
 
 const SUBTITULO = 'Remisiones en camino a tus zonas';
+const VOLVER = '/consola/mi-zona';
 
 /** C13 Por recibir (RF-MOT-009). Diseño: docs/03-diseno/stitch/C13-recepcion. */
 export function Recepciones() {
   const enLinea = useEnLinea();
   const consulta = useRecepciones();
-  const ir = useNavigate();
-  const [escaneando, fijarEscaneando] = useState(false);
-  const [aviso, fijarAviso] = useState<string | null>(null);
 
   if (!enLinea) {
     return (
       <div className="flex flex-col gap-space-md">
-        <Encabezado titulo="Por recibir" subtitulo={SUBTITULO} />
+        <Encabezado titulo="Por recibir" subtitulo={SUBTITULO} volverA={VOLVER} />
         <NecesitaRed titulo="La recepción necesita conexión" acopioId="">
           Vuelve a abrirla cuando tengas señal.
         </NecesitaRed>
@@ -35,33 +31,10 @@ export function Recepciones() {
     );
   }
 
-  function leer(texto: string) {
-    fijarEscaneando(false);
-    const token = tokenDeQr(texto);
-    if (token) void ir(`/consola/recepciones/qr/${encodeURIComponent(token)}`);
-    else fijarAviso('Ese código no es el QR de una remisión.');
-  }
-
   return (
     <div className="flex flex-col gap-space-md">
-      <Encabezado titulo="Por recibir" subtitulo={SUBTITULO} />
-      <Boton
-        onClick={() => {
-          fijarAviso(null);
-          fijarEscaneando(true);
-        }}
-      >
-        <Icono nombre="qr_code_scanner" className="text-[20px]" />
-        Escanear el QR de la remisión
-      </Boton>
-      {aviso && (
-        <p
-          role="status"
-          className="rounded-xl border border-outline-variant bg-surface-container-low p-space-sm text-body-md text-on-surface"
-        >
-          {aviso}
-        </p>
-      )}
+      <Encabezado titulo="Por recibir" subtitulo={SUBTITULO} volverA={VOLVER} />
+      <EscanearRemision />
 
       {consulta.isPending && <Esqueleto etiqueta="Cargando remisiones" />}
       {consulta.error && (
@@ -82,19 +55,6 @@ export function Recepciones() {
           </li>
         ))}
       </ul>
-
-      {escaneando && (
-        <VistaCamara
-          indicacion="Apunta al QR del documento de la remisión"
-          textoSalir="Ver la lista"
-          alLeer={leer}
-          alCerrar={() => fijarEscaneando(false)}
-          alFallar={() => {
-            fijarEscaneando(false);
-            fijarAviso('No pudimos abrir la cámara. Toca la remisión en la lista.');
-          }}
-        />
-      )}
     </div>
   );
 }

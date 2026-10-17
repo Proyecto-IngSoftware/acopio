@@ -3,7 +3,7 @@ title: "Recepción en zona · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, motor, recepcion]
 estado: vigente
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Recepción en zona · diseño en Stitch
@@ -24,7 +24,9 @@ C13 Recepción, para el Receptor, según el
 [plan del ciclo 3](../../../05-planes/2026-10-16-bloque-4-interfaz-ciclo-3.md).
 
 - En «Más», la sección «Mi zona»: «Por recibir», con el número de remisiones en camino, y una
-  fila por cada zona asignada, que abre su ficha (C10).
+  fila por cada zona asignada, que abre su ficha (C10). Desde el 2026-10-17 la sección es una
+  sola fila hacia la pantalla [«Mi zona»](../mi-zona/README.md), y `construida-mas.png` quedó
+  como estaba ese día.
 - `/consola/recepciones`: las remisiones en tránsito hacia las zonas del Receptor y los
   despachos generales, con «Escanear el QR de la remisión».
 - El escáner de C04 a pantalla completa, con otro texto, para leer el QR del documento de C12.

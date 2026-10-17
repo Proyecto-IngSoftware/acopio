@@ -3,7 +3,7 @@ title: "Diseños de Stitch — índice"
 type: moc
 tags: [moc, diseno, stitch]
 estado: vigente
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Diseños de Stitch
@@ -60,9 +60,10 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 | C20 Reportar necesidad | [C20-reportar](C20-reportar/README.md) | Bloque 4, ciclo 3 |
 | C21 Acopios | [C21-acopios](C21-acopios/) (lista y formulario) | Bloque 1 |
 | Mi acopio | [mi-acopio](mi-acopio/README.md) | Bloque 1 |
+| Mi zona | [mi-zona](mi-zona/README.md) | Bloque 4, ciclo 3 |
 
 ## Lo que sigue
 
-Del motor (Bloque 4, [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)) faltan
-por diseñar C12 Remisiones, para el ciclo 2, y C13 Recepción, C20 Reportar necesidad, «Mi zona»
-y la capa de zonas en P05, para el ciclo 3.
+Las pantallas del motor (Bloque 4, [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35))
+ya están diseñadas, «Mi zona» incluida. Siguen las de turnos, del Bloque 5
+([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)).

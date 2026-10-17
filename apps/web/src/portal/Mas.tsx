@@ -161,44 +161,27 @@ function MiAcopio() {
   );
 }
 
-/** C13 para el Receptor: lo que viene en camino y la ficha de cada zona asignada (I3-05). */
+/** El inicio del Receptor, en una fila como «Mi acopio» (diseño: docs/03-diseno/stitch/mi-zona). */
 function MiZona() {
   const { usuario } = useSesion();
   const { ubicaciones } = useUbicacionActiva();
+  const { data } = useRecepciones(usuario?.rol === 'RECEPTOR');
   if (usuario?.rol !== 'RECEPTOR') return null;
+  const zonas = ubicaciones.filter((u) => u.tipo === 'ZONA');
+  const n = data?.length ?? 0;
+  const donde = zonas.length === 1 ? zonas[0]!.nombre : `${zonas.length} zonas`;
+  const enCamino = n === 0 ? 'Nada en camino por ahora' : `${n} en camino`;
   return (
     <SeccionMenu id="mi-zona" titulo="Mi zona">
-      <FilaPorRecibir />
-      {ubicaciones
-        .filter((u) => u.tipo === 'ZONA')
-        .map((z) => (
-          <FilaMenu
-            key={z.id}
-            a={`/consola/zonas/${z.id}`}
-            icono="location_on"
-            titulo={z.nombre}
-            descripcion={`${z.municipio} · cobertura y reportes`}
-          />
-        ))}
+      <FilaMenu
+        a="/consola/mi-zona"
+        icono="location_on"
+        titulo="Mi zona"
+        // Lo que viene en camino primero: la fila corta la descripción larga
+        descripcion={zonas.length === 0 ? enCamino : `${enCamino} · ${donde}`}
+        distintivo={n > 0 ? <span className="text-label-md font-bold">{n}</span> : undefined}
+      />
     </SeccionMenu>
-  );
-}
-
-function FilaPorRecibir() {
-  const { data } = useRecepciones();
-  const n = data?.length ?? 0;
-  return (
-    <FilaMenu
-      a="/consola/recepciones"
-      icono="local_shipping"
-      titulo="Por recibir"
-      descripcion={
-        n === 0
-          ? 'Nada en camino por ahora'
-          : `${n} ${n === 1 ? 'remisión' : 'remisiones'} en camino`
-      }
-      distintivo={n > 0 ? <span className="text-label-md font-bold">{n}</span> : undefined}
-    />
   );
 }
 

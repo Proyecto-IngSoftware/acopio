@@ -109,7 +109,8 @@ practicar la recepción.
 Estos dependen del ciclo 3 del motor (C13 y C20). Si al momento de la ronda no están
 desplegados, se saltan.
 
-21. HU-12.1. Abro «Por recibir», entro a `R-2026-DEMA2` e intento confirmar sin foto.
+21. HU-12.1. Desde «Más» abro «Mi zona» y, en «Por recibir», entro a `R-2026-DEMA2` e
+    intento confirmar sin foto.
     Debería impedírmelo.
 22. Tomo una foto y confirmo `R-2026-DEMA2`. Debería quedar recibida, y la ficha de la zona
     debería contarla en «Recibido».

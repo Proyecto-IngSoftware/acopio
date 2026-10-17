@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { useFichaZona } from '../../api/motor';
 import { pendientesDeResolver, useReportar, useReportesZona } from '../../api/recepciones';
 import { Boton } from '../../componentes/Boton';
@@ -93,7 +93,11 @@ function Formulario({
 }) {
   const ir = useNavigate();
   const reportar = useReportar(zonaId);
-  const [modo, fijarModo] = useState<Modo>('falta');
+  // «Ya se resolvió algo» de «Mi zona» abre en ese modo
+  const [params] = useSearchParams();
+  const [modo, fijarModo] = useState<Modo>(
+    params.get('modo') === 'resuelta' ? 'resuelta' : 'falta',
+  );
   const [elegidas, fijarElegidas] = useState<string[]>([]);
   const [busqueda, fijarBusqueda] = useState('');
   const [nota, fijarNota] = useState('');

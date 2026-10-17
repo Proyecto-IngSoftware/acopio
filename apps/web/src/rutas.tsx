@@ -59,6 +59,9 @@ const RecibirPorCodigo = lazy(() =>
 const RecibirPorQr = lazy(() =>
   import('./consola/recepciones/RecibirRemision').then((m) => ({ default: m.RecibirPorQr })),
 );
+const MiZona = lazy(() =>
+  import('./consola/recepciones/MiZona').then((m) => ({ default: m.MiZona })),
+);
 const ReportarNecesidad = lazy(() =>
   import('./consola/recepciones/ReportarNecesidad').then((m) => ({
     default: m.ReportarNecesidad,
@@ -259,6 +262,7 @@ export function Rutas() {
         />
         {(
           [
+            ['consola/mi-zona', <MiZona key="mz" />],
             ['consola/recepciones', <Recepciones key="rc" />],
             ['consola/recepciones/qr/:token', <RecibirPorQr key="rq" />],
             ['consola/recepciones/:codigo', <RecibirPorCodigo key="rr" />],

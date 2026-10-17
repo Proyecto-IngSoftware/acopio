@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mi zona · Acopio</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-tertiary": "#ffffff",
+            "on-surface": "#1e1b19",
+            "on-secondary": "#ffffff",
+            "secondary-container": "#e9e1db",
+            "surface-variant": "#e9e1dd",
+            "on-secondary-fixed-variant": "#4a4642",
+            "tertiary": "#125454",
+            "on-background": "#1e1b19",
+            "error-container": "#ffdad6",
+            "on-primary-fixed": "#002020",
+            "on-primary": "#ffffff",
+            "inverse-surface": "#33302d",
+            "tertiary-fixed-dim": "#96d1d0",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-fixed": "#002020",
+            "on-primary-fixed-variant": "#004f50",
+            "on-primary-container": "#9eedec",
+            "secondary": "#625e59",
+            "inverse-primary": "#85d4d3",
+            "primary-fixed": "#a1f0ef",
+            "primary": "#005454",
+            "secondary-fixed-dim": "#ccc5c0",
+            "primary-fixed-dim": "#85d4d3",
+            "surface-container": "#f4ece8",
+            "surface-container-high": "#eee7e3",
+            "on-error-container": "#93000a",
+            "outline-variant": "#bec9c8",
+            "error": "#ba1a1a",
+            "primary-container": "#0f6e6e",
+            "background": "#fff8f5",
+            "inverse-on-surface": "#f7efeb",
+            "on-error": "#ffffff",
+            "on-secondary-fixed": "#1e1b18",
+            "tertiary-container": "#316c6c",
+            "surface-container-low": "#faf2ee",
+            "surface-tint": "#03696a",
+            "surface-bright": "#fff8f5",
+            "surface": "#fff8f5",
+            "on-surface-variant": "#3e4948",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "on-tertiary-container": "#afebea",
+            "secondary-fixed": "#e9e1db",
+            "tertiary-fixed": "#b2eded",
+            "surface-dim": "#e0d8d5",
+            "outline": "#6e7979",
+            "surface-container-highest": "#e9e1dd",
+            "on-secondary-container": "#68635f"
+          },
+          borderRadius: {
+            DEFAULT: "0.25rem",
+            lg: "0.5rem",
+            xl: "0.75rem",
+            full: "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter"],
+            display: ["Inter"],
+            body: ["Inter"],
+            label: ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased min-h-full flex flex-col items-center">
+<div class="w-full max-w-[360px] min-h-screen bg-surface flex flex-col pb-12 shadow-sm border-x border-outline-variant/30">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-4 h-14 bg-surface-container-lowest sticky top-0 z-40 border-b border-outline-variant/20">
+<button class="flex items-center gap-1 text-primary font-bold text-sm h-11 px-2 rounded-lg active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl">arrow_back</span>
+<span>Volver</span>
+</button>
+<h1 class="text-base font-bold text-on-surface tracking-tight">Mi zona</h1>
+<div class="w-16"></div> <!-- Spacer for alignment -->
+</header>
+<main class="flex-1 px-4 py-6 flex flex-col gap-6">
+<!-- Zone Info -->
+<section class="flex flex-col gap-1">
+<h2 class="text-2xl font-bold text-on-surface tracking-tight">Barrio San Agustín</h2>
+<p class="text-sm text-secondary font-medium">Mocoa · Emergencia Inundación Mocoa 2026</p>
+<p class="text-xs text-on-surface-variant/80 mt-0.5">Población estimada 1.200 personas</p>
+</section>
+<!-- Card: Por recibir -->
+<section class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-4 flex flex-col gap-4">
+<div class="flex justify-between items-baseline">
+<h3 class="text-lg font-bold text-on-surface">Por recibir</h3>
+<span class="text-sm font-bold text-primary">2 remisiones en camino</span>
+</div>
+<div class="flex flex-col gap-3">
+<!-- Row 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-lg p-3 flex flex-col gap-1">
+<div class="flex justify-between items-center text-xs text-secondary">
+<span class="font-bold text-on-surface">R-2026-DEMA2</span>
+<span>salió hace 3 h</span>
+</div>
+<p class="text-sm text-on-surface font-medium">desde Acopio Kennedy · Agua 40 L, Arroz 25 kg</p>
+</div>
+<!-- Row 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant/30 rounded-lg p-3 flex flex-col gap-1">
+<div class="flex justify-between items-center text-xs text-secondary">
+<span class="font-bold text-on-surface">R-2026-DEMA3</span>
+<span>salió hace 1 día</span>
+</div>
+<p class="text-sm text-on-surface font-medium">despacho general · Pañales 60 und</p>
+</div>
+</div>
+<div class="flex flex-col gap-2 pt-1">
+<button class="w-full h-14 bg-primary text-on-primary rounded-[10px] font-bold text-sm flex items-center justify-center gap-2 shadow-sm active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl">qr_code_scanner</span>
+<span>Escanear el QR de la remisión</span>
+</button>
+<div class="text-center pt-1">
+<a class="text-sm font-bold text-primary hover:underline" href="#">Ver todas</a>
+</div>
+</div>
+</section>
+<!-- Section: Lo que más falta -->
+<section class="flex flex-col gap-3">
+<div class="flex justify-between items-center">
+<h3 class="text-base font-bold text-on-surface">Lo que más falta</h3>
+<a class="text-xs font-bold text-primary hover:underline" href="#">Ver la ficha completa</a>
+</div>
+<div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-4 flex flex-col gap-4">
+<!-- Item 1: Agua potable -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between text-sm">
+<span class="font-bold text-on-surface">Agua potable</span>
+<span class="text-xs text-secondary">Recibido 120 de 400 L · 40 en camino</span>
+</div>
+<div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden flex">
+<div class="bg-primary h-full rounded-full" style="width: 30%;"></div>
+</div>
+</div>
+<!-- Item 2: Pañales -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between text-sm">
+<span class="font-bold text-on-surface">Pañales</span>
+<span class="text-xs text-secondary">Recibido 40 de 150 und · 60 en camino</span>
+</div>
+<div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden flex">
+<div class="bg-primary h-full rounded-full" style="width: 26%;"></div>
+</div>
+</div>
+<!-- Item 3: Arroz -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between text-sm">
+<span class="font-bold text-on-surface">Arroz</span>
+<span class="text-xs text-secondary">Recibido 80 de 200 kg · 25 en camino</span>
+</div>
+<div class="w-full bg-surface-container h-2.5 rounded-full overflow-hidden flex">
+<div class="bg-primary h-full rounded-full" style="width: 40%;"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Section: Tus reportes -->
+<section class="flex flex-col gap-3">
+<h3 class="text-base font-bold text-on-surface">Tus reportes</h3>
+<div class="flex flex-col gap-3">
+<!-- Report 1 -->
+<div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-4 flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="text-sm font-bold text-on-surface">Pañales</span>
+<span class="text-xs text-secondary font-medium">reportada hace 5 h</span>
+</div>
+<p class="text-sm text-secondary italic">«Faltan tallas 3 y 4»</p>
+</div>
+<!-- Report 2 -->
+<div class="bg-surface-container-low border border-outline-variant/40 rounded-xl p-4 flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="text-sm font-bold text-on-surface">Leche</span>
+<span class="text-xs text-secondary font-medium">reportada hace 2 días</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-2 pt-2">
+<button class="w-full h-12 bg-surface-container-high border border-outline-variant text-on-surface rounded-[10px] font-bold text-sm flex items-center justify-center gap-2 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-xl">add_circle</span>
+<span>Reportar necesidad</span>
+</button>
+<button class="w-full h-12 text-primary font-bold text-sm flex items-center justify-center rounded-[10px] hover:bg-surface-container transition-colors active:scale-95">
+            Ya se resolvió
+          </button>
+</div>
+</section>
+</main>
+</div>
+</body></html>
