@@ -19,7 +19,7 @@ const MAILPIT = process.env.MAILPIT ?? 'http://localhost:8025';
 const DISENO = fileURLToPath(new URL('../../../docs/03-diseno/stitch/', import.meta.url));
 const axe = createRequire(import.meta.url).resolve('axe-core/axe.min.js');
 const CHAPINERO = 'd0000000-0000-4000-8000-000000000011';
-const CONTRASENA_DEMO = 'demo-acopio-2026';
+const CONTRASENA_DEMO = process.env.DEMO_CONTRASENA ?? 'demo-acopio-2026';
 const CORREO = `donador-consola-${Date.now()}@demo.acopio.local`;
 
 let bien = 0;

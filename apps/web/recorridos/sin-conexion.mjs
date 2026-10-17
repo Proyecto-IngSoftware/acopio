@@ -16,6 +16,7 @@ import { chromium } from 'playwright';
 // Debe coincidir con APP_URL: la API rechaza escrituras con cookie desde otro origen
 const WEB = process.env.WEB ?? 'http://localhost:5173';
 const CHAPINERO = 'd0000000-0000-4000-8000-000000000011';
+const DEMO = process.env.DEMO_CONTRASENA ?? 'demo-acopio-2026';
 const DISENO = fileURLToPath(new URL('../../../docs/03-diseno/stitch/', import.meta.url));
 const axe = createRequire(import.meta.url).resolve('axe-core/axe.min.js');
 
@@ -58,7 +59,7 @@ p.on('pageerror', (e) => errores.push(e.message));
 await paso('operador1 entra con red', async () => {
   await p.goto(`${WEB}/entrar`);
   await p.getByLabel('Nombre de usuario').fill('operador1');
-  await p.getByLabel('Contraseña', { exact: true }).fill('demo-acopio-2026');
+  await p.getByLabel('Contraseña', { exact: true }).fill(DEMO);
   await p.getByRole('button', { name: 'Entrar' }).click();
   await p.waitForURL(`${WEB}/`);
 });

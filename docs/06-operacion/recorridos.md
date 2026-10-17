@@ -3,7 +3,7 @@ title: "Recorridos de punta a punta"
 type: operacion
 tags: [operacion, pruebas, web]
 estado: vigente
-actualizado: 2026-10-15
+actualizado: 2026-10-16
 ---
 
 # Recorridos de punta a punta
@@ -48,6 +48,8 @@ node apps/web/recorridos/sin-conexion.mjs
 - `CAPTURAS=no` evita reescribir las capturas `construida*.png` de las notas de diseño.
   `WEB`, `MAILPIT` y `ADMIN_CONTRASENA` cambian la dirección de la web, la de Mailpit y la
   contraseña del administrador del seed.
+- Las cuentas de la demo entran con `DEMO_CONTRASENA`, y si falta, con `demo-acopio-2026`.
+  Contra el servidor de pruebas hay que exportarla con el valor que tiene Dokploy.
 - Para detener el servidor de `vite preview` sin el PID: `ss -ltnp | grep 5173` y matar ese
   proceso.
 
@@ -170,7 +172,7 @@ con una prueba que falla si alguna vuelve a salir cruda. Dos detalles menores qu
 - **Un rol nuevo o un permiso que cambia.** Se ajustan las listas de rutas permitidas y
   negadas de ese rol.
 - **Datos de prueba.** Los scripts usan las cuentas de `seed:demo` (contraseña
-  `demo-acopio-2026`), Acopio Chapinero (`d0000000-0000-4000-8000-000000000011`) y el folio
+  `DEMO_CONTRASENA`, en local `demo-acopio-2026`), Acopio Chapinero (`d0000000-0000-4000-8000-000000000011`) y el folio
   `ACO-2026-DEMA4`. Si `seed:demo` cambia, se revisan esos valores.
 - **Al cerrar un bloque.** Se corren los cuatro scripts y se actualiza «Últimos resultados».
 

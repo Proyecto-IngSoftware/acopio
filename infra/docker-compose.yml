@@ -78,6 +78,9 @@ services:
       # Antes de levantar la API (apps/api/arrancar.sh). En el servidor, true
       MIGRAR_AL_ARRANCAR: ${MIGRAR_AL_ARRANCAR:-false}
       SEMBRAR_AL_ARRANCAR: ${SEMBRAR_AL_ARRANCAR:-false}
+      # La demo (seed:demo) en cada arranque; en producción pide DEMO_CONTRASENA
+      SEMBRAR_DEMO_AL_ARRANCAR: ${SEMBRAR_DEMO_AL_ARRANCAR:-false}
+      DEMO_CONTRASENA: ${DEMO_CONTRASENA:-}
     volumes:
       - llaves:/llaves
 

@@ -183,6 +183,8 @@ SEED_ADMIN_CORREO=
 SEED_ADMIN_CONTRASENA=         # cambiarla al primer ingreso
 MIGRAR_AL_ARRANCAR=true        # migraciones antes de levantar la API
 SEMBRAR_AL_ARRANCAR=true       # seed base antes de levantar la API
+SEMBRAR_DEMO_AL_ARRANCAR=true  # la demo, solo en el servidor de pruebas
+DEMO_CONTRASENA=               # contraseña de las cuentas de la demo; nunca la del repositorio
 ```
 
 Con `CORREO_ACTIVO=false` la API no encola ni envía correo, y al arrancar lo avisa en el log.
@@ -268,7 +270,18 @@ administrador ya existía». Si un paso falla, la API no levanta, el contenedor 
 el error queda en su log. Por defecto las dos variables valen `false`, y en desarrollo se
 corren a mano.
 
-En Dokploy se dejan las dos en `true`. Garage es lo único que se prepara a mano, una vez,
+`SEMBRAR_DEMO_AL_ARRANCAR=true` corre además la demo (`seed:demo`) después del seed base.
+Tampoco duplica nada al repetirse: cada parte revisa si ya existe antes de crear. Crea las
+cuentas por rol y la del Donador de prueba con el proveedor de `AUTH_PROVEEDOR`, así que en
+el servidor quedan en Supabase, todas con la contraseña de `DEMO_CONTRASENA`. Sin esa
+variable, en producción la demo falla y la API no levanta. Si después se cambia
+`DEMO_CONTRASENA`, las cuentas que ya existen conservan la anterior; se cambian en el panel
+de Supabase. Si una corrida se corta entre crear la cuenta en Supabase y guardar el usuario
+en la base, la siguiente falla nombrando el correo: se borra esa cuenta en el panel y se
+vuelve a desplegar.
+
+En Dokploy se dejan las dos primeras en `true`, y la de la demo solo en el servidor de
+pruebas. Garage es lo único que se prepara a mano, una vez,
 por SSH en el VPS. `<appName>` sale en el panel; el `-p` hace falta porque Dokploy usa ese
 nombre de proyecto y no el `name: acopio` del archivo.
 

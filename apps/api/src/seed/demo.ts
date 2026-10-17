@@ -4,8 +4,9 @@ import { config } from 'dotenv';
 import { HORARIO_VACIO, type Horario } from '@acopio/shared';
 import { PrismaService } from '../comun/prisma/prisma.service';
 import { leerEntorno } from '../config/entorno';
-import { ProveedorLocal } from '../modulos/identidad/proveedor/proveedor-local';
+import type { ProveedorIdentidad } from '../modulos/identidad/proveedor/proveedor-identidad';
 import type { Prisma } from '../generado/prisma/client';
+import { contrasenaDemo, crearCuentaDemo, proveedorDelSeed } from './credenciales';
 
 const semana: Horario = {
   ...HORARIO_VACIO,
@@ -127,14 +128,16 @@ const USUARIOS_DEMO = [
   },
 ] as const;
 
-export const CONTRASENA_DEMO = 'demo-acopio-2026';
-
 /**
  * Usuarios por rol, una emergencia con zona y un inventario que muestra cada estado del
  * semáforo, una salida, un ajuste, una entrada sin conexión, «no recibir» y códigos de
- * barras. Solo con el proveedor local: con Supabase las cuentas viven fuera de la base.
+ * barras. Las cuentas se crean con el proveedor configurado (local o Supabase).
  */
-export async function sembrarEscenariosDemo(prisma: PrismaService, proveedor: ProveedorLocal) {
+export async function sembrarEscenariosDemo(
+  prisma: PrismaService,
+  proveedor: ProveedorIdentidad,
+  contrasena: string,
+) {
   const admin = await prisma.usuario.findFirst({
     where: { rol: 'ADMIN' },
     orderBy: { creado_en: 'asc' },
@@ -176,7 +179,7 @@ export async function sembrarEscenariosDemo(prisma: PrismaService, proveedor: Pr
       continue;
     }
     const correo = u.correo;
-    const { uid } = await proveedor.crearUsuario(correo, CONTRASENA_DEMO);
+    const { uid } = await crearCuentaDemo(proveedor, correo, contrasena);
     const creado = await prisma.usuario.create({
       data: {
         username: u.username,
@@ -199,7 +202,7 @@ export async function sembrarEscenariosDemo(prisma: PrismaService, proveedor: Pr
   }
 
   await sembrarCasosInventario(prisma, ids.operador1!, ids.operador2!);
-  const donador = await sembrarDonadorDemo(prisma, proveedor);
+  const donador = await sembrarDonadorDemo(prisma, proveedor, contrasena);
   await sembrarDonacionesDemo(prisma, donador, ids.operador1!);
   await sembrarMotorDemo(prisma, ids.operador1!);
   await sembrarRemisionesDemo(prisma, ids.operador2!, ids.receptor1!, donador);
@@ -209,10 +212,14 @@ export async function sembrarEscenariosDemo(prisma: PrismaService, proveedor: Pr
 const DONADOR_DEMO = { correo: 'donador1@demo.acopio.local', nombre: 'Donadora (prueba)' };
 
 /** El Donador entra con correo (C-04): no tiene username. Queda confirmado. */
-async function sembrarDonadorDemo(prisma: PrismaService, proveedor: ProveedorLocal) {
+async function sembrarDonadorDemo(
+  prisma: PrismaService,
+  proveedor: ProveedorIdentidad,
+  contrasena: string,
+) {
   const existente = await prisma.usuario.findUnique({ where: { correo: DONADOR_DEMO.correo } });
   if (existente) return existente.id;
-  const { uid } = await proveedor.crearUsuario(DONADOR_DEMO.correo, CONTRASENA_DEMO);
+  const { uid } = await crearCuentaDemo(proveedor, DONADOR_DEMO.correo, contrasena);
   const creado = await prisma.usuario.create({
     data: {
       nombre: DONADOR_DEMO.nombre,
@@ -611,14 +618,16 @@ async function sembrarInventarioDemo(prisma: PrismaService, acopioId: string) {
 /** `bun run --filter @acopio/api seed:demo`. Corre como dueño de la base. */
 if (require.main === module) {
   config({ path: path.resolve(__dirname, '../../../../.env'), quiet: true });
+  // Antes de abrir la base: en producción, sin la variable, no se toca nada
+  const contrasena = contrasenaDemo(process.env);
   const entorno = leerEntorno({ ...process.env, DATABASE_URL: process.env.DATABASE_URL_OWNER });
   const prisma = new PrismaService(entorno);
   sembrarDemo(prisma)
     .then(async (r) => {
       console.log(`Demo lista: ${r.entidades} entidades y ${r.acopios} acopios de prueba.`);
-      if (entorno.AUTH_PROVEEDOR !== 'local') return;
-      const usuarios = await sembrarEscenariosDemo(prisma, new ProveedorLocal(prisma, entorno));
-      console.log(`Usuarios de prueba (contraseña ${CONTRASENA_DEMO}): ${usuarios.join(', ')}.`);
+      const proveedor = proveedorDelSeed(prisma, entorno);
+      const usuarios = await sembrarEscenariosDemo(prisma, proveedor, contrasena);
+      console.log(`Usuarios de prueba: ${usuarios.join(', ')}.`);
     })
     .catch((error: unknown) => {
       console.error(error instanceof Error ? error.message : error);

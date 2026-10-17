@@ -3,8 +3,7 @@ import path from 'node:path';
 import { config } from 'dotenv';
 import { PrismaService } from '../comun/prisma/prisma.service';
 import { leerEntorno } from '../config/entorno';
-import { ProveedorLocal } from '../modulos/identidad/proveedor/proveedor-local';
-import { ProveedorSupabase } from '../modulos/identidad/proveedor/proveedor-supabase';
+import { proveedorDelSeed } from './credenciales';
 import { sembrar } from './sembrar';
 
 config({ path: path.resolve(__dirname, '../../../../.env'), quiet: true });
@@ -22,10 +21,7 @@ async function principal(): Promise<void> {
 
   const entorno = leerEntorno({ ...variables, DATABASE_URL: variables.DATABASE_URL_OWNER });
   const prisma = new PrismaService(entorno);
-  const proveedor =
-    entorno.AUTH_PROVEEDOR === 'local'
-      ? new ProveedorLocal(prisma, entorno)
-      : new ProveedorSupabase(entorno);
+  const proveedor = proveedorDelSeed(prisma, entorno);
   try {
     const resumen = await sembrar(prisma, proveedor, {
       username: variables.SEED_ADMIN_USUARIO!,
