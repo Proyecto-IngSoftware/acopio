@@ -1014,6 +1014,45 @@ pantallas que no corresponden.
 duración de la sesión, y que sin red solo se muestren las herramientas que funcionan sin
 conexión
 
+### P-061 · Menores de la revisión final del ciclo 3 del motor
+**Fecha:** 2026-10-17 · **Propuesto por:** revisión final de la rama del ciclo 3 (PR #97)
+**Qué:** nueve detalles que la revisión dejó como menores. El PR #97 decía «anotados para
+después», pero la lista solo quedó en el informe final de esa sesión, en el chat. Se recuperó
+de ahí el 2026-10-17:
+- C20 deja elegir más de 20 categorías, y la API rechaza más de 20
+- «Subiendo…» de C13 no se anuncia a los lectores de pantalla
+- El escáner de C13 no valida la forma del token: un código de barras de producto termina en
+  «ya no está en camino» en vez de «Ese código no es el QR de una remisión»
+- El contador de la nota (C13 y C20) no está ligado a su campo con `aria-describedby`
+- La prueba del 413 no usa el código y el mensaje reales de la API, y falta una del 415
+- Un `ref` se escribe durante el render; debería ser un `useState`
+- Si falla una recarga con datos ya cargados, se ven el error y el formulario a la vez
+- `consola-recepciones.mjs` deja un borrador si el despacho falla
+- Pasar de una remisión a otra sin desmontar la pantalla dejaría fijada la primera; hoy ningún
+  camino de la app lo hace
+**Por qué:** ninguno rompe el flujo del Receptor, pero tres tocan accesibilidad y uno da un
+mensaje equivocado al escanear.
+**Estado:** ABIERTO. Se siguen en [#43](https://github.com/Proyecto-IngSoftware/acopio/issues/43)
+
+### P-062 · Dos pendientes de Joseph sobre el servidor de pruebas
+**Fecha:** 2026-10-17 · **Propuesto por:** informes finales de la sesión del 2026-10-17, recuperados
+**Qué:** dos cosas que solo se dijeron en el chat:
+- Cambiar `DEMO_CONTRASENA` en Dokploy por una más fuerte. La de hoy es fácil de adivinar, y
+  las cuentas de la demo están en un servidor público
+- Borrar en GitHub la primera versión de la descripción del PR #99, que mostraba el dominio de
+  otro servicio del mismo servidor
+**Por qué:** las dos exponen algo que no tiene por qué ser público.
+**Estado:** ABIERTO, depende de Joseph. Al cambiar la contraseña hay que avisar al equipo
+antes de la ronda (#58)
+
+### P-063 · El hook `commit-tras-verificar.sh` vive fuera del repositorio
+**Fecha:** 2026-10-17 · **Propuesto por:** informe final de la sesión del 2026-10-15, recuperado
+**Qué:** el hook que rechaza un commit encadenado a las verificaciones con `;` está en
+`~/.claude/hooks/`, en el equipo de Joseph. El `CLAUDE.md` lo nombra, pero quien clone el
+repositorio no lo tiene.
+**Por qué:** si se suma alguien con Claude Code, la regla queda sin quien la haga cumplir.
+**Estado:** ABIERTO. Versionarlo en `.claude/hooks/` cuando se sume otra persona
+
 ---
 
 ## Resueltos

@@ -1,0 +1,23 @@
+---
+title: "Informes de sesión — índice"
+type: moc
+tags: [moc, operacion, sesion]
+estado: vigente
+actualizado: 2026-10-17
+---
+
+# Informes de sesión
+
+Cada sesión de trabajo que cambia algo en el repositorio, en GitHub o en el servidor deja aquí
+su informe, con la [plantilla](../../plantillas/plantilla-informe-sesion.md). La regla está en
+la sección «Flujo de trabajo» del `CLAUDE.md`. Para retomar, se lee el último informe después
+de `git status` y antes del plan vigente.
+
+La regla empezó el 2026-10-17. Los informes anteriores solo existían en el chat; el del
+2026-10-17 en la madrugada se recuperó de ahí porque traía pendientes que no estaban escritos
+en otro lugar.
+
+| Fecha | Informe | Tema |
+|---|---|---|
+| 2026-10-17 | [2026-10-17-recorridos-y-mi-zona](2026-10-17-recorridos-y-mi-zona.md) | Recorridos estables, «Mi zona» e informes de sesión |
+| 2026-10-17 | [2026-10-17-ciclo-3-y-servidor](2026-10-17-ciclo-3-y-servidor.md) | Ciclo 3 del Receptor y servidor de pruebas (recuperado) |
