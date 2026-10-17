@@ -16,9 +16,14 @@ Qué hacer cuando algo falla.
 
 **72 horas antes:**
 
-- [ ] **Entrar al panel de Supabase.** El plan gratuito pausa proyectos inactivos
-      tras aproximadamente una semana sin uso. **Si está pausado, nadie puede
-      iniciar sesión el día de la sustentación.** Reactivarlo puede tardar minutos
+- [ ] **Entrar al panel de Supabase.** El proyecto es `acopio` (ref
+      `seqhaiuhfzvobfmljhzy`, región `us-east-1`), en la organización de Joseph:
+      https://supabase.com/dashboard/project/seqhaiuhfzvobfmljhzy. La misma cuenta tiene
+      otro proyecto que no es de Acopio y no se toca. El plan gratuito pausa proyectos
+      inactivos tras aproximadamente una semana sin uso. **Si está pausado, nadie puede
+      iniciar sesión el día de la sustentación.** Reactivarlo puede tardar minutos.
+      Sin entrar al panel, `curl -s -o /dev/null -w "%{http_code}\n" https://seqhaiuhfzvobfmljhzy.supabase.co/auth/v1/.well-known/jwks.json`
+      responde 200 si el proyecto está activo
 - [ ] Iniciar sesión con una cuenta real de cada rol, incluido un Donador (por correo)
 - [ ] Verificar que hay datos de demostración cargados
 - [ ] Probar el recorrido completo: preparar donación → recibirla en el acopio →
@@ -34,7 +39,9 @@ Qué hacer cuando algo falla.
 
 1. **¿El proyecto de Supabase está pausado?** Causa más frecuente. Reactivar desde
    el panel
-2. ¿`SUPABASE_URL` y `SUPABASE_ANON_KEY` correctas en el contenedor `web`?
+2. ¿`SUPABASE_URL`, `SUPABASE_JWKS_URL` y `SUPABASE_SERVICE_ROLE_KEY` correctas en el
+   contenedor `api`? En Dokploy están en las variables de la app `acopio-app-yrtfbo`. El
+   contenedor `web` no lleva llaves de Supabase
 3. ¿El endpoint del JWKS responde? `curl $SUPABASE_JWKS_URL`
 4. ¿El contenedor `api` está arriba? `docker compose ps`
 

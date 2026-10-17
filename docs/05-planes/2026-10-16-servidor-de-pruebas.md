@@ -46,7 +46,7 @@ domingo 18 de octubre) y [#26](https://github.com/Proyecto-IngSoftware/acopio/is
 | 2 Demo con contraseña por variable y cuentas en Supabase | ✅ | Hecha en local con `SEMBRAR_DEMO_AL_ARRANCAR`; falta desplegar |
 | 3 Sembrar la demo en el servidor | ⬜ | Fijar `DEMO_CONTRASENA` y `SEMBRAR_DEMO_AL_ARRANCAR=true` en Dokploy y desplegar |
 | 4 Recorridos y pruebas manuales contra el servidor | ⬜ | Espera a 3 |
-| 5 Runbook con el proyecto de Supabase | ⬜ | Revisar si el cambio ya existe fuera del repositorio |
+| 5 Runbook con el proyecto de Supabase | ✅ | El cambio no estaba en ningún lado; se escribió el 2026-10-16 con el proyecto verificado (`ACTIVE_HEALTHY`) |
 | 6 Decisiones abiertas (P-056, P-057) | ⬜ | Joseph decide P-056; P-057 se vigila en #58 |
 
 ### Task 1: Factura servida por la API
