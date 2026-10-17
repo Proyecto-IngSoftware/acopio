@@ -959,7 +959,10 @@ pegarlo a mano como las invitaciones, o esperar a que vuelva el correo y probar 
 `donador1@demo.acopio.local` de la demo.
 **Por qué:** la ronda de pruebas del equipo (#58) puede querer probar el registro de punta a
 punta en el servidor.
-**Estado:** ABIERTO. Decide Joseph ([plan del servidor de pruebas](../05-planes/2026-10-16-servidor-de-pruebas.md), tarea 6)
+**Decisión (2026-10-16, Joseph):** mientras el correo esté apagado, la ronda de pruebas usa
+`donador1@demo.acopio.local` de la demo y no prueba el registro de punta a punta. La API no
+escribe el enlace en el log. El registro con confirmación se prueba cuando vuelva el correo.
+**Estado:** RESUELTO el 2026-10-16.
 
 ### P-057 · `net::ERR_FAILED` intermitente en el servidor de pruebas
 **Fecha:** 2026-10-16 · **Propuesto por:** Claude, en el recorrido contra el servidor
