@@ -19,7 +19,7 @@ sesión. Antes de escribirla se recuperó lo que solo había quedado en el chat.
 | #108 | `consola-remisiones.mjs` busca la línea por su categoría, y `donador.mjs` corre con `SIN_CORREO=1` entrando como `donador1` |
 | #109 | «Mi zona» (`/consola/mi-zona`), el inicio del Receptor, con lo que viene en camino, lo que más falta y sus reportes. En «Más» queda una fila, y C20 abre en «Ya se resolvió» con `?modo=resuelta` |
 | #110 | Esta carpeta, la plantilla, la regla en el `CLAUDE.md` y P-061 a P-063 |
-| `menores-ciclo-3` | Los nueve menores de P-061: tope de 20 categorías en C20, «Subiendo la foto…» anunciado, forma del token del QR, contadores ligados a su nota, pruebas del 413 y el 415 con los datos reales de la API, la remisión fijada con estado en vez de `ref`, sin error encima del formulario al fallar una recarga, cambio de remisión sin desmontar, y el recorrido que cancela su borrador si no puede despachar |
+| #111 | Los nueve menores de P-061 y el arreglo de P-059 (`findBy` espera 3 s): tope de 20 categorías en C20, «Subiendo la foto…» anunciado, forma del token del QR, contadores ligados a su nota, pruebas del 413 y el 415 con los datos reales de la API, la remisión fijada con estado en vez de `ref`, sin error encima del formulario al fallar una recarga, cambio de remisión sin desmontar, y el recorrido que cancela su borrador si no puede despachar |
 
 Fuera del repositorio quedaron la maqueta de «Mi zona» en Stitch (pantalla
 `f030c2293f00455891466e1a62aeee5d`) y su artifact, que Joseph aprobó. Los nueve menores del
@@ -64,8 +64,15 @@ avance del motor, en [#35](https://github.com/Proyecto-IngSoftware/acopio/issues
   la corrida, y la prueba ahora lleva la cuenta escrita.
 - `prettier --write` sobre `src` reformateó `esquema.d.ts`, que es generado. Se devolvió a como
   estaba antes del commit.
+- El comentario de cierre en #43 decía que las nueve casillas iban marcadas antes de
+  marcarlas. Se marcaron enseguida, editando el comentario que las listaba.
 
 ## Pendiente
+
+El siguiente paso quedó en «Lo que sigue» del [índice de planes](../../05-planes/README.md):
+al empezar, Joseph elige entre las maquetas de P3 y P4
+([#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57)) y la especificación del
+Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)).
 
 - El hook `commit-tras-verificar.sh`, que está fuera del repositorio
   ([P-063](../../01-requerimientos/pendientes.md)).

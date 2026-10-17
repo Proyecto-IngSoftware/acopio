@@ -3,7 +3,7 @@ title: "Planes de implementación"
 type: moc
 tags: [moc, planes]
 estado: vigente
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Planes de implementación
@@ -57,27 +57,28 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 Las fechas máximas de cada semana, hasta la entrega final, están en el
 [cronograma](cronograma.md). Cada semana es un milestone de GitHub.
 
-1. **Bloque 4**, etapa 2 de la API ([#46](https://github.com/Proyecto-IngSoftware/acopio/issues/46),
-   hasta el domingo 18 de octubre; la interfaz sigue en
-   [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)). Primero se escribe su plan, a partir del §8 de la
-   [especificación](../superpowers/specs/2026-10-06-bloque-4-motor-design.md). Entran las
-   remisiones (crear a mano, editar el borrador, despachar con las `SALIDA`, cancelar y el
-   QR), la recepción en zona con foto, los reportes de necesidad del Receptor, la capa de
-   zonas del mapa público y el vínculo folio-remisión (RF-CMP-007). Las tablas ya existen
-   desde la etapa 1 y `RemisionesBorradorService` ya arma los borradores. El plan también
-   recoge los ocho menores que dejó la revisión final de la etapa 1 (anotados al pie de la
-   tabla de estado de su [plan](2026-10-06-bloque-4-api-etapa-1.md)).
-2. En paralelo con la etapa 2, el diseño de C10 Ficha de zona y C11 Motor de sugerencias en
-   Stitch: son el ciclo 1 de interfaz y no se escriben sin la maqueta aprobada. La API que
-   necesitan ya está.
-3. DAO, DTO y patrones de diseño que pide el Avance 5
-   ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59), hasta el 18 de octubre).
-   Primero un ADR que dice en qué módulos entran los DAOs y cómo comparten la
-   transacción de cada servicio. La sustentación del segundo corte es el viernes 23 de
-   octubre ([cronograma](cronograma.md)).
-4. En paralelo, cuando haga falta, la deuda técnica de
-   [#38 a #43](https://github.com/Proyecto-IngSoftware/acopio/issues?q=is%3Aopen+label%3Adeuda)
-   y el primer despliegue ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)).
+Estado al 2026-10-17: la API y los tres ciclos de interfaz del Bloque 4 están en `main`,
+con «Mi zona» y los menores de la revisión del ciclo 3. El servidor de pruebas corre la
+demo, y los recorridos pasan allá. El último informe de sesión está en
+[sesiones](../06-operacion/sesiones/README.md).
+
+1. **Siguiente paso: elegir entre dos frentes al empezar la sesión.** Los dos esperan una
+   decisión de Joseph:
+   - Las maquetas en Stitch de P3 y P4, las causas
+     ([#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57)). Se generan, Joseph
+     las aprueba y después se construyen.
+   - El Bloque 5, turnos ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)).
+     Empieza por su especificación de detalle, antes del plan y del código.
+2. La ronda de pruebas del equipo en el servidor
+   ([#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58)). Lo que reporten entra
+   como issue con la etiqueta `hallazgo`.
+3. Lo que depende de Joseph: una `DEMO_CONTRASENA` más fuerte y borrar la primera descripción
+   del PR #99 ([P-062](../01-requerimientos/pendientes.md)).
+4. Después de la presentación: P-060, que vence el usuario recordado. Cuando se sume otra
+   persona, P-063, el hook fuera del repositorio.
+5. En paralelo, cuando haga falta, la deuda técnica
+   ([etiqueta `deuda`](https://github.com/Proyecto-IngSoftware/acopio/issues?q=is%3Aopen+label%3Adeuda))
+   y el despliegue definitivo ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)).
 
 El [diseño general](../superpowers/specs/2026-08-20-acopio-design.md) ya está
 aprobado y cubre los siete bloques. Cada bloque necesita además su propia
