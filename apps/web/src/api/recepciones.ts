@@ -15,14 +15,16 @@ export interface DatosReporte {
 }
 
 const PREFIJO_QR = '/consola/recepciones/qr/';
+// La API lo genera con randomBytes(18) en base64url: 24 caracteres
+const FORMA_TOKEN = /^[A-Za-z0-9_-]{24}$/;
 
-/** El token del QR de una remisión: de la URL que imprime C12 o suelto (I3-08). */
+/** El token del QR de una remisión: de la URL que imprime C12 o suelto (I3-08). Lo que no
+ *  tiene su forma, como el código de barras de un producto, devuelve null. */
 export function tokenDeQr(texto: string): string | null {
   const t = texto.trim();
-  if (!t) return null;
   const i = t.indexOf(PREFIJO_QR);
-  if (i >= 0) return t.slice(i + PREFIJO_QR.length).split(/[?#/]/)[0] || null;
-  return t.includes('/') ? null : t;
+  const token = i >= 0 ? t.slice(i + PREFIJO_QR.length).split(/[?#/]/)[0]! : t;
+  return FORMA_TOKEN.test(token) ? token : null;
 }
 
 /** Lo último reportado de cada categoría, solo lo que sigue faltando (I3-07). */

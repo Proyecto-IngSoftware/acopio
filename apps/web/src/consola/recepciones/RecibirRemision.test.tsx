@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Route, Routes } from 'react-router';
+import { Link, Route, Routes } from 'react-router';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
 import {
   clienteFalso,
@@ -234,16 +234,118 @@ it('una foto rechazada muestra el mensaje y conserva las anteriores', async () =
   responderSegun({
     ...LISTA,
     'GET /api/recepciones': [{ ...HACIA_ZONA, evidencias: 1 }],
+    // El código y el mensaje de la API (almacenamiento/imagenes.ts)
     'POST /api/remisiones/*/evidencia': conEstado(413, {
       estado: 413,
-      codigo: 'IMAGEN_GRANDE',
-      mensaje: 'La foto pesa más de 10 MB',
+      codigo: 'ARCHIVO_GRANDE',
+      mensaje: 'La foto pesa más de 8 MB',
     }),
   });
   porCodigo();
   await userEvent.upload(await screen.findByLabelText('Otra'), FOTO());
-  expect(await screen.findByText('La foto pesa más de 10 MB')).toBeInTheDocument();
+  expect(await screen.findByText('La foto pesa más de 8 MB')).toBeInTheDocument();
   expect(screen.getByRole('img', { name: 'Foto 1 de lo que llegó' })).toBeInTheDocument();
+});
+
+it('un archivo que no es una imagen admitida muestra el mensaje de la API', async () => {
+  responderSegun({
+    ...LISTA,
+    'POST /api/remisiones/*/evidencia': conEstado(415, {
+      estado: 415,
+      codigo: 'TIPO_NO_ADMITIDO',
+      mensaje: 'Sube una foto en JPEG, PNG, WebP o HEIC',
+    }),
+  });
+  porCodigo();
+  await userEvent.upload(await screen.findByLabelText('Tomar foto'), FOTO());
+  expect(await screen.findByText('Sube una foto en JPEG, PNG, WebP o HEIC')).toBeInTheDocument();
+  expect(confirmar()).toBeDisabled();
+});
+
+it('mientras sube la foto lo anuncia a los lectores de pantalla', async () => {
+  let soltar: (r: Response) => void = () => {};
+  responderSegun(LISTA);
+  const segun = vi.mocked(globalThis.fetch).getMockImplementation()!;
+  vi.mocked(globalThis.fetch).mockImplementation((entrada) =>
+    (entrada as Request).method === 'POST'
+      ? new Promise<Response>((r) => (soltar = r))
+      : segun(entrada as Request),
+  );
+  porCodigo();
+  const tomar = await screen.findByLabelText('Tomar foto');
+  const estado = screen.getByRole('status');
+  expect(estado).toBeEmptyDOMElement();
+  await userEvent.upload(tomar, FOTO());
+  expect(estado).toHaveTextContent('Subiendo la foto…');
+  soltar(new Response(JSON.stringify({ ...HACIA_ZONA, evidencias: 1 })));
+  await waitFor(() => expect(estado).toBeEmptyDOMElement());
+});
+
+it('el contador de la nota describe el campo', async () => {
+  responderSegun(LISTA);
+  porCodigo();
+  const nota = await screen.findByLabelText('Nota (opcional)');
+  expect(nota).toHaveAccessibleDescription('0 / 280');
+  await userEvent.type(nota, 'Llegó');
+  expect(nota).toHaveAccessibleDescription('5 / 280');
+});
+
+it('si falla una recarga con la remisión ya cargada, sigue el formulario sin el error encima', async () => {
+  responderSegun({
+    'GET /api/recepciones': conEstado(500, {
+      estado: 500,
+      codigo: 'ERROR_INTERNO',
+      mensaje: 'Algo salió mal',
+    }),
+    'POST /api/remisiones/*/evidencia': { ...HACIA_ZONA, evidencias: 1 },
+    'GET /api/ubicaciones/mias': MIAS,
+  });
+  // La primera carga sale bien; la recarga que sigue a la foto falla
+  const conError = vi.mocked(globalThis.fetch).getMockImplementation()!;
+  let primera = true;
+  vi.mocked(globalThis.fetch).mockImplementation((entrada) => {
+    const p = entrada as Request;
+    if (primera && p.method === 'GET' && new URL(p.url).pathname === '/api/recepciones') {
+      primera = false;
+      return Promise.resolve(new Response(JSON.stringify([HACIA_ZONA, GENERAL])));
+    }
+    return conError(p);
+  });
+  porCodigo();
+  await userEvent.upload(await screen.findByLabelText('Tomar foto'), FOTO());
+  await waitFor(() => expect(primera).toBe(false));
+  await screen.findByRole('img', { name: 'Foto 1 de lo que llegó' });
+  await waitFor(() =>
+    expect(peticiones().filter((r) => r.startsWith('GET /api/recepciones'))).toHaveLength(2),
+  );
+  expect(screen.queryByText('Algo salió mal')).not.toBeInTheDocument();
+  expect(confirmar()).toBeEnabled();
+});
+
+it('al pasar a otra remisión sin salir de la pantalla muestra la nueva', async () => {
+  responderSegun(LISTA);
+  render(
+    envolver(
+      <Routes>
+        <Route
+          path="/consola/recepciones/:codigo"
+          element={
+            <>
+              <Link to="/consola/recepciones/R-2026-DEMA3">Ir a la otra</Link>
+              <RecibirPorCodigo />
+            </>
+          }
+        />
+      </Routes>,
+      '/consola/recepciones/R-2026-DEMA2',
+      clienteFalso(RECEPTORA),
+    ),
+  );
+  expect(await screen.findByText('R-2026-DEMA2')).toBeInTheDocument();
+  await userEvent.click(screen.getByRole('link', { name: 'Ir a la otra' }));
+  expect(await screen.findByText('R-2026-DEMA3')).toBeInTheDocument();
+  expect(screen.queryByText('R-2026-DEMA2')).not.toBeInTheDocument();
+  expect(screen.getByLabelText('¿En qué zona la recibes?')).toBeInTheDocument();
 });
 
 it('la nota se corta en 280 caracteres', async () => {

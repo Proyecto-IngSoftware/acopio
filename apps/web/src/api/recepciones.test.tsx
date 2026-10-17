@@ -20,11 +20,22 @@ function conConsultas() {
   );
 }
 
+// La API genera el token con randomBytes(18) en base64url: 24 caracteres
+const TOKEN = 'AbCdEfGhIjKlMnOpQrSt_-12';
+
 it('tokenDeQr saca el token de la URL del documento o acepta el token suelto', () => {
-  expect(tokenDeQr('https://acopio.josephqaz.dev/consola/recepciones/qr/abc123')).toBe('abc123');
-  expect(tokenDeQr('abc123')).toBe('abc123');
+  expect(tokenDeQr(`https://acopio.josephqaz.dev/consola/recepciones/qr/${TOKEN}`)).toBe(TOKEN);
+  expect(tokenDeQr(TOKEN)).toBe(TOKEN);
   expect(tokenDeQr('https://otra.com/x')).toBeNull();
   expect(tokenDeQr('  ')).toBeNull();
+});
+
+it('tokenDeQr rechaza lo que no tiene la forma del token', () => {
+  // Un código de barras de producto (EAN-13)
+  expect(tokenDeQr('7702004003508')).toBeNull();
+  expect(tokenDeQr('https://acopio.josephqaz.dev/consola/recepciones/qr/abc123')).toBeNull();
+  expect(tokenDeQr(`${TOKEN}x`)).toBeNull();
+  expect(tokenDeQr('AbCdEfGhIjKlMnOpQrSt+/12')).toBeNull();
 });
 
 const reporte = (r: Partial<ReporteNecesidad>): ReporteNecesidad => ({

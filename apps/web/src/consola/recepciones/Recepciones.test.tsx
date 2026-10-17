@@ -54,14 +54,19 @@ it('sin remisiones en camino lo dice', async () => {
 
 it('al leer el QR del documento abre esa remisión', async () => {
   camara.abrir = async (_v, alLeer) => {
-    setTimeout(() => alLeer('https://acopio.josephqaz.dev/consola/recepciones/qr/tok1'), 0);
+    setTimeout(
+      () => alLeer('https://acopio.josephqaz.dev/consola/recepciones/qr/AbCdEfGhIjKlMnOpQrSt_-12'),
+      0,
+    );
     return () => {};
   };
   responderSegun({ 'GET /api/recepciones': [HACIA_ZONA] });
   pantalla();
   await userEvent.click(await screen.findByRole('button', { name: /Escanear el QR/ }));
   await waitFor(() =>
-    expect(screen.getByTestId('ruta')).toHaveTextContent('/consola/recepciones/qr/tok1'),
+    expect(screen.getByTestId('ruta')).toHaveTextContent(
+      '/consola/recepciones/qr/AbCdEfGhIjKlMnOpQrSt_-12',
+    ),
   );
 });
 
@@ -110,4 +115,17 @@ it('no tiene violaciones graves de accesibilidad', async () => {
   const { container } = pantalla();
   await screen.findByRole('link', { name: /R-2026-DEMA2/ });
   expect(await violacionesGraves(container)).toEqual([]);
+});
+
+it('un código de barras de producto se avisa como código ajeno', async () => {
+  camara.abrir = async (_v, alLeer) => {
+    setTimeout(() => alLeer('7702004003508'), 0);
+    return () => {};
+  };
+  responderSegun({ 'GET /api/recepciones': [HACIA_ZONA] });
+  pantalla();
+  await userEvent.click(await screen.findByRole('button', { name: /Escanear el QR/ }));
+  expect(await screen.findByText('Ese código no es el QR de una remisión.')).toBeInTheDocument();
+  expect(screen.getByTestId('ruta')).toHaveTextContent('/consola/recepciones');
+  expect(screen.getByTestId('ruta')).not.toHaveTextContent('/qr/');
 });

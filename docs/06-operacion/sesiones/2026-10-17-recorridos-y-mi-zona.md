@@ -18,7 +18,8 @@ sesión. Antes de escribirla se recuperó lo que solo había quedado en el chat.
 |---|---|
 | #108 | `consola-remisiones.mjs` busca la línea por su categoría, y `donador.mjs` corre con `SIN_CORREO=1` entrando como `donador1` |
 | #109 | «Mi zona» (`/consola/mi-zona`), el inicio del Receptor, con lo que viene en camino, lo que más falta y sus reportes. En «Más» queda una fila, y C20 abre en «Ya se resolvió» con `?modo=resuelta` |
-| `informes-de-sesion` | Esta carpeta, la plantilla, la regla en el `CLAUDE.md` y P-061 a P-063 |
+| #110 | Esta carpeta, la plantilla, la regla en el `CLAUDE.md` y P-061 a P-063 |
+| `menores-ciclo-3` | Los nueve menores de P-061: tope de 20 categorías en C20, «Subiendo la foto…» anunciado, forma del token del QR, contadores ligados a su nota, pruebas del 413 y el 415 con los datos reales de la API, la remisión fijada con estado en vez de `ref`, sin error encima del formulario al fallar una recarga, cambio de remisión sin desmontar, y el recorrido que cancela su borrador si no puede despachar |
 
 Fuera del repositorio quedaron la maqueta de «Mi zona» en Stitch (pantalla
 `f030c2293f00455891466e1a62aeee5d`) y su artifact, que Joseph aprobó. Los nueve menores del
@@ -36,6 +37,13 @@ avance del motor, en [#35](https://github.com/Proyecto-IngSoftware/acopio/issues
   corre allá.
   `consola-remisiones.mjs` también dio 7/7 allá. Todo sin errores de página.
 
+- Con los menores corregidos, las unitarias de recepciones pasan 110/110 y
+  `consola-recepciones.mjs` 7/7 en local.
+- La verificación de esa rama falló dos veces en `rutas.test.tsx`, cada vez en una prueba
+  distinta y por tiempo. `main` sin los cambios falló igual en una de dos corridas: era
+  [P-059](../../01-requerimientos/pendientes.md). Con `findBy` esperando 3 s la suite pasó
+  cuatro de cuatro, y P-059 quedó resuelto en la misma rama.
+
 ## Decisiones
 
 - «Lo que más falta» ordena por cobertura y no por déficit, porque el déficit viene en
@@ -43,6 +51,9 @@ avance del motor, en [#35](https://github.com/Proyecto-IngSoftware/acopio/issues
 - La fila de «Más» dice «N en camino · zona», y «Por recibir» muestra tres remisiones. Las dos
   cosas salieron del recorrido y están en la [nota de diseño](../../03-diseno/stitch/mi-zona/README.md).
 - Joseph aprobó la maqueta de «Mi zona» y pidió el informe por sesión.
+- El token del QR se valida con la forma que genera la API (24 caracteres base64url). Un QR
+  de otra versión del documento con otra forma dejaría de abrirse, pero hoy todos salen de
+  `randomBytes(18)`.
 
 ## Errores y correcciones
 
@@ -56,8 +67,6 @@ avance del motor, en [#35](https://github.com/Proyecto-IngSoftware/acopio/issues
 
 ## Pendiente
 
-- Los nueve menores del ciclo 3 ([P-061](../../01-requerimientos/pendientes.md),
-  [#43](https://github.com/Proyecto-IngSoftware/acopio/issues/43)).
 - El hook `commit-tras-verificar.sh`, que está fuera del repositorio
   ([P-063](../../01-requerimientos/pendientes.md)).
 - El usuario recordado, para después de la presentación

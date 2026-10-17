@@ -988,17 +988,6 @@ cliente.
 **Estado:** ABIERTO. Deuda menor; se arregla traduciendo `NoSuchKey` a un `ErrorDominio` 404
 y declarando el `content` solo en la respuesta 200
 
-### P-059 · Pruebas de la web que fallan por tiempo con la máquina cargada
-**Fecha:** 2026-10-16 · **Propuesto por:** Claude, al verificar la rama `servidor-de-pruebas`
-**Qué:** `vitest run` de `apps/web` falló varias veces con una prueba distinta cada vez
-(`rutas.test.tsx`, `Acopios.test.tsx`, `Salida.test.tsx`, `selector.test.tsx`), todas por
-tiempo: un `findBy` que no encuentra la pantalla cargada en diferido o un timeout de 5 s. En
-`main` pasó lo mismo (una de dos corridas falló), y cada prueba pasa sola.
-**Por qué:** un rojo que no depende del cambio hace dudar de cada verificación, y en CI puede
-pasar igual.
-**Estado:** ABIERTO. Probar con menos workers en `vitest.config` o con más tiempo en los
-`findBy` de las rutas con carga diferida
-
 ### P-060 · El usuario recordado en localStorage no vence y abre menús sin red
 **Fecha:** 2026-10-17 · **Propuesto por:** Joseph, al revisar el almacenamiento del navegador
 **Qué:** `acopio.ultimo-usuario` (`apps/web/src/sesion/recordada.ts`) guarda el id, el
@@ -1013,26 +1002,6 @@ pantallas que no corresponden.
 **Estado:** ABIERTO, para después de la presentación. Que el registro venza con la misma
 duración de la sesión, y que sin red solo se muestren las herramientas que funcionan sin
 conexión
-
-### P-061 · Menores de la revisión final del ciclo 3 del motor
-**Fecha:** 2026-10-17 · **Propuesto por:** revisión final de la rama del ciclo 3 (PR #97)
-**Qué:** nueve detalles que la revisión dejó como menores. El PR #97 decía «anotados para
-después», pero la lista solo quedó en el informe final de esa sesión, en el chat. Se recuperó
-de ahí el 2026-10-17:
-- C20 deja elegir más de 20 categorías, y la API rechaza más de 20
-- «Subiendo…» de C13 no se anuncia a los lectores de pantalla
-- El escáner de C13 no valida la forma del token: un código de barras de producto termina en
-  «ya no está en camino» en vez de «Ese código no es el QR de una remisión»
-- El contador de la nota (C13 y C20) no está ligado a su campo con `aria-describedby`
-- La prueba del 413 no usa el código y el mensaje reales de la API, y falta una del 415
-- Un `ref` se escribe durante el render; debería ser un `useState`
-- Si falla una recarga con datos ya cargados, se ven el error y el formulario a la vez
-- `consola-recepciones.mjs` deja un borrador si el despacho falla
-- Pasar de una remisión a otra sin desmontar la pantalla dejaría fijada la primera; hoy ningún
-  camino de la app lo hace
-**Por qué:** ninguno rompe el flujo del Receptor, pero tres tocan accesibilidad y uno da un
-mensaje equivocado al escanear.
-**Estado:** ABIERTO. Se siguen en [#43](https://github.com/Proyecto-IngSoftware/acopio/issues/43)
 
 ### P-062 · Dos pendientes de Joseph sobre el servidor de pruebas
 **Fecha:** 2026-10-17 · **Propuesto por:** informes finales de la sesión del 2026-10-17, recuperados
@@ -1059,3 +1028,36 @@ repositorio no lo tiene.
 
 _Al resolver una entrada, muévela aquí con su destino. No se borran: la historia
 de por qué algo no entró vale tanto como lo que entró._
+
+### P-059 · Pruebas de la web que fallan por tiempo con la máquina cargada
+**Fecha:** 2026-10-16 · **Propuesto por:** Claude, al verificar la rama `servidor-de-pruebas`
+**Qué:** `vitest run` de `apps/web` falló varias veces con una prueba distinta cada vez
+(`rutas.test.tsx`, `Acopios.test.tsx`, `Salida.test.tsx`, `selector.test.tsx`), todas por
+tiempo: un `findBy` que no encuentra la pantalla cargada en diferido o un timeout de 5 s. En
+`main` pasó lo mismo (una de dos corridas falló), y cada prueba pasa sola.
+**Por qué:** un rojo que no depende del cambio hace dudar de cada verificación, y en CI puede
+pasar igual.
+**Estado:** RESUELTO el 2026-10-17 → `configure({ asyncUtilTimeout: 3000 })` en
+`apps/web/src/pruebas/preparar.ts`. Antes, `main` falló una de dos corridas completas (en
+`rutas.test.tsx`); con el cambio pasaron cuatro de cuatro
+
+### P-061 · Menores de la revisión final del ciclo 3 del motor
+**Fecha:** 2026-10-17 · **Propuesto por:** revisión final de la rama del ciclo 3 (PR #97)
+**Qué:** nueve detalles que la revisión dejó como menores. El PR #97 decía «anotados para
+después», pero la lista solo quedó en el informe final de esa sesión, en el chat. Se recuperó
+de ahí el 2026-10-17:
+- C20 deja elegir más de 20 categorías, y la API rechaza más de 20
+- «Subiendo…» de C13 no se anuncia a los lectores de pantalla
+- El escáner de C13 no valida la forma del token: un código de barras de producto termina en
+  «ya no está en camino» en vez de «Ese código no es el QR de una remisión»
+- El contador de la nota (C13 y C20) no está ligado a su campo con `aria-describedby`
+- La prueba del 413 no usa el código y el mensaje reales de la API, y falta una del 415
+- Un `ref` se escribe durante el render; debería ser un `useState`
+- Si falla una recarga con datos ya cargados, se ven el error y el formulario a la vez
+- `consola-recepciones.mjs` deja un borrador si el despacho falla
+- Pasar de una remisión a otra sin desmontar la pantalla dejaría fijada la primera; hoy ningún
+  camino de la app lo hace
+**Por qué:** ninguno rompe el flujo del Receptor, pero tres tocan accesibilidad y uno da un
+mensaje equivocado al escanear.
+**Estado:** RESUELTO el 2026-10-17 → los nueve, en la rama `menores-ciclo-3`, cada uno con su
+prueba. Seguimiento en [#43](https://github.com/Proyecto-IngSoftware/acopio/issues/43)

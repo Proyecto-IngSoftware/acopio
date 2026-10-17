@@ -162,7 +162,7 @@ it('«Por recibir» lista lo que viene a la zona y los despachos generales', asy
 
 it('el escáner abre la recepción del QR leído', async () => {
   camara.abrir = async (_video, alLeer) => {
-    alLeer('https://acopio.co/consola/recepciones/qr/tok-a2');
+    alLeer('https://acopio.co/consola/recepciones/qr/AbCdEfGhIjKlMnOpQrSt_-12');
     return () => {};
   };
   responderSegun(BASE);
@@ -171,7 +171,9 @@ it('el escáner abre la recepción del QR leído', async () => {
     await screen.findByRole('button', { name: 'Escanear el QR de la remisión' }),
   );
   await waitFor(() =>
-    expect(screen.getByTestId('ruta')).toHaveTextContent('/consola/recepciones/qr/tok-a2'),
+    expect(screen.getByTestId('ruta')).toHaveTextContent(
+      '/consola/recepciones/qr/AbCdEfGhIjKlMnOpQrSt_-12',
+    ),
   );
 });
 

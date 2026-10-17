@@ -47,7 +47,7 @@ recortado para el domingo 18, según la decisión del 2026-10-16 en el
 | 8 Capa de zonas en P05 (si alcanza) | ✅ | Maqueta aprobada el 2026-10-17. `consola-recepciones.mjs` comprueba en Chromium que un visitante ve la categoría reportada, con su nota, en el mapa y en la lista. Al construirla aparecieron dos fallas del mapa: el encuadre se perdía si las zonas llegaban mientras Leaflet animaba el de los acopios, y los marcadores se anunciaban con el nombre del ícono («inventory_2») en vez del suyo |
 | 9 «Mi zona» como pantalla propia | ✅ | Maqueta aprobada el 2026-10-17. `consola-recepciones.mjs` 7/7 entrando por «Más» → «Mi zona» → «Ver todas» |
 
-Los nueve menores de la revisión final de la rama quedaron en [P-061](../01-requerimientos/pendientes.md) y se siguen en [#43](https://github.com/Proyecto-IngSoftware/acopio/issues/43).
+Los nueve menores de la revisión final de la rama quedaron en [P-061](../01-requerimientos/pendientes.md) y se corrigieron el 2026-10-17 en la rama `menores-ciclo-3`.
 
 ## Decisiones al planear
 
