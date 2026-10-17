@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import type { AcopioPublico, ZonaPublica } from '../../api/red';
 import { ATRIBUCION, CENTRO_INICIAL, MOSAICOS } from '../../componentes/mapa/MapaLeaflet';
+import { claveEncuadre, leerClave } from './encuadre';
 
 // Marcadores con el color del tema; los pausados en gris con su ícono, no solo color (RNF-11)
 const marcador = (a: AcopioPublico, elegido: boolean) =>
@@ -103,7 +104,8 @@ function Zonas({
   return null;
 }
 
-/** Abarca los acopios y los centros de las zonas con necesidad, salvo con «Cerca de mí». */
+/** Abarca los acopios y los centros de las zonas con necesidad, salvo con «Cerca de mí».
+ *  Solo se rehace cuando cambian los puntos (claveEncuadre), no en cada render. */
 function Encuadre({
   acopios,
   zonas,
@@ -111,20 +113,18 @@ function Encuadre({
 }: {
   acopios: AcopioPublico[];
   zonas: ZonaPublica[];
-  centro: L.LatLngExpression | null;
+  centro: { lat: number; lng: number } | null;
 }) {
   const mapa = useMap();
+  const clave = claveEncuadre(acopios, zonas, centro);
   useEffect(() => {
-    const puntos = [
-      ...acopios.map((a) => [a.lat, a.lng] as [number, number]),
-      ...zonas.map((z) => [z.centro.lat, z.centro.lng] as [number, number]),
-    ];
+    const { centro: punto, puntos } = leerClave(clave);
     // Sin animación: Leaflet descarta un zoom pedido mientras anima el anterior, y las zonas
     // suelen llegar justo después de los acopios
-    if (centro) mapa.setView(centro, 14, { animate: false });
+    if (punto) mapa.setView(punto, 14, { animate: false });
     else if (puntos.length > 0)
       mapa.fitBounds(L.latLngBounds(puntos), { padding: [32, 32], maxZoom: 15, animate: false });
-  }, [mapa, acopios, zonas, centro]);
+  }, [mapa, clave]);
   return null;
 }
 
@@ -160,7 +160,7 @@ export default function MapaAcopios({
       aria-label="Mapa de acopios. La misma información está en la vista de lista."
     >
       <TileLayer url={MOSAICOS} attribution={ATRIBUCION} />
-      <Encuadre acopios={acopios} zonas={zonas} centro={cerca ? [cerca.lat, cerca.lng] : null} />
+      <Encuadre acopios={acopios} zonas={zonas} centro={cerca} />
       <Zonas zonas={zonas} elegida={zonaElegida} alElegir={alElegirZona} />
       <Marcadores acopios={acopios} elegido={elegido} alElegir={alElegir} />
     </MapContainer>

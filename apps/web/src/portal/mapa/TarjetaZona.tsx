@@ -1,6 +1,8 @@
+import type { Ref } from 'react';
 import type { ZonaPublica } from '../../api/red';
 import { Icono } from '../../componentes/Icono';
 import { haceCuanto } from '../../formato';
+import { useLlevarALaVista } from './llevarALaVista';
 
 interface Props {
   zona: ZonaPublica;
@@ -14,10 +16,32 @@ interface Props {
  *  La API no entrega nombre ni dirección de la zona, y la tarjeta no los inventa. */
 export function TarjetaZona({ zona, alCerrar, etiqueta }: Props) {
   const n = zona.necesidades.length;
+  return alCerrar ? (
+    <TarjetaElegida zona={zona} alCerrar={alCerrar} etiqueta={etiqueta} n={n} />
+  ) : (
+    <Contenido zona={zona} etiqueta={etiqueta} n={n} />
+  );
+}
+
+/** La del mapa: al elegirla, la página baja hasta ella. */
+function TarjetaElegida(props: Props & { n: number }) {
+  const ref = useLlevarALaVista<HTMLElement>(props.zona.zonaId);
+  return <Contenido {...props} refTarjeta={ref} />;
+}
+
+function Contenido({
+  zona,
+  alCerrar,
+  etiqueta,
+  n,
+  refTarjeta,
+}: Props & { n: number; refTarjeta?: Ref<HTMLElement> }) {
   return (
     <section
+      ref={refTarjeta}
+      tabIndex={refTarjeta ? -1 : undefined}
       aria-label={etiqueta}
-      className={`flex flex-col gap-space-sm rounded-xl bg-surface-container-lowest p-space-md ${alCerrar ? 'border-2 border-primary-container shadow-md' : 'border border-outline-variant'}`}
+      className={`flex scroll-mt-24 flex-col gap-space-sm rounded-xl bg-surface-container-lowest p-space-md outline-none ${alCerrar ? 'border-2 border-primary-container shadow-md' : 'border border-outline-variant'}`}
     >
       <div className="flex items-start gap-space-sm">
         <span className="flex size-9 shrink-0 items-center justify-center rounded-full bg-primary-fixed text-primary-container">
