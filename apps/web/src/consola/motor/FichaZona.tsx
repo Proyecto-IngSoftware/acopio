@@ -1,7 +1,8 @@
 import { formatearCantidad, formatearNumero } from '@acopio/shared';
 import { useState } from 'react';
-import { useParams } from 'react-router';
+import { useParams, useSearchParams } from 'react-router';
 import { useFichaZona, type CategoriaFicha, type FichaZona as Ficha } from '../../api/motor';
+import { EnlaceBoton } from '../../componentes/Boton';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
 import { Icono } from '../../componentes/Icono';
@@ -59,8 +60,38 @@ export function FichaZona() {
           alReintentar={() => void consulta.refetch()}
         />
       )}
+      <AvisoReporte />
+      {ficha && (usuario?.rol === 'RECEPTOR' || usuario?.rol === 'ADMIN') && (
+        <EnlaceBoton a={`/consola/zonas/${id}/reportar`}>
+          <Icono nombre="campaign" className="text-[20px]" />
+          Reportar necesidad
+        </EnlaceBoton>
+      )}
       {ficha && <Contenido ficha={ficha} administra={usuario?.rol === 'ADMIN'} />}
     </div>
+  );
+}
+
+/** Al volver de C20, cuántas categorías se reportaron o resolvieron (I3-06). */
+function AvisoReporte() {
+  const [params] = useSearchParams();
+  const reportado = Number(params.get('reportado'));
+  const resuelto = Number(params.get('resuelto'));
+  const texto =
+    reportado > 0
+      ? `Reportaste ${reportado} ${reportado === 1 ? 'categoría' : 'categorías'}. El motor las tiene en cuenta en el próximo cálculo.`
+      : resuelto > 0
+        ? `Marcaste ${resuelto} ${resuelto === 1 ? 'categoría como resuelta' : 'categorías como resueltas'}.`
+        : null;
+  if (!texto) return null;
+  return (
+    <p
+      role="status"
+      className="flex gap-space-sm rounded-xl border border-outline-variant bg-surface-container-low p-space-sm text-body-md text-on-surface"
+    >
+      <Icono nombre="check_circle" className="text-[22px] text-primary-container" />
+      {texto}
+    </p>
   );
 }
 

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acopios - Reportar necesidad</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-container": "#316c6c",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-fixed": "#b2eded",
+            "surface-dim": "#e0d8d5",
+            "on-primary-fixed": "#002020",
+            "on-secondary-fixed": "#1e1b18",
+            "secondary-fixed": "#e9e1db",
+            "primary-fixed-dim": "#85d4d3",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "inverse-surface": "#33302d",
+            "on-surface": "#1e1b19",
+            "primary-fixed": "#a1f0ef",
+            "surface-tint": "#03696a",
+            "secondary": "#625e59",
+            "on-primary-container": "#9eedec",
+            "surface-container-high": "#eee7e3",
+            "on-secondary-container": "#68635f",
+            "on-secondary": "#ffffff",
+            "surface-variant": "#e9e1dd",
+            "surface-container-highest": "#e9e1dd",
+            "on-tertiary-container": "#afebea",
+            "on-primary": "#ffffff",
+            "primary": "#005454",
+            "outline-variant": "#bec9c8",
+            "on-secondary-fixed-variant": "#4a4642",
+            "secondary-fixed-dim": "#ccc5c0",
+            "surface": "#fff8f5",
+            "on-error-container": "#93000a",
+            "secondary-container": "#e9e1db",
+            "outline": "#6e7979",
+            "on-surface-variant": "#3e4948",
+            "surface-container": "#f4ece8",
+            "on-background": "#1e1b19",
+            "error": "#ba1a1a",
+            "background": "#fff8f5",
+            "inverse-primary": "#85d4d3",
+            "surface-container-low": "#faf2ee",
+            "tertiary": "#125454",
+            "on-primary-fixed-variant": "#004f50",
+            "on-error": "#ffffff",
+            "inverse-on-surface": "#f7efeb",
+            "error-container": "#ffdad6",
+            "primary-container": "#0f6e6e",
+            "tertiary-fixed-dim": "#96d1d0",
+            "on-tertiary": "#ffffff",
+            "surface-bright": "#fff8f5",
+            "on-tertiary-fixed": "#002020"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter", "sans-serif"],
+            "display": ["Inter", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body h-full flex flex-col antialiased selection:bg-primary-container selection:text-on-primary">
+<!-- TopAppBar -->
+<header class="bg-surface-container-lowest flex justify-between items-center w-full px-4 h-14 max-w-md mx-auto sticky top-0 z-40">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-2xl">hub</span>
+<h1 class="font-bold font-headline text-headline-sm text-primary tracking-tight">Acopios</h1>
+</div>
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container font-medium text-sm" title="Avatar de usuario con iniciales del administrador">
+        RE
+      </div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 w-full max-w-md mx-auto px-4 py-6 pb-28 overflow-y-auto">
+<!-- Zone Context Header -->
+<div class="mb-5 flex items-center justify-between bg-surface-container-low p-3 rounded-xl border border-outline-variant">
+<div>
+<span class="text-xs text-secondary block font-medium">Zona actual</span>
+<span class="font-bold text-base text-on-surface">Barrio La Esperanza</span>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-tertiary-fixed text-on-tertiary-fixed">
+        Rol Receptor
+      </span>
+</div>
+<!-- Title -->
+<h2 class="text-2xl font-bold font-headline text-on-surface mb-4">¿Qué falta en la zona?</h2>
+<!-- Search Field -->
+<div class="relative mb-4">
+<span class="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-outline">
+<span class="material-symbols-outlined text-xl">search</span>
+</span>
+<input class="w-full pl-11 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-xl text-on-surface placeholder-outline focus:outline-none focus:border-primary text-base" placeholder="Buscar categoría" type="text"/>
+</div>
+<!-- Segmented Control -->
+<div class="flex bg-surface-container p-1 rounded-xl mb-6 border border-outline-variant">
+<button class="flex-1 py-2.5 text-center font-medium text-sm rounded-lg bg-surface-container-lowest text-primary shadow-sm transition-all" type="button">
+        Falta
+      </button>
+<button class="flex-1 py-2.5 text-center font-medium text-sm rounded-lg text-secondary hover:text-on-surface transition-all" type="button">
+        Ya se resolvió
+      </button>
+</div>
+<!-- Category Checkboxes -->
+<div class="space-y-3 mb-6">
+<label class="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<input class="w-5 h-5 text-primary border-outline rounded focus:ring-primary" type="checkbox"/>
+<span class="text-base font-medium text-on-surface">Agua potable</span>
+</div>
+<span class="material-symbols-outlined text-secondary">water_drop</span>
+</label>
+<label class="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<input class="w-5 h-5 text-primary border-outline rounded focus:ring-primary" type="checkbox"/>
+<span class="text-base font-medium text-on-surface">Arroz</span>
+</div>
+<span class="material-symbols-outlined text-secondary">grain</span>
+</label>
+<label class="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<input class="w-5 h-5 text-primary border-outline rounded focus:ring-primary" type="checkbox"/>
+<span class="text-base font-medium text-on-surface">Frijol</span>
+</div>
+<span class="material-symbols-outlined text-secondary">soup_kitchen</span>
+</label>
+<label class="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<input class="w-5 h-5 text-primary border-outline rounded focus:ring-primary" type="checkbox"/>
+<span class="text-base font-medium text-on-surface">Pañales</span>
+</div>
+<span class="material-symbols-outlined text-secondary">child_care</span>
+</label>
+<label class="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<input class="w-5 h-5 text-primary border-outline rounded focus:ring-primary" type="checkbox"/>
+<span class="text-base font-medium text-on-surface">Kit de aseo</span>
+</div>
+<span class="material-symbols-outlined text-secondary">cleaning_services</span>
+</label>
+<label class="flex items-center justify-between p-4 bg-surface-container-lowest border border-outline-variant rounded-xl cursor-pointer hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<input class="w-5 h-5 text-primary border-outline rounded focus:ring-primary" type="checkbox"/>
+<span class="text-base font-medium text-on-surface">Cobijas</span>
+</div>
+<span class="material-symbols-outlined text-secondary">bed</span>
+</label>
+</div>
+<!-- Multiline Field -->
+<div class="mb-6">
+<label class="block text-sm font-medium text-on-surface mb-2">Nota pública (opcional)</label>
+<textarea class="w-full p-3 bg-surface-container-lowest border border-outline-variant rounded-xl text-on-surface placeholder-outline focus:outline-none focus:border-primary text-base resize-none" placeholder="Escribe detalles adicionales..." rows="3"></textarea>
+</div>
+<!-- Prominent Informational Notice -->
+<div class="mb-8 p-4 bg-surface-container-low border border-outline-variant rounded-xl flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5" style="font-variation-settings: 'FILL' 1;">visibility</span>
+<p class="text-sm text-on-surface leading-relaxed">
+        Esta nota se ve en el mapa público tal como la escribas. No pongas nombres, teléfonos ni datos de personas.
+      </p>
+</div>
+<!-- Bottom Primary Button -->
+<div class="mb-8">
+<button class="w-full h-14 bg-primary text-on-primary font-medium text-base rounded-[10px] shadow-sm hover:bg-surface-tint active:scale-98 transition-all flex items-center justify-center" type="button">
+        Enviar reporte
+      </button>
+</div>
+<!-- Section: Reportes recientes -->
+<section class="mt-8 pt-6 border-t border-outline-variant">
+<h3 class="text-lg font-bold font-headline text-on-surface mb-4">Reportes recientes</h3>
+<div class="space-y-3">
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl flex items-center justify-between">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-medium text-sm text-on-surface">Agua potable, Arroz</span>
+</div>
+<p class="text-xs text-secondary">Ana · hace 3 h</p>
+</div>
+<span class="inline-flex items-center px-2 py-1 rounded text-xs bg-surface-container text-on-surface-variant">
+            Barrio La Esperanza
+          </span>
+</div>
+<div class="p-4 bg-surface-container-lowest border border-outline-variant rounded-xl flex items-center justify-between">
+<div>
+<div class="flex items-center gap-2 mb-1">
+<span class="font-medium text-sm text-on-surface">Cobijas, Kit de aseo</span>
+</div>
+<p class="text-xs text-secondary">Carlos · hace 5 h</p>
+</div>
+<span class="inline-flex items-center px-2 py-1 rounded text-xs bg-surface-container text-on-surface-variant">
+            Barrio La Esperanza
+          </span>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-16 px-2 max-w-md mx-auto bg-surface-container-lowest border-t border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 hover:text-primary transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-xl">home</span>
+<span class="text-[10px] font-medium mt-1">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-primary-container text-on-primary rounded-xl px-2 py-1" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">warehouse</span>
+<span class="text-[10px] font-medium mt-1">Acopios</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 hover:text-primary transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-xl">local_shipping</span>
+<span class="text-[10px] font-medium mt-1">Rutas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 hover:text-primary transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-xl">warning</span>
+<span class="text-[10px] font-medium mt-1">Alertas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant px-2 py-1 hover:text-primary transition-colors duration-150" href="#">
+<span class="material-symbols-outlined text-xl">more_horiz</span>
+<span class="text-[10px] font-medium mt-1">Más</span>
+</a>
+</nav>
+</body></html>

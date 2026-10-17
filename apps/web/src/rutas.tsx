@@ -50,6 +50,20 @@ const Remisiones = lazy(() =>
 const NuevaRemision = lazy(() =>
   import('./consola/remisiones/NuevaRemision').then((m) => ({ default: m.NuevaRemision })),
 );
+const Recepciones = lazy(() =>
+  import('./consola/recepciones/Recepciones').then((m) => ({ default: m.Recepciones })),
+);
+const RecibirPorCodigo = lazy(() =>
+  import('./consola/recepciones/RecibirRemision').then((m) => ({ default: m.RecibirPorCodigo })),
+);
+const RecibirPorQr = lazy(() =>
+  import('./consola/recepciones/RecibirRemision').then((m) => ({ default: m.RecibirPorQr })),
+);
+const ReportarNecesidad = lazy(() =>
+  import('./consola/recepciones/ReportarNecesidad').then((m) => ({
+    default: m.ReportarNecesidad,
+  })),
+);
 const DetalleRemision = lazy(() =>
   import('./consola/remisiones/DetalleRemision').then((m) => ({ default: m.DetalleRemision })),
 );
@@ -227,6 +241,27 @@ export function Rutas() {
             </RequiereRol>
           }
         />
+        <Route
+          path="consola/zonas/:id/reportar"
+          element={
+            <RequiereRol roles={['ADMIN', 'RECEPTOR']}>
+              <ReportarNecesidad />
+            </RequiereRol>
+          }
+        />
+        {(
+          [
+            ['consola/recepciones', <Recepciones key="rc" />],
+            ['consola/recepciones/qr/:token', <RecibirPorQr key="rq" />],
+            ['consola/recepciones/:codigo', <RecibirPorCodigo key="rr" />],
+          ] as const
+        ).map(([ruta, pantalla]) => (
+          <Route
+            key={ruta}
+            path={ruta}
+            element={<RequiereRol roles={['RECEPTOR']}>{pantalla}</RequiereRol>}
+          />
+        ))}
         {(
           [
             ['consola/motor', <Motor key="m" />],

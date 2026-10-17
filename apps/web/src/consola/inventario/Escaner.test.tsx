@@ -11,6 +11,7 @@ import {
   responderSegun,
 } from '../../pruebas/utilidades';
 import { BuscadorCategoria } from './BuscadorCategoria';
+import { VistaCamara } from './Escaner';
 
 type Abrir = (video: unknown, alLeer: (codigo: string) => void) => Promise<() => void>;
 // Una función simple y no vi.fn: vi.fn guarda cada resultado y deja sin atender la promesa
@@ -194,4 +195,21 @@ describe('Escáner', () => {
     await escanear();
     expect(await violacionesGraves(document.body)).toEqual([]);
   });
+});
+
+it('VistaCamara acepta otro texto para apuntar y para salir (C13)', async () => {
+  camara.abrir = camaraAbierta;
+  render(
+    envolver(
+      <VistaCamara
+        alLeer={() => {}}
+        alCerrar={() => {}}
+        alFallar={() => {}}
+        indicacion="Apunta al QR del documento de la remisión"
+        textoSalir="Ver la lista"
+      />,
+    ),
+  );
+  expect(await screen.findByText('Apunta al QR del documento de la remisión')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Ver la lista' })).toBeInTheDocument();
 });
