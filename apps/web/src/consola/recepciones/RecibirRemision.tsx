@@ -91,7 +91,14 @@ function Marco({ children }: { children: React.ReactNode }) {
   );
 }
 
-function YaNoEsta() {
+/** Errores con los que el formulario ya no puede terminar: se cambia por el aviso. */
+const SIN_SALIDA = ['REMISION_ESTADO_INVALIDO', 'REMISION_TOMADA'];
+
+function YaNoEsta({
+  mensaje = 'Esta remisión ya no está en camino a tus zonas. Puede que ya se haya recibido o cancelado.',
+}: {
+  mensaje?: string;
+}) {
   return (
     <>
       <p
@@ -99,7 +106,7 @@ function YaNoEsta() {
         className="flex gap-space-sm rounded-xl bg-error-container p-space-sm text-body-md text-on-error-container"
       >
         <Icono nombre="error" className="text-[22px]" />
-        Esta remisión ya no está en camino a tus zonas. Puede que ya se haya recibido o cancelado.
+        {mensaje}
       </p>
       <Link to={VOLVER} className="min-h-[48px] text-center text-label-md text-primary-container">
         Volver a Por recibir
@@ -119,6 +126,12 @@ function FormularioRecepcion({ remision }: { remision: Remision }) {
   const zonas = ubicaciones.filter((u) => u.tipo === 'ZONA');
 
   if (recibir.data) return <Recibida remision={recibir.data} />;
+  const sinSalida = [recibir.error, subir.error].find((e) => e && SIN_SALIDA.includes(e.codigo));
+  if (sinSalida) {
+    return (
+      <YaNoEsta mensaje={sinSalida.codigo === 'REMISION_TOMADA' ? sinSalida.message : undefined} />
+    );
+  }
 
   const faltaFoto = actual.evidencias === 0;
   const faltaZona = general && !zonaId;

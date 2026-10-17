@@ -1,4 +1,4 @@
-import { render, screen, within } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { useLocation } from 'react-router';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
@@ -60,7 +60,9 @@ it('al leer el QR del documento abre esa remisión', async () => {
   responderSegun({ 'GET /api/recepciones': [HACIA_ZONA] });
   pantalla();
   await userEvent.click(await screen.findByRole('button', { name: /Escanear el QR/ }));
-  expect(await screen.findByTestId('ruta')).toHaveTextContent('/consola/recepciones/qr/tok1');
+  await waitFor(() =>
+    expect(screen.getByTestId('ruta')).toHaveTextContent('/consola/recepciones/qr/tok1'),
+  );
 });
 
 it('un código que no es de una remisión se avisa y no navega', async () => {

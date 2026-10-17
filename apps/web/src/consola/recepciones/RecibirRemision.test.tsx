@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes } from 'react-router';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
@@ -175,7 +175,7 @@ it('por QR, una remisión en camino abre el formulario', async () => {
   expect(confirmar()).toBeDisabled();
 });
 
-it('si otro Receptor tomó el despacho, lo dice', async () => {
+it('si otro Receptor tomó el despacho, lo dice y lleva de vuelta a la lista', async () => {
   responderSegun({
     ...LISTA,
     'GET /api/recepciones': [{ ...HACIA_ZONA, evidencias: 1 }],
@@ -190,6 +190,44 @@ it('si otro Receptor tomó el despacho, lo dice', async () => {
   expect(
     await screen.findByText('Otro Receptor ya está recibiendo este despacho'),
   ).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Volver a Por recibir' })).toHaveAttribute(
+    'href',
+    '/consola/recepciones',
+  );
+  expect(screen.queryByRole('button', { name: /Confirmar recepción/ })).not.toBeInTheDocument();
+});
+
+it('si la remisión dejó de estar en camino al confirmar, muestra el aviso y vuelve a pedir la lista', async () => {
+  responderSegun({
+    ...LISTA,
+    'GET /api/recepciones': [{ ...HACIA_ZONA, evidencias: 1 }],
+    'POST /api/remisiones/*/recibir': conEstado(409, {
+      estado: 409,
+      codigo: 'REMISION_ESTADO_INVALIDO',
+      mensaje: 'Esta remisión está cancelada: no se puede recibir',
+    }),
+  });
+  porCodigo();
+  await userEvent.click(await screen.findByRole('button', { name: /Confirmar recepción/ }));
+  expect(await screen.findByText(AVISO)).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /Confirmar recepción/ })).not.toBeInTheDocument();
+  await waitFor(() =>
+    expect(peticiones().filter((x) => x === 'GET /api/recepciones').length).toBeGreaterThan(1),
+  );
+});
+
+it('si la remisión dejó de estar en camino al subir la foto, muestra el aviso', async () => {
+  responderSegun({
+    ...LISTA,
+    'POST /api/remisiones/*/evidencia': conEstado(409, {
+      estado: 409,
+      codigo: 'REMISION_ESTADO_INVALIDO',
+      mensaje: 'Esta remisión está recibida: no se puede subirEvidencia',
+    }),
+  });
+  porCodigo();
+  await userEvent.upload(await screen.findByLabelText('Tomar foto'), FOTO());
+  expect(await screen.findByText(AVISO)).toBeInTheDocument();
 });
 
 it('una foto rechazada muestra el mensaje y conserva las anteriores', async () => {

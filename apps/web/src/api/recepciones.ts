@@ -76,6 +76,7 @@ export function useSubirEvidencia(codigo: string) {
         }),
       ),
     onSuccess: () => invalidar(['recepciones']),
+    onError: (e) => e.estado === 409 && invalidar(['recepciones']),
   });
 }
 
@@ -86,7 +87,16 @@ export function useRecibirRemision(codigo: string) {
       desenvolver(
         api.POST('/api/remisiones/{codigo}/recibir', { params: { path: { codigo } }, body: d }),
       ),
-    onSuccess: () => invalidar(['recepciones'], ['ficha-zona']),
+    onSuccess: () =>
+      invalidar(
+        ['recepciones'],
+        ['recepcion-qr'],
+        ['ficha-zona'],
+        ['remisiones'],
+        ['remision', codigo],
+      ),
+    // La remisión cambió mientras se recibía: la lista deja de traerla
+    onError: (e) => e.estado === 409 && invalidar(['recepciones']),
   });
 }
 

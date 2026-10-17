@@ -7,6 +7,7 @@ import {
   pendientesDeResolver,
   tokenDeQr,
   useRecepciones,
+  useRemisionPorQr,
   useRecibirRemision,
   useSubirEvidencia,
   type ReporteNecesidad,
@@ -76,5 +77,21 @@ it('useRecibirRemision manda la zona y la nota, y vuelve a pedir lo que está po
   });
   await waitFor(() =>
     expect(peticiones().filter((p) => p === 'GET /api/recepciones')).toHaveLength(2),
+  );
+});
+
+it('al recibir también vuelve a pedir la remisión del QR', async () => {
+  responderSegun({
+    'GET /api/recepciones/qr/*': { codigo: 'R-2026-DEMA2' },
+    'POST /api/remisiones/*/recibir': { codigo: 'R-2026-DEMA2' },
+  });
+  const wrapper = conConsultas();
+  const qr = renderHook(() => useRemisionPorQr('tok1'), { wrapper });
+  await waitFor(() => expect(qr.result.current.isSuccess).toBe(true));
+  const { result } = renderHook(() => useRecibirRemision('R-2026-DEMA2'), { wrapper });
+  result.current.mutate({});
+  await waitFor(() => expect(result.current.isSuccess).toBe(true));
+  await waitFor(() =>
+    expect(peticiones().filter((p) => p === 'GET /api/recepciones/qr/tok1')).toHaveLength(2),
   );
 });
