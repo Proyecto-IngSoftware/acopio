@@ -1003,17 +1003,6 @@ pantallas que no corresponden.
 duración de la sesión, y que sin red solo se muestren las herramientas que funcionan sin
 conexión
 
-### P-062 · Dos pendientes de Joseph sobre el servidor de pruebas
-**Fecha:** 2026-10-17 · **Propuesto por:** informes finales de la sesión del 2026-10-17, recuperados
-**Qué:** dos cosas que solo se dijeron en el chat:
-- Cambiar `DEMO_CONTRASENA` en Dokploy por una más fuerte. La de hoy es fácil de adivinar, y
-  las cuentas de la demo están en un servidor público
-- Borrar en GitHub la primera versión de la descripción del PR #99, que mostraba el dominio de
-  otro servicio del mismo servidor
-**Por qué:** las dos exponen algo que no tiene por qué ser público.
-**Estado:** ABIERTO, depende de Joseph. Al cambiar la contraseña hay que avisar al equipo
-antes de la ronda (#58)
-
 ### P-063 · El hook `commit-tras-verificar.sh` vive fuera del repositorio
 **Fecha:** 2026-10-17 · **Propuesto por:** informe final de la sesión del 2026-10-15, recuperado
 **Qué:** el hook que rechaza un commit encadenado a las verificaciones con `;` está en
@@ -1028,6 +1017,19 @@ repositorio no lo tiene.
 
 _Al resolver una entrada, muévela aquí con su destino. No se borran: la historia
 de por qué algo no entró vale tanto como lo que entró._
+
+### P-062 · Dos pendientes de Joseph sobre el servidor de pruebas
+**Fecha:** 2026-10-17 · **Propuesto por:** informes finales de la sesión del 2026-10-17, recuperados
+**Qué:** dos cosas que solo se dijeron en el chat:
+- Cambiar `DEMO_CONTRASENA` en Dokploy por una más fuerte. La de hoy es fácil de adivinar, y
+  las cuentas de la demo están en un servidor público
+- Borrar en GitHub la primera versión de la descripción del PR #99, que mostraba el dominio de
+  otro servicio del mismo servidor
+**Por qué:** las dos exponen algo que no tiene por qué ser público.
+**Estado:** RESUELTO el 2026-10-17 → Joseph cambió las dos. En GitHub, las dos primeras
+versiones de la descripción del #99 aparecen borradas. La contraseña nueva no se pudo probar
+ese día porque el servidor no respondía; los recorridos contra el servidor la necesitan, y el
+equipo también, antes de la ronda (#58)
 
 ### P-059 · Pruebas de la web que fallan por tiempo con la máquina cargada
 **Fecha:** 2026-10-16 · **Propuesto por:** Claude, al verificar la rama `servidor-de-pruebas`
