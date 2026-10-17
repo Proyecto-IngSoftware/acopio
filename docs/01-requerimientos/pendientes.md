@@ -1011,6 +1011,13 @@ repositorio no lo tiene.
 **Por qué:** si se suma alguien con Claude Code, la regla queda sin quien la haga cumplir.
 **Estado:** ABIERTO. Versionarlo en `.claude/hooks/` cuando se sume otra persona
 
+---
+
+## Resueltos
+
+_Al resolver una entrada, muévela aquí con su destino. No se borran: la historia
+de por qué algo no entró vale tanto como lo que entró._
+
 ### P-062 · Dos pendientes de Joseph sobre el servidor de pruebas
 **Fecha:** 2026-10-17 · **Propuesto por:** informes finales de la sesión del 2026-10-17, recuperados
 **Qué:** dos cosas que solo se dijeron en el chat:
@@ -1019,19 +1026,15 @@ repositorio no lo tiene.
 - Borrar en GitHub la primera versión de la descripción del PR #99, que mostraba el dominio de
   otro servicio del mismo servidor
 **Por qué:** las dos exponen algo que no tiene por qué ser público.
-**Estado:** ABIERTO, a medias. La descripción del #99 quedó resuelta: en GitHub, sus dos
-primeras versiones aparecen borradas. La contraseña no. Joseph cambió `DEMO_CONTRASENA` en
-Dokploy el 2026-10-17, pero `seed:demo` crea las cuentas solo si no existen
-(`apps/api/src/seed/demo.ts:176`), así que las seis cuentas de Supabase siguen con la
-contraseña anterior: `receptor1` entró con ella a las 18:20. Falta cambiarla en Supabase, en
-cada una de las seis cuentas, y avisar al equipo antes de la ronda (#58)
-
----
-
-## Resueltos
-
-_Al resolver una entrada, muévela aquí con su destino. No se borran: la historia
-de por qué algo no entró vale tanto como lo que entró._
+**Estado:** RESUELTO el 2026-10-17 → la descripción del #99 quedó borrada (en GitHub, sus
+dos primeras versiones aparecen borradas). La contraseña se cambió de otra forma: Claude
+generó una nueva en el equipo de Joseph, la escribió en `DEMO_CONTRASENA` del `.env` local
+sin mostrarla, y puso su hash bcrypt en `auth.users` de Supabase para las cinco cuentas de la
+demo (`joseph`, `brayan`, `michael` y `alejandra@acopio.co`, y `donador1@demo.acopio.local`;
+`admin@acopio.co` no se tocó). Joseph puso el mismo valor en Dokploy. Comprobado contra el
+servidor: con la anterior, `receptor1` y `donador1` reciben 401; con la nueva, 200. Cambiar
+`DEMO_CONTRASENA` en Dokploy no alcanzaba, porque `seed:demo` solo crea las cuentas que no
+existen (`apps/api/src/seed/demo.ts:176`)
 
 ### P-059 · Pruebas de la web que fallan por tiempo con la máquina cargada
 **Fecha:** 2026-10-16 · **Propuesto por:** Claude, al verificar la rama `servidor-de-pruebas`

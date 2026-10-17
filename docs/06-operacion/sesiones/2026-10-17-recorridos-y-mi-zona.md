@@ -85,9 +85,9 @@ Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)).
 
 ## Depende de Joseph
 
-- Cambiar `DEMO_CONTRASENA` por una más fuerte y borrar la primera descripción del PR #99
-  ([P-062](../../01-requerimientos/pendientes.md)). Al cierre de la sesión, la descripción
-  quedó borrada y comprobada en GitHub. La contraseña no cambió: Joseph la cambió en Dokploy,
-  pero `seed:demo` no toca las cuentas que ya existen, y a las 18:20 `receptor1` entró con la
-  anterior. Falta cambiarla en Supabase. Entre las 18:10 y las 18:13 el servidor no respondió
-  por los puertos 80, 443 ni 22; a las 18:20 ya respondía.
+Nada. P-062 quedó [resuelto](../../01-requerimientos/pendientes.md) al cierre: la descripción
+del #99 se borró, y la contraseña de la demo se cambió en Supabase con un hash generado en el
+equipo, sin que pasara por el chat. Con la anterior, el servidor responde 401; con la nueva,
+200. Cambiarla en Dokploy no alcanzaba porque `seed:demo` no toca las cuentas que ya existen.
+El `.env` local trae ahora esa contraseña, y para los recorridos locales hay que pasar
+`DEMO_CONTRASENA=demo-acopio-2026` (ver [recorridos](../recorridos.md)).
