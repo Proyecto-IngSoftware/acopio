@@ -64,6 +64,9 @@ avance del motor, en [#35](https://github.com/Proyecto-IngSoftware/acopio/issues
   la corrida, y la prueba ahora lleva la cuenta escrita.
 - `prettier --write` sobre `src` reformateó `esquema.d.ts`, que es generado. Se devolvió a como
   estaba antes del commit.
+- P-062 se marcó resuelto (#113) con la palabra de que la contraseña se había cambiado, sin
+  haberla probado, porque el servidor no respondía. Al volver el servidor, la contraseña
+  anterior todavía entraba, y P-062 se reabrió.
 - El comentario de cierre en #43 decía que las nueve casillas iban marcadas antes de
   marcarlas. Se marcaron enseguida, editando el comentario que las listaba.
 
@@ -83,6 +86,8 @@ Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)).
 ## Depende de Joseph
 
 - Cambiar `DEMO_CONTRASENA` por una más fuerte y borrar la primera descripción del PR #99
-  ([P-062](../../01-requerimientos/pendientes.md)). Joseph las hizo al cierre de la sesión.
-  La descripción quedó comprobada en GitHub; la contraseña no, porque el servidor dejó de
-  responder: entre las 18:10 y las 18:13 no abrieron los puertos 80, 443 ni 22.
+  ([P-062](../../01-requerimientos/pendientes.md)). Al cierre de la sesión, la descripción
+  quedó borrada y comprobada en GitHub. La contraseña no cambió: Joseph la cambió en Dokploy,
+  pero `seed:demo` no toca las cuentas que ya existen, y a las 18:20 `receptor1` entró con la
+  anterior. Falta cambiarla en Supabase. Entre las 18:10 y las 18:13 el servidor no respondió
+  por los puertos 80, 443 ni 22; a las 18:20 ya respondía.
