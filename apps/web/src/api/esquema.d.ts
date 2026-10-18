@@ -550,6 +550,182 @@ export interface paths {
         patch: operations["EntidadesController_actualizar"];
         trace?: never;
     };
+    "/api/entidades/{id}/verificar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EntidadesController_verificar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/entidades/{id}/quitar-verificacion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EntidadesController_quitarVerificacion"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/entidades/{id}/logo": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["LogosController_leer"];
+        put: operations["EntidadesController_subirLogo"];
+        post?: never;
+        delete: operations["EntidadesController_quitarLogo"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/causas/gestion": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CausasController_listar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/causas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CausasPublicasController_listar"];
+        put?: never;
+        post: operations["CausasController_crear"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/causas/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CausasPublicasController_obtener"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["CausasController_editar"];
+        trace?: never;
+    };
+    "/api/causas/{id}/renovar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CausasController_renovar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/causas/{id}/archivar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CausasController_archivar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/causas/{id}/reactivar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CausasController_reactivar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/causas/{id}/imagen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CausasPublicasController_imagen"];
+        put: operations["CausasController_subirImagen"];
+        post?: never;
+        delete: operations["CausasController_quitarImagen"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/causas/atendidas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["CausasPublicasController_atendidas"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/acopios": {
         parameters: {
             query?: never;
@@ -1871,6 +2047,10 @@ export interface components {
             descripcion: string | null;
             /** @enum {string} */
             verificacion: "SIN_VERIFICAR" | "VERIFICADA" | "RECHAZADA";
+            verificadaEn: string | null;
+            tieneLogo: boolean;
+            /** @description Solo en la lista de C15 */
+            causasActivas?: number;
         };
         CrearEntidadDto: {
             nombre: string;
@@ -1895,6 +2075,117 @@ export interface components {
             /** Format: email */
             correo?: string | null;
             descripcion?: string | null;
+        };
+        VerificarEntidadDto: {
+            /** @description Confirmo que revisé la entidad y su sitio oficial (aviso de seguridad, C-09) */
+            confirmo?: boolean;
+        };
+        ArchivadasDto: {
+            archivadas: number;
+        };
+        CausaGestionDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            categoria: "PERSONAS" | "ANIMALES" | "ADULTOS_MAYORES" | "RESCATISTAS";
+            titulo: string;
+            descripcion: string;
+            pasos: string[];
+            urlOficial: string;
+            dominio: string | null;
+            tieneImagen: boolean;
+            /** Format: date-time */
+            actualizadoEn: string;
+            /** Format: date-time */
+            publicadaEn: string;
+            /** Format: date */
+            cierraEl: string;
+            /**
+             * Format: date
+             * @description Nulo mientras la causa siga activa
+             */
+            cerroEl: string | null;
+            /** @enum {string|null} */
+            motivo: "VENCIDA" | "MANUAL" | "ENTIDAD_SIN_VERIFICAR" | null;
+            entidad: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+                tieneLogo: boolean;
+                /** Format: date-time */
+                verificadaEn: string | null;
+            };
+            /** @enum {string} */
+            estado: "ACTIVA" | "ATENDIDA";
+            porCerrar: boolean;
+            dominioDistinto: boolean;
+            /** Format: uuid */
+            creadaPor: string;
+        };
+        CrearCausaDto: {
+            /** Format: uuid */
+            entidadId: string;
+            /** @enum {string} */
+            categoria: "PERSONAS" | "ANIMALES" | "ADULTOS_MAYORES" | "RESCATISTAS";
+            titulo: string;
+            descripcion: string;
+            pasos: string[];
+            urlOficial: string;
+            cierraEl: string;
+            /** @description Confirmo que revisé la entidad y el sitio de destino (C-09) */
+            confirmo?: boolean;
+        };
+        EditarCausaDto: {
+            /** Format: uuid */
+            entidadId?: string;
+            /** @enum {string} */
+            categoria?: "PERSONAS" | "ANIMALES" | "ADULTOS_MAYORES" | "RESCATISTAS";
+            titulo?: string;
+            descripcion?: string;
+            pasos?: string[];
+            urlOficial?: string;
+            cierraEl?: string;
+            /** @description Confirmo que revisé la entidad y el sitio de destino (C-09) */
+            confirmo?: boolean;
+        };
+        PlazoDto: {
+            cierraEl: string;
+            /** @description Confirmo que revisé la entidad y el sitio de destino (C-09) */
+            confirmo?: boolean;
+        };
+        CausaPublicaDto: {
+            /** Format: uuid */
+            id: string;
+            /** @enum {string} */
+            categoria: "PERSONAS" | "ANIMALES" | "ADULTOS_MAYORES" | "RESCATISTAS";
+            titulo: string;
+            descripcion: string;
+            pasos: string[];
+            /** @description Nulo si la entidad ya no está verificada: la web no muestra el enlace */
+            urlOficial: string | null;
+            dominio: string | null;
+            tieneImagen: boolean;
+            /** Format: date-time */
+            actualizadoEn: string;
+            /** Format: date-time */
+            publicadaEn: string;
+            /** Format: date */
+            cierraEl: string;
+            /**
+             * Format: date
+             * @description Nulo mientras la causa siga activa
+             */
+            cerroEl: string | null;
+            /** @enum {string|null} */
+            motivo: "VENCIDA" | "MANUAL" | "ENTIDAD_SIN_VERIFICAR" | null;
+            entidad: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+                tieneLogo: boolean;
+                /** Format: date-time */
+                verificadaEn: string | null;
+            };
         };
         AcopioPublicoDto: {
             /** Format: uuid */
@@ -4234,6 +4525,492 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    EntidadesController_verificar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerificarEntidadDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntidadDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    EntidadesController_quitarVerificacion: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ArchivadasDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    LogosController_leer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description La imagen del logotipo, en WebP */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EntidadesController_subirLogo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    logo: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntidadDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    EntidadesController_quitarLogo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["EntidadDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CausasController_listar: {
+        parameters: {
+            query?: {
+                estado?: "activas" | "por-cerrar" | "atendidas";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CausaGestionDto"][];
+                };
+            };
+        };
+    };
+    CausasPublicasController_listar: {
+        parameters: {
+            query?: {
+                categoria?: "PERSONAS" | "ANIMALES" | "ADULTOS_MAYORES" | "RESCATISTAS";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CausaPublicaDto"][];
+                };
+            };
+        };
+    };
+    CausasController_crear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearCausaDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CausaGestionDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CausasPublicasController_obtener: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CausaPublicaDto"];
+                };
+            };
+        };
+    };
+    CausasController_editar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditarCausaDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CausaGestionDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CausasController_renovar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlazoDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CausaGestionDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CausasController_archivar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CausaGestionDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CausasController_reactivar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PlazoDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CausaGestionDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CausasPublicasController_imagen: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description La imagen de la causa, en WebP */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    CausasController_subirImagen: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    imagen: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CausaGestionDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CausasController_quitarImagen: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CausaGestionDto"];
+                };
+            };
+            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    CausasPublicasController_atendidas: {
+        parameters: {
+            query?: {
+                categoria?: "PERSONAS" | "ANIMALES" | "ADULTOS_MAYORES" | "RESCATISTAS";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CausaPublicaDto"][];
                 };
             };
         };

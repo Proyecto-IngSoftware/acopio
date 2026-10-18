@@ -134,7 +134,10 @@ export function useEntidades() {
   });
 }
 
-export type DatosEntidad = Omit<Entidad, 'id' | 'verificacion'>;
+export type DatosEntidad = Omit<
+  Entidad,
+  'id' | 'verificacion' | 'verificadaEn' | 'tieneLogo' | 'causasActivas'
+>;
 
 export const useGuardarEntidad = () =>
   useCambio(
