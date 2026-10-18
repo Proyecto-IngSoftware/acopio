@@ -327,8 +327,8 @@ def volcar_md(md, nivel_base=1):
         if tipo in ("h2", "h3", "h4"):
             titulo(dato, min(3, nivel_base + int(tipo[1]) - 2))
         elif tipo == "img":
-            # Capturas de teléfono: altas y angostas, se limitan por alto
-            figura(AQUI / dato[1], dato[0], alto_max=12)
+            # Las capturas de teléfono son altas y angostas: se limitan por alto. Los diagramas usan la página
+            figura(AQUI / dato[1], dato[0], alto_max=None if "assets/diagramas" in dato[1] else 12)
         elif tipo == "p" and dato.startswith("Pendiente:"):
             recuadro(dato)
         elif tipo == "p":
@@ -385,8 +385,11 @@ metadato("Repositorio", REPO)
 salto_pagina()
 
 # 1. Incremento funcional y 2. Patrones de diseño
-volcar_md(parte("## 1. Incremento funcional", "## 2. Patrones de diseño"))
-salto_pagina()
+volcar_md(parte("## 1. Incremento funcional", "### 1d. Diagramas"))
+# Los diagramas son anchos: van en una sección horizontal, como en el Avance 4
+nueva_seccion(True)
+volcar_md(parte("### 1d. Diagramas", "## 2. Patrones de diseño"))
+nueva_seccion(False)
 volcar_md(parte("## 2. Patrones de diseño", "## 3. Registro documental del Sprint"))
 
 # 3. Registro documental del Sprint

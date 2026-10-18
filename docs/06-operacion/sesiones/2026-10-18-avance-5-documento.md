@@ -35,6 +35,11 @@ lo que falta.
 - `node scripts/revisar-plan.mjs` coincide con GitHub, y la verificación completa corrió antes
   del commit.
 
+Después, a pedido de Joseph, el Word sumó los diagramas y más pantallas (rama
+`avance-5-diagramas`). El diagrama de paquetes de la API no tenía `turnos`; se agregó con sus
+dependencias reales y se regeneraron los PNG de todos los diagramas, que eran del 9 de
+octubre. El Word quedó con 17 figuras y los diagramas en una sección horizontal.
+
 ## Decisiones
 
 Las tomó Joseph en la sesión:
@@ -58,6 +63,9 @@ Las tomó Joseph en la sesión:
   comprobado; quedó lo que muestra la pantalla, que lleva a la ficha de la zona.
 
 ## Pendiente
+
+- El balance de la portada no está conectado a la API
+  ([P-073](../../01-requerimientos/pendientes.md), [#50](https://github.com/Proyecto-IngSoftware/acopio/issues/50)).
 
 Todo está en la fila 2 del [plan de acción](../../05-planes/plan-de-accion.md) y en
 [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47).

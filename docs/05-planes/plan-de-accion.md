@@ -106,3 +106,7 @@ el Avance 5).
 - 2026-10-18: P-072 resuelto, la Review es el 23. El Word del Avance 5 queda generado con
   `generar-avance-05.py` y unido al documento de avances; pasa a en curso hasta que estén las
   dos capturas, la retrospectiva y la subida a OneDrive.
+- 2026-10-18: el Word del Avance 5 suma los diagramas al día (paquetes con turnos,
+  contenedores y tres modelos de datos) y tres pantallas más. Al tomar las capturas apareció
+  [P-073](../01-requerimientos/pendientes.md): el balance de la portada nunca se conectó a la
+  API; queda en la pieza D (#50).

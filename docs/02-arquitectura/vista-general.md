@@ -3,7 +3,7 @@ title: "Vista general de arquitectura"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-18
 ---
 
 # Vista general de arquitectura
@@ -57,7 +57,7 @@ flowchart TB
         Web["web<br/>nginx + build de Vite"]
 
         subgraph API["api · NestJS · monolito modular"]
-            Dominio["Módulos de dominio<br/>identidad · catalogo · acopios · inventario · comprobantes · motor<br/>pendientes: turnos · importacion"]
+            Dominio["Módulos de dominio<br/>identidad · catalogo · acopios · inventario · comprobantes · motor · turnos<br/>pendiente: importacion"]
             Transversales["Módulos transversales<br/>auditoria · notificaciones · almacenamiento · salud"]
             Tareas["Tareas programadas<br/>@nestjs/schedule"]
         end
@@ -111,10 +111,10 @@ Un módulo NestJS por límite de dominio. Sin dependencias circulares; cuando do
 módulos necesitan hablarse, lo hacen por una interfaz declarada, no importando
 clases internas.
 
-Construidos al 2026-10-07: `identidad`, `auditoria`, `catalogo`, `notificaciones`,
-`salud`, `acopios`, `inventario`, `comprobantes`, `almacenamiento` y la primera etapa de
-`motor` (cálculo, sugerencias y configuración; las remisiones, la recepción y los reportes
-llegan en la segunda). Faltan `turnos` (Bloque 5) e `importacion`.
+Construidos al 2026-10-18: `identidad`, `auditoria`, `catalogo`, `notificaciones`,
+`salud`, `acopios` (con las causas), `inventario`, `comprobantes`, `almacenamiento`, `motor`
+completo (cálculo, sugerencias, remisiones, recepción y reportes) y `turnos` (Bloque 5). Falta
+`importacion`.
 
 | Módulo | Responsabilidad | Expone |
 |---|---|---|

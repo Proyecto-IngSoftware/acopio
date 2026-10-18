@@ -157,7 +157,7 @@ figcaption p { color: var(--muted); }
   <figure>
     <h2>2. Paquetes de la API</h2>
     <div class="lamina">
-      <svg viewBox="0 0 1200 900" role="img" aria-label="Los módulos de dominio de la API se apilan en capas: motor arriba, luego comprobantes e inventario, luego acopios y catálogo. Todos importan hacia abajo; ningún módulo de abajo importa a uno de arriba.">
+      <svg viewBox="0 0 1200 900" role="img" aria-label="Los módulos de dominio de la API se apilan en capas: motor y turnos arriba, luego comprobantes e inventario, luego acopios y catálogo. Todos importan hacia abajo; ningún módulo de abajo importa a uno de arriba.">
         <defs>
           <marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
         </defs>
@@ -176,6 +176,18 @@ figcaption p { color: var(--muted); }
           <text x="444" y="117"><tspan style="fill:var(--muted)">«servicio» </tspan>NecesidadService · SugerenciasService</text>
           <text x="444" y="138"><tspan style="fill:var(--muted)">«servicio» </tspan>RemisionesBorradorService</text>
           <text x="444" y="159" style="font:12px var(--sans);fill:var(--muted)">fórmulas en packages/shared/motor</text>
+        </g>
+
+        <!-- turnos -->
+        <rect x="40" y="30" width="126" height="20" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="50" y="45" style="font:600 12.5px var(--mono);fill:currentColor">modulos/turnos</text>
+        <rect x="40" y="50" width="340" height="120" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <g style="font:13px var(--sans);fill:currentColor">
+          <text x="54" y="75"><tspan style="fill:var(--muted)">«controlador» </tspan>PublicoController · GestionController</text>
+          <text x="54" y="96"><tspan style="fill:var(--muted)">«servicio» </tspan>JornadasService</text>
+          <text x="54" y="117"><tspan style="fill:var(--muted)">«servicio» </tspan>ReservasService · TareasTurnosService</text>
+          <text x="54" y="138"><tspan style="fill:var(--muted)">«dao» </tspan>JornadaDao · ReservaDao</text>
+          <text x="54" y="159" style="font:12px var(--sans);fill:var(--muted)">jornadas, reservas sin cuenta y asistencia</text>
         </g>
 
         <!-- comprobantes -->
@@ -208,7 +220,7 @@ figcaption p { color: var(--muted); }
         <rect x="430" y="450" width="340" height="120" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
         <g style="font:13px var(--sans);fill:currentColor">
           <text x="444" y="475"><tspan style="fill:var(--muted)">«servicio» </tspan>AcopiosService · ZonasService</text>
-          <text x="444" y="496"><tspan style="fill:var(--muted)">«servicio» </tspan>EntidadesService</text>
+          <text x="444" y="496"><tspan style="fill:var(--muted)">«servicio» </tspan>EntidadesService · CausasService</text>
           <text x="444" y="517"><tspan style="fill:var(--muted)">«servicio» </tspan>UbicacionesService</text>
           <text x="444" y="538"><tspan style="fill:var(--muted)">«interfaz» </tspan>Geocodificador</text>
           <text x="444" y="559" style="font:12px var(--sans);fill:var(--muted)">implementa VerificadorUbicaciones</text>
@@ -235,6 +247,8 @@ figcaption p { color: var(--muted); }
           <line x1="380" y1="355" x2="428" y2="500" marker-end="url(#m2)"/>
           <line x1="720" y1="370" x2="720" y2="448" marker-end="url(#m2)"/>
           <line x1="940" y1="370" x2="940" y2="428" marker-end="url(#m2)"/>
+          <polyline points="380,120 412,120 412,470 428,470" marker-end="url(#m2)"/>
+          <polyline points="380,150 396,150 396,622" marker-end="url(#m2)"/>
         </g>
 
         <!-- capa de abajo: módulos hoja y transversales -->
@@ -318,7 +332,7 @@ figcaption p { color: var(--muted); }
       </svg>
     </div>
     <figcaption>
-      <p>Las flechas son las importaciones reales entre módulos, medidas con dependency-cruiser el 7 de octubre de 2026; el CI rechaza cualquier importación que no esté permitida. Todas bajan: el motor depende de comprobantes, inventario, acopios y catálogo, y ningún módulo de abajo importa a uno de arriba.</p>
+      <p>Las flechas son las importaciones reales entre módulos, medidas con dependency-cruiser el 18 de octubre de 2026; el CI rechaza cualquier importación que no esté permitida. Todas bajan: el motor depende de comprobantes, inventario, acopios y catálogo; turnos, de acopios y de notificaciones para sus correos; y ningún módulo de abajo importa a uno de arriba. Además de comprobantes, usan almacenamiento acopios, para los logotipos y las imágenes de las causas, y motor, para las fotos de la recepción; esas flechas no se dibujan para no cruzar las cajas.</p>
       <p><code>identidad</code> no importa <code>acopios</code>: valida las ubicaciones de una asignación con la interfaz <code>VerificadorUbicaciones</code> de <code>comun/</code>, que <code>acopios</code> implementa. Así no se forma un ciclo entre los dos.</p>
     </figcaption>
   </figure>

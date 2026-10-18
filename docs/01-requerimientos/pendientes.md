@@ -1041,6 +1041,17 @@ construirlo. La segunda sigue abierta: es una excepción a una regla del plan.
 (dos ediciones a la vez dejaban mal la bitácora y repetían el aviso) se arregló en la rama.
 **Estado:** ABIERTO
 
+### P-073 · El balance de la portada nunca se conectó a la API
+**Fecha:** 2026-10-18 · **Propuesto por:** Claude, al tomar las capturas del Avance 5 ([#50](https://github.com/Proyecto-IngSoftware/acopio/issues/50))
+**Qué:** el bloque «Balance de recepción» de la portada (`apps/web/src/portal/bloques/BalanceRecepcion.tsx`)
+muestra siempre «Todavía no hay acopios registrados», aunque la demo del servidor tiene cuatro
+acopios en el mapa. El texto es fijo: el comentario dice «Vacío hasta que exista el módulo de
+inventario», y el módulo existe desde el Bloque 2. Falta conectar «Qué hace falta» y «No
+traigan» con los datos de inventario y de «no recibir».
+**Por qué:** es lo primero que ve quien abre Acopio, y en la sustentación se vería como si no
+hubiera datos. Va con el contenido del home, en la pieza D.
+**Estado:** ABIERTO
+
 ---
 
 ## Resueltos
