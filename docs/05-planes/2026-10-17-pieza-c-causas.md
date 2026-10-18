@@ -46,7 +46,7 @@ aprobada por Joseph el 2026-10-17. Maquetas aprobadas de
 | 9 Maquetas de C22 y C15 | ✅ | Joseph las aprobó el 2026-10-17 |
 | 10 C15 con verificación y logotipo | ✅ | |
 | 11 C22 Causas | ✅ | |
-| 12 Demo, recorridos y cierre | 🟨 | Verificación completa en verde (`test:int` 402/402, web 853/853) y recorridos 4/4 y 6/6 en local. Faltan `consola-causas.mjs` contra el servidor, que necesita la contraseña del administrador, y los criterios de HU-02 y HU-15 con Joseph ([P-066](../01-requerimientos/pendientes.md)) |
+| 12 Demo, recorridos y cierre | 🟨 | Verificación completa en verde (`test:int` 402/402, web 853/853) y recorridos 4/4 y 6/6 en local; `portal-causas.mjs` 4/4 contra el servidor tras desplegar #117. Faltan `consola-causas.mjs` contra el servidor, que necesita la contraseña del administrador, y los criterios de HU-02 y HU-15 con Joseph ([P-066](../01-requerimientos/pendientes.md)) |
 
 La revisión final de la rama fue una autorrevisión: el revisor aparte no pudo correr porque se agotó el límite semanal del modelo. Encontró que editar una causa sin cambiar el destino pedía confirmar, y se corrigió con su prueba. Los menores quedaron en [P-066](../01-requerimientos/pendientes.md).
 
