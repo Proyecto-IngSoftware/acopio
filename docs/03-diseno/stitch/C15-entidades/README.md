@@ -18,3 +18,19 @@ actualizado: 2026-10-01
 | Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
 
 Una lista de entidades y una hoja inferior para crear o editar. Stitch dibujó la hoja abierta; la lista de debajo sigue el pedido: nombre, tipo, NIT, cuántos acopios tiene y la etiqueta neutra «Sin verificar». La verificación con documento llega con la especificación C.
+
+## Verificación y logotipo (pieza C)
+
+Joseph aprobó el 2026-10-17 los cambios de la
+[pieza C](../../../superpowers/specs/2026-10-17-pieza-c-causas-design.md), en la
+[maqueta de C22](../C22-causas/maqueta.html). La hoja con el aviso salió de Stitch: pantalla
+`ec9bd4ce58b247b198b27f25acf5531c` ([captura-verificar.png](captura-verificar.png) ·
+[pantalla-verificar.html](pantalla-verificar.html)).
+
+- La fila muestra el sello con su fecha o «Sin verificar», y cuántas causas activas tiene la
+  entidad.
+- La hoja de la entidad suma el logotipo (opcional) y «Verificar». Sin sitio web, el botón se
+  cambia por «Agrega el sitio web para poder verificarla».
+- Verificar abre el aviso de seguridad. El botón queda inactivo hasta marcar «Confirmo que
+  revisé la entidad y su sitio oficial».
+- «Quitar verificación» pide confirmación y dice cuántas causas activas pasan a atendidas.

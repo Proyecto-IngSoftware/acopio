@@ -1,12 +1,18 @@
 import { Global, Module } from '@nestjs/common';
 import { AcopioDao } from './dao/acopio.dao';
+import { CausaDao } from './dao/causa.dao';
+import { EntidadDao } from './dao/entidad.dao';
 import { ZonaDao } from './dao/zona.dao';
 import { VERIFICADOR_UBICACIONES } from '../../comun/ubicaciones/verificador-ubicaciones';
 import { AcopiosController } from './acopios.controller';
 import { AcopiosService } from './acopios.service';
+import { CausasController } from './causas.controller';
+import { CausasPublicasController } from './causas-publicas.controller';
+import { CausasService } from './causas.service';
 import { EntidadesController } from './entidades.controller';
 import { EntidadesService } from './entidades.service';
 import { GeocodificacionController } from './geocodificacion.controller';
+import { LogosController } from './logos.controller';
 import {
   GEOCODIFICADOR,
   GeocodificacionService,
@@ -27,6 +33,9 @@ import { ZonasService } from './zonas.service';
 @Module({
   controllers: [
     EntidadesController,
+    LogosController,
+    CausasController,
+    CausasPublicasController,
     AcopiosController,
     ZonasController,
     UbicacionesController,
@@ -34,8 +43,11 @@ import { ZonasService } from './zonas.service';
   ],
   providers: [
     AcopioDao,
+    CausaDao,
+    EntidadDao,
     ZonaDao,
     EntidadesService,
+    CausasService,
     AcopiosService,
     ZonasService,
     UbicacionesService,

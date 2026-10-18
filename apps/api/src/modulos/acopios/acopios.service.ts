@@ -9,11 +9,13 @@ import {
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import type { ClienteBd } from '../../comun/prisma/cliente-bd';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import type { Prisma } from '../../generado/prisma/client';
 import type { EstadoAcopio } from '../../generado/prisma/enums';
 import { BitacoraService } from '../auditoria/bitacora.service';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
+import { AcopioDao, type FilaAcopio } from './dao/acopio.dao';
+import { EntidadDao } from './dao/entidad.dao';
 
 export interface DatosAcopio {
   entidadId: string;
@@ -36,25 +38,21 @@ export interface DatosOperacion {
   telefono?: string | null;
 }
 
-const conEntidad = { entidad: { select: { id: true, nombre: true } } } as const;
-type FilaAcopio = Prisma.AcopioGetPayload<{ include: typeof conEntidad }>;
 const json = (h: Horario | undefined) => h as unknown as Prisma.InputJsonValue | undefined;
 
 /** Acopios operados (RF-RED-001 a 003). Uno con historia no se borra: se cierra. */
 @Injectable()
 export class AcopiosService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly dao: AcopioDao,
+    private readonly entidades: EntidadDao,
+    private readonly transacciones: Transacciones,
     private readonly bitacora: BitacoraService,
     private readonly alcance: AlcanceService,
   ) {}
 
   async listarPublicos(filtro: { abiertoAhora?: boolean; cerca?: Punto }, ahora = new Date()) {
-    const filas = await this.prisma.acopio.findMany({
-      where: { estado: { in: ['ACTIVO', 'PAUSADO'] } },
-      include: conEntidad,
-      orderBy: { nombre: 'asc' },
-    });
+    const filas = await this.dao.publicos();
     let vistas = filas.map((f) => presentarAcopio(f, ahora));
     if (filtro.abiertoAhora) vistas = vistas.filter((v) => v.abiertoAhora);
     if (filtro.cerca) {
@@ -67,7 +65,7 @@ export class AcopiosService {
   }
 
   async obtenerPublico(id: string) {
-    const f = await this.prisma.acopio.findUnique({ where: { id }, include: conEntidad });
+    const f = await this.dao.conEntidad(id);
     if (!f || f.estado === 'CERRADO') {
       throw new ErrorDominio('ACOPIO_NO_ENCONTRADO', 'El acopio no existe o ya cerró', 404);
     }
@@ -76,20 +74,16 @@ export class AcopiosService {
 
   async listarGestion(usuario: UsuarioAutenticado) {
     const ids = await this.alcance.idsAsignados(usuario, 'ACOPIO');
-    const filas = await this.prisma.acopio.findMany({
-      where: ids === null ? {} : { id: { in: ids } },
-      include: conEntidad,
-      orderBy: { nombre: 'asc' },
-    });
+    const filas = await this.dao.paraGestion(ids);
     return filas.map(presentarGestion);
   }
 
   async crear(admin: UsuarioAutenticado, datos: DatosAcopio) {
     exigirHorario(datos.horario);
-    return this.prisma.$transaction(async (tx) => {
-      await exigirEntidad(tx, datos.entidadId);
-      const f = await tx.acopio.create({
-        data: {
+    return this.transacciones.ejecutar(async (tx) => {
+      await this.exigirEntidad(tx, datos.entidadId);
+      const f = await this.dao.crear(
+        {
           entidad_id: datos.entidadId,
           nombre: datos.nombre.trim(),
           direccion: datos.direccion.trim(),
@@ -101,8 +95,8 @@ export class AcopiosService {
           horario: json(datos.horario)!,
           estado: datos.estado ?? 'ACTIVO',
         },
-        include: conEntidad,
-      });
+        tx,
+      );
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
         accion: 'acopio.creado',
@@ -117,12 +111,12 @@ export class AcopiosService {
 
   async actualizar(admin: UsuarioAutenticado, id: string, cambios: Partial<DatosAcopio>) {
     if (cambios.horario) exigirHorario(cambios.horario);
-    return this.prisma.$transaction(async (tx) => {
-      const antes = await obtenerFila(tx, id);
-      if (cambios.entidadId) await exigirEntidad(tx, cambios.entidadId);
-      const despues = await tx.acopio.update({
-        where: { id },
-        data: {
+    return this.transacciones.ejecutar(async (tx) => {
+      const antes = await this.obtenerFila(tx, id);
+      if (cambios.entidadId) await this.exigirEntidad(tx, cambios.entidadId);
+      const despues = await this.dao.actualizar(
+        id,
+        {
           entidad_id: cambios.entidadId,
           nombre: cambios.nombre?.trim(),
           direccion: cambios.direccion?.trim(),
@@ -134,8 +128,8 @@ export class AcopiosService {
           horario: json(cambios.horario),
           estado: cambios.estado,
         },
-        include: conEntidad,
-      });
+        tx,
+      );
       const cerrado = despues.estado === 'CERRADO' && antes.estado !== 'CERRADO';
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
@@ -154,8 +148,8 @@ export class AcopiosService {
   async operar(usuario: UsuarioAutenticado, id: string, cambios: DatosOperacion) {
     await this.alcance.exigir(usuario, 'ACOPIO', id);
     if (cambios.horario) exigirHorario(cambios.horario);
-    return this.prisma.$transaction(async (tx) => {
-      const antes = await obtenerFila(tx, id);
+    return this.transacciones.ejecutar(async (tx) => {
+      const antes = await this.obtenerFila(tx, id);
       if (antes.estado === 'CERRADO') {
         throw new ErrorDominio(
           'ACOPIO_CERRADO',
@@ -163,16 +157,16 @@ export class AcopiosService {
           409,
         );
       }
-      const despues = await tx.acopio.update({
-        where: { id },
-        data: {
+      const despues = await this.dao.actualizar(
+        id,
+        {
           estado: cambios.estado,
           horario: json(cambios.horario),
           indicaciones_acceso: cambios.indicacionesAcceso,
           telefono: cambios.telefono,
         },
-        include: conEntidad,
-      });
+        tx,
+      );
       await this.bitacora.registrar(tx, {
         usuarioId: usuario.id,
         accion: 'acopio.operado',
@@ -187,12 +181,28 @@ export class AcopiosService {
   }
 
   /** Para inventario: 404 si no existe, 409 si está cerrado. */
-  async exigirAbierto(id: string, bd: ClienteBd = this.prisma): Promise<void> {
-    const f = await bd.acopio.findUnique({ where: { id }, select: { estado: true } });
+  async exigirAbierto(id: string, bd?: ClienteBd): Promise<void> {
+    const f = await this.dao.estado(id, bd);
     if (!f) throw new ErrorDominio('ACOPIO_NO_ENCONTRADO', 'El acopio no existe', 404);
     if (f.estado === 'CERRADO') {
       throw new ErrorDominio('ACOPIO_CERRADO', 'El acopio está cerrado', 409);
     }
+  }
+
+  private async exigirEntidad(tx: ClienteBd, id: string) {
+    const e = await this.entidades.porId(id, tx);
+    if (!e) throw new ErrorDominio('ENTIDAD_NO_ENCONTRADA', 'La entidad no existe', 404);
+  }
+
+  /**
+   * Lee el acopio con la fila bloqueada hasta el fin de la transacción: un cierre que
+   * llega en medio espera, y quien sigue ve el estado nuevo (revisión final, I-1).
+   */
+  private async obtenerFila(tx: ClienteBd, id: string) {
+    await this.dao.bloquear(id, tx);
+    const f = await this.dao.conEntidad(id, tx);
+    if (!f) throw new ErrorDominio('ACOPIO_NO_ENCONTRADO', 'El acopio no existe', 404);
+    return f;
   }
 }
 
@@ -206,22 +216,6 @@ function exigirHorario(h: Horario) {
       errores.map((mensaje) => ({ campo: 'horario', mensaje })),
     );
   }
-}
-
-async function exigirEntidad(tx: Pick<PrismaService, 'entidad'>, id: string) {
-  const e = await tx.entidad.findUnique({ where: { id }, select: { id: true } });
-  if (!e) throw new ErrorDominio('ENTIDAD_NO_ENCONTRADA', 'La entidad no existe', 404);
-}
-
-/**
- * Lee el acopio con la fila bloqueada hasta el fin de la transacción: un cierre que
- * llega en medio espera, y quien sigue ve el estado nuevo (revisión final, I-1).
- */
-async function obtenerFila(tx: ClienteBd, id: string) {
-  await tx.$queryRaw`SELECT id FROM acopio WHERE id = ${id}::uuid FOR UPDATE`;
-  const f = await tx.acopio.findUnique({ where: { id }, include: conEntidad });
-  if (!f) throw new ErrorDominio('ACOPIO_NO_ENCONTRADO', 'El acopio no existe', 404);
-  return f;
 }
 
 export function presentarAcopio(f: FilaAcopio, ahora = new Date()) {

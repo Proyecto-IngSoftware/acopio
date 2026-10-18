@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acopio CO - Nueva causa</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#bec9c8",
+            "surface-container-highest": "#e9e1dd",
+            "surface-tint": "#03696a",
+            "on-surface": "#1e1b19",
+            "on-primary-fixed-variant": "#004f50",
+            "tertiary-fixed": "#b2eded",
+            "on-secondary-fixed": "#1e1b18",
+            "primary-fixed-dim": "#85d4d3",
+            "on-primary-fixed": "#002020",
+            "inverse-on-surface": "#f7efeb",
+            "secondary": "#625e59",
+            "on-primary-container": "#9eedec",
+            "tertiary-fixed-dim": "#96d1d0",
+            "on-error-container": "#93000a",
+            "error-container": "#ffdad6",
+            "tertiary": "#125454",
+            "surface-variant": "#e9e1dd",
+            "primary": "#005454",
+            "on-tertiary": "#ffffff",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "on-secondary-fixed-variant": "#4a4642",
+            "on-error": "#ffffff",
+            "primary-fixed": "#a1f0ef",
+            "outline": "#6e7979",
+            "surface-dim": "#e0d8d5",
+            "primary-container": "#0f6e6e",
+            "background": "#FAFAF9",
+            "secondary-container": "#e9e1db",
+            "inverse-surface": "#33302d",
+            "error": "#ba1a1a",
+            "on-background": "#1e1b19",
+            "inverse-primary": "#85d4d3",
+            "on-surface-variant": "#3e4948",
+            "surface": "#FAFAF9",
+            "surface-container": "#f4ece8",
+            "secondary-fixed": "#e9e1db",
+            "on-primary": "#ffffff",
+            "tertiary-container": "#316c6c",
+            "secondary-fixed-dim": "#ccc5c0",
+            "on-tertiary-fixed": "#002020",
+            "surface-container-high": "#eee7e3",
+            "surface-bright": "#fff8f5",
+            "on-tertiary-container": "#afebea",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-container": "#68635f",
+            "on-secondary": "#ffffff",
+            "surface-container-low": "#faf2ee"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter"],
+            "display": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#FAFAF9] text-[#1C1917] font-body antialiased min-h-screen pb-24">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-4 h-14 bg-surface-container-lowest dark:bg-surface-container-lowest z-40 sticky top-0 shadow-sm">
+<div class="flex items-center space-x-2">
+<span class="font-headline text-lg font-bold text-primary dark:text-primary-fixed">Acopio CO</span>
+</div>
+<div class="flex items-center space-x-3">
+<span class="text-xs font-bold px-2 py-0.5 bg-primary-container text-on-primary-container rounded">CO</span>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-sm">
+        A
+      </div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-md mx-auto px-4 pt-4 pb-12">
+<!-- Back Button and Title -->
+<div class="mb-6">
+<button class="inline-flex items-center text-primary font-semibold text-sm mb-3 hover:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-base mr-1">arrow_back</span>
+        Volver
+      </button>
+<h1 class="text-2xl font-bold font-headline text-on-background">Nueva causa</h1>
+</div>
+<!-- Form Container -->
+<form class="space-y-4" onsubmit="event.preventDefault();">
+<!-- 1. Entidad -->
+<div class="bg-surface-container-lowest border border-[#E7E5E4] rounded-xl p-4 shadow-sm">
+<label class="block text-sm font-bold text-on-surface mb-1" for="entidad">Entidad</label>
+<select class="w-full bg-surface border border-[#E7E5E4] rounded-[10px] p-3 text-on-surface text-base focus:ring-2 focus:ring-primary focus:outline-none" id="entidad">
+<option>Cruz Roja Colombiana</option>
+<option>Defensa Civil Colombiana</option>
+<option>Bomberos de Colombia</option>
+</select>
+<p class="text-xs text-secondary mt-1">Solo aparecen entidades verificadas.</p>
+</div>
+<!-- 2. Categoría -->
+<div class="bg-surface-container-lowest border border-[#E7E5E4] rounded-xl p-4 shadow-sm">
+<label class="block text-sm font-bold text-on-surface mb-2">Categoría</label>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full text-sm font-semibold bg-primary-container text-on-primary-container transition-all" type="button">Personas</button>
+<button class="px-4 py-2 rounded-full text-sm font-semibold bg-surface border border-[#E7E5E4] text-secondary hover:bg-surface-container transition-all" type="button">Animales</button>
+<button class="px-4 py-2 rounded-full text-sm font-semibold bg-surface border border-[#E7E5E4] text-secondary hover:bg-surface-container transition-all" type="button">Adultos mayores</button>
+<button class="px-4 py-2 rounded-full text-sm font-semibold bg-surface border border-[#E7E5E4] text-secondary hover:bg-surface-container transition-all" type="button">Rescatistas</button>
+</div>
+</div>
+<!-- 3. Título de la campaña y Descripción detallada -->
+<div class="bg-surface-container-lowest border border-[#E7E5E4] rounded-xl p-4 shadow-sm space-y-4">
+<div>
+<label class="block text-sm font-bold text-on-surface mb-1" for="titulo">Título de la campaña</label>
+<input class="w-full bg-surface border border-[#E7E5E4] rounded-[10px] p-3 text-on-surface text-base focus:ring-2 focus:ring-primary focus:outline-none placeholder:text-secondary/60" id="titulo" placeholder="Mercados para familias damnificadas en Mocoa" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-bold text-on-surface mb-1" for="descripcion">Descripción detallada</label>
+<textarea class="w-full bg-surface border border-[#E7E5E4] rounded-[10px] p-3 text-on-surface text-base focus:ring-2 focus:ring-primary focus:outline-none placeholder:text-secondary/60" id="descripcion" placeholder="Describa los detalles de la causa, necesidades específicas y destino de los recursos..." rows="4"></textarea>
+</div>
+</div>
+<!-- 4. Imagen de la causa -->
+<div class="bg-surface-container-lowest border border-[#E7E5E4] rounded-xl p-4 shadow-sm">
+<label class="block text-sm font-bold text-on-surface mb-1">Imagen de la causa (opcional)</label>
+<div class="border-2 border-dashed border-[#E7E5E4] rounded-[10px] p-6 text-center hover:bg-surface transition-colors cursor-pointer flex flex-col items-center justify-center">
+<span class="material-symbols-outlined text-3xl text-primary mb-2">add_a_photo</span>
+<span class="text-sm font-medium text-secondary">Subir imagen o fotografía de referencia</span>
+</div>
+</div>
+<!-- 5. Cómo donar (pasos numerados) -->
+<div class="bg-surface-container-lowest border border-[#E7E5E4] rounded-xl p-4 shadow-sm space-y-3">
+<label class="block text-sm font-bold text-on-surface mb-1">Cómo donar (pasos numerados)</label>
+<!-- Step 1 -->
+<div class="flex items-center space-x-2">
+<div class="w-7 h-7 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xs shrink-0">1</div>
+<input class="flex-1 bg-surface border border-[#E7E5E4] rounded-[10px] p-2 text-on-surface text-sm focus:ring-2 focus:ring-primary focus:outline-none" type="text" value="Ingrese a la cuenta bancaria autorizada"/>
+<div class="flex items-center space-x-1">
+<button class="p-1.5 rounded hover:bg-surface-container text-secondary" type="button"><span class="material-symbols-outlined text-sm">arrow_upward</span></button>
+<button class="p-1.5 rounded hover:bg-surface-container text-secondary" type="button"><span class="material-symbols-outlined text-sm">arrow_downward</span></button>
+<button class="p-1.5 rounded hover:bg-surface-container text-error" type="button"><span class="material-symbols-outlined text-sm">close</span></button>
+</div>
+</div>
+<!-- Step 2 -->
+<div class="flex items-center space-x-2">
+<div class="w-7 h-7 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xs shrink-0">2</div>
+<input class="flex-1 bg-surface border border-[#E7E5E4] rounded-[10px] p-2 text-on-surface text-sm focus:ring-2 focus:ring-primary focus:outline-none" type="text" value="Realice la transferencia por PSE o Nequi"/>
+<div class="flex items-center space-x-1">
+<button class="p-1.5 rounded hover:bg-surface-container text-secondary" type="button"><span class="material-symbols-outlined text-sm">arrow_upward</span></button>
+<button class="p-1.5 rounded hover:bg-surface-container text-secondary" type="button"><span class="material-symbols-outlined text-sm">arrow_downward</span></button>
+<button class="p-1.5 rounded hover:bg-surface-container text-error" type="button"><span class="material-symbols-outlined text-sm">close</span></button>
+</div>
+</div>
+<!-- Add Step Button -->
+<button class="w-full mt-2 py-2.5 px-4 border border-[#E7E5E4] rounded-[10px] text-primary font-semibold text-sm flex items-center justify-center space-x-1 hover:bg-surface transition-colors" type="button">
+<span class="material-symbols-outlined text-base">add</span>
+<span>Agregar paso</span>
+</button>
+</div>
+<!-- 6. Enlace oficial de donación -->
+<div class="bg-surface-container-lowest border border-[#E7E5E4] rounded-xl p-4 shadow-sm">
+<label class="block text-sm font-bold text-on-surface mb-1" for="enlace">Enlace oficial de donación</label>
+<input class="w-full bg-surface border border-[#E7E5E4] rounded-[10px] p-3 text-on-surface text-base focus:ring-2 focus:ring-primary focus:outline-none" id="enlace" type="url" value="https://www.cruzrojacolombiana.org/donaciones"/>
+<p class="text-xs text-secondary mt-1">Sitio web externo oficial de la entidad verificada.</p>
+</div>
+<!-- 7. Fecha de cierre -->
+<div class="bg-surface-container-lowest border border-[#E7E5E4] rounded-xl p-4 shadow-sm">
+<label class="block text-sm font-bold text-on-surface mb-1" for="fecha">Fecha de cierre</label>
+<input class="w-full bg-surface border border-[#E7E5E4] rounded-[10px] p-3 text-on-surface text-base focus:ring-2 focus:ring-primary focus:outline-none" id="fecha" type="date" value="2027-04-17"/>
+<p class="text-xs text-secondary mt-1">Hasta el 17 de abril de 2027 (vigencia máxima de 6 meses).</p>
+</div>
+<!-- 8. Botón principal -->
+<div class="pt-2">
+<button class="w-full h-14 bg-primary-container text-on-primary font-bold rounded-[10px] flex items-center justify-center space-x-2 shadow-sm hover:opacity-95 transition-opacity active:opacity-80" type="submit">
+<span class="material-symbols-outlined text-xl">check_circle</span>
+<span class="text-base">Publicar causa</span>
+</button>
+</div>
+</form>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface-container-lowest border-t border-surface-variant pb-safe shadow-lg">
+<!-- Inicio -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">home</span>
+<span class="text-xs mt-0.5">Inicio</span>
+</a>
+<!-- Mapa -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">map</span>
+<span class="text-xs mt-0.5">Mapa</span>
+</a>
+<!-- Causas (Active) -->
+<a class="flex flex-col items-center justify-center text-primary font-bold min-h-[48px] px-3" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-xs mt-0.5">Causas</span>
+</a>
+<!-- Voluntariado -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">volunteer_activism</span>
+<span class="text-xs mt-0.5">Voluntariado</span>
+</a>
+<!-- Más -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">menu</span>
+<span class="text-xs mt-0.5">Más</span>
+</a>
+</nav>
+</body></html>

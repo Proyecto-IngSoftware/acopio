@@ -29,3 +29,14 @@ export function fechaHora(fecha: string): string {
   });
   return texto.replace(' de ', ' ');
 }
+
+/** «12 de agosto de 2026», en Colombia. Acepta `2026-08-12` o una fecha con hora. */
+export function diaConAnio(fecha: string): string {
+  const instante = fecha.length === 10 ? `${fecha}T12:00:00-05:00` : fecha;
+  return new Date(instante).toLocaleDateString('es-CO', {
+    timeZone: 'America/Bogota',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+}

@@ -1,6 +1,22 @@
-import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
+  Put,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import {
   ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiResponse,
@@ -10,7 +26,9 @@ import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
+import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { EntidadDto, ErrorDto } from '../../comun/respuestas';
+import { TAMANO_MAXIMO } from '../almacenamiento/imagenes';
 import { EntidadesService } from './entidades.service';
 
 const opcional = (max: number) => z.string().trim().min(1).max(max).nullable().optional();
@@ -27,6 +45,15 @@ class CrearEntidadDto extends crearDto(
   }),
 ) {}
 class ActualizarEntidadDto extends crearDto(CrearEntidadDto.schema.partial()) {}
+class VerificarEntidadDto extends crearDto(
+  z.object({
+    confirmo: z
+      .boolean()
+      .optional()
+      .describe('Confirmo que revisé la entidad y su sitio oficial (aviso de seguridad, C-09)'),
+  }),
+) {}
+class ArchivadasDto extends crearDto(z.object({ archivadas: z.number().int() })) {}
 
 const errores = {
   status: 'default' as const,
@@ -64,5 +91,57 @@ export class EntidadesController {
     @Body() cambios: ActualizarEntidadDto,
   ) {
     return this.entidades.actualizar(admin, id, cambios);
+  }
+
+  @Post(':id/verificar')
+  @HttpCode(200)
+  @ApiOkResponse({ type: EntidadDto })
+  @ApiResponse(errores)
+  verificar(
+    @UsuarioActual() admin: UsuarioAutenticado,
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() cuerpo: VerificarEntidadDto,
+  ) {
+    return this.entidades.verificar(admin, id, cuerpo.confirmo === true);
+  }
+
+  @Post(':id/quitar-verificacion')
+  @HttpCode(200)
+  @ApiOkResponse({ type: ArchivadasDto })
+  @ApiResponse(errores)
+  quitarVerificacion(
+    @UsuarioActual() admin: UsuarioAutenticado,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    return this.entidades.quitarVerificacion(admin, id);
+  }
+
+  @Put(':id/logo')
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: { logo: { type: 'string', format: 'binary' } },
+      required: ['logo'],
+    },
+  })
+  // Un byte más que el máximo: así procesarImagen responde 413 con su mensaje
+  @UseInterceptors(FileInterceptor('logo', { limits: { fileSize: TAMANO_MAXIMO + 1 } }))
+  @ApiOkResponse({ type: EntidadDto })
+  @ApiResponse(errores)
+  subirLogo(
+    @UsuarioActual() admin: UsuarioAutenticado,
+    @Param('id', ParseUUIDPipe) id: string,
+    @UploadedFile() archivo?: Express.Multer.File,
+  ) {
+    if (!archivo) throw new ErrorDominio('SIN_ARCHIVO', 'Adjunta la imagen del logotipo', 400);
+    return this.entidades.subirLogo(admin, id, archivo.buffer);
+  }
+
+  @Delete(':id/logo')
+  @ApiOkResponse({ type: EntidadDto })
+  @ApiResponse(errores)
+  quitarLogo(@UsuarioActual() admin: UsuarioAutenticado, @Param('id', ParseUUIDPipe) id: string) {
+    return this.entidades.quitarLogo(admin, id);
   }
 }

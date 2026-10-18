@@ -1987,6 +1987,766 @@
         ]
       }
     },
+    "/api/entidades/{id}/verificar": {
+      "post": {
+        "operationId": "EntidadesController_verificar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerificarEntidadDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntidadDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/entidades/{id}/quitar-verificacion": {
+      "post": {
+        "operationId": "EntidadesController_quitarVerificacion",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArchivadasDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/entidades/{id}/logo": {
+      "put": {
+        "operationId": "EntidadesController_subirLogo",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "logo": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "logo"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntidadDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      },
+      "delete": {
+        "operationId": "EntidadesController_quitarLogo",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntidadDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "red"
+        ]
+      },
+      "get": {
+        "operationId": "LogosController_leer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "La imagen del logotipo, en WebP"
+          }
+        },
+        "tags": [
+          "red"
+        ]
+      }
+    },
+    "/api/causas/gestion": {
+      "get": {
+        "operationId": "CausasController_listar",
+        "parameters": [
+          {
+            "name": "estado",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "activas",
+              "type": "string",
+              "enum": [
+                "activas",
+                "por-cerrar",
+                "atendidas"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CausaGestionDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "causas"
+        ]
+      }
+    },
+    "/api/causas": {
+      "post": {
+        "operationId": "CausasController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearCausaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CausaGestionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "causas"
+        ]
+      },
+      "get": {
+        "operationId": "CausasPublicasController_listar",
+        "parameters": [
+          {
+            "name": "categoria",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PERSONAS",
+                "ANIMALES",
+                "ADULTOS_MAYORES",
+                "RESCATISTAS"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CausaPublicaDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "causas"
+        ]
+      }
+    },
+    "/api/causas/{id}": {
+      "patch": {
+        "operationId": "CausasController_editar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditarCausaDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CausaGestionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "causas"
+        ]
+      },
+      "get": {
+        "operationId": "CausasPublicasController_obtener",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CausaPublicaDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "causas"
+        ]
+      }
+    },
+    "/api/causas/{id}/renovar": {
+      "post": {
+        "operationId": "CausasController_renovar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlazoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CausaGestionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "causas"
+        ]
+      }
+    },
+    "/api/causas/{id}/archivar": {
+      "post": {
+        "operationId": "CausasController_archivar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CausaGestionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "causas"
+        ]
+      }
+    },
+    "/api/causas/{id}/reactivar": {
+      "post": {
+        "operationId": "CausasController_reactivar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlazoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CausaGestionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "causas"
+        ]
+      }
+    },
+    "/api/causas/{id}/imagen": {
+      "put": {
+        "operationId": "CausasController_subirImagen",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imagen": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "imagen"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CausaGestionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "causas"
+        ]
+      },
+      "delete": {
+        "operationId": "CausasController_quitarImagen",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CausaGestionDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error con forma { estado, codigo, mensaje, detalles? }",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "causas"
+        ]
+      },
+      "get": {
+        "operationId": "CausasPublicasController_imagen",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "La imagen de la causa, en WebP"
+          }
+        },
+        "tags": [
+          "causas"
+        ]
+      }
+    },
+    "/api/causas/atendidas": {
+      "get": {
+        "operationId": "CausasPublicasController_atendidas",
+        "parameters": [
+          {
+            "name": "categoria",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PERSONAS",
+                "ANIMALES",
+                "ADULTOS_MAYORES",
+                "RESCATISTAS"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CausaPublicaDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "causas"
+        ]
+      }
+    },
     "/api/acopios": {
       "get": {
         "operationId": "AcopiosController_listarPublicos",
@@ -6787,6 +7547,19 @@
               "VERIFICADA",
               "RECHAZADA"
             ]
+          },
+          "verificadaEn": {
+            "type": "string",
+            "nullable": true
+          },
+          "tieneLogo": {
+            "type": "boolean"
+          },
+          "causasActivas": {
+            "description": "Solo en la lista de C15",
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
           }
         },
         "required": [
@@ -6798,7 +7571,9 @@
           "telefono",
           "correo",
           "descripcion",
-          "verificacion"
+          "verificacion",
+          "verificadaEn",
+          "tieneLogo"
         ]
       },
       "CrearEntidadDto": {
@@ -6894,6 +7669,411 @@
             "nullable": true
           }
         }
+      },
+      "VerificarEntidadDto": {
+        "type": "object",
+        "properties": {
+          "confirmo": {
+            "description": "Confirmo que revisé la entidad y su sitio oficial (aviso de seguridad, C-09)",
+            "type": "boolean"
+          }
+        }
+      },
+      "ArchivadasDto": {
+        "type": "object",
+        "properties": {
+          "archivadas": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "archivadas"
+        ]
+      },
+      "CausaGestionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "categoria": {
+            "type": "string",
+            "enum": [
+              "PERSONAS",
+              "ANIMALES",
+              "ADULTOS_MAYORES",
+              "RESCATISTAS"
+            ]
+          },
+          "titulo": {
+            "type": "string"
+          },
+          "descripcion": {
+            "type": "string"
+          },
+          "pasos": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "urlOficial": {
+            "type": "string"
+          },
+          "dominio": {
+            "type": "string",
+            "nullable": true
+          },
+          "tieneImagen": {
+            "type": "boolean"
+          },
+          "actualizadoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "publicadaEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "cierraEl": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "cerroEl": {
+            "description": "Nulo mientras la causa siga activa",
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "nullable": true
+          },
+          "motivo": {
+            "type": "string",
+            "enum": [
+              "VENCIDA",
+              "MANUAL",
+              "ENTIDAD_SIN_VERIFICAR"
+            ],
+            "nullable": true
+          },
+          "entidad": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "nombre": {
+                "type": "string"
+              },
+              "tieneLogo": {
+                "type": "boolean"
+              },
+              "verificadaEn": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "nombre",
+              "tieneLogo",
+              "verificadaEn"
+            ]
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "ACTIVA",
+              "ATENDIDA"
+            ]
+          },
+          "porCerrar": {
+            "type": "boolean"
+          },
+          "dominioDistinto": {
+            "type": "boolean"
+          },
+          "creadaPor": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "id",
+          "categoria",
+          "titulo",
+          "descripcion",
+          "pasos",
+          "urlOficial",
+          "dominio",
+          "tieneImagen",
+          "actualizadoEn",
+          "publicadaEn",
+          "cierraEl",
+          "cerroEl",
+          "motivo",
+          "entidad",
+          "estado",
+          "porCerrar",
+          "dominioDistinto",
+          "creadaPor"
+        ]
+      },
+      "CrearCausaDto": {
+        "type": "object",
+        "properties": {
+          "entidadId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "categoria": {
+            "type": "string",
+            "enum": [
+              "PERSONAS",
+              "ANIMALES",
+              "ADULTOS_MAYORES",
+              "RESCATISTAS"
+            ]
+          },
+          "titulo": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 120
+          },
+          "descripcion": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 2000
+          },
+          "pasos": {
+            "minItems": 1,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 300
+            }
+          },
+          "urlOficial": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "cierraEl": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "confirmo": {
+            "description": "Confirmo que revisé la entidad y el sitio de destino (C-09)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "entidadId",
+          "categoria",
+          "titulo",
+          "descripcion",
+          "pasos",
+          "urlOficial",
+          "cierraEl"
+        ]
+      },
+      "EditarCausaDto": {
+        "type": "object",
+        "properties": {
+          "entidadId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "categoria": {
+            "type": "string",
+            "enum": [
+              "PERSONAS",
+              "ANIMALES",
+              "ADULTOS_MAYORES",
+              "RESCATISTAS"
+            ]
+          },
+          "titulo": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 120
+          },
+          "descripcion": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 2000
+          },
+          "pasos": {
+            "minItems": 1,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 3,
+              "maxLength": 300
+            }
+          },
+          "urlOficial": {
+            "type": "string",
+            "maxLength": 500
+          },
+          "cierraEl": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "confirmo": {
+            "description": "Confirmo que revisé la entidad y el sitio de destino (C-09)",
+            "type": "boolean"
+          }
+        }
+      },
+      "PlazoDto": {
+        "type": "object",
+        "properties": {
+          "cierraEl": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "confirmo": {
+            "description": "Confirmo que revisé la entidad y el sitio de destino (C-09)",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "cierraEl"
+        ]
+      },
+      "CausaPublicaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "categoria": {
+            "type": "string",
+            "enum": [
+              "PERSONAS",
+              "ANIMALES",
+              "ADULTOS_MAYORES",
+              "RESCATISTAS"
+            ]
+          },
+          "titulo": {
+            "type": "string"
+          },
+          "descripcion": {
+            "type": "string"
+          },
+          "pasos": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "urlOficial": {
+            "description": "Nulo si la entidad ya no está verificada: la web no muestra el enlace",
+            "type": "string",
+            "nullable": true
+          },
+          "dominio": {
+            "type": "string",
+            "nullable": true
+          },
+          "tieneImagen": {
+            "type": "boolean"
+          },
+          "actualizadoEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "publicadaEn": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$"
+          },
+          "cierraEl": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "cerroEl": {
+            "description": "Nulo mientras la causa siga activa",
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "nullable": true
+          },
+          "motivo": {
+            "type": "string",
+            "enum": [
+              "VENCIDA",
+              "MANUAL",
+              "ENTIDAD_SIN_VERIFICAR"
+            ],
+            "nullable": true
+          },
+          "entidad": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "nombre": {
+                "type": "string"
+              },
+              "tieneLogo": {
+                "type": "boolean"
+              },
+              "verificadaEn": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "nullable": true
+              }
+            },
+            "required": [
+              "id",
+              "nombre",
+              "tieneLogo",
+              "verificadaEn"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "categoria",
+          "titulo",
+          "descripcion",
+          "pasos",
+          "urlOficial",
+          "dominio",
+          "tieneImagen",
+          "actualizadoEn",
+          "publicadaEn",
+          "cierraEl",
+          "cerroEl",
+          "motivo",
+          "entidad"
+        ]
       },
       "AcopioPublicoDto": {
         "type": "object",

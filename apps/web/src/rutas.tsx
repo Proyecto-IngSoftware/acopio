@@ -124,8 +124,18 @@ const Conciliacion = lazy(() =>
   import('./consola/comprobantes/Conciliacion').then((m) => ({ default: m.Conciliacion })),
 );
 const Mapa = lazy(() => import('./portal/mapa/Mapa').then((m) => ({ default: m.Mapa })));
+const DirectorioCausas = lazy(() =>
+  import('./portal/causas/Directorio').then((m) => ({ default: m.Directorio })),
+);
+const CausasAtendidas = lazy(() =>
+  import('./portal/causas/Atendidas').then((m) => ({ default: m.Atendidas })),
+);
+const CausasConsola = lazy(() =>
+  import('./consola/causas/Causas').then((m) => ({ default: m.Causas })),
+);
+const FichaCausa = lazy(() => import('./portal/causas/Ficha').then((m) => ({ default: m.Ficha })));
 
-const SIN_CONSTRUIR = ['causas', 'voluntariado', 'proximamente'];
+const SIN_CONSTRUIR = ['voluntariado', 'proximamente'];
 
 /** /consola/* queda reservado para el ciclo 2. */
 export function Rutas() {
@@ -212,6 +222,7 @@ export function Rutas() {
             ['consola/usuarios/invitar', <InvitarPersona key="i" />, false],
             ['consola/usuarios/:id', <DetalleUsuario key="d" />, false],
             ['consola/entidades', <Entidades key="e" />, true],
+            ['consola/causas', <CausasConsola key="ca" />, true],
             ['consola/acopios', <Acopios key="a" />, true],
             ['consola/acopios/nuevo', <FormularioAcopio key="an" />, true],
             ['consola/acopios/:id', <FormularioAcopio key="ae" />, true],
@@ -320,6 +331,9 @@ export function Rutas() {
             </RequiereRol>
           }
         />
+        <Route path="causas" element={<DirectorioCausas />} />
+        <Route path="causas/atendidas" element={<CausasAtendidas />} />
+        <Route path="causas/:id" element={<FichaCausa />} />
         {SIN_CONSTRUIR.map((ruta) => (
           <Route key={ruta} path={ruta} element={<Proximamente />} />
         ))}

@@ -145,7 +145,7 @@ Estas historias o criterios no están construidos. Si alguien llega a ellos, no 
 
 - HU-01.2, la ficha de un acopio importado de RedAcopio: el importador es la pieza E del
   Bloque 1 ([#49](https://github.com/Proyecto-IngSoftware/acopio/issues/49)).
-- HU-02, causas verificadas, y HU-15, verificación de entidades con documento: pieza C del
+- HU-02, causas verificadas, y HU-15, verificación de entidades con aviso de seguridad: pieza C del
   Bloque 1 ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)).
 - HU-03, turnos de voluntariado: Bloque 5
   ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)).

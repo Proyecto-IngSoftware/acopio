@@ -1011,6 +1011,48 @@ repositorio no lo tiene.
 **Por qué:** si se suma alguien con Claude Code, la regla queda sin quien la haga cumplir.
 **Estado:** ABIERTO. Versionarlo en `.claude/hooks/` cuando se sume otra persona
 
+
+### P-066 · Lo que falta de la pieza C
+**Fecha:** 2026-10-17 · **Propuesto por:** Claude, al cerrar la pieza C ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48))
+**Qué:**
+- Correr `consola-causas.mjs` contra el servidor de pruebas. Necesita la contraseña del
+  administrador de allá (`ADMIN_CONTRASENA`), que tiene Joseph. Cada corrida crea una entidad
+  «Fundación Recorrido …» en el servidor
+- Verificar con Joseph los criterios de HU-02 y HU-15, uno por uno (§9 de la
+  [especificación](../superpowers/specs/2026-10-17-pieza-c-causas-design.md))
+- Tres menores de la revisión final: en la hoja de C15, tras subir el logotipo, el texto sigue
+  diciendo «Subir logotipo» hasta reabrirla; `GET /entidades/:id/logo` sirve el logotipo de
+  cualquier entidad, también de las no verificadas (no es un dato sensible); C22 no tiene una
+  ruta por causa, así que no se puede enlazar a una causa de la consola
+**Por qué:** la pieza quedó construida y probada en local; esto es lo que no se pudo cerrar
+en la sesión.
+**Estado:** ABIERTO
+
+---
+
+## Resueltos
+
+_Al resolver una entrada, muévela aquí con su destino. No se borran: la historia
+de por qué algo no entró vale tanto como lo que entró._
+
+### P-065 · Verificación sin documento y plazo en la causa
+**Fecha:** 2026-10-17 · **Propuesto por:** Joseph, en la conversación de la especificación de la pieza C ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48))
+**Qué:** tres cambios a los requerimientos de causas:
+- Verificar una entidad es una marca del Administrador, sin documento soporte. Acopio guarda
+  quién y cuándo, y en esta etapa solo se verifican organizaciones longevas y reconocidas en
+  todo el mundo, con un aviso de seguridad antes de verificar y de publicar
+- La verificación de la entidad no vence. El plazo vive en la causa: una fecha de cierre
+  obligatoria, como máximo a 6 meses, que se puede renovar; al pasar, la causa se archiva sola
+- El directorio muestra primero lo más reciente, nuevo o renovado
+**Por qué:** las entidades todavía no usan Acopio y el equipo no tiene sus documentos. El
+equipo revisa campañas, no entidades, y una causa sin fecha se queda publicada sin que nadie
+la mire.
+**Estado:** RESUELTO el 2026-10-17 → Joseph aprobó la
+[especificación](../superpowers/specs/2026-10-17-pieza-c-causas-design.md) (C-01 a C-05).
+Quedaron reescritos RF-RED-006, RF-RED-007, RF-RED-008 y RF-RED-010, y `entidad` y `causa` en
+`modelo-datos.md`. Los criterios nuevos de HU-15 están en §9 de la especificación; el avance 2
+se entregó con los anteriores y no se reescribe
+
 ### P-064 · Causas atendidas en pantalla aparte, con el enlace al sitio oficial
 **Fecha:** 2026-10-17 · **Propuesto por:** Joseph, al aprobar las maquetas de P3 y P4 ([#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57))
 **Qué:** dos decisiones para la especificación de la pieza C
@@ -1023,16 +1065,12 @@ repositorio no lo tiene.
 **Por qué:** RF-RED-008 pide las archivadas «fuera del listado principal», pero no dice si van
 en otra ruta. Y RF-RED-010 deja visible la causa archivada sin decir si conserva la salida al
 sitio de la entidad.
-**Estado:** ABIERTO hasta que la especificación de la pieza C lo recoja. Maquetas en
+**Estado:** RESUELTO el 2026-10-17 → la
+[especificación de la pieza C](../superpowers/specs/2026-10-17-pieza-c-causas-design.md),
+aprobada por Joseph, lo recoge en C-06 y C-08, y RF-RED-008 ya dice «pantalla aparte».
+Maquetas en
 [P03-causas](../03-diseno/stitch/P03-causas/README.md) y
 [P04-ficha-causa](../03-diseno/stitch/P04-ficha-causa/README.md)
-
----
-
-## Resueltos
-
-_Al resolver una entrada, muévela aquí con su destino. No se borran: la historia
-de por qué algo no entró vale tanto como lo que entró._
 
 ### P-062 · Dos pendientes de Joseph sobre el servidor de pruebas
 **Fecha:** 2026-10-17 · **Propuesto por:** informes finales de la sesión del 2026-10-17, recuperados

@@ -40,6 +40,8 @@ node apps/web/recorridos/consola-motor.mjs
 node apps/web/recorridos/consola-remisiones.mjs
 node apps/web/recorridos/consola-recepciones.mjs
 node apps/web/recorridos/sin-conexion.mjs
+node apps/web/recorridos/portal-causas.mjs
+node apps/web/recorridos/consola-causas.mjs
 ```
 
 - La web se sirve en el puerto 5173 porque la API rechaza escrituras con la cookie desde un
@@ -117,6 +119,8 @@ Con la demo recién sembrada, conviene correr `consola-motor.mjs` antes que
 | `consola-remisiones.mjs` | Remisiones para el Operador de Kennedy: la fila de «Más», editar una línea, despachar con responsable y folio comprobando que el saldo baja lo despachado, el documento con QR, cancelar lo despachado comprobando que el saldo vuelve, y un despacho general creado a mano y cancelado (Bloque 4, interfaz ciclo 2). Entra como `operador2` con `DEMO_CONTRASENA`. Al cancelar lo despachado deja la demo como estaba, así se puede repetir | 7 | C12-remisiones |
 | `consola-recepciones.mjs` | El Receptor (Bloque 4, interfaz ciclo 3): la fila «Mi zona» de «Más», la pantalla «Mi zona» y su «Ver todas» hacia «Por recibir», confirmar deshabilitado sin foto, subir una foto y ver su miniatura, confirmar y comprobar en la API que la remisión quedó recibida con la nota y la foto, reportar una categoría en C20, comprobar que un visitante sin sesión la ve en el mapa público y en la lista (HU-13.1) y marcarla resuelta. Entra como `receptor1` con `DEMO_CONTRASENA`. El 2026-10-17 pasó 7/7 en local | 7 | mi-zona, C13-recepcion, C20-reportar y P05-mapa |
 | `sin-conexion.mjs` | La captura sin conexión de C4 (Bloque 2, ciclo 3) | 12 | C04-sin-conexion y C04-pendientes |
+| `portal-causas.mjs` | Lo público de la pieza C sin iniciar sesión: P3 con las causas «(demo)» y su sello, el chip de personas desaparecidas con sus tres enlaces, la ficha con la hoja de salida y su `rel`, y las causas atendidas | 4 | P03-causas y P04-ficha-causa |
+| `consola-causas.mjs` | La consola de la pieza C: crea una entidad nueva por corrida, la verifica con el aviso (el botón empieza inactivo), publica una causa con la confirmación de destino, la renueva, archiva otra y le quita la verificación a la entidad; en P4 el enlace desaparece. Entra como `admin` con `ADMIN_CONTRASENA` y no toca las causas «(demo)» | 6 | C15-entidades, C22-causas y P04-ficha-causa |
 
 ### `validacion-general.mjs`
 
@@ -170,6 +174,14 @@ señal las tres se envían solas, y el historial muestra la entrada de arroz con
 ocurrió y la hora en que llegó.
 
 ## Últimos resultados
+
+**2026-10-17, en local, pieza C** (rama `pieza-c-especificacion`, API reconstruida con
+`servicios:todo`):
+
+| Script | Resultado |
+|---|---|
+| `portal-causas.mjs` | 4 de 4 |
+| `consola-causas.mjs` | 6 de 6. La primera corrida encontró que el formulario de C22 medía 420 px: el `fieldset` de los pasos tiene `min-width: min-content` por defecto; se corrigió con `min-w-0` |
 
 **2026-10-17, en local**, con los arreglos de la rama `recorridos-robustos`:
 

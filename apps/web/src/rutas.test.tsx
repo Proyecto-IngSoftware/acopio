@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/react';
-import { clienteFalso, envolver, responderJson } from './pruebas/utilidades';
+import { clienteFalso, envolver, responderJson, responderSegun } from './pruebas/utilidades';
 import { violacionesGraves } from './pruebas/accesibilidad';
 import { Rutas } from './rutas';
 
@@ -35,7 +35,13 @@ it('/mapa abre el mapa de acopios', async () => {
   expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent('Mapa de acopios');
 });
 
-it.each(['/causas', '/voluntariado', '/proximamente'])(
+it('/causas abre el directorio de causas', async () => {
+  responderSegun({ 'GET /api/causas': [] });
+  render(envolver(<Rutas />, '/causas'));
+  expect(await screen.findByRole('heading', { level: 1, name: 'Causas' })).toBeInTheDocument();
+});
+
+it.each(['/voluntariado', '/proximamente'])(
   '%s muestra «Próximamente» con un enlace de vuelta',
   (ruta) => {
     render(envolver(<Rutas />, ruta));

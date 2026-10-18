@@ -7,7 +7,12 @@ import { LimiteIntentosGuard } from '../src/comun/limite-intentos.guard';
 import { PrismaService } from '../src/comun/prisma/prisma.service';
 import { configurarApp } from '../src/configurar-app';
 import { leerEntorno } from '../src/config/entorno';
-import { GEOCODIFICADOR, GeocodificadorFalso } from '../src/modulos/acopios/geocodificacion';
+import {
+  GEOCODIFICADOR,
+  GeocodificadorFalso,
+  RELOJ,
+  relojReal,
+} from '../src/modulos/acopios/geocodificacion';
 import { ALMACEN } from '../src/modulos/almacenamiento/almacen';
 import { AlmacenMemoria } from '../src/modulos/almacenamiento/almacen-memoria';
 import {
@@ -35,13 +40,20 @@ export const almacenPrueba = new AlmacenMemoria();
 
 /** Levanta la API completa contra la base de pruebas, con el seed aplicado. */
 export async function crearAppPrueba(
-  opciones: { limiteDeIntentos?: boolean } = {},
+  opciones: { limiteDeIntentos?: boolean; ahora?: number } = {},
 ): Promise<AppPrueba> {
   Object.assign(process.env, entornoPruebas());
   let constructor = Test.createTestingModule({ imports: [AppModule] });
   // CI no sale a internet: Nominatim siempre con el adaptador falso
   constructor = constructor.overrideProvider(GEOCODIFICADOR).useValue(new GeocodificadorFalso());
   constructor = constructor.overrideProvider(ALMACEN).useValue(almacenPrueba);
+  // Un reloj fijo para lo que depende de «hoy» (pieza C); esperar sigue siendo real
+  const { ahora } = opciones;
+  if (ahora !== undefined) {
+    constructor = constructor
+      .overrideProvider(RELOJ)
+      .useValue({ ahora: () => ahora, esperar: relojReal.esperar });
+  }
   if (!opciones.limiteDeIntentos) {
     constructor = constructor
       .overrideProvider(LimiteIntentosGuard)

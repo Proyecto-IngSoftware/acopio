@@ -7,6 +7,7 @@ import {
   type DatosEntidad,
   type Entidad,
 } from '../../api/red';
+import { useQuitarVerificacion, useSubirLogo, useVerificarEntidad } from '../../api/causas';
 import { Boton } from '../../componentes/Boton';
 import { Campo } from '../../componentes/Campo';
 import { Esqueleto } from '../../componentes/Esqueleto';
@@ -14,16 +15,27 @@ import { EstadoError } from '../../componentes/EstadoError';
 import { EstadoVacio } from '../../componentes/EstadoVacio';
 import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
+import { dominioDe } from '@acopio/shared';
+import { Sello } from '../../portal/causas/piezas';
 import { Encabezado } from '../Encabezado';
 import { FormularioError } from '../catalogo/FormularioError';
 import { Buscador } from './Buscador';
 
 const TIPOS = ['Fundación', 'ONG', 'Alcaldía', 'Iglesia', 'Junta de acción comunal'];
 
-/** C15 Entidades (RF-RED-005). La verificación con documento llega con la especificación C. */
+/**
+ * C15 Entidades (RF-RED-005 y 006). Verificar es una marca del Administrador, con el aviso
+ * de seguridad y su casilla (pieza C, C-01 y C-09).
+ */
 export function Entidades() {
   const [q, fijarQ] = useState('');
   const [editando, fijarEditando] = useState<Entidad | 'nueva' | null>(null);
+  const [abierta, fijarAbierta] = useState<Entidad | null>(null);
+  const [paso, fijarPaso] = useState<'verificar' | 'quitar' | null>(null);
+  const cerrarTodo = () => {
+    fijarAbierta(null);
+    fijarPaso(null);
+  };
   const { data, error, isPending, refetch } = useEntidades();
   const { data: acopios } = useAcopiosGestion();
 
@@ -37,7 +49,7 @@ export function Entidades() {
     <div className="flex flex-col gap-space-md">
       <Encabezado
         titulo="Entidades"
-        subtitulo="Fundaciones, ONG y alcaldías que responden por los acopios"
+        subtitulo="Fundaciones, ONG y alcaldías que responden por los acopios y las causas"
       />
       <Boton className="min-h-[56px] w-full" onClick={() => fijarEditando('nueva')}>
         <Icono nombre="add_circle" className="text-[20px]" />
@@ -59,7 +71,7 @@ export function Entidades() {
             <li key={e.id}>
               <button
                 type="button"
-                onClick={() => fijarEditando(e)}
+                onClick={() => fijarAbierta(e)}
                 className="flex w-full items-center gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md text-left"
               >
                 <span className="flex min-w-0 flex-1 flex-col gap-1">
@@ -69,11 +81,17 @@ export function Entidades() {
                   </span>
                   <span className="flex flex-wrap items-center gap-space-xs text-body-sm text-on-surface-variant">
                     {n === 0 ? 'Sin acopios' : n === 1 ? '1 acopio' : `${n} acopios`}
-                    <span className="inline-flex items-center gap-1 rounded-full bg-surface-container px-2 py-0.5 text-label-md text-on-surface-variant">
+                    {!!e.causasActivas &&
+                      ` · ${e.causasActivas === 1 ? '1 causa activa' : `${e.causasActivas} causas activas`}`}
+                  </span>
+                  {e.verificadaEn ? (
+                    <Sello verificadaEn={e.verificadaEn} />
+                  ) : (
+                    <span className="inline-flex items-center gap-1 self-start rounded-full bg-surface-container px-2 py-0.5 text-label-md text-on-surface-variant">
                       <Icono nombre="pending" className="text-[16px]" />
                       Sin verificar
                     </span>
-                  </span>
+                  )}
                 </span>
                 <Icono nombre="chevron_right" className="text-[22px] text-on-surface-variant" />
               </button>
@@ -82,6 +100,22 @@ export function Entidades() {
         })}
       </ul>
 
+      {abierta && paso === null && (
+        <HojaEntidad
+          entidad={abierta}
+          alCerrar={cerrarTodo}
+          alEditar={() => {
+            fijarEditando(abierta);
+            fijarAbierta(null);
+          }}
+          alVerificar={() => fijarPaso('verificar')}
+          alQuitar={() => fijarPaso('quitar')}
+        />
+      )}
+      {abierta && paso === 'verificar' && (
+        <AvisoVerificar entidad={abierta} alCerrar={cerrarTodo} />
+      )}
+      {abierta && paso === 'quitar' && <ConfirmarQuitar entidad={abierta} alCerrar={cerrarTodo} />}
       {editando && (
         <FormularioEntidad
           entidad={editando === 'nueva' ? null : editando}
@@ -172,6 +206,127 @@ function FormularioEntidad({
           {guardar.isPending ? 'Guardando…' : 'Guardar'}
         </Boton>
       </form>
+    </Hoja>
+  );
+}
+
+/** La entidad abierta: logotipo, verificación y edición. */
+function HojaEntidad({
+  entidad,
+  alCerrar,
+  alEditar,
+  alVerificar,
+  alQuitar,
+}: {
+  entidad: Entidad;
+  alCerrar: () => void;
+  alEditar: () => void;
+  alVerificar: () => void;
+  alQuitar: () => void;
+}) {
+  const subir = useSubirLogo(entidad.id);
+  const sitio = entidad.sitioWeb ? dominioDe(entidad.sitioWeb) : null;
+  return (
+    <Hoja titulo={entidad.nombre} alCerrar={alCerrar}>
+      {sitio && <p className="-mt-space-sm text-body-sm text-on-surface-variant">{sitio}</p>}
+      {entidad.verificadaEn && <Sello verificadaEn={entidad.verificadaEn} />}
+      <label className="flex min-h-[72px] cursor-pointer flex-col items-center justify-center gap-1 rounded-xl border border-dashed border-outline text-body-sm text-on-surface-variant">
+        <Icono nombre="add_a_photo" className="text-[24px]" />
+        {subir.isPending ? 'Subiendo…' : entidad.tieneLogo ? 'Cambiar logotipo' : 'Subir logotipo'}
+        <input
+          type="file"
+          accept="image/*"
+          className="sr-only"
+          onChange={(ev) => {
+            const archivo = ev.target.files?.[0];
+            if (archivo) subir.mutate(archivo);
+          }}
+        />
+      </label>
+      <FormularioError mensaje={subir.error?.message} />
+      {entidad.verificacion === 'VERIFICADA' ? (
+        <Boton variante="secundario" className="min-h-[56px] w-full" onClick={alQuitar}>
+          Quitar verificación
+        </Boton>
+      ) : entidad.sitioWeb ? (
+        <Boton className="min-h-[56px] w-full" onClick={alVerificar}>
+          <Icono nombre="verified" className="text-[20px]" />
+          Verificar entidad
+        </Boton>
+      ) : (
+        <p className="rounded-xl bg-surface-container-low p-space-sm text-body-sm text-on-surface-variant">
+          Agrega el sitio web para poder verificarla.
+        </p>
+      )}
+      <Boton variante="secundario" className="min-h-[56px] w-full" onClick={alEditar}>
+        Editar datos
+      </Boton>
+    </Hoja>
+  );
+}
+
+/** El aviso de seguridad (C-02, C-09): el botón no se activa sin la casilla. */
+function AvisoVerificar({ entidad, alCerrar }: { entidad: Entidad; alCerrar: () => void }) {
+  const [confirmo, fijarConfirmo] = useState(false);
+  const verificar = useVerificarEntidad(entidad.id);
+  return (
+    <Hoja titulo={`Verificar ${entidad.nombre}`} alCerrar={alCerrar}>
+      <div className="flex items-start gap-space-sm rounded-xl border border-outline-variant bg-surface-container-low p-space-sm text-body-sm text-on-surface">
+        <Icono nombre="shield" className="mt-0.5 text-[22px] text-primary-container" />
+        <p>
+          <strong className="block">Antes de verificar</strong>
+          Acopio va a dirigir a los donantes hacia esta entidad. Si no es quien dice ser, los
+          estaremos mandando a una estafa. En esta etapa solo se verifican organizaciones con años
+          de trayectoria y reconocidas fuera del país.
+        </p>
+      </div>
+      <label className="flex min-h-[48px] items-start gap-space-sm text-body-md text-on-surface">
+        <input
+          type="checkbox"
+          checked={confirmo}
+          onChange={(ev) => fijarConfirmo(ev.target.checked)}
+          className="mt-1 h-5 w-5 accent-primary-container"
+        />
+        Confirmo que revisé la entidad y su sitio oficial.
+      </label>
+      <FormularioError mensaje={verificar.error?.message} />
+      <Boton
+        className="min-h-[56px] w-full"
+        disabled={!confirmo || verificar.isPending}
+        onClick={() => verificar.mutate(undefined, { onSuccess: alCerrar })}
+      >
+        Verificar entidad
+      </Boton>
+      <Boton variante="secundario" className="min-h-[56px] w-full" onClick={alCerrar}>
+        Cancelar
+      </Boton>
+    </Hoja>
+  );
+}
+
+function ConfirmarQuitar({ entidad, alCerrar }: { entidad: Entidad; alCerrar: () => void }) {
+  const quitar = useQuitarVerificacion(entidad.id);
+  const n = entidad.causasActivas ?? 0;
+  return (
+    <Hoja titulo="¿Quitar la verificación?" alCerrar={alCerrar}>
+      <p className="text-body-md text-on-surface-variant">
+        {entidad.nombre} deja de estar verificada.{' '}
+        {n === 0
+          ? 'No tiene causas activas.'
+          : `${n === 1 ? 'Su única causa activa pasa' : `Sus ${n} causas activas pasan`} a atendidas, sin sello ni enlace al sitio oficial.`}{' '}
+        Volver a verificarla no las reactiva.
+      </p>
+      <FormularioError mensaje={quitar.error?.message} />
+      <Boton
+        className="min-h-[56px] w-full"
+        disabled={quitar.isPending}
+        onClick={() => quitar.mutate(undefined, { onSuccess: alCerrar })}
+      >
+        Quitar verificación
+      </Boton>
+      <Boton variante="secundario" className="min-h-[56px] w-full" onClick={alCerrar}>
+        Cancelar
+      </Boton>
     </Hoja>
   );
 }

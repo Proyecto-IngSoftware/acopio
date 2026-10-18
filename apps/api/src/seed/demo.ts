@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import path from 'node:path';
 import { config } from 'dotenv';
-import { HORARIO_VACIO, type Horario } from '@acopio/shared';
+import { HORARIO_VACIO, hoyBogota, sumarMeses, type Horario } from '@acopio/shared';
 import { PrismaService } from '../comun/prisma/prisma.service';
 import { leerEntorno } from '../config/entorno';
 import type { ProveedorIdentidad } from '../modulos/identidad/proveedor/proveedor-identidad';
@@ -206,6 +206,7 @@ export async function sembrarEscenariosDemo(
   await sembrarDonacionesDemo(prisma, donador, ids.operador1!);
   await sembrarMotorDemo(prisma, ids.operador1!);
   await sembrarRemisionesDemo(prisma, ids.operador2!, ids.receptor1!, donador);
+  await sembrarCausasDemo(prisma, admin.id);
   return [...USUARIOS_DEMO.map((u) => u.username), DONADOR_DEMO.correo];
 }
 
@@ -634,4 +635,82 @@ if (require.main === module) {
       process.exitCode = 1;
     })
     .finally(() => prisma.$disconnect());
+}
+
+const ENTIDADES_CAUSAS = [
+  {
+    nombre: 'Cruz Roja Colombiana',
+    tipo: 'ONG',
+    sitio_web: 'https://www.cruzrojacolombiana.org',
+  },
+  {
+    nombre: 'UNICEF Colombia',
+    tipo: 'ONG',
+    sitio_web: 'https://www.unicef.org/colombia',
+  },
+] as const;
+
+/** Causas de la demo: [entidad, categoría, título, meses hasta el cierre, ¿atendida?]. */
+const CAUSAS_DEMO = [
+  [0, 'PERSONAS', 'Mercados para familias damnificadas (demo)', 1, false],
+  [1, 'PERSONAS', 'Kits escolares para niños de Mocoa (demo)', 2, false],
+  [0, 'RESCATISTAS', 'Equipos para rescatistas de Salgar (demo)', 4, false],
+  [1, 'ANIMALES', 'Alimento para animales rescatados (demo)', -1, true],
+] as const;
+
+/**
+ * Dos organizaciones reconocidas, verificadas por el administrador, con causas de ejemplo
+ * (pieza C, §7). Los títulos dicen «(demo)» y los enlaces van al sitio principal de cada
+ * una: el servidor de pruebas es público y no se inventan rutas de donación. Si la entidad ya existe, no se
+ * toca; las causas se crean solo si su entidad está verificada.
+ */
+export async function sembrarCausasDemo(
+  prisma: PrismaService,
+  adminId: string,
+  ahora = new Date(),
+) {
+  const hoy = hoyBogota(ahora);
+  const entidades = [];
+  for (const e of ENTIDADES_CAUSAS) {
+    entidades.push(
+      await prisma.entidad.upsert({
+        where: { nombre: e.nombre },
+        update: {},
+        create: {
+          nombre: e.nombre,
+          tipo: e.tipo,
+          sitio_web: e.sitio_web,
+          descripcion: 'Entidad de la demostración de Acopio',
+          verificacion: 'VERIFICADA',
+          verificada_por: adminId,
+          verificada_en: ahora,
+        },
+      }),
+    );
+  }
+  for (const [i, categoria, titulo, meses, atendida] of CAUSAS_DEMO) {
+    const entidad = entidades[i]!;
+    if (entidad.verificacion !== 'VERIFICADA') continue;
+    if (await prisma.causa.findFirst({ where: { titulo, entidad_id: entidad.id } })) continue;
+    await prisma.causa.create({
+      data: {
+        entidad_id: entidad.id,
+        categoria,
+        titulo,
+        descripcion:
+          'Causa de ejemplo para la demostración de Acopio. Para donar de verdad, entra al sitio oficial de la organización.',
+        pasos: [
+          `Entra al sitio oficial de ${entidad.nombre}.`,
+          'Busca la sección de donaciones.',
+          'Elige el monto y el medio de pago.',
+          'Guarda el comprobante que te envía la organización.',
+        ],
+        url_oficial: ENTIDADES_CAUSAS[i]!.sitio_web,
+        cierra_el: new Date(`${sumarMeses(hoy, meses)}T00:00:00Z`),
+        publicada_en: ahora,
+        creada_por: adminId,
+        ...(atendida && { archivada_en: ahora, archivo_motivo: 'VENCIDA' as const }),
+      },
+    });
+  }
 }

@@ -12,6 +12,7 @@ import { VitePWA } from 'vite-plugin-pwa';
 const PRECARGAS: Record<string, string> = {
   '/mapa': 'src/portal/mapa/Mapa.tsx',
   '/acopios/': 'src/portal/ficha/FichaAcopio.tsx',
+  '/causas/': 'src/portal/causas/Ficha.tsx',
   '/seguimiento/': 'src/portal/Seguimiento.tsx',
   '/donador/confirmar/': 'src/donador/Confirmar.tsx',
 };

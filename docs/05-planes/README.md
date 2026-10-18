@@ -47,7 +47,7 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 | 2 · Inventario | [aprobada](../superpowers/specs/2026-10-01-bloque-2-inventario-design.md) | [API](2026-10-01-bloque-2-api.md), [interfaz ciclo 1](2026-10-01-bloque-2-interfaz-ciclo-1.md), [interfaz ciclo 2](2026-10-02-bloque-2-interfaz-ciclo-2.md), [interfaz ciclo 3](2026-10-02-bloque-2-interfaz-ciclo-3.md) | ✅ cerrado el 2026-10-05: API e interfaz (ciclos 1 a 3). El escáner en un teléfono real queda en P-037 |
 | 3 · Custodia | [aprobada](../superpowers/specs/2026-10-05-bloque-3-custodia-design.md) | [API](2026-10-05-bloque-3-api.md) · [interfaz, ciclo 1](2026-10-06-bloque-3-interfaz-ciclo-1.md) · [interfaz, ciclo 2](2026-10-06-bloque-3-interfaz-ciclo-2.md) | ✅ Cerrado el 2026-10-06: API, ciclo 1 (el Donador) y ciclo 2 (la consola), con sus recorridos en `apps/web/recorridos/donador.mjs` y `consola-comprobantes.mjs` |
 | 4 · Motor | [aprobada](../superpowers/specs/2026-10-06-bloque-4-motor-design.md) | [API, etapa 1](2026-10-06-bloque-4-api-etapa-1.md) · [API, etapa 2](2026-10-09-bloque-4-api-etapa-2.md) · [interfaz, ciclo 1](2026-10-14-bloque-4-interfaz-ciclo-1.md) | 🟡 API hecha: etapa 1 el 2026-10-07 (cálculo, sugerencias, pesos, aprobar y descartar) y etapa 2 el 2026-10-10 (remisiones, recepción en zona, reportes, capa pública, RF-CMP-007 y simulador). Interfaz: ciclo 1 (Administrador) construido el 2026-10-14, con su recorrido `consola-motor.mjs`; faltan los ciclos 2 y 3. [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35) |
-| 1 · Piezas C, D y E | pendientes: verificación y causas, contenido del home, importador | pendiente | ⬜ Quedaron fuera de la especificación del Bloque 1 y sin issue hasta el Sprint Review ([P-046](../01-requerimientos/pendientes.md)). [#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48) hasta el 1 nov, [#50](https://github.com/Proyecto-IngSoftware/acopio/issues/50) y [#49](https://github.com/Proyecto-IngSoftware/acopio/issues/49) hasta el 15 nov |
+| 1 · Piezas C, D y E | C: [plan](2026-10-17-pieza-c-causas.md), construida el 2026-10-17; D y E: contenido del home e importador | C construida, D y E pendientes | 🟨 C en `main` con lo que falta en [P-066](../01-requerimientos/pendientes.md). D y E quedaron fuera de la especificación del Bloque 1 y sin issue hasta el Sprint Review ([P-046](../01-requerimientos/pendientes.md)). [#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48) hasta el 1 nov, [#50](https://github.com/Proyecto-IngSoftware/acopio/issues/50) y [#49](https://github.com/Proyecto-IngSoftware/acopio/issues/49) hasta el 15 nov |
 | 5 · Turnos | pendiente | pendiente | ⬜ [#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36) |
 | 6 · Extras | pendiente | pendiente | ⬜ [#37](https://github.com/Proyecto-IngSoftware/acopio/issues/37) |
 | Servidor de pruebas | [despliegue.md](../06-operacion/despliegue.md) | [plan de trabajo](2026-10-16-servidor-de-pruebas.md) · [factura y demo](2026-10-16-servidor-de-pruebas-factura-y-demo.md) | 🟡 Arriba desde el 2026-10-16 (#91, #92, #93). Factura por la API y demo con `DEMO_CONTRASENA` hechas en local; faltan desplegarlas, sembrar la demo y los recorridos contra el servidor. [#53](https://github.com/Proyecto-IngSoftware/acopio/issues/53), [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26) |
@@ -63,14 +63,12 @@ demo, y los recorridos pasan allá. Las maquetas de P3 y P4, las causas, quedaro
 ([#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57)). El último informe de
 sesión está en [sesiones](../06-operacion/sesiones/README.md).
 
-1. **Siguiente paso: elegir entre dos especificaciones al empezar la sesión.** Las dos van
-   antes de su plan y de su código:
-   - La pieza C, verificación de entidades y causas
-     ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48), hasta el 1 de
-     noviembre). Ya tiene las maquetas públicas y las dos decisiones de
-     [P-064](../01-requerimientos/pendientes.md). Le faltan las pantallas de la consola.
-   - El Bloque 5, turnos ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36),
-     hasta el 8 de noviembre).
+1. **Siguiente paso: la especificación del Bloque 5, turnos**
+   ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36), hasta el 8 de
+   noviembre), antes de su plan y de su código. La pieza C quedó construida el 2026-10-17
+   ([plan](2026-10-17-pieza-c-causas.md)); de ella falta lo de
+   [P-066](../01-requerimientos/pendientes.md): el recorrido de consola contra el servidor y
+   los criterios de HU-02 y HU-15 con Joseph.
 2. La ronda de pruebas del equipo en el servidor
    ([#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58)). Lo que reporten entra
    como issue con la etiqueta `hallazgo`.

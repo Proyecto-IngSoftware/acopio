@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import type { ClienteBd } from '../../comun/prisma/cliente-bd';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import type { Zona } from '../../generado/prisma/client';
 import type { EstadoZona } from '../../generado/prisma/enums';
 import { BitacoraService } from '../auditoria/bitacora.service';
+import { ZonaDao } from './dao/zona.dao';
 
 export interface DatosZona {
   emergenciaId: string;
@@ -22,23 +24,21 @@ export interface DatosZona {
 @Injectable()
 export class ZonasService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly dao: ZonaDao,
+    private readonly transacciones: Transacciones,
     private readonly bitacora: BitacoraService,
   ) {}
 
   async listar(emergenciaId?: string) {
-    const filas = await this.prisma.zona.findMany({
-      where: { emergencia_id: emergenciaId },
-      orderBy: { nombre: 'asc' },
-    });
+    const filas = await this.dao.listar(emergenciaId);
     return filas.map(presentarZona);
   }
 
   async crear(admin: UsuarioAutenticado, datos: DatosZona) {
-    return this.prisma.$transaction(async (tx) => {
-      await exigirEmergenciaAbierta(tx, datos.emergenciaId);
-      const z = await tx.zona.create({
-        data: {
+    return this.transacciones.ejecutar(async (tx) => {
+      await this.exigirEmergenciaAbierta(tx, datos.emergenciaId);
+      const z = await this.dao.crear(
+        {
           emergencia_id: datos.emergenciaId,
           nombre: datos.nombre.trim(),
           municipio: datos.municipio.trim(),
@@ -49,7 +49,8 @@ export class ZonasService {
           poblacion_fecha: datos.poblacionFecha,
           estado: datos.estado ?? 'SIN_ATENDER',
         },
-      });
+        tx,
+      );
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
         accion: 'zona.creada',
@@ -67,10 +68,10 @@ export class ZonasService {
     id: string,
     cambios: Partial<Omit<DatosZona, 'emergenciaId'>>,
   ) {
-    return this.prisma.$transaction(async (tx) => {
-      const antes = await tx.zona.findUnique({ where: { id } });
+    return this.transacciones.ejecutar(async (tx) => {
+      const antes = await this.dao.porId(id, tx);
       if (!antes) throw new ErrorDominio('ZONA_NO_ENCONTRADA', 'La zona no existe', 404);
-      await exigirEmergenciaAbierta(tx, antes.emergencia_id);
+      await this.exigirEmergenciaAbierta(tx, antes.emergencia_id);
       // RF-MOT-012: un número nuevo llega con su fuente y la fecha de esa estimación
       if (
         cambios.poblacionEstimada !== undefined &&
@@ -84,9 +85,9 @@ export class ZonasService {
           'Un número nuevo de población necesita su fuente y la fecha de esa estimación',
         );
       }
-      const despues = await tx.zona.update({
-        where: { id },
-        data: {
+      const despues = await this.dao.actualizar(
+        id,
+        {
           nombre: cambios.nombre?.trim(),
           municipio: cambios.municipio?.trim(),
           lat: cambios.lat,
@@ -96,7 +97,8 @@ export class ZonasService {
           poblacion_fecha: cambios.poblacionFecha,
           estado: cambios.estado,
         },
-      });
+        tx,
+      );
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
         accion: 'zona.actualizada',
@@ -109,17 +111,17 @@ export class ZonasService {
       return presentarZona(despues);
     });
   }
-}
 
-async function exigirEmergenciaAbierta(tx: Pick<PrismaService, 'emergencia'>, id: string) {
-  const e = await tx.emergencia.findUnique({ where: { id }, select: { estado: true } });
-  if (!e) throw new ErrorDominio('EMERGENCIA_NO_ENCONTRADA', 'La emergencia no existe', 404);
-  if (e.estado === 'CERRADA') {
-    throw new ErrorDominio(
-      'ZONA_SOLO_LECTURA',
-      'La emergencia está cerrada: sus zonas quedan en solo lectura',
-      409,
-    );
+  private async exigirEmergenciaAbierta(tx: ClienteBd, id: string) {
+    const e = await this.dao.estadoEmergencia(id, tx);
+    if (!e) throw new ErrorDominio('EMERGENCIA_NO_ENCONTRADA', 'La emergencia no existe', 404);
+    if (e.estado === 'CERRADA') {
+      throw new ErrorDominio(
+        'ZONA_SOLO_LECTURA',
+        'La emergencia está cerrada: sus zonas quedan en solo lectura',
+        409,
+      );
+    }
   }
 }
 
