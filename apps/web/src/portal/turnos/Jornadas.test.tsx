@@ -104,3 +104,18 @@ it('abierta con ?acopio= filtra por ese acopio', async () => {
     'true',
   );
 });
+
+it('con ajuste manual, los cupos dicen cuántos llegaron sin reserva', async () => {
+  responderSegun({
+    'GET /api/turnos/jornadas': [
+      jornadaDe({
+        ocupados: 3,
+        ajuste: 2,
+        libres: 5,
+        ajusteActualizadoEn: new Date().toISOString(),
+      }),
+    ],
+  });
+  render(envolver(<Jornadas />, '/voluntariado'));
+  expect(await screen.findByText('3 de 10 cupos reservados · 2 sin reserva')).toBeInTheDocument();
+});

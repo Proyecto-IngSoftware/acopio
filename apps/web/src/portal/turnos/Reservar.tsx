@@ -3,10 +3,13 @@ import { Link, useNavigate, useParams } from 'react-router';
 import { useJornada, useReservar, type JornadaPublica, type Perfil } from '../../api/turnos';
 import { Boton, EnlaceBoton } from '../../componentes/Boton';
 import { Campo } from '../../componentes/Campo';
+import { EstadoError } from '../../componentes/EstadoError';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { Icono } from '../../componentes/Icono';
 import { diaSemana, rangoHoras } from '../../formato';
 import { Aviso, Dato, EstadoCupos, Marca, NOMBRE_PERFIL, marcaJornada, requisitos } from './piezas';
+
+const TELEFONO = /^[0-9+ -]{7,20}$/;
 
 /** Lo que declara quien reserva una jornada que pide un perfil (T-04). */
 const DECLARACION: Record<Perfil, string> = {
@@ -20,20 +23,29 @@ const DECLARACION: Record<Perfil, string> = {
 /** P7 Reservar (RF-TUR-003, HU-03): el detalle de la jornada y el formulario. */
 export function Reservar() {
   const { id } = useParams();
-  const { data, isPending, error } = useJornada(id!);
+  const { data, isPending, error, refetch } = useJornada(id!);
 
   if (isPending) return <Esqueleto etiqueta="Cargando la jornada" className="m-margin h-64" />;
-  if (error || !data)
+  // Si ya se cargó, un refetch fallido no borra el formulario
+  if (data) return <Detalle jornada={data} />;
+  if (error.estado !== 404)
     return (
-      <div className="flex flex-col gap-space-md px-margin py-space-lg">
-        <h1 className="text-headline-lg-mobile text-on-surface">Esta jornada no existe</h1>
-        <p className="text-body-md text-on-surface-variant">
-          Puede que el enlace esté incompleto o que la jornada ya haya pasado.
-        </p>
-        <EnlaceBoton a="/voluntariado">Ver las jornadas</EnlaceBoton>
+      <div className="px-margin py-space-lg">
+        <EstadoError
+          mensaje="No se pudo cargar la jornada. Revisa tu conexión e inténtalo de nuevo."
+          alReintentar={() => void refetch()}
+        />
       </div>
     );
-  return <Detalle jornada={data} />;
+  return (
+    <div className="flex flex-col gap-space-md px-margin py-space-lg">
+      <h1 className="text-headline-lg-mobile text-on-surface">Esta jornada no existe</h1>
+      <p className="text-body-md text-on-surface-variant">
+        Puede que el enlace esté incompleto o que la jornada ya haya pasado.
+      </p>
+      <EnlaceBoton a="/voluntariado">Ver las jornadas</EnlaceBoton>
+    </div>
+  );
 }
 
 function Detalle({ jornada }: { jornada: JornadaPublica }) {
@@ -140,7 +152,14 @@ function Formulario({ jornada }: { jornada: JornadaPublica }) {
   const [perfil, fijarPerfil] = useState(false);
   const [acepta, fijarAcepta] = useState(false);
   const pidePerfil = jornada.perfilRequerido !== null;
-  const listo = nombre.trim() !== '' && correo.trim() !== '' && acepta && (!pidePerfil || perfil);
+  // Los mismos límites que la API: así el error se ve antes de enviar
+  const telefonoMal = telefono.trim() !== '' && !TELEFONO.test(telefono.trim());
+  const listo =
+    nombre.trim().length >= 2 &&
+    correo.trim() !== '' &&
+    !telefonoMal &&
+    acepta &&
+    (!pidePerfil || perfil);
 
   function enviar(e: FormEvent) {
     e.preventDefault();
@@ -165,6 +184,8 @@ function Formulario({ jornada }: { jornada: JornadaPublica }) {
         id="reserva-nombre"
         etiqueta="Nombre"
         autoComplete="name"
+        minLength={2}
+        maxLength={120}
         required
         value={nombre}
         onChange={(e) => fijarNombre(e.target.value)}
@@ -186,7 +207,11 @@ function Formulario({ jornada }: { jornada: JornadaPublica }) {
         autoComplete="tel"
         value={telefono}
         onChange={(e) => fijarTelefono(e.target.value)}
-        ayuda="Para que te avisen si algo cambia."
+        ayuda={
+          telefonoMal
+            ? 'Escribe solo números, espacios, + o -, entre 7 y 20 caracteres.'
+            : 'Para que te avisen si algo cambia.'
+        }
       />
       {jornada.perfilRequerido && (
         <label className="flex items-start gap-space-sm text-body-md text-on-surface">
@@ -225,7 +250,18 @@ function Formulario({ jornada }: { jornada: JornadaPublica }) {
           className="flex items-start gap-space-sm rounded-xl border border-outline bg-surface-container-high p-space-sm text-body-sm text-on-surface"
         >
           <Icono nombre="error" className="mt-0.5 text-[20px] text-primary" />
-          {reservar.error.message}
+          <span>
+            {reservar.error.message}
+            {(reservar.error.codigo === 'JORNADA_LLENA' ||
+              reservar.error.codigo === 'RESERVAS_CERRADAS') && (
+              <>
+                {' '}
+                <Link to="/voluntariado" className="text-primary-container underline">
+                  Ver otras jornadas
+                </Link>
+              </>
+            )}
+          </span>
         </p>
       )}
       <Boton type="submit" disabled={!listo || reservar.isPending} className="min-h-[56px]">

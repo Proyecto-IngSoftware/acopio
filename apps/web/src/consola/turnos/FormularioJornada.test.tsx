@@ -66,6 +66,7 @@ async function llenar() {
   await userEvent.type(screen.getByLabelText('Cupos por jornada'), '20');
 }
 
+// Escribe todo el formulario y corre axe: con la suite completa en paralelo pasa de 5 s
 it('el Operador crea varias fechas en su acopio, ordenadas, y vuelve a la lista', async () => {
   responderSegun({
     'GET /api/ubicaciones/mias': MIAS,
@@ -96,7 +97,7 @@ it('el Operador crea varias fechas en su acopio, ordenadas, y vuelve a la lista'
     horaFin: '18:00',
   });
   expect(await violacionesGraves(container)).toEqual([]);
-});
+}, 15_000);
 
 it('el Administrador puede crear una jornada de una entidad verificada en una dirección propia', async () => {
   responderSegun({
@@ -133,7 +134,7 @@ it('el Administrador puede crear una jornada de una entidad verificada en una di
     }),
   );
   expect(await cuerpoDe('POST /api/turnos/gestion/jornadas')).not.toHaveProperty('acopioId');
-});
+}, 15_000);
 
 it('un 422 de la API se muestra junto al horario', async () => {
   responderSegun({
@@ -185,4 +186,54 @@ it('al editar una jornada de entidad, el Operador no ve el lugar y el Administra
   unmount();
   editar('ADMIN');
   expect(await screen.findByLabelText('Dirección')).toHaveValue('Calle 68 # 66-31');
+});
+
+describe('editar una jornada', () => {
+  const editar = () => {
+    responderSegun({
+      'GET /api/ubicaciones/mias': MIAS,
+      'PATCH /api/turnos/gestion/jornadas/j1': gestionDe(),
+    });
+    const alTerminar = vi.fn();
+    render(
+      envolver(
+        <FormularioJornada jornada={gestionDe()} hoy="2026-10-17" alTerminar={alTerminar} />,
+        '/consola/turnos',
+        clienteFalso(persona('OPERADOR')),
+      ),
+    );
+    return alTerminar;
+  };
+
+  it('cambiar solo el título no mueve la jornada', async () => {
+    const alTerminar = editar();
+    const titulo = await screen.findByLabelText('Título');
+    await userEvent.clear(titulo);
+    await userEvent.type(titulo, 'Armar mercados grandes');
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar cambios' }));
+    await waitFor(() => expect(alTerminar).toHaveBeenCalled());
+    const cuerpo = (await cuerpoDe('PATCH /api/turnos/gestion/jornadas/j1')) as Record<
+      string,
+      unknown
+    >;
+    expect(cuerpo.titulo).toBe('Armar mercados grandes');
+    expect(cuerpo).not.toHaveProperty('fecha');
+    expect(cuerpo).not.toHaveProperty('horaInicio');
+    expect(cuerpo).not.toHaveProperty('horaFin');
+  });
+
+  it('cambiar solo la hora de fin manda la fecha y las dos horas, como pide la API', async () => {
+    const alTerminar = editar();
+    const fin = await screen.findByLabelText('Termina');
+    expect(fin).toHaveValue('12:00');
+    await userEvent.clear(fin);
+    await userEvent.type(fin, '13:00');
+    await userEvent.click(screen.getByRole('button', { name: 'Guardar cambios' }));
+    await waitFor(() => expect(alTerminar).toHaveBeenCalled());
+    expect(await cuerpoDe('PATCH /api/turnos/gestion/jornadas/j1')).toMatchObject({
+      fecha: '2026-10-21',
+      horaInicio: '08:00',
+      horaFin: '13:00',
+    });
+  });
 });

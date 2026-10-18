@@ -15,13 +15,19 @@ interface Props {
 export function Hoja({ titulo, alCerrar, children }: Props) {
   const id = useId();
   const cerrar = useRef<HTMLButtonElement>(null);
+  // La última `alCerrar` en una referencia: quien la pasa en línea crea una nueva en cada
+  // render, y el efecto de abajo volvería a enfocar «Cerrar» con cada tecla del formulario
+  const alCerrarActual = useRef(alCerrar);
+  useEffect(() => {
+    alCerrarActual.current = alCerrar;
+  });
 
   useEffect(() => {
     cerrar.current?.focus();
-    const tecla = (e: KeyboardEvent) => e.key === 'Escape' && alCerrar();
+    const tecla = (e: KeyboardEvent) => e.key === 'Escape' && alCerrarActual.current();
     document.addEventListener('keydown', tecla);
     return () => document.removeEventListener('keydown', tecla);
-  }, [alCerrar]);
+  }, []);
 
   return createPortal(
     <div className="fixed inset-0 z-[60] flex items-end justify-center">

@@ -145,3 +145,48 @@ it('cerradas por plazo lo explica y no tiene formulario', async () => {
   ).toBeInTheDocument();
   expect(screen.queryByLabelText('Nombre')).not.toBeInTheDocument();
 });
+
+it('un 500 al cargar la jornada no dice que no existe y deja reintentar', async () => {
+  responderSegun({
+    'GET /api/turnos/jornadas/j1': conEstado(500, { estado: 500, codigo: 'ERROR', mensaje: 'x' }),
+  });
+  pantalla();
+  expect(await screen.findByRole('button', { name: /Reintentar/ })).toBeInTheDocument();
+  expect(screen.queryByText('Esta jornada no existe')).not.toBeInTheDocument();
+});
+
+it('no deja reservar con un nombre de una letra ni un teléfono con paréntesis', async () => {
+  responderSegun({ 'GET /api/turnos/jornadas/j1': jornadaDe() });
+  pantalla();
+  await userEvent.type(await screen.findByLabelText('Nombre'), 'A');
+  await userEvent.type(screen.getByLabelText('Correo'), 'ana@correo.co');
+  await userEvent.click(screen.getByRole('checkbox', { name: /Acepto que guarden/ }));
+  const reservar = screen.getByRole('button', { name: 'Reservar' });
+  expect(reservar).toBeDisabled();
+  await userEvent.type(screen.getByLabelText('Nombre'), 'na');
+  expect(reservar).toBeEnabled();
+  await userEvent.type(screen.getByLabelText('Teléfono (opcional)'), '(310) 555');
+  expect(reservar).toBeDisabled();
+  expect(screen.getByText(/solo números, espacios, \+ o -/)).toBeInTheDocument();
+});
+
+it('si se llenó al enviar, conserva lo escrito y ofrece ver otras jornadas', async () => {
+  responderSegun({
+    'GET /api/turnos/jornadas/j1': jornadaDe(),
+    'POST /api/turnos/jornadas/j1/reservas': conEstado(409, {
+      estado: 409,
+      codigo: 'JORNADA_LLENA',
+      mensaje: 'La jornada ya no tiene cupos.',
+    }),
+  });
+  pantalla();
+  await llenar();
+  await userEvent.click(screen.getByRole('checkbox', { name: /Acepto que guarden/ }));
+  await userEvent.click(screen.getByRole('button', { name: 'Reservar' }));
+  await screen.findByRole('alert');
+  expect(screen.getByRole('link', { name: 'Ver otras jornadas' })).toHaveAttribute(
+    'href',
+    '/voluntariado',
+  );
+  expect(screen.getByLabelText('Nombre')).toHaveValue('Ana Gómez');
+});

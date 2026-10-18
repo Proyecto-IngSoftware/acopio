@@ -66,6 +66,50 @@ con `envolver` y `responderSegun`, Playwright para los recorridos.
 5. Una jornada cancelada que llega por un enlace viejo muestra el motivo y no ofrece reservar.
    Prueba en la tarea 4.
 
+## Errores del plan
+
+Los encontró la revisión final del 2026-10-18, hecha por un revisor aparte sobre #123 y #124.
+Cada punto dice qué decía el plan, qué debía decir y qué se hizo.
+
+1. **Tarea 6** ponía «Ver jornadas» en `TarjetaAcopio.tsx`. Esa tarjeta ya es un enlace a la
+   ficha, y otro enlace adentro sería HTML inválido. Debía decir `Mapa.tsx`, en la tarjeta del
+   acopio elegido, que es «la hoja del acopio» de la especificación. Se construyó así.
+2. **Tarea 3** metía en `textoCupos` la cuenta, la marca («Llena», «Reservas cerradas») y la
+   antigüedad del ajuste, y no decía qué hacer con el ajuste. Debía separar `textoCupos` (la
+   cuenta, con «· N sin reserva» cuando hay ajuste) de `marcaJornada` (la marca), y pedir que
+   P6, P7 y C14 usaran las dos. Corregido en #125: el ajuste aparece en los cupos y la barra
+   cuenta lo tomado.
+3. **Tarea 6** pedía listar las jornadas de P6 «con `textoCupos`» y no pedía marcar las llenas
+   ni las cerradas. P6 mostraba como disponible una jornada llena. Corregido en #125.
+4. **Tareas 7 y 8** no tenían ninguna prueba ni paso del recorrido que editara una jornada. La
+   API ya pedía la fecha y las dos horas juntas para mover una jornada (§11 de la
+   especificación), y el plan no lo trasladó. Por eso mover una jornada fallaba siempre con
+   un 400. Corregido en #125, con dos pruebas del cuerpo del `PATCH` y un paso nuevo en
+   `consola-turnos.mjs` que mueve una jornada y revisa `fin` en la API.
+5. **Tarea 8** pedía que «el Operador no ve el botón de editar el lugar de una jornada de
+   entidad». A ese estado no se llega: la lista del Operador no trae jornadas de entidad y la
+   API le responde 403. Debía decir que, al editar, solo el Administrador ve dirección y
+   municipio. La prueba de `FormularioJornada` cubre eso.
+6. **Tarea 4** no pedía probar el 409 `RESERVAS_CERRADAS`, que llega cuando el plazo vence entre
+   abrir el formulario y enviarlo (§8 de la especificación). Desde #125, ese 409 y el de
+   `JORNADA_LLENA` muestran el mensaje, conservan lo escrito y ofrecen «Ver otras jornadas».
+7. **Tarea 5** solo pedía el caso 404 de P8. Faltaban sin red, 429 y 5xx, que no deben decir
+   «No encontramos esa reserva». Corregido en #125 en P8 y en la reserva de P7: «no existe»
+   sale solo con 404, lo demás deja reintentar, y un refetch fallido no borra lo cargado.
+8. **Requisito sin tarea:** §6 de la especificación dice que P8 «muestra si la jornada
+   cambió». Ninguna tarea lo asignó y la API no lo expone. Quedó para decidir en
+   [P-070](../01-requerimientos/pendientes.md).
+9. **Las restricciones globales** dicen que la web no calcula plazos, y la tarea 8 pide
+   habilitar la asistencia con `puedeMarcarAsistencia` y el reloj del navegador. P8 también
+   oculta «Cancelar reserva» después del inicio con ese reloj. Se acepta la excepción: en los
+   dos casos la API vuelve a validar y responde con su mensaje. Quedó escrito en P-070 por si
+   se prefiere que la API mande esos permisos.
+10. **Review Focus 3** (`TZ=America/New_York` en la prueba) solo funciona si Vitest corre en
+    procesos; en hilos el cambio de zona no tiene efecto y la prueba pasaría sin probar nada.
+    Desde #125 `vite.config.ts` fija `pool: 'forks'`.
+11. **Tarea 2** definía `useMarcarAsistencia(jornadaId)` con un parámetro que no se usa. Quedó
+    en [P-069](../01-requerimientos/pendientes.md).
+
 ## Estado
 
 | Tarea | Estado | Notas |
@@ -78,7 +122,7 @@ con `envolver` y `responderSegun`, Playwright para los recorridos.
 | 6 P5, P6 y P12 | ✅ | «Ver jornadas» va en la tarjeta del acopio elegido en el mapa (`Mapa.tsx`), porque `TarjetaAcopio` ya es un enlace |
 | 7 C14 lista y formulario | ✅ | |
 | 8 C14 detalle de la jornada | ✅ | |
-| 9 Recorridos y cierre | 🟡 | Recorridos 6 de 6 en local y verificación completa en verde. `portal-turnos.mjs` dio 6 de 6 contra el servidor el 2026-10-18, después de desplegar #123. Falta revisar HU-03 con Joseph |
+| 9 Recorridos y cierre | ✅ | Recorridos 6 de 6 en local y verificación completa en verde. `portal-turnos.mjs` dio 6 de 6 contra el servidor el 2026-10-18, después de desplegar #123. La revisión final y sus arreglos van en #125. Falta revisar HU-03 con Joseph |
 
 ---
 

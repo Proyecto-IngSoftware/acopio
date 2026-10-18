@@ -68,6 +68,7 @@ export function Inscritos({
                 {!borrado && (
                   <button
                     type="button"
+                    aria-label={`Copiar contacto de ${i.nombre}`}
                     onClick={() => void copiar(i)}
                     className="inline-flex min-h-[40px] shrink-0 items-center gap-1 rounded-xl bg-surface-container-high px-space-sm text-label-md text-primary"
                   >

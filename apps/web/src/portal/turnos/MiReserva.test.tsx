@@ -166,3 +166,28 @@ it('el secreto nunca aparece en una URL que se pide a la API', async () => {
   await waitFor(() => expect(peticiones()).toContain(CANCELAR));
   for (const p of peticiones()) expect(p).not.toContain('s3cr3t');
 });
+
+it.each([
+  [500, 'ERROR', 'Algo falló'],
+  [429, 'DEMASIADOS_INTENTOS', 'Demasiados intentos'],
+])('un %s no dice que la reserva no existe y deja reintentar', async (estado, codigo, mensaje) => {
+  responderSegun({ [CONSULTAR]: conEstado(estado, { estado, codigo, mensaje }) });
+  pantalla();
+  expect(await screen.findByRole('button', { name: /Reintentar/ })).toBeInTheDocument();
+  expect(screen.queryByText('No encontramos esa reserva')).not.toBeInTheDocument();
+});
+
+it('después del inicio ya no ofrece cancelar', async () => {
+  responderSegun({
+    [CONSULTAR]: reservaDe({
+      jornada: jornadaDe({
+        inicio: new Date(Date.now() - 3_600_000).toISOString(),
+        fin: new Date(Date.now() + 3_600_000).toISOString(),
+      }),
+    }),
+  });
+  pantalla();
+  await screen.findByText('K7QM4XPA');
+  expect(screen.queryByRole('button', { name: 'Cancelar reserva' })).not.toBeInTheDocument();
+  expect(screen.getByText(/La jornada ya empezó/)).toBeInTheDocument();
+});

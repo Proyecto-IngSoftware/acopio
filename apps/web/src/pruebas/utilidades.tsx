@@ -19,7 +19,8 @@ export function responderJson(cuerpo: unknown, estado = 200): void {
 
 const ESTADO = Symbol('estado');
 
-/** Para `responderSegun`: responde ese cuerpo con otro estado HTTP, por ejemplo un 409. */
+/** Para `responderSegun`: responde ese cuerpo con otro estado HTTP, por ejemplo un 409.
+ *  Con 204 responde sin cuerpo, como la API al borrar. */
 export function conEstado(estado: number, cuerpo: unknown) {
   return { [ESTADO]: estado, cuerpo };
 }
@@ -39,6 +40,9 @@ export function responderSegun(mapa: Record<string, unknown>): void {
     const p = entrada as Request;
     const ruta = new URL(p.url).pathname;
     const regla = reglas.find((r) => r.metodo === p.method && r.patron.test(ruta));
+    // Un 204 no lleva cuerpo, como en la API
+    if (regla && estadoDe(regla.cuerpo) === 204)
+      return Promise.resolve(new Response(null, { status: 204 }));
     return Promise.resolve(
       new Response(
         JSON.stringify(

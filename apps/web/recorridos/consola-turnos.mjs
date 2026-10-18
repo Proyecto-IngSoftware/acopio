@@ -1,5 +1,5 @@
 // Recorrido de C14 Turnos (Bloque 5) a 360 × 640 con `operador1`: crea una serie de dos fechas,
-// ve los inscritos de «Armar mercados (demo)», ajusta un cupo, cierra y reabre las reservas, y
+// mueve una, ve los inscritos de «Armar mercados (demo)», ajusta un cupo, cierra y reabre las reservas, y
 // comprueba cada efecto en la API. Al final devuelve el ajuste y borra la serie que creó, así la
 // demo queda como estaba y se puede repetir.
 //
@@ -152,6 +152,20 @@ await paso('crea una serie de dos fechas con un solo formulario', async () => {
   if (nuevas[0].serieId === null || nuevas[0].serieId !== nuevas[1].serieId) {
     throw new Error('no comparten serie');
   }
+});
+
+await paso('mueve una jornada de la serie y la API guarda la hora nueva', async () => {
+  const filas = p.getByRole('button', { name: new RegExp(TITULO) });
+  await filas.first().click();
+  await pestana('Acciones');
+  await p.getByRole('button', { name: /Editar la jornada/ }).click();
+  await p.getByRole('heading', { level: 1, name: 'Editar jornada' }).waitFor();
+  await p.getByLabel('Termina').fill('13:00');
+  await p.getByRole('button', { name: 'Guardar cambios' }).click();
+  await p.getByRole('heading', { level: 1, name: 'Turnos' }).waitFor();
+  const movida = (await gestion()).filter((j) => j.titulo === TITULO).map((j) => j.fin);
+  // 13:00 en Bogotá es 18:00 UTC
+  if (!movida.some((f) => f.slice(11, 16) === '18:00')) throw new Error(`fines ${movida}`);
 });
 
 await paso('ve los inscritos de «Armar mercados (demo)»', async () => {

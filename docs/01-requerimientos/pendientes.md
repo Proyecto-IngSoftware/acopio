@@ -1049,19 +1049,43 @@ plazo del 23 de octubre.
 ### P-069 · Menores de la interfaz de turnos
 **Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la autorrevisión de la interfaz del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))
 **Qué:**
-- `Hoja` vuelve a enfocar su botón «Cerrar» cada vez que recibe una función `alCerrar` nueva.
-  Si el formulario de la hoja guarda su estado en el componente padre, cada tecla crea una
-  función nueva y el foco salta a «Cerrar»; un espacio la cierra. En C14 se evitó con
-  `useCallback`. Las otras hojas de la consola guardan el estado adentro y no lo sufren. El
-  arreglo de fondo es que `Hoja` guarde `alCerrar` en una referencia y enfoque solo al abrir
 - «Ajustado hace…» sigue visible cuando el ajuste manual vuelve a 0, porque la API conserva
   la hora del último ajuste
 - El prefijo `/voluntariado/` de `PRECARGAS` también coincide con P8, que así precarga la
   pantalla de reservar sin usarla
 - En C14, el contador de «Llegaron sin reserva» toma el valor al abrir la jornada y no se
   actualiza si otra persona cambia el ajuste mientras la pantalla sigue abierta
+- Desde «Ver jornadas» de un acopio sin jornadas, el chip de lugar queda marcado con el texto
+  «Lugar» y no dice qué acopio filtra
+- Un `dia` o un `acopio` mal formado en la URL de P7 llega a la API, que responde 400, y el
+  botón de reintentar nunca funciona; conviene ignorar el parámetro inválido
+- P6 no enlaza al listado filtrado cuando el acopio tiene más de tres jornadas, y si la
+  consulta falla no muestra nada
+- Los chips de filtro de P7 abren un diálogo y usan `aria-pressed`; les falta
+  `aria-haspopup="dialog"`
+- `useMarcarAsistencia(jornadaId)` recibe un parámetro que no usa (error 11 del
+  [plan](../05-planes/2026-10-17-bloque-5-interfaz.md))
+
+La revisión final del 2026-10-18 encontró además siete errores que se arreglaron en #125,
+entre ellos que mover una jornada desde C14 fallaba siempre. El arreglo de fondo de `Hoja`,
+que antes estaba en esta lista, también va en #125.
 **Por qué:** ninguno rompe un flujo de la especificación. Se dejaron para no frenar el cierre
 antes de la sustentación del 23 de octubre.
+**Estado:** ABIERTO
+
+### P-070 · Turnos: avisar en P8 que la jornada cambió, y los plazos que mira el navegador
+**Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la revisión final de la interfaz del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))
+**Qué:**
+- §6 de la especificación pide que P8 muestre «si la jornada cambió». La API no guarda una
+  marca de cambio: P8 muestra la fecha y el lugar vigentes, pero no avisa que se movieron.
+  Propuesta: que `jornada` guarde `movida_en` al cambiar el inicio, el fin o la dirección, y
+  que P8 muestre «La jornada cambió el …» si es posterior a la reserva. Otra opción es recortar
+  el requisito, porque el correo de cambio ya está en cola.
+- P8 oculta «Cancelar reserva» después del inicio y C14 habilita la asistencia según el reloj
+  del navegador, aunque las restricciones del plan dicen que la web no calcula plazos. La API
+  valida igual. Si se prefiere, la API puede mandar `puedeCancelar` y `puedeMarcarAsistencia`.
+**Por qué:** la primera es un requisito de la especificación sin construir, y decidir si se
+construye o se recorta le toca a Joseph. La segunda es una excepción a una regla del plan.
 **Estado:** ABIERTO
 
 ---

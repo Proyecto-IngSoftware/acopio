@@ -8,6 +8,7 @@ import {
   type ReservaPublica,
 } from '../../api/turnos';
 import { Boton, EnlaceBoton } from '../../componentes/Boton';
+import { EstadoError } from '../../componentes/EstadoError';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
@@ -40,14 +41,23 @@ export function MiReserva() {
     );
   if (consulta.isPending)
     return <Esqueleto etiqueta="Cargando tu reserva" className="m-margin h-64" />;
-  if (consulta.error || !consulta.data)
+  // Si ya se cargó, un refetch fallido no la reemplaza: el enlace es la única copia
+  if (consulta.data) return <Reserva reserva={consulta.data} secreto={secreto} />;
+  if (consulta.error?.estado === 404)
     return (
       <Mensaje icono="search_off" titulo="No encontramos esa reserva">
         Revisa que el enlace esté completo. Si la jornada ya pasó, la reserva ya no se puede
         consultar.
       </Mensaje>
     );
-  return <Reserva reserva={consulta.data} secreto={secreto} />;
+  return (
+    <div className="px-margin py-space-lg">
+      <EstadoError
+        mensaje="No se pudo cargar tu reserva. Revisa tu conexión e inténtalo de nuevo."
+        alReintentar={() => void consulta.refetch()}
+      />
+    </div>
+  );
 }
 
 function Mensaje({ icono, titulo, children }: { icono: string; titulo: string; children: string }) {
@@ -92,7 +102,8 @@ function descargarIcs(reserva: ReservaPublica) {
   enlace.href = url;
   enlace.download = `reserva-${reserva.codigo}.ics`;
   enlace.click();
-  URL.revokeObjectURL(url);
+  // Algunos navegadores cortan la descarga si la URL se libera en el mismo instante
+  setTimeout(() => URL.revokeObjectURL(url), 10_000);
 }
 
 function Reserva({ reserva, secreto }: { reserva: ReservaPublica; secreto: string }) {
@@ -156,7 +167,9 @@ function Reserva({ reserva, secreto }: { reserva: ReservaPublica; secreto: strin
         <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-container text-on-primary">
           <Icono nombre="check" className="text-[30px]" />
         </span>
-        <h1 className="text-headline-sm text-on-surface">Tu cupo está reservado</h1>
+        <h1 className="text-headline-sm text-on-surface">
+          {reserva.estado === 'ACTIVA' ? 'Tu cupo está reservado' : 'Tu reserva'}
+        </h1>
         <p className="text-body-md text-on-surface-variant">Muestra este código al llegar.</p>
       </div>
       {codigo}
@@ -208,13 +221,20 @@ function Reserva({ reserva, secreto }: { reserva: ReservaPublica; secreto: strin
           {aviso}
         </p>
       )}
-      <button
-        type="button"
-        onClick={() => fijarConfirmando(true)}
-        className="min-h-[48px] text-label-md text-primary"
-      >
-        Cancelar reserva
-      </button>
+      {/* La API acepta cancelar hasta la hora de inicio (§4) */}
+      {reserva.estado === 'ACTIVA' && new Date(j.inicio) > new Date() ? (
+        <button
+          type="button"
+          onClick={() => fijarConfirmando(true)}
+          className="min-h-[48px] text-label-md text-primary"
+        >
+          Cancelar reserva
+        </button>
+      ) : (
+        <p className="text-center text-body-sm text-on-surface-variant">
+          La jornada ya empezó: la reserva ya no se puede cancelar.
+        </p>
+      )}
 
       {confirmando && (
         <Hoja titulo="¿Cancelar tu reserva?" alCerrar={() => fijarConfirmando(false)}>
