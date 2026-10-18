@@ -29,7 +29,8 @@ que va desde «## 1. Incremento funcional» lo vuelca
 |---|---|---|
 | Incremento | API con base de datos, Docker Compose reproducible con volumen, variables de entorno sin credenciales en el repositorio, manejo de errores y validaciones | [§1](#1-incremento-funcional) |
 | Colaboración | Commits, ramas, pull requests y revisión de cambios en GitHub | [§1](#1-incremento-funcional) |
-| Pantallas | Una o dos pantallas conectadas a la API, con datos reales, mensajes de confirmación, validación o error y un flujo completo, con capturas e historias relacionadas | [§1a y §1b](#1a-flujo-del-motor-de-la-sugerencia-a-la-recepción) |
+| Pantallas | Una o dos pantallas conectadas a la API, con datos reales, mensajes de confirmación, validación o error y un flujo completo, con capturas e historias relacionadas | [§1a a §1c](#1a-flujo-del-motor-de-la-sugerencia-a-la-recepción) |
+| Diagrama de paquetes | El del avance anterior, para la sustentación | [§1d](#1d-diagramas), al día |
 | DAO, DTO y patrones | DAO obligatorio, DTO si aplica, dos creacionales, dos estructurales y al menos uno de comportamiento | [§2](#2-patrones-de-diseño) |
 | Planning, Daily, Review y retrospectiva | El mismo registro del Sprint 1 | [§3](#3-registro-documental-del-sprint) |
 | Entrega | Enlace al repositorio público, patrones y registro en el documento de OneDrive | [§4](#4-repositorio-y-servidor) |
@@ -131,6 +132,36 @@ Historias HU-02 Donar a una causa real y HU-15 No dirigir donantes a una estafa.
    enlace.
 
 ![Causas en la consola (C22).](evidencia/avance-05/c22-causas.png)
+
+### 1c. Otras pantallas del incremento
+
+El incremento tiene más pantallas que las de los dos flujos. Estas también leen la base de la
+demo del servidor.
+
+![Mapa de acopios (P5): búsqueda por dirección, «Cerca de mí», filtros y mapa.](evidencia/avance-05/p05-mapa.png)
+
+![Voluntariado (P7): jornadas por día con sus cupos reservados.](evidencia/avance-05/p07-voluntariado.png)
+
+![Turnos en la consola (C14): jornadas próximas, en curso y pasadas, de acopios y de entidades.](evidencia/avance-05/c14-turnos.png)
+
+### 1d. Diagramas
+
+Los diagramas están al día con el código del 18 de octubre. El de paquetes es el que pide la
+sustentación; se dibuja a mano en `docs/02-arquitectura/diagramas/paquetes.html` y sus
+dependencias salen de dependency-cruiser. Los de contenedores y los modelos de datos se
+generan con Mermaid desde la misma carpeta.
+
+![Paquetes del monorepo: la web, la API y los paquetes compartidos.](../assets/diagramas/arquitectura-03-paquetes-del-monorepo.png)
+
+![Paquetes de la API: los módulos de dominio arriba, los transversales abajo. Incluye turnos.](../assets/diagramas/arquitectura-04-paquetes-de-la-api.png)
+
+![Contenedores: el navegador, la web y la API en el VPS con Dokploy, y los servicios externos (Supabase Auth, SMTP, Nominatim, OpenStreetMap y RedAcopio).](../assets/diagramas/arquitectura-02-contenedores.png)
+
+![Modelo de datos del motor: sugerencias, remisiones con sus líneas y reportes de necesidad.](../assets/diagramas/er-05-motor.png)
+
+![Modelo de datos de la red: emergencias, zonas, entidades, acopios y causas.](../assets/diagramas/er-02-red.png)
+
+![Modelo de datos de turnos: jornadas de acopio o de entidad y sus reservas.](../assets/diagramas/er-06-turnos.png)
 
 ## 2. Patrones de diseño
 
