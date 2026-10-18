@@ -816,7 +816,7 @@ export async function sembrarTurnosDemo(
           jornada_id: creada.id,
           nombre: `Voluntario ${i} (prueba)`,
           correo: `voluntario${i}@demo.acopio.local`,
-          codigo: codigoReserva(randomBytes(8)),
+          codigo: codigoReserva((n) => randomBytes(n)),
           secreto_hash: createHash('sha256').update(randomBytes(18)).digest('hex'),
           perfil_declarado: Boolean(j.datos.perfil_requerido),
           consentimiento_en: ahora,

@@ -59,6 +59,9 @@ anticipación, igual que crearla.
 - `z.email()` rechazaba el correo con espacios antes de recortarlo. Se recorta primero.
 - Tres DTO nuevos se llamaban igual que otros de inventario, causas y acopios, y el generador
   del contrato pisó los viejos sin avisar. Lo detectó el `typecheck` de la web. Se renombraron.
+- CodeQL marcó en el PR que `codigoReserva` usaba el resto de dividir un byte aleatorio entre 31.
+  Como 256 no es múltiplo de 31, las primeras ocho letras salían un poco más seguido. Ahora la
+  función descarta los bytes de 248 en adelante, con su prueba.
 - La revisión final fue una autorrevisión, porque en esta sesión no se abren subagentes sin
   pedirlo. Dejó cuatro menores en [P-068](../../01-requerimientos/pendientes.md).
 

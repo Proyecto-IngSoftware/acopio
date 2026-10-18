@@ -98,12 +98,18 @@ describe('turnos', () => {
     expect(puedeMarcarAsistencia(ini, fin, new Date('2026-10-28T17:01:00Z'))).toBe(false);
   });
 
-  it('codigoReserva: 8 caracteres sin ambiguos', () => {
+  it('codigoReserva: 8 caracteres sin ambiguos y sin sesgo', () => {
     expect(CARACTERES_CODIGO).toHaveLength(31);
-    expect(codigoReserva(new Uint8Array([0, 1, 2, 3, 4, 5, 6, 31]))).toBe('ABCDEFGA');
-    expect(codigoReserva(crypto.getRandomValues(new Uint8Array(8)))).toMatch(
-      /^[A-HJKMNP-Z2-9]{8}$/,
-    );
+    const fijos = (...valores: number[]) => {
+      let i = 0;
+      return (n: number) => Uint8Array.from({ length: n }, () => valores[i++ % valores.length]!);
+    };
+    expect(codigoReserva(fijos(0, 1, 2, 3, 4, 5, 6, 31))).toBe('ABCDEFGA');
+    // 31 × 8 = 248: de 248 a 255 se descartan, porque sobrarían para las 8 primeras letras
+    expect(codigoReserva(fijos(248, 255, 0, 1, 2, 3, 4, 5, 6, 7))).toBe('ABCDEFGH');
+    expect(codigoReserva(fijos(247))).toBe('99999999');
+    const aleatorio = (n: number) => crypto.getRandomValues(new Uint8Array(n));
+    expect(codigoReserva(aleatorio)).toMatch(/^[A-HJKMNP-Z2-9]{8}$/);
   });
 
   it('normalizarCorreo', () => {

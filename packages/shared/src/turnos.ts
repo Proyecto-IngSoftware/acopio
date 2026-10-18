@@ -105,11 +105,19 @@ export function puedeMarcarAsistencia(inicio: Date, fin: Date, ahora: Date): boo
 /** Sin 0, O, 1, I ni L, que se confunden al dictarlos o copiarlos a mano. */
 export const CARACTERES_CODIGO = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789';
 
-/** Código de 8 caracteres a partir de 8 bytes aleatorios. */
-export function codigoReserva(bytes: Uint8Array): string {
+/**
+ * Código de 8 caracteres con `aleatorio` (`crypto.getRandomValues` o `randomBytes`). Descarta
+ * los bytes de 248 en adelante: 256 no es múltiplo de 31, y con el resto directo las primeras
+ * letras saldrían más que las demás.
+ */
+export function codigoReserva(aleatorio: (n: number) => Uint8Array): string {
+  const n = CARACTERES_CODIGO.length;
+  const tope = 256 - (256 % n);
   let codigo = '';
-  for (let i = 0; i < 8; i++) {
-    codigo += CARACTERES_CODIGO[(bytes[i] ?? 0) % CARACTERES_CODIGO.length];
+  while (codigo.length < 8) {
+    for (const b of aleatorio(16)) {
+      if (b < tope && codigo.length < 8) codigo += CARACTERES_CODIGO[b % n];
+    }
   }
   return codigo;
 }

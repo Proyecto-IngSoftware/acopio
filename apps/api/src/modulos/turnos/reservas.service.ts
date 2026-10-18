@@ -179,7 +179,7 @@ export class ReservasService {
           nombre: d.nombre.trim(),
           correo,
           telefono: d.telefono?.trim() || null,
-          codigo: codigoReserva(randomBytes(8)),
+          codigo: codigoReserva((n) => randomBytes(n)),
           secreto_hash: hashSecreto(secreto),
           perfil_declarado: d.perfilDeclarado,
           consentimiento_en: ahora,
