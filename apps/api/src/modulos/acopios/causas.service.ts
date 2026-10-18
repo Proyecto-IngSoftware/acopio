@@ -67,22 +67,26 @@ export class CausasService {
     });
   }
 
-  /** Cambiar el enlace o la entidad pide confirmar otra vez: es lo que llega al público. */
+  /**
+   * Cambiar el enlace o la entidad pide confirmar otra vez: es lo que llega al público. Mandar
+   * los mismos valores, como hace el formulario de C22, no cuenta como cambio.
+   */
   async editar(
     admin: UsuarioAutenticado,
     id: string,
     cambios: Partial<DatosCausa>,
     confirmo: boolean,
   ) {
-    if (cambios.urlOficial !== undefined || cambios.entidadId !== undefined) {
-      exigirConfirmacion(confirmo);
-    }
     if (cambios.urlOficial !== undefined) exigirUrl(cambios.urlOficial);
     const hoy = hoyBogota(this.ahora());
     if (cambios.cierraEl !== undefined) exigirCierre(cambios.cierraEl, hoy);
     return this.transacciones.ejecutar(async (tx) => {
       const antes = await this.exigirActiva(id, hoy, tx);
-      if (cambios.entidadId) await this.exigirEntidadVerificada(cambios.entidadId, tx);
+      const otroEnlace =
+        cambios.urlOficial !== undefined && cambios.urlOficial !== antes.url_oficial;
+      const otraEntidad = cambios.entidadId !== undefined && cambios.entidadId !== antes.entidad_id;
+      if (otroEnlace || otraEntidad) exigirConfirmacion(confirmo);
+      if (otraEntidad) await this.exigirEntidadVerificada(cambios.entidadId!, tx);
       const despues = await this.dao.actualizar(
         id,
         {

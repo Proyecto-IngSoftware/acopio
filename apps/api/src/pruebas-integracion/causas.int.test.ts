@@ -250,6 +250,22 @@ describe('causas', () => {
       expect(renovada.cierraEl).toBe('2027-03-01');
     });
 
+    it('editar el título mandando el mismo enlace y la misma entidad no pide confirmar', async () => {
+      const id = await entidadVerificada();
+      const creada = (await crearCausa(id).expect(201)).body;
+      const r = await a
+        .http()
+        .patch(`/api/causas/${creada.id}`)
+        .set(como(admin))
+        .send({
+          entidadId: id,
+          urlOficial: 'https://www.fundacion.org/donar',
+          titulo: 'Mercados para familias de Mocoa',
+        })
+        .expect(200);
+      expect(r.body.titulo).toBe('Mercados para familias de Mocoa');
+    });
+
     it('cambiar el enlace al editar pide confirmar', async () => {
       const id = await entidadVerificada();
       const creada = (await crearCausa(id).expect(201)).body;
