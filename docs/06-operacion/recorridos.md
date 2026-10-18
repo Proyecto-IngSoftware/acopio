@@ -181,6 +181,7 @@ ocurrió y la hora en que llegó.
 | Script | Resultado |
 |---|---|
 | `portal-causas.mjs` | 4 de 4 |
+| `portal-causas.mjs` contra el servidor, tras desplegar #117 | 4 de 4, con las causas «(demo)» que el servidor sembró al arrancar |
 | `consola-causas.mjs` | 6 de 6. La primera corrida encontró que el formulario de C22 medía 420 px: el `fieldset` de los pasos tiene `min-width: min-content` por defecto; se corrigió con `min-w-0` |
 
 **2026-10-17, en local**, con los arreglos de la rama `recorridos-robustos`:

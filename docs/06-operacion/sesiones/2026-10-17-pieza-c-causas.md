@@ -17,7 +17,7 @@ rama `pieza-c-especificacion`, en un solo PR.
 
 | PR o commit | Qué trae |
 |---|---|
-| Rama `pieza-c-especificacion` | Especificación y plan; `acopios` migrado a DAO; reglas puras de causas en `packages/shared`; tabla `causa` y columnas de verificación en `entidad`; API de verificación, logotipo, causas, rutas públicas y archivado diario; P3, causas atendidas y P4; C15 con verificación y logotipo; C22 Causas; causas de la demo; dos recorridos |
+| [#117](https://github.com/Proyecto-IngSoftware/acopio/pull/117), rama `pieza-c-especificacion` | Especificación y plan; `acopios` migrado a DAO; reglas puras de causas en `packages/shared`; tabla `causa` y columnas de verificación en `entidad`; API de verificación, logotipo, causas, rutas públicas y archivado diario; P3, causas atendidas y P4; C15 con verificación y logotipo; C22 Causas; causas de la demo; dos recorridos |
 
 Fuera del repositorio:
 
@@ -33,8 +33,9 @@ Fuera del repositorio:
 - Verificación completa en local con código de salida 0: `lint`, `typecheck`, `depcruise`,
   `test` (shared 94, API 70, web 853), `test:int` (402/402) y `revisar-colores.sh`.
 - Recorridos contra el Compose: `portal-causas.mjs` 4/4 y `consola-causas.mjs` 6/6.
-- No se corrió nada contra el servidor de pruebas antes de fusionar.
-  `consola-causas.mjs` necesita la contraseña del administrador de allá
+- Contra el servidor de pruebas, después de desplegar #117: `portal-causas.mjs` 4/4. El
+  servidor sembró las causas «(demo)» al arrancar. `consola-causas.mjs` no se corrió allá
+  porque necesita la contraseña del administrador
   ([P-066](../../01-requerimientos/pendientes.md)).
 
 ## Decisiones
