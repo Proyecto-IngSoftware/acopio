@@ -131,14 +131,16 @@ export class JornadasService {
       datos.inicio = instanteBogota(c.fecha, c.horaInicio!);
       datos.fin = instanteBogota(c.fecha, c.horaFin!);
     }
-    if (antes.entidad_id) {
-      Object.assign(datos, lugarPropio(c, true));
+    if (antes.entidad_id) Object.assign(datos, lugarPropio(c, true));
+    return this.transacciones.ejecutar(async (tx) => {
+      // Desde aquí se compara contra `vigente`: otra edición pudo cambiar la fila antes del bloqueo
+      const vigente = await this.releerBloqueada(id, tx);
       const cambiaLugar =
-        (datos.direccion !== undefined && datos.direccion !== antes.direccion) ||
-        (datos.municipio !== undefined && datos.municipio !== antes.municipio);
+        (datos.direccion !== undefined && datos.direccion !== vigente.direccion) ||
+        (datos.municipio !== undefined && datos.municipio !== vigente.municipio);
       if (
         cambiaLugar &&
-        antes.inicio.getTime() - ahora.getTime() <= LIMITES_TURNOS.horasCierre * MS_HORA
+        vigente.inicio.getTime() - ahora.getTime() <= LIMITES_TURNOS.horasCierre * MS_HORA
       ) {
         throw new ErrorDominio(
           'JORNADA_INVALIDA',
@@ -146,9 +148,6 @@ export class JornadasService {
           422,
         );
       }
-    }
-    return this.transacciones.ejecutar(async (tx) => {
-      const vigente = await this.releerBloqueada(id, tx);
       if (c.cupoMaximo !== undefined) {
         const ocupados = await this.reservas.ocupados(id, tx);
         if (c.cupoMaximo < ocupados + vigente.cupos_ajuste_manual) {
@@ -161,16 +160,16 @@ export class JornadasService {
       }
       let despues = await this.dao.actualizar(id, datos, tx);
       const movida =
-        despues.inicio.getTime() !== antes.inicio.getTime() ||
-        despues.fin.getTime() !== antes.fin.getTime() ||
-        despues.direccion !== antes.direccion ||
-        despues.municipio !== antes.municipio;
+        despues.inicio.getTime() !== vigente.inicio.getTime() ||
+        despues.fin.getTime() !== vigente.fin.getTime() ||
+        despues.direccion !== vigente.direccion ||
+        despues.municipio !== vigente.municipio;
       if (movida) {
         // La hora del cambio: P8 avisa a quien reservó antes (P-070)
         despues = await this.dao.actualizar(id, { movida_en: ahora }, tx);
         await this.avisos.cambiada(tx, await this.reservas.activas(id, tx), despues);
       }
-      return this.registrar(tx, usuario, 'jornada.editada', antes, despues, ahora);
+      return this.registrar(tx, usuario, 'jornada.editada', vigente, despues, ahora);
     });
   }
 
@@ -230,7 +229,8 @@ export class JornadasService {
 
   async ajustar(usuario: UsuarioAutenticado, id: string, cupos: number) {
     const ahora = this.ahora();
-    const antes = await this.exigirGestionable(usuario, id);
+    // Solo revisa el acceso: el cupo y el ajuste se leen después del bloqueo
+    await this.exigirGestionable(usuario, id);
     return this.transacciones.ejecutar(async (tx) => {
       const vigente = await this.releerBloqueada(id, tx);
       const ocupados = await this.reservas.ocupados(id, tx);
@@ -246,7 +246,7 @@ export class JornadasService {
         { cupos_ajuste_manual: cupos, ajuste_actualizado_en: ahora },
         tx,
       );
-      return this.registrar(tx, usuario, 'jornada.ajustada', antes, despues, ahora);
+      return this.registrar(tx, usuario, 'jornada.ajustada', vigente, despues, ahora);
     });
   }
 

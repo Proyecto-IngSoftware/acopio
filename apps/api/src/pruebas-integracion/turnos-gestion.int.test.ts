@@ -272,6 +272,36 @@ describe('turnos: gestión', () => {
     await a.http().patch(ruta).set(como(admin)).send({ direccion: 'Otra calle 1' }).expect(200);
   });
 
+  it('dos ediciones a la vez: la bitácora de cada una compara contra lo que había al bloquear', async () => {
+    const entidadId = await crearEntidad();
+    await a
+      .http()
+      .post(`/api/entidades/${entidadId}/verificar`)
+      .set(como(admin))
+      .send({ confirmo: true })
+      .expect(200);
+    const lugar = { acopioId: undefined, entidadId, direccion: 'Calle 0', municipio: 'Bogotá' };
+    const [j] = (await crear(admin, datos(lugar)).expect(201)).body;
+    const ruta = `/api/turnos/gestion/jornadas/${j.id}`;
+    const editar = (cuerpo: object) =>
+      a.http().patch(ruta).set(como(admin)).send(cuerpo).expect(200);
+    for (let i = 1; i <= 8; i++) {
+      await Promise.all([editar({ direccion: `Calle ${i}` }), editar({ titulo: `Título ${i}` })]);
+    }
+    type Vista = { titulo: string; lugar: { direccion: string } };
+    const eventos = await a.prisma.bitacora.findMany({
+      where: { accion: 'jornada.editada', entidad_id: j.id },
+    });
+    expect(eventos).toHaveLength(16);
+    for (const e of eventos) {
+      const [antes, despues] = [e.datos_antes as Vista, e.datos_despues as Vista];
+      // Quien solo cambió el título no aparece cambiando la dirección
+      if (antes.titulo !== despues.titulo) {
+        expect(despues.lugar.direccion).toBe(antes.lugar.direccion);
+      }
+    }
+  });
+
   it('cada quien ve las jornadas que le tocan', async () => {
     const entidadId = await crearEntidad();
     await a
