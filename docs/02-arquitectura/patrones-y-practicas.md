@@ -161,6 +161,7 @@ Servicios de otros módulos que se usan desde cualquier parte: `BitacoraService.
 | `pruebas/utilidades.tsx` | `envolver`, `clienteFalso`, `responderSegun`, `responderJson`, `conEstado`, `responderError`, `peticiones`, `cuerpoDe` |
 | `pruebas/accesibilidad.ts` | `violacionesGraves` |
 | `pruebas/datos-red.ts` | `acopioDePrueba` |
+| `pruebas/datos-turnos.ts` | `jornadaDe`, `gestionDe` e `inscritoDe`, con valores válidos por defecto |
 | `pruebas/preparar.ts` | Hace fallar como sin red toda petición no simulada |
 
 ## Cómo se mantiene

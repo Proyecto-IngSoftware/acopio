@@ -2,14 +2,16 @@ import { diaEnBogota, distanciaKm } from '@acopio/shared';
 import type { ReactNode } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { useAcopio, useNoRecibir, type AcopioPublico } from '../../api/red';
+import { useJornadas } from '../../api/turnos';
 import { DIAS_SEMANA, NOMBRE_DIA } from '../../componentes/EditorHorario';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EtiquetaEstado } from '../../componentes/EtiquetaEstado';
 import { Icono } from '../../componentes/Icono';
 import { TarjetaNoTraigan } from '../../componentes/TarjetaNoTraigan';
-import { haceCuanto } from '../../formato';
+import { diaSemana, haceCuanto, rangoHoras } from '../../formato';
 import { AvisoSinDinero } from '../bloques/AvisoSinDinero';
 import { aperturaPublica, km } from '../mapa/TarjetaAcopio';
+import { textoCupos } from '../turnos/piezas';
 
 const BOTON =
   'inline-flex min-h-[48px] w-full items-center justify-center gap-space-xs rounded-xl px-space-md text-label-md';
@@ -172,7 +174,7 @@ function Contenido({ acopio, cerca }: { acopio: AcopioPublico; cerca: string | n
       )}
 
       <Pronto titulo="Lo que urge" icono="inventory_2" texto="Llega pronto con el inventario." />
-      <Pronto titulo="Voluntariado" icono="groups" texto="Llega pronto con los turnos." />
+      <Voluntariado acopioId={acopio.id} />
 
       <a
         href={`https://wa.me/?text=${encodeURIComponent(`${acopio.nombre}: ${enlace}`)}`}
@@ -197,6 +199,52 @@ function Pronto({ titulo, icono, texto }: { titulo: string; icono: string; texto
         <h2 className="text-label-md text-on-surface">{titulo}</h2>
         <p className="text-body-sm text-on-surface-variant">{texto}</p>
       </div>
+    </section>
+  );
+}
+
+/** Las próximas tres jornadas del acopio (RF-TUR-002), con el aviso de RF-TUR-006. */
+function Voluntariado({ acopioId }: { acopioId: string }) {
+  const { data } = useJornadas({ acopio: acopioId });
+  const proximas = (data ?? []).slice(0, 3);
+  return (
+    <section
+      aria-label="Voluntariado"
+      className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md"
+    >
+      <h2 className="flex items-center gap-space-xs text-label-md text-on-surface">
+        <Icono nombre="groups" className="text-[22px] text-primary-container" />
+        Voluntariado
+      </h2>
+      {data && proximas.length === 0 && (
+        <p className="text-body-sm text-on-surface-variant">
+          Este acopio no tiene jornadas abiertas
+        </p>
+      )}
+      {proximas.map((j) => (
+        <Link
+          key={j.id}
+          to={`/voluntariado/${j.id}`}
+          className="flex items-center gap-space-sm border-t border-outline-variant pt-space-sm"
+        >
+          <span className="flex min-w-0 flex-1 flex-col">
+            <span className="text-body-md font-semibold text-on-surface">{j.titulo}</span>
+            <span className="text-body-sm text-on-surface-variant">
+              {diaSemana(j.inicio)} · {rangoHoras(j.inicio, j.fin)}
+            </span>
+            <span className="text-body-sm text-on-surface-variant tabular-nums">
+              {textoCupos(j)}
+            </span>
+          </span>
+          <Icono nombre="chevron_right" className="text-[22px] text-on-surface-variant" />
+        </Link>
+      ))}
+      {proximas.length > 0 && (
+        <p className="text-body-sm text-on-surface-variant">
+          Puede haber gente que llegó sin reserva. Los cupos cuentan reservas, no personas
+          presentes.
+        </p>
+      )}
     </section>
   );
 }

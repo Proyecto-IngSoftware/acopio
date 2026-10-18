@@ -135,7 +135,7 @@ it('un Operador ve «Mi acopio» solo para la ubicación activa', async () => {
     'href',
     '/consola/remisiones',
   );
-  expect(within(mio).getAllByRole('link')).toHaveLength(6);
+  expect(within(mio).getAllByRole('link')).toHaveLength(7);
   expect(screen.queryByRole('region', { name: 'Administración' })).not.toBeInTheDocument();
 });
 
@@ -310,4 +310,40 @@ it('no tiene violaciones graves de accesibilidad', async () => {
   const { container } = pantalla(persona('ADMIN'));
   await screen.findByRole('region', { name: 'Administración' });
   expect(await violacionesGraves(container)).toEqual([]);
+});
+
+it('el Administrador llega a Turnos desde «Más»', async () => {
+  responderSegun({ 'GET /api/ubicaciones/mias': [] });
+  pantalla(persona('ADMIN'));
+  expect(await screen.findByRole('link', { name: /Turnos/ })).toHaveAttribute(
+    'href',
+    '/consola/turnos',
+  );
+});
+
+it('el Operador ve «Turnos» con su acopio', async () => {
+  responderSegun({
+    'GET /api/ubicaciones/mias': [
+      {
+        tipo: 'ACOPIO',
+        id: 'x1',
+        nombre: 'Acopio Chapinero',
+        municipio: 'Bogotá',
+        estado: 'ACTIVO',
+      },
+    ],
+    'GET /api/remisiones': [],
+  });
+  pantalla(persona('OPERADOR'));
+  expect(await screen.findByRole('link', { name: /Turnos/ })).toHaveAttribute(
+    'href',
+    '/consola/turnos',
+  );
+});
+
+it('el Auditor no ve Turnos', async () => {
+  responderSegun({ 'GET /api/ubicaciones/mias': [] });
+  pantalla(persona('AUDITOR'));
+  await screen.findByRole('region', { name: 'Tu cuenta' });
+  expect(screen.queryByRole('link', { name: /Turnos/ })).not.toBeInTheDocument();
 });

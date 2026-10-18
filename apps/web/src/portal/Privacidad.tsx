@@ -16,6 +16,11 @@ const SECCIONES = [
     texto:
       'La guardamos sin datos de ubicación y la borramos 12 meses después de cerrar la donación.',
   },
+  {
+    titulo: 'Si reservas un turno',
+    texto:
+      'Guardamos tu nombre, tu correo y, si lo das, tu teléfono, para que el acopio o la entidad sepa quién llega y pueda avisarte si la jornada cambia. El nombre, el correo y el teléfono de una reserva se borran 30 días después de la jornada; quedan solo los conteos.',
+  },
 ];
 
 /** P12: privacidad. Diseño: docs/03-diseno/stitch/P12-privacidad. */

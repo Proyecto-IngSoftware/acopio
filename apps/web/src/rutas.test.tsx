@@ -41,18 +41,24 @@ it('/causas abre el directorio de causas', async () => {
   expect(await screen.findByRole('heading', { level: 1, name: 'Causas' })).toBeInTheDocument();
 });
 
-it.each(['/voluntariado', '/proximamente'])(
-  '%s muestra «Próximamente» con un enlace de vuelta',
-  (ruta) => {
-    render(envolver(<Rutas />, ruta));
-    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Próximamente');
-    expect(screen.getByRole('link', { name: 'Volver al inicio' })).toHaveAttribute('href', '/');
-  },
-);
+it('/voluntariado abre el listado de jornadas', async () => {
+  responderSegun({ 'GET /api/turnos/jornadas': [] });
+  render(envolver(<Rutas />, '/voluntariado'));
+  expect(
+    await screen.findByRole('heading', { level: 1, name: 'Voluntariado' }),
+  ).toBeInTheDocument();
+});
+
+it.each(['/proximamente'])('%s muestra «Próximamente» con un enlace de vuelta', (ruta) => {
+  render(envolver(<Rutas />, ruta));
+  expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Próximamente');
+  expect(screen.getByRole('link', { name: 'Volver al inicio' })).toHaveAttribute('href', '/');
+});
 
 it.each([
   ['/consola/acopios/x1/salida', 'Registrar salida'],
   ['/consola/acopios/x1/conteo', 'Conteo físico'],
+  ['/consola/turnos', 'Turnos'],
 ])('%s abre su pantalla para el Operador', async (ruta, titulo) => {
   const operador = { id: 'o', username: 'o', nombre: 'Daniela', rol: 'OPERADOR' as const };
   render(envolver(<Rutas />, ruta, clienteFalso(operador)));

@@ -63,6 +63,8 @@ export async function desenvolver<T>(
     throw new ErrorApi(0, 'SIN_RED', SIN_RED);
   }
   if (r.data !== undefined && r.response.ok) return r.data;
+  // Un 204 no trae cuerpo y openapi-fetch deja `data` sin definir: también es un éxito
+  if (r.response.status === 204) return undefined as T;
   const e = (r.error ?? {}) as { codigo?: string; mensaje?: string; detalles?: unknown };
   throw new ErrorApi(
     r.response.status,

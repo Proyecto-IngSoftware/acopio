@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-18
 ---
 
 # Pendientes — bandeja de entrada
@@ -1042,6 +1042,28 @@ en la sesión.
   incrustados y el diagrama de turnos, que ya tiene la jornada de entidad
 **Por qué:** ninguno rompe un flujo de la especificación; quedaron fuera de la sesión por el
 plazo del 23 de octubre.
+**Estado:** ABIERTO
+
+---
+
+### P-069 · Menores de la interfaz de turnos
+**Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la autorrevisión de la interfaz del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))
+**Qué:**
+- `Hoja` vuelve a enfocar su botón «Cerrar» cada vez que recibe una función `alCerrar` nueva.
+  Si el formulario de la hoja guarda su estado en el componente padre, cada tecla crea una
+  función nueva y el foco salta a «Cerrar»; un espacio la cierra. En C14 se evitó con
+  `useCallback`. Las otras hojas de la consola guardan el estado adentro y no lo sufren. El
+  arreglo de fondo es que `Hoja` guarde `alCerrar` en una referencia y enfoque solo al abrir
+- «Ajustado hace…» sigue visible cuando el ajuste manual vuelve a 0, porque la API conserva
+  la hora del último ajuste
+- El prefijo `/voluntariado/` de `PRECARGAS` también coincide con P8, que así precarga la
+  pantalla de reservar sin usarla
+- En C14, el contador de «Llegaron sin reserva» toma el valor al abrir la jornada y no se
+  actualiza si otra persona cambia el ajuste mientras la pantalla sigue abierta
+- `portal-turnos.mjs` no se ha corrido contra el servidor de pruebas: falta desplegar la
+  interfaz (paso 5 de la tarea 9 del [plan](../05-planes/2026-10-17-bloque-5-interfaz.md))
+**Por qué:** ninguno rompe un flujo de la especificación. Se dejaron para no frenar el cierre
+antes de la sustentación del 23 de octubre.
 **Estado:** ABIERTO
 
 ---
