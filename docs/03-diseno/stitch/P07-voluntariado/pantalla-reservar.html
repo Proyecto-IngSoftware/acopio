@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acopio - Reservar cupo</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "tertiary-container": "#316c6c",
+            "surface-container": "#f4ece8",
+            "secondary": "#625e59",
+            "on-primary": "#ffffff",
+            "surface-variant": "#e9e1dd",
+            "on-secondary-fixed-variant": "#4a4642",
+            "primary-container": "#0f6e6e",
+            "on-tertiary-fixed": "#002020",
+            "surface-tint": "#03696a",
+            "on-primary-fixed-variant": "#004f50",
+            "primary": "#005454",
+            "on-tertiary": "#ffffff",
+            "background": "#fff8f5",
+            "on-secondary-container": "#68635f",
+            "on-background": "#1e1b19",
+            "tertiary-fixed": "#b2eded",
+            "surface": "#fff8f5",
+            "secondary-fixed-dim": "#ccc5c0",
+            "on-primary-fixed": "#002020",
+            "on-error-container": "#93000a",
+            "on-surface": "#1e1b19",
+            "error-container": "#ffdad6",
+            "on-error": "#ffffff",
+            "tertiary-fixed-dim": "#96d1d0",
+            "inverse-on-surface": "#f7efeb",
+            "tertiary": "#125454",
+            "surface-container-highest": "#e9e1dd",
+            "secondary-fixed": "#e9e1db",
+            "surface-dim": "#e0d8d5",
+            "secondary-container": "#e9e1db",
+            "on-tertiary-container": "#afebea",
+            "on-secondary-fixed": "#1e1b18",
+            "surface-container-low": "#faf2ee",
+            "surface-container-high": "#eee7e3",
+            "surface-bright": "#fff8f5",
+            "inverse-surface": "#33302d",
+            "on-secondary": "#ffffff",
+            "outline": "#6e7979",
+            "on-primary-container": "#9eedec",
+            "primary-fixed": "#a1f0ef",
+            "on-surface-variant": "#3e4948",
+            "inverse-primary": "#85d4d3",
+            "error": "#ba1a1a",
+            "outline-variant": "#bec9c8",
+            "primary-fixed-dim": "#85d4d3"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter", "sans-serif"],
+            "display": ["Inter", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Inter", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased h-full flex flex-col">
+<!-- TopAppBar -->
+<header class="bg-surface text-primary font-headline font-bold text-lg docked full-width top sticky top-0 z-50 flex justify-between items-center w-full px-4 py-3">
+<div class="flex items-center gap-3">
+<button aria-label="Volver" class="p-2 rounded-full hover:bg-surface-variant transition-all duration-200 text-primary flex items-center justify-center">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="text-lg font-bold text-primary">Reservar cupo</h1>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 max-w-lg mx-auto w-full px-4 py-6 space-y-6 overflow-y-auto pb-16">
+<!-- Jornada Summary Card -->
+<section class="bg-surface-container-low rounded-xl p-5 border border-outline-variant space-y-4">
+<div>
+<span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-surface-container text-on-surface-variant inline-block mb-2">Jornada de voluntariado</span>
+<h2 class="text-2xl font-bold text-on-background tracking-tight">Armar mercados</h2>
+</div>
+<div class="space-y-3 text-sm text-on-surface-variant">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">location_on</span>
+<div>
+<p class="font-medium text-on-background">Bodega Central Zona Industrial</p>
+<p class="text-xs text-secondary">Calle 13 # 68-90, Bogotá</p>
+</div>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">schedule</span>
+<div>
+<p class="font-medium text-on-background">Miércoles 21 de octubre</p>
+<p class="text-xs text-secondary">1:00 p. m. – 5:00 p. m.</p>
+</div>
+</div>
+</div>
+<!-- Aforo Indicator -->
+<div class="pt-2 border-t border-outline-variant">
+<div class="flex justify-between items-center mb-1.5 text-sm">
+<span class="text-on-surface-variant font-medium">Cupos disponibles</span>
+<span class="font-bold text-on-background">4 de 12 cupos reservados</span>
+</div>
+<div class="w-full bg-surface-variant h-2.5 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 33%;"></div>
+</div>
+</div>
+<!-- Labor Description -->
+<div class="pt-2 text-sm text-on-surface-variant space-y-2">
+<p><strong class="text-on-background">Labor:</strong> Descarga y empaquetado de kits alimentarios esenciales para familias damnificadas.</p>
+<p><strong class="text-on-background">Qué llevar:</strong> Ropa cómoda, calzado cerrado y termo con agua personal.</p>
+</div>
+<!-- Requirements -->
+<div class="bg-surface rounded-lg p-3.5 border border-outline-variant space-y-1.5 text-xs text-on-surface-variant">
+<p class="font-semibold text-on-background flex items-center gap-1.5">
+<span class="material-symbols-outlined text-sm text-primary">verified</span>
+          Requisitos obligatorios
+        </p>
+<ul class="list-disc list-inside space-y-1 pl-1">
+<li>Ropa cerrada</li>
+<li>Ser mayor de 16 años</li>
+</ul>
+</div>
+<!-- Notice -->
+<div class="bg-surface-container-high rounded-lg p-3.5 flex items-start gap-3 border border-outline-variant">
+<span class="material-symbols-outlined text-primary mt-0.5">info</span>
+<p class="text-xs text-on-background leading-relaxed">Puede haber gente que llegó sin reserva.</p>
+</div>
+</section>
+<!-- Reservation Form -->
+<form class="bg-surface-container-lowest rounded-xl p-5 border border-outline-variant space-y-5">
+<h3 class="text-lg font-bold text-on-background">Tus datos para la reserva</h3>
+<div class="space-y-4">
+<div>
+<label class="block text-sm font-medium text-on-surface mb-1" for="nombre">Nombre completo <span class="text-error">*</span></label>
+<input class="w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 text-on-background text-base focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" id="nombre" placeholder="Escribe tu nombre completo" required="" type="text"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface mb-1" for="correo">Correo electrónico <span class="text-error">*</span></label>
+<input class="w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 text-on-background text-base focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" id="correo" placeholder="correo@ejemplo.com" required="" type="email"/>
+</div>
+<div>
+<label class="block text-sm font-medium text-on-surface mb-1" for="telefono">Teléfono <span class="text-secondary font-normal">(opcional)</span></label>
+<input class="w-full rounded-lg border border-outline-variant bg-surface px-4 py-3 text-on-background text-base focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" id="telefono" placeholder="300 123 4567" type="tel"/>
+</div>
+<!-- Checkboxes -->
+<div class="space-y-4 pt-2">
+<div class="flex items-start gap-3">
+<input class="mt-1 h-5 w-5 rounded border-outline-variant text-primary focus:ring-primary" id="licencia" type="checkbox"/>
+<label class="text-sm text-on-surface select-none" for="licencia">
+<span class="font-medium text-on-background">Tengo licencia de conducción C2</span>
+<span class="block text-xs text-secondary mt-0.5">El acopio o la entidad puede pedirte que lo demuestres al llegar.</span>
+</label>
+</div>
+<div class="flex items-start gap-3">
+<input class="mt-1 h-5 w-5 rounded border-outline-variant text-primary focus:ring-primary" id="consentimiento" required="" type="checkbox"/>
+<label class="text-sm text-on-surface select-none" for="consentimiento">Acepto el tratamiento de mis datos personales según la <a class="text-primary underline font-medium" href="#">política de privacidad</a> conforme a la Ley 1581 de 2012. <span class="text-error">*</span></label>
+</div>
+</div>
+</div>
+<!-- Primary Button -->
+<div class="pt-4 space-y-2">
+<button class="w-full h-14 bg-primary text-on-primary font-bold rounded-[10px] text-base hover:bg-opacity-90 transition-all shadow-sm flex items-center justify-center" type="submit">Reservar cupo</button>
+<p class="text-center text-xs text-secondary">Las reservas se cierran 12 horas antes del inicio.</p>
+</div>
+</form>
+</main>
+</body></html>

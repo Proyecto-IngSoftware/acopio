@@ -24,6 +24,8 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 | P4 Ficha de causa | [P04-ficha-causa](P04-ficha-causa/README.md) | Pendiente, pieza C ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)) |
 | P5 Mapa de acopios | [P05-mapa](P05-mapa/README.md) | Bloque 1 |
 | P6 Ficha de acopio | [P06-ficha-acopio](P06-ficha-acopio/README.md) | Bloque 1 |
+| P7 Voluntariado | [P07-voluntariado](P07-voluntariado/README.md) (listado y reserva) | Bloque 5 |
+| P8 Mi reserva | [P08-mi-reserva](P08-mi-reserva/README.md) | Bloque 5 |
 | Más con sesión | [mas-con-sesion](mas-con-sesion/README.md) | Bloque 0 |
 | P9 Preparar mi donación | [P09-preparar](P09-preparar/README.md) | Bloque 3, ciclo 1 |
 | P10 Seguir mi donación | [P10-seguimiento](P10-seguimiento/README.md) | Bloque 3, ciclo 1 |
@@ -54,6 +56,7 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 | C11 Motor de sugerencias | [C11-motor](C11-motor/README.md) | Bloque 4, ciclo 1 |
 | C12 Remisiones | [C12-remisiones](C12-remisiones/README.md) | Bloque 4, ciclo 2 |
 | C13 Recepción en zona | [C13-recepcion](C13-recepcion/README.md) | Bloque 4, ciclo 3 |
+| C14 Turnos | [C14-turnos](C14-turnos/README.md) | Bloque 5 |
 | C15 Entidades | [C15-entidades](C15-entidades/README.md) | Bloque 1; verificación en la pieza C |
 | C16 Usuarios y accesos | [C16-usuarios](C16-usuarios/) (lista, detalle, invitar y matriz) | Bloque 0 y Bloque 1 |
 | C17 Bitácora | [C17-bitacora](C17-bitacora/README.md) | Bloque 0 |
@@ -67,9 +70,7 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 
 ## Lo que sigue
 
-Las pantallas del motor (Bloque 4, [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35))
-y las de causas (P3 y P4, [#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57)) ya
-están diseñadas. Siguen las de turnos, del Bloque 5
-([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)), y las de la consola para
-verificar entidades y gestionar causas, que salen de la especificación de la pieza C
-([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)).
+Las pantallas del motor (Bloque 4, [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)),
+las de causas (pieza C, [#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)) y las de
+turnos (Bloque 5, [#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)) ya están
+diseñadas y aprobadas.

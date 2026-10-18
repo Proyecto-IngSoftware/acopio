@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acopio CO - Voluntariado</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary-container": "#316c6c",
+            "on-surface-variant": "#57534E",
+            "background": "#FAFAF9",
+            "on-primary-container": "#9eedec",
+            "surface-dim": "#e0d8d5",
+            "inverse-primary": "#85d4d3",
+            "outline": "#E7E5E4",
+            "inverse-surface": "#33302d",
+            "surface-container-highest": "#e9e1dd",
+            "primary-fixed-dim": "#85d4d3",
+            "inverse-on-surface": "#f7efeb",
+            "on-tertiary-fixed": "#002020",
+            "on-tertiary": "#ffffff",
+            "on-primary-fixed": "#002020",
+            "on-primary": "#ffffff",
+            "tertiary": "#125454",
+            "surface": "#FFFFFF",
+            "on-error": "#ffffff",
+            "surface-container-low": "#faf2ee",
+            "surface-container-high": "#eee7e3",
+            "tertiary-fixed-dim": "#96d1d0",
+            "secondary-container": "#e9e1db",
+            "error": "#DC2626",
+            "primary-fixed": "#a1f0ef",
+            "on-secondary-container": "#68635f",
+            "surface-container-lowest": "#FFFFFF",
+            "primary-container": "#0F6E6E",
+            "on-tertiary-container": "#afebea",
+            "on-secondary-fixed": "#1e1b18",
+            "secondary": "#57534E",
+            "error-container": "#ffdad6",
+            "surface-container": "#F5F5F4",
+            "on-primary-fixed-variant": "#004f50",
+            "surface-bright": "#FFFFFF",
+            "on-error-container": "#93000a",
+            "on-surface": "#1C1917",
+            "on-background": "#1C1917",
+            "surface-tint": "#0F6E6E",
+            "surface-variant": "#E7E5E4",
+            "secondary-fixed": "#e9e1db",
+            "primary": "#0F6E6E",
+            "tertiary-fixed": "#b2eded",
+            "secondary-fixed-dim": "#ccc5c0",
+            "outline-variant": "#E7E5E4",
+            "on-secondary": "#ffffff",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "on-secondary-fixed-variant": "#4a4642"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter", "sans-serif"],
+            "display": ["Inter", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Inter", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased h-full flex flex-col justify-between selection:bg-primary/20 selection:text-primary">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-4 h-14 bg-surface-container-lowest dark:bg-surface-container-lowest z-40 fixed top-0 left-0">
+<div class="flex items-center space-x-3">
+<button aria-label="Volver" class="flex items-center justify-center w-10 h-10 rounded-lg hover:bg-surface-container-low text-primary transition-opacity duration-150 active:opacity-80">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline text-base font-bold text-on-surface">Acopio CO</h1>
+</div>
+<div class="flex items-center">
+<div class="w-9 h-9 rounded-full bg-primary-container text-on-primary font-bold flex items-center justify-center text-sm shadow-sm" data-alt="A professional portrait avatar of a humanitarian logistics coordinator in Colombia, featuring warm lighting and neutral tones consistent with the Acopio design system.">
+        DM
+      </div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-md mx-auto pt-20 pb-28 px-4 space-y-6 overflow-y-auto">
+<!-- Section Header -->
+<div class="space-y-1">
+<h2 class="font-headline text-2xl font-bold text-on-surface tracking-tight">Voluntariado</h2>
+<p class="text-secondary text-sm leading-relaxed">Apoyo logístico en bodegas y zonas de entrega para la coordinación de ayuda humanitaria.</p>
+</div>
+<!-- Horizontal Filters -->
+<div class="flex space-x-2 overflow-x-auto pb-2 scrollbar-none -mx-4 px-4">
+<button class="flex items-center space-x-2 bg-surface border border-outline px-4 py-2 rounded-xl text-sm font-medium text-on-surface hover:bg-surface-container-low transition-colors whitespace-nowrap min-h-[48px]">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">location_on</span>
+<span>Lugar</span>
+<span class="material-symbols-outlined text-secondary" style="font-size: 16px;">expand_more</span>
+</button>
+<button class="flex items-center space-x-2 bg-surface border border-outline px-4 py-2 rounded-xl text-sm font-medium text-on-surface hover:bg-surface-container-low transition-colors whitespace-nowrap min-h-[48px]">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">calendar_today</span>
+<span>Día</span>
+<span class="material-symbols-outlined text-secondary" style="font-size: 16px;">expand_more</span>
+</button>
+<button class="flex items-center space-x-2 bg-surface border border-outline px-4 py-2 rounded-xl text-sm font-medium text-on-surface hover:bg-surface-container-low transition-colors whitespace-nowrap min-h-[48px]">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">badge</span>
+<span>Perfil</span>
+<span class="material-symbols-outlined text-secondary" style="font-size: 16px;">expand_more</span>
+</button>
+</div>
+<!-- Date Group 1 -->
+<div class="space-y-4">
+<h3 class="font-headline text-sm font-bold text-secondary tracking-wide uppercase">Miércoles 21 de octubre</h3>
+<!-- Card 1: Abierta / Disponible -->
+<div class="bg-surface border border-outline rounded-xl p-4 space-y-4 shadow-xs">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">Disponible</span>
+<h4 class="font-headline text-base font-bold text-on-surface">Carga y clasificación en estibas</h4>
+</div>
+</div>
+<div class="space-y-2 text-sm text-secondary">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">warehouse</span>
+<span>Acopio Chapinero</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">schedule</span>
+<span>8:00 a. m. – 12:00 p. m.</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">group</span>
+<span class="tabular-nums">3 de 10 cupos reservados</span>
+</div>
+</div>
+<button class="w-full h-12 bg-primary text-on-primary font-medium rounded-[10px] flex items-center justify-center hover:bg-primary/90 transition-opacity active:opacity-80 min-h-[48px]">
+          Reservar cupo
+        </button>
+</div>
+<!-- Card 2: Llena -->
+<div class="bg-surface border border-outline rounded-xl p-4 space-y-4 opacity-90">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-surface-container text-secondary">Llena</span>
+<h4 class="font-headline text-base font-bold text-on-surface">Empaque de kits alimentarios</h4>
+</div>
+</div>
+<div class="space-y-2 text-sm text-secondary">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">warehouse</span>
+<span>Bodega Central Zona Industrial</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">schedule</span>
+<span>1:00 p. m. – 5:00 p. m.</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">group</span>
+<span class="tabular-nums">15 de 15 cupos reservados (Sin cupos disponibles)</span>
+</div>
+</div>
+<button class="w-full h-12 bg-surface-container text-secondary font-medium rounded-[10px] flex items-center justify-center cursor-not-allowed min-h-[48px]" disabled="">
+          Cupo completo
+        </button>
+</div>
+</div>
+<!-- Date Group 2 -->
+<div class="space-y-4 pt-2">
+<h3 class="font-headline text-sm font-bold text-secondary tracking-wide uppercase">Jueves 22 de octubre</h3>
+<!-- Card 3: Reservas cerradas -->
+<div class="bg-surface border border-outline rounded-xl p-4 space-y-4">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-surface-container text-secondary">Reservas cerradas</span>
+<h4 class="font-headline text-base font-bold text-on-surface">Inventario y registro de medicamentos</h4>
+</div>
+</div>
+<div class="space-y-2 text-sm text-secondary">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">warehouse</span>
+<span>Punto de Acopio Norte</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">schedule</span>
+<span>9:00 a. m. – 1:00 p. m.</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">group</span>
+<span class="tabular-nums">8 de 8 cupos</span>
+</div>
+</div>
+<div class="text-xs text-secondary font-medium pt-1">
+          Las inscripciones para esta jornada han finalizado.
+        </div>
+</div>
+<!-- Card 4: Con perfil específico -->
+<div class="bg-surface border border-outline rounded-xl p-4 space-y-4">
+<div class="flex justify-between items-start">
+<div class="space-y-1">
+<div class="flex items-center space-x-2">
+<span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary">Disponible</span>
+<span class="inline-block px-2.5 py-0.5 rounded-full text-xs font-semibold bg-surface-container text-on-surface-variant font-medium">Conductor C2</span>
+</div>
+<h4 class="font-headline text-base font-bold text-on-surface">Transporte de suministros a zona rural</h4>
+</div>
+</div>
+<div class="space-y-2 text-sm text-secondary">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">warehouse</span>
+<span>Base Operativa Occidente</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">schedule</span>
+<span>6:00 a. m. – 2:00 p. m.</span>
+</div>
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-secondary" style="font-size: 18px;">group</span>
+<span class="tabular-nums">2 de 4 cupos reservados</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-2">
+<span class="text-xs text-secondary">Ajustado hace 2 h</span>
+<button class="w-auto px-6 h-12 bg-primary text-on-primary font-medium rounded-[10px] flex items-center justify-center hover:bg-primary/95 transition-opacity active:opacity-80 min-h-[48px]">
+            Reservar cupo
+          </button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav aria-label="Navegación inferior" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface-container-lowest dark:bg-surface-container-lowest">
+<!-- Inicio -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] w-full hover:text-primary transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">home</span>
+<span class="font-label text-sm mt-1">Inicio</span>
+</a>
+<!-- Mapa -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] w-full hover:text-primary transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">map</span>
+<span class="font-label text-sm mt-1">Mapa</span>
+</a>
+<!-- Causas -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] w-full hover:text-primary transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">favorite</span>
+<span class="font-label text-sm mt-1">Causas</span>
+</a>
+<!-- Voluntariado (Active) -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold min-h-[48px] w-full hover:text-primary transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px; font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+<span class="font-label text-sm mt-1">Voluntariado</span>
+</a>
+<!-- Más -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] w-full hover:text-primary transition-opacity duration-150" href="#">
+<span class="material-symbols-outlined" style="font-size: 24px;">menu</span>
+<span class="font-label text-sm mt-1">Más</span>
+</a>
+</nav>
+</body></html>

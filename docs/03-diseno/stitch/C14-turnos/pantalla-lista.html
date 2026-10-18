@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acopio CO - Gestión de Turnos</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-fixed-variant": "#4a4642",
+            "on-primary-container": "#9eedec",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-highest": "#e9e1dd",
+            "surface": "#fff8f5",
+            "surface-dim": "#e0d8d5",
+            "on-surface-variant": "#3e4948",
+            "surface-bright": "#fff8f5",
+            "surface-container-high": "#eee7e3",
+            "on-secondary": "#ffffff",
+            "on-primary": "#ffffff",
+            "tertiary-container": "#316c6c",
+            "primary-container": "#0f6e6e",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed": "#002020",
+            "outline-variant": "#bec9c8",
+            "inverse-on-surface": "#f7efeb",
+            "outline": "#6e7979",
+            "surface-container": "#f4ece8",
+            "primary-fixed": "#a1f0ef",
+            "on-secondary-container": "#68635f",
+            "error-container": "#ffdad6",
+            "surface-tint": "#03696a",
+            "inverse-primary": "#85d4d3",
+            "on-tertiary": "#ffffff",
+            "on-surface": "#1e1b19",
+            "error": "#ba1a1a",
+            "secondary-fixed": "#e9e1db",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "on-error-container": "#93000a",
+            "on-tertiary-container": "#afebea",
+            "on-background": "#1e1b19",
+            "secondary-container": "#e9e1db",
+            "on-primary-fixed": "#002020",
+            "inverse-surface": "#33302d",
+            "primary-fixed-dim": "#85d4d3",
+            "tertiary": "#125454",
+            "tertiary-fixed": "#b2eded",
+            "on-secondary-fixed": "#1e1b18",
+            "tertiary-fixed-dim": "#96d1d0",
+            "surface-variant": "#e9e1dd",
+            "surface-container-low": "#faf2ee",
+            "on-primary-fixed-variant": "#004f50",
+            "secondary-fixed-dim": "#ccc5c0",
+            "primary": "#005454",
+            "secondary": "#625e59",
+            "background": "#fff8f5"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter"],
+            "display": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#FAFAF9] text-[#1C1917] font-body antialiased h-full flex flex-col justify-between selection:bg-primary-container selection:text-on-primary-container pb-20">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-4 h-14 bg-surface-container-lowest dark:bg-surface-container-lowest z-40 fixed top-0 left-0">
+<div class="flex items-center gap-3">
+<button aria-label="Volver" class="p-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface">
+<span class="material-symbols-outlined">arrow_back</span>
+</button>
+<h1 class="font-headline text-base font-bold text-on-surface dark:text-on-surface">Acopio CO · Turnos</h1>
+</div>
+<div class="flex items-center">
+<div class="w-9 h-9 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm shadow-sm">
+        JQ
+      </div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="w-full max-w-md mx-auto px-4 pt-20 pb-8 flex-1 flex flex-col gap-6">
+<!-- Subheader / Title Area -->
+<div class="flex flex-col gap-1">
+<h2 class="text-2xl font-bold font-headline text-[#1C1917]">Gestión de Turnos</h2>
+<p class="text-sm text-[#57534E]">Coordinación logística y aforo para voluntarios en terreno.</p>
+</div>
+<!-- Horizontal Tabs -->
+<div class="flex border-b border-[#E7E5E4] gap-6 text-sm">
+<button class="pb-3 font-bold text-[#0F6E6E] border-b-2 border-[#0F6E6E] flex items-center gap-2">
+        Próximas
+        <span class="bg-[#C7E8E8] text-[#0A4F4F] text-xs px-2 py-0.5 rounded-full font-semibold">3</span>
+</button>
+<button class="pb-3 font-medium text-[#57534E] hover:text-[#1C1917] transition-colors">
+        En curso
+      </button>
+<button class="pb-3 font-medium text-[#57534E] hover:text-[#1C1917] transition-colors">
+        Pasadas
+      </button>
+</div>
+<!-- Primary Action Button -->
+<button class="w-full h-14 bg-[#0F6E6E] text-white rounded-[10px] font-bold flex items-center justify-center gap-2 hover:bg-[#0A4F4F] active:opacity-90 transition-all shadow-sm">
+<span class="material-symbols-outlined">add</span>
+      Nueva jornada
+    </button>
+<!-- Shift Cards List -->
+<div class="flex flex-col gap-4">
+<!-- Card 1: Abierta -->
+<div class="bg-[#FFFFFF] border border-[#E7E5E4] rounded-[12px] p-4 flex flex-col gap-4 shadow-sm">
+<div class="flex justify-between items-start gap-2">
+<div class="flex flex-col gap-1">
+<span class="text-xs text-[#57534E] font-medium">Jornada activa</span>
+<h3 class="font-headline font-bold text-base text-[#1C1917]">Armar mercados de emergencia</h3>
+</div>
+<!-- Estado: Abierta (verde inventario) -->
+<div class="flex items-center gap-1.5 bg-[#E6F4F4] text-[#0A4F4F] px-2.5 py-1 rounded-full text-xs font-bold">
+<span class="w-2 h-2 rounded-full bg-[#16A34A]"></span>
+            Abierta
+          </div>
+</div>
+<div class="flex flex-col gap-2 text-sm text-[#57534E]">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-base mt-0.5 text-[#0F6E6E]">location_on</span>
+<span>Bodega Central Zona Industrial (Calle 13 # 68-90)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-[#0F6E6E]">schedule</span>
+<span>Miércoles 21 de octubre · 1:00 p. m. – 5:00 p. m.</span>
+</div>
+</div>
+<!-- Aforo Progress -->
+<div class="flex flex-col gap-1.5 pt-2 border-t border-[#E7E5E4]">
+<div class="flex justify-between text-xs font-medium text-[#57534E]">
+<span>8 de 12 cupos reservados</span>
+<span class="text-[#0F6E6E] font-bold">66%</span>
+</div>
+<div class="w-full bg-[#F5F5F4] h-2 rounded-full overflow-hidden">
+<div class="bg-[#0F6E6E] h-full rounded-full" style="width: 66%;"></div>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="flex items-center justify-end gap-2 pt-1">
+<button class="px-4 py-2 text-sm font-semibold text-[#57534E] bg-[#F5F5F4] hover:bg-[#E7E5E4] rounded-[10px] transition-colors">
+            Editar
+          </button>
+<button class="px-4 py-2 text-sm font-semibold text-[#0F6E6E] bg-[#E6F4F4] hover:bg-[#C7E8E8] rounded-[10px] transition-colors">
+            Ver inscritos
+          </button>
+</div>
+</div>
+<!-- Card 2: Cerrada -->
+<div class="bg-[#FFFFFF] border border-[#E7E5E4] rounded-[12px] p-4 flex flex-col gap-4 shadow-sm opacity-95">
+<div class="flex justify-between items-start gap-2">
+<div class="flex flex-col gap-1">
+<span class="text-xs text-[#57534E] font-medium">Jornada completa</span>
+<h3 class="font-headline font-bold text-base text-[#1C1917]">Carga y clasificación en estibas</h3>
+</div>
+<!-- Estado: Cerrada (gris/neutro) -->
+<div class="flex items-center gap-1.5 bg-[#F5F5F4] text-[#57534E] px-2.5 py-1 rounded-full text-xs font-bold">
+<span class="w-2 h-2 rounded-full bg-[#625E59]"></span>
+            Cerrada
+          </div>
+</div>
+<div class="flex flex-col gap-2 text-sm text-[#57534E]">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-base mt-0.5 text-[#0F6E6E]">location_on</span>
+<span>Acopio Chapinero</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-[#0F6E6E]">schedule</span>
+<span>Jueves 22 de octubre · 8:00 a. m. – 12:00 p. m.</span>
+</div>
+</div>
+<!-- Aforo Progress -->
+<div class="flex flex-col gap-1.5 pt-2 border-t border-[#E7E5E4]">
+<div class="flex justify-between text-xs font-medium text-[#57534E]">
+<span>12 de 12 cupos reservados (Cupo completo)</span>
+<span class="text-[#625E59] font-bold">100%</span>
+</div>
+<div class="w-full bg-[#F5F5F4] h-2 rounded-full overflow-hidden">
+<div class="bg-[#625E59] h-full rounded-full" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="flex items-center justify-end gap-2 pt-1">
+<button class="px-4 py-2 text-sm font-semibold text-[#57534E] bg-[#F5F5F4] hover:bg-[#E7E5E4] rounded-[10px] transition-colors">
+            Editar
+          </button>
+<button class="px-4 py-2 text-sm font-semibold text-[#0F6E6E] bg-[#E6F4F4] hover:bg-[#C7E8E8] rounded-[10px] transition-colors">
+            Ver inscritos
+          </button>
+</div>
+</div>
+<!-- Card 3: Cancelada -->
+<div class="bg-[#FFFFFF] border border-[#E7E5E4] rounded-[12px] p-4 flex flex-col gap-4 shadow-sm">
+<div class="flex justify-between items-start gap-2">
+<div class="flex flex-col gap-1">
+<span class="text-xs text-[#57534E] font-medium">Jornada suspendida</span>
+<h3 class="font-headline font-bold text-base text-[#1C1917]">Distribución en zona afectada</h3>
+</div>
+<!-- Estado: Cancelada (rojo inventario) -->
+<div class="flex items-center gap-1.5 bg-[#FFDAD6] text-[#93000A] px-2.5 py-1 rounded-full text-xs font-bold">
+<span class="w-2 h-2 rounded-full bg-[#DC2626]"></span>
+            Cancelada
+          </div>
+</div>
+<div class="flex flex-col gap-2 text-sm text-[#57534E]">
+<div class="flex items-start gap-2">
+<span class="material-symbols-outlined text-base mt-0.5 text-[#0F6E6E]">location_on</span>
+<span>Barrio San Agustín (Mocoa)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-base text-[#0F6E6E]">schedule</span>
+<span>Viernes 23 de octubre · 9:00 a. m. – 3:00 p. m.</span>
+</div>
+</div>
+<!-- Aforo Progress -->
+<div class="flex flex-col gap-1.5 pt-2 border-t border-[#E7E5E4]">
+<div class="flex justify-between text-xs font-medium text-[#57534E]">
+<span>3 de 15 cupos reservados</span>
+<span class="text-[#DC2626] font-bold">20%</span>
+</div>
+<div class="w-full bg-[#F5F5F4] h-2 rounded-full overflow-hidden">
+<div class="bg-[#DC2626] h-full rounded-full" style="width: 20%;"></div>
+</div>
+</div>
+<!-- Card Actions -->
+<div class="flex items-center justify-end gap-2 pt-1">
+<button class="px-4 py-2 text-sm font-semibold text-[#57534E] bg-[#F5F5F4] hover:bg-[#E7E5E4] rounded-[10px] transition-colors">
+            Reactivar
+          </button>
+<button class="px-4 py-2 text-sm font-semibold text-[#0F6E6E] bg-[#E6F4F4] hover:bg-[#C7E8E8] rounded-[10px] transition-colors">
+            Ver inscritos
+          </button>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface-container-lowest dark:bg-surface-container-lowest pb-safe">
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">home</span>
+<span class="text-xs mt-0.5">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">map</span>
+<span class="text-xs mt-0.5">Mapa</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">favorite</span>
+<span class="text-xs mt-0.5">Causas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">volunteer_activism</span>
+<span class="text-xs mt-0.5">Voluntariado</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">menu</span>
+<span class="text-xs mt-0.5">Más</span>
+</a>
+</nav>
+</body></html>
