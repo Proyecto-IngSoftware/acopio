@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acopio CO - Entidades</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#bec9c8",
+            "on-background": "#1e1b19",
+            "tertiary-fixed": "#b2eded",
+            "primary-fixed": "#a1f0ef",
+            "surface-variant": "#e9e1dd",
+            "on-primary-fixed": "#002020",
+            "on-primary": "#ffffff",
+            "primary-fixed-dim": "#85d4d3",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-highest": "#e9e1dd",
+            "surface-dim": "#e0d8d5",
+            "on-secondary-fixed": "#1e1b18",
+            "error-container": "#ffdad6",
+            "on-surface": "#1e1b19",
+            "on-error": "#ffffff",
+            "on-error-container": "#93000a",
+            "on-secondary": "#ffffff",
+            "secondary": "#57534E",
+            "inverse-on-surface": "#f7efeb",
+            "inverse-primary": "#85d4d3",
+            "surface-container-high": "#eee7e3",
+            "tertiary-container": "#316c6c",
+            "surface-tint": "#03696a",
+            "on-primary-container": "#9eedec",
+            "surface": "#FAFAF9",
+            "secondary-fixed": "#e9e1db",
+            "primary-container": "#0F6E6E",
+            "surface-container": "#f4ece8",
+            "tertiary": "#125454",
+            "error": "#DC2626",
+            "on-surface-variant": "#3e4948",
+            "surface-bright": "#fff8f5",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "on-tertiary-container": "#afebea",
+            "on-secondary-container": "#68635f",
+            "inverse-surface": "#33302d",
+            "primary": "#0F6E6E",
+            "secondary-fixed-dim": "#ccc5c0",
+            "on-tertiary-fixed": "#002020",
+            "on-primary-fixed-variant": "#004f50",
+            "tertiary-fixed-dim": "#96d1d0",
+            "on-tertiary": "#ffffff",
+            "on-secondary-fixed-variant": "#4a4642",
+            "surface-container-low": "#faf2ee",
+            "background": "#FAFAF9",
+            "outline": "#E7E5E4",
+            "secondary-container": "#e9e1db"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter", "sans-serif"],
+            "display": ["Inter", "sans-serif"],
+            "body": ["Inter", "sans-serif"],
+            "label": ["Inter", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased selection:bg-primary-container selection:text-on-primary">
+<!-- App Shell: TopAppBar -->
+<header class="flex justify-between items-center w-full px-4 h-14 bg-surface-container-lowest border-b border-outline z-40 fixed top-0 left-0">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary cursor-pointer" data-icon="arrow_back">arrow_back</span>
+<div class="flex items-center gap-2">
+<h1 class="font-headline text-base font-bold text-on-background">Acopio</h1>
+<span class="px-2 py-0.5 text-xs font-bold bg-surface-container text-primary rounded-full border border-outline">CO</span>
+</div>
+</div>
+<div class="flex items-center">
+<div class="w-9 h-9 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-bold text-sm shadow-sm">
+        A
+      </div>
+</div>
+</header>
+<!-- Main Content: Background Entity List (Blurred/Dimmed) -->
+<main class="pt-20 pb-24 px-4 max-w-md mx-auto filter brightness-95 select-none pointer-events-none opacity-60">
+<div class="flex justify-between items-center mb-4">
+<h2 class="text-lg font-bold text-on-background">Entidades aliadas</h2>
+<span class="text-sm text-secondary">4 registradas</span>
+</div>
+<div class="space-y-3">
+<!-- Entity Card 1 -->
+<div class="bg-surface-container-lowest border border-outline rounded-xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary font-bold">U</div>
+<div>
+<h3 class="font-bold text-on-background">UNICEF Colombia</h3>
+<p class="text-sm text-secondary">unicef.org/colombia</p>
+</div>
+</div>
+<span class="text-xs px-2.5 py-1 rounded-full bg-surface-container text-secondary font-medium">Pendiente</span>
+</div>
+<!-- Entity Card 2 -->
+<div class="bg-surface-container-lowest border border-outline rounded-xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary font-bold">CR</div>
+<div>
+<h3 class="font-bold text-on-background">Cruz Roja Colombiana</h3>
+<p class="text-sm text-secondary">cruzrojacolombiana.org</p>
+</div>
+</div>
+<span class="text-xs px-2.5 py-1 rounded-full bg-primary-container text-on-primary font-medium">Verificada</span>
+</div>
+<!-- Entity Card 3 -->
+<div class="bg-surface-container-lowest border border-outline rounded-xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary font-bold">P</div>
+<div>
+<h3 class="font-bold text-on-background">Pastoral Social Colombia</h3>
+<p class="text-sm text-secondary">ccp.org.co</p>
+</div>
+</div>
+<span class="text-xs px-2.5 py-1 rounded-full bg-primary-container text-on-primary font-medium">Verificada</span>
+</div>
+</div>
+</main>
+<!-- Bottom Sheet Overlay Backdrop -->
+<div class="fixed inset-0 bg-neutral-900/40 z-50 backdrop-blur-[2px]"></div>
+<!-- Bottom Sheet: Verificar entidad -->
+<div class="fixed bottom-0 left-0 right-0 z-50 bg-surface-container-lowest rounded-t-2xl border-t border-outline shadow-2xl max-w-md mx-auto flex flex-col max-h-[795px]">
+<!-- Drag Handle -->
+<div class="w-full flex justify-center pt-3 pb-1">
+<div class="w-10 h-1 bg-surface-variant rounded-full"></div>
+</div>
+<!-- Sheet Content Container -->
+<div class="px-6 pb-8 pt-2 overflow-y-auto space-y-6">
+<!-- 1. Encabezado -->
+<div class="space-y-1">
+<h2 class="text-xl font-bold text-on-background font-headline">UNICEF Colombia</h2>
+<p class="text-sm text-secondary">unicef.org/colombia</p>
+</div>
+<!-- 2. Recuadro de aviso de seguridad -->
+<div class="bg-surface-container-low border border-outline rounded-xl p-4 flex gap-3 items-start">
+<span class="material-symbols-outlined text-primary mt-0.5" data-icon="shield">shield</span>
+<div class="space-y-1.5 text-sm">
+<p class="font-bold text-on-background">Antes de verificar</p>
+<p class="text-secondary leading-relaxed">Acopio va a dirigir a los donantes hacia esta entidad. Si no es quien dice ser, los estaremos mandando a una estafa. En esta etapa solo se verifican organizaciones con años de trayectoria y reconocidas fuera del país.</p>
+</div>
+</div>
+<!-- 3. Casilla de verificación -->
+<label class="flex items-start gap-3 cursor-pointer select-none pt-1">
+<input class="mt-1 h-5 w-5 rounded border-outline text-primary focus:ring-primary focus:ring-offset-0 cursor-pointer" id="verify-checkbox" type="checkbox"/>
+<span class="text-sm font-medium text-on-background leading-snug">Confirmo que revisé la entidad y su sitio oficial</span>
+</label>
+<!-- 4 & 5. Botones de acción -->
+<div class="space-y-3 pt-2">
+<button class="w-full h-[56px] rounded-[10px] bg-primary-container text-on-primary font-bold text-base flex items-center justify-center opacity-50 cursor-not-allowed transition-opacity duration-150" disabled="" id="verify-btn">
+          Verificar entidad
+        </button>
+<button class="w-full h-[56px] rounded-[10px] bg-surface-container-lowest border border-outline text-on-background font-bold text-base flex items-center justify-center hover:bg-surface-container transition-colors duration-150">
+          Cancelar
+        </button>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar (Shell) -->
+<nav class="fixed bottom-0 left-0 w-full z-40 flex justify-around items-center px-2 py-1 bg-surface-container-lowest border-t border-outline pb-safe md:hidden pointer-events-none opacity-40">
+<div class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3">
+<span class="material-symbols-outlined text-xl" data-icon="home">home</span>
+<span class="text-xs font-label">Inicio</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3">
+<span class="material-symbols-outlined text-xl" data-icon="map">map</span>
+<span class="text-xs font-label">Mapa</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3">
+<span class="material-symbols-outlined text-xl" data-icon="favorite">favorite</span>
+<span class="text-xs font-label">Causas</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary font-bold min-h-[48px] px-3">
+<span class="material-symbols-outlined text-xl" data-icon="volunteer_activism">volunteer_activism</span>
+<span class="text-xs font-label">Voluntariado</span>
+</div>
+<div class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3">
+<span class="material-symbols-outlined text-xl" data-icon="menu">menu</span>
+<span class="text-xs font-label">Más</span>
+</div>
+</nav>
+<!-- Script for Checkbox Interactivity -->
+<script>
+    const checkbox = document.getElementById('verify-checkbox');
+    const verifyBtn = document.getElementById('verify-btn');
+
+    checkbox.addEventListener('change', function() {
+      if (this.checked) {
+        verifyBtn.removeAttribute('disabled');
+        verifyBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        verifyBtn.classList.add('cursor-pointer', 'active:opacity-90');
+      } else {
+        verifyBtn.setAttribute('disabled', 'true');
+        verifyBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        verifyBtn.classList.remove('cursor-pointer', 'active:opacity-90');
+      }
+    });
+  </script>
+</body></html>
