@@ -67,6 +67,7 @@ it('el Administrador ve su cuenta y sus herramientas, también las de la red', a
   for (const [nombre, a] of [
     ['Acopios', '/consola/acopios'],
     ['Entidades', '/consola/entidades'],
+    ['Causas', '/consola/causas'],
     ['Zonas afectadas', '/consola/zonas'],
     ['Motor de sugerencias', '/consola/motor'],
     ['Remisiones', '/consola/remisiones'],

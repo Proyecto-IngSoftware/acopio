@@ -167,3 +167,10 @@ export const useSubirLogo = (id: string) =>
       ),
     conEntidades,
   );
+
+/** Sube la imagen de una causa recién creada, cuando el id todavía no estaba en un hook. */
+export async function subirImagenCausa(id: string, archivo: File) {
+  return await desenvolver(
+    api.PUT('/api/causas/{id}/imagen', { params: { path: { id } }, ...subir('imagen', archivo) }),
+  );
+}

@@ -130,6 +130,9 @@ const DirectorioCausas = lazy(() =>
 const CausasAtendidas = lazy(() =>
   import('./portal/causas/Atendidas').then((m) => ({ default: m.Atendidas })),
 );
+const CausasConsola = lazy(() =>
+  import('./consola/causas/Causas').then((m) => ({ default: m.Causas })),
+);
 const FichaCausa = lazy(() => import('./portal/causas/Ficha').then((m) => ({ default: m.Ficha })));
 
 const SIN_CONSTRUIR = ['voluntariado', 'proximamente'];
@@ -219,6 +222,7 @@ export function Rutas() {
             ['consola/usuarios/invitar', <InvitarPersona key="i" />, false],
             ['consola/usuarios/:id', <DetalleUsuario key="d" />, false],
             ['consola/entidades', <Entidades key="e" />, true],
+            ['consola/causas', <CausasConsola key="ca" />, true],
             ['consola/acopios', <Acopios key="a" />, true],
             ['consola/acopios/nuevo', <FormularioAcopio key="an" />, true],
             ['consola/acopios/:id', <FormularioAcopio key="ae" />, true],

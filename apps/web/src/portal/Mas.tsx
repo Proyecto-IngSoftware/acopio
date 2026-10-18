@@ -70,6 +70,13 @@ const HERRAMIENTAS: Herramienta[] = [
     roles: ['ADMIN'],
   },
   {
+    a: '/consola/causas',
+    icono: 'volunteer_activism',
+    titulo: 'Causas',
+    descripcion: 'Campañas de entidades verificadas',
+    roles: ['ADMIN'],
+  },
+  {
     a: '/consola/zonas',
     icono: 'map',
     titulo: 'Zonas afectadas',
