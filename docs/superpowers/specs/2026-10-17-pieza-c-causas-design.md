@@ -16,7 +16,7 @@ actualizado: 2026-10-17
 HU-02 y HU-15 ([avance 2](../../entregas/avance-02-requisitos.md)), y las maquetas aprobadas de
 [P3](../../03-diseno/stitch/P03-causas/README.md) y [P4](../../03-diseno/stitch/P04-ficha-causa/README.md)
 **Issue:** [#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48), hasta el 1 de noviembre
-**Plan:** pendiente
+**Plan:** [2026-10-17-pieza-c-causas.md](../../05-planes/2026-10-17-pieza-c-causas.md)
 
 ---
 
