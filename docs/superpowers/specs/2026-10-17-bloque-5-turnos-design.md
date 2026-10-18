@@ -200,7 +200,7 @@ Una consulta con un secreto que no coincide responde 404, igual que un código q
 
 | Método y ruta | Qué |
 |---|---|
-| `GET /api/turnos/gestion/jornadas?estado&acopio` | Las jornadas que le tocan a quien consulta |
+| `GET /api/turnos/gestion/jornadas?pestana&acopio` (`proximas`, `en-curso` o `pasadas`) | Las jornadas que le tocan a quien consulta |
 | `POST /api/turnos/gestion/jornadas` | Crea una o varias: `{ …datos, fechas: ['2026-10-25', …] }` con la hora de inicio y fin |
 | `PATCH /api/turnos/gestion/jornadas/:id` | Edita |
 | `POST /api/turnos/gestion/jornadas/:id/cerrar` · `/reabrir` · `/cancelar` | Cambia el estado; cancelar lleva `{ motivo }` |
@@ -339,5 +339,14 @@ Interfaz, rama `bloque-5-interfaz` ([plan](../../05-planes/2026-10-17-bloque-5-i
   «Tengo licencia de conducción C2» o «Tengo título de psicología».
 - En C14 los inscritos cancelados no se listan, y «Borrar» solo aparece si la jornada no tuvo
   ninguna reserva, ni siquiera cancelada, porque la API solo borra en ese caso.
-- Al editar una jornada se mandan solo los campos que cambiaron. Así un cambio de título no
-  cuenta como mover la jornada ni avisa a quienes reservaron.
+- Al editar una jornada, el contenido (título, labor, cupo, requisitos, perfil) se manda
+  siempre. La fecha y las dos horas se mandan las tres juntas, y solo si cambió alguna. Así un
+  cambio de título no cuenta como mover la jornada ni avisa a quienes reservaron.
+- Los cupos del portal dicen las reservas y, aparte, las personas sin reserva del ajuste
+  manual («3 de 10 cupos reservados · 2 sin reserva»). La barra cuenta las dos. P6 marca las
+  jornadas llenas y cerradas igual que P7.
+- P8 deja de ofrecer «Cancelar reserva» cuando la jornada ya empezó, según el reloj del
+  navegador. C14 habilita la asistencia con `puedeMarcarAsistencia` y el mismo reloj. En los
+  dos casos la API vuelve a validar ([P-070](../../01-requerimientos/pendientes.md)).
+- «Muestra si la jornada cambió» (§6, P8) no se construyó: la API no expone una marca de
+  cambio. Quedó para decidir en [P-070](../../01-requerimientos/pendientes.md).

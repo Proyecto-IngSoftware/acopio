@@ -109,7 +109,15 @@ it('el bloque de voluntariado lista las próximas jornadas del acopio', async ()
     ...RESPUESTAS,
     'GET /api/turnos/jornadas': [
       jornadaDe(),
-      jornadaDe({ id: 'j2', titulo: 'Clasificar ropa donada', ocupados: 3, cupoMaximo: 3 }),
+      jornadaDe({
+        id: 'j2',
+        titulo: 'Clasificar ropa donada',
+        ocupados: 3,
+        cupoMaximo: 3,
+        libres: 0,
+        aceptaReservas: false,
+        motivoSinReserva: 'LLENA',
+      }),
     ],
   });
   ficha();
@@ -119,6 +127,9 @@ it('el bloque de voluntariado lista las próximas jornadas del acopio', async ()
     '/voluntariado/j1',
   );
   expect(within(bloque).getByText(/3 de 3 cupos reservados/)).toBeInTheDocument();
+  // Una llena se marca igual que en P7
+  const llena = within(bloque).getByRole('link', { name: /Clasificar ropa donada/ });
+  expect(within(llena).getByText('Llena')).toBeInTheDocument();
   expect(within(bloque).getByText(/Puede haber gente que llegó sin reserva/)).toBeInTheDocument();
   expect(peticiones()).toContain('GET /api/turnos/jornadas?acopio=x1');
 });

@@ -54,7 +54,9 @@ it('copiar contacto copia el nombre y el teléfono', async () => {
   const fila = await screen.findByRole('listitem', { name: 'María Fernanda Ruiz' });
   const copiar = vi.fn(() => Promise.resolve());
   Object.assign(navigator, { clipboard: { writeText: copiar } });
-  await userEvent.click(within(fila).getByRole('button', { name: /Copiar/ }));
+  await userEvent.click(
+    within(fila).getByRole('button', { name: 'Copiar contacto de María Fernanda Ruiz' }),
+  );
   expect(copiar).toHaveBeenCalledWith('María Fernanda Ruiz 3105550101');
 });
 
@@ -145,6 +147,10 @@ it('cancelar pide un motivo', async () => {
   const hoja = screen.getByRole('dialog');
   const confirmar = within(hoja).getByRole('button', { name: 'Cancelar jornada' });
   expect(confirmar).toBeDisabled();
+  // La API pide al menos 5 caracteres
+  await userEvent.type(within(hoja).getByLabelText('Motivo'), 'abc');
+  expect(confirmar).toBeDisabled();
+  await userEvent.clear(within(hoja).getByLabelText('Motivo'));
   await userEvent.type(within(hoja).getByLabelText('Motivo'), 'Se inundó la bodega');
   await userEvent.click(confirmar);
   await waitFor(async () =>
@@ -157,7 +163,7 @@ it('cancelar pide un motivo', async () => {
 it('«Borrar» solo aparece si la jornada nunca tuvo reservas', async () => {
   responderSegun({
     [INSCRITOS]: [],
-    'DELETE /api/turnos/gestion/jornadas/j1': {},
+    'DELETE /api/turnos/gestion/jornadas/j1': conEstado(204, null),
   });
   const { alVolver, unmount } = pantalla(gestionDe({ ocupados: 0 }));
   await userEvent.click(await screen.findByRole('radio', { name: 'Acciones' }));
@@ -173,4 +179,13 @@ it('«Borrar» solo aparece si la jornada nunca tuvo reservas', async () => {
   await userEvent.click(await screen.findByRole('radio', { name: 'Acciones' }));
   await screen.findByRole('button', { name: /Cerrar las reservas/ });
   expect(screen.queryByRole('button', { name: /Borrar la jornada/ })).not.toBeInTheDocument();
+});
+
+it('si fallan los inscritos lo dice y deja reintentar, no que nadie reservó', async () => {
+  responderSegun({
+    [INSCRITOS]: conEstado(500, { estado: 500, codigo: 'ERROR', mensaje: 'x' }),
+  });
+  pantalla();
+  expect(await screen.findByRole('button', { name: /Reintentar/ })).toBeInTheDocument();
+  expect(screen.queryByText('Nadie ha reservado todavía')).not.toBeInTheDocument();
 });

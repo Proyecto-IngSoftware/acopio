@@ -114,9 +114,10 @@ export function FormularioJornada({
         cupoMaximo: Number(cupo),
         requisitos,
         perfilRequerido: perfil || null,
-        ...(fecha !== antes.fecha ? { fecha } : {}),
-        ...(horaInicio !== antes.horaInicio ? { horaInicio } : {}),
-        ...(horaFin !== antes.horaFin ? { horaFin } : {}),
+        // La API pide la fecha y las dos horas juntas para mover la jornada, o ninguna
+        ...(fecha !== antes.fecha || horaInicio !== antes.horaInicio || horaFin !== antes.horaFin
+          ? { fecha, horaInicio, horaFin }
+          : {}),
         ...(editaLugar && direccion.trim() !== jornada.lugar.direccion
           ? { direccion: direccion.trim() }
           : {}),
@@ -330,7 +331,7 @@ export function FormularioJornada({
           etiqueta="Edad mínima (opcional)"
           type="number"
           inputMode="numeric"
-          min={14}
+          min={12}
           max={99}
           value={edad}
           onChange={(e) => fijarEdad(e.target.value)}

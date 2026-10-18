@@ -1,5 +1,5 @@
 import { puedeMarcarAsistencia } from '@acopio/shared';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import {
   useAjustarCupos,
   useBorrarJornada,
@@ -8,6 +8,7 @@ import {
   type JornadaGestion,
 } from '../../api/turnos';
 import { Boton } from '../../componentes/Boton';
+import { EstadoError } from '../../componentes/EstadoError';
 import { EstadoVacio } from '../../componentes/EstadoVacio';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { Hoja } from '../../componentes/Hoja';
@@ -77,6 +78,11 @@ export function DetalleJornada({
       {pestana === 'inscritos' ? (
         inscritos.isPending ? (
           <Esqueleto etiqueta="Cargando los inscritos" />
+        ) : inscritos.error ? (
+          <EstadoError
+            mensaje="No se pudieron cargar los inscritos."
+            alReintentar={() => void inscritos.refetch()}
+          />
         ) : vigentes.length === 0 ? (
           <EstadoVacio titulo="Nadie ha reservado todavía">
             Las reservas aparecen aquí con el nombre y el contacto de cada persona.
@@ -166,8 +172,6 @@ function Acciones({
   const borrar = useBorrarJornada(jornada.id);
   const [pregunta, fijarPregunta] = useState<Pregunta>(null);
   const [motivo, fijarMotivo] = useState('');
-  // Estable: Hoja vuelve a enfocar su botón de cerrar cada vez que cambia `alCerrar`
-  const cerrarPregunta = useCallback(() => fijarPregunta(null), []);
   if (jornada.estado === 'CANCELADA')
     return (
       <EstadoVacio titulo="Esta jornada está cancelada">
@@ -223,7 +227,7 @@ function Acciones({
       </p>
 
       {pregunta === 'cancelar' && (
-        <Hoja titulo="¿Cancelar la jornada?" alCerrar={cerrarPregunta}>
+        <Hoja titulo="¿Cancelar la jornada?" alCerrar={() => fijarPregunta(null)}>
           <p className="text-body-md text-on-surface-variant">
             Las reservas dejan de contar y cada persona ve el motivo en su enlace. No se puede
             deshacer.
@@ -232,8 +236,13 @@ function Acciones({
             <label htmlFor="jornada-motivo" className="text-label-md text-on-surface">
               Motivo
             </label>
+            <p id="jornada-motivo-ayuda" className="text-body-sm text-on-surface-variant">
+              Al menos 5 caracteres. Lo ve quien reservó.
+            </p>
             <textarea
               id="jornada-motivo"
+              aria-describedby="jornada-motivo-ayuda"
+              maxLength={300}
               value={motivo}
               onChange={(e) => fijarMotivo(e.target.value)}
               className="min-h-[88px] rounded-xl border-[1.5px] border-outline-variant bg-surface-container-lowest p-space-md text-body-md text-on-surface"
@@ -241,7 +250,7 @@ function Acciones({
           </div>
           <FormularioError mensaje={cambiar.error?.message} />
           <Boton
-            disabled={motivo.trim() === '' || cambiar.isPending}
+            disabled={motivo.trim().length < 5 || cambiar.isPending}
             onClick={() =>
               cambiar.mutate(
                 { accion: 'cancelar', motivo: motivo.trim() },
@@ -257,7 +266,7 @@ function Acciones({
         </Hoja>
       )}
       {pregunta === 'borrar' && (
-        <Hoja titulo="¿Borrar la jornada?" alCerrar={cerrarPregunta}>
+        <Hoja titulo="¿Borrar la jornada?" alCerrar={() => fijarPregunta(null)}>
           <p className="text-body-md text-on-surface-variant">
             Nadie reservó en esta jornada. Se borra y deja de verse en el portal.
           </p>

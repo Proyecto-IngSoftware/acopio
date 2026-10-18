@@ -118,7 +118,6 @@ export function Turnos() {
                 <span className="flex items-center gap-1 text-body-sm text-on-surface-variant tabular-nums">
                   <Icono nombre="group" className="text-[16px]" />
                   {textoCupos(j)}
-                  {j.ajuste > 0 && ` · ${j.ajuste} sin reserva`}
                 </span>
               </span>
               <Icono nombre="chevron_right" className="text-[22px] text-on-surface-variant" />

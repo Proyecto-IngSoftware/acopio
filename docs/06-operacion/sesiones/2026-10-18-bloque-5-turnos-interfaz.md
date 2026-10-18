@@ -59,10 +59,44 @@ aprobó las tres maquetas el 2026-10-17, incluidas las dos vistas de C14 armadas
 - Al formatear con Prettier toda la carpeta `src`, se reformateó `esquema.d.ts`, que es
   generado. Se devolvió a su versión antes del commit.
 
+## Revisión final y arreglos (#125)
+
+A pedido de Joseph, un revisor aparte leyó todo lo de #123 y #124 y anotó también los errores
+del plan. Sus hallazgos y lo que se hizo con cada uno:
+
+- **Crítico.** Mover una jornada desde C14 fallaba siempre. El formulario mandaba solo la
+  fecha o la hora que cambió, y la API pide las tres juntas. Ninguna prueba ni recorrido
+  editaba una jornada. Arreglado, con dos pruebas del cuerpo del `PATCH` y un paso nuevo en
+  `consola-turnos.mjs`.
+- **Importante.** Con ajuste manual, los cupos del portal contradecían la marca, y P6 no
+  marcaba las jornadas llenas ni las cerradas. Ahora los cupos dicen «· N sin reserva», la
+  barra cuenta lo tomado y P6 usa la misma marca que P7.
+- **Importante.** P8 y la reserva de P7 decían «no existe» ante cualquier error, incluidos sin
+  red, 429 y 500. Ahora eso sale solo con un 404; lo demás deja reintentar, y un refetch
+  fallido no borra lo cargado.
+- **Importante.** El motivo de cancelar, el nombre y el teléfono aceptaban valores que la API
+  rechaza con un mensaje genérico. Ahora la web aplica los mismos límites.
+- **Menores arreglados.** `Hoja` ya no depende de recibir una función estable (el arreglo
+  de fondo que estaba en P-069). Un fallo al cargar los inscritos ya no se muestra como
+  «Nadie ha reservado todavía». «Copiar» lleva el nombre de la persona. La edad mínima
+  empieza en 12, como en la API. El `.ics` libera su URL más tarde. P8 no ofrece cancelar
+  después del inicio. Los 409 de cupo o de plazo ofrecen «Ver otras jornadas». El doble de
+  pruebas ya responde 204 sin cuerpo. Vitest corre en procesos para que la prueba de zona
+  horaria pruebe algo.
+- **Menores pendientes** en [P-069](../../01-requerimientos/pendientes.md), y lo que necesita
+  decisión en [P-070](../../01-requerimientos/pendientes.md).
+- **Errores del plan:** once, anotados en la sección «Errores del plan» del
+  [plan](../../05-planes/2026-10-17-bloque-5-interfaz.md).
+
+El error crítico venía de una regla de la API que estaba escrita en §11 de la especificación y
+no pasó al plan de la interfaz ni a sus pruebas.
+
 ## Pendiente
 
 - Los menores de esta interfaz ([P-069](../../01-requerimientos/pendientes.md)) y los de la API
   ([P-068](../../01-requerimientos/pendientes.md)).
+- Decidir si P8 avisa que la jornada cambió y si la API manda los permisos de cancelar y de
+  asistencia ([P-070](../../01-requerimientos/pendientes.md)).
 - Lo que falta de la pieza C ([P-066](../../01-requerimientos/pendientes.md)).
 
 ## Depende de Joseph

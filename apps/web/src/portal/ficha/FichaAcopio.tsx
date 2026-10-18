@@ -11,7 +11,7 @@ import { TarjetaNoTraigan } from '../../componentes/TarjetaNoTraigan';
 import { diaSemana, haceCuanto, rangoHoras } from '../../formato';
 import { AvisoSinDinero } from '../bloques/AvisoSinDinero';
 import { aperturaPublica, km } from '../mapa/TarjetaAcopio';
-import { textoCupos } from '../turnos/piezas';
+import { Marca, marcaJornada, textoCupos } from '../turnos/piezas';
 
 const BOTON =
   'inline-flex min-h-[48px] w-full items-center justify-center gap-space-xs rounded-xl px-space-md text-label-md';
@@ -228,6 +228,7 @@ function Voluntariado({ acopioId }: { acopioId: string }) {
           className="flex items-center gap-space-sm border-t border-outline-variant pt-space-sm"
         >
           <span className="flex min-w-0 flex-1 flex-col">
+            {marcaJornada(j) && <Marca>{marcaJornada(j)!}</Marca>}
             <span className="text-body-md font-semibold text-on-surface">{j.titulo}</span>
             <span className="text-body-sm text-on-surface-variant">
               {diaSemana(j.inicio)} · {rangoHoras(j.inicio, j.fin)}

@@ -122,6 +122,9 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    // En procesos y no en hilos: así una prueba puede cambiar process.env.TZ y ver otra
+    // zona horaria (P7 en hora de Bogotá); en worker_threads el cambio no tiene efecto
+    pool: 'forks',
     globals: true,
     setupFiles: ['./src/pruebas/preparar.ts'],
     css: false,

@@ -124,7 +124,7 @@ Con la demo recién sembrada, conviene correr `consola-motor.mjs` antes que
 | `portal-causas.mjs` | Lo público de la pieza C sin iniciar sesión: P3 con las causas «(demo)» y su sello, el chip de personas desaparecidas con sus tres enlaces, la ficha con la hoja de salida y su `rel`, y las causas atendidas | 4 | P03-causas y P04-ficha-causa |
 | `consola-causas.mjs` | La consola de la pieza C: crea una entidad nueva por corrida, la verifica con el aviso (el botón empieza inactivo), publica una causa con la confirmación de destino, la renueva, archiva otra y le quita la verificación a la entidad; en P4 el enlace desaparece. Entra como `admin` con `ADMIN_CONTRASENA` y no toca las causas «(demo)» | 6 | C15-entidades, C22-causas y P04-ficha-causa |
 | `portal-turnos.mjs` | Lo público de turnos sin iniciar sesión (HU-03): P7 con «Clasificar ropa donada (demo)» marcada «Llena», reservar en «Armar mercados (demo)» con un correo nuevo, P8 con el código y el secreto después del `#`, el `.ics`, cancelar y comprobar en la API que `ocupados` volvió a su valor, y P8 sin `#`. Deja la demo como estaba | 6 | P07-voluntariado y P08-mi-reserva |
-| `consola-turnos.mjs` | C14 con `operador1` y `DEMO_CONTRASENA`: llega desde «Más», crea una serie de dos fechas y comprueba en la API que comparten serie, ve los inscritos de «Armar mercados (demo)», suma un cupo de ajuste, cierra y reabre las reservas (con el portal sin aceptar reservas mientras está cerrada). Al final devuelve el ajuste y borra la serie desde la pantalla | 6 | C14-turnos |
+| `consola-turnos.mjs` | C14 con `operador1` y `DEMO_CONTRASENA`: llega desde «Más», crea una serie de dos fechas y comprueba en la API que comparten serie, mueve una (cambia la hora de fin) y revisa `fin` en la API, ve los inscritos de «Armar mercados (demo)», suma un cupo de ajuste, cierra y reabre las reservas (con el portal sin aceptar reservas mientras está cerrada). Al final devuelve el ajuste y borra la serie desde la pantalla | 7 | C14-turnos |
 
 ### `validacion-general.mjs`
 
@@ -178,6 +178,13 @@ señal las tres se envían solas, y el historial muestra la entrada de arroz con
 ocurrió y la hora en que llegó.
 
 ## Últimos resultados
+
+**2026-10-18, en local, arreglos de la revisión final** (rama `bloque-5-revision`):
+
+| Script | Resultado |
+|---|---|
+| `portal-turnos.mjs` | 6 de 6 |
+| `consola-turnos.mjs` | 7 de 7, con el paso nuevo de mover una jornada. Ese paso habría fallado antes del arreglo: el formulario mandaba solo la hora que cambió y la API respondía 400 |
 
 **2026-10-18, en local, Bloque 5** (rama `bloque-5-interfaz`, API reconstruida con
 `servicios:todo`):

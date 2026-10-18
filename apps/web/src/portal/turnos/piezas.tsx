@@ -12,11 +12,13 @@ export const NOMBRE_PERFIL: Record<Perfil, string> = {
 
 type ConCupos = Pick<
   JornadaPublica,
-  'cupoMaximo' | 'ocupados' | 'ajusteActualizadoEn' | 'motivoSinReserva'
+  'cupoMaximo' | 'ocupados' | 'ajuste' | 'libres' | 'ajusteActualizadoEn' | 'motivoSinReserva'
 >;
 
-/** Siempre reservas, nunca personas presentes (RF-TUR-006). */
-export const textoCupos = (j: ConCupos) => `${j.ocupados} de ${j.cupoMaximo} cupos reservados`;
+/** Siempre reservas, nunca personas presentes (RF-TUR-006); el ajuste manual va aparte. */
+export const textoCupos = (j: Pick<ConCupos, 'cupoMaximo' | 'ocupados' | 'ajuste'>) =>
+  `${j.ocupados} de ${j.cupoMaximo} cupos reservados` +
+  (j.ajuste > 0 ? ` · ${j.ajuste} sin reserva` : '');
 
 /** Por qué una jornada no acepta reservas, como lo ve el público; null si las acepta. */
 export function marcaJornada(j: Pick<JornadaPublica, 'motivoSinReserva'>): string | null {
@@ -55,7 +57,9 @@ export function Marca({
 /** Cupos reservados de los totales, con barra si quedan libres y la antigüedad del ajuste. */
 export function EstadoCupos({ jornada }: { jornada: ConCupos }) {
   const abierta = jornada.motivoSinReserva === null;
-  const porcentaje = Math.min(100, Math.round((jornada.ocupados / jornada.cupoMaximo) * 100));
+  // La barra cuenta lo tomado: reservas y gente sin reserva
+  const tomados = jornada.cupoMaximo - jornada.libres;
+  const porcentaje = Math.min(100, Math.round((tomados / jornada.cupoMaximo) * 100));
   return (
     <div className="flex flex-col gap-space-xs border-t border-outline-variant pt-space-sm">
       <span className="text-body-md tabular-nums text-on-surface">{textoCupos(jornada)}</span>
