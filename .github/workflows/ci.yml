@@ -10,6 +10,10 @@ concurrency:
   group: ci-${{ github.ref }}
   cancel-in-progress: true
 
+# Ningún job publica: el token de GitHub solo necesita leer el repositorio
+permissions:
+  contents: read
+
 jobs:
   verificar:
     name: Lint, tipos y pruebas

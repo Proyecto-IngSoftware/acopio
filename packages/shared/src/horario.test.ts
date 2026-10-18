@@ -40,6 +40,14 @@ describe('abiertoAhora', () => {
 });
 
 describe('erroresHorario', () => {
+  it('rechaza más de 4 tramos en un día, sin recorrerlos', () => {
+    const t = (h: number) => ({ abre: `0${h}:00`, cierra: `0${h}:30` });
+    const cinco = { ...HORARIO_VACIO, lun: [t(1), t(2), t(3), t(4), t(5)] };
+    expect(erroresHorario(cinco)).toEqual(['lun: máximo 4 tramos por día']);
+    const cuatro = { ...HORARIO_VACIO, lun: [t(1), t(2), t(3), t(4)] };
+    expect(erroresHorario(cuatro)).toEqual([]);
+  });
+
   it('un horario bien hecho no tiene errores', () => {
     expect(erroresHorario(horario)).toEqual([]);
   });

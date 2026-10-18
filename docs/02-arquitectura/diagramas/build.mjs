@@ -15,7 +15,14 @@ const modelo = leer('modelo-datos.md');
 const vista = leer('vista-general.md');
 
 // ── Utilidades ────────────────────────────────────────────────────────────
-const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// Sirve para texto y para valores de atributo entre comillas
+const esc = (s) =>
+  s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
 const slug = (s) => s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/`/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 // Markdown mínimo → HTML: párrafos, viñetas, negrita, código y enlaces (queda el texto).

@@ -47,7 +47,12 @@ function precargarPantallas(): Plugin {
           visitar(raiz.fileName);
           mapa[prefijo] = [...archivos].map((f) => `/${f}`);
         }
-        const script = `(function(){var p=location.pathname,m=${JSON.stringify(mapa)};for(var k in m){if(k.slice(-1)==='/'?p.indexOf(k)!==0:p!==k)continue;m[k].forEach(function(h){var l=document.createElement('link');if(/\\.css$/.test(h)){l.rel='stylesheet'}else{l.rel='modulepreload';l.crossOrigin=''}l.href=h;document.head.appendChild(l)})}})()`;
+        // Escapado para JavaScript dentro de <script>: un nombre de archivo no puede cerrar la etiqueta
+        const datos = JSON.stringify(mapa).replace(
+          /[<>&\u2028\u2029]/g,
+          (c) => `\\u${c.charCodeAt(0).toString(16).padStart(4, '0')}`,
+        );
+        const script = `(function(){var p=location.pathname,m=${datos};for(var k in m){if(k.slice(-1)==='/'?p.indexOf(k)!==0:p!==k)continue;m[k].forEach(function(h){var l=document.createElement('link');if(/\\.css$/.test(h)){l.rel='stylesheet'}else{l.rel='modulepreload';l.crossOrigin=''}l.href=h;document.head.appendChild(l)})}})()`;
         return { html, tags: [{ tag: 'script', children: script, injectTo: 'head-prepend' }] };
       },
     },

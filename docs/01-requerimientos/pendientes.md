@@ -1038,6 +1038,8 @@ en la sesión.
 - Nada impide que dos clases DTO con el mismo nombre se pisen en el contrato OpenAPI. Pasó con
   tres DTO de turnos y solo se notó por el error de tipos en la web; una prueba que busque nombres
   repetidos lo evitaría
+- `docs/02-arquitectura/diagramas/` está desactualizado: al correr `build.mjs` cambian los SVG
+  incrustados y el diagrama de turnos, que ya tiene la jornada de entidad
 **Por qué:** ninguno rompe un flujo de la especificación; quedaron fuera de la sesión por el
 plazo del 23 de octubre.
 **Estado:** ABIERTO
