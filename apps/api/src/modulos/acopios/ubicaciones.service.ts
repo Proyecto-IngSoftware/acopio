@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
-import { PrismaService } from '../../comun/prisma/prisma.service';
 import type {
   RefUbicacion,
   VerificadorUbicaciones,
 } from '../../comun/ubicaciones/verificador-ubicaciones';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
+import { AcopioDao } from './dao/acopio.dao';
+import { ZonaDao } from './dao/zona.dao';
 
 export interface UbicacionVista {
   tipo: 'ACOPIO' | 'ZONA';
@@ -19,7 +20,8 @@ export interface UbicacionVista {
 @Injectable()
 export class UbicacionesService implements VerificadorUbicaciones {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly acopios: AcopioDao,
+    private readonly zonas: ZonaDao,
     private readonly alcance: AlcanceService,
   ) {}
 
@@ -27,14 +29,8 @@ export class UbicacionesService implements VerificadorUbicaciones {
     const ids = (tipo: RefUbicacion['tipo']) =>
       refs.filter((r) => r.tipo === tipo).map((r) => r.ubicacionId);
     const [acopios, zonas] = await Promise.all([
-      this.prisma.acopio.findMany({
-        where: { id: { in: ids('ACOPIO') } },
-        select: { id: true, nombre: true },
-      }),
-      this.prisma.zona.findMany({
-        where: { id: { in: ids('ZONA') } },
-        select: { id: true, nombre: true },
-      }),
+      this.acopios.nombres(ids('ACOPIO')),
+      this.zonas.nombres(ids('ZONA')),
     ]);
     const clave = (tipo: string, id: string) => `${tipo}:${id}`;
     const nombre = new Map([
@@ -48,8 +44,8 @@ export class UbicacionesService implements VerificadorUbicaciones {
   async buscar(q?: string): Promise<UbicacionVista[]> {
     const filtro = q ? { nombre: { contains: q.trim(), mode: 'insensitive' as const } } : {};
     const [acopios, zonas] = await Promise.all([
-      this.prisma.acopio.findMany({ where: filtro, orderBy: { nombre: 'asc' } }),
-      this.prisma.zona.findMany({ where: filtro, orderBy: { nombre: 'asc' } }),
+      this.acopios.buscar(filtro),
+      this.zonas.buscar(filtro),
     ]);
     return [
       ...acopios.map((x) => ({

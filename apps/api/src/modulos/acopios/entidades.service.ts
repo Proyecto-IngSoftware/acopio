@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { restriccionUnicaViolada } from '../../comun/prisma/errores-prisma';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import type { Entidad } from '../../generado/prisma/client';
 import { BitacoraService } from '../auditoria/bitacora.service';
+import { EntidadDao } from './dao/entidad.dao';
 
 export interface DatosEntidad {
   nombre: string;
@@ -20,21 +21,23 @@ export interface DatosEntidad {
 @Injectable()
 export class EntidadesService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly dao: EntidadDao,
+    private readonly transacciones: Transacciones,
     private readonly bitacora: BitacoraService,
   ) {}
 
   async listar() {
-    const filas = await this.prisma.entidad.findMany({ orderBy: { nombre: 'asc' } });
+    const filas = await this.dao.listar();
     return filas.map(presentarEntidad);
   }
 
   async crear(admin: UsuarioAutenticado, datos: DatosEntidad) {
-    return this.prisma
-      .$transaction(async (tx) => {
-        const e = await tx.entidad.create({
-          data: { ...aFila(datos), nombre: datos.nombre.trim(), tipo: datos.tipo.trim() },
-        });
+    return this.transacciones
+      .ejecutar(async (tx) => {
+        const e = await this.dao.crear(
+          { ...aFila(datos), nombre: datos.nombre.trim(), tipo: datos.tipo.trim() },
+          tx,
+        );
         await this.bitacora.registrar(tx, {
           usuarioId: admin.id,
           accion: 'entidad.creada',
@@ -48,11 +51,11 @@ export class EntidadesService {
   }
 
   async actualizar(admin: UsuarioAutenticado, id: string, cambios: Partial<DatosEntidad>) {
-    return this.prisma
-      .$transaction(async (tx) => {
-        const antes = await tx.entidad.findUnique({ where: { id } });
+    return this.transacciones
+      .ejecutar(async (tx) => {
+        const antes = await this.dao.porId(id, tx);
         if (!antes) throw new ErrorDominio('ENTIDAD_NO_ENCONTRADA', 'La entidad no existe', 404);
-        const despues = await tx.entidad.update({ where: { id }, data: aFila(cambios) });
+        const despues = await this.dao.actualizar(id, aFila(cambios), tx);
         await this.bitacora.registrar(tx, {
           usuarioId: admin.id,
           accion: 'entidad.actualizada',

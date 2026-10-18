@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { AcopioDao } from './dao/acopio.dao';
+import { EntidadDao } from './dao/entidad.dao';
 import { ZonaDao } from './dao/zona.dao';
 import { VERIFICADOR_UBICACIONES } from '../../comun/ubicaciones/verificador-ubicaciones';
 import { AcopiosController } from './acopios.controller';
@@ -34,6 +35,7 @@ import { ZonasService } from './zonas.service';
   ],
   providers: [
     AcopioDao,
+    EntidadDao,
     ZonaDao,
     EntidadesService,
     AcopiosService,
