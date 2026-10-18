@@ -54,7 +54,7 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | 1 | Fecha de la Review del Sprint 2: el viernes 23, según la guía ([P-072](../01-requerimientos/pendientes.md)) | P-072 | 2026-10-18 | ✅ |
 | 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio. Generado y revisado renderizado; faltan la captura del tablero, la del seguimiento y subirlo | #47 | 2026-10-22 | 🟡 |
 | 3 | Lo que falta del Word de avances anteriores: seguimiento y captura del Avance 4, revisión del Avance 2 y captura del tablero | #45, #23, #21 | 2026-10-22 | ⬜ |
-| 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes | #47 | 2026-10-23 | ⬜ |
+| 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes. La demo del servidor ya tiene el balance de la portada y las causas con imagen, y el diagrama de paquetes está al día con turnos | #47 | 2026-10-23 | ⬜ |
 | 5 | Ronda de pruebas en el servidor, por rol, con los escenarios de `escenarios-por-rol.md`; cada hallazgo entra como issue `hallazgo` | #58 | 2026-10-25 | ⬜ |
 
 ## Sprint 3: del 26 de octubre al 22 de noviembre
@@ -64,7 +64,7 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | 6 | Planning del Sprint 3 | #51 | 2026-10-26 | ⬜ |
 | 7 | Review y retrospectiva del Sprint 2 | #47 | 2026-11-01 | ⬜ |
 | 8 | Pieza E: importador de RedAcopio y carga por CSV, criterio 2 de HU-01. Necesita especificación, el módulo `importacion` y su prueba contra una copia del JSON | #49 | 2026-11-15 | ⬜ |
-| 9 | Pieza D: contenido del home, páginas legales y Open Graph, con su ADR | #50 | 2026-11-15 | ⬜ |
+| 9 | Pieza D: contenido del home, páginas legales y Open Graph, con su ADR. El balance de la portada (P-073) ya quedó hecho | #50 | 2026-11-15 | ⬜ |
 | 10 | Escáner probado con un teléfono y un código real contra el servidor | #40 | 2026-11-15 | ⬜ |
 | 11 | Review y retrospectiva del Sprint 3 | #51 | 2026-11-20 | ⬜ |
 | 12 | Bloque 6: bitácora enriquecida, transparencia y publicaciones. Es lo primero que se recorta | #37 | 2026-11-22 | ⬜ |
@@ -97,6 +97,12 @@ el Avance 5).
 | Pieza C: verificación de entidades y causas, con HU-02 y HU-15 | #48 | 2026-10-18 | ✅ |
 | Bloque 4, motor: API y los tres ciclos de interfaz | #35 | 2026-10-18 | ✅ |
 | Escenarios de prueba por rol | #55 | 2026-10-18 | ✅ |
+| Plan de acción con `revisar-plan.mjs` y el hook que recuerda actualizarlo (PR 130) | | 2026-10-18 | ✅ |
+| Balance de la portada conectado a la API, P-073 (PR 134) | | 2026-10-18 | ✅ |
+| Causas de la demo con imagen y entidades con logotipo (PR 134) | | 2026-10-18 | ✅ |
+| Diagrama de paquetes con turnos y PNG de todos los diagramas regenerados (PR 132) | | 2026-10-18 | ✅ |
+| Recorridos que guardan capturas para el Word con `CAPTURAS_WORD` (PR 134) | | 2026-10-18 | ✅ |
+| Contenedor para renderizar los Word de los avances, `render.Dockerfile` (PR 133) | | 2026-10-18 | ✅ |
 
 ## Registro de cambios
 
@@ -116,3 +122,7 @@ el Avance 5).
 - 2026-10-18: P-073 resuelto, la portada muestra el balance con datos de inventario. La demo
   sube imagen a las causas y logotipo a sus entidades. Los recorridos guardan capturas para el
   Word con `CAPTURAS_WORD`, y el Avance 5 usa 22 de ellas.
+- 2026-10-18, cierre de la jornada: se fusionaron los PR #128 a #134 con el CI en verde. La
+  tabla «Hecho» suma lo terminado en el día. El resumen completo está en el
+  [informe de la jornada](../06-operacion/sesiones/2026-10-18-resumen-de-la-jornada.md). Lo
+  siguiente es la fila 2: las dos capturas del Avance 5 y subirlo a OneDrive.
