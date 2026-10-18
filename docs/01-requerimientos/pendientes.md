@@ -1012,6 +1012,22 @@ repositorio no lo tiene.
 **Estado:** ABIERTO. Versionarlo en `.claude/hooks/` cuando se sume otra persona
 
 
+### P-066 · Lo que falta de la pieza C
+**Fecha:** 2026-10-17 · **Propuesto por:** Claude, al cerrar la pieza C ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48))
+**Qué:**
+- Correr `consola-causas.mjs` contra el servidor de pruebas. Necesita la contraseña del
+  administrador de allá (`ADMIN_CONTRASENA`), que tiene Joseph. Cada corrida crea una entidad
+  «Fundación Recorrido …» en el servidor
+- Verificar con Joseph los criterios de HU-02 y HU-15, uno por uno (§9 de la
+  [especificación](../superpowers/specs/2026-10-17-pieza-c-causas-design.md))
+- Tres menores de la revisión final: en la hoja de C15, tras subir el logotipo, el texto sigue
+  diciendo «Subir logotipo» hasta reabrirla; `GET /entidades/:id/logo` sirve el logotipo de
+  cualquier entidad, también de las no verificadas (no es un dato sensible); C22 no tiene una
+  ruta por causa, así que no se puede enlazar a una causa de la consola
+**Por qué:** la pieza quedó construida y probada en local; esto es lo que no se pudo cerrar
+en la sesión.
+**Estado:** ABIERTO
+
 ---
 
 ## Resueltos

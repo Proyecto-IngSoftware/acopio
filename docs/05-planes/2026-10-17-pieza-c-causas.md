@@ -35,18 +35,20 @@ aprobada por Joseph el 2026-10-17. Maquetas aprobadas de
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 `acopios` a DAO | ⬜ | |
-| 2 Reglas puras de causas | ⬜ | |
-| 3 Esquema y migración | ⬜ | |
-| 4 Verificación y logotipo | ⬜ | |
-| 5 Gestión de causas | ⬜ | |
-| 6 Rutas públicas y tarea diaria | ⬜ | |
-| 7 Contrato y cliente web | ⬜ | |
-| 8 Público: P3, atendidas y P4 | ⬜ | |
-| 9 Maquetas de C22 y C15 | ⬜ | Aprobación de Joseph |
-| 10 C15 con verificación y logotipo | ⬜ | Tarea 9 |
-| 11 C22 Causas | ⬜ | Tarea 9 |
-| 12 Demo, recorridos y cierre | ⬜ | |
+| 1 `acopios` a DAO | ✅ | Suites de red, zonas, usuarios y «no recibir» en verde, 47/47 |
+| 2 Reglas puras de causas | ✅ | 15 pruebas en `packages/shared` |
+| 3 Esquema y migración | ✅ | La migración da `verificada_en` a las entidades que ya estuvieran verificadas, para que el `CHECK` no rompa el despliegue |
+| 4 Verificación y logotipo | ✅ | |
+| 5 Gestión de causas | ✅ | |
+| 6 Rutas públicas y tarea diaria | ✅ | `test:int` 400/400 |
+| 7 Contrato y cliente web | ✅ | |
+| 8 Público: P3, atendidas y P4 | ✅ | |
+| 9 Maquetas de C22 y C15 | ✅ | Joseph las aprobó el 2026-10-17 |
+| 10 C15 con verificación y logotipo | ✅ | |
+| 11 C22 Causas | ✅ | |
+| 12 Demo, recorridos y cierre | 🟨 | Verificación completa en verde (`test:int` 402/402, web 853/853) y recorridos 4/4 y 6/6 en local. Faltan `consola-causas.mjs` contra el servidor, que necesita la contraseña del administrador, y los criterios de HU-02 y HU-15 con Joseph ([P-066](../01-requerimientos/pendientes.md)) |
+
+La revisión final de la rama fue una autorrevisión: el revisor aparte no pudo correr porque se agotó el límite semanal del modelo. Encontró que editar una causa sin cambiar el destino pedía confirmar, y se corrigió con su prueba. Los menores quedaron en [P-066](../01-requerimientos/pendientes.md).
 
 Un solo PR para toda la pieza (P-051 y la regla de un PR por fase), con commits por tema:
 DAO, API, contrato, público, consola y cierre.

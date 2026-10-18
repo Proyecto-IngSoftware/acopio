@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-10-17 | [2026-10-17-pieza-c-causas](2026-10-17-pieza-c-causas.md) | Pieza C: verificación de entidades y causas |
 | 2026-10-17 | [2026-10-17-maquetas-causas](2026-10-17-maquetas-causas.md) | Maquetas de causas, P3 y P4, aprobadas |
 | 2026-10-17 | [2026-10-17-recorridos-y-mi-zona](2026-10-17-recorridos-y-mi-zona.md) | Recorridos estables, «Mi zona» e informes de sesión |
 | 2026-10-17 | [2026-10-17-ciclo-3-y-servidor](2026-10-17-ciclo-3-y-servidor.md) | Ciclo 3 del Receptor y servidor de pruebas (recuperado) |

@@ -317,4 +317,19 @@ inventadas como si fueran de ellas.
 
 ## 11. Cambios al construir
 
-Vacía hasta que empiece la construcción.
+- **Imágenes.** Pasan por `AlmacenamientoService.guardarImagen`, que guarda la imagen y su
+  miniatura con una clave nueva por imagen, en vez de las claves fijas de §4. `logo_key` e
+  `imagen_key` guardan la clave grande; el logotipo se sirve con la miniatura. Una clave nueva
+  evita servir la imagen vieja desde la caché.
+- **Editar el destino pide confirmar.** Cambiar el enlace oficial o la entidad de una causa
+  activa pide `confirmo: true`, como publicar. Mandar los mismos valores no cuenta como cambio.
+- **Reactivar una causa activa** da 409 `CAUSA_ACTIVA`, un código que la especificación no
+  nombraba. La imagen solo se cambia en causas activas.
+- **Migración.** Antes del `CHECK` de `entidad`, un `UPDATE` da `verificada_en = creado_en` a
+  las entidades que ya estuvieran `VERIFICADA`, para que el despliegue no falle.
+- **C15.** Tocar una entidad abre su hoja (logotipo, verificar o quitar la verificación,
+  «Editar datos»), como en la maqueta aprobada; antes abría el formulario.
+- **C22** cambia de vista dentro de `/consola/causas` (lista, causa y formulario), sin rutas
+  por causa. La imagen de una causa nueva se sube después de crearla.
+- **Demo.** Los enlaces de las causas «(demo)» van al sitio principal de cada organización, no
+  a una página de donaciones, para no inventar rutas.
