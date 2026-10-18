@@ -73,6 +73,7 @@ model Usuario {
   entidades_verificadas  Entidad[]               @relation("entidades_verificadas")
   causas_creadas         Causa[]                 @relation("causas_creadas")
   causas_archivadas      Causa[]                 @relation("causas_archivadas")
+  jornadas_creadas       Jornada[]               @relation("jornadas_creadas")
 
   @@map("usuario")
 }
@@ -298,6 +299,7 @@ model Entidad {
   creado_en       DateTime           @default(now()) @db.Timestamptz
   acopios         Acopio[]
   causas          Causa[]
+  jornadas        Jornada[]
 
   @@map("entidad")
 }
@@ -367,6 +369,7 @@ model Acopio {
   comprobantes        Comprobante[]
   remisiones          Remision[]
   sugerencias         Sugerencia[]
+  jornadas            Jornada[]
 
   @@index([estado])
   @@map("acopio")
@@ -762,4 +765,91 @@ model ConfiguracionMotor {
   actualizado_en  DateTime @default(now()) @db.Timestamptz
 
   @@map("configuracion_motor")
+}
+
+// ── Turnos (Bloque 5) ───────────────────────────────────────────────────────
+
+enum EstadoJornada {
+  ABIERTA
+  CERRADA
+  CANCELADA
+}
+
+enum EstadoReserva {
+  ACTIVA
+  CANCELADA
+  ASISTIO
+  NO_ASISTIO
+}
+
+enum PerfilVoluntario {
+  VETERINARIO
+  MEDICO
+  PSICOLOGO
+  CUIDADOR_ADULTO_MAYOR
+  CONDUCTOR_C2
+}
+
+/// RF-TUR-001. De un acopio o de una entidad, nunca de los dos (CHECK jornada_un_dueno). La de
+/// entidad trae su lugar; la de acopio lo toma del acopio.
+model Jornada {
+  id                    String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  acopio_id             String?           @db.Uuid
+  acopio                Acopio?           @relation(fields: [acopio_id], references: [id])
+  entidad_id            String?           @db.Uuid
+  entidad               Entidad?          @relation(fields: [entidad_id], references: [id])
+  direccion             String?
+  municipio             String?
+  lat                   Decimal?          @db.Decimal(9, 6)
+  lng                   Decimal?          @db.Decimal(9, 6)
+  titulo                String
+  descripcion           String
+  que_llevar            String?
+  inicio                DateTime          @db.Timestamptz
+  fin                   DateTime          @db.Timestamptz
+  cupo_maximo           Int
+  /// { edadMinima?: number, ropaCerrada: boolean, carga: boolean }
+  requisitos            Json              @default("{}")
+  perfil_requerido      PerfilVoluntario?
+  cupos_ajuste_manual   Int               @default(0)
+  ajuste_actualizado_en DateTime?         @db.Timestamptz
+  estado                EstadoJornada     @default(ABIERTA)
+  motivo_cancelacion    String?
+  cancelada_en          DateTime?         @db.Timestamptz
+  /// Las jornadas creadas juntas, en varias fechas, comparten serie.
+  serie_id              String?           @db.Uuid
+  creada_por            String            @db.Uuid
+  creador               Usuario           @relation("jornadas_creadas", fields: [creada_por], references: [id])
+  creado_en             DateTime          @default(now()) @db.Timestamptz
+  actualizado_en        DateTime          @default(now()) @updatedAt @db.Timestamptz
+  reservas              Reserva[]
+
+  @@index([inicio])
+  @@index([acopio_id])
+  @@map("jornada")
+}
+
+/// RF-TUR-003. Sin cuenta. Nombre, correo y teléfono quedan nulos 30 días después de la
+/// jornada (T-06). El índice parcial reserva_correo_unico (jornada_id, correo) WHERE
+/// estado <> 'CANCELADA' vive en la migración: Prisma no lo expresa. Sin DELETE para acopio_app.
+model Reserva {
+  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  jornada_id        String        @db.Uuid
+  jornada           Jornada       @relation(fields: [jornada_id], references: [id])
+  nombre            String?
+  correo            String?
+  telefono          String?
+  codigo            String        @unique
+  /// sha256 en hexadecimal del secreto del enlace (T-07); el secreto no se guarda.
+  secreto_hash      String
+  perfil_declarado  Boolean       @default(false)
+  estado            EstadoReserva @default(ACTIVA)
+  consentimiento_en DateTime      @db.Timestamptz
+  recordatorio_en   DateTime?     @db.Timestamptz
+  cancelada_en      DateTime?     @db.Timestamptz
+  datos_borrados_en DateTime?     @db.Timestamptz
+  creada_en         DateTime      @default(now()) @db.Timestamptz
+
+  @@index([jornada_id])
+  @@map("reserva")
 }
