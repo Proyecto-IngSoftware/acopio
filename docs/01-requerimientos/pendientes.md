@@ -902,19 +902,6 @@ GitHub no deja aprobar un PR propio, la revisión queda como comentario. El prim
 que registra esta decisión
 
 
-### P-052 · Dos DTO con el mismo nombre se pisan en el contrato
-**Fecha:** 2026-10-10 · **Propuesto por:** Joseph
-**Qué:** Swagger nombra cada esquema del contrato con el nombre de la clase del DTO. En la
-etapa 2 del motor, `RecibirDto` existía en `comprobantes` y en `motor`, y el contrato se
-quedó con uno solo: la web dejó de compilar porque la recepción de donaciones perdió sus
-campos. Se renombró a `RecibirRemisionDto`, pero nada impide que vuelva a pasar.
-**Por qué:** el error no aparece en la API ni en sus pruebas, solo en los tipos de la web,
-y en otro caso podría pasar sin que nada compile mal.
-**Estado:** ABIERTO. Una prueba unitaria en `apps/api` que busque nombres de clase
-`*Dto` repetidos en `src/` o que revise el contrato generado
-
----
-
 ### P-053 · La hoja de despachar lista todos los folios conciliados del acopio
 **Fecha:** 2026-10-15 · **Propuesto por:** Claude, en la revisión final del ciclo 2 del Bloque 4
 **Qué:** `GET /remisiones/:codigo/folios-vinculables` devuelve todos los comprobantes
@@ -972,6 +959,10 @@ registrar cada petición en todas las pantallas, la API no respondió ningún 5x
 no lanzó errores. Puede ser el service worker descargando su caché cuando el recorrido
 cambia de página, pero no se confirmó.
 **Por qué:** si es una petición real que falla, alguien la va a ver en la ronda de pruebas.
+**Otro caso, 2026-10-18:** `consola-turnos.mjs` contra el servidor falló una vez con
+`fetch failed` en una petición de Node, y un `curl` recibió una vez una respuesta vacía. No se
+repitió en las corridas siguientes. Detalle en el
+[informe del cierre del Bloque 5](../06-operacion/sesiones/2026-10-18-cierre-bloque-5.md).
 **Estado:** ABIERTO. Se vigila en #58; si aparece, se anota la URL con la pestaña Red
 
 ### P-058 · Imagen que falta en Garage y contrato de los endpoints de imagen
@@ -1050,9 +1041,27 @@ construirlo. La segunda sigue abierta: es una excepción a una regla del plan.
 (dos ediciones a la vez dejaban mal la bitácora y repetían el aviso) se arregló en la rama.
 **Estado:** ABIERTO
 
+### P-072 · Fecha de la Review del Sprint 2
+**Fecha:** 2026-10-18 · **Propuesto por:** Claude, al armar el [plan de acción](../05-planes/plan-de-accion.md) ([#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47))
+**Qué:** el [cronograma](../05-planes/cronograma.md) pone la Review del Sprint 2 en la
+validación de clase del viernes 23 de octubre, y #47 la pone el viernes 30. Hay que confirmar
+cuál vale con la guía del Avance 5 o con el docente y corregir el otro.
+**Por qué:** si es el 23, la Review se prepara junto con la sustentación de esa semana.
+**Estado:** ABIERTO
+
 ---
 
 ## Resueltos
+
+### P-052 · Dos DTO con el mismo nombre se pisan en el contrato
+**Fecha:** 2026-10-10 · **Propuesto por:** Joseph
+**Qué:** Swagger nombra cada esquema del contrato con el nombre de la clase del DTO. En la
+etapa 2 del motor, `RecibirDto` existía en `comprobantes` y en `motor`, y el contrato se
+quedó con uno solo: la web dejó de compilar porque la recepción de donaciones perdió sus
+campos. Se renombró a `RecibirRemisionDto`, pero nada impide que vuelva a pasar.
+**Por qué:** el error no aparece en la API ni en sus pruebas, solo en los tipos de la web,
+y en otro caso podría pasar sin que nada compile mal.
+**Estado:** RESUELTO el 2026-10-18 → `apps/api/src/comun/dto-nombres.test.ts` falla si dos clases `…Dto` que extienden `crearDto` comparten nombre. Al escribirla encontró `FiltroCategoriaDto` en dos controladores, que se renombraron (#128)
 
 ### P-069 · Menores de la interfaz de turnos
 **Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la autorrevisión de la interfaz del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))

@@ -1,0 +1,105 @@
+---
+title: "Plan de acción del proyecto"
+type: plan
+tags: [plan, seguimiento, cronograma]
+estado: vigente
+actualizado: 2026-10-18
+---
+
+# Plan de acción del proyecto
+
+Lista única de lo que falta hasta la entrega final, en orden de prioridad, con el issue que
+lleva cada punto. Los planes de cada bloque dicen cómo se construye algo; este dice qué sigue
+y si va a tiempo. Las fechas máximas por semana vienen del [cronograma](cronograma.md). Las
+fechas objetivo anteriores al 23 de octubre las propuso Claude el 2026-10-18 y Joseph las
+puede mover.
+
+## Cómo se mantiene
+
+El plan se corrige cada vez que pasa algo, no al final de la semana:
+
+- Se cierra, se abre o se crea un issue, o se fusiona un PR: se corrige la fila que toca y se
+  agrega una línea al [registro de cambios](#registro-de-cambios). El hook
+  `.claude/hooks/plan-de-accion.mjs` lo recuerda después de cada `gh issue` y `gh pr merge`.
+- Aparece un hallazgo, una consigna nueva del curso o una decisión de Joseph: entra como
+  `P-0NN` o issue, y si cambia una prioridad o una fecha, también aquí.
+- Al retomar una sesión se corre `node scripts/revisar-plan.mjs`. Compara cada fila con
+  GitHub y avisa si una fila dice hecho y el issue sigue abierto, si un issue cerrado sigue
+  como pendiente, si una fecha ya pasó o si hay un issue abierto que el plan no nombra. Sale
+  con 1 si encuentra algo.
+- Al cerrar una sesión, el informe enlaza las filas que cambiaron.
+
+Estados de una fila: ✅ hecho, 🟡 en curso, ⬜ pendiente y ⛔ bloqueado. Todo lo ejecuta Joseph
+(CLAUDE.md, «Flujo de trabajo»); los issues conservan el reparto por rol del curso.
+
+Si el tiempo no alcanza, se recorta en este orden: el Bloque 6, la pieza D y la deuda menor.
+La pieza E no se recorta porque completa HU-01, que es Must.
+
+## Fechas que mandan
+
+| Fecha | Qué pasa |
+|---|---|
+| Viernes 23 de octubre | Sustentación del segundo corte |
+| Lunes 26 de octubre | Planning del Sprint 3 |
+| Domingo 1 de noviembre | Fin del Sprint 2 |
+| Domingo 15 de noviembre | Piezas D y E del Bloque 1 |
+| Viernes 20 de noviembre | Review del Sprint 3 |
+| Domingo 29 de noviembre | Congelamiento y calidad |
+| Semana 18, hasta el 6 de diciembre | Entrega final y sustentación |
+
+## Ahora: hasta la sustentación del 23 de octubre
+
+| # | Qué | Issue | Fecha | Estado |
+|---|---|---|---|---|
+| 1 | Confirmar la fecha de la Review del Sprint 2: el cronograma dice el 23 y el issue el 30 ([P-072](../01-requerimientos/pendientes.md)) | #47 | 2026-10-20 | ⬜ |
+| 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio | #47 | 2026-10-22 | ⬜ |
+| 3 | Lo que falta del Word de avances anteriores: seguimiento y captura del Avance 4, revisión del Avance 2 y captura del tablero | #45, #23, #21 | 2026-10-22 | ⬜ |
+| 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes | #47 | 2026-10-23 | ⬜ |
+| 5 | Ronda de pruebas en el servidor, por rol, con los escenarios de `escenarios-por-rol.md`; cada hallazgo entra como issue `hallazgo` | #58 | 2026-10-25 | ⬜ |
+
+## Sprint 3: del 26 de octubre al 22 de noviembre
+
+| # | Qué | Issue | Fecha | Estado |
+|---|---|---|---|---|
+| 6 | Planning del Sprint 3 | #51 | 2026-10-26 | ⬜ |
+| 7 | Review y retrospectiva del Sprint 2 | #47 | 2026-11-01 | ⬜ |
+| 8 | Pieza E: importador de RedAcopio y carga por CSV, criterio 2 de HU-01. Necesita especificación, el módulo `importacion` y su prueba contra una copia del JSON | #49 | 2026-11-15 | ⬜ |
+| 9 | Pieza D: contenido del home, páginas legales y Open Graph, con su ADR | #50 | 2026-11-15 | ⬜ |
+| 10 | Escáner probado con un teléfono y un código real contra el servidor | #40 | 2026-11-15 | ⬜ |
+| 11 | Review y retrospectiva del Sprint 3 | #51 | 2026-11-20 | ⬜ |
+| 12 | Bloque 6: bitácora enriquecida, transparencia y publicaciones. Es lo primero que se recorta | #37 | 2026-11-22 | ⬜ |
+| 13 | Deuda de las revisiones: menores de los bloques 1 a 3 y del cierre del Bloque 5 (P-070, P-071) | #43, #129 | 2026-11-22 | ⬜ |
+| 14 | P5 de Stitch con el filtro viejo | #39 | 2026-11-22 | ⬜ |
+| 15 | Íconos que se ven como texto mientras baja su fuente | #41 | 2026-11-22 | ⬜ |
+
+## Cierre: del 23 de noviembre al 6 de diciembre
+
+| # | Qué | Issue | Fecha | Estado |
+|---|---|---|---|---|
+| 16 | RNF y escenarios de calidad verificados, cada uno con su prueba | #25 | 2026-11-29 | ⬜ |
+| 17 | Revisión final del ADR-001 y su matriz de riesgos | #24 | 2026-11-29 | ⬜ |
+| 18 | Despliegue: probar el SMTP desde Supabase y decidir cómo se lee Garage en producción (P-041) | #26 | 2026-11-29 | ⬜ |
+| 19 | Congelamiento, recorridos contra el servidor, Word final, ensayo y sustentación final | #52 | 2026-12-06 | ⬜ |
+
+## Se vigila sin fecha
+
+Estos pendientes no tienen issue propio. Se revisan cuando se toca su tema:
+[P-057](../01-requerimientos/pendientes.md) (fallos de red intermitentes contra el servidor,
+dentro de #58), P-060 (el usuario recordado no vence, para después de la presentación),
+P-063 (el hook de commits fuera del repositorio, cuando se sume otra persona) y P-050 (DAO en
+el Avance 5).
+
+## Hecho
+
+| Qué | Issue | Cerrado | Estado |
+|---|---|---|---|
+| Bloque 5, turnos: API, interfaz y cierre, con HU-03 revisada en el servidor | #36 | 2026-10-18 | ✅ |
+| Pieza C: verificación de entidades y causas, con HU-02 y HU-15 | #48 | 2026-10-18 | ✅ |
+| Bloque 4, motor: API y los tres ciclos de interfaz | #35 | 2026-10-18 | ✅ |
+| Escenarios de prueba por rol | #55 | 2026-10-18 | ✅ |
+
+## Registro de cambios
+
+- 2026-10-18: se crea el plan a partir del estado de GitHub, los pendientes y el cronograma.
+  Se cierran #35 y #55, que ya estaban hechos. #45, #23 y #21 pasan a la semana 12 y #26 a la
+  17. Nace #129 con P-070 y P-071. #47 suma las casillas del Avance 5 y de la sustentación.
