@@ -223,6 +223,35 @@ def figura(ruta, pie, alto_max=None):
     escribir(c, pie, tam=9, color=TINTA_2)
 
 
+def galeria(imagenes, por_fila=3):
+    """Capturas de teléfono en filas de `por_fila`, cada una con su pie, en una tabla sin bordes."""
+    global n_figura
+    ancho_util = util(doc.sections[-1])[0]
+    ancho_celda = ancho_util / por_fila
+    for i in range(0, len(imagenes), por_fila):
+        fila = imagenes[i:i + por_fila]
+        t = doc.add_table(rows=1, cols=por_fila)
+        t.alignment = WD_TABLE_ALIGNMENT.CENTER
+        for j, (pie, ruta) in enumerate(fila):
+            n_figura += 1
+            celda = t.rows[0].cells[j]
+            celda.width = Cm(ancho_celda)
+            p = celda.paragraphs[0]
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.add_run().add_picture(str(ruta), width=Cm(ancho_celda - 0.8))
+            c = celda.add_paragraph()
+            c.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            r = c.add_run(f"Figura {n_figura}. ")
+            r.bold, r.font.size, r.font.color.rgb = True, Pt(8), TINTA_2
+            escribir(c, pie, tam=8, color=TINTA_2)
+        # La fila no se parte entre páginas
+        trPr = t.rows[0]._tr.get_or_add_trPr()
+        no_partir_fila = OxmlElement("w:cantSplit")
+        no_partir_fila.set(qn("w:val"), "true")
+        trPr.append(no_partir_fila)
+        doc.add_paragraph().paragraph_format.space_after = Pt(4)
+
+
 def captura_o_recuadro(nombre, pie, falta):
     ruta = EVIDENCIA / nombre
     if ruta.exists():
@@ -323,12 +352,23 @@ def anchos_para(filas):
 def volcar_md(md, nivel_base=1):
     """Vuelca Markdown. «## X» queda en el nivel `nivel_base`, «###» uno más abajo."""
     md = re.sub(r"<(https?://[^>]+)>", r"[\1](\1)", md)
+    capturas = []
+
+    def soltar():
+        # Las capturas seguidas van en galería; un diagrama, solo y a todo el ancho
+        if capturas:
+            galeria(capturas)
+            capturas.clear()
+
     for tipo, dato in bloques_md(md):
+        if tipo == "img" and "assets/diagramas" not in dato[1]:
+            capturas.append((dato[0], AQUI / dato[1]))
+            continue
+        soltar()
         if tipo in ("h2", "h3", "h4"):
             titulo(dato, min(3, nivel_base + int(tipo[1]) - 2))
         elif tipo == "img":
-            # Las capturas de teléfono son altas y angostas: se limitan por alto. Los diagramas usan la página
-            figura(AQUI / dato[1], dato[0], alto_max=None if "assets/diagramas" in dato[1] else 12)
+            figura(AQUI / dato[1], dato[0])
         elif tipo == "p" and dato.startswith("Pendiente:"):
             recuadro(dato)
         elif tipo == "p":
@@ -342,6 +382,7 @@ def volcar_md(md, nivel_base=1):
         elif tipo == "tabla":
             filas, centradas = filas_tabla(dato)
             tabla(filas, anchos_para(filas), centradas)
+    soltar()
 
 
 def tabla_contenedores():

@@ -40,6 +40,13 @@ Después, a pedido de Joseph, el Word sumó los diagramas y más pantallas (rama
 dependencias reales y se regeneraron los PNG de todos los diagramas, que eran del 9 de
 octubre. El Word quedó con 17 figuras y los diagramas en una sección horizontal.
 
+Por último, con un contenedor de LibreOffice (`docs/entregas/render.Dockerfile`) se vio el
+Word renderizado por primera vez. Cada captura de teléfono ocupaba una página casi en blanco y
+el documento de remisión quedaba diminuto por su alto. Ahora las capturas van en galerías de
+tres por fila, el documento está recortado hasta el QR, y salieron el diagrama de contenedores
+y el ER del motor, que no se leían en la página. El Word pasó de 26 a 17 páginas. Joseph dictó
+la retrospectiva; la acción quedó atada a la pieza E (#49) para que se pueda verificar.
+
 ## Decisiones
 
 Las tomó Joseph en la sesión:
@@ -75,6 +82,5 @@ Todo está en la fila 2 del [plan de acción](../../05-planes/plan-de-accion.md)
 - La captura del tablero del Project con las historias del Sprint 2, en
   `docs/entregas/evidencia/avance-05/tablero.png`.
 - La captura del seguimiento, en `docs/entregas/evidencia/avance-05/seguimiento.png`.
-- La retrospectiva, en la sección «#### Retrospectiva» de `avance-05-sprint2.md`.
 - Después: `python generar-avance-05.py` y `python unificar-avances.py` desde
   `docs/entregas`, revisar el Word y subirlo a OneDrive.

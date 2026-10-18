@@ -52,7 +52,7 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
 | 1 | Fecha de la Review del Sprint 2: el viernes 23, según la guía ([P-072](../01-requerimientos/pendientes.md)) | P-072 | 2026-10-18 | ✅ |
-| 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio. Generado; faltan la captura del tablero, la del seguimiento, la retrospectiva y subirlo | #47 | 2026-10-22 | 🟡 |
+| 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio. Generado y revisado renderizado; faltan la captura del tablero, la del seguimiento y subirlo | #47 | 2026-10-22 | 🟡 |
 | 3 | Lo que falta del Word de avances anteriores: seguimiento y captura del Avance 4, revisión del Avance 2 y captura del tablero | #45, #23, #21 | 2026-10-22 | ⬜ |
 | 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes | #47 | 2026-10-23 | ⬜ |
 | 5 | Ronda de pruebas en el servidor, por rol, con los escenarios de `escenarios-por-rol.md`; cada hallazgo entra como issue `hallazgo` | #58 | 2026-10-25 | ⬜ |
@@ -110,3 +110,6 @@ el Avance 5).
   contenedores y tres modelos de datos) y tres pantallas más. Al tomar las capturas apareció
   [P-073](../01-requerimientos/pendientes.md): el balance de la portada nunca se conectó a la
   API; queda en la pieza D (#50).
+- 2026-10-18: el Word del Avance 5 se revisó renderizado en un contenedor de LibreOffice; las
+  capturas van en galerías y queda en 17 páginas. Joseph escribió la retrospectiva. Faltan las
+  dos capturas y subirlo.
