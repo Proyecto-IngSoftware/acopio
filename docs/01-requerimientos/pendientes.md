@@ -1041,17 +1041,17 @@ construirlo. La segunda sigue abierta: es una excepción a una regla del plan.
 (dos ediciones a la vez dejaban mal la bitácora y repetían el aviso) se arregló en la rama.
 **Estado:** ABIERTO
 
+---
+
+## Resueltos
+
 ### P-072 · Fecha de la Review del Sprint 2
 **Fecha:** 2026-10-18 · **Propuesto por:** Claude, al armar el [plan de acción](../05-planes/plan-de-accion.md) ([#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47))
 **Qué:** el [cronograma](../05-planes/cronograma.md) pone la Review del Sprint 2 en la
 validación de clase del viernes 23 de octubre, y #47 la pone el viernes 30. Hay que confirmar
 cuál vale con la guía del Avance 5 o con el docente y corregir el otro.
 **Por qué:** si es el 23, la Review se prepara junto con la sustentación de esa semana.
-**Estado:** ABIERTO
-
----
-
-## Resueltos
+**Estado:** RESUELTO el 2026-10-18 → vale el viernes 23. La guía del Avance 5 pide la revisión «de acuerdo con la validación que se realizará en clase el próximo viernes», y P-047 ya lo había fijado. Se corrigió #47, que decía el 30
 
 ### P-052 · Dos DTO con el mismo nombre se pisan en el contrato
 **Fecha:** 2026-10-10 · **Propuesto por:** Joseph
