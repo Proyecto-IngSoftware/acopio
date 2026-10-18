@@ -20,6 +20,8 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 | Pantalla | Diseño | Construida |
 |---|---|---|
 | P1 Portada | [P01-portada](P01-portada/README.md) | Bloque 0 |
+| P3 Directorio de causas y causas atendidas | [P03-causas](P03-causas/README.md) | Pendiente, pieza C ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)) |
+| P4 Ficha de causa | [P04-ficha-causa](P04-ficha-causa/README.md) | Pendiente, pieza C ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)) |
 | P5 Mapa de acopios | [P05-mapa](P05-mapa/README.md) | Bloque 1 |
 | P6 Ficha de acopio | [P06-ficha-acopio](P06-ficha-acopio/README.md) | Bloque 1 |
 | Más con sesión | [mas-con-sesion](mas-con-sesion/README.md) | Bloque 0 |
@@ -65,5 +67,8 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 ## Lo que sigue
 
 Las pantallas del motor (Bloque 4, [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35))
-ya están diseñadas, «Mi zona» incluida. Siguen las de turnos, del Bloque 5
-([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)).
+y las de causas (P3 y P4, [#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57)) ya
+están diseñadas. Siguen las de turnos, del Bloque 5
+([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)), y las de la consola para
+verificar entidades y gestionar causas, que salen de la especificación de la pieza C
+([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)).

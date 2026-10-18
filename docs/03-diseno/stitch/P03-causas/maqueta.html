@@ -1,0 +1,318 @@
+<title>Causas · P3 y P4</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0..1,0&display=swap">
+<style>
+/* Tema «Acopio Field Command», el de packages/ui-tokens. Teléfonos a 360 px sobre el lienzo; un solo tema, claro, como la app. */
+:root {
+  --surface: #faf8ff; --lowest: #ffffff; --low: #f2f3ff; --container: #eaedff; --high: #e2e7ff;
+  --on-surface: #131b2e; --variant: #3f4946; --outline: #707976; --outline-variant: #bfc9c5;
+  --primary: #003730; --primary-container: #085046; --primary-fixed: #b0efe1; --on-primary: #ffffff;
+  --lienzo: #dae2fd;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: light;
+}
+body { background: var(--lienzo); color: var(--on-surface); font-family: var(--sans); font-size: 16px; }
+.pagina { padding-block: 24px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 32px; max-width: 1560px; margin: 0 auto; }
+.intro { max-width: 68ch; display: flex; flex-direction: column; gap: 8px; }
+.intro h1 { font-size: 1.625rem; line-height: 2.125rem; margin: 0; text-wrap: balance; }
+.intro p { margin: 0; color: var(--variant); line-height: 1.5; }
+.ms { font-family: 'Material Symbols Outlined', sans-serif; font-size: 22px; line-height: 1; font-weight: normal; display: inline-block; vertical-align: middle; width: 1em; overflow: hidden; flex: none; }
+.lleno { font-variation-settings: 'FILL' 1; }
+.telefonos { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.caso { display: flex; flex-direction: column; gap: 8px; width: 360px; max-width: 100%; min-width: 0; }
+.caso > h2 { font-size: .9375rem; font-weight: 700; margin: 0; }
+.caso > p { margin: 0; font-size: .875rem; color: var(--variant); line-height: 1.4; }
+.tel { background: var(--surface); border: 1px solid var(--outline-variant); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+
+/* Cabecera pública y barra inferior: las de _compartidos */
+.cabecera { display: flex; align-items: center; gap: 8px; padding: 0 16px; height: 64px; background: var(--lowest); border-bottom: 1px solid var(--outline-variant); }
+.logo { width: 40px; height: 40px; border-radius: 10px; background: var(--primary-container); color: var(--on-primary); display: grid; place-items: center; }
+.marca { font-weight: 700; font-size: 1.25rem; letter-spacing: -.01em; }
+.co { font-size: .7rem; font-weight: 700; letter-spacing: .06em; color: var(--primary-container); background: var(--primary-fixed); border-radius: 4px; padding: 2px 4px; }
+.entrar { margin-left: auto; min-height: 44px; padding: 0 16px; border-radius: 10px; background: var(--high); color: var(--primary); font-weight: 600; font-size: .875rem; display: grid; place-items: center; }
+.atras { width: 40px; height: 40px; display: grid; place-items: center; margin-left: -8px; }
+.barra { display: flex; justify-content: space-around; height: 72px; align-items: center; background: var(--lowest); border-top: 1px solid var(--outline-variant); margin-top: auto; }
+.barra span.it { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .65rem; font-weight: 700; color: var(--variant); min-width: 48px; }
+.barra span.it.activa { color: var(--primary-container); }
+
+.cuerpo { padding: 16px; display: flex; flex-direction: column; gap: 16px; }
+.titulo h3 { margin: 0; font-size: 1.625rem; line-height: 2.125rem; }
+.titulo p { margin: 4px 0 0; color: var(--variant); font-size: .9375rem; line-height: 1.45; }
+.aviso { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1px solid var(--outline-variant); border-radius: 12px; background: var(--low); font-size: .875rem; line-height: 1.4; }
+.aviso .ms { color: var(--primary-container); font-size: 20px; }
+.chips { display: flex; gap: 8px; overflow-x: auto; margin: 0 -16px; padding: 0 16px; scrollbar-width: none; }
+.chip { flex: none; min-height: 40px; padding: 0 14px; border-radius: 999px; border: 1px solid var(--outline-variant); background: var(--lowest); display: grid; place-items: center; font-size: .875rem; font-weight: 600; white-space: nowrap; }
+.chip.activo { background: var(--primary-container); border-color: var(--primary-container); color: var(--on-primary); }
+
+.tarjeta { background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+.tarjeta .info { padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+.img { aspect-ratio: 16 / 9; max-width: 100%; background: repeating-linear-gradient(135deg, var(--container) 0 12px, var(--low) 12px 24px); display: grid; place-items: center; color: var(--outline); font-size: .8125rem; }
+.img div { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.cat { align-self: flex-start; font-size: .8125rem; font-weight: 600; color: var(--variant); background: var(--container); border-radius: 999px; padding: 3px 10px; }
+.tarjeta h4 { margin: 0; font-size: 1.0625rem; line-height: 1.35; }
+.entidad { font-size: .9375rem; font-weight: 600; }
+.sello { display: flex; gap: 6px; align-items: center; color: var(--primary-container); font-size: .875rem; font-weight: 600; }
+.sello .ms { font-size: 18px; }
+.desc { margin: 0; color: var(--variant); font-size: .9375rem; line-height: 1.45; }
+.cerro { display: flex; gap: 6px; align-items: center; font-size: .875rem; color: var(--variant); }
+.cerro .ms { font-size: 18px; }
+
+.desaparecidas { background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 8px; }
+.desaparecidas h4 { margin: 0; font-size: 1.0625rem; display: flex; gap: 8px; align-items: center; }
+.desaparecidas h4 .ms { color: var(--primary-container); }
+.desaparecidas p { margin: 0; color: var(--variant); font-size: .9375rem; line-height: 1.45; }
+.enlace { display: flex; justify-content: space-between; gap: 12px; align-items: center; min-height: 52px; border-top: 1px solid var(--outline-variant); font-size: .9375rem; font-weight: 600; color: var(--primary-container); }
+.enlace .ms { font-size: 20px; }
+.fila { display: flex; gap: 12px; align-items: center; padding: 12px 14px; min-height: 56px; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 12px; }
+.fila .ico { width: 40px; height: 40px; border-radius: 10px; background: var(--low); color: var(--primary-container); display: grid; place-items: center; }
+.fila b { display: block; font-size: .9375rem; }
+.fila small { display: block; color: var(--variant); font-size: .8125rem; line-height: 1.35; }
+.fila > .ms:last-child { margin-left: auto; color: var(--variant); }
+.vacio { text-align: center; padding: 24px 8px; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+.vacio .ms { font-size: 40px; color: var(--outline); }
+.vacio b { font-size: 1.0625rem; }
+.vacio p { margin: 0; color: var(--variant); font-size: .9375rem; line-height: 1.45; max-width: 30ch; }
+
+/* P4 */
+.ficha { display: flex; flex-direction: column; gap: 14px; }
+.ficha h3 { margin: 0; font-size: 1.5rem; line-height: 1.25; text-wrap: balance; }
+.resp { border: 1px solid var(--outline-variant); border-radius: 12px; padding: 14px; display: flex; flex-direction: column; gap: 10px; background: var(--lowest); }
+.resp .cab { display: flex; gap: 12px; align-items: center; }
+.avatar { width: 48px; height: 48px; border-radius: 999px; background: var(--primary-container); color: var(--on-primary); display: grid; place-items: center; font-weight: 700; flex: none; }
+.resp small { color: var(--variant); font-size: .8125rem; line-height: 1.4; }
+.ficha h5 { margin: 6px 0 0; font-size: 1.125rem; }
+.ficha .texto { margin: 0; color: var(--variant); line-height: 1.5; font-size: .9375rem; }
+.pasos { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.pasos li { display: flex; gap: 12px; align-items: flex-start; font-size: .9375rem; line-height: 1.4; }
+.pasos li b { width: 28px; height: 28px; border-radius: 999px; background: var(--primary-container); color: var(--on-primary); display: grid; place-items: center; font-size: .8125rem; flex: none; margin-top: -3px; }
+.boton { min-height: 56px; border-radius: 10px; background: var(--primary-container); color: var(--on-primary); font-weight: 700; display: flex; gap: 8px; align-items: center; justify-content: center; font-size: 1rem; }
+.boton.sec { background: var(--lowest); color: var(--primary); border: 1px solid var(--outline-variant); }
+.boton .ms { font-size: 20px; }
+.franja { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border-radius: 12px; background: var(--container); font-size: .875rem; line-height: 1.4; }
+.franja .ms { font-size: 20px; color: var(--variant); }
+.velo { position: absolute; inset: 0; background: rgb(19 27 46 / .45); }
+.hoja { position: absolute; left: 0; right: 0; bottom: 0; background: var(--lowest); border-radius: 16px 16px 0 0; padding: 12px 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+.hoja .asa { width: 40px; height: 4px; border-radius: 4px; background: var(--outline-variant); align-self: center; }
+.hoja h4 { margin: 0; font-size: 1.25rem; display: flex; gap: 10px; align-items: center; }
+.hoja h4 .ms { width: 40px; height: 40px; border-radius: 999px; background: var(--low); display: grid; place-items: center; color: var(--primary-container); font-size: 22px; }
+.hoja p { margin: 0; color: var(--variant); line-height: 1.5; font-size: .9375rem; }
+.hoja .dominio { font-weight: 700; color: var(--on-surface); word-break: break-all; }
+
+.notas { max-width: 72ch; display: flex; flex-direction: column; gap: 10px; }
+.notas h2 { font-size: 1.25rem; margin: 0; }
+.notas ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; line-height: 1.5; }
+.notas p { margin: 0; line-height: 1.5; color: var(--variant); }
+</style>
+
+<div class="pagina">
+  <div class="intro">
+    <h1>P3 Directorio de causas y P4 Ficha de causa</h1>
+    <p>Maqueta para aprobar antes de la especificación de la pieza C (<a href="https://github.com/Proyecto-IngSoftware/acopio/issues/48">#48</a>). Sale de las pantallas de Stitch «P3 · Directorio de causas» y «P4 · Ficha de causa», armada con los tokens de la app. Los nombres de entidades y causas son de ejemplo.</p>
+  </div>
+
+  <div class="telefonos">
+    <!-- P3 · Todas -->
+    <section class="caso">
+      <h2>P3 · Todas</h2>
+      <p>Solo causas de entidades verificadas. Personas desaparecidas siempre aparece, al final, con sus tres enlaces.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span><span class="co">CO</span><span class="entrar">Entrar</span></div>
+        <div class="cuerpo">
+          <div class="titulo"><h3>Causas</h3><p>Entidades verificadas por Acopio. Cada causa explica paso a paso cómo donar en su sitio oficial.</p></div>
+          <div class="aviso"><span class="ms">info</span><span>Acopio no recibe dinero. Las donaciones se hacen en el sitio oficial de cada entidad.</span></div>
+          <div class="chips"><span class="chip activo">Todas</span><span class="chip">Personas</span><span class="chip">Animales</span><span class="chip">Adultos mayores</span><span class="chip">Personas desaparecidas</span><span class="chip">Rescatistas</span></div>
+          <article class="tarjeta">
+            <div class="img"><div><span class="ms">image</span>Imagen de la causa</div></div>
+            <div class="info">
+              <span class="cat">Personas</span>
+              <h4>Mercados para familias damnificadas en Mocoa</h4>
+              <span class="entidad">Fundación Tierra Viva</span>
+              <span class="sello"><span class="ms lleno">verified</span>Verificada el 12 de agosto de 2026</span>
+              <p class="desc">Alimentos no perecederos y elementos de aseo para 300 familias.</p>
+            </div>
+          </article>
+          <article class="tarjeta">
+            <div class="img"><div><span class="ms">image</span>Imagen de la causa</div></div>
+            <div class="info">
+              <span class="cat">Animales</span>
+              <h4>Alimento y atención para animales rescatados en Mocoa</h4>
+              <span class="entidad">Huellas del Putumayo</span>
+              <span class="sello"><span class="ms lleno">verified</span>Verificada el 10 de agosto de 2026</span>
+              <p class="desc">Concentrado, medicamentos y atención veterinaria de urgencia.</p>
+            </div>
+          </article>
+          <div class="desaparecidas">
+            <h4><span class="ms">person_search</span>Personas desaparecidas</h4>
+            <p>Acopio no guarda datos de personas desaparecidas. Si buscas a alguien o quieres ayudar, acude a:</p>
+            <span class="enlace">Unidad de Búsqueda de Personas dadas por Desaparecidas (UBPD)<span class="ms">open_in_new</span></span>
+            <span class="enlace">Cruz Roja Colombiana<span class="ms">open_in_new</span></span>
+            <span class="enlace">Medicina Legal<span class="ms">open_in_new</span></span>
+          </div>
+          <div class="fila"><span class="ico"><span class="ms">inventory</span></span><span><b>Causas atendidas</b><small>Las que ya cerraron, visibles por transparencia</small></span><span class="ms">chevron_right</span></div>
+        </div>
+        <nav class="barra"><span class="it"><span class="ms">home</span>Inicio</span><span class="it"><span class="ms">map</span>Mapa</span><span class="it activa"><span class="ms lleno">volunteer_activism</span>Causas</span><span class="it"><span class="ms">groups</span>Voluntariado</span><span class="it"><span class="ms">more_horiz</span>Más</span></nav>
+      </div>
+    </section>
+
+    <!-- P3 · Personas desaparecidas -->
+    <section class="caso">
+      <h2>P3 · Personas desaparecidas</h2>
+      <p>Con ese filtro no hay causas ni formularios: solo los tres enlaces oficiales.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span><span class="co">CO</span><span class="entrar">Entrar</span></div>
+        <div class="cuerpo">
+          <div class="titulo"><h3>Causas</h3><p>Entidades verificadas por Acopio. Cada causa explica paso a paso cómo donar en su sitio oficial.</p></div>
+          <div class="chips"><span class="chip">Todas</span><span class="chip">Personas</span><span class="chip">Animales</span><span class="chip">Adultos mayores</span><span class="chip activo">Personas desaparecidas</span><span class="chip">Rescatistas</span></div>
+          <div class="desaparecidas">
+            <h4><span class="ms">person_search</span>Personas desaparecidas</h4>
+            <p>Acopio no guarda datos de personas desaparecidas. Si buscas a alguien o quieres ayudar, acude a:</p>
+            <span class="enlace">Unidad de Búsqueda de Personas dadas por Desaparecidas (UBPD)<span class="ms">open_in_new</span></span>
+            <span class="enlace">Cruz Roja Colombiana<span class="ms">open_in_new</span></span>
+            <span class="enlace">Medicina Legal<span class="ms">open_in_new</span></span>
+          </div>
+        </div>
+        <nav class="barra"><span class="it"><span class="ms">home</span>Inicio</span><span class="it"><span class="ms">map</span>Mapa</span><span class="it activa"><span class="ms lleno">volunteer_activism</span>Causas</span><span class="it"><span class="ms">groups</span>Voluntariado</span><span class="it"><span class="ms">more_horiz</span>Más</span></nav>
+      </div>
+    </section>
+
+    <!-- P3 · Causas atendidas -->
+    <section class="caso">
+      <h2>P3 · Causas atendidas</h2>
+      <p>Las archivadas, aparte del listado principal. Conservan su sello y su fecha, y dicen cuándo cerraron.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="atras"><span class="ms">arrow_back</span></span><span class="marca">Causas atendidas</span></div>
+        <div class="cuerpo">
+          <p class="desc">Causas que ya cerraron, porque terminó su plazo o porque Acopio las archivó. Siguen aquí para que cualquiera pueda revisar a quién se dirigió la ayuda.</p>
+          <div class="chips"><span class="chip activo">Todas</span><span class="chip">Personas</span><span class="chip">Animales</span><span class="chip">Adultos mayores</span><span class="chip">Rescatistas</span></div>
+          <article class="tarjeta">
+            <div class="info">
+              <span class="cat">Rescatistas</span>
+              <h4>Equipos de protección para rescatistas en Salgar</h4>
+              <span class="entidad">Brigada Antioquia Rescate</span>
+              <span class="sello"><span class="ms lleno">verified</span>Verificada el 3 de marzo de 2026</span>
+              <span class="cerro"><span class="ms">event_available</span>Cerró el 30 de septiembre de 2026</span>
+            </div>
+          </article>
+          <article class="tarjeta">
+            <div class="info">
+              <span class="cat">Adultos mayores</span>
+              <h4>Kits de abrigo para hogares geriátricos de Nariño</h4>
+              <span class="entidad">Fundación Años Dorados</span>
+              <span class="sello"><span class="ms lleno">verified</span>Verificada el 20 de febrero de 2026</span>
+              <span class="cerro"><span class="ms">event_available</span>Cerró el 20 de agosto de 2026</span>
+            </div>
+          </article>
+        </div>
+        <nav class="barra"><span class="it"><span class="ms">home</span>Inicio</span><span class="it"><span class="ms">map</span>Mapa</span><span class="it activa"><span class="ms lleno">volunteer_activism</span>Causas</span><span class="it"><span class="ms">groups</span>Voluntariado</span><span class="it"><span class="ms">more_horiz</span>Más</span></nav>
+      </div>
+    </section>
+
+    <!-- P3 · Sin causas -->
+    <section class="caso">
+      <h2>P3 · Sin causas publicadas</h2>
+      <p>Mientras ninguna entidad esté verificada, o en un filtro sin causas. Personas desaparecidas sigue abajo en «Todas».</p>
+      <div class="tel">
+        <div class="cabecera"><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span><span class="co">CO</span><span class="entrar">Entrar</span></div>
+        <div class="cuerpo">
+          <div class="titulo"><h3>Causas</h3></div>
+          <div class="chips"><span class="chip">Todas</span><span class="chip activo">Personas</span><span class="chip">Animales</span><span class="chip">Adultos mayores</span><span class="chip">Personas desaparecidas</span><span class="chip">Rescatistas</span></div>
+          <div class="vacio"><span class="ms">volunteer_activism</span><b>Aún no hay causas de personas</b><p>Solo se publican causas de entidades que Acopio verificó con un documento soporte.</p></div>
+          <div class="fila"><span class="ico"><span class="ms">inventory</span></span><span><b>Causas atendidas</b><small>Las que ya cerraron, visibles por transparencia</small></span><span class="ms">chevron_right</span></div>
+        </div>
+        <nav class="barra"><span class="it"><span class="ms">home</span>Inicio</span><span class="it"><span class="ms">map</span>Mapa</span><span class="it activa"><span class="ms lleno">volunteer_activism</span>Causas</span><span class="it"><span class="ms">groups</span>Voluntariado</span><span class="it"><span class="ms">more_horiz</span>Más</span></nav>
+      </div>
+    </section>
+
+    <!-- P4 · Ficha -->
+    <section class="caso">
+      <h2>P4 · Ficha de causa</h2>
+      <p>Entidad con su sello y fecha, pasos numerados y la salida al sitio oficial.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="atras"><span class="ms">arrow_back</span></span><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span><span class="co">CO</span><span class="entrar">Entrar</span></div>
+        <div class="img"><div><span class="ms">image</span>Imagen de la causa</div></div>
+        <div class="cuerpo ficha">
+          <span class="cat">Personas</span>
+          <h3>Mercados para familias damnificadas en Mocoa</h3>
+          <div class="resp">
+            <div class="cab"><span class="avatar">FT</span><span><span class="entidad">Fundación Tierra Viva</span><span class="sello"><span class="ms lleno">verified</span>Verificada el 12 de agosto de 2026</span></span></div>
+            <small>Acopio revisó un documento soporte de esta entidad. La verificación se renueva cada 6 meses.</small>
+          </div>
+          <h5>Sobre la causa</h5>
+          <p class="texto">La fundación reúne alimentos no perecederos y elementos de aseo para 300 familias que perdieron su casa en la avenida torrencial del 4 de octubre.</p>
+          <h5>Cómo donar</h5>
+          <ol class="pasos">
+            <li><b>1</b>Entra al sitio oficial de la fundación.</li>
+            <li><b>2</b>Elige «Donar a Mocoa».</li>
+            <li><b>3</b>Escoge el monto y el medio de pago.</li>
+            <li><b>4</b>Guarda el comprobante que te envía la fundación.</li>
+          </ol>
+          <div class="aviso"><span class="ms">info</span><span>Acopio no recibe dinero. El pago se hace solo en el sitio oficial de la entidad.</span></div>
+          <span class="boton">Ir al sitio oficial<span class="ms">open_in_new</span></span>
+        </div>
+        <nav class="barra"><span class="it"><span class="ms">home</span>Inicio</span><span class="it"><span class="ms">map</span>Mapa</span><span class="it activa"><span class="ms lleno">volunteer_activism</span>Causas</span><span class="it"><span class="ms">groups</span>Voluntariado</span><span class="it"><span class="ms">more_horiz</span>Más</span></nav>
+      </div>
+    </section>
+
+    <!-- P4 · Salir -->
+    <section class="caso">
+      <h2>P4 · Al tocar «Ir al sitio oficial»</h2>
+      <p>La hoja avisa que se sale de Acopio, con el dominio de destino a la vista. «Continuar al sitio» abre el enlace en otra pestaña.</p>
+      <div class="tel" style="min-height: 640px">
+        <div class="cabecera"><span class="atras"><span class="ms">arrow_back</span></span><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span><span class="co">CO</span><span class="entrar">Entrar</span></div>
+        <div class="img"><div><span class="ms">image</span>Imagen de la causa</div></div>
+        <div class="cuerpo ficha">
+          <span class="cat">Personas</span>
+          <h3>Mercados para familias damnificadas en Mocoa</h3>
+        </div>
+        <div class="velo"></div>
+        <div class="hoja">
+          <span class="asa"></span>
+          <h4><span class="ms">logout</span>Vas a salir de Acopio</h4>
+          <p>Te llevamos a <span class="dominio">fundaciontierraviva.org</span>. Acopio no recibe dinero ni ve tus pagos: lo que hagas allá queda entre tú y la entidad.</p>
+          <span class="boton">Continuar al sitio</span>
+          <span class="boton sec">Quedarme aquí</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- P4 · Atendida -->
+    <section class="caso">
+      <h2>P4 · Causa atendida</h2>
+      <p>La ficha de una archivada: misma información, con la fecha de cierre arriba. El enlace queda como secundario.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="atras"><span class="ms">arrow_back</span></span><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span><span class="co">CO</span><span class="entrar">Entrar</span></div>
+        <div class="cuerpo ficha">
+          <div class="franja"><span class="ms">event_available</span><span>Esta causa cerró el 30 de septiembre de 2026. Puede que la entidad ya no esté recibiendo donaciones para ella.</span></div>
+          <span class="cat">Rescatistas</span>
+          <h3>Equipos de protección para rescatistas en Salgar</h3>
+          <div class="resp">
+            <div class="cab"><span class="avatar">BA</span><span><span class="entidad">Brigada Antioquia Rescate</span><span class="sello"><span class="ms lleno">verified</span>Verificada el 3 de marzo de 2026</span></span></div>
+          </div>
+          <h5>Cómo se donaba</h5>
+          <ol class="pasos">
+            <li><b>1</b>Entrar al sitio oficial de la brigada.</li>
+            <li><b>2</b>Elegir «Equipos Salgar».</li>
+            <li><b>3</b>Hacer la transferencia y enviar el soporte.</li>
+          </ol>
+          <span class="boton sec">Ir al sitio oficial<span class="ms">open_in_new</span></span>
+        </div>
+        <nav class="barra"><span class="it"><span class="ms">home</span>Inicio</span><span class="it"><span class="ms">map</span>Mapa</span><span class="it activa"><span class="ms lleno">volunteer_activism</span>Causas</span><span class="it"><span class="ms">groups</span>Voluntariado</span><span class="it"><span class="ms">more_horiz</span>Más</span></nav>
+      </div>
+    </section>
+  </div>
+
+  <div class="notas">
+    <h2>Diferencias con Stitch</h2>
+    <ul>
+      <li>Cabecera pública y barra inferior de los componentes compartidos. En P3, Stitch quitó el recuadro de la marca y cambió los íconos de Causas y Más.</li>
+      <li>La imagen de la causa es un espacio reservado: la sube la entidad. Stitch generó fotos con logotipos de la Defensa Civil, que no pueden ir en una causa de otra entidad.</li>
+      <li>La tarjeta entera abre la ficha, sin el botón «Ver cómo donar» que Stitch puso en cada una.</li>
+      <li>El sello y su fecha van en una sola línea bajo la entidad, en el color de la marca.</li>
+      <li>Personas desaparecidas usa el ícono person_search en el color de la marca. Stitch puso un triángulo de alerta rojo, y el rojo está reservado para el inventario.</li>
+      <li>La categoría va en una píldora neutra, igual en todas: el color no distingue categorías.</li>
+      <li>Hechas sin Stitch, con los tokens: el filtro de personas desaparecidas, «Causas atendidas», la vista sin causas, la hoja de salida aparte de la ficha y la ficha de una causa atendida.</li>
+    </ul>
+    <p>Joseph aprobó la maqueta el 2026-10-17 y decidió dos puntos: «Causas atendidas» es una pantalla aparte, para separar las secciones, y la ficha de una causa atendida mantiene el enlace al sitio oficial.</p>
+  </div>
+</div>

@@ -59,16 +59,18 @@ Las fechas máximas de cada semana, hasta la entrega final, están en el
 
 Estado al 2026-10-17: la API y los tres ciclos de interfaz del Bloque 4 están en `main`,
 con «Mi zona» y los menores de la revisión del ciclo 3. El servidor de pruebas corre la
-demo, y los recorridos pasan allá. El último informe de sesión está en
-[sesiones](../06-operacion/sesiones/README.md).
+demo, y los recorridos pasan allá. Las maquetas de P3 y P4, las causas, quedaron aprobadas
+([#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57)). El último informe de
+sesión está en [sesiones](../06-operacion/sesiones/README.md).
 
-1. **Siguiente paso: elegir entre dos frentes al empezar la sesión.** Los dos esperan una
-   decisión de Joseph:
-   - Las maquetas en Stitch de P3 y P4, las causas
-     ([#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57)). Se generan, Joseph
-     las aprueba y después se construyen.
-   - El Bloque 5, turnos ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)).
-     Empieza por su especificación de detalle, antes del plan y del código.
+1. **Siguiente paso: elegir entre dos especificaciones al empezar la sesión.** Las dos van
+   antes de su plan y de su código:
+   - La pieza C, verificación de entidades y causas
+     ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48), hasta el 1 de
+     noviembre). Ya tiene las maquetas públicas y las dos decisiones de
+     [P-064](../01-requerimientos/pendientes.md). Le faltan las pantallas de la consola.
+   - El Bloque 5, turnos ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36),
+     hasta el 8 de noviembre).
 2. La ronda de pruebas del equipo en el servidor
    ([#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58)). Lo que reporten entra
    como issue con la etiqueta `hallazgo`.
