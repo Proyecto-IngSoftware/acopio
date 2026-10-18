@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { CatalogoModule } from '../catalogo/catalogo.module';
+import { BalanceController } from './balance.controller';
+import { BalanceService } from './balance.service';
 import { ConsultasController } from './consultas.controller';
 import { ConsultasService } from './consultas.service';
 import { MovimientoDao } from './dao/movimiento.dao';
@@ -17,6 +19,7 @@ import { UmbralesService } from './umbrales.service';
 @Module({
   imports: [CatalogoModule],
   controllers: [
+    BalanceController,
     NoRecibirController,
     MovimientosController,
     ConsultasController,
@@ -31,6 +34,7 @@ import { UmbralesService } from './umbrales.service';
     MovimientosService,
     ConsultasService,
     UmbralesService,
+    BalanceService,
   ],
   exports: [MovimientosService, MovimientoDao, SaldoDao, NoRecibirDao, UmbralDao],
 })

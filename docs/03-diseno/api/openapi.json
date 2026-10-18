@@ -3269,6 +3269,29 @@
         ]
       }
     },
+    "/api/publico/balance": {
+      "get": {
+        "operationId": "BalanceController_leer",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BalanceDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "summary": "Qué hace falta y qué no traer, por categoría y con cuántos acopios. No exige sesión",
+        "tags": [
+          "inventario"
+        ]
+      }
+    },
     "/api/acopios/{id}/no-recibir": {
       "get": {
         "operationId": "NoRecibirController_listar",
@@ -9973,6 +9996,69 @@
           "etiqueta",
           "lat",
           "lng"
+        ]
+      },
+      "BalanceDto": {
+        "type": "object",
+        "properties": {
+          "faltan": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "categoria": {
+                  "type": "string"
+                },
+                "acopios": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991,
+                  "description": "Cuántos acopios abiertos están en ese caso"
+                }
+              },
+              "required": [
+                "categoriaId",
+                "categoria",
+                "acopios"
+              ]
+            }
+          },
+          "noTraigan": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "categoria": {
+                  "type": "string"
+                },
+                "acopios": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991,
+                  "description": "Cuántos acopios abiertos están en ese caso"
+                }
+              },
+              "required": [
+                "categoriaId",
+                "categoria",
+                "acopios"
+              ]
+            }
+          }
+        },
+        "required": [
+          "faltan",
+          "noTraigan"
         ]
       },
       "NoRecibirDto": {
