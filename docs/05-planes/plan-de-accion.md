@@ -51,8 +51,8 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
-| 1 | Confirmar la fecha de la Review del Sprint 2: el cronograma dice el 23 y el issue el 30 ([P-072](../01-requerimientos/pendientes.md)) | #47 | 2026-10-20 | ⬜ |
-| 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio | #47 | 2026-10-22 | ⬜ |
+| 1 | Fecha de la Review del Sprint 2: el viernes 23, según la guía ([P-072](../01-requerimientos/pendientes.md)) | P-072 | 2026-10-18 | ✅ |
+| 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio. Generado; faltan la captura del tablero, la del seguimiento, la retrospectiva y subirlo | #47 | 2026-10-22 | 🟡 |
 | 3 | Lo que falta del Word de avances anteriores: seguimiento y captura del Avance 4, revisión del Avance 2 y captura del tablero | #45, #23, #21 | 2026-10-22 | ⬜ |
 | 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes | #47 | 2026-10-23 | ⬜ |
 | 5 | Ronda de pruebas en el servidor, por rol, con los escenarios de `escenarios-por-rol.md`; cada hallazgo entra como issue `hallazgo` | #58 | 2026-10-25 | ⬜ |
@@ -103,3 +103,6 @@ el Avance 5).
 - 2026-10-18: se crea el plan a partir del estado de GitHub, los pendientes y el cronograma.
   Se cierran #35 y #55, que ya estaban hechos. #45, #23 y #21 pasan a la semana 12 y #26 a la
   17. Nace #129 con P-070 y P-071. #47 suma las casillas del Avance 5 y de la sustentación.
+- 2026-10-18: P-072 resuelto, la Review es el 23. El Word del Avance 5 queda generado con
+  `generar-avance-05.py` y unido al documento de avances; pasa a en curso hasta que estén las
+  dos capturas, la retrospectiva y la subida a OneDrive.
