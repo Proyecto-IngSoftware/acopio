@@ -205,6 +205,9 @@ export class EntidadDto extends crearDto(
     correo: z.string().nullable(),
     descripcion: z.string().nullable(),
     verificacion: z.enum(['SIN_VERIFICAR', 'VERIFICADA', 'RECHAZADA']),
+    verificadaEn: z.string().nullable(),
+    tieneLogo: z.boolean(),
+    causasActivas: z.number().int().optional().describe('Solo en la lista de C15'),
   }),
 ) {}
 
