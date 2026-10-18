@@ -1041,6 +1041,10 @@ construirlo. La segunda sigue abierta: es una excepción a una regla del plan.
 (dos ediciones a la vez dejaban mal la bitácora y repetían el aviso) se arregló en la rama.
 **Estado:** ABIERTO
 
+---
+
+## Resueltos
+
 ### P-073 · El balance de la portada nunca se conectó a la API
 **Fecha:** 2026-10-18 · **Propuesto por:** Claude, al tomar las capturas del Avance 5 ([#50](https://github.com/Proyecto-IngSoftware/acopio/issues/50))
 **Qué:** el bloque «Balance de recepción» de la portada (`apps/web/src/portal/bloques/BalanceRecepcion.tsx`)
@@ -1050,11 +1054,12 @@ inventario», y el módulo existe desde el Bloque 2. Falta conectar «Qué hace 
 traigan» con los datos de inventario y de «no recibir».
 **Por qué:** es lo primero que ve quien abre Acopio, y en la sustentación se vería como si no
 hubiera datos. Va con el contenido del home, en la pieza D.
-**Estado:** ABIERTO
-
----
-
-## Resueltos
+**Estado:** RESUELTO el 2026-10-18 → `GET /api/publico/balance` (módulo `inventario`, sin
+sesión) devuelve las categorías que en algún acopio abierto están por debajo del mínimo, con
+el mismo semáforo de la consola, y las marcadas como «no recibir», cada una con cuántos
+acopios; no dice cuáles ni cuánto tiene cada uno. La portada lo muestra en sus dos pestañas,
+con la forma de la maqueta. De paso, la demo sube una imagen a cada causa y un logotipo a cada
+entidad (`seed/imagenes-demo.ts`), que antes salían como recuadros vacíos
 
 ### P-072 · Fecha de la Review del Sprint 2
 **Fecha:** 2026-10-18 · **Propuesto por:** Claude, al armar el [plan de acción](../05-planes/plan-de-accion.md) ([#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47))

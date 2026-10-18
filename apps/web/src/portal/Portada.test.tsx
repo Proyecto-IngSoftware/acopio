@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import type { Emergencia } from '../api/emergencias';
 import { violacionesGraves } from '../pruebas/accesibilidad';
-import { envolver, responderError, responderJson } from '../pruebas/utilidades';
+import { envolver, responderError, responderSegun } from '../pruebas/utilidades';
 import { Portada } from './Portada';
 
 const emergencia = (datos: Partial<Emergencia>): Emergencia => ({
@@ -25,17 +25,24 @@ const DOS = [
 ];
 const FIJOS = ['¿Cómo apoyar?', 'Canal Oficial Sin Intermediación Financiera'];
 const TITULO = 'Revisa qué hace falta antes de donar.';
+const BALANCE_VACIO = { faltan: [], noTraigan: [] };
+/** La portada pide las emergencias y el balance; cada uno con su respuesta. */
+const responder = (emergencias: unknown) =>
+  responderSegun({
+    'GET /api/emergencias': emergencias,
+    'GET /api/publico/balance': BALANCE_VACIO,
+  });
 
 describe('con emergencias', () => {
   it('muestra el título y la primera emergencia en el selector', async () => {
-    responderJson(DOS);
+    responder(DOS);
     render(envolver(<Portada />));
     expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(TITULO);
     expect(screen.getByRole('button', { name: /Sismo en Caldas/ })).toBeInTheDocument();
   });
 
   it('el selector cambia la emergencia mostrada', async () => {
-    responderJson(DOS);
+    responder(DOS);
     render(envolver(<Portada />));
     await userEvent.click(await screen.findByRole('button', { name: /Sismo en Caldas/ }));
     await userEvent.click(screen.getByRole('menuitemradio', { name: /Inundación en La Mojana/ }));
@@ -46,7 +53,7 @@ describe('con emergencias', () => {
   });
 
   it('respeta la emergencia que viene en la URL', async () => {
-    responderJson(DOS);
+    responder(DOS);
     render(envolver(<Portada />, '/?emergencia=b'));
     expect(
       await screen.findByRole('button', { name: /Inundación en La Mojana/ }),
@@ -54,13 +61,13 @@ describe('con emergencias', () => {
   });
 
   it('con un identificador que no existe muestra la primera y no falla', async () => {
-    responderJson(DOS);
+    responder(DOS);
     render(envolver(<Portada />, '/?emergencia=no-existe'));
     expect(await screen.findByRole('button', { name: /Sismo en Caldas/ })).toBeInTheDocument();
   });
 
   it('con una sola emergencia el selector no despliega nada', async () => {
-    responderJson([DOS[0]]);
+    responder([DOS[0]]);
     render(envolver(<Portada />));
     const boton = await screen.findByRole('button', { name: /Sismo en Caldas/ });
     expect(boton).not.toHaveAttribute('aria-haspopup');
@@ -69,34 +76,32 @@ describe('con emergencias', () => {
   });
 
   it('los bloques sin backend explican por qué están vacíos y no inventan datos', async () => {
-    responderJson(DOS);
+    responder(DOS);
     render(envolver(<Portada />));
     await screen.findByRole('heading', { level: 1 });
-    for (const titulo of [
-      /Balance de recepción/i,
-      /Jornadas de voluntariado/i,
-      /Reporte en terreno/i,
-    ]) {
+    for (const titulo of [/Jornadas de voluntariado/i, /Reporte en terreno/i]) {
       const bloque = screen.getByRole('region', { name: titulo });
       expect(within(bloque).getByText(/Todavía no/)).toBeInTheDocument();
     }
   });
 
-  it('la pestaña «No traigan» cambia el texto del estado vacío', async () => {
-    responderJson(DOS);
+  it('el balance sin datos lo dice en cada pestaña', async () => {
+    responder(DOS);
     render(envolver(<Portada />));
     await screen.findByRole('heading', { level: 1 });
-    expect(screen.getByRole('tabpanel')).toHaveTextContent(/qué insumos escasean/);
+    expect(
+      await screen.findByText(/Ningún acopio está por debajo de lo mínimo/),
+    ).toBeInTheDocument();
     await userEvent.click(screen.getByRole('tab', { name: 'No traigan' }));
     expect(screen.getByRole('tab', { name: 'No traigan' })).toHaveAttribute(
       'aria-selected',
       'true',
     );
-    expect(screen.getByRole('tabpanel')).toHaveTextContent(/qué ya sobra/);
+    expect(screen.getByText(/Ningún acopio pide que no le lleven nada/)).toBeInTheDocument();
   });
 
   it('el formulario de folio lleva al seguimiento de ese folio', async () => {
-    responderJson(DOS);
+    responder(DOS);
     render(
       envolver(
         <Routes>
@@ -116,7 +121,7 @@ describe('con emergencias', () => {
   });
 
   it('no tiene violaciones graves de accesibilidad', async () => {
-    responderJson(DOS);
+    responder(DOS);
     const { container } = render(envolver(<Portada />));
     await screen.findByRole('heading', { level: 1 });
     expect(await violacionesGraves(container)).toEqual([]);
@@ -139,7 +144,7 @@ describe('si la API falla', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('No pudimos conectar con Acopio');
     for (const texto of FIJOS) expect(screen.getByText(texto)).toBeInTheDocument();
 
-    responderJson(DOS);
+    responder(DOS);
     await userEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
     expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(TITULO);
   });
@@ -157,7 +162,7 @@ describe('sin emergencias vigentes', () => {
     ['la lista está vacía', []],
     ['todas están cerradas', [emergencia({ estado: 'CERRADA' })]],
   ])('cuando %s lo dice y no dibuja los bloques que dependen de una', async (_caso, lista) => {
-    responderJson(lista);
+    responder(lista);
     render(envolver(<Portada />));
     expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(
       'No hay emergencias activas',

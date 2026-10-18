@@ -68,8 +68,8 @@ la API corren en la misma máquina con Docker Compose y también en el servidor 
   integrante abriera al menos un PR revisado por otro, no se cumplió.
 
 Las pantallas de abajo corresponden a las historias del Planning del Sprint 2. Las capturas
-son de la demo del servidor de pruebas, con datos de la base, a 390 px de ancho, el tamaño de
-un teléfono.
+las toman los recorridos de punta a punta mientras recorren cada flujo en un navegador real,
+con datos de la base de la demo, a 360 px de ancho, el tamaño de un teléfono.
 
 ### 1a. Flujo del motor: de la sugerencia a la recepción
 
@@ -93,13 +93,17 @@ por unidad.
 HU-13 Contar lo que la fórmula no ve se cubre desde «Mi zona»: el Receptor reporta una
 necesidad que el cálculo no conoce, y el motor la toma en cuenta al recalcular.
 
-![Motor de sugerencias (C11): traslados sugeridos con su puntaje.](evidencia/avance-05/c11-motor.png)
+![Motor de sugerencias (C11): traslados sugeridos con su puntaje.](evidencia/avance-05/motor-1-sugerencias.png)
 
-![Remisiones (C12): la remisión en borrador, lista para despachar.](evidencia/avance-05/c12-remisiones.png)
+![Aprobar un traslado: la cantidad sugerida y la remisión en borrador que se crea.](evidencia/avance-05/motor-2-aprobar.png)
 
-![Documento de una remisión despachada, con su QR.](evidencia/avance-05/c12-documento.png)
+![Despachar la remisión (C12): quién lleva el envío y qué folios van.](evidencia/avance-05/motor-3-despachar.png)
 
-![Recepción en la zona (C13): confirmación de una remisión recibida.](evidencia/avance-05/c13-recibida.png)
+![Documento de la remisión despachada, con su QR.](evidencia/avance-05/motor-4-documento.png)
+
+![Recibir en la zona (C13): lo que llegó, la foto y la nota.](evidencia/avance-05/motor-5-recibir.png)
+
+![Confirmación de la remisión recibida.](evidencia/avance-05/motor-6-recibida.png)
 
 ### 1b. Flujo de las causas verificadas
 
@@ -116,24 +120,34 @@ Historias HU-02 Donar a una causa real y HU-15 No dirigir donantes a una estafa.
    verificación, sus causas pasan a «atendidas» y la ficha pública pierde el sello y el
    enlace.
 
-![Directorio de causas (P3).](evidencia/avance-05/p03-causas.png)
+![Directorio de causas (P3), solo de entidades verificadas.](evidencia/avance-05/causas-1-directorio.png)
 
-![Ficha de una causa (P4).](evidencia/avance-05/p04-ficha-causa.png)
+![Ficha de una causa (P4), con su imagen, la entidad y el paso a paso.](evidencia/avance-05/causas-2-ficha.png)
 
-![Aviso antes de salir al sitio oficial de la entidad.](evidencia/avance-05/p04-salida.png)
+![Aviso antes de salir al sitio oficial de la entidad.](evidencia/avance-05/causas-3-salida.png)
 
-![Causas en la consola (C22).](evidencia/avance-05/c22-causas.png)
+![Verificar una entidad (C15): el botón se activa al marcar la casilla del aviso.](evidencia/avance-05/causas-4-verificar.png)
+
+![Publicar una causa (C22): paso a paso, enlace oficial y fecha de cierre.](evidencia/avance-05/causas-5-publicar.png)
+
+![Ficha de una causa cuya entidad perdió la verificación: sin sello ni enlace.](evidencia/avance-05/causas-6-sin-verificar.png)
 
 ### 1c. Otras pantallas del incremento
 
 El incremento tiene más pantallas que las de los dos flujos. Estas también leen la base de la
-demo del servidor.
+demo; la portada ya muestra el balance de recepción con datos de inventario.
 
-![Mapa de acopios (P5): búsqueda por dirección, «Cerca de mí», filtros y mapa.](evidencia/avance-05/p05-mapa.png)
+![Portada (P1): el balance dice qué hace falta y qué no traer.](evidencia/avance-05/portada-balance.png)
 
-![Voluntariado (P7): jornadas por día con sus cupos reservados.](evidencia/avance-05/p07-voluntariado.png)
+![Mapa (P5): una zona con necesidad y lo que reportó.](evidencia/avance-05/otras-mapa-zona.png)
 
-![Turnos en la consola (C14): jornadas próximas, en curso y pasadas, de acopios y de entidades.](evidencia/avance-05/c14-turnos.png)
+![«Mi zona» del Receptor: lo que está por recibir.](evidencia/avance-05/otras-mi-zona.png)
+
+![Voluntariado (P7): jornadas por día con sus cupos reservados.](evidencia/avance-05/otras-voluntariado.png)
+
+![Reservar un cupo, con el consentimiento de los datos.](evidencia/avance-05/otras-reservar.png)
+
+![La reserva (P8): código, jornada y cómo llegar.](evidencia/avance-05/otras-mi-reserva.png)
 
 ### 1d. Diagramas
 

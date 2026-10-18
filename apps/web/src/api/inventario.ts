@@ -6,9 +6,18 @@ type S = components['schemas'];
 export type Saldo = S['SaldoDto'];
 export type FilaHistorial = S['PaginaHistorialDto']['filas'][number];
 export type ResultadoMovimiento = S['ResultadoMovimientoDto'];
+export type Balance = S['BalanceDto'];
 type PaginaHistorial = S['PaginaHistorialDto'];
 
 const ruta = (id: string) => ({ params: { path: { id } } });
+
+/** P1: qué hace falta y qué no traer, para la portada (P-073). No exige sesión. */
+export function useBalance() {
+  return useQuery<Balance, ErrorApi>({
+    queryKey: ['balance'],
+    queryFn: () => desenvolver(api.GET('/api/publico/balance')),
+  });
+}
 
 /** C3: saldos por categoría del acopio (RF-INV-005). */
 export function useSaldos(acopioId: string) {

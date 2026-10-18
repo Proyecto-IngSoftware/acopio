@@ -873,6 +873,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/publico/balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Qué hace falta y qué no traer, por categoría y con cuántos acopios. No exige sesión */
+        get: operations["BalanceController_leer"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/acopios/{id}/no-recibir": {
         parameters: {
             query?: never;
@@ -2681,6 +2698,22 @@ export interface components {
             etiqueta: string;
             lat: number;
             lng: number;
+        };
+        BalanceDto: {
+            faltan: {
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
+                /** @description Cuántos acopios abiertos están en ese caso */
+                acopios: number;
+            }[];
+            noTraigan: {
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
+                /** @description Cuántos acopios abiertos están en ese caso */
+                acopios: number;
+            }[];
         };
         NoRecibirDto: {
             /** Format: uuid */
@@ -5855,6 +5888,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ErrorDto"];
+                };
+            };
+        };
+    };
+    BalanceController_leer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["BalanceDto"];
                 };
             };
         };

@@ -7,7 +7,10 @@ import { PrismaService } from '../comun/prisma/prisma.service';
 import { leerEntorno } from '../config/entorno';
 import type { ProveedorIdentidad } from '../modulos/identidad/proveedor/proveedor-identidad';
 import type { Prisma } from '../generado/prisma/client';
+import { AlmacenS3 } from '../modulos/almacenamiento/almacen-s3';
+import { AlmacenamientoService } from '../modulos/almacenamiento/almacenamiento.service';
 import { contrasenaDemo, crearCuentaDemo, proveedorDelSeed } from './credenciales';
+import { sembrarImagenesDemo } from './imagenes-demo';
 
 const semana: Horario = {
   ...HORARIO_VACIO,
@@ -631,6 +634,16 @@ if (require.main === module) {
       const proveedor = proveedorDelSeed(prisma, entorno);
       const usuarios = await sembrarEscenariosDemo(prisma, proveedor, contrasena);
       console.log(`Usuarios de prueba: ${usuarios.join(', ')}.`);
+      // Sin almacén la demo sirve igual: las causas se ven con el recuadro de siempre
+      try {
+        const almacenamiento = new AlmacenamientoService(new AlmacenS3(entorno));
+        const subidas = await sembrarImagenesDemo(prisma, almacenamiento);
+        console.log(`Imágenes de la demo: ${subidas} nuevas.`);
+      } catch (error: unknown) {
+        console.warn(
+          `No se subieron las imágenes de la demo: ${error instanceof Error ? error.message : error}`,
+        );
+      }
     })
     .catch((error: unknown) => {
       console.error(error instanceof Error ? error.message : error);

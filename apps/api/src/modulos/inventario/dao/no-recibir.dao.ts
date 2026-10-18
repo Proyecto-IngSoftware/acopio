@@ -29,6 +29,14 @@ export class NoRecibirDao {
     });
   }
 
+  /** Las marcas vigentes en acopios que no están cerrados, con el nombre de la categoría. */
+  vigentesAbiertas(hoy: Date, bd: ClienteBd = this.prisma) {
+    return bd.noRecibir.findMany({
+      where: { ...vigente(hoy), acopio: { estado: { not: 'CERRADO' } } },
+      include: { categoria: { select: { nombre: true } } },
+    });
+  }
+
   /** Las marcas vigentes de unas categorías, en cualquier acopio. */
   vigentesDeCategorias(categoriaIds: string[], hoy: Date) {
     return this.prisma.noRecibir.findMany({

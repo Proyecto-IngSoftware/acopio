@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-10-18 | [2026-10-18-portada-y-capturas](2026-10-18-portada-y-capturas.md) | Balance de la portada, imágenes de la demo y capturas de los recorridos |
 | 2026-10-18 | [2026-10-18-avance-5-documento](2026-10-18-avance-5-documento.md) | Word del Avance 5 |
 | 2026-10-18 | [2026-10-18-plan-de-accion](2026-10-18-plan-de-accion.md) | Plan de acción y orden de los issues |
 | 2026-10-18 | [2026-10-18-cierre-bloque-5](2026-10-18-cierre-bloque-5.md) | Cierre del Bloque 5 y de la pieza C |

@@ -177,7 +177,33 @@ aceite; la cabecera dice «3 sin sincronizar» y C5 explica que necesita conexi�
 señal las tres se envían solas, y el historial muestra la entrada de arroz con la hora en que
 ocurrió y la hora en que llegó.
 
+## Capturas para el Word
+
+Con `CAPTURAS_WORD=<carpeta>`, los recorridos que toman capturas guardan además cada una del
+alto de la pantalla en esa carpeta, con la cabecera y la barra inferior en su lugar (las de
+página completa las dejan superpuestas en medio). Las del Avance 5 salieron así, en local:
+
+```bash
+CAPTURAS=no SIN_CORREO=1 CAPTURAS_WORD=/tmp/capturas node apps/web/recorridos/consola-motor.mjs
+```
+
+Si se corren varios seguidos, el límite de 5 inicios de sesión por minuto hace fallar el que
+entra después; hay que esperar un minuto entre uno y otro.
+
 ## Últimos resultados
+
+**2026-10-18, en local, con el balance de la portada y las imágenes de la demo** (rama
+`portada-y-capturas`, API reconstruida con `servicios:todo`, `CAPTURAS_WORD` activo):
+
+| Script | Resultado |
+|---|---|
+| `portal-causas.mjs` | 4 de 4 |
+| `consola-causas.mjs` | 6 de 6 |
+| `consola-motor.mjs` | 9 de 9 |
+| `consola-remisiones.mjs` | 7 de 7 |
+| `consola-recepciones.mjs` | 7 de 7. La primera corrida falló al entrar por el límite de inicios de sesión; pasó al esperar un minuto |
+| `portal-turnos.mjs` | 6 de 6 |
+| `consola-turnos.mjs` | 7 de 7, con la misma espera |
 
 **2026-10-18, cierre del Bloque 5** (rama `bloque-5-cierre`). Contra el servidor, con `main`
 desplegado y las contraseñas que dio Joseph:

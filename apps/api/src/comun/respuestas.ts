@@ -289,6 +289,16 @@ export class AcopioNoRecibeDto extends crearDto(
   z.object({ acopioId: z.uuid(), hasta: dia.nullable() }),
 ) {}
 
+const filaBalance = z.object({
+  categoriaId: z.uuid(),
+  categoria: z.string(),
+  acopios: z.number().int().describe('Cuántos acopios abiertos están en ese caso'),
+});
+
+export class BalanceDto extends crearDto(
+  z.object({ faltan: z.array(filaBalance), noTraigan: z.array(filaBalance) }),
+) {}
+
 const tipoMovimiento = z.enum(['ENTRADA', 'SALIDA', 'AJUSTE']);
 const motivoSalida = z.enum(['ENTREGA_FAMILIAS', 'TRASLADO', 'VENCIDO', 'OTRO']);
 

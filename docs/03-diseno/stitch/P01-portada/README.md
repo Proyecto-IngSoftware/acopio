@@ -3,7 +3,7 @@ title: "P01 · Portada · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portada]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-18
 ---
 
 # P01 · Portada · diseño en Stitch
@@ -45,8 +45,11 @@ de Stitch y se pueden borrar desde su interfaz; la pantalla original no se tocó
 
 - La píldora «Prioridad máxima» y la frase «9 de 14 zonas siguen sin cobertura
   suficiente» salen del motor. En el ciclo 1 el título de la franja es fijo.
-- «Qué hace falta», «No traigan», las jornadas y el reporte en terreno se muestran
-  vacíos, con un texto que dice qué aparecerá.
+- Las jornadas y el reporte en terreno se muestran vacíos, con un texto que dice qué
+  aparecerá. «Qué hace falta» y «No traigan» se conectaron el 2026-10-18 (P-073): cada fila es
+  una categoría con cuántos acopios están en ese caso. La etiqueta dice «Falta en N acopios» en
+  vez del nivel («CRÍTICO», «URGENTE») de la maqueta, porque el inventario no tiene niveles de
+  urgencia; tampoco se muestra la antigüedad del dato.
 - El buscador de folio está, pero responde que el rastreo aún no está disponible.
 - La foto del reporte en terreno es una imagen de ejemplo generada por Stitch. No entra
   al repositorio.
