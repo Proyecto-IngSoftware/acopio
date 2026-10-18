@@ -124,7 +124,7 @@ Para retomar entre sesiones, leer en este orden:
 
 1. `git status`, la rama actual y `gh pr list`, para ver si quedó trabajo sin subir o sin fusionar.
 2. El último informe en `docs/06-operacion/sesiones/`: su sección «Pendiente» dice qué quedó y dónde está escrito cada punto.
-3. El plan vigente en `docs/05-planes/`. Su tabla de estado dice qué tarea está hecha y qué le falta. Los issues abiertos son el plan de trabajo: uno por bloque o ciclo pendiente (etiquetas `bloque-N`) y uno por pendiente técnico (`deuda`).
+3. El [plan de acción](docs/05-planes/plan-de-accion.md), que ordena todo lo que falta, y `node scripts/revisar-plan.mjs`, que dice qué filas ya no coinciden con GitHub; si avisa algo, se corrige antes de empezar. Después, el plan vigente del bloque en `docs/05-planes/`. Su tabla de estado dice qué tarea está hecha y qué le falta. Los issues abiertos son el plan de trabajo: uno por bloque o ciclo pendiente (etiquetas `bloque-N`) y uno por pendiente técnico (`deuda`).
 4. `docs/01-requerimientos/pendientes.md`, sección «Abiertos», y `gh issue list`.
 5. `gh run list --limit 5`, para confirmar que `main` está en verde antes de empezar algo nuevo.
 
@@ -132,7 +132,7 @@ Al terminar una sesión, dejar el estado escrito donde el equipo lo lee:
 
 - Toda sesión que cambie algo en el repositorio, en GitHub o en el servidor, sea el cambio pequeño, mediano o grande, deja un informe en `docs/06-operacion/sesiones/AAAA-MM-DD-<tema>.md`, con la [plantilla](docs/plantillas/plantilla-informe-sesion.md), y una fila en el índice de esa carpeta. El informe va en el PR de la sesión o en uno propio, y el mensaje final del chat lo resume y lo enlaza. El chat no es un lugar donde quede nada: lo que solo se dijo ahí se pierde al cerrar la sesión.
 - En el informe, cada pendiente, hallazgo diferido o tarea para Joseph enlaza al lugar donde quedó escrito (`P-0NN`, issue o plan). Escribir «anotado» sin enlace no vale: si no hay dónde, se crea el `P-0NN` antes de cerrar.
-- Actualizar la fila de la tarea en el plan del bloque.
+- Actualizar la fila de la tarea en el plan del bloque y la del [plan de acción](docs/05-planes/plan-de-accion.md), con una línea en su «Registro de cambios». El hook `.claude/hooks/plan-de-accion.mjs` lo recuerda tras cada `gh issue` o `gh pr merge`.
 - Si apareció una decisión o un hueco, anotarlo en `pendientes.md` o en «Cambios al construir».
 - Comentar en el issue lo que se probó y lo que falta. Si una casilla solo depende de otro integrante, no bloquea el cierre: se cierra y el comentario dice qué quedó sin hacer y dónde quedó anotado.
 
