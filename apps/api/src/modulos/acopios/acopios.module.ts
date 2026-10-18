@@ -7,6 +7,7 @@ import { VERIFICADOR_UBICACIONES } from '../../comun/ubicaciones/verificador-ubi
 import { AcopiosController } from './acopios.controller';
 import { AcopiosService } from './acopios.service';
 import { CausasController } from './causas.controller';
+import { CausasPublicasController } from './causas-publicas.controller';
 import { CausasService } from './causas.service';
 import { EntidadesController } from './entidades.controller';
 import { EntidadesService } from './entidades.service';
@@ -34,6 +35,7 @@ import { ZonasService } from './zonas.service';
     EntidadesController,
     LogosController,
     CausasController,
+    CausasPublicasController,
     AcopiosController,
     ZonasController,
     UbicacionesController,

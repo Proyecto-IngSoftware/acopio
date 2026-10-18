@@ -9,6 +9,7 @@ import {
   unico,
   type AppPrueba,
 } from '../../test/app-prueba';
+import { CausasService } from '../modulos/acopios/causas.service';
 
 /** Hoy, para toda la suite: 17 de octubre de 2026 en Bogotá. */
 const AHORA = Date.parse('2026-10-17T15:00:00Z');
@@ -347,6 +348,104 @@ describe('causas', () => {
         .get('/api/causas/gestion?estado=activas')
         .set(como(operador.token))
         .expect(403);
+    });
+  });
+
+  describe('lo público (RF-RED-008, HU-02)', () => {
+    it('una causa vencida no sale aunque la tarea diaria no haya corrido', async () => {
+      const id = await entidadVerificada();
+      const vencida = await insertarCausa(id, '2026-10-16');
+      const activas = (await a.http().get('/api/causas').expect(200)).body as { id: string }[];
+      expect(activas.map((c) => c.id)).not.toContain(vencida.id);
+      const atendidas = (await a.http().get('/api/causas/atendidas').expect(200)).body as {
+        id: string;
+        cerroEl: string;
+      }[];
+      expect(atendidas.find((c) => c.id === vencida.id)?.cerroEl).toBe('2026-10-17');
+      const servicio = a.app.get(CausasService);
+      expect(await servicio.archivarVencidas()).toBeGreaterThanOrEqual(1);
+      const fila = await a.prisma.causa.findUniqueOrThrow({ where: { id: vencida.id } });
+      expect(fila.archivo_motivo).toBe('VENCIDA');
+      expect(fila.archivada_por).toBeNull();
+      const b = await a.prisma.bitacora.findFirstOrThrow({
+        where: { accion: 'causa.archivada', entidad_id: vencida.id },
+      });
+      expect(b.usuario_id).toBeNull();
+    });
+
+    it('lo más reciente sale primero', async () => {
+      const id = await entidadVerificada();
+      const vieja = (await crearCausa(id).expect(201)).body;
+      await a.prisma.causa.update({
+        where: { id: vieja.id },
+        data: { publicada_en: new Date('2026-09-01T00:00:00Z') },
+      });
+      const nueva = (await crearCausa(id).expect(201)).body;
+      const ids = ((await a.http().get('/api/causas').expect(200)).body as { id: string }[]).map(
+        (c) => c.id,
+      );
+      expect(ids.indexOf(nueva.id)).toBeLessThan(ids.indexOf(vieja.id));
+    });
+
+    it('filtra por categoría', async () => {
+      const id = await entidadVerificada();
+      const gatos = (await crearCausa(id, { categoria: 'ANIMALES' }).expect(201)).body;
+      const r = await a.http().get('/api/causas?categoria=ANIMALES').expect(200);
+      const filas = r.body as { id: string; categoria: string }[];
+      expect(filas.map((c) => c.id)).toContain(gatos.id);
+      expect(filas.every((c) => c.categoria === 'ANIMALES')).toBe(true);
+    });
+
+    it('si la entidad perdió la verificación, la ficha no trae sello ni enlace', async () => {
+      const id = await entidadVerificada();
+      const c = (await crearCausa(id).expect(201)).body;
+      const antes = (await a.http().get(`/api/causas/${c.id}`).expect(200)).body;
+      expect(antes.urlOficial).toBe('https://www.fundacion.org/donar');
+      expect(antes.entidad.verificadaEn).toBe(new Date(AHORA).toISOString());
+      await a.http().post(`/api/entidades/${id}/quitar-verificacion`).set(como(admin)).expect(200);
+      const despues = (await a.http().get(`/api/causas/${c.id}`).expect(200)).body;
+      expect(despues).toMatchObject({
+        urlOficial: null,
+        dominio: null,
+        motivo: 'ENTIDAD_SIN_VERIFICAR',
+        cerroEl: '2026-10-17',
+      });
+      expect(despues.entidad.verificadaEn).toBeNull();
+    });
+
+    it('lo público nunca dice quién creó o archivó la causa', async () => {
+      const id = await entidadVerificada();
+      const c = (await crearCausa(id).expect(201)).body;
+      await accion(c.id, 'archivar').expect(200);
+      for (const ruta of ['/api/causas', '/api/causas/atendidas', `/api/causas/${c.id}`]) {
+        const texto = JSON.stringify((await a.http().get(ruta).expect(200)).body);
+        expect(texto).not.toContain('creadaPor');
+        expect(texto).not.toContain('archivadaPor');
+        expect(texto).not.toContain(adminId);
+      }
+    });
+
+    it('un id que no existe da 404', async () => {
+      await a.http().get('/api/causas/00000000-0000-4000-8000-000000000000').expect(404);
+    });
+
+    it('la imagen se lee sin sesión', async () => {
+      const id = await entidadVerificada();
+      const c = (await crearCausa(id).expect(201)).body;
+      await a.http().get(`/api/causas/${c.id}/imagen`).expect(404);
+      const png = await sharp({
+        create: { width: 320, height: 180, channels: 3, background: '#777' },
+      })
+        .png()
+        .toBuffer();
+      await a
+        .http()
+        .put(`/api/causas/${c.id}/imagen`)
+        .set(como(admin))
+        .attach('imagen', png, 'c.png')
+        .expect(200);
+      const r = await a.http().get(`/api/causas/${c.id}/imagen`).expect(200);
+      expect(r.headers['content-type']).toMatch(/image\/webp/);
     });
   });
 

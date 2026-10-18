@@ -1,4 +1,5 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Cron } from '@nestjs/schedule';
 import { cierreValido, hoyBogota, validarUrlOficial, type CategoriaCausa } from '@acopio/shared';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
@@ -6,7 +7,7 @@ import type { ClienteBd } from '../../comun/prisma/cliente-bd';
 import { Transacciones } from '../../comun/prisma/transacciones';
 import { AlmacenamientoService } from '../almacenamiento/almacenamiento.service';
 import { BitacoraService } from '../auditoria/bitacora.service';
-import { esActiva, presentarCausaGestion } from './causas.vistas';
+import { esActiva, presentarCausaGestion, presentarCausaPublica } from './causas.vistas';
 import { CausaDao, comoFecha, type FilaCausa } from './dao/causa.dao';
 import { EntidadDao } from './dao/entidad.dao';
 import { miniatura } from './entidades.service';
@@ -30,6 +31,8 @@ export type EstadoGestion = 'activas' | 'por-cerrar' | 'atendidas';
  */
 @Injectable()
 export class CausasService {
+  private readonly log = new Logger(CausasService.name);
+
   constructor(
     private readonly dao: CausaDao,
     private readonly entidades: EntidadDao,
@@ -171,6 +174,55 @@ export class CausasService {
         .sort((x, y) => (y.cerroEl ?? '').localeCompare(x.cerroEl ?? ''));
     }
     return vistas.filter((v) => v.estado === 'ACTIVA' && (estado === 'activas' || v.porCerrar));
+  }
+
+  /** Las activas, lo más reciente primero (C-05). */
+  async listarPublicas(categoria?: CategoriaCausa) {
+    const hoy = hoyBogota(this.ahora());
+    const filas = await this.dao.todas(categoria ? { categoria } : {});
+    return filas.filter((c) => esActiva(c, hoy)).map((c) => presentarCausaPublica(c, hoy));
+  }
+
+  /** Las atendidas, la que cerró más reciente primero. */
+  async listarAtendidas(categoria?: CategoriaCausa) {
+    const hoy = hoyBogota(this.ahora());
+    const filas = await this.dao.todas(categoria ? { categoria } : {});
+    return filas
+      .filter((c) => !esActiva(c, hoy))
+      .map((c) => presentarCausaPublica(c, hoy))
+      .sort((x, y) => (y.cerroEl ?? '').localeCompare(x.cerroEl ?? ''));
+  }
+
+  async obtenerPublica(id: string) {
+    return presentarCausaPublica(await this.exigir(id), hoyBogota(this.ahora()));
+  }
+
+  async leerImagen(id: string) {
+    const c = await this.exigir(id);
+    if (!c.imagen_key) throw new ErrorDominio('SIN_IMAGEN', 'La causa no tiene imagen', 404);
+    return this.almacenamiento.leerImagen(c.imagen_key);
+  }
+
+  /** Cada día a las 00:10 en Colombia: las que pasaron su fecha de cierre (RF-RED-010). */
+  @Cron('10 0 * * *', { name: 'archivar-causas', timeZone: 'America/Bogota' })
+  async archivarVencidas(): Promise<number> {
+    const ahora = this.ahora();
+    return this.transacciones.ejecutar(async (tx) => {
+      const vencidas = await this.dao.vencidas(hoyBogota(ahora), tx);
+      for (const { id } of vencidas) {
+        await this.dao.archivar(id, { motivo: 'VENCIDA', por: null, en: ahora }, tx);
+        await this.bitacora.registrar(tx, {
+          usuarioId: null,
+          accion: 'causa.archivada',
+          entidad: 'causa',
+          entidadId: id,
+          antes: { archivadaEn: null },
+          despues: { archivadaEn: ahora, motivo: 'VENCIDA' },
+        });
+      }
+      if (vencidas.length) this.log.log(`${vencidas.length} causas vencidas pasaron a atendidas`);
+      return vencidas.length;
+    });
   }
 
   private async cambiarImagen(admin: UsuarioAutenticado, id: string, clave: string | null) {

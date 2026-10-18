@@ -3,7 +3,7 @@ title: "Vista general de arquitectura"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Vista general de arquitectura
@@ -234,7 +234,7 @@ protege con un bloqueo en PostgreSQL para que no corra dos veces.
 | Sincronizar puntos referenciados | Cada 60 min | `importacion` |
 | Recalcular las sugerencias del motor | Cada 15 minutos | `motor` |
 | Cancelar folios `PREPARADO` con más de 7 días | Diaria | `comprobantes` |
-| Archivar causas vencidas o de entidades con verificación caducada | Diaria | `acopios` |
+| Archivar las causas que pasaron su fecha de cierre (`archivar-causas`, 00:10) | Diaria | `acopios` |
 | Alertas de vencimiento de perecederos | Diaria | `inventario` |
 | Enviar la cola de correo y reintentar los fallidos | Cada minuto | `notificaciones` |
 
