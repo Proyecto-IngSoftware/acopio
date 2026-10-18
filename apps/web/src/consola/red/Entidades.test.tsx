@@ -185,3 +185,22 @@ describe('verificación (pieza C, HU-15)', () => {
     expect(peticiones()).toContain('POST /api/entidades/e4/quitar-verificacion');
   });
 });
+
+it('después de subir el logotipo la hoja dice «Cambiar logotipo» sin reabrirla', async () => {
+  responderSegun(RESPUESTAS);
+  render(envolver(<Entidades />, '/consola/entidades', clienteFalso(ADMIN)));
+  await userEvent.click(await screen.findByRole('button', { name: /Fundación Manos Unidas/ }));
+  const hoja = screen.getByRole('dialog', { name: 'Fundación Manos Unidas' });
+  expect(within(hoja).getByText('Subir logotipo')).toBeInTheDocument();
+  const conLogo = entidad({ tieneLogo: true });
+  responderSegun({
+    ...RESPUESTAS,
+    'GET /api/entidades': [conLogo, RESPUESTAS['GET /api/entidades'][1]],
+    'PUT /api/entidades/e1/logo': conLogo,
+  });
+  await userEvent.upload(
+    within(hoja).getByLabelText(/logotipo/),
+    new File(['png'], 'logo.png', { type: 'image/png' }),
+  );
+  expect(await within(hoja).findByText('Cambiar logotipo')).toBeInTheDocument();
+});

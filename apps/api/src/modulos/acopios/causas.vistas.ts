@@ -44,7 +44,7 @@ export function presentarCausaPublica(c: FilaCausa, hoy: string) {
     entidad: {
       id: c.entidad.id,
       nombre: c.entidad.nombre,
-      tieneLogo: c.entidad.logo_key !== null,
+      tieneLogo: verificada && c.entidad.logo_key !== null,
       verificadaEn: verificada ? (c.entidad.verificada_en?.toISOString() ?? null) : null,
     },
   };

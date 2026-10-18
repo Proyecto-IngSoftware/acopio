@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 import { cierreValido, dominioDe, hoyBogota, topeCierre } from '@acopio/shared';
 import {
   useArchivarCausa,
+  useCausaGestion,
   useCausasGestion,
   useReactivarCausa,
   useRenovarCausa,
@@ -23,34 +24,58 @@ import { FormularioError } from '../catalogo/FormularioError';
 import { Confirmar, DestinoCausa } from './Confirmar';
 import { FormularioCausa } from './FormularioCausa';
 
-type Vista =
-  | { tipo: 'lista' }
-  | { tipo: 'formulario'; causa: CausaGestion | null }
-  | { tipo: 'causa'; causa: CausaGestion };
+type Vista = { tipo: 'lista' } | { tipo: 'formulario' };
 
 const diasHasta = (fecha: string, hoy: string) =>
   Math.round((Date.parse(`${fecha}T00:00:00Z`) - Date.parse(`${hoy}T00:00:00Z`)) / 86_400_000);
 
-/** C22 Causas (RF-RED-007 y 010). Solo el Administrador. */
+/** C22 Causas (RF-RED-007 y 010). Solo el Administrador. Cada causa abre en su ruta. */
 export function Causas() {
   const [vista, fijarVista] = useState<Vista>({ tipo: 'lista' });
-  const volver = () => fijarVista({ tipo: 'lista' });
+  const navegar = useNavigate();
   if (vista.tipo === 'formulario') {
-    return <FormularioCausa causa={vista.causa} alTerminar={volver} />;
-  }
-  if (vista.tipo === 'causa') {
-    return (
-      <VistaCausa
-        causa={vista.causa}
-        alVolver={volver}
-        alEditar={() => fijarVista({ tipo: 'formulario', causa: vista.causa })}
-      />
-    );
+    return <FormularioCausa causa={null} alTerminar={() => fijarVista({ tipo: 'lista' })} />;
   }
   return (
     <Lista
-      alNueva={() => fijarVista({ tipo: 'formulario', causa: null })}
-      alAbrir={(c) => fijarVista({ tipo: 'causa', causa: c })}
+      alNueva={() => fijarVista({ tipo: 'formulario' })}
+      alAbrir={(c) => void navegar(`/consola/causas/${c.id}`)}
+    />
+  );
+}
+
+/** Una causa en `/consola/causas/:id`, leída de la lista para que se refresque tras cada cambio. */
+export function CausaConsola() {
+  const { id = '' } = useParams();
+  const navegar = useNavigate();
+  const [editando, fijarEditando] = useState(false);
+  const { causa, isPending, error, refetch } = useCausaGestion(id);
+  const volver = () => void navegar('/consola/causas');
+  if (isPending) return <Esqueleto etiqueta="Cargando la causa" className="m-margin h-64" />;
+  if (error)
+    return (
+      <div className="px-margin py-space-lg">
+        <EstadoError mensaje="No se pudo cargar la causa." alReintentar={() => void refetch()} />
+      </div>
+    );
+  if (!causa)
+    return (
+      <div className="flex flex-col gap-space-md px-margin py-space-lg">
+        <EstadoVacio titulo="No encontramos esa causa">
+          Puede que el enlace esté mal escrito.
+        </EstadoVacio>
+        <Link to="/consola/causas" className="text-label-md text-primary">
+          Volver a las causas
+        </Link>
+      </div>
+    );
+  if (editando) return <FormularioCausa causa={causa} alTerminar={() => fijarEditando(false)} />;
+  return (
+    <VistaCausa
+      key={causa.id}
+      causa={causa}
+      alVolver={volver}
+      alEditar={() => fijarEditando(true)}
     />
   );
 }
