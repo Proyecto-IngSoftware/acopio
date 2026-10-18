@@ -4,7 +4,7 @@ type: plan
 tags: [plan, bloque-5, turnos, web]
 estado: vigente
 bloque: 5
-actualizado: 2026-10-17
+actualizado: 2026-10-18
 ---
 
 # Bloque 5 · Turnos · plan de la interfaz
@@ -72,13 +72,13 @@ con `envolver` y `responderSegun`, Playwright para los recorridos.
 |---|---|---|
 | 1 Maquetas de P7, P8 y C14 | ✅ | Joseph las aprobó el 2026-10-17. El formulario y el detalle de C14 se armaron con los tokens: Stitch no devolvió esas pantallas |
 | 2 Cliente web y datos de prueba | ✅ | |
-| 3 P7 listado | ✅ | |
+| 3 P7 listado | ✅ | Los filtros van en la URL; `textoCupos` da solo los cupos y la marca «Llena» o «Reservas cerradas» sale de `marcaJornada` |
 | 4 P7 reservar | ✅ | |
 | 5 P8 mi reserva | ✅ | |
-| 6 P5, P6 y P12 | ✅ | |
+| 6 P5, P6 y P12 | ✅ | «Ver jornadas» va en la tarjeta del acopio elegido en el mapa (`Mapa.tsx`), porque `TarjetaAcopio` ya es un enlace |
 | 7 C14 lista y formulario | ✅ | |
 | 8 C14 detalle de la jornada | ✅ | |
-| 9 Recorridos y cierre | ⬜ | |
+| 9 Recorridos y cierre | 🟡 | Recorridos 6 de 6 en local y verificación completa en verde. Falta correr `portal-turnos.mjs` contra el servidor después del despliegue ([P-069](../01-requerimientos/pendientes.md)) y revisar HU-03 con Joseph |
 
 ---
 

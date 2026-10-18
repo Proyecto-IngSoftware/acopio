@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-5, turnos]
 estado: vigente
 bloque: 5
-actualizado: 2026-10-17
+actualizado: 2026-10-18
 ---
 
 # Bloque 5 · Turnos de voluntariado · especificación
@@ -325,3 +325,19 @@ API, rama `bloque-5-api` ([plan](../../05-planes/2026-10-17-bloque-5-api.md)):
 - La asistencia se puede corregir dentro del plazo, de `ASISTIO` a `NO_ASISTIO` y al revés.
 - La demo pone la jornada de la Cruz Roja en «Punto de encuentro de la demostración», Bogotá,
   y no inventa una dirección real.
+
+Interfaz, rama `bloque-5-interfaz` ([plan](../../05-planes/2026-10-17-bloque-5-interfaz.md)):
+
+- Stitch generó el formulario y el detalle de C14, pero no devolvió las pantallas. Esas dos
+  vistas se armaron con los tokens y Joseph las aprobó así el 2026-10-17
+  ([C14-turnos](../../03-diseno/stitch/C14-turnos/README.md)).
+- Los filtros de P7 viven en la URL (`acopio` o `entidad`, `dia` y `perfil`). Las opciones de
+  lugar y de día salen de las jornadas publicadas, así que un lugar sin jornadas no aparece.
+- «Ver jornadas» de P5 va en la tarjeta del acopio elegido en el mapa. En la lista, cada
+  tarjeta ya es un enlace a la ficha, y la ficha (P6) lista las jornadas.
+- Quien reserva una jornada que pide perfil declara una frase según el perfil, por ejemplo
+  «Tengo licencia de conducción C2» o «Tengo título de psicología».
+- En C14 los inscritos cancelados no se listan, y «Borrar» solo aparece si la jornada no tuvo
+  ninguna reserva, ni siquiera cancelada, porque la API solo borra en ese caso.
+- Al editar una jornada se mandan solo los campos que cambiaron. Así un cambio de título no
+  cuenta como mover la jornada ni avisa a quienes reservaron.
