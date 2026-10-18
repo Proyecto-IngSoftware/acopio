@@ -6,6 +6,8 @@ import { ZonaDao } from './dao/zona.dao';
 import { VERIFICADOR_UBICACIONES } from '../../comun/ubicaciones/verificador-ubicaciones';
 import { AcopiosController } from './acopios.controller';
 import { AcopiosService } from './acopios.service';
+import { CausasController } from './causas.controller';
+import { CausasService } from './causas.service';
 import { EntidadesController } from './entidades.controller';
 import { EntidadesService } from './entidades.service';
 import { GeocodificacionController } from './geocodificacion.controller';
@@ -31,6 +33,7 @@ import { ZonasService } from './zonas.service';
   controllers: [
     EntidadesController,
     LogosController,
+    CausasController,
     AcopiosController,
     ZonasController,
     UbicacionesController,
@@ -42,6 +45,7 @@ import { ZonasService } from './zonas.service';
     EntidadDao,
     ZonaDao,
     EntidadesService,
+    CausasService,
     AcopiosService,
     ZonasService,
     UbicacionesService,

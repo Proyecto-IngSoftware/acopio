@@ -157,6 +157,199 @@ describe('causas', () => {
     });
   });
 
+  /** Una entidad verificada con sitio `https://www.fundacion.org`. */
+  async function entidadVerificada() {
+    const id = await crearEntidad();
+    await verificar(id).expect(200);
+    return id;
+  }
+
+  const datosCausa = (entidadId: string, extra: object = {}) => ({
+    entidadId,
+    categoria: 'PERSONAS',
+    titulo: 'Mercados para familias damnificadas',
+    descripcion: 'Alimentos no perecederos y elementos de aseo para 300 familias',
+    pasos: ['Entra al sitio oficial', 'Elige «Donar»'],
+    urlOficial: 'https://www.fundacion.org/donar',
+    cierraEl: '2026-12-01',
+    confirmo: true,
+    ...extra,
+  });
+
+  const crearCausa = (entidadId: string, extra: object = {}) =>
+    a.http().post('/api/causas').set(como(admin)).send(datosCausa(entidadId, extra));
+
+  const accion = (id: string, que: string, cuerpo: object = {}) =>
+    a.http().post(`/api/causas/${id}/${que}`).set(como(admin)).send(cuerpo);
+
+  describe('gestionar causas (RF-RED-007, RF-RED-010)', () => {
+    it('una entidad sin verificar no publica causas', async () => {
+      const id = await crearEntidad();
+      const r = await crearCausa(id).expect(409);
+      expect(r.body.codigo).toBe('ENTIDAD_SIN_VERIFICAR');
+    });
+
+    it('publicar pide confirmar el aviso', async () => {
+      const id = await entidadVerificada();
+      const r = await crearCausa(id, { confirmo: undefined }).expect(422);
+      expect(r.body.codigo).toBe('CONFIRMACION_REQUERIDA');
+    });
+
+    it.each(['https://u:c@fundacion.org/donar', 'http://fundacion.org', 'javascript:alert(1)'])(
+      'rechaza el enlace %s',
+      async (urlOficial) => {
+        const id = await entidadVerificada();
+        const r = await crearCausa(id, { urlOficial });
+        expect([400, 422]).toContain(r.status);
+        if (r.status === 422) expect(r.body.codigo).toBe('URL_NO_SEGURA');
+      },
+    );
+
+    it('la fecha de cierre va de hoy a seis meses', async () => {
+      const id = await entidadVerificada();
+      const tarde = await crearCausa(id, { cierraEl: '2027-04-18' }).expect(422);
+      expect(tarde.body.codigo).toBe('CIERRE_FUERA_DE_RANGO');
+      await crearCausa(id, { cierraEl: '2026-10-16' }).expect(422);
+      const r = await crearCausa(id, { cierraEl: '2027-04-17' }).expect(201);
+      expect(r.body).toMatchObject({
+        estado: 'ACTIVA',
+        cierraEl: '2027-04-17',
+        dominio: 'fundacion.org',
+        dominioDistinto: false,
+      });
+    });
+
+    it('personas desaparecidas no admite causas', async () => {
+      const id = await entidadVerificada();
+      await crearCausa(id, { categoria: 'PERSONAS_DESAPARECIDAS' }).expect(400);
+    });
+
+    it('renovar mueve la fecha de publicación y editar no', async () => {
+      const id = await entidadVerificada();
+      const creada = (await crearCausa(id).expect(201)).body;
+      const editada = (
+        await a
+          .http()
+          .patch(`/api/causas/${creada.id}`)
+          .set(como(admin))
+          .send({ titulo: 'Mercados para familias de Mocoa' })
+          .expect(200)
+      ).body;
+      expect(editada.publicadaEn).toBe(creada.publicadaEn);
+      await a.prisma.causa.update({
+        where: { id: creada.id },
+        data: { publicada_en: new Date('2026-10-01T00:00:00Z') },
+      });
+      await accion(creada.id, 'renovar', { cierraEl: '2026-10-16', confirmo: true }).expect(422);
+      const renovada = (
+        await accion(creada.id, 'renovar', { cierraEl: '2027-03-01', confirmo: true }).expect(200)
+      ).body;
+      expect(renovada.publicadaEn).toBe(new Date(AHORA).toISOString());
+      expect(renovada.cierraEl).toBe('2027-03-01');
+    });
+
+    it('cambiar el enlace al editar pide confirmar', async () => {
+      const id = await entidadVerificada();
+      const creada = (await crearCausa(id).expect(201)).body;
+      const r = await a
+        .http()
+        .patch(`/api/causas/${creada.id}`)
+        .set(como(admin))
+        .send({ urlOficial: 'https://www.fundacion.org/otra' })
+        .expect(422);
+      expect(r.body.codigo).toBe('CONFIRMACION_REQUERIDA');
+    });
+
+    it('una causa atendida no se edita, y se reactiva solo con la entidad verificada', async () => {
+      const id = await entidadVerificada();
+      const creada = (await crearCausa(id).expect(201)).body;
+      const archivada = (await accion(creada.id, 'archivar').expect(200)).body;
+      expect(archivada).toMatchObject({ estado: 'ATENDIDA', motivo: 'MANUAL' });
+      const r = await a
+        .http()
+        .patch(`/api/causas/${creada.id}`)
+        .set(como(admin))
+        .send({ titulo: 'Otro título para la causa' })
+        .expect(409);
+      expect(r.body.codigo).toBe('CAUSA_ATENDIDA');
+      await a.http().post(`/api/entidades/${id}/quitar-verificacion`).set(como(admin)).expect(200);
+      const sin = await accion(creada.id, 'reactivar', { cierraEl: '2027-01-01', confirmo: true });
+      expect(sin.status).toBe(409);
+      expect(sin.body.codigo).toBe('ENTIDAD_SIN_VERIFICAR');
+      await verificar(id).expect(200);
+      const reactivada = (
+        await accion(creada.id, 'reactivar', { cierraEl: '2027-01-01', confirmo: true }).expect(200)
+      ).body;
+      expect(reactivada).toMatchObject({ estado: 'ACTIVA', motivo: null });
+    });
+
+    it('por cerrar son las que cierran en los próximos 15 días', async () => {
+      const id = await entidadVerificada();
+      const pronto = (await crearCausa(id, { cierraEl: '2026-11-01' }).expect(201)).body;
+      const luego = (await crearCausa(id, { cierraEl: '2026-11-02' }).expect(201)).body;
+      const r = await a.http().get('/api/causas/gestion?estado=por-cerrar').set(como(admin));
+      const ids = (r.body as { id: string }[]).map((c) => c.id);
+      expect(ids).toContain(pronto.id);
+      expect(ids).not.toContain(luego.id);
+      const activas = await a.http().get('/api/causas/gestion?estado=activas').set(como(admin));
+      const fila = (activas.body as { id: string; porCerrar: boolean }[]).find(
+        (c) => c.id === pronto.id,
+      );
+      expect(fila?.porCerrar).toBe(true);
+    });
+
+    it('un enlace a otro dominio que el de la entidad queda marcado', async () => {
+      const id = await entidadVerificada();
+      const r = await crearCausa(id, { urlOficial: 'https://donaciones-mocoa.co/x' }).expect(201);
+      expect(r.body.dominioDistinto).toBe(true);
+    });
+
+    it('cada operación deja su fila en la bitácora', async () => {
+      const id = await entidadVerificada();
+      const c = (await crearCausa(id).expect(201)).body;
+      await accion(c.id, 'renovar', { cierraEl: '2027-02-01', confirmo: true }).expect(200);
+      await accion(c.id, 'archivar').expect(200);
+      await accion(c.id, 'reactivar', { cierraEl: '2027-02-01', confirmo: true }).expect(200);
+      const filas = await a.prisma.bitacora.findMany({
+        where: { entidad: 'causa', entidad_id: c.id },
+        orderBy: { ocurrido_en: 'asc' },
+      });
+      expect(filas.map((f) => f.accion)).toEqual([
+        'causa.creada',
+        'causa.renovada',
+        'causa.archivada',
+        'causa.reactivada',
+      ]);
+    });
+
+    it('la imagen se sube y se cambia', async () => {
+      const id = await entidadVerificada();
+      const c = (await crearCausa(id).expect(201)).body;
+      const png = await sharp({
+        create: { width: 800, height: 450, channels: 3, background: '#888' },
+      })
+        .png()
+        .toBuffer();
+      const r = await a
+        .http()
+        .put(`/api/causas/${c.id}/imagen`)
+        .set(como(admin))
+        .attach('imagen', png, 'causa.png')
+        .expect(200);
+      expect(r.body.tieneImagen).toBe(true);
+      await a.http().delete(`/api/causas/${c.id}/imagen`).set(como(admin)).expect(200);
+    });
+
+    it('un Operador no gestiona causas', async () => {
+      const operador = await crearUsuarioActivo(a, admin, { rol: 'OPERADOR' });
+      await a
+        .http()
+        .get('/api/causas/gestion?estado=activas')
+        .set(como(operador.token))
+        .expect(403);
+    });
+  });
+
   describe('logotipo', () => {
     it('se sube como Administrador y se lee sin sesión', async () => {
       const id = await crearEntidad();

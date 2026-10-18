@@ -728,3 +728,46 @@ export class ZonaPublicaDto extends crearDto(
     ),
   }),
 ) {}
+
+// ── Causas (pieza C del Bloque 1) ──
+
+const categoriaCausa = z.enum(['PERSONAS', 'ANIMALES', 'ADULTOS_MAYORES', 'RESCATISTAS']);
+const motivoArchivo = z.enum(['VENCIDA', 'MANUAL', 'ENTIDAD_SIN_VERIFICAR']);
+
+export class CausaPublicaDto extends crearDto(
+  z.object({
+    id: z.uuid(),
+    categoria: categoriaCausa,
+    titulo: z.string(),
+    descripcion: z.string(),
+    pasos: z.array(z.string()),
+    urlOficial: z
+      .string()
+      .nullable()
+      .describe('Nulo si la entidad ya no está verificada: la web no muestra el enlace'),
+    dominio: z.string().nullable(),
+    tieneImagen: z.boolean(),
+    actualizadoEn: fecha,
+    publicadaEn: fecha,
+    cierraEl: dia,
+    cerroEl: dia.nullable().describe('Nulo mientras la causa siga activa'),
+    motivo: motivoArchivo.nullable(),
+    entidad: z.object({
+      id: z.uuid(),
+      nombre: z.string(),
+      tieneLogo: z.boolean(),
+      verificadaEn: fecha.nullable(),
+    }),
+  }),
+) {}
+
+export class CausaGestionDto extends crearDto(
+  CausaPublicaDto.schema.extend({
+    urlOficial: z.string(),
+    dominio: z.string().nullable(),
+    estado: z.enum(['ACTIVA', 'ATENDIDA']),
+    porCerrar: z.boolean(),
+    dominioDistinto: z.boolean(),
+    creadaPor: z.uuid(),
+  }),
+) {}
