@@ -7,6 +7,7 @@ import {
   type AppPrueba,
 } from '../../test/app-prueba';
 import { TareasTurnosService } from '../modulos/turnos/tareas-turnos.service';
+import { sembrarCausasDemo, sembrarTurnosDemo } from '../seed/demo';
 
 /** Lunes 19 de octubre de 2026, 10:00 en Bogotá. */
 const AHORA = Date.parse('2026-10-19T15:00:00Z');
@@ -156,5 +157,21 @@ describe('turnos: correos y tareas', () => {
       .set(como())
       .expect(200);
     expect(inscritos.body[0]).toMatchObject({ nombre: null, correo: null });
+  });
+
+  it('la demo de turnos es idempotente y trae la jornada de la Cruz Roja', async () => {
+    const adminId = (
+      await a.prisma.usuario.findUniqueOrThrow({ where: { username: ADMIN.username } })
+    ).id;
+    await sembrarCausasDemo(a.prisma, adminId, new Date(AHORA));
+    await sembrarTurnosDemo(a.prisma, adminId, new Date(AHORA));
+    const contar = () => a.prisma.jornada.count({ where: { titulo: { contains: '(demo)' } } });
+    const primera = await contar();
+    expect(primera).toBeGreaterThan(0);
+    await sembrarTurnosDemo(a.prisma, adminId, new Date(AHORA));
+    expect(await contar()).toBe(primera);
+    const r = await a.http().get('/api/turnos/jornadas?perfil=CONDUCTOR_C2').expect(200);
+    const cruzRoja = r.body.find((j: { titulo: string }) => j.titulo.includes('(demo)'));
+    expect(cruzRoja.lugar).toMatchObject({ tipo: 'ENTIDAD', nombre: 'Cruz Roja Colombiana' });
   });
 });

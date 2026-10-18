@@ -1028,6 +1028,20 @@ repositorio no lo tiene.
 en la sesión.
 **Estado:** ABIERTO
 
+### P-068 · Menores de la revisión de la API de turnos
+**Fecha:** 2026-10-17 · **Propuesto por:** Claude, en la autorrevisión de la API del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))
+**Qué:**
+- Ajustar el aforo y editar el cupo leen el cupo y el ajuste antes de tomar el bloqueo de la
+  jornada: dos cambios a la vez pueden validar contra un valor viejo
+- Se puede marcar asistencia en una jornada cancelada si todavía está dentro del plazo
+- Cambiar solo la dirección de una jornada de entidad no revisa que falten más de 12 horas
+- Nada impide que dos clases DTO con el mismo nombre se pisen en el contrato OpenAPI. Pasó con
+  tres DTO de turnos y solo se notó por el error de tipos en la web; una prueba que busque nombres
+  repetidos lo evitaría
+**Por qué:** ninguno rompe un flujo de la especificación; quedaron fuera de la sesión por el
+plazo del 23 de octubre.
+**Estado:** ABIERTO
+
 ---
 
 ## Resueltos

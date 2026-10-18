@@ -312,4 +312,16 @@ que pide `CONDUCTOR_C2`. Las reservas usan correos `@demo.acopio.local`.
 
 ## 11. Cambios al construir
 
-Vacío hasta que empiece la construcción.
+API, rama `bloque-5-api` ([plan](../../05-planes/2026-10-17-bloque-5-api.md)):
+
+- Mover una jornada (cambiar su fecha u horas) pide las mismas 13 horas de anticipación que
+  crearla, no las 12 de §4. Así crear y mover siguen una sola regla. Lo que se pierde: no se
+  puede mover una jornada a un inicio entre 12 y 13 horas después.
+- Para mover una jornada se mandan la fecha y las dos horas juntas; la API rechaza una sola.
+- Los correos salen de una clase propia del módulo, `AvisosTurnos`. Una reserva con los datos
+  ya borrados no recibe ninguno.
+- El borrado de los 30 días deja una sola fila en la bitácora (`reservas.datos_borrados`) con
+  la cantidad, sin identificar a nadie.
+- La asistencia se puede corregir dentro del plazo, de `ASISTIO` a `NO_ASISTIO` y al revés.
+- La demo pone la jornada de la Cruz Roja en «Punto de encuentro de la demostración», Bogotá,
+  y no inventa una dirección real.

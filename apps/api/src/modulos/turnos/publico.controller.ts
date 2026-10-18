@@ -25,7 +25,7 @@ class ReservarDto extends crearDto(
 
 const dia = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Usa el formato AAAA-MM-DD');
 
-class FiltroPublicoDto extends crearDto(
+class FiltroJornadasPublicoDto extends crearDto(
   z.object({
     desde: dia.optional(),
     hasta: dia.optional(),
@@ -49,7 +49,7 @@ export class PublicoController {
 
   @Get('jornadas')
   @ApiOkResponse({ type: JornadaPublicaDto, isArray: true })
-  listar(@Query() f: FiltroPublicoDto) {
+  listar(@Query() f: FiltroJornadasPublicoDto) {
     return this.jornadas.listarPublicas(f);
   }
 

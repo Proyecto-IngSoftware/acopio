@@ -73,8 +73,8 @@ class EditarJornadaDto extends crearDto(editarJornada) {}
 class CancelarJornadaDto extends crearDto(
   z.object({ motivo: z.string().trim().min(5).max(300) }),
 ) {}
-class AjusteDto extends crearDto(z.object({ cupos: z.number().int().min(0).max(500) })) {}
-class FiltroGestionDto extends crearDto(
+class AjusteCuposDto extends crearDto(z.object({ cupos: z.number().int().min(0).max(500) })) {}
+class FiltroJornadasGestionDto extends crearDto(
   z.object({
     pestana: z.enum(['proximas', 'en-curso', 'pasadas']).optional(),
     acopio: z.uuid().optional(),
@@ -100,7 +100,7 @@ export class GestionController {
 
   @Get()
   @ApiOkResponse({ type: JornadaGestionDto, isArray: true })
-  listar(@UsuarioActual() u: UsuarioAutenticado, @Query() f: FiltroGestionDto) {
+  listar(@UsuarioActual() u: UsuarioAutenticado, @Query() f: FiltroJornadasGestionDto) {
     return this.jornadas.listarGestion(u, f);
   }
 
@@ -156,7 +156,7 @@ export class GestionController {
   ajustar(
     @UsuarioActual() u: UsuarioAutenticado,
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() d: AjusteDto,
+    @Body() d: AjusteCuposDto,
   ) {
     return this.jornadas.ajustar(u, id, d.cupos);
   }

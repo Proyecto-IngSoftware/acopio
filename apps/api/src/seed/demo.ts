@@ -1,7 +1,8 @@
 import 'reflect-metadata';
+import { createHash, randomBytes } from 'node:crypto';
 import path from 'node:path';
 import { config } from 'dotenv';
-import { HORARIO_VACIO, hoyBogota, sumarMeses, type Horario } from '@acopio/shared';
+import { codigoReserva, HORARIO_VACIO, hoyBogota, sumarMeses, type Horario } from '@acopio/shared';
 import { PrismaService } from '../comun/prisma/prisma.service';
 import { leerEntorno } from '../config/entorno';
 import type { ProveedorIdentidad } from '../modulos/identidad/proveedor/proveedor-identidad';
@@ -207,6 +208,7 @@ export async function sembrarEscenariosDemo(
   await sembrarMotorDemo(prisma, ids.operador1!);
   await sembrarRemisionesDemo(prisma, ids.operador2!, ids.receptor1!, donador);
   await sembrarCausasDemo(prisma, admin.id);
+  await sembrarTurnosDemo(prisma, admin.id);
   return [...USUARIOS_DEMO.map((u) => u.username), DONADOR_DEMO.correo];
 }
 
@@ -712,5 +714,114 @@ export async function sembrarCausasDemo(
         ...(atendida && { archivada_en: ahora, archivo_motivo: 'VENCIDA' as const }),
       },
     });
+  }
+}
+
+const MS_HORA_DEMO = 3_600_000;
+
+/**
+ * Jornadas de voluntariado (Bloque 5, §7), relativas a `ahora`: una llena, una con cupos, una
+ * con las reservas ya cerradas y una de la Cruz Roja que pide conductores. Si ya hay una jornada
+ * vigente con el mismo título no se crea otra. Las reservas usan correos de la demo y un secreto
+ * aleatorio que nadie conoce.
+ */
+export async function sembrarTurnosDemo(
+  prisma: PrismaService,
+  adminId: string,
+  ahora = new Date(),
+) {
+  const dia = (n: number, hora: number) => {
+    const base = Date.parse(`${hoyBogota(ahora)}T00:00:00-05:00`);
+    return new Date(base + n * 24 * MS_HORA_DEMO + hora * MS_HORA_DEMO);
+  };
+  const cruzRoja = await prisma.entidad.findUnique({ where: { nombre: 'Cruz Roja Colombiana' } });
+  const acopios = await prisma.acopio.findMany({
+    where: { id: { in: ACOPIOS.map((a) => a.id) } },
+    select: { id: true },
+  });
+  const [primero, segundo] = [acopios[0]?.id, acopios[1]?.id ?? acopios[0]?.id];
+  const jornadas: {
+    titulo: string;
+    reservas: number;
+    datos: Omit<Prisma.JornadaUncheckedCreateInput, 'titulo' | 'creada_por'>;
+  }[] = [];
+  const comun = {
+    descripcion: 'Clasificar lo que llegó y armar los kits para las familias (dato de prueba)',
+    que_llevar: 'Guantes, agua y ropa cómoda',
+    requisitos: { ropaCerrada: true, carga: false },
+  };
+  if (primero) {
+    jornadas.push(
+      {
+        titulo: 'Clasificar ropa donada (demo)',
+        reservas: 3,
+        datos: { ...comun, acopio_id: primero, inicio: dia(2, 8), fin: dia(2, 12), cupo_maximo: 3 },
+      },
+      {
+        titulo: 'Armar mercados (demo)',
+        reservas: 2,
+        datos: {
+          ...comun,
+          acopio_id: primero,
+          inicio: dia(3, 14),
+          fin: dia(3, 18),
+          cupo_maximo: 20,
+        },
+      },
+    );
+  }
+  if (segundo) {
+    const pronto = new Date(ahora.getTime() + 6 * MS_HORA_DEMO);
+    jornadas.push({
+      titulo: 'Descargar el camión de agua (demo)',
+      reservas: 4,
+      datos: {
+        ...comun,
+        requisitos: { ropaCerrada: true, carga: true },
+        acopio_id: segundo,
+        inicio: pronto,
+        fin: new Date(pronto.getTime() + 3 * MS_HORA_DEMO),
+        cupo_maximo: 8,
+      },
+    });
+  }
+  if (cruzRoja?.verificacion === 'VERIFICADA') {
+    jornadas.push({
+      titulo: 'Conductores para llevar kits a Mocoa (demo)',
+      reservas: 1,
+      datos: {
+        ...comun,
+        descripcion: 'Llevar kits de aseo y mercados a los puntos de entrega (dato de prueba)',
+        entidad_id: cruzRoja.id,
+        direccion: 'Punto de encuentro de la demostración',
+        municipio: 'Bogotá',
+        perfil_requerido: 'CONDUCTOR_C2',
+        inicio: dia(3, 6),
+        fin: dia(3, 14),
+        cupo_maximo: 6,
+      },
+    });
+  }
+  for (const j of jornadas) {
+    const vigente = await prisma.jornada.findFirst({
+      where: { titulo: j.titulo, fin: { gt: ahora } },
+    });
+    if (vigente) continue;
+    const creada = await prisma.jornada.create({
+      data: { ...j.datos, titulo: j.titulo, creada_por: adminId },
+    });
+    for (let i = 1; i <= j.reservas; i++) {
+      await prisma.reserva.create({
+        data: {
+          jornada_id: creada.id,
+          nombre: `Voluntario ${i} (prueba)`,
+          correo: `voluntario${i}@demo.acopio.local`,
+          codigo: codigoReserva(randomBytes(8)),
+          secreto_hash: createHash('sha256').update(randomBytes(18)).digest('hex'),
+          perfil_declarado: Boolean(j.datos.perfil_requerido),
+          consentimiento_en: ahora,
+        },
+      });
+    }
   }
 }
