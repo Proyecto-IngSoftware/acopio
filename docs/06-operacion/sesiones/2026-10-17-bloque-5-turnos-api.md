@@ -94,10 +94,9 @@ anticipación, igual que crearla.
 
 ## Pendiente
 
-- La interfaz del Bloque 5: maquetas de P7, P8 y C14 para que Joseph las apruebe, después las
-  pantallas, los cambios en P5, P6 y P12 y los dos recorridos
-  ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36),
-  [especificación §6 y §7](../../superpowers/specs/2026-10-17-bloque-5-turnos-design.md)).
+- La interfaz del Bloque 5, con su [plan](../../05-planes/2026-10-17-bloque-5-interfaz.md): maquetas
+  de P7, P8 y C14 para que Joseph las apruebe, después las pantallas, los cambios en P5, P6 y P12
+  y los dos recorridos ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)).
 - Los cuatro menores de la revisión ([P-068](../../01-requerimientos/pendientes.md)).
 - Lo que sigue abierto de la pieza C ([P-066](../../01-requerimientos/pendientes.md)).
 

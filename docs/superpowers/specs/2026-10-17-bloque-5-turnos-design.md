@@ -16,7 +16,7 @@ actualizado: 2026-10-17
 ([avance 2](../../entregas/avance-02-requisitos.md)) y RNF-09
 ([no funcionales](../../01-requerimientos/no-funcionales.md#rnf-09--privacidad--ley-1581-de-2012))
 **Issue:** [#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36). El milestone dice 8 de noviembre, pero Joseph pidió adelantarlo todo lo posible antes de la sustentación del viernes 23 de octubre
-**Planes:** API e interfaz, por escribir
+**Planes:** [API](../../05-planes/2026-10-17-bloque-5-api.md) (construida) · [interfaz](../../05-planes/2026-10-17-bloque-5-interfaz.md)
 
 ---
 
