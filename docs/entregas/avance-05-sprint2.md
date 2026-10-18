@@ -20,7 +20,6 @@ que va desde «## 1. Incremento funcional» lo vuelca
 - La captura del tablero del Project con las historias del Sprint 2, en
   `evidencia/avance-05/tablero.png`. Mientras no esté, el Word deja un recuadro.
 - La captura del seguimiento, en `evidencia/avance-05/seguimiento.png`.
-- La retrospectiva, que la escribe Joseph.
 - Subir el Word unificado a OneDrive.
 
 ## Qué pide la guía y dónde está
@@ -77,59 +76,51 @@ un teléfono.
 Historias HU-10a Ver a dónde falta y de dónde sobra, HU-10b Aprobar o descartar un traslado,
 HU-11 Despachar con un documento verificable y HU-12 Confirmar la llegada sin contar unidad
 por unidad.
-
 1. El Administrador abre el **motor de sugerencias** (C11) y toca «Recalcular». La API cruza
    la necesidad de cada zona con lo que sobra en cada acopio y devuelve los traslados
    ordenados por puntaje. Cada tarjeta explica por qué se sugiere y muestra los cuatro
    criterios del puntaje. Desde ahí se aprueba o se descarta; al descartar se pide el motivo,
    y la tarjeta queda en «Descartadas» con quién lo decidió.
-
-![Motor de sugerencias (C11): traslados sugeridos con su puntaje.](evidencia/avance-05/c11-motor.png)
-
 2. Un traslado aprobado se vuelve una **remisión** en borrador (C12). El Administrador la
    revisa y la despacha; entonces pasa a «En tránsito».
-
-![Remisiones (C12): la remisión en borrador, lista para despachar.](evidencia/avance-05/c12-remisiones.png)
-
 3. La remisión despachada tiene su **documento** para imprimir, con el código, el QR, las
    cantidades y los espacios para las firmas de quien entrega y quien recibe.
-
-![Documento de una remisión despachada, con su QR.](evidencia/avance-05/c12-documento.png)
-
 4. En la zona, el Receptor escanea el QR o escribe el código, confirma lo que llegó y adjunta
    una foto. La pantalla confirma la recepción y lleva a la ficha de la zona. Si el
    código no es de una remisión, responde «Ese código no es el QR de una remisión»; si la
    remisión ya se recibió, «Esta remisión ya no está en camino a tus zonas».
 
-![Recepción en la zona (C13): confirmación de una remisión recibida.](evidencia/avance-05/c13-recibida.png)
-
 HU-13 Contar lo que la fórmula no ve se cubre desde «Mi zona»: el Receptor reporta una
 necesidad que el cálculo no conoce, y el motor la toma en cuenta al recalcular.
+
+![Motor de sugerencias (C11): traslados sugeridos con su puntaje.](evidencia/avance-05/c11-motor.png)
+
+![Remisiones (C12): la remisión en borrador, lista para despachar.](evidencia/avance-05/c12-remisiones.png)
+
+![Documento de una remisión despachada, con su QR.](evidencia/avance-05/c12-documento.png)
+
+![Recepción en la zona (C13): confirmación de una remisión recibida.](evidencia/avance-05/c13-recibida.png)
 
 ### 1b. Flujo de las causas verificadas
 
 Historias HU-02 Donar a una causa real y HU-15 No dirigir donantes a una estafa.
-
 1. Cualquier persona, sin cuenta, abre **Causas** (P3). Solo aparecen causas de entidades
    verificadas, cada una con el sello y la fecha de verificación.
-
-![Directorio de causas (P3).](evidencia/avance-05/p03-causas.png)
-
 2. La **ficha de la causa** (P4) muestra la entidad, el paso a paso para donar y el enlace al
    sitio oficial.
-
-![Ficha de una causa (P4).](evidencia/avance-05/p04-ficha-causa.png)
-
 3. Al tocar «Ir al sitio oficial», una hoja avisa que la persona sale de Acopio y que Acopio
    no recibe dinero ni ve sus pagos. Solo después de confirmar se abre el sitio.
-
-![Aviso antes de salir al sitio oficial de la entidad.](evidencia/avance-05/p04-salida.png)
-
 4. En la consola, el Administrador verifica la entidad (C15). El botón de verificar empieza
    inactivo hasta marcar la casilla del aviso de seguridad. Después publica la causa (C22),
    donde el formulario solo ofrece entidades verificadas. Si a una entidad se le quita la
    verificación, sus causas pasan a «atendidas» y la ficha pública pierde el sello y el
    enlace.
+
+![Directorio de causas (P3).](evidencia/avance-05/p03-causas.png)
+
+![Ficha de una causa (P4).](evidencia/avance-05/p04-ficha-causa.png)
+
+![Aviso antes de salir al sitio oficial de la entidad.](evidencia/avance-05/p04-salida.png)
 
 ![Causas en la consola (C22).](evidencia/avance-05/c22-causas.png)
 
@@ -148,16 +139,13 @@ demo del servidor.
 
 Los diagramas están al día con el código del 18 de octubre. El de paquetes es el que pide la
 sustentación; se dibuja a mano en `docs/02-arquitectura/diagramas/paquetes.html` y sus
-dependencias salen de dependency-cruiser. Los de contenedores y los modelos de datos se
-generan con Mermaid desde la misma carpeta.
+dependencias salen de dependency-cruiser. Los modelos de datos de la red y de turnos se
+generan con Mermaid desde la misma carpeta; el resto de los diagramas está en la bóveda,
+en `docs/02-arquitectura/`.
 
 ![Paquetes del monorepo: la web, la API y los paquetes compartidos.](../assets/diagramas/arquitectura-03-paquetes-del-monorepo.png)
 
 ![Paquetes de la API: los módulos de dominio arriba, los transversales abajo. Incluye turnos.](../assets/diagramas/arquitectura-04-paquetes-de-la-api.png)
-
-![Contenedores: el navegador, la web y la API en el VPS con Dokploy, y los servicios externos (Supabase Auth, SMTP, Nominatim, OpenStreetMap y RedAcopio).](../assets/diagramas/arquitectura-02-contenedores.png)
-
-![Modelo de datos del motor: sugerencias, remisiones con sus líneas y reportes de necesidad.](../assets/diagramas/er-05-motor.png)
 
 ![Modelo de datos de la red: emergencias, zonas, entidades, acopios y causas.](../assets/diagramas/er-02-red.png)
 
@@ -309,19 +297,28 @@ criterios revisados en el servidor el 18 de octubre.
 
 **¿Qué funcionó bien?**
 
-Pendiente: la escribe Joseph.
+El trabajo con Stitch. Con las maquetas aprobadas se construyen interfaces funcionales, y el
+flujo que se está usando (maqueta, especificación, plan, pull request y recorrido) es bastante
+bueno para avanzar y para analizar requerimientos nuevos y extras al aplicativo.
 
 **¿Qué no funcionó o dificultó el trabajo?**
 
-Pendiente: la escribe Joseph.
+Con el tiempo se dificultó crear la lógica del envío de correos sin poder probarla, porque el
+SMTP todavía no se ha configurado. Pasa lo mismo con otros apartados que no han tenido pruebas
+reales durante el desarrollo.
 
 **¿Qué aprendimos?**
 
-Pendiente: la escribe Joseph.
+Aprendimos a usar un gestor de contenido S3 (Garage), que puede albergar bastante información.
+Sin él, almacenar ese contenido habría sido pesado para el servidor.
 
 **¿Qué acción concreta aplicaremos en el siguiente corte?**
 
-Pendiente: la escribe Joseph. Tiene que ser una acción verificable.
+Continuar con el mínimo viable y cargar la información del aplicativo original de Acopio Bogotá
+(RedAcopio), obtenida por scraping, por tandas y sin sobrecargar el servidor de terceros. Se
+verifica cuando el importador de la pieza E
+([#49](https://github.com/Proyecto-IngSoftware/acopio/issues/49)) haya cargado esos acopios en
+el servidor de pruebas, antes del 15 de noviembre.
 
 ## 4. Repositorio y servidor
 
