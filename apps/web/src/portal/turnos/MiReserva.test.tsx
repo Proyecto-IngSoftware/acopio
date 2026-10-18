@@ -18,6 +18,7 @@ const reservaDe = (extra: Partial<ReservaPublica> = {}): ReservaPublica => ({
   estado: 'ACTIVA',
   nombre: 'Ana Gómez',
   perfilDeclarado: false,
+  jornadaCambiadaEn: null,
   jornada: jornadaDe(),
   ...extra,
 });
@@ -190,4 +191,18 @@ it('después del inicio ya no ofrece cancelar', async () => {
   await screen.findByText('K7QM4XPA');
   expect(screen.queryByRole('button', { name: 'Cancelar reserva' })).not.toBeInTheDocument();
   expect(screen.getByText(/La jornada ya empezó/)).toBeInTheDocument();
+});
+
+it('si cambiaron la hora o el lugar después de reservar, lo avisa arriba', async () => {
+  responderSegun({ [CONSULTAR]: reservaDe({ jornadaCambiadaEn: '2026-10-19T15:00:00.000Z' }) });
+  pantalla();
+  const aviso = await screen.findByRole('status', { name: 'La jornada cambió' });
+  expect(aviso).toHaveTextContent('Cambiaron la hora o el lugar el 19 oct, 10:00 a. m.');
+});
+
+it('sin cambios no muestra el aviso', async () => {
+  responderSegun({ [CONSULTAR]: reservaDe() });
+  pantalla();
+  await screen.findByText('K7QM4XPA');
+  expect(screen.queryByRole('status', { name: 'La jornada cambió' })).not.toBeInTheDocument();
 });

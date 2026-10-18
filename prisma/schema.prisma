@@ -816,6 +816,8 @@ model Jornada {
   estado                EstadoJornada     @default(ABIERTA)
   motivo_cancelacion    String?
   cancelada_en          DateTime?         @db.Timestamptz
+  /// Última vez que cambiaron el inicio, el fin o el lugar. P8 avisa a quien reservó antes.
+  movida_en             DateTime?         @db.Timestamptz
   /// Las jornadas creadas juntas, en varias fechas, comparten serie.
   serie_id              String?           @db.Uuid
   creada_por            String            @db.Uuid

@@ -3,7 +3,7 @@ title: "Modelo de datos"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-18
 ---
 
 # Modelo de datos
@@ -421,7 +421,7 @@ jornada
   requisitos jsonb · perfil_requerido?
   cupos_ajuste_manual int DEFAULT 0
   ajuste_actualizado_en · estado  ABIERTA | CERRADA | CANCELADA
-  motivo_cancelacion? · cancelada_en? · serie_id? · creada_por
+  motivo_cancelacion? · cancelada_en? · movida_en? · serie_id? · creada_por
 
 reserva
   id · jornada_id · nombre? · correo? · telefono?   nulos a los 30 días

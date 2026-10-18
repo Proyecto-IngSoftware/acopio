@@ -1076,16 +1076,15 @@ antes de la sustentación del 23 de octubre.
 ### P-070 · Turnos: avisar en P8 que la jornada cambió, y los plazos que mira el navegador
 **Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la revisión final de la interfaz del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))
 **Qué:**
-- §6 de la especificación pide que P8 muestre «si la jornada cambió». La API no guarda una
-  marca de cambio: P8 muestra la fecha y el lugar vigentes, pero no avisa que se movieron.
-  Propuesta: que `jornada` guarde `movida_en` al cambiar el inicio, el fin o la dirección, y
-  que P8 muestre «La jornada cambió el …» si es posterior a la reserva. Otra opción es recortar
-  el requisito, porque el correo de cambio ya está en cola.
+- Resuelto el 2026-10-18, a pedido de Joseph: P8 avisa si la jornada cambió. `jornada` guarda
+  `movida_en` cuando cambian el inicio, el fin o el lugar. La consulta de la reserva devuelve
+  `jornadaCambiadaEn` si el cambio fue en el momento de reservar o después, y P8 muestra
+  «La jornada cambió» con la fecha del cambio.
 - P8 oculta «Cancelar reserva» después del inicio y C14 habilita la asistencia según el reloj
   del navegador, aunque las restricciones del plan dicen que la web no calcula plazos. La API
   valida igual. Si se prefiere, la API puede mandar `puedeCancelar` y `puedeMarcarAsistencia`.
-**Por qué:** la primera es un requisito de la especificación sin construir, y decidir si se
-construye o se recorta le toca a Joseph. La segunda es una excepción a una regla del plan.
+**Por qué:** la primera era un requisito de la especificación sin construir; Joseph pidió
+construirlo. La segunda sigue abierta: es una excepción a una regla del plan.
 **Estado:** ABIERTO
 
 ---

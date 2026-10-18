@@ -3767,6 +3767,11 @@ export interface components {
             /** @description Nulo cuando ya se borraron los datos (30 días) */
             nombre: string | null;
             perfilDeclarado: boolean;
+            /**
+             * Format: date-time
+             * @description Cuándo cambiaron la hora o el lugar, si fue después de reservar
+             */
+            jornadaCambiadaEn: string | null;
             jornada: {
                 /** Format: uuid */
                 id: string;
