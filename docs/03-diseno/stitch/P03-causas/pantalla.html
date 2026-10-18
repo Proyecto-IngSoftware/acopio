@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acopio CO - Causas</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-variant": "#e9e1dd",
+            "primary": "#005454",
+            "on-tertiary-fixed": "#002020",
+            "surface-dim": "#e0d8d5",
+            "on-secondary-fixed": "#1e1b18",
+            "on-secondary": "#ffffff",
+            "on-primary": "#ffffff",
+            "inverse-on-surface": "#f7efeb",
+            "outline-variant": "#bec9c8",
+            "primary-container": "#0f6e6e",
+            "tertiary-container": "#316c6c",
+            "outline": "#6e7979",
+            "on-error": "#ffffff",
+            "surface-container-low": "#faf2ee",
+            "surface-container-highest": "#e9e1dd",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "background": "#fff8f5",
+            "secondary-fixed": "#e9e1db",
+            "on-surface-variant": "#3e4948",
+            "surface": "#fff8f5",
+            "secondary": "#625e59",
+            "primary-fixed-dim": "#85d4d3",
+            "on-surface": "#1e1b19",
+            "on-primary-fixed-variant": "#004f50",
+            "inverse-primary": "#85d4d3",
+            "error-container": "#ffdad6",
+            "error": "#ba1a1a",
+            "tertiary-fixed-dim": "#96d1d0",
+            "primary-fixed": "#a1f0ef",
+            "on-secondary-fixed-variant": "#4a4642",
+            "tertiary": "#125454",
+            "on-tertiary": "#ffffff",
+            "on-primary-container": "#9eedec",
+            "on-error-container": "#93000a",
+            "secondary-fixed-dim": "#ccc5c0",
+            "on-background": "#1e1b19",
+            "on-primary-fixed": "#002020",
+            "surface-tint": "#03696a",
+            "surface-bright": "#fff8f5",
+            "tertiary-fixed": "#b2eded",
+            "surface-container": "#f4ece8",
+            "inverse-surface": "#33302d",
+            "secondary-container": "#e9e1db",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-container": "#afebea",
+            "on-secondary-container": "#68635f",
+            "surface-container-high": "#eee7e3"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter"],
+            "display": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#FAFAF9] text-[#1C1917] font-body antialiased pb-24">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-4 h-14 bg-surface-container-lowest dark:bg-surface-container-lowest border-b border-surface-variant dark:border-outline-variant z-40 fixed top-0 left-0">
+<div class="flex items-center space-x-2">
+<span class="font-headline text-lg font-bold text-primary dark:text-primary-fixed">Acopio CO</span>
+</div>
+<div>
+<button class="bg-[#0F6E6E] text-white px-4 py-1.5 rounded-[10px] text-sm font-bold active:opacity-80 transition-opacity">Entrar</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-md mx-auto px-4 pt-20 space-y-6">
+<!-- Title and Subtitle -->
+<div class="space-y-1">
+<h1 class="text-2xl font-bold font-headline text-[#1C1917]">Causas</h1>
+<p class="text-sm text-[#57534E] leading-relaxed">Entidades verificadas por Acopio. Cada causa explica paso a paso cómo donar en su sitio oficial.</p>
+</div>
+<!-- Institutional Notice -->
+<div class="bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl p-4 flex items-start space-x-3">
+<span class="material-symbols-outlined text-[#0F6E6E] mt-0.5" style="font-variation-settings: 'FILL' 1;">info</span>
+<p class="text-sm text-[#1C1917] leading-snug">Acopio no recibe dinero. Las donaciones se hacen en el sitio oficial de cada entidad.</p>
+</div>
+<!-- Filter Chips Horizontal Scroll -->
+<div class="flex space-x-2 overflow-x-auto pb-1 no-scrollbar">
+<button class="bg-[#0F6E6E] text-white px-4 py-2 rounded-[10px] text-sm font-medium whitespace-nowrap">Todas</button>
+<button class="bg-white border border-[#E7E5E4] text-[#57534E] px-4 py-2 rounded-[10px] text-sm font-medium whitespace-nowrap">Personas</button>
+<button class="bg-white border border-[#E7E5E4] text-[#57534E] px-4 py-2 rounded-[10px] text-sm font-medium whitespace-nowrap">Animales</button>
+<button class="bg-white border border-[#E7E5E4] text-[#57534E] px-4 py-2 rounded-[10px] text-sm font-medium whitespace-nowrap">Adultos mayores</button>
+<button class="bg-white border border-[#E7E5E4] text-[#57534E] px-4 py-2 rounded-[10px] text-sm font-medium whitespace-nowrap">Personas desaparecidas</button>
+<button class="bg-white border border-[#E7E5E4] text-[#57534E] px-4 py-2 rounded-[10px] text-sm font-medium whitespace-nowrap">Rescatistas</button>
+</div>
+<!-- Cause Card 1 -->
+<article class="bg-white border border-[#E7E5E4] rounded-xl overflow-hidden shadow-sm">
+<div class="aspect-video w-full bg-cover bg-center" data-alt="Documentary photography of humanitarian relief workers loading food boxes into a rescue truck in Mocoa Colombia, warm natural daylight, professional reporting style" style="background-image: url('https://lh3.googleusercontent.com/aida/AEtjO1WJDhXE33kEQtSQQZ5ZXnRcW3pXLrs6VrMQn6UfZ0Wf7WBR7CLJatpmFZO1y5LHgrF7Ri3sEK-wy9paEq1nGtepzZHAwepk-F2nd_32ASMpVAHAuKPpDcI7yNonV1apVuJDJKubAa7ODdEjJb8y__GClfoPk11qHi2_tLhl77CkU8WDmp7hEQ__hMyvgr-jGv8AkaSSAzjhq0UujZOs8jJSdJrhHlFRHaRHbl955Ok4rHpHOKySvsfmkc0')"></div>
+<div class="p-4 space-y-3">
+<div class="inline-block bg-[#F5F5F4] text-[#57534E] text-xs px-2.5 py-1 rounded-[10px] font-medium">Personas</div>
+<h2 class="text-base font-bold text-[#1C1917] leading-snug">Mercados para familias damnificadas en Mocoa</h2>
+<div class="flex items-center space-x-1.5">
+<span class="text-sm font-medium text-[#1C1917]">Fundación Tierra Viva</span>
+<span class="material-symbols-outlined text-[#0F6E6E] text-base" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-xs text-[#57534E]">Verificada el 12 de agosto de 2026</p>
+<p class="text-sm text-[#57534E] leading-relaxed">Reúne alimentos no perecederos y elementos de aseo para 300 familias afectadas</p>
+<button class="w-full bg-[#0F6E6E] text-white h-12 rounded-[10px] font-bold text-sm mt-2 flex items-center justify-center">Ver cómo donar</button>
+</div>
+</article>
+<!-- Cause Card 2 -->
+<article class="bg-white border border-[#E7E5E4] rounded-xl overflow-hidden shadow-sm">
+<div class="aspect-video w-full bg-[#F5F5F4] flex items-center justify-center text-[#57534E]" data-alt="A detailed documentary photograph of volunteers feeding rescued stray dogs and cats in a temporary shelter in Mocoa, Colombia, soft natural lighting, high detail, realistic humanitarian reporting aesthetic" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCsIB9MgIArubJjYlb4nS0yv73wzovgi5rTQ359WXkflX4XCKb6bwUdynUFk_h8N_h5ZjsAp86jIqfynvSDWmDI7jUM-6wO5SflWWjZG-0wzlTLPZqFU7Dqp4K0wCC3a84BdpkULOKKwWGFdQEOjkrX7loP8xtITQ-SUisxoWStdJ0KZKqtuM1xDpM2M-8Pi991N6d8VpBwTsMu7KFlNhYS11wAItxWbngJW07PYVeizpKdRjVTduvdko8zBfQttUFjHkg0dhIVrDs')">
+<span class="material-symbols-outlined text-4xl text-[#0F6E6E]">pets</span>
+</div>
+<div class="p-4 space-y-3">
+<div class="inline-block bg-[#F5F5F4] text-[#57534E] text-xs px-2.5 py-1 rounded-[10px] font-medium">Animales</div>
+<h2 class="text-base font-bold text-[#1C1917] leading-snug">Alimento y atención para animales rescatados en Mocoa</h2>
+<div class="flex items-center space-x-1.5">
+<span class="text-sm font-medium text-[#1C1917]">Huellas del Putumayo</span>
+<span class="material-symbols-outlined text-[#0F6E6E] text-base" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<p class="text-xs text-[#57534E]">Verificada el 10 de agosto de 2026</p>
+<p class="text-sm text-[#57534E] leading-relaxed">Suministro de concentrado, medicamentos veterinarios y atención de urgencia para animales afectados.</p>
+<button class="w-full bg-[#0F6E6E] text-white h-12 rounded-[10px] font-bold text-sm mt-2 flex items-center justify-center">Ver cómo donar</button>
+</div>
+</article>
+<!-- Missing Persons Card -->
+<article class="bg-white border border-[#E7E5E4] rounded-xl p-4 space-y-4 shadow-sm">
+<div class="flex items-center space-x-2 text-[#DC2626]">
+<span class="material-symbols-outlined" data-icon="warning" style="font-variation-settings: 'FILL' 1;">warning</span>
+<h2 class="text-base font-bold text-[#1C1917]">Personas desaparecidas</h2>
+</div>
+<p class="text-sm text-[#57534E] leading-relaxed">Acopio no guarda datos de personas desaparecidas. Si buscas a alguien o quieres ayudar, acude a:</p>
+<div class="divide-y divide-[#E7E5E4]">
+<a class="py-3 flex items-center justify-between text-sm text-[#1C1917] hover:bg-[#FAFAF9] transition-colors" href="#">
+<span class="font-medium pr-2">Unidad de Búsqueda de Personas dadas por Desaparecidas (UBPD)</span>
+<span class="material-symbols-outlined text-[#57534E] text-lg shrink-0" data-icon="open_in_new">open_in_new</span>
+</a>
+<a class="py-3 flex items-center justify-between text-sm text-[#1C1917] hover:bg-[#FAFAF9] transition-colors" href="#">
+<span class="font-medium pr-2">Cruz Roja Colombiana</span>
+<span class="material-symbols-outlined text-[#57534E] text-lg shrink-0" data-icon="open_in_new">open_in_new</span>
+</a>
+<a class="py-3 flex items-center justify-between text-sm text-[#1C1917] hover:bg-[#FAFAF9] transition-colors" href="#">
+<span class="font-medium pr-2">Medicina Legal</span>
+<span class="material-symbols-outlined text-[#57534E] text-lg shrink-0" data-icon="open_in_new">open_in_new</span>
+</a>
+</div>
+</article>
+<!-- Archive Section Link -->
+<a class="bg-white border border-[#E7E5E4] rounded-xl p-4 flex items-center justify-between shadow-sm hover:bg-[#FAFAF9] transition-colors" href="#">
+<div class="flex items-center space-x-3">
+<div class="w-10 h-10 rounded-[10px] bg-[#F5F5F4] flex items-center justify-center text-[#0F6E6E]">
+<span class="material-symbols-outlined" data-icon="archive">archive</span>
+</div>
+<div>
+<h3 class="text-sm font-bold text-[#1C1917]">Causas atendidas</h3>
+<p class="text-xs text-[#57534E]">Las que ya cerraron, visibles por transparencia</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-[#57534E]" data-icon="chevron_right">chevron_right</span>
+</a>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-surface-variant dark:border-outline-variant pb-safe">
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="text-xs font-normal">Inicio</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="map">map</span>
+<span class="text-xs font-normal">Mapa</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold min-h-[48px] px-3 py-1" href="#">
+<span class="material-symbols-outlined" data-icon="favorite" style="font-variation-settings: 'FILL' 1;">favorite</span>
+<span class="text-xs font-bold">Causas</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="volunteer_activism">volunteer_activism</span>
+<span class="text-xs font-normal">Voluntariado</span>
+</a>
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary" href="#">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+<span class="text-xs font-normal">Más</span>
+</a>
+</nav>
+</body></html>

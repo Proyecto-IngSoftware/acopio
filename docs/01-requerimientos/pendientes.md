@@ -1011,6 +1011,22 @@ repositorio no lo tiene.
 **Por qué:** si se suma alguien con Claude Code, la regla queda sin quien la haga cumplir.
 **Estado:** ABIERTO. Versionarlo en `.claude/hooks/` cuando se sume otra persona
 
+### P-064 · Causas atendidas en pantalla aparte, con el enlace al sitio oficial
+**Fecha:** 2026-10-17 · **Propuesto por:** Joseph, al aprobar las maquetas de P3 y P4 ([#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57))
+**Qué:** dos decisiones para la especificación de la pieza C
+([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)):
+- «Causas atendidas», las archivadas de RF-RED-008 y RF-RED-010, es una pantalla aparte de P3
+  y no un filtro dentro del directorio, para separar las dos secciones. P3 la abre desde una
+  fila al final
+- La ficha de una causa atendida mantiene el enlace al sitio oficial, como botón secundario,
+  con la fecha de cierre arriba
+**Por qué:** RF-RED-008 pide las archivadas «fuera del listado principal», pero no dice si van
+en otra ruta. Y RF-RED-010 deja visible la causa archivada sin decir si conserva la salida al
+sitio de la entidad.
+**Estado:** ABIERTO hasta que la especificación de la pieza C lo recoja. Maquetas en
+[P03-causas](../03-diseno/stitch/P03-causas/README.md) y
+[P04-ficha-causa](../03-diseno/stitch/P04-ficha-causa/README.md)
+
 ---
 
 ## Resueltos
