@@ -11,8 +11,8 @@ describe('nombres de DTO', () => {
     );
     for (const archivo of archivos) {
       const texto = readFileSync(join(raiz, archivo), 'utf8');
-      for (const m of texto.matchAll(/class (\w+Dto) extends crearDto/g)) {
-        nombres.set(m[1], [...(nombres.get(m[1]) ?? []), archivo]);
+      for (const [, nombre] of texto.matchAll(/class (\w+Dto) extends crearDto/g)) {
+        nombres.set(nombre!, [...(nombres.get(nombre!) ?? []), archivo]);
       }
     }
     const repetidos = [...nombres].filter(([, donde]) => donde.length > 1);
