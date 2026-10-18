@@ -10,12 +10,12 @@ actualizado: 2026-10-18
 
 La sesión siguió el [plan de la interfaz](../../05-planes/2026-10-17-bloque-5-interfaz.md):
 maquetas de P7, P8 y C14, que Joseph aprobó, y después las pantallas de turnos del portal y
-de la consola. Quedaron construidas y probadas en local. Falta el recorrido contra el servidor
-y revisar HU-03 con Joseph.
+de la consola. Quedaron construidas, se fusionaron en #123 y pasaron sus recorridos en local y en el servidor. Falta
+revisar HU-03 con Joseph.
 
 ## Qué cambió
 
-Todo va en la rama `bloque-5-interfaz` y en un solo PR.
+Todo fue en la rama `bloque-5-interfaz`, fusionada en #123. El resultado contra el servidor quedó anotado en la rama `bloque-5-servidor`.
 
 | Commit | Qué trae |
 |---|---|
@@ -33,7 +33,7 @@ teléfono.
   API 70, shared 104), integración 436 y `revisar-colores.sh`.
 - Recorridos en local contra el Compose reconstruido: `portal-turnos.mjs` 6 de 6 y
   `consola-turnos.mjs` 6 de 6 ([detalle](../recorridos.md)).
-- No se corrió nada contra el servidor de pruebas, porque la interfaz aún no está desplegada.
+- Contra el servidor de pruebas, después de que Dokploy desplegó #123: `portal-turnos.mjs` 6 de 6. `consola-turnos.mjs` no se corrió allá porque entra con `operador1`, y la contraseña de la demo del servidor la tiene Joseph.
 
 ## Decisiones
 
@@ -61,9 +61,6 @@ aprobó las tres maquetas el 2026-10-17, incluidas las dos vistas de C14 armadas
 
 ## Pendiente
 
-- Correr `portal-turnos.mjs` contra el servidor después del despliegue
-  ([P-069](../../01-requerimientos/pendientes.md), tarea 9 del
-  [plan](../../05-planes/2026-10-17-bloque-5-interfaz.md)).
 - Los menores de esta interfaz ([P-069](../../01-requerimientos/pendientes.md)) y los de la API
   ([P-068](../../01-requerimientos/pendientes.md)).
 - Lo que falta de la pieza C ([P-066](../../01-requerimientos/pendientes.md)).

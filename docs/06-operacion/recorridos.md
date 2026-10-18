@@ -186,6 +186,7 @@ ocurrió y la hora en que llegó.
 |---|---|
 | `portal-turnos.mjs` | 6 de 6. La primera corrida falló porque `getByLabel('Nombre')` también encontraba la casilla del consentimiento, que dice «mi nombre»; ahora busca la etiqueta exacta |
 | `consola-turnos.mjs` | 6 de 6. Las corridas anteriores encontraron que borrar una jornada mostraba «Algo falló» aunque la API borraba: `desenvolver` tomaba el 204 sin cuerpo como error. Se corrigió en `api/cliente.ts`, y el arreglo alcanza a quitar un umbral y quitar «no recibir», que también responden 204 |
+| `portal-turnos.mjs` contra el servidor, después de desplegar #123 | 6 de 6, con las jornadas «(demo)» que el servidor sembró al arrancar |
 
 **2026-10-17, en local, pieza C** (rama `pieza-c-especificacion`, API reconstruida con
 `servicios:todo`):

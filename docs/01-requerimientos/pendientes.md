@@ -1060,8 +1060,6 @@ plazo del 23 de octubre.
   pantalla de reservar sin usarla
 - En C14, el contador de «Llegaron sin reserva» toma el valor al abrir la jornada y no se
   actualiza si otra persona cambia el ajuste mientras la pantalla sigue abierta
-- `portal-turnos.mjs` no se ha corrido contra el servidor de pruebas: falta desplegar la
-  interfaz (paso 5 de la tarea 9 del [plan](../05-planes/2026-10-17-bloque-5-interfaz.md))
 **Por qué:** ninguno rompe un flujo de la especificación. Se dejaron para no frenar el cierre
 antes de la sustentación del 23 de octubre.
 **Estado:** ABIERTO
