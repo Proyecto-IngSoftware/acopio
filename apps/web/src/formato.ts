@@ -40,3 +40,40 @@ export function diaConAnio(fecha: string): string {
     year: 'numeric',
   });
 }
+
+const BOGOTA = 'America/Bogota';
+// Algunas versiones de ICU separan «a. m.» con espacios finos; la interfaz usa espacios comunes
+const espacios = (t: string) => t.replace(/[\u00a0\u202f]/g, ' ');
+
+/** «8:00 a. m.», en hora de Colombia sin importar la zona del navegador. */
+export function hora(fecha: string): string {
+  return espacios(
+    new Date(fecha).toLocaleTimeString('es-CO', {
+      timeZone: BOGOTA,
+      hour: 'numeric',
+      minute: '2-digit',
+      hour12: true,
+    }),
+  );
+}
+
+/** «8:00 a. m. – 12:00 p. m.» */
+export const rangoHoras = (inicio: string, fin: string) => `${hora(inicio)} – ${hora(fin)}`;
+
+/** `2026-10-21`: el día de Colombia en que cae un instante. */
+export function diaBogota(fecha: string | Date): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: BOGOTA }).format(new Date(fecha));
+}
+
+/** «Miércoles 21 de octubre», el día de Colombia en que cae un instante. */
+export function diaSemana(fecha: string): string {
+  const partes = new Intl.DateTimeFormat('es-CO', {
+    timeZone: BOGOTA,
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+  }).formatToParts(new Date(fecha));
+  const de = (tipo: string) => partes.find((p) => p.type === tipo)?.value ?? '';
+  const dia = de('weekday');
+  return `${dia.charAt(0).toUpperCase()}${dia.slice(1)} ${de('day')} de ${de('month')}`;
+}

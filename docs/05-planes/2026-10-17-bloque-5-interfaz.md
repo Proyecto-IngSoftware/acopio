@@ -70,14 +70,14 @@ con `envolver` y `responderSegun`, Playwright para los recorridos.
 
 | Tarea | Estado | Notas |
 |---|---|---|
-| 1 Maquetas de P7, P8 y C14 | ⬜ | Espera la aprobación de Joseph |
-| 2 Cliente web y datos de prueba | ⬜ | |
-| 3 P7 listado | ⬜ | |
-| 4 P7 reservar | ⬜ | |
-| 5 P8 mi reserva | ⬜ | |
-| 6 P5, P6 y P12 | ⬜ | |
-| 7 C14 lista y formulario | ⬜ | |
-| 8 C14 detalle de la jornada | ⬜ | |
+| 1 Maquetas de P7, P8 y C14 | ✅ | Joseph las aprobó el 2026-10-17. El formulario y el detalle de C14 se armaron con los tokens: Stitch no devolvió esas pantallas |
+| 2 Cliente web y datos de prueba | ✅ | |
+| 3 P7 listado | ✅ | |
+| 4 P7 reservar | ✅ | |
+| 5 P8 mi reserva | ✅ | |
+| 6 P5, P6 y P12 | ✅ | |
+| 7 C14 lista y formulario | ✅ | |
+| 8 C14 detalle de la jornada | ✅ | |
 | 9 Recorridos y cierre | ⬜ | |
 
 ---

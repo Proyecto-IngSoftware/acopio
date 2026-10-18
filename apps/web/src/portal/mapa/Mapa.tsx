@@ -251,6 +251,13 @@ function Elegido({ acopio, enlace }: { acopio: AcopioPublico; enlace: string }) 
       <EnlaceBoton a={enlace} className="w-full">
         Ver ficha
       </EnlaceBoton>
+      <EnlaceBoton
+        a={`/voluntariado?acopio=${encodeURIComponent(acopio.id)}`}
+        variante="secundario"
+        className="w-full"
+      >
+        Ver jornadas
+      </EnlaceBoton>
     </section>
   );
 }

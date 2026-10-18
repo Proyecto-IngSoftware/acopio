@@ -6,17 +6,26 @@ import { acopioDePrueba } from '../../pruebas/datos-red';
 import { envolver, peticiones, responderSegun } from '../../pruebas/utilidades';
 import { Mapa } from './Mapa';
 
-// Leaflet no corre en jsdom: el doble muestra un botón por cada zona que recibe
+// Leaflet no corre en jsdom: el doble muestra un botón por cada acopio y cada zona que recibe
 vi.mock('./MapaAcopios', () => ({
   default: ({
+    acopios = [],
+    alElegir,
     zonas = [],
     alElegirZona,
   }: {
+    acopios?: { id: string }[];
+    alElegir?: (id: string) => void;
     zonas?: { zonaId: string }[];
     alElegirZona?: (id: string) => void;
   }) => (
     <div>
       mapa de acopios
+      {acopios.map((a) => (
+        <button key={a.id} type="button" onClick={() => alElegir?.(a.id)}>
+          acopio {a.id}
+        </button>
+      ))}
       {zonas.map((z) => (
         <button key={z.zonaId} type="button" onClick={() => alElegirZona?.(z.zonaId)}>
           zona {z.zonaId}
@@ -218,4 +227,17 @@ describe('zonas con necesidad (HU-13.1)', () => {
     await screen.findByRole('region', { name: 'Lo que falta en zonas afectadas' });
     expect(await violacionesGraves(container)).toEqual([]);
   });
+});
+
+it('la hoja del acopio elegido lleva a sus jornadas', async () => {
+  responderSegun({ 'GET /api/acopios': [acopioDePrueba()] });
+  render(envolver(<Mapa />, '/mapa'));
+  await userEvent.click(
+    await screen.findByRole('button', { name: `acopio ${acopioDePrueba().id}` }),
+  );
+  const hoja = await screen.findByRole('region', { name: /Acopio elegido/ });
+  expect(within(hoja).getByRole('link', { name: 'Ver jornadas' })).toHaveAttribute(
+    'href',
+    `/voluntariado?acopio=${acopioDePrueba().id}`,
+  );
 });

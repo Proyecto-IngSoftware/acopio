@@ -77,6 +77,13 @@ const HERRAMIENTAS: Herramienta[] = [
     roles: ['ADMIN'],
   },
   {
+    a: '/consola/turnos',
+    icono: 'groups',
+    titulo: 'Turnos',
+    descripcion: 'Jornadas de voluntariado y sus inscritos',
+    roles: ['ADMIN'],
+  },
+  {
     a: '/consola/zonas',
     icono: 'map',
     titulo: 'Zonas afectadas',
@@ -140,6 +147,14 @@ function MiAcopio() {
         />
       )}
       {operador && <FilaRemisiones />}
+      {operador && (
+        <FilaMenu
+          a="/consola/turnos"
+          icono="groups"
+          titulo="Turnos"
+          descripcion="Jornadas de voluntariado y sus inscritos"
+        />
+      )}
       {operador && (
         <FilaMenu
           a={`${base}/conteo`}

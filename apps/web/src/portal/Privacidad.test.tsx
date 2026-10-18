@@ -11,19 +11,25 @@ const fijarCorreo = (correo: string | null) =>
 const pantalla = () => render(envolver(<Privacidad />, '/privacidad'));
 
 describe('Privacidad', () => {
-  it('muestra las cinco secciones', () => {
+  it('muestra las seis secciones', () => {
     pantalla();
     expect(screen.getByRole('heading', { level: 1, name: 'Cómo usamos tus datos' })).toBeVisible();
     for (const t of [
       'Qué guardamos',
       'Para qué',
       'La foto de la factura',
+      'Si reservas un turno',
       'Tus derechos',
       'Quién responde',
     ]) {
       expect(screen.getByRole('heading', { level: 2, name: t })).toBeInTheDocument();
     }
     expect(screen.getByText(/12 meses después de cerrar la donación/)).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /nombre, el correo y el teléfono .* se borran 30 días después de la jornada/,
+      ),
+    ).toBeInTheDocument();
     expect(screen.getByText(/Acopio no recibe dinero/)).toBeInTheDocument();
   });
 

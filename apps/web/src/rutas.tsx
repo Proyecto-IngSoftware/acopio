@@ -135,7 +135,23 @@ const CausasConsola = lazy(() =>
 );
 const FichaCausa = lazy(() => import('./portal/causas/Ficha').then((m) => ({ default: m.Ficha })));
 
-const SIN_CONSTRUIR = ['voluntariado', 'proximamente'];
+const Jornadas = lazy(() =>
+  import('./portal/turnos/Jornadas').then((m) => ({ default: m.Jornadas })),
+);
+
+const ReservarJornada = lazy(() =>
+  import('./portal/turnos/Reservar').then((m) => ({ default: m.Reservar })),
+);
+
+const MiReserva = lazy(() =>
+  import('./portal/turnos/MiReserva').then((m) => ({ default: m.MiReserva })),
+);
+
+const TurnosConsola = lazy(() =>
+  import('./consola/turnos/Turnos').then((m) => ({ default: m.Turnos })),
+);
+
+const SIN_CONSTRUIR = ['proximamente'];
 
 /** /consola/* queda reservado para el ciclo 2. */
 export function Rutas() {
@@ -324,6 +340,14 @@ export function Rutas() {
           />
         ))}
         <Route
+          path="consola/turnos"
+          element={
+            <RequiereRol roles={['ADMIN', 'OPERADOR']} margen>
+              <TurnosConsola />
+            </RequiereRol>
+          }
+        />
+        <Route
           path="consola/catalogo"
           element={
             <RequiereRol roles={['ADMIN']}>
@@ -332,6 +356,9 @@ export function Rutas() {
           }
         />
         <Route path="causas" element={<DirectorioCausas />} />
+        <Route path="voluntariado" element={<Jornadas />} />
+        <Route path="voluntariado/:id" element={<ReservarJornada />} />
+        <Route path="voluntariado/reserva/:codigo" element={<MiReserva />} />
         <Route path="causas/atendidas" element={<CausasAtendidas />} />
         <Route path="causas/:id" element={<FichaCausa />} />
         {SIN_CONSTRUIR.map((ruta) => (

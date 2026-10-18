@@ -4,7 +4,8 @@ import { Route, Routes } from 'react-router';
 import { vi } from 'vitest';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
 import { acopioDePrueba } from '../../pruebas/datos-red';
-import { envolver, responderSegun } from '../../pruebas/utilidades';
+import { jornadaDe } from '../../pruebas/datos-turnos';
+import { envolver, peticiones, responderSegun } from '../../pruebas/utilidades';
 import { FichaAcopio } from './FichaAcopio';
 
 const HORARIO = {
@@ -101,6 +102,31 @@ it('cómo entrar, llamar y compartir por WhatsApp', async () => {
     expect.stringContaining('https://wa.me/?text=Acopio%20Chapinero'),
   );
   expect(screen.getByText('Llega pronto con el inventario.')).toBeInTheDocument();
+});
+
+it('el bloque de voluntariado lista las próximas jornadas del acopio', async () => {
+  responderSegun({
+    ...RESPUESTAS,
+    'GET /api/turnos/jornadas': [
+      jornadaDe(),
+      jornadaDe({ id: 'j2', titulo: 'Clasificar ropa donada', ocupados: 3, cupoMaximo: 3 }),
+    ],
+  });
+  ficha();
+  const bloque = await screen.findByRole('region', { name: 'Voluntariado' });
+  expect(await within(bloque).findByRole('link', { name: /Armar mercados/ })).toHaveAttribute(
+    'href',
+    '/voluntariado/j1',
+  );
+  expect(within(bloque).getByText(/3 de 3 cupos reservados/)).toBeInTheDocument();
+  expect(within(bloque).getByText(/Puede haber gente que llegó sin reserva/)).toBeInTheDocument();
+  expect(peticiones()).toContain('GET /api/turnos/jornadas?acopio=x1');
+});
+
+it('sin jornadas, el bloque de voluntariado lo dice', async () => {
+  responderSegun({ ...RESPUESTAS, 'GET /api/turnos/jornadas': [] });
+  ficha();
+  expect(await screen.findByText('Este acopio no tiene jornadas abiertas')).toBeInTheDocument();
 });
 
 it('un acopio cerrado o que no existe lo dice y lleva al mapa', async () => {
