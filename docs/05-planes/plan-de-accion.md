@@ -113,3 +113,6 @@ el Avance 5).
 - 2026-10-18: el Word del Avance 5 se revisó renderizado en un contenedor de LibreOffice; las
   capturas van en galerías y queda en 17 páginas. Joseph escribió la retrospectiva. Faltan las
   dos capturas y subirlo.
+- 2026-10-18: P-073 resuelto, la portada muestra el balance con datos de inventario. La demo
+  sube imagen a las causas y logotipo a sus entidades. Los recorridos guardan capturas para el
+  Word con `CAPTURAS_WORD`, y el Avance 5 usa 22 de ellas.

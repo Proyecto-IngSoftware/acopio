@@ -226,6 +226,9 @@ def figura(ruta, pie, alto_max=None):
 def galeria(imagenes, por_fila=3):
     """Capturas de teléfono en filas de `por_fila`, cada una con su pie, en una tabla sin bordes."""
     global n_figura
+    # El texto que presenta la galería no queda solo al pie de una página
+    if doc.paragraphs:
+        doc.paragraphs[-1].paragraph_format.keep_with_next = True
     ancho_util = util(doc.sections[-1])[0]
     ancho_celda = ancho_util / por_fila
     for i in range(0, len(imagenes), por_fila):
