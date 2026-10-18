@@ -46,37 +46,20 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 | 1 · Red, interfaz ciclo 2 | [aprobada](../superpowers/specs/2026-09-30-bloque-1-red-design.md) | [aprobado](2026-10-01-bloque-1-interfaz-ciclo-2.md) | ✅ selector de la cabecera y matriz de acceso construidos |
 | 2 · Inventario | [aprobada](../superpowers/specs/2026-10-01-bloque-2-inventario-design.md) | [API](2026-10-01-bloque-2-api.md), [interfaz ciclo 1](2026-10-01-bloque-2-interfaz-ciclo-1.md), [interfaz ciclo 2](2026-10-02-bloque-2-interfaz-ciclo-2.md), [interfaz ciclo 3](2026-10-02-bloque-2-interfaz-ciclo-3.md) | ✅ cerrado el 2026-10-05: API e interfaz (ciclos 1 a 3). El escáner en un teléfono real queda en P-037 |
 | 3 · Custodia | [aprobada](../superpowers/specs/2026-10-05-bloque-3-custodia-design.md) | [API](2026-10-05-bloque-3-api.md) · [interfaz, ciclo 1](2026-10-06-bloque-3-interfaz-ciclo-1.md) · [interfaz, ciclo 2](2026-10-06-bloque-3-interfaz-ciclo-2.md) | ✅ Cerrado el 2026-10-06: API, ciclo 1 (el Donador) y ciclo 2 (la consola), con sus recorridos en `apps/web/recorridos/donador.mjs` y `consola-comprobantes.mjs` |
-| 4 · Motor | [aprobada](../superpowers/specs/2026-10-06-bloque-4-motor-design.md) | [API, etapa 1](2026-10-06-bloque-4-api-etapa-1.md) · [API, etapa 2](2026-10-09-bloque-4-api-etapa-2.md) · [interfaz, ciclo 1](2026-10-14-bloque-4-interfaz-ciclo-1.md) | 🟡 API hecha: etapa 1 el 2026-10-07 (cálculo, sugerencias, pesos, aprobar y descartar) y etapa 2 el 2026-10-10 (remisiones, recepción en zona, reportes, capa pública, RF-CMP-007 y simulador). Interfaz: ciclo 1 (Administrador) construido el 2026-10-14, con su recorrido `consola-motor.mjs`; faltan los ciclos 2 y 3. [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35) |
-| 1 · Piezas C, D y E | C: [plan](2026-10-17-pieza-c-causas.md), construida el 2026-10-17; D y E: contenido del home e importador | C construida, D y E pendientes | 🟨 C en `main` con lo que falta en [P-066](../01-requerimientos/pendientes.md). D y E quedaron fuera de la especificación del Bloque 1 y sin issue hasta el Sprint Review ([P-046](../01-requerimientos/pendientes.md)). [#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48) hasta el 1 nov, [#50](https://github.com/Proyecto-IngSoftware/acopio/issues/50) y [#49](https://github.com/Proyecto-IngSoftware/acopio/issues/49) hasta el 15 nov |
-| 5 · Turnos | [aprobada](../superpowers/specs/2026-10-17-bloque-5-turnos-design.md) | [API](2026-10-17-bloque-5-api.md) · [interfaz](2026-10-17-bloque-5-interfaz.md) · [cierre](2026-10-18-cierre-bloque-5.md) | 🟡 API construida el 2026-10-17 e interfaz el 2026-10-18. El recorrido del portal pasó contra el servidor; falta revisar HU-03 con Joseph. [#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36) |
+| 4 · Motor | [aprobada](../superpowers/specs/2026-10-06-bloque-4-motor-design.md) | [API, etapa 1](2026-10-06-bloque-4-api-etapa-1.md) · [API, etapa 2](2026-10-09-bloque-4-api-etapa-2.md) · [interfaz, ciclo 1](2026-10-14-bloque-4-interfaz-ciclo-1.md) | ✅ Cerrado el 2026-10-18: API (etapas 1 y 2) y los tres ciclos de interfaz, con sus recorridos. [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35) |
+| 1 · Piezas C, D y E | C: [plan](2026-10-17-pieza-c-causas.md); D y E: sin especificación | C cerrada, D y E pendientes | 🟨 C cerrada el 2026-10-18 con HU-02 y HU-15 revisadas en el servidor ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)). D ([#50](https://github.com/Proyecto-IngSoftware/acopio/issues/50)) y E ([#49](https://github.com/Proyecto-IngSoftware/acopio/issues/49)) hasta el 15 nov |
+| 5 · Turnos | [aprobada](../superpowers/specs/2026-10-17-bloque-5-turnos-design.md) | [API](2026-10-17-bloque-5-api.md) · [interfaz](2026-10-17-bloque-5-interfaz.md) · [cierre](2026-10-18-cierre-bloque-5.md) | ✅ Cerrado el 2026-10-18: API, interfaz y cierre, con HU-03 revisada en el servidor. [#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36) |
 | 6 · Extras | pendiente | pendiente | ⬜ [#37](https://github.com/Proyecto-IngSoftware/acopio/issues/37) |
 | Servidor de pruebas | [despliegue.md](../06-operacion/despliegue.md) | [plan de trabajo](2026-10-16-servidor-de-pruebas.md) · [factura y demo](2026-10-16-servidor-de-pruebas-factura-y-demo.md) | 🟡 Arriba desde el 2026-10-16 (#91, #92, #93). Factura por la API y demo con `DEMO_CONTRASENA` hechas en local; faltan desplegarlas, sembrar la demo y los recorridos contra el servidor. [#53](https://github.com/Proyecto-IngSoftware/acopio/issues/53), [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26) |
 
 ## Lo que sigue
 
-Las fechas máximas de cada semana, hasta la entrega final, están en el
-[cronograma](cronograma.md). Cada semana es un milestone de GitHub.
-
-Estado al 2026-10-18: la API y los tres ciclos de interfaz del Bloque 4 están en `main`,
-con «Mi zona» y los menores de la revisión del ciclo 3. El servidor de pruebas corre la
-demo, y los recorridos pasan allá. Las maquetas de P3 y P4, las causas, quedaron aprobadas
-([#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57)). El último informe de
-sesión está en [sesiones](../06-operacion/sesiones/README.md).
-
-1. **Siguiente paso: el [plan de cierre del Bloque 5](2026-10-18-cierre-bloque-5.md)**
-   ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36) y
-   [#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)). La API y la interfaz de
-   turnos están construidas, revisadas y desplegadas. Quedan la revisión de HU-03 con Joseph,
-   lo que falta de la pieza C ([P-066](../01-requerimientos/pendientes.md)) y los menores de
-   [P-068](../01-requerimientos/pendientes.md) y [P-069](../01-requerimientos/pendientes.md).
-2. La ronda de pruebas del equipo en el servidor
-   ([#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58)). Lo que reporten entra
-   como issue con la etiqueta `hallazgo`.
-3. Después de la presentación: P-060, que vence el usuario recordado. Cuando se sume otra
-   persona, P-063, el hook fuera del repositorio.
-4. En paralelo, cuando haga falta, la deuda técnica
-   ([etiqueta `deuda`](https://github.com/Proyecto-IngSoftware/acopio/issues?q=is%3Aopen+label%3Adeuda))
-   y el despliegue definitivo ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)).
+El orden de lo que falta, con su issue, su fecha y su estado, está en el
+[plan de acción](plan-de-accion.md). Se corrige cada vez que cambia algo y
+`node scripts/revisar-plan.mjs` dice si quedó desalineado con GitHub. Las fechas máximas de
+cada semana, hasta la entrega final, están en el [cronograma](cronograma.md); cada semana es
+un milestone de GitHub. El último informe de sesión está en
+[sesiones](../06-operacion/sesiones/README.md).
 
 El [diseño general](../superpowers/specs/2026-08-20-acopio-design.md) ya está
 aprobado y cubre los siete bloques. Cada bloque necesita además su propia
