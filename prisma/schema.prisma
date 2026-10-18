@@ -70,6 +70,9 @@ model Usuario {
   reportes_necesidad     ReporteNecesidad[]      @relation("reportes_necesidad")
   necesidades_manuales   NecesidadManual[]       @relation("necesidades_manuales")
   configuracion_motor    ConfiguracionMotor[]    @relation("configuracion_motor")
+  entidades_verificadas  Entidad[]               @relation("entidades_verificadas")
+  causas_creadas         Causa[]                 @relation("causas_creadas")
+  causas_archivadas      Causa[]                 @relation("causas_archivadas")
 
   @@map("usuario")
 }
@@ -276,21 +279,68 @@ enum EstadoZona {
   CUBIERTA
 }
 
-/// RF-RED-005. La verificación con documento llega con la especificación C.
+/// RF-RED-005 y RF-RED-006. Verificar es una marca del Administrador, sin documento (P-065).
+/// CHECK: VERIFICADA si y solo si tiene verificada_en.
 model Entidad {
-  id           String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  nombre       String             @unique @db.Citext
-  tipo         String
-  nit          String?
-  sitio_web    String?
-  telefono     String?
-  correo       String?
-  descripcion  String?
-  verificacion EstadoVerificacion @default(SIN_VERIFICAR)
-  creado_en    DateTime           @default(now()) @db.Timestamptz
-  acopios      Acopio[]
+  id              String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre          String             @unique @db.Citext
+  tipo            String
+  nit             String?
+  sitio_web       String?
+  telefono        String?
+  correo          String?
+  descripcion     String?
+  verificacion    EstadoVerificacion @default(SIN_VERIFICAR)
+  verificada_por  String?            @db.Uuid
+  verificador     Usuario?           @relation("entidades_verificadas", fields: [verificada_por], references: [id])
+  verificada_en   DateTime?          @db.Timestamptz
+  logo_key        String?
+  creado_en       DateTime           @default(now()) @db.Timestamptz
+  acopios         Acopio[]
+  causas          Causa[]
 
   @@map("entidad")
+}
+
+enum CategoriaCausa {
+  PERSONAS
+  ANIMALES
+  ADULTOS_MAYORES
+  RESCATISTAS
+}
+
+enum MotivoArchivo {
+  VENCIDA
+  MANUAL
+  ENTIDAD_SIN_VERIFICAR
+}
+
+/// RF-RED-007, 008 y 010. Activa: sin archivar, cierra_el >= hoy y entidad VERIFICADA.
+/// CHECK: archivada_en y archivo_motivo van juntos. acopio_app no borra.
+model Causa {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entidad_id     String         @db.Uuid
+  entidad        Entidad        @relation(fields: [entidad_id], references: [id])
+  categoria      CategoriaCausa
+  titulo         String
+  descripcion    String
+  imagen_key     String?
+  /// Arreglo de textos, de 1 a 10
+  pasos          Json
+  url_oficial    String
+  cierra_el      DateTime       @db.Date
+  publicada_en   DateTime       @default(now()) @db.Timestamptz
+  archivada_en   DateTime?      @db.Timestamptz
+  archivo_motivo MotivoArchivo?
+  archivada_por  String?        @db.Uuid
+  archivador     Usuario?       @relation("causas_archivadas", fields: [archivada_por], references: [id])
+  creada_por     String         @db.Uuid
+  creador        Usuario        @relation("causas_creadas", fields: [creada_por], references: [id])
+  creado_en      DateTime       @default(now()) @db.Timestamptz
+  actualizado_en DateTime       @default(now()) @updatedAt @db.Timestamptz
+
+  @@index([archivada_en, publicada_en(sort: Desc)])
+  @@map("causa")
 }
 
 /// RF-RED-001. Los acopios referenciados (tipo, fuente) llegan con el importador.
