@@ -124,7 +124,7 @@ llegan en la segunda). Faltan `turnos` (Bloque 5) e `importacion`.
 | `inventario` | Movimientos, saldos, umbrales, no recibir | `MovimientoService`, `SaldoService` |
 | `comprobantes` | Donaciones preparadas con folio, sugerencia de acopio, factura, recepción por folio, conciliación, seguimiento público y tareas de vencimiento y retención | `DonacionesService`, `RecepcionService`, `ConciliacionService` |
 | `motor` | Necesidad, déficit, excedentes, sugerencias con su recálculo, pesos, remisiones y despacho general, vínculo folio–remisión, necesidad reportada. Las fórmulas viven en `packages/shared` | `EstadoMotorService`, `NecesidadService`, `SugerenciasService`, `ConfiguracionService`, `RemisionesBorradorService` |
-| `turnos` | Jornadas, reservas, cupos | `JornadaService` |
+| `turnos` | Jornadas de acopio y de entidad, reservas sin cuenta, aforo, asistencia, recordatorios y borrado de datos a los 30 días | `JornadasService`, `ReservasService` |
 | `auditoria` | Bitácora. Cada servicio la escribe en la misma transacción que el cambio; no hay interceptor | `BitacoraService` |
 | `notificaciones` | Correo por SMTP: invitaciones, reservas, avisos de folio y de acopio cerrado. Envío con reintentos | `NotificacionService` |
 | `almacenamiento` | Archivos en Garage, por la API de S3: facturas, evidencias de remisión, documentos de verificación, logotipos. La API lee el objeto y entrega los bytes | `AlmacenamientoService` |
@@ -235,6 +235,8 @@ protege con un bloqueo en PostgreSQL para que no corra dos veces.
 | Recalcular las sugerencias del motor | Cada 15 minutos | `motor` |
 | Cancelar folios `PREPARADO` con más de 7 días | Diaria | `comprobantes` |
 | Archivar las causas que pasaron su fecha de cierre (`archivar-causas`, 00:10) | Diaria | `acopios` |
+| Encolar el recordatorio de las reservas de jornadas que empiezan en las próximas 24 horas (`recordar-reservas`) | Cada 15 minutos | `turnos` |
+| Borrar los datos personales de las reservas de jornadas que terminaron hace más de 30 días (`borrar-datos-reservas`, 00:20) | Diaria | `turnos` |
 | Alertas de vencimiento de perecederos | Diaria | `inventario` |
 | Enviar la cola de correo y reintentar los fallidos | Cada minuto | `notificaciones` |
 

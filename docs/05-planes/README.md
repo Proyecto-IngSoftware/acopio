@@ -63,9 +63,11 @@ demo, y los recorridos pasan allá. Las maquetas de P3 y P4, las causas, quedaro
 ([#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57)). El último informe de
 sesión está en [sesiones](../06-operacion/sesiones/README.md).
 
-1. **Siguiente paso: la especificación del Bloque 5, turnos**
-   ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36), hasta el 8 de
-   noviembre), antes de su plan y de su código. La pieza C quedó construida el 2026-10-17
+1. **Siguiente paso: el plan de la API del Bloque 5, turnos**
+   ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)). La
+   [especificación](../superpowers/specs/2026-10-17-bloque-5-turnos-design.md) quedó aprobada
+   el 2026-10-17, y Joseph pidió adelantar todo lo posible antes de la sustentación del
+   viernes 23 de octubre. La pieza C quedó construida el 2026-10-17
    ([plan](2026-10-17-pieza-c-causas.md)); de ella falta lo de
    [P-066](../01-requerimientos/pendientes.md): el recorrido de consola contra el servidor y
    los criterios de HU-02 y HU-15 con Joseph.

@@ -3,7 +3,7 @@ title: "Requerimientos no funcionales"
 type: requerimientos
 tags: [requerimientos, rnf]
 estado: vigente
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Requerimientos no funcionales
@@ -105,6 +105,7 @@ antes de cada despliegue.
 | Política de privacidad publicada, con finalidad y temporalidad declaradas | |
 | Aviso de transferencia internacional de datos: los correos residen en Supabase, fuera de Colombia | |
 | Consentimiento explícito al reservar un turno y al registrarse como Donador | |
+| Los datos personales de una reserva de turno se borran 30 días después de su jornada; quedan el estado y los conteos (T-06 del Bloque 5) | |
 | Las facturas pueden contener nombre, cédula y dirección: nunca se muestran en superficie pública | |
 | La página de seguimiento por folio revela el recorrido del insumo, **jamás datos del donante** | |
 

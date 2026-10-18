@@ -3,7 +3,7 @@ title: "Especificaciones — índice"
 type: moc
 tags: [moc, spec]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-17
 ---
 
 # Especificaciones — índice
@@ -21,7 +21,7 @@ construcción.
 | [2026-10-01 · Bloque 2 · Inventario](2026-10-01-bloque-2-inventario-design.md) | Movimientos, saldos, umbrales, entrada rápida, captura sin conexión | Aprobada · construido |
 | [2026-10-05 · Bloque 3 · Custodia](2026-10-05-bloque-3-custodia-design.md) | Donador, comprobantes con folio, factura en Garage, recepción, conciliación, seguimiento | Aprobada · construido |
 | [2026-10-06 · Bloque 4 · Motor](2026-10-06-bloque-4-motor-design.md) | Necesidad, déficit, sugerencias, remisiones, recepción en zona, reporte de necesidad, simulador | Aprobada |
-| Bloque 5 · Turnos | Jornadas, reservas, aforo | ⬜ pendiente |
+| [2026-10-17 · Bloque 5 · Turnos](2026-10-17-bloque-5-turnos-design.md) | Jornadas de acopio y de entidad, reserva sin cuenta, aforo, asistencia, perfiles, borrado a los 30 días | Aprobada |
 | Bloque 6 · Extras | Bitácora enriquecida, transparencia, publicaciones | ⬜ pendiente |
 
 ## Cadena de trabajo

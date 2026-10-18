@@ -3,7 +3,7 @@ title: "Cronograma semanal hasta la entrega final"
 type: plan
 tags: [planes, cronograma]
 estado: vigente
-actualizado: 2026-10-09
+actualizado: 2026-10-17
 ---
 
 # Cronograma semanal hasta la entrega final
@@ -75,6 +75,7 @@ el viernes 23 de octubre ([P-047](../01-requerimientos/pendientes.md)).
 | Sustentación del segundo corte el viernes 23: proyecto en ejecución y diagrama de paquetes | [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47) |
 | Primera ronda de pruebas del equipo en el servidor, con sus hallazgos como issues | [#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58) |
 | Maquetas de P3 y P4 (causas) aprobadas | [#57](https://github.com/Proyecto-IngSoftware/acopio/issues/57) |
+| Lo más avanzado posible del Bloque 5, turnos, para mostrarlo en la sustentación del 23: primero la API y la reserva pública. Lo que falte sigue en la semana 14 | [#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36) |
 
 ### Semana 13 · hasta el domingo 1 de noviembre · Sprint 3
 

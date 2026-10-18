@@ -1032,6 +1032,20 @@ en la sesión.
 
 ## Resueltos
 
+### P-067 · Turnos: jornadas de entidad, cierre a 12 horas y borrado a los 30 días
+**Fecha:** 2026-10-17 · **Propuesto por:** Joseph, en la especificación del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))
+**Qué:** las decisiones T-01 a T-06 de la
+[especificación](../superpowers/specs/2026-10-17-bloque-5-turnos-design.md) cambian los RF de
+turnos. Una jornada puede ser de un acopio o de una entidad, y la de entidad la crea el
+Administrador con la dirección que escriba. Las reservas se cierran 12 horas antes del inicio.
+Quien reserva una jornada con perfil solo lo declara. Se recorta el enlace entre causas y
+turnos. Los correos se encolan aunque el correo esté apagado, y los datos personales de cada
+reserva se borran 30 días después de la jornada.
+**Por qué:** las entidades también piden voluntarios para sus campañas, el responsable
+necesita saber cuánta gente esperar, y la Ley 1581 pide declarar cuánto se guardan los datos.
+**Estado:** RESUELTO el 2026-10-17 → RF-TUR-001, RF-TUR-003 y RF-TUR-007, RNF-09 y
+`modelo-datos.md` reescritos en el PR de la especificación.
+
 _Al resolver una entrada, muévela aquí con su destino. No se borran: la historia
 de por qué algo no entró vale tanto como lo que entró._
 
