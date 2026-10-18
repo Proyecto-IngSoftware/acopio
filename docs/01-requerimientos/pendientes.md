@@ -1012,39 +1012,47 @@ repositorio no lo tiene.
 **Estado:** ABIERTO. Versionarlo en `.claude/hooks/` cuando se sume otra persona
 
 
-### P-066 · Lo que falta de la pieza C
-**Fecha:** 2026-10-17 · **Propuesto por:** Claude, al cerrar la pieza C ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48))
+### P-070 · Turnos: avisar en P8 que la jornada cambió, y los plazos que mira el navegador
+**Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la revisión final de la interfaz del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))
 **Qué:**
-- Correr `consola-causas.mjs` contra el servidor de pruebas. Necesita la contraseña del
-  administrador de allá (`ADMIN_CONTRASENA`), que tiene Joseph. Cada corrida crea una entidad
-  «Fundación Recorrido …» en el servidor
-- Verificar con Joseph los criterios de HU-02 y HU-15, uno por uno (§9 de la
-  [especificación](../superpowers/specs/2026-10-17-pieza-c-causas-design.md))
-- Tres menores de la revisión final: en la hoja de C15, tras subir el logotipo, el texto sigue
-  diciendo «Subir logotipo» hasta reabrirla; `GET /entidades/:id/logo` sirve el logotipo de
-  cualquier entidad, también de las no verificadas (no es un dato sensible); C22 no tiene una
-  ruta por causa, así que no se puede enlazar a una causa de la consola
-**Por qué:** la pieza quedó construida y probada en local; esto es lo que no se pudo cerrar
-en la sesión.
+- Resuelto el 2026-10-18, a pedido de Joseph: P8 avisa si la jornada cambió. `jornada` guarda
+  `movida_en` cuando cambian el inicio, el fin o el lugar. La consulta de la reserva devuelve
+  `jornadaCambiadaEn` si el cambio fue en el momento de reservar o después, y P8 muestra
+  «La jornada cambió» con la fecha del cambio.
+- P8 oculta «Cancelar reserva» después del inicio y C14 habilita la asistencia según el reloj
+  del navegador, aunque las restricciones del plan dicen que la web no calcula plazos. La API
+  valida igual. Si se prefiere, la API puede mandar `puedeCancelar` y `puedeMarcarAsistencia`.
+**Por qué:** la primera era un requisito de la especificación sin construir; Joseph pidió
+construirlo. La segunda sigue abierta: es una excepción a una regla del plan.
 **Estado:** ABIERTO
 
-### P-068 · Menores de la revisión de la API de turnos
-**Fecha:** 2026-10-17 · **Propuesto por:** Claude, en la autorrevisión de la API del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))
+### P-071 · Menores de la revisión del cierre del Bloque 5
+**Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la revisión de la rama `bloque-5-cierre` ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36), [#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48))
 **Qué:**
-- Ajustar el aforo y editar el cupo leen el cupo y el ajuste antes de tomar el bloqueo de la
-  jornada: dos cambios a la vez pueden validar contra un valor viejo
-- Se puede marcar asistencia en una jornada cancelada si todavía está dentro del plazo
-- Cambiar solo la dirección de una jornada de entidad no revisa que falten más de 12 horas
-- Nada impide que dos clases DTO con el mismo nombre se pisen en el contrato OpenAPI. Pasó con
-  tres DTO de turnos y solo se notó por el error de tipos en la web; una prueba que busque nombres
-  repetidos lo evitaría
-- `docs/02-arquitectura/diagramas/` está desactualizado: al correr `build.mjs` cambian los SVG
-  incrustados y el diagrama de turnos, que ya tiene la jornada de entidad
-**Por qué:** ninguno rompe un flujo de la especificación; quedaron fuera de la sesión por el
-plazo del 23 de octubre.
+- El patrón de UUID de P7 es más laxo que `z.uuid()` de la API, que exige el dígito de versión
+  y la variante. Un enlace editado a mano con `acopio=11111111-1111-1111-1111-111111111111`
+  sigue llegando a la API, que responde 400
+- Un UUID en mayúsculas pasa el filtro de P7, pero no coincide con las opciones (que vienen en
+  minúsculas) y el chip dice «Lugar». Bastaría con pasarlo a minúsculas
+- `?dia=2026-13-01` pasa la forma `AAAA-MM-DD` en la web y en la API; `instanteBogota` da una
+  fecha inválida y la consulta probablemente responde 500. `2026-02-30` pasa al 2 de marzo. La
+  API podría validar con `z.iso.date()` y la web revisar que la fecha exista
+- `GET /api/entidades/:id/logo` responde con `Cache-Control: public, max-age=300` y la URL
+  pública no lleva versión: un navegador puede seguir mostrando hasta 5 minutos el logotipo de
+  una entidad a la que le quitaron la verificación
+- En C22, al guardar una edición, la causa se ve con los valores viejos hasta que termina la
+  recarga de la lista
+- Los estados de error y «No encontramos esa causa» de C22 suman `px-margin` al margen del
+  diseño de la consola; hay que mirarlos a 360 px
+- P6 muestra «No se pudieron cargar las jornadas» encima de la lista si falla una recarga con
+  datos ya cargados; debería ser `error && !data`
+**Por qué:** ninguno rompe un flujo de la especificación. El único importante de la revisión
+(dos ediciones a la vez dejaban mal la bitácora y repetían el aviso) se arregló en la rama.
 **Estado:** ABIERTO
 
 ---
+
+## Resueltos
 
 ### P-069 · Menores de la interfaz de turnos
 **Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la autorrevisión de la interfaz del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))
@@ -1071,25 +1079,52 @@ entre ellos que mover una jornada desde C14 fallaba siempre. El arreglo de fondo
 que antes estaba en esta lista, también va en #125.
 **Por qué:** ninguno rompe un flujo de la especificación. Se dejaron para no frenar el cierre
 antes de la sustentación del 23 de octubre.
-**Estado:** ABIERTO
+**Estado:** RESUELTO el 2026-10-18 → todos menos el de `PRECARGAS`, en la rama
+`bloque-5-cierre`, cada uno con su prueba. El prefijo `/voluntariado/` se deja como está, por
+decisión del plan de cierre: cuesta una precarga de más en P8 y separarlo exige cambiar el
+script del build. El nombre en el chip de lugar solo se busca para acopios, porque no hay un
+endpoint público de entidades
 
-### P-070 · Turnos: avisar en P8 que la jornada cambió, y los plazos que mira el navegador
-**Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la revisión final de la interfaz del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))
+### P-068 · Menores de la revisión de la API de turnos
+**Fecha:** 2026-10-17 · **Propuesto por:** Claude, en la autorrevisión de la API del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))
 **Qué:**
-- Resuelto el 2026-10-18, a pedido de Joseph: P8 avisa si la jornada cambió. `jornada` guarda
-  `movida_en` cuando cambian el inicio, el fin o el lugar. La consulta de la reserva devuelve
-  `jornadaCambiadaEn` si el cambio fue en el momento de reservar o después, y P8 muestra
-  «La jornada cambió» con la fecha del cambio.
-- P8 oculta «Cancelar reserva» después del inicio y C14 habilita la asistencia según el reloj
-  del navegador, aunque las restricciones del plan dicen que la web no calcula plazos. La API
-  valida igual. Si se prefiere, la API puede mandar `puedeCancelar` y `puedeMarcarAsistencia`.
-**Por qué:** la primera era un requisito de la especificación sin construir; Joseph pidió
-construirlo. La segunda sigue abierta: es una excepción a una regla del plan.
-**Estado:** ABIERTO
+- Ajustar el aforo y editar el cupo leen el cupo y el ajuste antes de tomar el bloqueo de la
+  jornada: dos cambios a la vez pueden validar contra un valor viejo
+- Se puede marcar asistencia en una jornada cancelada si todavía está dentro del plazo
+- Cambiar solo la dirección de una jornada de entidad no revisa que falten más de 12 horas
+- Nada impide que dos clases DTO con el mismo nombre se pisen en el contrato OpenAPI. Pasó con
+  tres DTO de turnos y solo se notó por el error de tipos en la web; una prueba que busque nombres
+  repetidos lo evitaría
+- `docs/02-arquitectura/diagramas/` está desactualizado: al correr `build.mjs` cambian los SVG
+  incrustados y el diagrama de turnos, que ya tiene la jornada de entidad
+**Por qué:** ninguno rompe un flujo de la especificación; quedaron fuera de la sesión por el
+plazo del 23 de octubre.
+**Estado:** RESUELTO el 2026-10-18 → los cinco, en la rama `bloque-5-cierre`, con sus pruebas.
+La prueba nueva de nombres de DTO encontró `FiltroCategoriaDto` en dos controladores; no
+cambiaba el contrato porque los DTO de consulta salen como parámetros, pero se renombraron.
+Que la bitácora de la asistencia no guarde datos personales ya tenía prueba; se le sumó el
+teléfono
 
----
-
-## Resueltos
+### P-066 · Lo que falta de la pieza C
+**Fecha:** 2026-10-17 · **Propuesto por:** Claude, al cerrar la pieza C ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48))
+**Qué:**
+- Correr `consola-causas.mjs` contra el servidor de pruebas. Necesita la contraseña del
+  administrador de allá (`ADMIN_CONTRASENA`), que tiene Joseph. Cada corrida crea una entidad
+  «Fundación Recorrido …» en el servidor
+- Verificar con Joseph los criterios de HU-02 y HU-15, uno por uno (§9 de la
+  [especificación](../superpowers/specs/2026-10-17-pieza-c-causas-design.md))
+- Tres menores de la revisión final: en la hoja de C15, tras subir el logotipo, el texto sigue
+  diciendo «Subir logotipo» hasta reabrirla; `GET /entidades/:id/logo` sirve el logotipo de
+  cualquier entidad, también de las no verificadas (no es un dato sensible); C22 no tiene una
+  ruta por causa, así que no se puede enlazar a una causa de la consola
+**Por qué:** la pieza quedó construida y probada en local; esto es lo que no se pudo cerrar
+en la sesión.
+**Estado:** RESUELTO el 2026-10-18 → `consola-causas.mjs` dio 6 de 6 contra el servidor y los
+criterios de HU-02 y HU-15 pasaron, revisados con las credenciales que dio Joseph. Joseph pidió
+arreglar los tres menores en la rama `bloque-5-cierre`: la hoja de C15 lee la entidad de la
+lista y cambia el texto apenas se sube el logotipo; el logotipo de una entidad sin verificar
+responde 404 y lo público ya no lo anuncia; C22 abre cada causa en `/consola/causas/:id`. Informe:
+[2026-10-18-cierre-bloque-5](../06-operacion/sesiones/2026-10-18-cierre-bloque-5.md)
 
 ### P-067 · Turnos: jornadas de entidad, cierre a 12 horas y borrado a los 30 días
 **Fecha:** 2026-10-17 · **Propuesto por:** Joseph, en la especificación del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))

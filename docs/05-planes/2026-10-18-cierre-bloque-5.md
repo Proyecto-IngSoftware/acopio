@@ -2,7 +2,7 @@
 title: "Bloque 5 · Turnos · plan de cierre"
 type: plan
 tags: [plan, bloque-5, turnos, pieza-c]
-estado: vigente
+estado: cerrado
 bloque: 5
 actualizado: 2026-10-18
 ---
@@ -63,11 +63,11 @@ Pendientes: [P-066, P-068, P-069 y P-070](../01-requerimientos/pendientes.md).
 
 | Tarea | Estado | Notas |
 |---|---|---|
-| 1 Revisión de HU-03 y §1 con Joseph | ⬜ | Necesita a Joseph |
-| 2 Pieza C: recorrido en el servidor y HU-02 y HU-15 | ⬜ | Necesita la contraseña del administrador del servidor |
-| 3 Menores de la API de turnos (P-068) | ⬜ | |
-| 4 Menores de la web de turnos (P-069) | ⬜ | |
-| 5 Verificación y cierre | ⬜ | |
+| 1 Revisión de HU-03 y §1 con Joseph | ✅ | Revisada en el servidor con las credenciales que dio Joseph: recorridos y consultas a la API, detalle en el informe |
+| 2 Pieza C: recorrido en el servidor y HU-02 y HU-15 | ✅ | `consola-causas` 6 de 6 y `portal-causas` 4 de 4 en el servidor. Joseph pidió arreglar los tres menores de P-066 aquí |
+| 3 Menores de la API de turnos (P-068) | ✅ | La prueba de la bitácora ya existía; se le sumó el teléfono. La de DTO encontró un nombre repetido |
+| 4 Menores de la web de turnos (P-069) | ✅ | |
+| 5 Verificación y cierre | ✅ | Código 0; los cuatro recorridos en local; revisión aparte de la rama |
 
 ---
 
@@ -93,7 +93,7 @@ pueden ver a mano se respaldan con su prueba.
 | §1.6 El Operador ve inscritos, ajusta dos cupos, marca asistencia y cierra | C14 con `operador1` | `consola-turnos.mjs` y `DetalleJornada.test.tsx` |
 | §1.7 La persona cancela desde su enlace y el cupo queda libre | P8 → «Cancelar reserva» | `portal-turnos.mjs`, paso 5 |
 | §1.8 A los 30 días se borran los datos y quedan los conteos | No se puede a mano | `turnos-tareas.int.test.ts` |
-| §1.9 Lo de la consola queda en la bitácora, sin datos personales | Bitácora con `admin` | En parte: `turnos-gestion.int.test.ts` cuenta los eventos de creación y la primera prueba de `turnos-reservas.int.test.ts` revisa que reservar no escriba. Que la asistencia no deje datos personales lo prueba la tarea 3 |
+| §1.9 Lo de la consola queda en la bitácora, sin datos personales | Bitácora con `admin` | En parte: `turnos-gestion.int.test.ts` cuenta los eventos de creación y la primera prueba de `turnos-reservas.int.test.ts` revisa que reservar no escriba. Que la asistencia no deje datos personales lo prueba «la asistencia se marca en su plazo y la bitácora no guarda a la persona» (`turnos-publico.int.test.ts`); la tarea 3 le sumó el teléfono |
 
 - [ ] **Step 1:** Recorrer la tabla con Joseph. Lo que falle entra como issue con la etiqueta
   `hallazgo`, enlazado desde #36.

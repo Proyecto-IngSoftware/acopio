@@ -179,6 +179,21 @@ ocurrió y la hora en que llegó.
 
 ## Últimos resultados
 
+**2026-10-18, cierre del Bloque 5** (rama `bloque-5-cierre`). Contra el servidor, con `main`
+desplegado y las contraseñas que dio Joseph:
+
+| Script | Resultado |
+|---|---|
+| `portal-turnos.mjs` | 6 de 6 |
+| `consola-causas.mjs` | 6 de 6. Dejó una «Fundación Recorrido …» en el servidor, como se esperaba |
+| `portal-causas.mjs` | 4 de 4 |
+| `consola-turnos.mjs` | La primera corrida dio 5 de 6: «cierra las reservas y las reabre» falló con `fetch failed`, una petición que no llegó al servidor. Al fallar, el script salía sin limpiar y dejó «Armar mercados (demo)» cerrada, con un ajuste de más y dos jornadas del recorrido; se restauró a mano. La segunda dio 7 de 7. Desde esta rama el script limpia la demo aunque falle un paso; se probó forzando un fallo en ese mismo paso |
+
+En local, con la API reconstruida con `servicios:todo`: `portal-turnos.mjs` 6 de 6,
+`consola-turnos.mjs` 7 de 7, `portal-causas.mjs` 4 de 4 y `consola-causas.mjs` 6 de 6. Para el
+último, `ADMIN_CONTRASENA` es la del `.env.example`, porque la base local se sembró con esa y el
+`.env` tiene la del servidor.
+
 **2026-10-18, en local, arreglos de la revisión final** (rama `bloque-5-revision`):
 
 | Script | Resultado |
