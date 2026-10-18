@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: turnos
 bloque: 5
-actualizado: 2026-08-20
+actualizado: 2026-10-17
 ---
 
 # RF-TUR · Turnos y aforo
@@ -15,13 +15,21 @@ actualizado: 2026-08-20
 Principio: **el aforo publicado es de reservas, no de presencia real.** La interfaz
 lo dice con esas palabras; no se finge un dato que no se tiene.
 
+El detalle de este bloque, y las decisiones T-01 a T-12 que cambiaron RF-TUR-001, 003 y 007
+el 2026-10-17, están en la
+[especificación del Bloque 5](../../superpowers/specs/2026-10-17-bloque-5-turnos-design.md)
+([P-067](../pendientes.md)).
+
 ---
 
 ### RF-TUR-001 · Crear jornada
-**Actor:** Operador · **Prioridad:** DEBE
+**Actor:** Operador, Administrador · **Prioridad:** DEBE
 
 **Criterios de aceptación:**
 - [ ] Acopio, fecha, hora de inicio y fin, cupo máximo, descripción de la labor
+- [ ] El Administrador también crea jornadas de una entidad verificada, en la dirección que
+      escriba, para las campañas que piden voluntarios
+- [ ] Se crea con al menos 13 horas de anticipación, para que alguien alcance a reservar
 - [ ] Requisitos opcionales: edad mínima, ropa cerrada, capacidad de carga
 - [ ] Se pueden crear jornadas repetidas para varios días de una vez
 - [ ] Una jornada con reservas no se elimina, se cancela, y se notifica a los
@@ -44,8 +52,11 @@ lo dice con esas palabras; no se finge un dato que no se tiene.
 - [ ] Solo pide nombre, correo y teléfono opcional
 - [ ] Consentimiento de tratamiento de datos (Ley 1581)
 - [ ] Genera un código de reserva y lo envía por correo
-- [ ] **La reserva solo se crea si `reservas_activas < cupo_maximo`**, verificado
-      dentro de la transacción con bloqueo sobre la jornada
+- [ ] **La reserva solo se crea si quedan cupos libres**, verificado dentro de la
+      transacción con bloqueo sobre la jornada
+- [ ] Las reservas se cierran 12 horas antes del inicio, para que el responsable sepa
+      cuánta gente esperar
+- [ ] Los datos personales de la reserva se borran 30 días después de la jornada
 - [ ] Dos personas reservando el último cupo a la vez: una obtiene el cupo, la otra
       recibe un mensaje claro
 - [ ] Un mismo correo no puede reservar dos veces la misma jornada
@@ -87,5 +98,8 @@ lo dice con esas palabras; no se finge un dato que no se tiene.
 **Criterios de aceptación:**
 - [ ] Una jornada puede exigir un perfil: veterinario, médico, psicólogo, cuidador
       de adulto mayor, conductor con licencia C2
+- [ ] Quien reserva declara que tiene el perfil y ve un aviso de que el acopio o la
+      entidad puede verificarlo al llegar
 - [ ] El listado público permite filtrar por perfil
-- [ ] Conecta las causas de animales y adultos mayores con el módulo de turnos
+- ~~Conecta las causas de animales y adultos mayores con el módulo de turnos~~:
+  recortado el 2026-10-17 (T-04)

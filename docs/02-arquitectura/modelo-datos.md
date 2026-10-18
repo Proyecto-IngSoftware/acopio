@@ -415,20 +415,27 @@ principio que [ADR-0002](adr/ADR-0002-saldo-derivado.md).
 
 ```
 jornada
-  id · acopio_id · inicio · fin · cupo_maximo int
-  descripcion · requisitos jsonb · perfil_requerido?
+  id · acopio_id? · entidad_id?          exactamente uno de los dos
+  direccion? · municipio? · lat? · lng?  solo en las de entidad
+  titulo · descripcion · que_llevar? · inicio · fin · cupo_maximo int
+  requisitos jsonb · perfil_requerido?
   cupos_ajuste_manual int DEFAULT 0
   ajuste_actualizado_en · estado  ABIERTA | CERRADA | CANCELADA
+  motivo_cancelacion? · cancelada_en? · serie_id? · creada_por
 
 reserva
-  id · jornada_id · nombre · correo · telefono?
-  codigo text UNIQUE · estado  ACTIVA | CANCELADA | ASISTIO | NO_ASISTIO
+  id · jornada_id · nombre? · correo? · telefono?   nulos a los 30 días
+  codigo text UNIQUE · secreto_hash · perfil_declarado bool
+  estado  ACTIVA | CANCELADA | ASISTIO | NO_ASISTIO
   consentimiento_en timestamptz NOT NULL
-  UNIQUE (jornada_id, correo)
+  recordatorio_en? · cancelada_en? · datos_borrados_en?
+  UNIQUE (jornada_id, correo) WHERE estado <> 'CANCELADA'
 ```
 
 `cupos_ajuste_manual` es la salida para quien llega sin reservar:
-`libres = cupo_maximo − reservas_activas − cupos_ajuste_manual`.
+`libres = cupo_maximo − ocupados − cupos_ajuste_manual`, donde ocupados son las reservas
+que no están canceladas. El detalle está en la
+[especificación del Bloque 5](../superpowers/specs/2026-10-17-bloque-5-turnos-design.md), §4.
 
 ### Identidad
 
@@ -903,14 +910,19 @@ Se construye en el Bloque 5.
 ```mermaid
 erDiagram
     ACOPIO ||--o{ JORNADA : abre
+    ENTIDAD ||--o{ JORNADA : "pide gente"
     JORNADA ||--o{ RESERVA : recibe
 
     ACOPIO {
         uuid id PK "clúster Red"
     }
+    ENTIDAD {
+        uuid id PK "clúster Red"
+    }
     JORNADA {
         uuid id PK
-        uuid acopio_id FK
+        uuid acopio_id FK "o entidad_id"
+        uuid entidad_id FK
         timestamptz inicio
         timestamptz fin
         int cupo_maximo
