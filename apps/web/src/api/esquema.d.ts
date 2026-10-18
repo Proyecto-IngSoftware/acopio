@@ -4,7014 +4,7086 @@
  */
 
 export interface paths {
-    "/api/bitacora": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["BitacoraController_buscar"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/sesion": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["SesionController_iniciar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/salir": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["SesionController_salir"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/yo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["SesionController_yo"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/.well-known/jwks.json": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["SesionController_jwks"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/registro": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["DonadorController_registrar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/registro/confirmar/{token}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["DonadorController_validarEnlace"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/registro/confirmar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["DonadorController_confirmar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/auth/donador/sesion": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["DonadorController_iniciar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/invitaciones/{token}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["InvitacionesController_consultar"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/invitaciones/{token}/canje": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["InvitacionesController_canjear"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/usuarios": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["UsuariosController_listar"];
-        put?: never;
-        post: operations["UsuariosController_crear"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/usuarios/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["UsuariosController_obtener"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["UsuariosController_actualizar"];
-        trace?: never;
-    };
-    "/api/usuarios/{id}/suspender": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["UsuariosController_suspender"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/usuarios/{id}/reactivar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["UsuariosController_reactivar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/usuarios/{id}/invitacion": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["UsuariosController_reinvitar"];
-        delete: operations["UsuariosController_revocarInvitacion"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/usuarios/{id}/restablecer": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["UsuariosController_restablecer"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/usuarios/{id}/asignaciones": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["UsuariosController_asignar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/usuarios/{id}/asignaciones/{tipo}/{ubicacionId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete: operations["UsuariosController_desasignar"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/categorias": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CatalogoController_listarCategorias"];
-        put?: never;
-        post: operations["CatalogoController_crearCategoria"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/categorias/vigentes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Categorías vigentes, sin las archivadas. No exige sesión */
-        get: operations["CatalogoController_listarVigentes"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/categorias/buscar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CatalogoController_buscar"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/categorias/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CatalogoController_obtenerCategoria"];
-        put?: never;
-        post?: never;
-        delete: operations["CatalogoController_eliminarCategoria"];
-        options?: never;
-        head?: never;
-        patch: operations["CatalogoController_actualizarCategoria"];
-        trace?: never;
-    };
-    "/api/categorias/{id}/archivar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["CatalogoController_archivar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/categorias/{id}/reactivar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["CatalogoController_reactivarCategoria"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/canasta": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CatalogoController_canastaVigente"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/categorias/{id}/canasta": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CatalogoController_historialCanasta"];
-        put?: never;
-        post: operations["CatalogoController_agregarVersion"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/emergencias": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Lista las emergencias. No exige sesión */
-        get: operations["CatalogoController_listarEmergencias"];
-        put?: never;
-        post: operations["CatalogoController_crearEmergencia"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/emergencias/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["CatalogoController_actualizarEmergencia"];
-        trace?: never;
-    };
-    "/api/emergencias/{id}/cerrar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["CatalogoController_cerrarEmergencia"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/codigos-barras": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CodigosBarrasController_listar"];
-        put?: never;
-        post: operations["CodigosBarrasController_asociar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/codigos-barras/{ean}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CodigosBarrasController_obtener"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["CodigosBarrasController_editar"];
-        trace?: never;
-    };
-    "/api/entidades": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["EntidadesController_listar"];
-        put?: never;
-        post: operations["EntidadesController_crear"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/entidades/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["EntidadesController_actualizar"];
-        trace?: never;
-    };
-    "/api/entidades/{id}/verificar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["EntidadesController_verificar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/entidades/{id}/quitar-verificacion": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["EntidadesController_quitarVerificacion"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/entidades/{id}/logo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["LogosController_leer"];
-        put: operations["EntidadesController_subirLogo"];
-        post?: never;
-        delete: operations["EntidadesController_quitarLogo"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/causas/gestion": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CausasController_listar"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/causas": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CausasPublicasController_listar"];
-        put?: never;
-        post: operations["CausasController_crear"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/causas/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CausasPublicasController_obtener"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["CausasController_editar"];
-        trace?: never;
-    };
-    "/api/causas/{id}/renovar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["CausasController_renovar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/causas/{id}/archivar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["CausasController_archivar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/causas/{id}/reactivar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["CausasController_reactivar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/causas/{id}/imagen": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CausasPublicasController_imagen"];
-        put: operations["CausasController_subirImagen"];
-        post?: never;
-        delete: operations["CausasController_quitarImagen"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/causas/atendidas": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["CausasPublicasController_atendidas"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/acopios": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Acopios activos y pausados para el mapa. No exige sesión */
-        get: operations["AcopiosController_listarPublicos"];
-        put?: never;
-        post: operations["AcopiosController_crear"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/acopios/gestion": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["AcopiosController_listarGestion"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/acopios/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Ficha pública de un acopio. No exige sesión */
-        get: operations["AcopiosController_obtenerPublico"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["AcopiosController_actualizar"];
-        trace?: never;
-    };
-    "/api/acopios/{id}/operacion": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["AcopiosController_operar"];
-        trace?: never;
-    };
-    "/api/zonas": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ZonasController_listar"];
-        put?: never;
-        post: operations["ZonasController_crear"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/zonas/{id}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["ZonasController_actualizar"];
-        trace?: never;
-    };
-    "/api/ubicaciones/mias": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["UbicacionesController_mias"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/ubicaciones": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["UbicacionesController_buscar"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/geocodificar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Dirección a coordenadas, solo en Colombia. No exige sesión */
-        get: operations["GeocodificacionController_buscar"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/acopios/{id}/no-recibir": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Lo que un acopio no recibe hoy. No exige sesión */
-        get: operations["NoRecibirController_listar"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/no-recibir": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Acopios que no reciben una categoría. No exige sesión */
-        get: operations["NoRecibirController_porCategoria"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/acopios/{id}/no-recibir/{categoriaId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["NoRecibirController_marcar"];
-        post?: never;
-        delete: operations["NoRecibirController_desmarcar"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/acopios/{id}/entradas": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["MovimientosController_entrada"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/acopios/{id}/salidas": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["MovimientosController_salida"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/acopios/{id}/ajustes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["MovimientosController_ajuste"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/acopios/{id}/saldos": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ConsultasController_saldos"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/acopios/{id}/movimientos": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ConsultasController_historial"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/acopios/{id}/umbrales/{categoriaId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["UmbralesController_fijar"];
-        post?: never;
-        delete: operations["UmbralesController_quitar"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/donaciones": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["DonacionesController_listar"];
-        put?: never;
-        post: operations["DonacionesController_crear"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/donaciones/{folio}/cancelar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["DonacionesController_cancelar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/donaciones/sugerencias": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["DonacionesController_sugerir"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/donaciones/codigos/{ean}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["DonacionesController_codigo"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/donaciones/{folio}/factura": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["FacturasController_subir"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/comprobantes/{folio}/factura": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["FacturasController_factura"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/comprobantes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ComprobantesController_bandeja"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/comprobantes/{folio}/conciliacion": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ComprobantesController_detalle"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/comprobantes/{folio}/entradas-vinculables": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ComprobantesController_vinculables"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/comprobantes/{folio}/vinculos": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["ComprobantesController_vincular"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/comprobantes/{folio}/conciliar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["ComprobantesController_conciliar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/comprobantes/{folio}/rechazar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["ComprobantesController_rechazar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/comprobantes/{folio}/revertir-rechazo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["ComprobantesController_revertir"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/comprobantes/{folio}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ComprobantesController_consultar"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/comprobantes/{folio}/recepcion": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["ComprobantesController_recibir"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/seguimiento/{folio}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Recorrido de una donación por folio, sin datos del Donador. No exige sesión */
-        get: operations["SeguimientoController_consultar"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/zonas/{id}/necesidad": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["NecesidadController_ficha"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/zonas/{id}/necesidad-manual/{categoriaId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["NecesidadController_ponerManual"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/acopios/{id}/excedentes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["NecesidadController_excedentes"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/sugerencias/descartes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["SugerenciasController_descartes"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/sugerencias": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["SugerenciasController_listar"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/sugerencias/recalcular": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["SugerenciasController_recalcular"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/sugerencias/{id}/aprobar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["SugerenciasController_aprobar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/sugerencias/{id}/descartar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["SugerenciasController_descartar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/motor/configuracion": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ConfiguracionController_leer"];
-        put: operations["ConfiguracionController_guardar"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/motor/configuracion/vista-previa": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["ConfiguracionController_vistaPrevia"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/remisiones": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["RemisionesController_listar"];
-        put?: never;
-        post: operations["RemisionesController_crear"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/remisiones/{codigo}/folios-vinculables": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["RemisionesController_foliosVinculables"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/remisiones/{codigo}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["RemisionesController_ver"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch: operations["RemisionesController_editar"];
-        trace?: never;
-    };
-    "/api/remisiones/{codigo}/lineas": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put: operations["RemisionesController_lineas"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/remisiones/{codigo}/despachar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["RemisionesController_despachar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/remisiones/{codigo}/cancelar": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["RemisionesController_cancelar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/recepciones": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["RecepcionesController_pendientes"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/recepciones/qr/{token}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["RecepcionesController_porQr"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/remisiones/{codigo}/evidencia": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["RecepcionesController_subirEvidencia"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/remisiones/{codigo}/evidencia/{n}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["RecepcionesController_evidencia"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/remisiones/{codigo}/recibir": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["RecepcionesController_recibir"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/zonas/{id}/reportes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ReportesController_deZona"];
-        put?: never;
-        post: operations["ReportesController_reportar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/publico/zonas-necesidad": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["ReportesController_capaPublica"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/salud": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get: operations["SaludController_revisar"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
+  '/api/bitacora': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['BitacoraController_buscar'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/auth/sesion': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['SesionController_iniciar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/auth/salir': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['SesionController_salir'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/auth/yo': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SesionController_yo'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/auth/.well-known/jwks.json': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SesionController_jwks'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/auth/registro': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['DonadorController_registrar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/auth/registro/confirmar/{token}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['DonadorController_validarEnlace'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/auth/registro/confirmar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['DonadorController_confirmar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/auth/donador/sesion': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['DonadorController_iniciar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/invitaciones/{token}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['InvitacionesController_consultar'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/invitaciones/{token}/canje': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['InvitacionesController_canjear'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/usuarios': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['UsuariosController_listar'];
+    put?: never;
+    post: operations['UsuariosController_crear'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/usuarios/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['UsuariosController_obtener'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations['UsuariosController_actualizar'];
+    trace?: never;
+  };
+  '/api/usuarios/{id}/suspender': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['UsuariosController_suspender'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/usuarios/{id}/reactivar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['UsuariosController_reactivar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/usuarios/{id}/invitacion': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['UsuariosController_reinvitar'];
+    delete: operations['UsuariosController_revocarInvitacion'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/usuarios/{id}/restablecer': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['UsuariosController_restablecer'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/usuarios/{id}/asignaciones': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['UsuariosController_asignar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/usuarios/{id}/asignaciones/{tipo}/{ubicacionId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete: operations['UsuariosController_desasignar'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/categorias': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['CatalogoController_listarCategorias'];
+    put?: never;
+    post: operations['CatalogoController_crearCategoria'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/categorias/vigentes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Categorías vigentes, sin las archivadas. No exige sesión */
+    get: operations['CatalogoController_listarVigentes'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/categorias/buscar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['CatalogoController_buscar'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/categorias/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['CatalogoController_obtenerCategoria'];
+    put?: never;
+    post?: never;
+    delete: operations['CatalogoController_eliminarCategoria'];
+    options?: never;
+    head?: never;
+    patch: operations['CatalogoController_actualizarCategoria'];
+    trace?: never;
+  };
+  '/api/categorias/{id}/archivar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['CatalogoController_archivar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/categorias/{id}/reactivar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['CatalogoController_reactivarCategoria'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/canasta': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['CatalogoController_canastaVigente'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/categorias/{id}/canasta': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['CatalogoController_historialCanasta'];
+    put?: never;
+    post: operations['CatalogoController_agregarVersion'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/emergencias': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Lista las emergencias. No exige sesión */
+    get: operations['CatalogoController_listarEmergencias'];
+    put?: never;
+    post: operations['CatalogoController_crearEmergencia'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/emergencias/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations['CatalogoController_actualizarEmergencia'];
+    trace?: never;
+  };
+  '/api/emergencias/{id}/cerrar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['CatalogoController_cerrarEmergencia'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/codigos-barras': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['CodigosBarrasController_listar'];
+    put?: never;
+    post: operations['CodigosBarrasController_asociar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/codigos-barras/{ean}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['CodigosBarrasController_obtener'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations['CodigosBarrasController_editar'];
+    trace?: never;
+  };
+  '/api/entidades': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['EntidadesController_listar'];
+    put?: never;
+    post: operations['EntidadesController_crear'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/entidades/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations['EntidadesController_actualizar'];
+    trace?: never;
+  };
+  '/api/entidades/{id}/verificar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['EntidadesController_verificar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/entidades/{id}/quitar-verificacion': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['EntidadesController_quitarVerificacion'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/entidades/{id}/logo': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['LogosController_leer'];
+    put: operations['EntidadesController_subirLogo'];
+    post?: never;
+    delete: operations['EntidadesController_quitarLogo'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/causas/gestion': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['CausasController_listar'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/causas': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['CausasPublicasController_listar'];
+    put?: never;
+    post: operations['CausasController_crear'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/causas/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['CausasPublicasController_obtener'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations['CausasController_editar'];
+    trace?: never;
+  };
+  '/api/causas/{id}/renovar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['CausasController_renovar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/causas/{id}/archivar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['CausasController_archivar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/causas/{id}/reactivar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['CausasController_reactivar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/causas/{id}/imagen': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['CausasPublicasController_imagen'];
+    put: operations['CausasController_subirImagen'];
+    post?: never;
+    delete: operations['CausasController_quitarImagen'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/causas/atendidas': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['CausasPublicasController_atendidas'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/acopios': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Acopios activos y pausados para el mapa. No exige sesión */
+    get: operations['AcopiosController_listarPublicos'];
+    put?: never;
+    post: operations['AcopiosController_crear'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/acopios/gestion': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['AcopiosController_listarGestion'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/acopios/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Ficha pública de un acopio. No exige sesión */
+    get: operations['AcopiosController_obtenerPublico'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations['AcopiosController_actualizar'];
+    trace?: never;
+  };
+  '/api/acopios/{id}/operacion': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations['AcopiosController_operar'];
+    trace?: never;
+  };
+  '/api/zonas': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['ZonasController_listar'];
+    put?: never;
+    post: operations['ZonasController_crear'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/zonas/{id}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations['ZonasController_actualizar'];
+    trace?: never;
+  };
+  '/api/ubicaciones/mias': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['UbicacionesController_mias'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/ubicaciones': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['UbicacionesController_buscar'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/geocodificar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Dirección a coordenadas, solo en Colombia. No exige sesión */
+    get: operations['GeocodificacionController_buscar'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/acopios/{id}/no-recibir': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Lo que un acopio no recibe hoy. No exige sesión */
+    get: operations['NoRecibirController_listar'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/no-recibir': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Acopios que no reciben una categoría. No exige sesión */
+    get: operations['NoRecibirController_porCategoria'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/acopios/{id}/no-recibir/{categoriaId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put: operations['NoRecibirController_marcar'];
+    post?: never;
+    delete: operations['NoRecibirController_desmarcar'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/acopios/{id}/entradas': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['MovimientosController_entrada'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/acopios/{id}/salidas': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['MovimientosController_salida'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/acopios/{id}/ajustes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['MovimientosController_ajuste'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/acopios/{id}/saldos': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['ConsultasController_saldos'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/acopios/{id}/movimientos': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['ConsultasController_historial'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/acopios/{id}/umbrales/{categoriaId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put: operations['UmbralesController_fijar'];
+    post?: never;
+    delete: operations['UmbralesController_quitar'];
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/donaciones': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['DonacionesController_listar'];
+    put?: never;
+    post: operations['DonacionesController_crear'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/donaciones/{folio}/cancelar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['DonacionesController_cancelar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/donaciones/sugerencias': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['DonacionesController_sugerir'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/donaciones/codigos/{ean}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['DonacionesController_codigo'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/donaciones/{folio}/factura': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['FacturasController_subir'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/comprobantes/{folio}/factura': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['FacturasController_factura'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/comprobantes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['ComprobantesController_bandeja'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/comprobantes/{folio}/conciliacion': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['ComprobantesController_detalle'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/comprobantes/{folio}/entradas-vinculables': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['ComprobantesController_vinculables'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/comprobantes/{folio}/vinculos': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['ComprobantesController_vincular'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/comprobantes/{folio}/conciliar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['ComprobantesController_conciliar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/comprobantes/{folio}/rechazar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['ComprobantesController_rechazar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/comprobantes/{folio}/revertir-rechazo': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['ComprobantesController_revertir'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/comprobantes/{folio}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['ComprobantesController_consultar'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/comprobantes/{folio}/recepcion': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['ComprobantesController_recibir'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/seguimiento/{folio}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    /** Recorrido de una donación por folio, sin datos del Donador. No exige sesión */
+    get: operations['SeguimientoController_consultar'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/zonas/{id}/necesidad': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['NecesidadController_ficha'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/zonas/{id}/necesidad-manual/{categoriaId}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put: operations['NecesidadController_ponerManual'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/acopios/{id}/excedentes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['NecesidadController_excedentes'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/sugerencias/descartes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SugerenciasController_descartes'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/sugerencias': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SugerenciasController_listar'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/sugerencias/recalcular': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['SugerenciasController_recalcular'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/sugerencias/{id}/aprobar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['SugerenciasController_aprobar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/sugerencias/{id}/descartar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['SugerenciasController_descartar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/motor/configuracion': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['ConfiguracionController_leer'];
+    put: operations['ConfiguracionController_guardar'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/motor/configuracion/vista-previa': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['ConfiguracionController_vistaPrevia'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/remisiones': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['RemisionesController_listar'];
+    put?: never;
+    post: operations['RemisionesController_crear'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/remisiones/{codigo}/folios-vinculables': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['RemisionesController_foliosVinculables'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/remisiones/{codigo}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['RemisionesController_ver'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch: operations['RemisionesController_editar'];
+    trace?: never;
+  };
+  '/api/remisiones/{codigo}/lineas': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put: operations['RemisionesController_lineas'];
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/remisiones/{codigo}/despachar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['RemisionesController_despachar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/remisiones/{codigo}/cancelar': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['RemisionesController_cancelar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/recepciones': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['RecepcionesController_pendientes'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/recepciones/qr/{token}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['RecepcionesController_porQr'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/remisiones/{codigo}/evidencia': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['RecepcionesController_subirEvidencia'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/remisiones/{codigo}/evidencia/{n}': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['RecepcionesController_evidencia'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/remisiones/{codigo}/recibir': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get?: never;
+    put?: never;
+    post: operations['RecepcionesController_recibir'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/zonas/{id}/reportes': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['ReportesController_deZona'];
+    put?: never;
+    post: operations['ReportesController_reportar'];
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/publico/zonas-necesidad': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['ReportesController_capaPublica'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
+  '/api/salud': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['SaludController_revisar'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
 }
 export type webhooks = Record<string, never>;
 export interface components {
-    schemas: {
-        PaginaBitacoraDto: {
-            total: number;
-            pagina: number;
-            porPagina: number;
-            registros: {
-                /** Format: uuid */
-                id: string;
-                /** Format: uuid */
-                usuario_id: string | null;
-                accion: string;
-                entidad: string;
-                entidad_id: string | null;
-                /** Format: uuid */
-                ubicacion_id: string | null;
-                datos_antes: unknown;
-                datos_despues: unknown;
-                destacado: boolean;
-                /** Format: date-time */
-                ocurrido_en: string;
-                usuario: {
-                    /** Format: uuid */
-                    id: string;
-                    username: string | null;
-                    nombre: string;
-                } | null;
-            }[];
-        };
-        IniciarSesionDto: {
-            /** @description Nombre de usuario, no correo */
-            usuario: string;
-            contrasena: string;
-        };
-        SesionDto: {
-            /** Format: date-time */
-            expiraEn: string;
-            usuario: {
-                /** Format: uuid */
-                id: string;
-                username: string | null;
-                nombre: string;
-                /** @enum {string} */
-                rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
-            };
-        };
-        ErrorDto: {
-            estado: number;
-            /** @description Código estable para la interfaz, por ejemplo ULTIMO_ADMIN */
-            codigo: string;
-            /** @description Mensaje en español, listo para mostrar */
-            mensaje: string;
-            /** @description En errores de validación, un mensaje por campo. En algunos errores de dominio, datos para la interfaz (SALDO_INSUFICIENTE trae { saldo }) */
-            detalles?: {
-                campo: string;
-                mensaje: string;
-            }[] | {
-                [key: string]: unknown;
-            };
-        };
-        YoDto: {
-            /** Format: uuid */
-            id: string;
-            username: string | null;
-            nombre: string;
-            /** @enum {string} */
-            rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
-            /** @description El Administrador actúa sobre todas las ubicaciones */
-            alcanceGlobal: boolean;
-            asignaciones: {
-                /** @enum {string} */
-                tipo: "ACOPIO" | "ZONA";
-                /** Format: uuid */
-                ubicacionId: string;
-            }[];
-        };
-        RegistroDto: {
-            /** Format: email */
-            correo: string;
-            nombre: string;
-        };
-        MensajeDto: {
-            mensaje: string;
-        };
-        EnlaceDonadorDto: {
-            nombre: string;
-            correo: string;
-        };
-        ConfirmarDto: {
-            token: string;
-            contrasena: string;
-            nombre?: string;
-        };
-        SesionDonadorDto: {
-            correo: string;
-            contrasena: string;
-        };
-        InvitacionPublicaDto: {
-            username: string | null;
-            nombre: string;
-            /** @enum {string} */
-            rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
-            esRestablecimiento: boolean;
-            /** Format: date-time */
-            venceEn: string;
-            asignaciones: {
-                /** @enum {string} */
-                tipo: "ACOPIO" | "ZONA";
-                /** Format: uuid */
-                ubicacionId: string;
-            }[];
-        };
-        CanjearDto: {
-            contrasena: string;
-        };
-        CanjeDto: {
-            username: string | null;
-        };
-        CrearUsuarioDto: {
-            username: string;
-            nombre: string;
-            /** @enum {string} */
-            rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR";
-            /**
-             * Format: email
-             * @description Sin correo no hay recuperación de contraseña
-             */
-            correo?: string | null;
-            /** @default [] */
-            asignaciones: {
-                /** @enum {string} */
-                tipo: "ACOPIO" | "ZONA";
-                /** Format: uuid */
-                ubicacionId: string;
-            }[];
-        };
-        UsuarioCreadoDto: {
-            usuario: {
-                /** Format: uuid */
-                id: string;
-                username: string | null;
-                nombre: string;
-                /** @description Nulo si no tiene correo real */
-                correo: string | null;
-                sinCorreoReal: boolean;
-                /** @enum {string} */
-                rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
-                /** @enum {string} */
-                estado: "INVITADO" | "ACTIVO" | "SUSPENDIDO";
-                /** Format: date-time */
-                creadoEn: string;
-                asignaciones: {
-                    /** @enum {string} */
-                    tipo: "ACOPIO" | "ZONA";
-                    /** Format: uuid */
-                    ubicacionId: string;
-                    /** Format: uuid */
-                    asignadoPor: string;
-                    /** Format: date-time */
-                    asignadoEn: string;
-                }[];
-                invitacionPendiente: {
-                    /** Format: date-time */
-                    venceEn: string;
-                } | null;
-                restablecimientoPendiente: {
-                    /** Format: date-time */
-                    venceEn: string;
-                } | null;
-            };
-            invitacion: {
-                /** @description APP_URL/invitacion/<token>. Copiable para WhatsApp */
-                enlace: string;
-                /** Format: date-time */
-                venceEn: string;
-            };
-        };
-        UsuarioDto: {
-            /** Format: uuid */
-            id: string;
-            username: string | null;
-            nombre: string;
-            /** @description Nulo si no tiene correo real */
-            correo: string | null;
-            sinCorreoReal: boolean;
-            /** @enum {string} */
-            rol: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
-            /** @enum {string} */
-            estado: "INVITADO" | "ACTIVO" | "SUSPENDIDO";
-            /** Format: date-time */
-            creadoEn: string;
-            asignaciones: {
-                /** @enum {string} */
-                tipo: "ACOPIO" | "ZONA";
-                /** Format: uuid */
-                ubicacionId: string;
-                /** Format: uuid */
-                asignadoPor: string;
-                /** Format: date-time */
-                asignadoEn: string;
-            }[];
-            invitacionPendiente: {
-                /** Format: date-time */
-                venceEn: string;
-            } | null;
-            restablecimientoPendiente: {
-                /** Format: date-time */
-                venceEn: string;
-            } | null;
-        };
-        ActualizarUsuarioDto: {
-            nombre?: string;
-            /** @enum {string} */
-            rol?: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR";
-            /** Format: email */
-            correo?: string | null;
-        };
-        EnlaceInvitacionDto: {
-            /** @description APP_URL/invitacion/<token>. Copiable para WhatsApp */
-            enlace: string;
-            /** Format: date-time */
-            venceEn: string;
-        };
-        RevocadasDto: {
-            revocadas: number;
-        };
-        RestablecerDto: {
-            motivo: string;
-        };
-        AsignacionDto: {
-            /** @enum {string} */
-            tipo: "ACOPIO" | "ZONA";
-            /** Format: uuid */
-            ubicacionId: string;
-        };
-        CategoriaDto: {
-            /** Format: uuid */
-            id: string;
-            nombre: string;
-            /** @enum {string} */
-            grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
-            /** @enum {string} */
-            unidadBase: "LITRO" | "KILOGRAMO" | "UNIDAD";
-            perecedero: boolean;
-            sinonimos: string[];
-            archivada: boolean;
-        };
-        ResultadoBusquedaDto: {
-            /** Format: uuid */
-            id: string;
-            nombre: string;
-            /** @enum {string} */
-            grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
-            /** @enum {string} */
-            unidadBase: "LITRO" | "KILOGRAMO" | "UNIDAD";
-            perecedero: boolean;
-            /** @description 0 a 1; mayor es mejor coincidencia */
-            puntaje: number;
-        };
-        CrearCategoriaDto: {
-            nombre: string;
-            /** @enum {string} */
-            grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
-            /** @enum {string} */
-            unidadBase: "LITRO" | "KILOGRAMO" | "UNIDAD";
-            /** @default false */
-            perecedero: boolean;
-            /** @default [] */
-            sinonimos: string[];
-        };
-        ActualizarCategoriaDto: {
-            nombre?: string;
-            /** @enum {string} */
-            grupo?: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
-            perecedero?: boolean;
-            sinonimos?: string[];
-        };
-        CanastaVigenteDto: {
-            /** Format: uuid */
-            categoriaId: string;
-            categoria: string;
-            /** @enum {string} */
-            unidadBase: "LITRO" | "KILOGRAMO" | "UNIDAD";
-            cantidadPersonaDia: number;
-            fuente: string;
-            /** Format: date-time */
-            vigenteDesde: string;
-        };
-        VersionCanastaRespuestaDto: {
-            /** Format: uuid */
-            id: string;
-            cantidadPersonaDia: number;
-            fuente: string;
-            /** Format: date-time */
-            vigenteDesde: string;
-        };
-        VersionCanastaDto: {
-            cantidadPersonaDia: number;
-            /** @description Obligatoria: Esfera, UNGRD, Cruz Roja u otra */
-            fuente: string;
-            /** Format: date */
-            vigenteDesde?: string;
-        };
-        EmergenciaDto: {
-            /** Format: uuid */
-            id: string;
-            nombre: string;
-            tipo: string;
-            /** Format: date-time */
-            inicio: string;
-            horizonteDias: number;
-            /** @enum {string} */
-            estado: "ACTIVA" | "EN_SEGUIMIENTO" | "CERRADA";
-            /** Format: date-time */
-            destacadaHasta: string;
-            /** Format: date-time */
-            cerradaEn: string | null;
-            motivoCierre: string | null;
-        };
-        CrearEmergenciaDto: {
-            nombre: string;
-            tipo: string;
-            /** Format: date */
-            inicio: string;
-            horizonteDias?: number;
-            /** Format: date */
-            destacadaHasta: string;
-        };
-        ActualizarEmergenciaDto: {
-            nombre?: string;
-            tipo?: string;
-            /** Format: date */
-            inicio?: string;
-            horizonteDias?: number;
-            /** Format: date */
-            destacadaHasta?: string;
-        };
-        CerrarEmergenciaDto: {
-            motivo: string;
-        };
-        CodigoBarrasDto: {
-            ean: string;
-            /** Format: uuid */
-            categoriaId: string;
-            categoria: string;
-            /** @enum {string} */
-            unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
-            /** @description Unidad base que trae una presentación */
-            contenido: number | null;
-            descripcion: string | null;
-            revisado: boolean;
-            /** @enum {string} */
-            grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
-            perecedero: boolean;
-            /** @description Nombre de quien lo asoció */
-            creadoPor: string | null;
-            /** Format: date-time */
-            creadoEn: string;
-        };
-        AsociarDto: {
-            ean: string;
-            /** Format: uuid */
-            categoriaId: string;
-            contenido?: number | null;
-            descripcion?: string | null;
-        };
-        EditarDto: {
-            /** Format: uuid */
-            categoriaId?: string;
-            contenido?: number | null;
-            descripcion?: string | null;
-            revisado?: boolean;
-        };
-        EntidadDto: {
-            /** Format: uuid */
-            id: string;
-            nombre: string;
-            tipo: string;
-            nit: string | null;
-            sitioWeb: string | null;
-            telefono: string | null;
-            correo: string | null;
-            descripcion: string | null;
-            /** @enum {string} */
-            verificacion: "SIN_VERIFICAR" | "VERIFICADA" | "RECHAZADA";
-            verificadaEn: string | null;
-            tieneLogo: boolean;
-            /** @description Solo en la lista de C15 */
-            causasActivas?: number;
-        };
-        CrearEntidadDto: {
-            nombre: string;
-            /** @description Fundación, ONG, alcaldía, iglesia… */
-            tipo: string;
-            nit?: string | null;
-            /** Format: uri */
-            sitioWeb?: string | null;
-            telefono?: string | null;
-            /** Format: email */
-            correo?: string | null;
-            descripcion?: string | null;
-        };
-        ActualizarEntidadDto: {
-            nombre?: string;
-            /** @description Fundación, ONG, alcaldía, iglesia… */
-            tipo?: string;
-            nit?: string | null;
-            /** Format: uri */
-            sitioWeb?: string | null;
-            telefono?: string | null;
-            /** Format: email */
-            correo?: string | null;
-            descripcion?: string | null;
-        };
-        VerificarEntidadDto: {
-            /** @description Confirmo que revisé la entidad y su sitio oficial (aviso de seguridad, C-09) */
-            confirmo?: boolean;
-        };
-        ArchivadasDto: {
-            archivadas: number;
-        };
-        CausaGestionDto: {
-            /** Format: uuid */
-            id: string;
-            /** @enum {string} */
-            categoria: "PERSONAS" | "ANIMALES" | "ADULTOS_MAYORES" | "RESCATISTAS";
-            titulo: string;
-            descripcion: string;
-            pasos: string[];
-            urlOficial: string;
-            dominio: string | null;
-            tieneImagen: boolean;
-            /** Format: date-time */
-            actualizadoEn: string;
-            /** Format: date-time */
-            publicadaEn: string;
-            /** Format: date */
-            cierraEl: string;
-            /**
-             * Format: date
-             * @description Nulo mientras la causa siga activa
-             */
-            cerroEl: string | null;
-            /** @enum {string|null} */
-            motivo: "VENCIDA" | "MANUAL" | "ENTIDAD_SIN_VERIFICAR" | null;
-            entidad: {
-                /** Format: uuid */
-                id: string;
-                nombre: string;
-                tieneLogo: boolean;
-                /** Format: date-time */
-                verificadaEn: string | null;
-            };
-            /** @enum {string} */
-            estado: "ACTIVA" | "ATENDIDA";
-            porCerrar: boolean;
-            dominioDistinto: boolean;
-            /** Format: uuid */
-            creadaPor: string;
-        };
-        CrearCausaDto: {
-            /** Format: uuid */
-            entidadId: string;
-            /** @enum {string} */
-            categoria: "PERSONAS" | "ANIMALES" | "ADULTOS_MAYORES" | "RESCATISTAS";
-            titulo: string;
-            descripcion: string;
-            pasos: string[];
-            urlOficial: string;
-            cierraEl: string;
-            /** @description Confirmo que revisé la entidad y el sitio de destino (C-09) */
-            confirmo?: boolean;
-        };
-        EditarCausaDto: {
-            /** Format: uuid */
-            entidadId?: string;
-            /** @enum {string} */
-            categoria?: "PERSONAS" | "ANIMALES" | "ADULTOS_MAYORES" | "RESCATISTAS";
-            titulo?: string;
-            descripcion?: string;
-            pasos?: string[];
-            urlOficial?: string;
-            cierraEl?: string;
-            /** @description Confirmo que revisé la entidad y el sitio de destino (C-09) */
-            confirmo?: boolean;
-        };
-        PlazoDto: {
-            cierraEl: string;
-            /** @description Confirmo que revisé la entidad y el sitio de destino (C-09) */
-            confirmo?: boolean;
-        };
-        CausaPublicaDto: {
-            /** Format: uuid */
-            id: string;
-            /** @enum {string} */
-            categoria: "PERSONAS" | "ANIMALES" | "ADULTOS_MAYORES" | "RESCATISTAS";
-            titulo: string;
-            descripcion: string;
-            pasos: string[];
-            /** @description Nulo si la entidad ya no está verificada: la web no muestra el enlace */
-            urlOficial: string | null;
-            dominio: string | null;
-            tieneImagen: boolean;
-            /** Format: date-time */
-            actualizadoEn: string;
-            /** Format: date-time */
-            publicadaEn: string;
-            /** Format: date */
-            cierraEl: string;
-            /**
-             * Format: date
-             * @description Nulo mientras la causa siga activa
-             */
-            cerroEl: string | null;
-            /** @enum {string|null} */
-            motivo: "VENCIDA" | "MANUAL" | "ENTIDAD_SIN_VERIFICAR" | null;
-            entidad: {
-                /** Format: uuid */
-                id: string;
-                nombre: string;
-                tieneLogo: boolean;
-                /** Format: date-time */
-                verificadaEn: string | null;
-            };
-        };
-        AcopioPublicoDto: {
-            /** Format: uuid */
-            id: string;
-            nombre: string;
-            entidad: {
-                /** Format: uuid */
-                id: string;
-                nombre: string;
-            };
-            direccion: string;
-            municipio: string;
-            lat: number;
-            lng: number;
-            telefono: string | null;
-            indicacionesAcceso: string | null;
-            horario: {
-                dom: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                lun: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                mar: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                mie: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                jue: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                vie: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                sab: {
-                    abre: string;
-                    cierra: string;
-                }[];
-            };
-            /** @enum {string} */
-            estado: "ACTIVO" | "PAUSADO" | "CERRADO";
-            abiertoAhora: boolean;
-            /** Format: date-time */
-            actualizadoEn: string;
-            distanciaKm?: number;
-        };
-        AcopioDto: {
-            /** Format: uuid */
-            id: string;
-            nombre: string;
-            entidad: {
-                /** Format: uuid */
-                id: string;
-                nombre: string;
-            };
-            direccion: string;
-            municipio: string;
-            lat: number;
-            lng: number;
-            telefono: string | null;
-            indicacionesAcceso: string | null;
-            horario: {
-                dom: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                lun: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                mar: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                mie: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                jue: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                vie: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                sab: {
-                    abre: string;
-                    cierra: string;
-                }[];
-            };
-            /** @enum {string} */
-            estado: "ACTIVO" | "PAUSADO" | "CERRADO";
-            abiertoAhora: boolean;
-            /** Format: date-time */
-            actualizadoEn: string;
-            distanciaKm?: number;
-            /** Format: date-time */
-            creadoEn: string;
-        };
-        CrearAcopioDto: {
-            /** Format: uuid */
-            entidadId: string;
-            nombre: string;
-            direccion: string;
-            municipio: string;
-            lat: number;
-            lng: number;
-            telefono?: string | null;
-            indicacionesAcceso?: string | null;
-            horario: {
-                dom: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                lun: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                mar: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                mie: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                jue: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                vie: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                sab: {
-                    abre: string;
-                    cierra: string;
-                }[];
-            };
-            /** @enum {string} */
-            estado?: "ACTIVO" | "PAUSADO" | "CERRADO";
-        };
-        ActualizarAcopioDto: {
-            /** Format: uuid */
-            entidadId?: string;
-            nombre?: string;
-            direccion?: string;
-            municipio?: string;
-            lat?: number;
-            lng?: number;
-            telefono?: string | null;
-            indicacionesAcceso?: string | null;
-            horario?: {
-                dom: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                lun: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                mar: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                mie: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                jue: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                vie: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                sab: {
-                    abre: string;
-                    cierra: string;
-                }[];
-            };
-            /** @enum {string} */
-            estado?: "ACTIVO" | "PAUSADO" | "CERRADO";
-        };
-        OperacionDto: {
-            /** @enum {string} */
-            estado?: "ACTIVO" | "PAUSADO";
-            horario?: {
-                dom: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                lun: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                mar: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                mie: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                jue: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                vie: {
-                    abre: string;
-                    cierra: string;
-                }[];
-                sab: {
-                    abre: string;
-                    cierra: string;
-                }[];
-            };
-            indicacionesAcceso?: string | null;
-            telefono?: string | null;
-        };
-        ZonaDto: {
-            /** Format: uuid */
-            id: string;
-            /** Format: uuid */
-            emergenciaId: string;
-            nombre: string;
-            municipio: string;
-            lat: number;
-            lng: number;
-            poblacionEstimada: number;
-            poblacionFuente: string;
-            /** Format: date-time */
-            poblacionFecha: string;
-            /** @enum {string} */
-            estado: "SIN_ATENDER" | "EN_ATENCION" | "CUBIERTA";
-            /** Format: date-time */
-            actualizadoEn: string;
-        };
-        CrearZonaDto: {
-            /** Format: uuid */
-            emergenciaId: string;
-            nombre: string;
-            municipio: string;
-            lat: number;
-            lng: number;
-            poblacionEstimada: number;
-            poblacionFuente: string;
-            /** Format: date */
-            poblacionFecha: string;
-            /** @enum {string} */
-            estado?: "SIN_ATENDER" | "EN_ATENCION" | "CUBIERTA";
-        };
-        ActualizarZonaDto: {
-            nombre?: string;
-            municipio?: string;
-            lat?: number;
-            lng?: number;
-            poblacionEstimada?: number;
-            poblacionFuente?: string;
-            /** Format: date */
-            poblacionFecha?: string;
-            /** @enum {string} */
-            estado?: "SIN_ATENDER" | "EN_ATENCION" | "CUBIERTA";
-        };
-        UbicacionDto: {
-            /** @enum {string} */
-            tipo: "ACOPIO" | "ZONA";
-            /** Format: uuid */
-            id: string;
-            nombre: string;
-            municipio: string;
-            /** @description Estado del acopio o de la zona */
-            estado: string;
-        };
-        ResultadoGeoDto: {
-            etiqueta: string;
-            lat: number;
-            lng: number;
-        };
-        NoRecibirDto: {
-            /** Format: uuid */
-            categoriaId: string;
-            categoria: string;
-            /** Format: date */
-            hasta: string | null;
-            /** Format: date-time */
-            marcadoEn: string;
-        };
-        AcopioNoRecibeDto: {
-            /** Format: uuid */
-            acopioId: string;
-            /** Format: date */
-            hasta: string | null;
-        };
-        MarcarDto: {
-            /**
-             * Format: date
-             * @description Fecha de reapertura; sin ella, hasta que se desmarque
-             */
-            hasta?: string | null;
-        };
-        EntradaDto: {
-            /** Format: uuid */
-            id?: string;
-            /** Format: uuid */
-            categoriaId: string;
-            cantidad: number;
-            /** Format: date */
-            venceEn?: string;
-            /** Format: date-time */
-            ocurridoEn?: string;
-            origenOffline?: boolean;
-        };
-        ResultadoMovimientoDto: {
-            movimiento: {
-                /** Format: uuid */
-                id: string;
-                /** @enum {string} */
-                tipo: "ENTRADA" | "SALIDA" | "AJUSTE";
-                /** Format: uuid */
-                categoriaId: string;
-                /** @description Siempre positiva; el signo lo da el tipo */
-                cantidad: number;
-                signo: 1 | -1;
-                /** @enum {string|null} */
-                motivoSalida: "ENTREGA_FAMILIAS" | "TRASLADO" | "VENCIDO" | "OTRO" | null;
-                nota: string | null;
-                motivo: string | null;
-                /** Format: date */
-                venceEn: string | null;
-                /** Format: date-time */
-                ocurridoEn: string;
-                /** Format: date-time */
-                registradoEn: string;
-                origenOffline: boolean;
-            };
-            /** @description Saldo de la categoría en el acopio después del movimiento */
-            saldo: number;
-            /** @description La categoría está marcada «no recibir» en el acopio */
-            noRecibe: boolean;
-        };
-        SalidaDto: {
-            /** Format: uuid */
-            categoriaId: string;
-            cantidad: number;
-            /** @enum {string} */
-            motivoSalida: "ENTREGA_FAMILIAS" | "TRASLADO" | "VENCIDO" | "OTRO";
-            nota?: string;
-        };
-        AjusteDto: {
-            /** Format: uuid */
-            categoriaId: string;
-            cantidadContada: number;
-            motivo: string;
-        };
-        SaldoDto: {
-            /** Format: uuid */
-            categoriaId: string;
-            categoria: string;
-            grupo: string;
-            /** @enum {string} */
-            unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
-            perecedero: boolean;
-            cantidad: number;
-            umbral: {
-                minimo: number;
-                maximo: number;
-            } | null;
-            /** @enum {string} */
-            semaforo: "SIN_UMBRAL" | "BAJO" | "CERCA" | "EN_RANGO" | "SOBRE";
-            /** Format: date-time */
-            ultimoMovimiento: string | null;
-            /** @description Estimado: supone que sale primero lo que vence antes (V-02). Vacío si no es perecedero */
-            vencimientos: {
-                /** Format: date */
-                venceEn: string | null;
-                cantidad: number;
-            }[];
-        };
-        PaginaHistorialDto: {
-            filas: {
-                /** Format: uuid */
-                id: string;
-                /** @enum {string} */
-                tipo: "ENTRADA" | "SALIDA" | "AJUSTE";
-                /** Format: uuid */
-                categoriaId: string;
-                /** @description Siempre positiva; el signo lo da el tipo */
-                cantidad: number;
-                signo: 1 | -1;
-                /** @enum {string|null} */
-                motivoSalida: "ENTREGA_FAMILIAS" | "TRASLADO" | "VENCIDO" | "OTRO" | null;
-                nota: string | null;
-                motivo: string | null;
-                /** Format: date */
-                venceEn: string | null;
-                /** Format: date-time */
-                ocurridoEn: string;
-                /** Format: date-time */
-                registradoEn: string;
-                origenOffline: boolean;
-                usuario: string;
-                saldoDespues: number;
-            }[];
-            siguiente: string | null;
-        };
-        FijarUmbralDto: {
-            minimo: number;
-            maximo: number;
-        };
-        UmbralDto: {
-            /** Format: uuid */
-            categoriaId: string;
-            minimo: number;
-            maximo: number;
-            /** Format: date-time */
-            actualizadoEn: string;
-        };
-        CrearDonacionDto: {
-            /** Format: uuid */
-            acopioId: string;
-            lineas: {
-                /** Format: uuid */
-                categoriaId: string;
-                ean?: string;
-                cantidad: number;
-                /** Format: date */
-                venceEn?: string;
-            }[];
-        };
-        ComprobanteDto: {
-            /** @description ACO-AAAA-XXXXX */
-            folio: string;
-            /** @enum {string} */
-            estado: "PREPARADO" | "PENDIENTE" | "CONCILIADO" | "RECHAZADO" | "CANCELADO";
-            acopio: {
-                /** Format: uuid */
-                id: string;
-                nombre: string;
-            };
-            /** Format: date-time */
-            creadoEn: string;
-            /** Format: date-time */
-            recibidoEn: string | null;
-            /** Format: date-time */
-            verificadoEn: string | null;
-            motivoRechazo: string | null;
-            notaRechazo: string | null;
-            tieneFactura: boolean;
-            lineas: {
-                /** Format: uuid */
-                id: string;
-                /** Format: uuid */
-                categoriaId: string;
-                categoria: string;
-                /** @enum {string} */
-                unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
-                perecedero: boolean;
-                ean: string | null;
-                /** @description Unidad base por presentación; 1 si no hay código */
-                contenidoUnitario: number;
-                cantidadDeclarada: number;
-                cantidadConfirmada: number | null;
-                /** Format: date */
-                venceEn: string | null;
-                motivoDiferencia: string | null;
-            }[];
-        };
-        SugerenciasDto: {
-            lineas: {
-                /** Format: uuid */
-                categoriaId: string;
-            }[];
-            lat?: number;
-            lng?: number;
-        };
-        SugerenciaEntregaDto: {
-            /** Format: uuid */
-            acopioId: string;
-            nombre: string;
-            direccion: string;
-            abiertoAhora: boolean;
-            distanciaKm: number | null;
-            /** @description Categorías de la donación que este acopio no recibe */
-            noRecibe: string[];
-            lineasAceptadas: number;
-        };
-        CodigoDonadorDto: {
-            ean: string;
-            /** Format: uuid */
-            categoriaId: string;
-            categoria: string;
-            /** @enum {string} */
-            unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
-            /** @enum {string} */
-            grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
-            perecedero: boolean;
-            contenido: number | null;
-        };
-        BandejaRespuestaDto: {
-            comprobantes: {
-                /** @description ACO-AAAA-XXXXX */
-                folio: string;
-                /** @enum {string} */
-                estado: "PREPARADO" | "PENDIENTE" | "CONCILIADO" | "RECHAZADO" | "CANCELADO";
-                acopio: {
-                    /** Format: uuid */
-                    id: string;
-                    nombre: string;
-                };
-                /** Format: date-time */
-                creadoEn: string;
-                /** Format: date-time */
-                recibidoEn: string | null;
-                /** Format: date-time */
-                verificadoEn: string | null;
-                motivoRechazo: string | null;
-                notaRechazo: string | null;
-                tieneFactura: boolean;
-                lineas: {
-                    /** Format: uuid */
-                    id: string;
-                    /** Format: uuid */
-                    categoriaId: string;
-                    categoria: string;
-                    /** @enum {string} */
-                    unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
-                    perecedero: boolean;
-                    ean: string | null;
-                    /** @description Unidad base por presentación; 1 si no hay código */
-                    contenidoUnitario: number;
-                    cantidadDeclarada: number;
-                    cantidadConfirmada: number | null;
-                    /** Format: date */
-                    venceEn: string | null;
-                    motivoDiferencia: string | null;
-                }[];
-                conDiferencia: boolean;
-            }[];
-            porAcopio: {
-                /** Format: uuid */
-                acopioId: string;
-                nombre: string;
-                pendientes: number;
-            }[];
-        };
-        ConciliacionDto: {
-            /** @description ACO-AAAA-XXXXX */
-            folio: string;
-            /** @enum {string} */
-            estado: "PREPARADO" | "PENDIENTE" | "CONCILIADO" | "RECHAZADO" | "CANCELADO";
-            acopio: {
-                /** Format: uuid */
-                id: string;
-                nombre: string;
-            };
-            /** Format: date-time */
-            creadoEn: string;
-            /** Format: date-time */
-            recibidoEn: string | null;
-            /** Format: date-time */
-            verificadoEn: string | null;
-            motivoRechazo: string | null;
-            notaRechazo: string | null;
-            tieneFactura: boolean;
-            lineas: {
-                /** Format: uuid */
-                id: string;
-                /** Format: uuid */
-                categoriaId: string;
-                categoria: string;
-                /** @enum {string} */
-                unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
-                perecedero: boolean;
-                ean: string | null;
-                /** @description Unidad base por presentación; 1 si no hay código */
-                contenidoUnitario: number;
-                cantidadDeclarada: number;
-                cantidadConfirmada: number | null;
-                /** Format: date */
-                venceEn: string | null;
-                motivoDiferencia: string | null;
-            }[];
-            conDiferencia: boolean;
-            entradas: {
-                /** Format: uuid */
-                movimientoId: string;
-                /** Format: uuid */
-                categoriaId: string;
-                categoria: string;
-                unidad: string;
-                cantidad: number;
-                /** Format: date-time */
-                ocurridoEn: string;
-                /** @enum {string} */
-                origen: "RECEPCION" | "AUDITOR";
-                /** @description Nombre de quien registró la entrada */
-                registradoPor: string;
-            }[];
-            resumen: {
-                /** Format: uuid */
-                categoriaId: string;
-                categoria: string;
-                unidad: string;
-                confirmado: number;
-                entradas: number;
-                cuadra: boolean;
-            }[];
-        };
-        EntradaVinculableDto: {
-            /** Format: uuid */
-            id: string;
-            /** Format: uuid */
-            categoriaId: string;
-            categoria: string;
-            unidad: string;
-            cantidad: number;
-            /** Format: date-time */
-            ocurridoEn: string;
-            origenOffline: boolean;
-            /** @description Nombre de quien registró la entrada */
-            registradoPor: string;
-        };
-        VincularDto: {
-            movimientoIds: string[];
-        };
-        RechazarDto: {
-            /** @enum {string} */
-            motivo: "DUPLICADO" | "NO_CUADRA_MOVIMIENTOS" | "DIFERENCIA_SIN_EXPLICAR" | "OTRO";
-            nota?: string;
-        };
-        RecibirDto: {
-            /** Format: uuid */
-            acopioId: string;
-            lineas: {
-                /** Format: uuid */
-                lineaId: string;
-                cantidadConfirmada: number;
-                /** Format: date */
-                venceEn?: string;
-                motivoDiferencia?: string;
-            }[];
-        };
-        RecepcionDto: {
-            comprobante: {
-                /** @description ACO-AAAA-XXXXX */
-                folio: string;
-                /** @enum {string} */
-                estado: "PREPARADO" | "PENDIENTE" | "CONCILIADO" | "RECHAZADO" | "CANCELADO";
-                acopio: {
-                    /** Format: uuid */
-                    id: string;
-                    nombre: string;
-                };
-                /** Format: date-time */
-                creadoEn: string;
-                /** Format: date-time */
-                recibidoEn: string | null;
-                /** Format: date-time */
-                verificadoEn: string | null;
-                motivoRechazo: string | null;
-                notaRechazo: string | null;
-                tieneFactura: boolean;
-                lineas: {
-                    /** Format: uuid */
-                    id: string;
-                    /** Format: uuid */
-                    categoriaId: string;
-                    categoria: string;
-                    /** @enum {string} */
-                    unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
-                    perecedero: boolean;
-                    ean: string | null;
-                    /** @description Unidad base por presentación; 1 si no hay código */
-                    contenidoUnitario: number;
-                    cantidadDeclarada: number;
-                    cantidadConfirmada: number | null;
-                    /** Format: date */
-                    venceEn: string | null;
-                    motivoDiferencia: string | null;
-                }[];
-            };
-            /** @description Categorías de la donación marcadas «no recibir» en el acopio */
-            noRecibe: string[];
-        };
-        SeguimientoDto: {
-            folio: string;
-            /** @description Etiqueta para mostrar, por ejemplo «Recibida en el acopio» */
-            estado: string;
-            pasos: {
-                /** @enum {string} */
-                paso: "PREPARADA" | "RECIBIDA" | "CONCILIADA" | "RECIBIDA_EN_DESTINO";
-                /** Format: date-time */
-                en: string | null;
-                /** @description Nombre del acopio, desde que se recibe */
-                acopio?: string;
-            }[];
-            /** @description Alguna remisión con este folio llegó a su zona */
-            recibidoEnDestino: boolean;
-            /** @description Lo despachado con este folio, sin código ni zona */
-            remisiones: {
-                /** @enum {string} */
-                estado: "EN_TRANSITO" | "RECIBIDA";
-                /** Format: date-time */
-                despachadaEn: string;
-                /** Format: date-time */
-                recibidaEn: string | null;
-            }[];
-            /** @description Más de una remisión: cada una lleva una parte */
-            parteDeTuDonacion: boolean;
-            lineas: {
-                categoria: string;
-                unidad: string;
-                /** @description Lo declarado si aún no se recibe; lo confirmado después */
-                cantidad: number;
-                confirmada: boolean;
-            }[];
-        };
-        FichaZonaDto: {
-            zona: {
-                /** Format: uuid */
-                id: string;
-                nombre: string;
-                municipio: string;
-                poblacionEstimada: number;
-                poblacionFuente: string;
-                /** Format: date-time */
-                poblacionFecha: string;
-                emergencia: {
-                    /** Format: uuid */
-                    id: string;
-                    nombre: string;
-                    /** @enum {string} */
-                    estado: "ACTIVA" | "EN_SEGUIMIENTO" | "CERRADA";
-                    horizonteDias: number;
-                };
-            };
-            categorias: {
-                /** Format: uuid */
-                categoriaId: string;
-                categoria: string;
-                /** @enum {string} */
-                unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
-                /** @enum {string} */
-                origen: "CANASTA" | "MANUAL";
-                cantidadPersonaDia: number | null;
-                fuenteCanasta: string | null;
-                manual: {
-                    cantidad: number;
-                    motivo: string;
-                    puestaPor: string;
-                    /** Format: date-time */
-                    puestaEn: string;
-                } | null;
-                necesidad: number;
-                recibido: number;
-                enCamino: number;
-                deficit: number;
-                cobertura: number | null;
-            }[];
-            coberturaGlobal: number | null;
-            categoriaMasBaja: {
-                /** Format: uuid */
-                categoriaId: string;
-                categoria: string;
-                cobertura: number;
-            } | null;
-            reportes: {
-                /** Format: uuid */
-                categoriaId: string;
-                categoria: string;
-                nota: string | null;
-                /** Format: date-time */
-                reportadoEn: string;
-            }[];
-        };
-        ManualDto: {
-            cantidad: number | null;
-            motivo: string;
-        };
-        NecesidadManualDto: {
-            /** Format: uuid */
-            categoriaId: string;
-            cantidad: number | null;
-            motivo: string;
-            /** Format: date-time */
-            puestaEn: string;
-        };
-        ExcedenteDto: {
-            /** Format: uuid */
-            categoriaId: string;
-            categoria: string;
-            /** @enum {string} */
-            unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
-            saldo: number;
-            umbral: {
-                minimo: number;
-                maximo: number;
-            } | null;
-            noRecibe: boolean;
-            superavit: number;
-            comprometido: number;
-            vencido: number;
-            movible: number;
-            diasParaVencer: number | null;
-            /** @enum {string|null} */
-            aviso: "SIN_UMBRAL" | null;
-        };
-        InformeDescartesDto: {
-            total: number;
-            porMotivo: {
-                nombre: string;
-                veces: number;
-            }[];
-            porCategoria: {
-                nombre: string;
-                veces: number;
-            }[];
-            porAcopio: {
-                nombre: string;
-                veces: number;
-            }[];
-            recientes: {
-                /** Format: uuid */
-                id: string;
-                /** Format: date-time */
-                ronda: string;
-                /** @enum {string} */
-                estado: "PROPUESTA" | "APROBADA" | "DESCARTADA";
-                acopio: {
-                    /** Format: uuid */
-                    id: string;
-                    nombre: string;
-                };
-                zona: {
-                    /** Format: uuid */
-                    id: string;
-                    nombre: string;
-                };
-                emergencia: {
-                    /** Format: uuid */
-                    id: string;
-                    nombre: string;
-                };
-                categoria: {
-                    /** Format: uuid */
-                    id: string;
-                    nombre: string;
-                    /** @enum {string} */
-                    unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
-                };
-                cantidad: number;
-                puntaje: number;
-                desglose: {
-                    criticidad: number;
-                    urgencia: number;
-                    proximidad: number;
-                    magnitud: number;
-                };
-                justificacion: string;
-                cantidadAprobada: number | null;
-                remisionCodigo: string | null;
-                motivoDescarte: string | null;
-                decididaPor: string | null;
-                /** Format: date-time */
-                decididaEn: string | null;
-            }[];
-        };
-        SugerenciaDto: {
-            /** Format: uuid */
-            id: string;
-            /** Format: date-time */
-            ronda: string;
-            /** @enum {string} */
-            estado: "PROPUESTA" | "APROBADA" | "DESCARTADA";
-            acopio: {
-                /** Format: uuid */
-                id: string;
-                nombre: string;
-            };
-            zona: {
-                /** Format: uuid */
-                id: string;
-                nombre: string;
-            };
-            emergencia: {
-                /** Format: uuid */
-                id: string;
-                nombre: string;
-            };
-            categoria: {
-                /** Format: uuid */
-                id: string;
-                nombre: string;
-                /** @enum {string} */
-                unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
-            };
-            cantidad: number;
-            puntaje: number;
-            desglose: {
-                criticidad: number;
-                urgencia: number;
-                proximidad: number;
-                magnitud: number;
-            };
-            justificacion: string;
-            cantidadAprobada: number | null;
-            remisionCodigo: string | null;
-            motivoDescarte: string | null;
-            decididaPor: string | null;
-            /** Format: date-time */
-            decididaEn: string | null;
-        };
-        RecalculoDto: {
-            /** Format: date-time */
-            ronda: string;
-            generadas: number;
-        };
-        AprobarDto: {
-            cantidad?: number;
-        };
-        AprobacionDto: {
-            /** Format: uuid */
-            sugerenciaId: string;
-            cantidad: number;
-            remision: {
-                /** Format: uuid */
-                id: string;
-                codigo: string;
-                creada: boolean;
-            };
-        };
-        DescartarDto: {
-            motivo: string;
-        };
-        DescarteDto: {
-            /** Format: uuid */
-            id: string;
-            /** @enum {string} */
-            estado: "DESCARTADA";
-        };
-        ConfiguracionMotorDto: {
-            pesos: {
-                criticidad: number;
-                urgencia: number;
-                proximidad: number;
-                magnitud: number;
-            };
-            cantidadMinima: number;
-            /** Format: date-time */
-            actualizadoEn: string | null;
-            actualizadoPor: string | null;
-        };
-        GuardarConfiguracionDto: {
-            pesos: {
-                criticidad: number;
-                urgencia: number;
-                proximidad: number;
-                magnitud: number;
-            };
-            cantidadMinima: number;
-        };
-        VistaPreviaMotorDto: {
-            actual: {
-                acopio: string;
-                zona: string;
-                categoria: string;
-                cantidad: number;
-                puntaje: number;
-            }[];
-            propuesta: {
-                acopio: string;
-                zona: string;
-                categoria: string;
-                cantidad: number;
-                puntaje: number;
-            }[];
-        };
-        CrearRemisionDto: {
-            /** Format: uuid */
-            acopioId: string;
-            /**
-             * Format: uuid
-             * @description null: despacho general
-             */
-            zonaId: string | null;
-            responsable?: string | null;
-            lineas: {
-                /** Format: uuid */
-                categoriaId: string;
-                cantidad: number;
-            }[];
-        };
-        RemisionDto: {
-            /** Format: uuid */
-            id: string;
-            /** @description R-AAAA-XXXXX */
-            codigo: string;
-            /** @enum {string} */
-            estado: "BORRADOR" | "EN_TRANSITO" | "RECIBIDA" | "CANCELADA";
-            acopio: {
-                /** Format: uuid */
-                id: string;
-                nombre: string;
-            };
-            /** @description null: despacho general */
-            zona: {
-                /** Format: uuid */
-                id: string;
-                nombre: string;
-            } | null;
-            responsable: string | null;
-            qrToken: string;
-            /** Format: date-time */
-            creadaEn: string;
-            /** Format: date-time */
-            despachadaEn: string | null;
-            /** Format: date-time */
-            recibidaEn: string | null;
-            /** Format: date-time */
-            canceladaEn: string | null;
-            motivoCancelacion: string | null;
-            notaRecepcion: string | null;
-            /** @description Fotos de evidencia subidas */
-            evidencias: number;
-            folios: string[];
-            lineas: {
-                /** Format: uuid */
-                categoriaId: string;
-                categoria: string;
-                /** @enum {string} */
-                unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
-                cantidadPlaneada: number;
-                cantidadRecibida: number | null;
-            }[];
-        };
-        FolioVinculableDto: {
-            /** @description ACO-AAAA-XXXXX */
-            folio: string;
-            /**
-             * Format: date-time
-             * @description null si se concilió sin fecha registrada
-             */
-            conciliadoEn: string | null;
-            /** @description Sin repetir, en orden alfabético */
-            categorias: string[];
-        };
-        LineasDto: {
-            lineas: {
-                /** Format: uuid */
-                categoriaId: string;
-                cantidad: number;
-            }[];
-        };
-        DespacharDto: {
-            folios?: string[];
-        };
-        CancelarDto: {
-            motivo: string;
-        };
-        EditarRemisionDto: {
-            responsable?: string | null;
-            /** Format: uuid */
-            zonaId?: string | null;
-        };
-        RecibirRemisionDto: {
-            /**
-             * Format: uuid
-             * @description Solo en un despacho general: una zona del Receptor
-             */
-            zonaId?: string;
-            nota?: string;
-        };
-        ReportarDto: {
-            categorias: string[];
-            /** @description Pública: el mapa la muestra tal cual. Sin nombres ni datos de personas */
-            nota?: string;
-            resuelta: boolean;
-        };
-        ReportesCreadosDto: {
-            creados: string[];
-        };
-        ReporteNecesidadDto: {
-            /** Format: uuid */
-            id: string;
-            /** Format: uuid */
-            categoriaId: string;
-            categoria: string;
-            nota: string | null;
-            resuelta: boolean;
-            reportadoPor: string;
-            /** Format: date-time */
-            reportadoEn: string;
-        };
-        ZonaPublicaDto: {
-            /** Format: uuid */
-            zonaId: string;
-            /** @description Redondeado a dos decimales */
-            centro: {
-                lat: number;
-                lng: number;
-            };
-            radioKm: number;
-            necesidades: {
-                categoria: string;
-                nota: string | null;
-                /** Format: date-time */
-                reportadoEn: string;
-            }[];
-        };
-        SaludDto: {
-            /** @enum {string} */
-            estado: "ok";
-            /** @enum {string} */
-            base: "ok";
-        };
+  schemas: {
+    PaginaBitacoraDto: {
+      total: number;
+      pagina: number;
+      porPagina: number;
+      registros: {
+        /** Format: uuid */
+        id: string;
+        /** Format: uuid */
+        usuario_id: string | null;
+        accion: string;
+        entidad: string;
+        entidad_id: string | null;
+        /** Format: uuid */
+        ubicacion_id: string | null;
+        datos_antes: unknown;
+        datos_despues: unknown;
+        destacado: boolean;
+        /** Format: date-time */
+        ocurrido_en: string;
+        usuario: {
+          /** Format: uuid */
+          id: string;
+          username: string | null;
+          nombre: string;
+        } | null;
+      }[];
     };
-    responses: never;
-    parameters: never;
-    requestBodies: never;
-    headers: never;
-    pathItems: never;
+    IniciarSesionDto: {
+      /** @description Nombre de usuario, no correo */
+      usuario: string;
+      contrasena: string;
+    };
+    SesionDto: {
+      /** Format: date-time */
+      expiraEn: string;
+      usuario: {
+        /** Format: uuid */
+        id: string;
+        username: string | null;
+        nombre: string;
+        /** @enum {string} */
+        rol: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR' | 'DONADOR';
+      };
+    };
+    ErrorDto: {
+      estado: number;
+      /** @description Código estable para la interfaz, por ejemplo ULTIMO_ADMIN */
+      codigo: string;
+      /** @description Mensaje en español, listo para mostrar */
+      mensaje: string;
+      /** @description En errores de validación, un mensaje por campo. En algunos errores de dominio, datos para la interfaz (SALDO_INSUFICIENTE trae { saldo }) */
+      detalles?:
+        | {
+            campo: string;
+            mensaje: string;
+          }[]
+        | {
+            [key: string]: unknown;
+          };
+    };
+    YoDto: {
+      /** Format: uuid */
+      id: string;
+      username: string | null;
+      nombre: string;
+      /** @enum {string} */
+      rol: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR' | 'DONADOR';
+      /** @description El Administrador actúa sobre todas las ubicaciones */
+      alcanceGlobal: boolean;
+      asignaciones: {
+        /** @enum {string} */
+        tipo: 'ACOPIO' | 'ZONA';
+        /** Format: uuid */
+        ubicacionId: string;
+      }[];
+    };
+    RegistroDto: {
+      /** Format: email */
+      correo: string;
+      nombre: string;
+    };
+    MensajeDto: {
+      mensaje: string;
+    };
+    EnlaceDonadorDto: {
+      nombre: string;
+      correo: string;
+    };
+    ConfirmarDto: {
+      token: string;
+      contrasena: string;
+      nombre?: string;
+    };
+    SesionDonadorDto: {
+      correo: string;
+      contrasena: string;
+    };
+    InvitacionPublicaDto: {
+      username: string | null;
+      nombre: string;
+      /** @enum {string} */
+      rol: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR' | 'DONADOR';
+      esRestablecimiento: boolean;
+      /** Format: date-time */
+      venceEn: string;
+      asignaciones: {
+        /** @enum {string} */
+        tipo: 'ACOPIO' | 'ZONA';
+        /** Format: uuid */
+        ubicacionId: string;
+      }[];
+    };
+    CanjearDto: {
+      contrasena: string;
+    };
+    CanjeDto: {
+      username: string | null;
+    };
+    CrearUsuarioDto: {
+      username: string;
+      nombre: string;
+      /** @enum {string} */
+      rol: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR';
+      /**
+       * Format: email
+       * @description Sin correo no hay recuperación de contraseña
+       */
+      correo?: string | null;
+      /** @default [] */
+      asignaciones: {
+        /** @enum {string} */
+        tipo: 'ACOPIO' | 'ZONA';
+        /** Format: uuid */
+        ubicacionId: string;
+      }[];
+    };
+    UsuarioCreadoDto: {
+      usuario: {
+        /** Format: uuid */
+        id: string;
+        username: string | null;
+        nombre: string;
+        /** @description Nulo si no tiene correo real */
+        correo: string | null;
+        sinCorreoReal: boolean;
+        /** @enum {string} */
+        rol: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR' | 'DONADOR';
+        /** @enum {string} */
+        estado: 'INVITADO' | 'ACTIVO' | 'SUSPENDIDO';
+        /** Format: date-time */
+        creadoEn: string;
+        asignaciones: {
+          /** @enum {string} */
+          tipo: 'ACOPIO' | 'ZONA';
+          /** Format: uuid */
+          ubicacionId: string;
+          /** Format: uuid */
+          asignadoPor: string;
+          /** Format: date-time */
+          asignadoEn: string;
+        }[];
+        invitacionPendiente: {
+          /** Format: date-time */
+          venceEn: string;
+        } | null;
+        restablecimientoPendiente: {
+          /** Format: date-time */
+          venceEn: string;
+        } | null;
+      };
+      invitacion: {
+        /** @description APP_URL/invitacion/<token>. Copiable para WhatsApp */
+        enlace: string;
+        /** Format: date-time */
+        venceEn: string;
+      };
+    };
+    UsuarioDto: {
+      /** Format: uuid */
+      id: string;
+      username: string | null;
+      nombre: string;
+      /** @description Nulo si no tiene correo real */
+      correo: string | null;
+      sinCorreoReal: boolean;
+      /** @enum {string} */
+      rol: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR' | 'DONADOR';
+      /** @enum {string} */
+      estado: 'INVITADO' | 'ACTIVO' | 'SUSPENDIDO';
+      /** Format: date-time */
+      creadoEn: string;
+      asignaciones: {
+        /** @enum {string} */
+        tipo: 'ACOPIO' | 'ZONA';
+        /** Format: uuid */
+        ubicacionId: string;
+        /** Format: uuid */
+        asignadoPor: string;
+        /** Format: date-time */
+        asignadoEn: string;
+      }[];
+      invitacionPendiente: {
+        /** Format: date-time */
+        venceEn: string;
+      } | null;
+      restablecimientoPendiente: {
+        /** Format: date-time */
+        venceEn: string;
+      } | null;
+    };
+    ActualizarUsuarioDto: {
+      nombre?: string;
+      /** @enum {string} */
+      rol?: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR';
+      /** Format: email */
+      correo?: string | null;
+    };
+    EnlaceInvitacionDto: {
+      /** @description APP_URL/invitacion/<token>. Copiable para WhatsApp */
+      enlace: string;
+      /** Format: date-time */
+      venceEn: string;
+    };
+    RevocadasDto: {
+      revocadas: number;
+    };
+    RestablecerDto: {
+      motivo: string;
+    };
+    AsignacionDto: {
+      /** @enum {string} */
+      tipo: 'ACOPIO' | 'ZONA';
+      /** Format: uuid */
+      ubicacionId: string;
+    };
+    CategoriaDto: {
+      /** Format: uuid */
+      id: string;
+      nombre: string;
+      /** @enum {string} */
+      grupo:
+        | 'ALIMENTOS'
+        | 'AGUA_Y_BEBIDAS'
+        | 'ASEO_PERSONAL'
+        | 'ASEO_DEL_HOGAR'
+        | 'SALUD'
+        | 'ROPA_Y_ABRIGO'
+        | 'BEBE'
+        | 'ADULTO_MAYOR'
+        | 'ANIMALES'
+        | 'HERRAMIENTAS';
+      /** @enum {string} */
+      unidadBase: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+      perecedero: boolean;
+      sinonimos: string[];
+      archivada: boolean;
+    };
+    ResultadoBusquedaDto: {
+      /** Format: uuid */
+      id: string;
+      nombre: string;
+      /** @enum {string} */
+      grupo:
+        | 'ALIMENTOS'
+        | 'AGUA_Y_BEBIDAS'
+        | 'ASEO_PERSONAL'
+        | 'ASEO_DEL_HOGAR'
+        | 'SALUD'
+        | 'ROPA_Y_ABRIGO'
+        | 'BEBE'
+        | 'ADULTO_MAYOR'
+        | 'ANIMALES'
+        | 'HERRAMIENTAS';
+      /** @enum {string} */
+      unidadBase: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+      perecedero: boolean;
+      /** @description 0 a 1; mayor es mejor coincidencia */
+      puntaje: number;
+    };
+    CrearCategoriaDto: {
+      nombre: string;
+      /** @enum {string} */
+      grupo:
+        | 'ALIMENTOS'
+        | 'AGUA_Y_BEBIDAS'
+        | 'ASEO_PERSONAL'
+        | 'ASEO_DEL_HOGAR'
+        | 'SALUD'
+        | 'ROPA_Y_ABRIGO'
+        | 'BEBE'
+        | 'ADULTO_MAYOR'
+        | 'ANIMALES'
+        | 'HERRAMIENTAS';
+      /** @enum {string} */
+      unidadBase: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+      /** @default false */
+      perecedero: boolean;
+      /** @default [] */
+      sinonimos: string[];
+    };
+    ActualizarCategoriaDto: {
+      nombre?: string;
+      /** @enum {string} */
+      grupo?:
+        | 'ALIMENTOS'
+        | 'AGUA_Y_BEBIDAS'
+        | 'ASEO_PERSONAL'
+        | 'ASEO_DEL_HOGAR'
+        | 'SALUD'
+        | 'ROPA_Y_ABRIGO'
+        | 'BEBE'
+        | 'ADULTO_MAYOR'
+        | 'ANIMALES'
+        | 'HERRAMIENTAS';
+      perecedero?: boolean;
+      sinonimos?: string[];
+    };
+    CanastaVigenteDto: {
+      /** Format: uuid */
+      categoriaId: string;
+      categoria: string;
+      /** @enum {string} */
+      unidadBase: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+      cantidadPersonaDia: number;
+      fuente: string;
+      /** Format: date-time */
+      vigenteDesde: string;
+    };
+    VersionCanastaRespuestaDto: {
+      /** Format: uuid */
+      id: string;
+      cantidadPersonaDia: number;
+      fuente: string;
+      /** Format: date-time */
+      vigenteDesde: string;
+    };
+    VersionCanastaDto: {
+      cantidadPersonaDia: number;
+      /** @description Obligatoria: Esfera, UNGRD, Cruz Roja u otra */
+      fuente: string;
+      /** Format: date */
+      vigenteDesde?: string;
+    };
+    EmergenciaDto: {
+      /** Format: uuid */
+      id: string;
+      nombre: string;
+      tipo: string;
+      /** Format: date-time */
+      inicio: string;
+      horizonteDias: number;
+      /** @enum {string} */
+      estado: 'ACTIVA' | 'EN_SEGUIMIENTO' | 'CERRADA';
+      /** Format: date-time */
+      destacadaHasta: string;
+      /** Format: date-time */
+      cerradaEn: string | null;
+      motivoCierre: string | null;
+    };
+    CrearEmergenciaDto: {
+      nombre: string;
+      tipo: string;
+      /** Format: date */
+      inicio: string;
+      horizonteDias?: number;
+      /** Format: date */
+      destacadaHasta: string;
+    };
+    ActualizarEmergenciaDto: {
+      nombre?: string;
+      tipo?: string;
+      /** Format: date */
+      inicio?: string;
+      horizonteDias?: number;
+      /** Format: date */
+      destacadaHasta?: string;
+    };
+    CerrarEmergenciaDto: {
+      motivo: string;
+    };
+    CodigoBarrasDto: {
+      ean: string;
+      /** Format: uuid */
+      categoriaId: string;
+      categoria: string;
+      /** @enum {string} */
+      unidad: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+      /** @description Unidad base que trae una presentación */
+      contenido: number | null;
+      descripcion: string | null;
+      revisado: boolean;
+      /** @enum {string} */
+      grupo:
+        | 'ALIMENTOS'
+        | 'AGUA_Y_BEBIDAS'
+        | 'ASEO_PERSONAL'
+        | 'ASEO_DEL_HOGAR'
+        | 'SALUD'
+        | 'ROPA_Y_ABRIGO'
+        | 'BEBE'
+        | 'ADULTO_MAYOR'
+        | 'ANIMALES'
+        | 'HERRAMIENTAS';
+      perecedero: boolean;
+      /** @description Nombre de quien lo asoció */
+      creadoPor: string | null;
+      /** Format: date-time */
+      creadoEn: string;
+    };
+    AsociarDto: {
+      ean: string;
+      /** Format: uuid */
+      categoriaId: string;
+      contenido?: number | null;
+      descripcion?: string | null;
+    };
+    EditarDto: {
+      /** Format: uuid */
+      categoriaId?: string;
+      contenido?: number | null;
+      descripcion?: string | null;
+      revisado?: boolean;
+    };
+    EntidadDto: {
+      /** Format: uuid */
+      id: string;
+      nombre: string;
+      tipo: string;
+      nit: string | null;
+      sitioWeb: string | null;
+      telefono: string | null;
+      correo: string | null;
+      descripcion: string | null;
+      /** @enum {string} */
+      verificacion: 'SIN_VERIFICAR' | 'VERIFICADA' | 'RECHAZADA';
+      verificadaEn: string | null;
+      tieneLogo: boolean;
+      /** @description Solo en la lista de C15 */
+      causasActivas?: number;
+    };
+    CrearEntidadDto: {
+      nombre: string;
+      /** @description Fundación, ONG, alcaldía, iglesia… */
+      tipo: string;
+      nit?: string | null;
+      /** Format: uri */
+      sitioWeb?: string | null;
+      telefono?: string | null;
+      /** Format: email */
+      correo?: string | null;
+      descripcion?: string | null;
+    };
+    ActualizarEntidadDto: {
+      nombre?: string;
+      /** @description Fundación, ONG, alcaldía, iglesia… */
+      tipo?: string;
+      nit?: string | null;
+      /** Format: uri */
+      sitioWeb?: string | null;
+      telefono?: string | null;
+      /** Format: email */
+      correo?: string | null;
+      descripcion?: string | null;
+    };
+    VerificarEntidadDto: {
+      /** @description Confirmo que revisé la entidad y su sitio oficial (aviso de seguridad, C-09) */
+      confirmo?: boolean;
+    };
+    ArchivadasDto: {
+      archivadas: number;
+    };
+    CausaGestionDto: {
+      /** Format: uuid */
+      id: string;
+      /** @enum {string} */
+      categoria: 'PERSONAS' | 'ANIMALES' | 'ADULTOS_MAYORES' | 'RESCATISTAS';
+      titulo: string;
+      descripcion: string;
+      pasos: string[];
+      urlOficial: string;
+      dominio: string | null;
+      tieneImagen: boolean;
+      /** Format: date-time */
+      actualizadoEn: string;
+      /** Format: date-time */
+      publicadaEn: string;
+      /** Format: date */
+      cierraEl: string;
+      /**
+       * Format: date
+       * @description Nulo mientras la causa siga activa
+       */
+      cerroEl: string | null;
+      /** @enum {string|null} */
+      motivo: 'VENCIDA' | 'MANUAL' | 'ENTIDAD_SIN_VERIFICAR' | null;
+      entidad: {
+        /** Format: uuid */
+        id: string;
+        nombre: string;
+        tieneLogo: boolean;
+        /** Format: date-time */
+        verificadaEn: string | null;
+      };
+      /** @enum {string} */
+      estado: 'ACTIVA' | 'ATENDIDA';
+      porCerrar: boolean;
+      dominioDistinto: boolean;
+      /** Format: uuid */
+      creadaPor: string;
+    };
+    CrearCausaDto: {
+      /** Format: uuid */
+      entidadId: string;
+      /** @enum {string} */
+      categoria: 'PERSONAS' | 'ANIMALES' | 'ADULTOS_MAYORES' | 'RESCATISTAS';
+      titulo: string;
+      descripcion: string;
+      pasos: string[];
+      urlOficial: string;
+      cierraEl: string;
+      /** @description Confirmo que revisé la entidad y el sitio de destino (C-09) */
+      confirmo?: boolean;
+    };
+    EditarCausaDto: {
+      /** Format: uuid */
+      entidadId?: string;
+      /** @enum {string} */
+      categoria?: 'PERSONAS' | 'ANIMALES' | 'ADULTOS_MAYORES' | 'RESCATISTAS';
+      titulo?: string;
+      descripcion?: string;
+      pasos?: string[];
+      urlOficial?: string;
+      cierraEl?: string;
+      /** @description Confirmo que revisé la entidad y el sitio de destino (C-09) */
+      confirmo?: boolean;
+    };
+    PlazoDto: {
+      cierraEl: string;
+      /** @description Confirmo que revisé la entidad y el sitio de destino (C-09) */
+      confirmo?: boolean;
+    };
+    CausaPublicaDto: {
+      /** Format: uuid */
+      id: string;
+      /** @enum {string} */
+      categoria: 'PERSONAS' | 'ANIMALES' | 'ADULTOS_MAYORES' | 'RESCATISTAS';
+      titulo: string;
+      descripcion: string;
+      pasos: string[];
+      /** @description Nulo si la entidad ya no está verificada: la web no muestra el enlace */
+      urlOficial: string | null;
+      dominio: string | null;
+      tieneImagen: boolean;
+      /** Format: date-time */
+      actualizadoEn: string;
+      /** Format: date-time */
+      publicadaEn: string;
+      /** Format: date */
+      cierraEl: string;
+      /**
+       * Format: date
+       * @description Nulo mientras la causa siga activa
+       */
+      cerroEl: string | null;
+      /** @enum {string|null} */
+      motivo: 'VENCIDA' | 'MANUAL' | 'ENTIDAD_SIN_VERIFICAR' | null;
+      entidad: {
+        /** Format: uuid */
+        id: string;
+        nombre: string;
+        tieneLogo: boolean;
+        /** Format: date-time */
+        verificadaEn: string | null;
+      };
+    };
+    AcopioPublicoDto: {
+      /** Format: uuid */
+      id: string;
+      nombre: string;
+      entidad: {
+        /** Format: uuid */
+        id: string;
+        nombre: string;
+      };
+      direccion: string;
+      municipio: string;
+      lat: number;
+      lng: number;
+      telefono: string | null;
+      indicacionesAcceso: string | null;
+      horario: {
+        dom: {
+          abre: string;
+          cierra: string;
+        }[];
+        lun: {
+          abre: string;
+          cierra: string;
+        }[];
+        mar: {
+          abre: string;
+          cierra: string;
+        }[];
+        mie: {
+          abre: string;
+          cierra: string;
+        }[];
+        jue: {
+          abre: string;
+          cierra: string;
+        }[];
+        vie: {
+          abre: string;
+          cierra: string;
+        }[];
+        sab: {
+          abre: string;
+          cierra: string;
+        }[];
+      };
+      /** @enum {string} */
+      estado: 'ACTIVO' | 'PAUSADO' | 'CERRADO';
+      abiertoAhora: boolean;
+      /** Format: date-time */
+      actualizadoEn: string;
+      distanciaKm?: number;
+    };
+    AcopioDto: {
+      /** Format: uuid */
+      id: string;
+      nombre: string;
+      entidad: {
+        /** Format: uuid */
+        id: string;
+        nombre: string;
+      };
+      direccion: string;
+      municipio: string;
+      lat: number;
+      lng: number;
+      telefono: string | null;
+      indicacionesAcceso: string | null;
+      horario: {
+        dom: {
+          abre: string;
+          cierra: string;
+        }[];
+        lun: {
+          abre: string;
+          cierra: string;
+        }[];
+        mar: {
+          abre: string;
+          cierra: string;
+        }[];
+        mie: {
+          abre: string;
+          cierra: string;
+        }[];
+        jue: {
+          abre: string;
+          cierra: string;
+        }[];
+        vie: {
+          abre: string;
+          cierra: string;
+        }[];
+        sab: {
+          abre: string;
+          cierra: string;
+        }[];
+      };
+      /** @enum {string} */
+      estado: 'ACTIVO' | 'PAUSADO' | 'CERRADO';
+      abiertoAhora: boolean;
+      /** Format: date-time */
+      actualizadoEn: string;
+      distanciaKm?: number;
+      /** Format: date-time */
+      creadoEn: string;
+    };
+    CrearAcopioDto: {
+      /** Format: uuid */
+      entidadId: string;
+      nombre: string;
+      direccion: string;
+      municipio: string;
+      lat: number;
+      lng: number;
+      telefono?: string | null;
+      indicacionesAcceso?: string | null;
+      horario: {
+        dom: {
+          abre: string;
+          cierra: string;
+        }[];
+        lun: {
+          abre: string;
+          cierra: string;
+        }[];
+        mar: {
+          abre: string;
+          cierra: string;
+        }[];
+        mie: {
+          abre: string;
+          cierra: string;
+        }[];
+        jue: {
+          abre: string;
+          cierra: string;
+        }[];
+        vie: {
+          abre: string;
+          cierra: string;
+        }[];
+        sab: {
+          abre: string;
+          cierra: string;
+        }[];
+      };
+      /** @enum {string} */
+      estado?: 'ACTIVO' | 'PAUSADO' | 'CERRADO';
+    };
+    ActualizarAcopioDto: {
+      /** Format: uuid */
+      entidadId?: string;
+      nombre?: string;
+      direccion?: string;
+      municipio?: string;
+      lat?: number;
+      lng?: number;
+      telefono?: string | null;
+      indicacionesAcceso?: string | null;
+      horario?: {
+        dom: {
+          abre: string;
+          cierra: string;
+        }[];
+        lun: {
+          abre: string;
+          cierra: string;
+        }[];
+        mar: {
+          abre: string;
+          cierra: string;
+        }[];
+        mie: {
+          abre: string;
+          cierra: string;
+        }[];
+        jue: {
+          abre: string;
+          cierra: string;
+        }[];
+        vie: {
+          abre: string;
+          cierra: string;
+        }[];
+        sab: {
+          abre: string;
+          cierra: string;
+        }[];
+      };
+      /** @enum {string} */
+      estado?: 'ACTIVO' | 'PAUSADO' | 'CERRADO';
+    };
+    OperacionDto: {
+      /** @enum {string} */
+      estado?: 'ACTIVO' | 'PAUSADO';
+      horario?: {
+        dom: {
+          abre: string;
+          cierra: string;
+        }[];
+        lun: {
+          abre: string;
+          cierra: string;
+        }[];
+        mar: {
+          abre: string;
+          cierra: string;
+        }[];
+        mie: {
+          abre: string;
+          cierra: string;
+        }[];
+        jue: {
+          abre: string;
+          cierra: string;
+        }[];
+        vie: {
+          abre: string;
+          cierra: string;
+        }[];
+        sab: {
+          abre: string;
+          cierra: string;
+        }[];
+      };
+      indicacionesAcceso?: string | null;
+      telefono?: string | null;
+    };
+    ZonaDto: {
+      /** Format: uuid */
+      id: string;
+      /** Format: uuid */
+      emergenciaId: string;
+      nombre: string;
+      municipio: string;
+      lat: number;
+      lng: number;
+      poblacionEstimada: number;
+      poblacionFuente: string;
+      /** Format: date-time */
+      poblacionFecha: string;
+      /** @enum {string} */
+      estado: 'SIN_ATENDER' | 'EN_ATENCION' | 'CUBIERTA';
+      /** Format: date-time */
+      actualizadoEn: string;
+    };
+    CrearZonaDto: {
+      /** Format: uuid */
+      emergenciaId: string;
+      nombre: string;
+      municipio: string;
+      lat: number;
+      lng: number;
+      poblacionEstimada: number;
+      poblacionFuente: string;
+      /** Format: date */
+      poblacionFecha: string;
+      /** @enum {string} */
+      estado?: 'SIN_ATENDER' | 'EN_ATENCION' | 'CUBIERTA';
+    };
+    ActualizarZonaDto: {
+      nombre?: string;
+      municipio?: string;
+      lat?: number;
+      lng?: number;
+      poblacionEstimada?: number;
+      poblacionFuente?: string;
+      /** Format: date */
+      poblacionFecha?: string;
+      /** @enum {string} */
+      estado?: 'SIN_ATENDER' | 'EN_ATENCION' | 'CUBIERTA';
+    };
+    UbicacionDto: {
+      /** @enum {string} */
+      tipo: 'ACOPIO' | 'ZONA';
+      /** Format: uuid */
+      id: string;
+      nombre: string;
+      municipio: string;
+      /** @description Estado del acopio o de la zona */
+      estado: string;
+    };
+    ResultadoGeoDto: {
+      etiqueta: string;
+      lat: number;
+      lng: number;
+    };
+    NoRecibirDto: {
+      /** Format: uuid */
+      categoriaId: string;
+      categoria: string;
+      /** Format: date */
+      hasta: string | null;
+      /** Format: date-time */
+      marcadoEn: string;
+    };
+    AcopioNoRecibeDto: {
+      /** Format: uuid */
+      acopioId: string;
+      /** Format: date */
+      hasta: string | null;
+    };
+    MarcarDto: {
+      /**
+       * Format: date
+       * @description Fecha de reapertura; sin ella, hasta que se desmarque
+       */
+      hasta?: string | null;
+    };
+    EntradaDto: {
+      /** Format: uuid */
+      id?: string;
+      /** Format: uuid */
+      categoriaId: string;
+      cantidad: number;
+      /** Format: date */
+      venceEn?: string;
+      /** Format: date-time */
+      ocurridoEn?: string;
+      origenOffline?: boolean;
+    };
+    ResultadoMovimientoDto: {
+      movimiento: {
+        /** Format: uuid */
+        id: string;
+        /** @enum {string} */
+        tipo: 'ENTRADA' | 'SALIDA' | 'AJUSTE';
+        /** Format: uuid */
+        categoriaId: string;
+        /** @description Siempre positiva; el signo lo da el tipo */
+        cantidad: number;
+        signo: 1 | -1;
+        /** @enum {string|null} */
+        motivoSalida: 'ENTREGA_FAMILIAS' | 'TRASLADO' | 'VENCIDO' | 'OTRO' | null;
+        nota: string | null;
+        motivo: string | null;
+        /** Format: date */
+        venceEn: string | null;
+        /** Format: date-time */
+        ocurridoEn: string;
+        /** Format: date-time */
+        registradoEn: string;
+        origenOffline: boolean;
+      };
+      /** @description Saldo de la categoría en el acopio después del movimiento */
+      saldo: number;
+      /** @description La categoría está marcada «no recibir» en el acopio */
+      noRecibe: boolean;
+    };
+    SalidaDto: {
+      /** Format: uuid */
+      categoriaId: string;
+      cantidad: number;
+      /** @enum {string} */
+      motivoSalida: 'ENTREGA_FAMILIAS' | 'TRASLADO' | 'VENCIDO' | 'OTRO';
+      nota?: string;
+    };
+    AjusteDto: {
+      /** Format: uuid */
+      categoriaId: string;
+      cantidadContada: number;
+      motivo: string;
+    };
+    SaldoDto: {
+      /** Format: uuid */
+      categoriaId: string;
+      categoria: string;
+      grupo: string;
+      /** @enum {string} */
+      unidad: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+      perecedero: boolean;
+      cantidad: number;
+      umbral: {
+        minimo: number;
+        maximo: number;
+      } | null;
+      /** @enum {string} */
+      semaforo: 'SIN_UMBRAL' | 'BAJO' | 'CERCA' | 'EN_RANGO' | 'SOBRE';
+      /** Format: date-time */
+      ultimoMovimiento: string | null;
+      /** @description Estimado: supone que sale primero lo que vence antes (V-02). Vacío si no es perecedero */
+      vencimientos: {
+        /** Format: date */
+        venceEn: string | null;
+        cantidad: number;
+      }[];
+    };
+    PaginaHistorialDto: {
+      filas: {
+        /** Format: uuid */
+        id: string;
+        /** @enum {string} */
+        tipo: 'ENTRADA' | 'SALIDA' | 'AJUSTE';
+        /** Format: uuid */
+        categoriaId: string;
+        /** @description Siempre positiva; el signo lo da el tipo */
+        cantidad: number;
+        signo: 1 | -1;
+        /** @enum {string|null} */
+        motivoSalida: 'ENTREGA_FAMILIAS' | 'TRASLADO' | 'VENCIDO' | 'OTRO' | null;
+        nota: string | null;
+        motivo: string | null;
+        /** Format: date */
+        venceEn: string | null;
+        /** Format: date-time */
+        ocurridoEn: string;
+        /** Format: date-time */
+        registradoEn: string;
+        origenOffline: boolean;
+        usuario: string;
+        saldoDespues: number;
+      }[];
+      siguiente: string | null;
+    };
+    FijarUmbralDto: {
+      minimo: number;
+      maximo: number;
+    };
+    UmbralDto: {
+      /** Format: uuid */
+      categoriaId: string;
+      minimo: number;
+      maximo: number;
+      /** Format: date-time */
+      actualizadoEn: string;
+    };
+    CrearDonacionDto: {
+      /** Format: uuid */
+      acopioId: string;
+      lineas: {
+        /** Format: uuid */
+        categoriaId: string;
+        ean?: string;
+        cantidad: number;
+        /** Format: date */
+        venceEn?: string;
+      }[];
+    };
+    ComprobanteDto: {
+      /** @description ACO-AAAA-XXXXX */
+      folio: string;
+      /** @enum {string} */
+      estado: 'PREPARADO' | 'PENDIENTE' | 'CONCILIADO' | 'RECHAZADO' | 'CANCELADO';
+      acopio: {
+        /** Format: uuid */
+        id: string;
+        nombre: string;
+      };
+      /** Format: date-time */
+      creadoEn: string;
+      /** Format: date-time */
+      recibidoEn: string | null;
+      /** Format: date-time */
+      verificadoEn: string | null;
+      motivoRechazo: string | null;
+      notaRechazo: string | null;
+      tieneFactura: boolean;
+      lineas: {
+        /** Format: uuid */
+        id: string;
+        /** Format: uuid */
+        categoriaId: string;
+        categoria: string;
+        /** @enum {string} */
+        unidad: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+        perecedero: boolean;
+        ean: string | null;
+        /** @description Unidad base por presentación; 1 si no hay código */
+        contenidoUnitario: number;
+        cantidadDeclarada: number;
+        cantidadConfirmada: number | null;
+        /** Format: date */
+        venceEn: string | null;
+        motivoDiferencia: string | null;
+      }[];
+    };
+    SugerenciasDto: {
+      lineas: {
+        /** Format: uuid */
+        categoriaId: string;
+      }[];
+      lat?: number;
+      lng?: number;
+    };
+    SugerenciaEntregaDto: {
+      /** Format: uuid */
+      acopioId: string;
+      nombre: string;
+      direccion: string;
+      abiertoAhora: boolean;
+      distanciaKm: number | null;
+      /** @description Categorías de la donación que este acopio no recibe */
+      noRecibe: string[];
+      lineasAceptadas: number;
+    };
+    CodigoDonadorDto: {
+      ean: string;
+      /** Format: uuid */
+      categoriaId: string;
+      categoria: string;
+      /** @enum {string} */
+      unidad: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+      /** @enum {string} */
+      grupo:
+        | 'ALIMENTOS'
+        | 'AGUA_Y_BEBIDAS'
+        | 'ASEO_PERSONAL'
+        | 'ASEO_DEL_HOGAR'
+        | 'SALUD'
+        | 'ROPA_Y_ABRIGO'
+        | 'BEBE'
+        | 'ADULTO_MAYOR'
+        | 'ANIMALES'
+        | 'HERRAMIENTAS';
+      perecedero: boolean;
+      contenido: number | null;
+    };
+    BandejaRespuestaDto: {
+      comprobantes: {
+        /** @description ACO-AAAA-XXXXX */
+        folio: string;
+        /** @enum {string} */
+        estado: 'PREPARADO' | 'PENDIENTE' | 'CONCILIADO' | 'RECHAZADO' | 'CANCELADO';
+        acopio: {
+          /** Format: uuid */
+          id: string;
+          nombre: string;
+        };
+        /** Format: date-time */
+        creadoEn: string;
+        /** Format: date-time */
+        recibidoEn: string | null;
+        /** Format: date-time */
+        verificadoEn: string | null;
+        motivoRechazo: string | null;
+        notaRechazo: string | null;
+        tieneFactura: boolean;
+        lineas: {
+          /** Format: uuid */
+          id: string;
+          /** Format: uuid */
+          categoriaId: string;
+          categoria: string;
+          /** @enum {string} */
+          unidad: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+          perecedero: boolean;
+          ean: string | null;
+          /** @description Unidad base por presentación; 1 si no hay código */
+          contenidoUnitario: number;
+          cantidadDeclarada: number;
+          cantidadConfirmada: number | null;
+          /** Format: date */
+          venceEn: string | null;
+          motivoDiferencia: string | null;
+        }[];
+        conDiferencia: boolean;
+      }[];
+      porAcopio: {
+        /** Format: uuid */
+        acopioId: string;
+        nombre: string;
+        pendientes: number;
+      }[];
+    };
+    ConciliacionDto: {
+      /** @description ACO-AAAA-XXXXX */
+      folio: string;
+      /** @enum {string} */
+      estado: 'PREPARADO' | 'PENDIENTE' | 'CONCILIADO' | 'RECHAZADO' | 'CANCELADO';
+      acopio: {
+        /** Format: uuid */
+        id: string;
+        nombre: string;
+      };
+      /** Format: date-time */
+      creadoEn: string;
+      /** Format: date-time */
+      recibidoEn: string | null;
+      /** Format: date-time */
+      verificadoEn: string | null;
+      motivoRechazo: string | null;
+      notaRechazo: string | null;
+      tieneFactura: boolean;
+      lineas: {
+        /** Format: uuid */
+        id: string;
+        /** Format: uuid */
+        categoriaId: string;
+        categoria: string;
+        /** @enum {string} */
+        unidad: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+        perecedero: boolean;
+        ean: string | null;
+        /** @description Unidad base por presentación; 1 si no hay código */
+        contenidoUnitario: number;
+        cantidadDeclarada: number;
+        cantidadConfirmada: number | null;
+        /** Format: date */
+        venceEn: string | null;
+        motivoDiferencia: string | null;
+      }[];
+      conDiferencia: boolean;
+      entradas: {
+        /** Format: uuid */
+        movimientoId: string;
+        /** Format: uuid */
+        categoriaId: string;
+        categoria: string;
+        unidad: string;
+        cantidad: number;
+        /** Format: date-time */
+        ocurridoEn: string;
+        /** @enum {string} */
+        origen: 'RECEPCION' | 'AUDITOR';
+        /** @description Nombre de quien registró la entrada */
+        registradoPor: string;
+      }[];
+      resumen: {
+        /** Format: uuid */
+        categoriaId: string;
+        categoria: string;
+        unidad: string;
+        confirmado: number;
+        entradas: number;
+        cuadra: boolean;
+      }[];
+    };
+    EntradaVinculableDto: {
+      /** Format: uuid */
+      id: string;
+      /** Format: uuid */
+      categoriaId: string;
+      categoria: string;
+      unidad: string;
+      cantidad: number;
+      /** Format: date-time */
+      ocurridoEn: string;
+      origenOffline: boolean;
+      /** @description Nombre de quien registró la entrada */
+      registradoPor: string;
+    };
+    VincularDto: {
+      movimientoIds: string[];
+    };
+    RechazarDto: {
+      /** @enum {string} */
+      motivo: 'DUPLICADO' | 'NO_CUADRA_MOVIMIENTOS' | 'DIFERENCIA_SIN_EXPLICAR' | 'OTRO';
+      nota?: string;
+    };
+    RecibirDto: {
+      /** Format: uuid */
+      acopioId: string;
+      lineas: {
+        /** Format: uuid */
+        lineaId: string;
+        cantidadConfirmada: number;
+        /** Format: date */
+        venceEn?: string;
+        motivoDiferencia?: string;
+      }[];
+    };
+    RecepcionDto: {
+      comprobante: {
+        /** @description ACO-AAAA-XXXXX */
+        folio: string;
+        /** @enum {string} */
+        estado: 'PREPARADO' | 'PENDIENTE' | 'CONCILIADO' | 'RECHAZADO' | 'CANCELADO';
+        acopio: {
+          /** Format: uuid */
+          id: string;
+          nombre: string;
+        };
+        /** Format: date-time */
+        creadoEn: string;
+        /** Format: date-time */
+        recibidoEn: string | null;
+        /** Format: date-time */
+        verificadoEn: string | null;
+        motivoRechazo: string | null;
+        notaRechazo: string | null;
+        tieneFactura: boolean;
+        lineas: {
+          /** Format: uuid */
+          id: string;
+          /** Format: uuid */
+          categoriaId: string;
+          categoria: string;
+          /** @enum {string} */
+          unidad: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+          perecedero: boolean;
+          ean: string | null;
+          /** @description Unidad base por presentación; 1 si no hay código */
+          contenidoUnitario: number;
+          cantidadDeclarada: number;
+          cantidadConfirmada: number | null;
+          /** Format: date */
+          venceEn: string | null;
+          motivoDiferencia: string | null;
+        }[];
+      };
+      /** @description Categorías de la donación marcadas «no recibir» en el acopio */
+      noRecibe: string[];
+    };
+    SeguimientoDto: {
+      folio: string;
+      /** @description Etiqueta para mostrar, por ejemplo «Recibida en el acopio» */
+      estado: string;
+      pasos: {
+        /** @enum {string} */
+        paso: 'PREPARADA' | 'RECIBIDA' | 'CONCILIADA' | 'RECIBIDA_EN_DESTINO';
+        /** Format: date-time */
+        en: string | null;
+        /** @description Nombre del acopio, desde que se recibe */
+        acopio?: string;
+      }[];
+      /** @description Alguna remisión con este folio llegó a su zona */
+      recibidoEnDestino: boolean;
+      /** @description Lo despachado con este folio, sin código ni zona */
+      remisiones: {
+        /** @enum {string} */
+        estado: 'EN_TRANSITO' | 'RECIBIDA';
+        /** Format: date-time */
+        despachadaEn: string;
+        /** Format: date-time */
+        recibidaEn: string | null;
+      }[];
+      /** @description Más de una remisión: cada una lleva una parte */
+      parteDeTuDonacion: boolean;
+      lineas: {
+        categoria: string;
+        unidad: string;
+        /** @description Lo declarado si aún no se recibe; lo confirmado después */
+        cantidad: number;
+        confirmada: boolean;
+      }[];
+    };
+    FichaZonaDto: {
+      zona: {
+        /** Format: uuid */
+        id: string;
+        nombre: string;
+        municipio: string;
+        poblacionEstimada: number;
+        poblacionFuente: string;
+        /** Format: date-time */
+        poblacionFecha: string;
+        emergencia: {
+          /** Format: uuid */
+          id: string;
+          nombre: string;
+          /** @enum {string} */
+          estado: 'ACTIVA' | 'EN_SEGUIMIENTO' | 'CERRADA';
+          horizonteDias: number;
+        };
+      };
+      categorias: {
+        /** Format: uuid */
+        categoriaId: string;
+        categoria: string;
+        /** @enum {string} */
+        unidad: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+        /** @enum {string} */
+        origen: 'CANASTA' | 'MANUAL';
+        cantidadPersonaDia: number | null;
+        fuenteCanasta: string | null;
+        manual: {
+          cantidad: number;
+          motivo: string;
+          puestaPor: string;
+          /** Format: date-time */
+          puestaEn: string;
+        } | null;
+        necesidad: number;
+        recibido: number;
+        enCamino: number;
+        deficit: number;
+        cobertura: number | null;
+      }[];
+      coberturaGlobal: number | null;
+      categoriaMasBaja: {
+        /** Format: uuid */
+        categoriaId: string;
+        categoria: string;
+        cobertura: number;
+      } | null;
+      reportes: {
+        /** Format: uuid */
+        categoriaId: string;
+        categoria: string;
+        nota: string | null;
+        /** Format: date-time */
+        reportadoEn: string;
+      }[];
+    };
+    ManualDto: {
+      cantidad: number | null;
+      motivo: string;
+    };
+    NecesidadManualDto: {
+      /** Format: uuid */
+      categoriaId: string;
+      cantidad: number | null;
+      motivo: string;
+      /** Format: date-time */
+      puestaEn: string;
+    };
+    ExcedenteDto: {
+      /** Format: uuid */
+      categoriaId: string;
+      categoria: string;
+      /** @enum {string} */
+      unidad: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+      saldo: number;
+      umbral: {
+        minimo: number;
+        maximo: number;
+      } | null;
+      noRecibe: boolean;
+      superavit: number;
+      comprometido: number;
+      vencido: number;
+      movible: number;
+      diasParaVencer: number | null;
+      /** @enum {string|null} */
+      aviso: 'SIN_UMBRAL' | null;
+    };
+    InformeDescartesDto: {
+      total: number;
+      porMotivo: {
+        nombre: string;
+        veces: number;
+      }[];
+      porCategoria: {
+        nombre: string;
+        veces: number;
+      }[];
+      porAcopio: {
+        nombre: string;
+        veces: number;
+      }[];
+      recientes: {
+        /** Format: uuid */
+        id: string;
+        /** Format: date-time */
+        ronda: string;
+        /** @enum {string} */
+        estado: 'PROPUESTA' | 'APROBADA' | 'DESCARTADA';
+        acopio: {
+          /** Format: uuid */
+          id: string;
+          nombre: string;
+        };
+        zona: {
+          /** Format: uuid */
+          id: string;
+          nombre: string;
+        };
+        emergencia: {
+          /** Format: uuid */
+          id: string;
+          nombre: string;
+        };
+        categoria: {
+          /** Format: uuid */
+          id: string;
+          nombre: string;
+          /** @enum {string} */
+          unidad: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+        };
+        cantidad: number;
+        puntaje: number;
+        desglose: {
+          criticidad: number;
+          urgencia: number;
+          proximidad: number;
+          magnitud: number;
+        };
+        justificacion: string;
+        cantidadAprobada: number | null;
+        remisionCodigo: string | null;
+        motivoDescarte: string | null;
+        decididaPor: string | null;
+        /** Format: date-time */
+        decididaEn: string | null;
+      }[];
+    };
+    SugerenciaDto: {
+      /** Format: uuid */
+      id: string;
+      /** Format: date-time */
+      ronda: string;
+      /** @enum {string} */
+      estado: 'PROPUESTA' | 'APROBADA' | 'DESCARTADA';
+      acopio: {
+        /** Format: uuid */
+        id: string;
+        nombre: string;
+      };
+      zona: {
+        /** Format: uuid */
+        id: string;
+        nombre: string;
+      };
+      emergencia: {
+        /** Format: uuid */
+        id: string;
+        nombre: string;
+      };
+      categoria: {
+        /** Format: uuid */
+        id: string;
+        nombre: string;
+        /** @enum {string} */
+        unidad: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+      };
+      cantidad: number;
+      puntaje: number;
+      desglose: {
+        criticidad: number;
+        urgencia: number;
+        proximidad: number;
+        magnitud: number;
+      };
+      justificacion: string;
+      cantidadAprobada: number | null;
+      remisionCodigo: string | null;
+      motivoDescarte: string | null;
+      decididaPor: string | null;
+      /** Format: date-time */
+      decididaEn: string | null;
+    };
+    RecalculoDto: {
+      /** Format: date-time */
+      ronda: string;
+      generadas: number;
+    };
+    AprobarDto: {
+      cantidad?: number;
+    };
+    AprobacionDto: {
+      /** Format: uuid */
+      sugerenciaId: string;
+      cantidad: number;
+      remision: {
+        /** Format: uuid */
+        id: string;
+        codigo: string;
+        creada: boolean;
+      };
+    };
+    DescartarDto: {
+      motivo: string;
+    };
+    DescarteDto: {
+      /** Format: uuid */
+      id: string;
+      /** @enum {string} */
+      estado: 'DESCARTADA';
+    };
+    ConfiguracionMotorDto: {
+      pesos: {
+        criticidad: number;
+        urgencia: number;
+        proximidad: number;
+        magnitud: number;
+      };
+      cantidadMinima: number;
+      /** Format: date-time */
+      actualizadoEn: string | null;
+      actualizadoPor: string | null;
+    };
+    GuardarConfiguracionDto: {
+      pesos: {
+        criticidad: number;
+        urgencia: number;
+        proximidad: number;
+        magnitud: number;
+      };
+      cantidadMinima: number;
+    };
+    VistaPreviaMotorDto: {
+      actual: {
+        acopio: string;
+        zona: string;
+        categoria: string;
+        cantidad: number;
+        puntaje: number;
+      }[];
+      propuesta: {
+        acopio: string;
+        zona: string;
+        categoria: string;
+        cantidad: number;
+        puntaje: number;
+      }[];
+    };
+    CrearRemisionDto: {
+      /** Format: uuid */
+      acopioId: string;
+      /**
+       * Format: uuid
+       * @description null: despacho general
+       */
+      zonaId: string | null;
+      responsable?: string | null;
+      lineas: {
+        /** Format: uuid */
+        categoriaId: string;
+        cantidad: number;
+      }[];
+    };
+    RemisionDto: {
+      /** Format: uuid */
+      id: string;
+      /** @description R-AAAA-XXXXX */
+      codigo: string;
+      /** @enum {string} */
+      estado: 'BORRADOR' | 'EN_TRANSITO' | 'RECIBIDA' | 'CANCELADA';
+      acopio: {
+        /** Format: uuid */
+        id: string;
+        nombre: string;
+      };
+      /** @description null: despacho general */
+      zona: {
+        /** Format: uuid */
+        id: string;
+        nombre: string;
+      } | null;
+      responsable: string | null;
+      qrToken: string;
+      /** Format: date-time */
+      creadaEn: string;
+      /** Format: date-time */
+      despachadaEn: string | null;
+      /** Format: date-time */
+      recibidaEn: string | null;
+      /** Format: date-time */
+      canceladaEn: string | null;
+      motivoCancelacion: string | null;
+      notaRecepcion: string | null;
+      /** @description Fotos de evidencia subidas */
+      evidencias: number;
+      folios: string[];
+      lineas: {
+        /** Format: uuid */
+        categoriaId: string;
+        categoria: string;
+        /** @enum {string} */
+        unidad: 'LITRO' | 'KILOGRAMO' | 'UNIDAD';
+        cantidadPlaneada: number;
+        cantidadRecibida: number | null;
+      }[];
+    };
+    FolioVinculableDto: {
+      /** @description ACO-AAAA-XXXXX */
+      folio: string;
+      /**
+       * Format: date-time
+       * @description null si se concilió sin fecha registrada
+       */
+      conciliadoEn: string | null;
+      /** @description Sin repetir, en orden alfabético */
+      categorias: string[];
+    };
+    LineasDto: {
+      lineas: {
+        /** Format: uuid */
+        categoriaId: string;
+        cantidad: number;
+      }[];
+    };
+    DespacharDto: {
+      folios?: string[];
+    };
+    CancelarDto: {
+      motivo: string;
+    };
+    EditarRemisionDto: {
+      responsable?: string | null;
+      /** Format: uuid */
+      zonaId?: string | null;
+    };
+    RecibirRemisionDto: {
+      /**
+       * Format: uuid
+       * @description Solo en un despacho general: una zona del Receptor
+       */
+      zonaId?: string;
+      nota?: string;
+    };
+    ReportarDto: {
+      categorias: string[];
+      /** @description Pública: el mapa la muestra tal cual. Sin nombres ni datos de personas */
+      nota?: string;
+      resuelta: boolean;
+    };
+    ReportesCreadosDto: {
+      creados: string[];
+    };
+    ReporteNecesidadDto: {
+      /** Format: uuid */
+      id: string;
+      /** Format: uuid */
+      categoriaId: string;
+      categoria: string;
+      nota: string | null;
+      resuelta: boolean;
+      reportadoPor: string;
+      /** Format: date-time */
+      reportadoEn: string;
+    };
+    ZonaPublicaDto: {
+      /** Format: uuid */
+      zonaId: string;
+      /** @description Redondeado a dos decimales */
+      centro: {
+        lat: number;
+        lng: number;
+      };
+      radioKm: number;
+      necesidades: {
+        categoria: string;
+        nota: string | null;
+        /** Format: date-time */
+        reportadoEn: string;
+      }[];
+    };
+    SaludDto: {
+      /** @enum {string} */
+      estado: 'ok';
+      /** @enum {string} */
+      base: 'ok';
+    };
+  };
+  responses: never;
+  parameters: never;
+  requestBodies: never;
+  headers: never;
+  pathItems: never;
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    BitacoraController_buscar: {
-        parameters: {
-            query?: {
-                usuarioId?: string;
-                ubicacionId?: string;
-                accion?: string;
-                entidad?: string;
-                destacado?: string;
-                desde?: string;
-                hasta?: string;
-                pagina?: number;
-                porPagina?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginaBitacoraDto"];
-                };
-            };
-        };
-    };
-    SesionController_iniciar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["IniciarSesionDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SesionDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    SesionController_salir: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    SesionController_yo: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["YoDto"];
-                };
-            };
-        };
-    };
-    SesionController_jwks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    DonadorController_registrar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RegistroDto"];
-            };
-        };
-        responses: {
-            202: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["MensajeDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    DonadorController_validarEnlace: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                token: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EnlaceDonadorDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    DonadorController_confirmar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ConfirmarDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SesionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    DonadorController_iniciar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SesionDonadorDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SesionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    InvitacionesController_consultar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                token: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InvitacionPublicaDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    InvitacionesController_canjear: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                token: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CanjearDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CanjeDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    UsuariosController_listar: {
-        parameters: {
-            query?: {
-                rol?: "ADMIN" | "OPERADOR" | "AUDITOR" | "RECEPTOR" | "DONADOR";
-                estado?: "INVITADO" | "ACTIVO" | "SUSPENDIDO";
-                q?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UsuarioDto"][];
-                };
-            };
-        };
-    };
-    UsuariosController_crear: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CrearUsuarioDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UsuarioCreadoDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    UsuariosController_obtener: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UsuarioDto"];
-                };
-            };
-        };
-    };
-    UsuariosController_actualizar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ActualizarUsuarioDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UsuarioDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    UsuariosController_suspender: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UsuarioDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    UsuariosController_reactivar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UsuarioDto"];
-                };
-            };
-        };
-    };
-    UsuariosController_reinvitar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EnlaceInvitacionDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    UsuariosController_revocarInvitacion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RevocadasDto"];
-                };
-            };
-        };
-    };
-    UsuariosController_restablecer: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RestablecerDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EnlaceInvitacionDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    UsuariosController_asignar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AsignacionDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UsuarioDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    UsuariosController_desasignar: {
-        parameters: {
-            query?: {
-                confirmar?: string;
-            };
-            header?: never;
-            path: {
-                id: string;
-                tipo: string;
-                ubicacionId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UsuarioDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CatalogoController_listarCategorias: {
-        parameters: {
-            query?: {
-                grupo?: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
-                incluirArchivadas?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CategoriaDto"][];
-                };
-            };
-        };
-    };
-    CatalogoController_crearCategoria: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CrearCategoriaDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CategoriaDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CatalogoController_listarVigentes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CategoriaDto"][];
-                };
-            };
-        };
-    };
-    CatalogoController_buscar: {
-        parameters: {
-            query: {
-                q: string;
-                limite?: number;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResultadoBusquedaDto"][];
-                };
-            };
-        };
-    };
-    CatalogoController_obtenerCategoria: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CategoriaDto"];
-                };
-            };
-        };
-    };
-    CatalogoController_eliminarCategoria: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Eliminada */
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CatalogoController_actualizarCategoria: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ActualizarCategoriaDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CategoriaDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CatalogoController_archivar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CategoriaDto"];
-                };
-            };
-        };
-    };
-    CatalogoController_reactivarCategoria: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CategoriaDto"];
-                };
-            };
-        };
-    };
-    CatalogoController_canastaVigente: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CanastaVigenteDto"][];
-                };
-            };
-        };
-    };
-    CatalogoController_historialCanasta: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["VersionCanastaRespuestaDto"][];
-                };
-            };
-        };
-    };
-    CatalogoController_agregarVersion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["VersionCanastaDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["VersionCanastaRespuestaDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CatalogoController_listarEmergencias: {
-        parameters: {
-            query?: {
-                estado?: "ACTIVA" | "EN_SEGUIMIENTO" | "CERRADA";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EmergenciaDto"][];
-                };
-            };
-        };
-    };
-    CatalogoController_crearEmergencia: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CrearEmergenciaDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EmergenciaDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CatalogoController_actualizarEmergencia: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ActualizarEmergenciaDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EmergenciaDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CatalogoController_cerrarEmergencia: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CerrarEmergenciaDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EmergenciaDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CodigosBarrasController_listar: {
-        parameters: {
-            query?: {
-                revisado?: "true" | "false";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CodigoBarrasDto"][];
-                };
-            };
-        };
-    };
-    CodigosBarrasController_asociar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AsociarDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CodigoBarrasDto"];
-                };
-            };
-        };
-    };
-    CodigosBarrasController_obtener: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                ean: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CodigoBarrasDto"];
-                };
-            };
-        };
-    };
-    CodigosBarrasController_editar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                ean: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["EditarDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CodigoBarrasDto"];
-                };
-            };
-        };
-    };
-    EntidadesController_listar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntidadDto"][];
-                };
-            };
-        };
-    };
-    EntidadesController_crear: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CrearEntidadDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntidadDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    EntidadesController_actualizar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ActualizarEntidadDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntidadDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    EntidadesController_verificar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["VerificarEntidadDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntidadDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    EntidadesController_quitarVerificacion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ArchivadasDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    LogosController_leer: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description La imagen del logotipo, en WebP */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    EntidadesController_subirLogo: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": {
-                    /** Format: binary */
-                    logo: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntidadDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    EntidadesController_quitarLogo: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntidadDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CausasController_listar: {
-        parameters: {
-            query?: {
-                estado?: "activas" | "por-cerrar" | "atendidas";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CausaGestionDto"][];
-                };
-            };
-        };
-    };
-    CausasPublicasController_listar: {
-        parameters: {
-            query?: {
-                categoria?: "PERSONAS" | "ANIMALES" | "ADULTOS_MAYORES" | "RESCATISTAS";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CausaPublicaDto"][];
-                };
-            };
-        };
-    };
-    CausasController_crear: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CrearCausaDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CausaGestionDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CausasPublicasController_obtener: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CausaPublicaDto"];
-                };
-            };
-        };
-    };
-    CausasController_editar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["EditarCausaDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CausaGestionDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CausasController_renovar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PlazoDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CausaGestionDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CausasController_archivar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CausaGestionDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CausasController_reactivar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["PlazoDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CausaGestionDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CausasPublicasController_imagen: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description La imagen de la causa, en WebP */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    CausasController_subirImagen: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": {
-                    /** Format: binary */
-                    imagen: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CausaGestionDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CausasController_quitarImagen: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CausaGestionDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    CausasPublicasController_atendidas: {
-        parameters: {
-            query?: {
-                categoria?: "PERSONAS" | "ANIMALES" | "ADULTOS_MAYORES" | "RESCATISTAS";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CausaPublicaDto"][];
-                };
-            };
-        };
-    };
-    AcopiosController_listarPublicos: {
-        parameters: {
-            query?: {
-                abiertoAhora?: string;
-                cerca?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AcopioPublicoDto"][];
-                };
-            };
-        };
-    };
-    AcopiosController_crear: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CrearAcopioDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AcopioDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    AcopiosController_listarGestion: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AcopioDto"][];
-                };
-            };
-        };
-    };
-    AcopiosController_obtenerPublico: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AcopioPublicoDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    AcopiosController_actualizar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ActualizarAcopioDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AcopioDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    AcopiosController_operar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["OperacionDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AcopioDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ZonasController_listar: {
-        parameters: {
-            query?: {
-                emergencia?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ZonaDto"][];
-                };
-            };
-        };
-    };
-    ZonasController_crear: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CrearZonaDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ZonaDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ZonasController_actualizar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ActualizarZonaDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ZonaDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    UbicacionesController_mias: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UbicacionDto"][];
-                };
-            };
-        };
-    };
-    UbicacionesController_buscar: {
-        parameters: {
-            query?: {
-                q?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UbicacionDto"][];
-                };
-            };
-        };
-    };
-    GeocodificacionController_buscar: {
-        parameters: {
-            query: {
-                q: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResultadoGeoDto"][];
-                };
-            };
-            /** @description Nominatim no respondió */
-            503: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    NoRecibirController_listar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NoRecibirDto"][];
-                };
-            };
-        };
-    };
-    NoRecibirController_porCategoria: {
-        parameters: {
-            query: {
-                categoria: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AcopioNoRecibeDto"][];
-                };
-            };
-        };
-    };
-    NoRecibirController_marcar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                categoriaId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["MarcarDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NoRecibirDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    NoRecibirController_desmarcar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                categoriaId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    MovimientosController_entrada: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["EntradaDto"];
-            };
-        };
-        responses: {
-            /** @description Reintento: el movimiento ya existía */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResultadoMovimientoDto"];
-                };
-            };
-            /** @description Movimiento nuevo */
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResultadoMovimientoDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    MovimientosController_salida: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SalidaDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResultadoMovimientoDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    MovimientosController_ajuste: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AjusteDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ResultadoMovimientoDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ConsultasController_saldos: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SaldoDto"][];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ConsultasController_historial: {
-        parameters: {
-            query: {
-                categoriaId: string;
-                cursor?: string;
-                limite?: number;
-            };
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["PaginaHistorialDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    UmbralesController_fijar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                categoriaId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["FijarUmbralDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["UmbralDto"];
-                };
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    UmbralesController_quitar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                categoriaId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Error con forma { estado, codigo, mensaje, detalles? } */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    DonacionesController_listar: {
-        parameters: {
-            query?: {
-                estado?: "PREPARADO" | "PENDIENTE" | "CONCILIADO" | "RECHAZADO" | "CANCELADO";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ComprobanteDto"][];
-                };
-            };
-        };
-    };
-    DonacionesController_crear: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CrearDonacionDto"];
-            };
-        };
-        responses: {
-            201: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ComprobanteDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    DonacionesController_cancelar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                folio: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ComprobanteDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    DonacionesController_sugerir: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SugerenciasDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SugerenciaEntregaDto"][];
-                };
-            };
-        };
-    };
-    DonacionesController_codigo: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                ean: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["CodigoDonadorDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    FacturasController_subir: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                folio: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": {
-                    /** Format: binary */
-                    factura: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ComprobanteDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    FacturasController_factura: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                folio: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "image/webp": string;
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "image/webp": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ComprobantesController_bandeja: {
-        parameters: {
-            query?: {
-                estado?: "PENDIENTE" | "CONCILIADO" | "RECHAZADO";
-                acopioId?: string;
-                desde?: string;
-                hasta?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["BandejaRespuestaDto"];
-                };
-            };
-        };
-    };
-    ComprobantesController_detalle: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                folio: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConciliacionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ComprobantesController_vinculables: {
-        parameters: {
-            query: {
-                acopioId: string;
-            };
-            header?: never;
-            path: {
-                folio: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["EntradaVinculableDto"][];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ComprobantesController_vincular: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                folio: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["VincularDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ComprobanteDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ComprobantesController_conciliar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                folio: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ComprobanteDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ComprobantesController_rechazar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                folio: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RechazarDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ComprobanteDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ComprobantesController_revertir: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                folio: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ComprobanteDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ComprobantesController_consultar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                folio: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ComprobanteDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ComprobantesController_recibir: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                folio: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RecibirDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RecepcionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    SeguimientoController_consultar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                folio: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SeguimientoDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    NecesidadController_ficha: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FichaZonaDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    NecesidadController_ponerManual: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-                categoriaId: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ManualDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["NecesidadManualDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    NecesidadController_excedentes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ExcedenteDto"][];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    SugerenciasController_descartes: {
-        parameters: {
-            query?: {
-                desde?: string;
-                hasta?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["InformeDescartesDto"];
-                };
-            };
-        };
-    };
-    SugerenciasController_listar: {
-        parameters: {
-            query?: {
-                zona?: string;
-                acopio?: string;
-                categoria?: string;
-                estado?: "PROPUESTA" | "APROBADA" | "DESCARTADA";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SugerenciaDto"][];
-                };
-            };
-        };
-    };
-    SugerenciasController_recalcular: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RecalculoDto"];
-                };
-            };
-        };
-    };
-    SugerenciasController_aprobar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["AprobarDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["AprobacionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    SugerenciasController_descartar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["DescartarDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["DescarteDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ConfiguracionController_leer: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConfiguracionMotorDto"];
-                };
-            };
-        };
-    };
-    ConfiguracionController_guardar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["GuardarConfiguracionDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ConfiguracionMotorDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ConfiguracionController_vistaPrevia: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["GuardarConfiguracionDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["VistaPreviaMotorDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    RemisionesController_listar: {
-        parameters: {
-            query?: {
-                estado?: "BORRADOR" | "EN_TRANSITO" | "RECIBIDA" | "CANCELADA";
-                zona?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RemisionDto"][];
-                };
-            };
-        };
-    };
-    RemisionesController_crear: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CrearRemisionDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RemisionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    RemisionesController_foliosVinculables: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                codigo: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["FolioVinculableDto"][];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    RemisionesController_ver: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                codigo: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RemisionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    RemisionesController_editar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                codigo: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["EditarRemisionDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RemisionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    RemisionesController_lineas: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                codigo: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["LineasDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RemisionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    RemisionesController_despachar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                codigo: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["DespacharDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RemisionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    RemisionesController_cancelar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                codigo: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["CancelarDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RemisionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    RecepcionesController_pendientes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RemisionDto"][];
-                };
-            };
-        };
-    };
-    RecepcionesController_porQr: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                token: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RemisionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    RecepcionesController_subirEvidencia: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                codigo: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": {
-                    /** Format: binary */
-                    foto: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RemisionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    RecepcionesController_evidencia: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                codigo: string;
-                n: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "image/webp": string;
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "image/webp": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    RecepcionesController_recibir: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                codigo: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["RecibirRemisionDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RemisionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ReportesController_deZona: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ReporteNecesidadDto"][];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ReportesController_reportar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                id: string;
-            };
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["ReportarDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ReportesCreadosDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    ReportesController_capaPublica: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ZonaPublicaDto"][];
-                };
-            };
-        };
-    };
-    SaludController_revisar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SaludDto"];
-                };
-            };
-        };
-    };
+  BitacoraController_buscar: {
+    parameters: {
+      query?: {
+        usuarioId?: string;
+        ubicacionId?: string;
+        accion?: string;
+        entidad?: string;
+        destacado?: string;
+        desde?: string;
+        hasta?: string;
+        pagina?: number;
+        porPagina?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginaBitacoraDto'];
+        };
+      };
+    };
+  };
+  SesionController_iniciar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['IniciarSesionDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SesionDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  SesionController_salir: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  SesionController_yo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['YoDto'];
+        };
+      };
+    };
+  };
+  SesionController_jwks: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  DonadorController_registrar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RegistroDto'];
+      };
+    };
+    responses: {
+      202: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['MensajeDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  DonadorController_validarEnlace: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        token: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EnlaceDonadorDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  DonadorController_confirmar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ConfirmarDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SesionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  DonadorController_iniciar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SesionDonadorDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SesionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  InvitacionesController_consultar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        token: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InvitacionPublicaDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  InvitacionesController_canjear: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        token: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CanjearDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CanjeDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  UsuariosController_listar: {
+    parameters: {
+      query?: {
+        rol?: 'ADMIN' | 'OPERADOR' | 'AUDITOR' | 'RECEPTOR' | 'DONADOR';
+        estado?: 'INVITADO' | 'ACTIVO' | 'SUSPENDIDO';
+        q?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UsuarioDto'][];
+        };
+      };
+    };
+  };
+  UsuariosController_crear: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CrearUsuarioDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UsuarioCreadoDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  UsuariosController_obtener: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UsuarioDto'];
+        };
+      };
+    };
+  };
+  UsuariosController_actualizar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ActualizarUsuarioDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UsuarioDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  UsuariosController_suspender: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UsuarioDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  UsuariosController_reactivar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UsuarioDto'];
+        };
+      };
+    };
+  };
+  UsuariosController_reinvitar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EnlaceInvitacionDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  UsuariosController_revocarInvitacion: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RevocadasDto'];
+        };
+      };
+    };
+  };
+  UsuariosController_restablecer: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RestablecerDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EnlaceInvitacionDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  UsuariosController_asignar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AsignacionDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UsuarioDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  UsuariosController_desasignar: {
+    parameters: {
+      query?: {
+        confirmar?: string;
+      };
+      header?: never;
+      path: {
+        id: string;
+        tipo: string;
+        ubicacionId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UsuarioDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CatalogoController_listarCategorias: {
+    parameters: {
+      query?: {
+        grupo?:
+          | 'ALIMENTOS'
+          | 'AGUA_Y_BEBIDAS'
+          | 'ASEO_PERSONAL'
+          | 'ASEO_DEL_HOGAR'
+          | 'SALUD'
+          | 'ROPA_Y_ABRIGO'
+          | 'BEBE'
+          | 'ADULTO_MAYOR'
+          | 'ANIMALES'
+          | 'HERRAMIENTAS';
+        incluirArchivadas?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CategoriaDto'][];
+        };
+      };
+    };
+  };
+  CatalogoController_crearCategoria: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CrearCategoriaDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CategoriaDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CatalogoController_listarVigentes: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CategoriaDto'][];
+        };
+      };
+    };
+  };
+  CatalogoController_buscar: {
+    parameters: {
+      query: {
+        q: string;
+        limite?: number;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ResultadoBusquedaDto'][];
+        };
+      };
+    };
+  };
+  CatalogoController_obtenerCategoria: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CategoriaDto'];
+        };
+      };
+    };
+  };
+  CatalogoController_eliminarCategoria: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description Eliminada */
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CatalogoController_actualizarCategoria: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ActualizarCategoriaDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CategoriaDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CatalogoController_archivar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CategoriaDto'];
+        };
+      };
+    };
+  };
+  CatalogoController_reactivarCategoria: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CategoriaDto'];
+        };
+      };
+    };
+  };
+  CatalogoController_canastaVigente: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CanastaVigenteDto'][];
+        };
+      };
+    };
+  };
+  CatalogoController_historialCanasta: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['VersionCanastaRespuestaDto'][];
+        };
+      };
+    };
+  };
+  CatalogoController_agregarVersion: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['VersionCanastaDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['VersionCanastaRespuestaDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CatalogoController_listarEmergencias: {
+    parameters: {
+      query?: {
+        estado?: 'ACTIVA' | 'EN_SEGUIMIENTO' | 'CERRADA';
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EmergenciaDto'][];
+        };
+      };
+    };
+  };
+  CatalogoController_crearEmergencia: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CrearEmergenciaDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EmergenciaDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CatalogoController_actualizarEmergencia: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ActualizarEmergenciaDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EmergenciaDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CatalogoController_cerrarEmergencia: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CerrarEmergenciaDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EmergenciaDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CodigosBarrasController_listar: {
+    parameters: {
+      query?: {
+        revisado?: 'true' | 'false';
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CodigoBarrasDto'][];
+        };
+      };
+    };
+  };
+  CodigosBarrasController_asociar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AsociarDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CodigoBarrasDto'];
+        };
+      };
+    };
+  };
+  CodigosBarrasController_obtener: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ean: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CodigoBarrasDto'];
+        };
+      };
+    };
+  };
+  CodigosBarrasController_editar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ean: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['EditarDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CodigoBarrasDto'];
+        };
+      };
+    };
+  };
+  EntidadesController_listar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EntidadDto'][];
+        };
+      };
+    };
+  };
+  EntidadesController_crear: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CrearEntidadDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EntidadDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  EntidadesController_actualizar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ActualizarEntidadDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EntidadDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  EntidadesController_verificar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['VerificarEntidadDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EntidadDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  EntidadesController_quitarVerificacion: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ArchivadasDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  LogosController_leer: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description La imagen del logotipo, en WebP */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  EntidadesController_subirLogo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'multipart/form-data': {
+          /** Format: binary */
+          logo: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EntidadDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  EntidadesController_quitarLogo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EntidadDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CausasController_listar: {
+    parameters: {
+      query?: {
+        estado?: 'activas' | 'por-cerrar' | 'atendidas';
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CausaGestionDto'][];
+        };
+      };
+    };
+  };
+  CausasPublicasController_listar: {
+    parameters: {
+      query?: {
+        categoria?: 'PERSONAS' | 'ANIMALES' | 'ADULTOS_MAYORES' | 'RESCATISTAS';
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CausaPublicaDto'][];
+        };
+      };
+    };
+  };
+  CausasController_crear: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CrearCausaDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CausaGestionDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CausasPublicasController_obtener: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CausaPublicaDto'];
+        };
+      };
+    };
+  };
+  CausasController_editar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['EditarCausaDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CausaGestionDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CausasController_renovar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PlazoDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CausaGestionDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CausasController_archivar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CausaGestionDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CausasController_reactivar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PlazoDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CausaGestionDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CausasPublicasController_imagen: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      /** @description La imagen de la causa, en WebP */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+    };
+  };
+  CausasController_subirImagen: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'multipart/form-data': {
+          /** Format: binary */
+          imagen: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CausaGestionDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CausasController_quitarImagen: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CausaGestionDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  CausasPublicasController_atendidas: {
+    parameters: {
+      query?: {
+        categoria?: 'PERSONAS' | 'ANIMALES' | 'ADULTOS_MAYORES' | 'RESCATISTAS';
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CausaPublicaDto'][];
+        };
+      };
+    };
+  };
+  AcopiosController_listarPublicos: {
+    parameters: {
+      query?: {
+        abiertoAhora?: string;
+        cerca?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AcopioPublicoDto'][];
+        };
+      };
+    };
+  };
+  AcopiosController_crear: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CrearAcopioDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AcopioDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  AcopiosController_listarGestion: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AcopioDto'][];
+        };
+      };
+    };
+  };
+  AcopiosController_obtenerPublico: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AcopioPublicoDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  AcopiosController_actualizar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ActualizarAcopioDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AcopioDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  AcopiosController_operar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['OperacionDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AcopioDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ZonasController_listar: {
+    parameters: {
+      query?: {
+        emergencia?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ZonaDto'][];
+        };
+      };
+    };
+  };
+  ZonasController_crear: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CrearZonaDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ZonaDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ZonasController_actualizar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ActualizarZonaDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ZonaDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  UbicacionesController_mias: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UbicacionDto'][];
+        };
+      };
+    };
+  };
+  UbicacionesController_buscar: {
+    parameters: {
+      query?: {
+        q?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UbicacionDto'][];
+        };
+      };
+    };
+  };
+  GeocodificacionController_buscar: {
+    parameters: {
+      query: {
+        q: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ResultadoGeoDto'][];
+        };
+      };
+      /** @description Nominatim no respondió */
+      503: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  NoRecibirController_listar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NoRecibirDto'][];
+        };
+      };
+    };
+  };
+  NoRecibirController_porCategoria: {
+    parameters: {
+      query: {
+        categoria: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AcopioNoRecibeDto'][];
+        };
+      };
+    };
+  };
+  NoRecibirController_marcar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+        categoriaId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['MarcarDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NoRecibirDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  NoRecibirController_desmarcar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+        categoriaId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  MovimientosController_entrada: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['EntradaDto'];
+      };
+    };
+    responses: {
+      /** @description Reintento: el movimiento ya existía */
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ResultadoMovimientoDto'];
+        };
+      };
+      /** @description Movimiento nuevo */
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ResultadoMovimientoDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  MovimientosController_salida: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SalidaDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ResultadoMovimientoDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  MovimientosController_ajuste: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AjusteDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ResultadoMovimientoDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ConsultasController_saldos: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SaldoDto'][];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ConsultasController_historial: {
+    parameters: {
+      query: {
+        categoriaId: string;
+        cursor?: string;
+        limite?: number;
+      };
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['PaginaHistorialDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  UmbralesController_fijar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+        categoriaId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['FijarUmbralDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['UmbralDto'];
+        };
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  UmbralesController_quitar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+        categoriaId: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      204: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content?: never;
+      };
+      /** @description Error con forma { estado, codigo, mensaje, detalles? } */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  DonacionesController_listar: {
+    parameters: {
+      query?: {
+        estado?: 'PREPARADO' | 'PENDIENTE' | 'CONCILIADO' | 'RECHAZADO' | 'CANCELADO';
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ComprobanteDto'][];
+        };
+      };
+    };
+  };
+  DonacionesController_crear: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CrearDonacionDto'];
+      };
+    };
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ComprobanteDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  DonacionesController_cancelar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        folio: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ComprobanteDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  DonacionesController_sugerir: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['SugerenciasDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SugerenciaEntregaDto'][];
+        };
+      };
+    };
+  };
+  DonacionesController_codigo: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        ean: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['CodigoDonadorDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  FacturasController_subir: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        folio: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'multipart/form-data': {
+          /** Format: binary */
+          factura: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ComprobanteDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  FacturasController_factura: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        folio: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/webp': string;
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/webp': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ComprobantesController_bandeja: {
+    parameters: {
+      query?: {
+        estado?: 'PENDIENTE' | 'CONCILIADO' | 'RECHAZADO';
+        acopioId?: string;
+        desde?: string;
+        hasta?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['BandejaRespuestaDto'];
+        };
+      };
+    };
+  };
+  ComprobantesController_detalle: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        folio: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConciliacionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ComprobantesController_vinculables: {
+    parameters: {
+      query: {
+        acopioId: string;
+      };
+      header?: never;
+      path: {
+        folio: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['EntradaVinculableDto'][];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ComprobantesController_vincular: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        folio: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['VincularDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ComprobanteDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ComprobantesController_conciliar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        folio: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ComprobanteDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ComprobantesController_rechazar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        folio: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RechazarDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ComprobanteDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ComprobantesController_revertir: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        folio: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ComprobanteDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ComprobantesController_consultar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        folio: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ComprobanteDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ComprobantesController_recibir: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        folio: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RecibirDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RecepcionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  SeguimientoController_consultar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        folio: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SeguimientoDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  NecesidadController_ficha: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['FichaZonaDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  NecesidadController_ponerManual: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+        categoriaId: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ManualDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['NecesidadManualDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  NecesidadController_excedentes: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ExcedenteDto'][];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  SugerenciasController_descartes: {
+    parameters: {
+      query?: {
+        desde?: string;
+        hasta?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['InformeDescartesDto'];
+        };
+      };
+    };
+  };
+  SugerenciasController_listar: {
+    parameters: {
+      query?: {
+        zona?: string;
+        acopio?: string;
+        categoria?: string;
+        estado?: 'PROPUESTA' | 'APROBADA' | 'DESCARTADA';
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SugerenciaDto'][];
+        };
+      };
+    };
+  };
+  SugerenciasController_recalcular: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RecalculoDto'];
+        };
+      };
+    };
+  };
+  SugerenciasController_aprobar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['AprobarDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['AprobacionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  SugerenciasController_descartar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DescartarDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['DescarteDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ConfiguracionController_leer: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConfiguracionMotorDto'];
+        };
+      };
+    };
+  };
+  ConfiguracionController_guardar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GuardarConfiguracionDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ConfiguracionMotorDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ConfiguracionController_vistaPrevia: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['GuardarConfiguracionDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['VistaPreviaMotorDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  RemisionesController_listar: {
+    parameters: {
+      query?: {
+        estado?: 'BORRADOR' | 'EN_TRANSITO' | 'RECIBIDA' | 'CANCELADA';
+        zona?: string;
+      };
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RemisionDto'][];
+        };
+      };
+    };
+  };
+  RemisionesController_crear: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CrearRemisionDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RemisionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  RemisionesController_foliosVinculables: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        codigo: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['FolioVinculableDto'][];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  RemisionesController_ver: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        codigo: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RemisionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  RemisionesController_editar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        codigo: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['EditarRemisionDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RemisionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  RemisionesController_lineas: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        codigo: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['LineasDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RemisionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  RemisionesController_despachar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        codigo: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['DespacharDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RemisionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  RemisionesController_cancelar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        codigo: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['CancelarDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RemisionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  RecepcionesController_pendientes: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RemisionDto'][];
+        };
+      };
+    };
+  };
+  RecepcionesController_porQr: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        token: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RemisionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  RecepcionesController_subirEvidencia: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        codigo: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'multipart/form-data': {
+          /** Format: binary */
+          foto: string;
+        };
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RemisionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  RecepcionesController_evidencia: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        codigo: string;
+        n: number;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/webp': string;
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'image/webp': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  RecepcionesController_recibir: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        codigo: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['RecibirRemisionDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RemisionDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ReportesController_deZona: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ReporteNecesidadDto'][];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ReportesController_reportar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path: {
+        id: string;
+      };
+      cookie?: never;
+    };
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['ReportarDto'];
+      };
+    };
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ReportesCreadosDto'];
+        };
+      };
+      /** @description Error */
+      default: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ErrorDto'];
+        };
+      };
+    };
+  };
+  ReportesController_capaPublica: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['ZonaPublicaDto'][];
+        };
+      };
+    };
+  };
+  SaludController_revisar: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['SaludDto'];
+        };
+      };
+    };
+  };
 }
