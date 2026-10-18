@@ -12,7 +12,7 @@ import { EstadoError } from '../../componentes/EstadoError';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
-import { diaSemana, rangoHoras } from '../../formato';
+import { diaSemana, fechaHora, rangoHoras } from '../../formato';
 import { Aviso, Dato } from './piezas';
 
 /** El secreto llega después del `#`: el navegador no lo manda al servidor (T-07). */
@@ -173,6 +173,20 @@ function Reserva({ reserva, secreto }: { reserva: ReservaPublica; secreto: strin
         <p className="text-body-md text-on-surface-variant">Muestra este código al llegar.</p>
       </div>
       {codigo}
+      {reserva.jornadaCambiadaEn && (
+        <div
+          role="status"
+          aria-label="La jornada cambió"
+          className="flex items-start gap-space-sm rounded-xl border border-primary-container bg-primary-fixed p-space-sm text-body-sm text-primary"
+        >
+          <Icono nombre="update" className="mt-0.5 text-[20px]" />
+          <span>
+            <b className="block font-label-md">La jornada cambió</b>
+            Cambiaron la hora o el lugar el {fechaHora(reserva.jornadaCambiadaEn)}. Revisa los datos
+            de abajo antes de salir.
+          </span>
+        </div>
+      )}
       <section
         aria-label="La jornada"
         className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md"

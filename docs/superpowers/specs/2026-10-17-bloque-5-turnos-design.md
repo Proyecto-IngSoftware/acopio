@@ -124,6 +124,7 @@ jornada
   cupos_ajuste_manual int DEFAULT 0  CHECK (>= 0) · ajuste_actualizado_en timestamptz?
   estado  ABIERTA | CERRADA | CANCELADA
   motivo_cancelacion text? · cancelada_en timestamptz?
+  movida_en timestamptz?    última vez que cambiaron el inicio, el fin o el lugar
   serie_id uuid?            las jornadas creadas juntas comparten serie
   creada_por uuid (FK usuario) · creado_en · actualizado_en
 
@@ -348,5 +349,9 @@ Interfaz, rama `bloque-5-interfaz` ([plan](../../05-planes/2026-10-17-bloque-5-i
 - P8 deja de ofrecer «Cancelar reserva» cuando la jornada ya empezó, según el reloj del
   navegador. C14 habilita la asistencia con `puedeMarcarAsistencia` y el mismo reloj. En los
   dos casos la API vuelve a validar ([P-070](../../01-requerimientos/pendientes.md)).
-- «Muestra si la jornada cambió» (§6, P8) no se construyó: la API no expone una marca de
-  cambio. Quedó para decidir en [P-070](../../01-requerimientos/pendientes.md).
+- «Muestra si la jornada cambió» (§6, P8) se construyó el 2026-10-18, a pedido de Joseph
+  ([P-070](../../01-requerimientos/pendientes.md)). `jornada.movida_en` guarda cuándo cambiaron
+  el inicio, el fin o el lugar. `POST /api/turnos/reservas/:codigo/consultar` devuelve
+  `jornadaCambiadaEn` si ese cambio es igual o posterior al consentimiento de la reserva; la
+  comparación usa el reloj de la API para las dos horas. P8 muestra «La jornada cambió» con la
+  fecha. Quien reservó después del cambio no ve el aviso.

@@ -97,8 +97,8 @@ Cada punto dice qué decía el plan, qué debía decir y qué se hizo.
    «No encontramos esa reserva». Corregido en #125 en P8 y en la reserva de P7: «no existe»
    sale solo con 404, lo demás deja reintentar, y un refetch fallido no borra lo cargado.
 8. **Requisito sin tarea:** §6 de la especificación dice que P8 «muestra si la jornada
-   cambió». Ninguna tarea lo asignó y la API no lo expone. Quedó para decidir en
-   [P-070](../01-requerimientos/pendientes.md).
+   cambió». Ninguna tarea lo asignó y la API no lo exponía. Joseph pidió construirlo: va en
+   #126, con `jornada.movida_en` y el aviso en P8 ([P-070](../01-requerimientos/pendientes.md)).
 9. **Las restricciones globales** dicen que la web no calcula plazos, y la tarea 8 pide
    habilitar la asistencia con `puedeMarcarAsistencia` y el reloj del navegador. P8 también
    oculta «Cancelar reserva» después del inicio con ese reloj. Se acepta la excepción: en los

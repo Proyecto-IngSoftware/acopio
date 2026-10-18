@@ -209,6 +209,11 @@ export class ReservasService {
       estado: r.estado,
       nombre: r.nombre,
       perfilDeclarado: r.perfil_declarado,
+      // Solo si la jornada se movió después de reservar; las dos horas salen del reloj de la API
+      jornadaCambiadaEn:
+        r.jornada.movida_en && r.jornada.movida_en >= r.consentimiento_en
+          ? r.jornada.movida_en.toISOString()
+          : null,
       jornada: presentarJornadaPublica(r.jornada, this.ahora()),
     };
   }

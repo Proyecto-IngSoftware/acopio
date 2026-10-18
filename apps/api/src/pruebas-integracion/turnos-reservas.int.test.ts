@@ -157,6 +157,47 @@ describe('turnos: reservas', () => {
     await reservar(j.id, datos).expect(201);
   });
 
+  describe('la reserva dice si la jornada cambió después de reservar', () => {
+    const editar = (jornadaId: string, cuerpo: object) =>
+      a
+        .http()
+        .patch(`/api/turnos/gestion/jornadas/${jornadaId}`)
+        .set({ authorization: `Bearer ${admin}` })
+        .send(cuerpo)
+        .expect(200);
+    const consultar = async (codigo: string, secreto: string) =>
+      (
+        await a
+          .http()
+          .post(`/api/turnos/reservas/${codigo}/consultar`)
+          .send({ secreto })
+          .expect(200)
+      ).body;
+
+    it('mover la hora la marca, con la hora del cambio', async () => {
+      const j = await insertarJornada({ cupo_maximo: 5 });
+      const { codigo, secreto } = (await reservar(j.id, persona()).expect(201)).body;
+      expect((await consultar(codigo, secreto)).jornadaCambiadaEn).toBeNull();
+      await editar(j.id, { fecha: '2026-10-22', horaInicio: '08:00', horaFin: '12:00' });
+      expect((await consultar(codigo, secreto)).jornadaCambiadaEn).toBe(
+        new Date(AHORA).toISOString(),
+      );
+    });
+
+    it('cambiar solo el título no la marca', async () => {
+      const j = await insertarJornada({ cupo_maximo: 5 });
+      const { codigo, secreto } = (await reservar(j.id, persona()).expect(201)).body;
+      await editar(j.id, { titulo: 'Descargar y ordenar el agua' });
+      expect((await consultar(codigo, secreto)).jornadaCambiadaEn).toBeNull();
+    });
+
+    it('si la jornada se movió antes de reservar, no avisa', async () => {
+      const j = await insertarJornada({ cupo_maximo: 5, movida_en: new Date(AHORA - HORA) });
+      const { codigo, secreto } = (await reservar(j.id, persona()).expect(201)).body;
+      expect((await consultar(codigo, secreto)).jornadaCambiadaEn).toBeNull();
+    });
+  });
+
   it('una reserva no se cancela después del inicio', async () => {
     const j = await insertarJornada({
       inicio: new Date(AHORA + 13 * HORA),

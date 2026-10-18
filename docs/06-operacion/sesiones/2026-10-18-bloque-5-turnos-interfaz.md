@@ -91,12 +91,29 @@ del plan. Sus hallazgos y lo que se hizo con cada uno:
 El error crítico venía de una regla de la API que estaba escrita en §11 de la especificación y
 no pasó al plan de la interfaz ni a sus pruebas.
 
+## P8 avisa si la jornada cambió (#126)
+
+Joseph pidió construir la primera parte de [P-070](../../01-requerimientos/pendientes.md). La
+migración `20261020120000_jornada_movida_en` agrega `jornada.movida_en`, que la API llena al
+cambiar el inicio, el fin o el lugar. La consulta de la reserva devuelve `jornadaCambiadaEn`
+cuando el cambio fue en el momento de reservar o después, y P8 muestra «La jornada cambió» con
+la fecha del cambio. Lo cubren tres pruebas de integración (mover la hora, cambiar solo el
+título, moverla antes de reservar) y dos de P8. El contrato OpenAPI y los tipos de la web se
+regeneraron.
+
+La primera versión comparaba con `>` y la prueba de integración la tumbó: con el reloj fijo de
+las pruebas, la reserva y el cambio caen en el mismo instante. Quedó `>=`.
+
+No se agregó un paso al recorrido: comprobar P8 de punta a punta exige reservar en una jornada
+que luego se mueve, y esa jornada ya no se puede borrar, así que cada corrida dejaría una
+jornada en la demo.
+
 ## Pendiente
 
 - Los menores de esta interfaz ([P-069](../../01-requerimientos/pendientes.md)) y los de la API
   ([P-068](../../01-requerimientos/pendientes.md)).
-- Decidir si P8 avisa que la jornada cambió y si la API manda los permisos de cancelar y de
-  asistencia ([P-070](../../01-requerimientos/pendientes.md)).
+- Decidir si la API manda los permisos de cancelar y de asistencia
+  ([P-070](../../01-requerimientos/pendientes.md)).
 - Lo que falta de la pieza C ([P-066](../../01-requerimientos/pendientes.md)).
 
 ## Depende de Joseph

@@ -144,13 +144,17 @@ export class JornadasService {
           );
         }
       }
-      const despues = await this.dao.actualizar(id, datos, tx);
+      let despues = await this.dao.actualizar(id, datos, tx);
       const movida =
         despues.inicio.getTime() !== antes.inicio.getTime() ||
         despues.fin.getTime() !== antes.fin.getTime() ||
         despues.direccion !== antes.direccion ||
         despues.municipio !== antes.municipio;
-      if (movida) await this.avisos.cambiada(tx, await this.reservas.activas(id, tx), despues);
+      if (movida) {
+        // La hora del cambio: P8 avisa a quien reservó antes (P-070)
+        despues = await this.dao.actualizar(id, { movida_en: ahora }, tx);
+        await this.avisos.cambiada(tx, await this.reservas.activas(id, tx), despues);
+      }
       return this.registrar(tx, usuario, 'jornada.editada', antes, despues, ahora);
     });
   }

@@ -832,6 +832,9 @@ export class ReservaPublicaDto extends crearDto(
     estado: z.enum(['ACTIVA', 'CANCELADA', 'ASISTIO', 'NO_ASISTIO']),
     nombre: z.string().nullable().describe('Nulo cuando ya se borraron los datos (30 días)'),
     perfilDeclarado: z.boolean(),
+    jornadaCambiadaEn: fecha
+      .nullable()
+      .describe('Cuándo cambiaron la hora o el lugar, si fue después de reservar'),
     jornada: jornadaPublica,
   }),
 ) {}
