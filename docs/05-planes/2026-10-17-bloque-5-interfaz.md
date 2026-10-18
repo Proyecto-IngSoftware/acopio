@@ -78,7 +78,7 @@ con `envolver` y `responderSegun`, Playwright para los recorridos.
 | 6 P5, P6 y P12 | ✅ | «Ver jornadas» va en la tarjeta del acopio elegido en el mapa (`Mapa.tsx`), porque `TarjetaAcopio` ya es un enlace |
 | 7 C14 lista y formulario | ✅ | |
 | 8 C14 detalle de la jornada | ✅ | |
-| 9 Recorridos y cierre | 🟡 | Recorridos 6 de 6 en local y verificación completa en verde. Falta correr `portal-turnos.mjs` contra el servidor después del despliegue ([P-069](../01-requerimientos/pendientes.md)) y revisar HU-03 con Joseph |
+| 9 Recorridos y cierre | 🟡 | Recorridos 6 de 6 en local y verificación completa en verde. `portal-turnos.mjs` dio 6 de 6 contra el servidor el 2026-10-18, después de desplegar #123. Falta revisar HU-03 con Joseph |
 
 ---
 
