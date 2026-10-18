@@ -10,6 +10,7 @@ import {
   type AppPrueba,
 } from '../../test/app-prueba';
 import { CausasService } from '../modulos/acopios/causas.service';
+import { sembrarCausasDemo } from '../seed/demo';
 
 /** Hoy, para toda la suite: 17 de octubre de 2026 en Bogotá. */
 const AHORA = Date.parse('2026-10-17T15:00:00Z');
@@ -446,6 +447,30 @@ describe('causas', () => {
         .expect(200);
       const r = await a.http().get(`/api/causas/${c.id}/imagen`).expect(200);
       expect(r.headers['content-type']).toMatch(/image\/webp/);
+    });
+  });
+
+  describe('demo (seed:demo)', () => {
+    it('crea dos entidades verificadas con causas «(demo)», sin duplicar', async () => {
+      await sembrarCausasDemo(a.prisma, adminId, new Date(AHORA));
+      await sembrarCausasDemo(a.prisma, adminId, new Date(AHORA));
+      const entidades = await a.prisma.entidad.findMany({
+        where: { nombre: { in: ['Cruz Roja Colombiana', 'UNICEF Colombia'] } },
+      });
+      expect(entidades.map((e) => e.verificacion)).toEqual(['VERIFICADA', 'VERIFICADA']);
+      const demo = await a.prisma.causa.findMany({ where: { titulo: { endsWith: '(demo)' } } });
+      expect(demo).toHaveLength(4);
+      expect(demo.filter((c) => c.archivo_motivo === 'VENCIDA')).toHaveLength(1);
+      const publicas = (
+        (await a.http().get('/api/causas').expect(200)).body as {
+          titulo: string;
+        }[]
+      ).filter((c) => c.titulo.endsWith('(demo)'));
+      expect(publicas).toHaveLength(3);
+      for (const c of demo)
+        expect(['cruzrojacolombiana.org', 'unicef.org']).toContain(
+          new URL(c.url_oficial).hostname.replace(/^www\./, ''),
+        );
     });
   });
 
