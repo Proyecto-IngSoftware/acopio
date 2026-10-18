@@ -27,6 +27,7 @@ const MIGRADOS_A_DAO = [
   'salud',
   'notificaciones',
   'acopios',
+  'turnos',
 ];
 
 /** módulo → módulos que lo pueden importar */

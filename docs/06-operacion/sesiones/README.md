@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-10-17 | [2026-10-17-bloque-5-turnos-api](2026-10-17-bloque-5-turnos-api.md) | Bloque 5: especificación y API de turnos |
 | 2026-10-17 | [2026-10-17-pieza-c-causas](2026-10-17-pieza-c-causas.md) | Pieza C: verificación de entidades y causas |
 | 2026-10-17 | [2026-10-17-maquetas-causas](2026-10-17-maquetas-causas.md) | Maquetas de causas, P3 y P4, aprobadas |
 | 2026-10-17 | [2026-10-17-recorridos-y-mi-zona](2026-10-17-recorridos-y-mi-zona.md) | Recorridos estables, «Mi zona» e informes de sesión |
