@@ -118,7 +118,7 @@ export function FormularioCausa({
             </option>
           ))}
         </Selector>
-        <fieldset className="flex flex-col gap-space-xs">
+        <fieldset className="flex min-w-0 flex-col gap-space-xs">
           <legend className="pb-space-xs text-label-md text-on-surface">Categoría</legend>
           <div className="flex flex-wrap gap-space-xs">
             {CATEGORIAS_CAUSA.map((c: CategoriaCausa) => (

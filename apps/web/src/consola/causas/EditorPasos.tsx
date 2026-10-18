@@ -18,7 +18,7 @@ export function EditorPasos({
   const boton =
     'flex h-11 w-9 shrink-0 items-center justify-center text-on-surface-variant disabled:opacity-40';
   return (
-    <fieldset className="flex flex-col gap-space-xs">
+    <fieldset className="flex min-w-0 flex-col gap-space-xs">
       <legend className="pb-space-xs text-label-md text-on-surface">Cómo donar</legend>
       <ol className="flex flex-col gap-space-xs">
         {pasos.map((paso, i) => (
