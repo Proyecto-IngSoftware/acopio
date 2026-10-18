@@ -79,7 +79,27 @@ const b = await chromium.launch();
 const ctx = await b.newContext({ viewport: { width: 360, height: 640 }, deviceScaleFactor: 2 });
 const p = await ctx.newPage();
 p.on('pageerror', (e) => errores.push(e.message));
+/** Si un paso falla, la demo vuelve a como estaba: reservas abiertas, el ajuste y sin la serie. */
+async function limpiar() {
+  if (!armar) return;
+  try {
+    const c = await cookie();
+    const ruta = (id) => `/api/turnos/gestion/jornadas/${id}`;
+    const jornadas = await gestion();
+    const actual = jornadas.find((j) => j.id === armar.id);
+    if (actual?.estado === 'CERRADA') await api('POST', `${ruta(armar.id)}/reabrir`, c);
+    if (actual && actual.ajuste !== armar.ajuste) {
+      await api('PUT', `${ruta(armar.id)}/ajuste`, c, { cupos: armar.ajuste });
+    }
+    for (const j of jornadas.filter((j) => j.titulo === TITULO)) await api('DELETE', ruta(j.id), c);
+    console.log('Limpieza: la demo quedó como estaba');
+  } catch (e) {
+    console.log('LA LIMPIEZA FALLÓ —', String(e.message).split('\n')[0]);
+  }
+}
+
 cerrar = async () => {
+  await limpiar();
   await b.close();
   console.log(`\nErrores de la página: ${errores.length}`);
   for (const e of errores.slice(0, 10)) console.log('  ', e.slice(0, 200));
