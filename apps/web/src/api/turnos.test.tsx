@@ -115,7 +115,7 @@ it('useAjustarCupos y useMarcarAsistencia mandan su cuerpo', async () => {
   await waitFor(() => expect(ajuste.result.current.isSuccess).toBe(true));
   expect(await cuerpoDe('PUT /api/turnos/gestion/jornadas/j1/ajuste')).toEqual({ cupos: 2 });
 
-  const asistencia = renderHook(() => useMarcarAsistencia('j1'), { wrapper: conConsultas() });
+  const asistencia = renderHook(() => useMarcarAsistencia(), { wrapper: conConsultas() });
   asistencia.result.current.mutate({ reservaId: 'r1', estado: 'ASISTIO' });
   await waitFor(() => expect(asistencia.result.current.isSuccess).toBe(true));
   expect(await cuerpoDe('PUT /api/turnos/gestion/reservas/r1/asistencia')).toEqual({

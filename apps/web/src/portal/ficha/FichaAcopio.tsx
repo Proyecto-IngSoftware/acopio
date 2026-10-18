@@ -205,7 +205,7 @@ function Pronto({ titulo, icono, texto }: { titulo: string; icono: string; texto
 
 /** Las próximas tres jornadas del acopio (RF-TUR-002), con el aviso de RF-TUR-006. */
 function Voluntariado({ acopioId }: { acopioId: string }) {
-  const { data } = useJornadas({ acopio: acopioId });
+  const { data, error } = useJornadas({ acopio: acopioId });
   const proximas = (data ?? []).slice(0, 3);
   return (
     <section
@@ -216,6 +216,9 @@ function Voluntariado({ acopioId }: { acopioId: string }) {
         <Icono nombre="groups" className="text-[22px] text-primary-container" />
         Voluntariado
       </h2>
+      {error && (
+        <p className="text-body-sm text-on-surface-variant">No se pudieron cargar las jornadas</p>
+      )}
       {data && proximas.length === 0 && (
         <p className="text-body-sm text-on-surface-variant">
           Este acopio no tiene jornadas abiertas
@@ -240,6 +243,14 @@ function Voluntariado({ acopioId }: { acopioId: string }) {
           <Icono nombre="chevron_right" className="text-[22px] text-on-surface-variant" />
         </Link>
       ))}
+      {data && data.length > proximas.length && (
+        <Link
+          to={`/voluntariado?acopio=${acopioId}`}
+          className="flex min-h-[48px] items-center border-t border-outline-variant pt-space-sm text-label-md text-primary"
+        >
+          Ver todas las jornadas
+        </Link>
+      )}
       {proximas.length > 0 && (
         <p className="text-body-sm text-on-surface-variant">
           Puede haber gente que llegó sin reserva. Los cupos cuentan reservas, no personas

@@ -96,6 +96,21 @@ it('ajusta los cupos por gente que llegó sin reserva', async () => {
   expect(await cuerpoDe('PUT /api/turnos/gestion/jornadas/j1/ajuste')).toEqual({ cupos: 2 });
 });
 
+it('el contador toma el ajuste nuevo cuando la lista se refresca', async () => {
+  responderSegun({ [INSCRITOS]: [] });
+  const { rerender } = pantalla();
+  await screen.findByRole('button', { name: 'Sumar una persona sin reserva' });
+  rerender(
+    envolver(
+      <DetalleJornada jornada={{ ...EN_CURSO, ajuste: 3 }} alVolver={vi.fn()} alEditar={vi.fn()} />,
+      '/consola/turnos',
+      clienteFalso(OPERADOR),
+    ),
+  );
+  expect(await screen.findByText('3', { selector: 'b' })).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: 'Guardar ajuste' })).not.toBeInTheDocument();
+});
+
 it('un ajuste sin cupo muestra el mensaje de la API', async () => {
   responderSegun({
     [INSCRITOS]: [],

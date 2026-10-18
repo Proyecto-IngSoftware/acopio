@@ -5,17 +5,15 @@ import { NOMBRE_PERFIL } from '../../portal/turnos/piezas';
 
 /** Los inscritos de una jornada, con su contacto para llamarlos y la asistencia. */
 export function Inscritos({
-  jornadaId,
   inscritos,
   perfil,
   asistenciaAbierta,
 }: {
-  jornadaId: string;
   inscritos: Inscrito[];
   perfil: Perfil | null;
   asistenciaAbierta: boolean;
 }) {
-  const marcar = useMarcarAsistencia(jornadaId);
+  const marcar = useMarcarAsistencia();
   const [copiado, fijarCopiado] = useState<string | null>(null);
 
   async function copiar(i: Inscrito) {
