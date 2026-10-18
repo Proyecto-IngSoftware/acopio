@@ -65,6 +65,20 @@ export function useCausasGestion(estado: EstadoGestion) {
   });
 }
 
+/** Una causa de la consola: se busca en activas (que incluye las por cerrar) y en atendidas. */
+export function useCausaGestion(id: string) {
+  const activas = useCausasGestion('activas');
+  const atendidas = useCausasGestion('atendidas');
+  const causa = [...(activas.data ?? []), ...(atendidas.data ?? [])].find((c) => c.id === id);
+  return {
+    causa,
+    // Se muestra apenas aparece en una de las dos, sin esperar la otra
+    isPending: !causa && (activas.isPending || atendidas.isPending),
+    error: causa ? null : (activas.error ?? atendidas.error),
+    refetch: () => Promise.all([activas.refetch(), atendidas.refetch()]),
+  };
+}
+
 function useCambio<T, R>(hacer: (datos: T) => Promise<R>, claves: string[][] = [['causas']]) {
   const consultas = useQueryClient();
   return useMutation<R, ErrorApi, T>({

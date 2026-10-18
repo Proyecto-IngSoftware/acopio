@@ -30,13 +30,15 @@ const TIPOS = ['Fundación', 'ONG', 'Alcaldía', 'Iglesia', 'Junta de acción co
 export function Entidades() {
   const [q, fijarQ] = useState('');
   const [editando, fijarEditando] = useState<Entidad | 'nueva' | null>(null);
-  const [abierta, fijarAbierta] = useState<Entidad | null>(null);
+  // Se guarda el id: la hoja lee la entidad de la lista, que se refresca tras cada cambio
+  const [abiertaId, fijarAbiertaId] = useState<string | null>(null);
   const [paso, fijarPaso] = useState<'verificar' | 'quitar' | null>(null);
   const cerrarTodo = () => {
-    fijarAbierta(null);
+    fijarAbiertaId(null);
     fijarPaso(null);
   };
   const { data, error, isPending, refetch } = useEntidades();
+  const abierta = data?.find((e) => e.id === abiertaId) ?? null;
   const { data: acopios } = useAcopiosGestion();
 
   const porEntidad = new Map<string, number>();
@@ -71,7 +73,7 @@ export function Entidades() {
             <li key={e.id}>
               <button
                 type="button"
-                onClick={() => fijarAbierta(e)}
+                onClick={() => fijarAbiertaId(e.id)}
                 className="flex w-full items-center gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md text-left"
               >
                 <span className="flex min-w-0 flex-1 flex-col gap-1">
@@ -106,7 +108,7 @@ export function Entidades() {
           alCerrar={cerrarTodo}
           alEditar={() => {
             fijarEditando(abierta);
-            fijarAbierta(null);
+            fijarAbiertaId(null);
           }}
           alVerificar={() => fijarPaso('verificar')}
           alQuitar={() => fijarPaso('quitar')}

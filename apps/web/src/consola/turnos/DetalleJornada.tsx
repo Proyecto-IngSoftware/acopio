@@ -90,7 +90,6 @@ export function DetalleJornada({
         ) : (
           <>
             <Inscritos
-              jornadaId={jornada.id}
               inscritos={vigentes}
               perfil={jornada.perfilRequerido}
               asistenciaAbierta={asistenciaAbierta}
@@ -117,6 +116,12 @@ export function DetalleJornada({
 /** Personas que llegaron sin reserva (RF-TUR-006): se guardan con su hora. */
 function Ajuste({ jornada }: { jornada: JornadaGestion }) {
   const [cupos, fijarCupos] = useState(jornada.ajuste);
+  // Si otra persona cambió el ajuste y aquí no hay nada sin guardar, se toma el nuevo
+  const [base, fijarBase] = useState(jornada.ajuste);
+  if (base !== jornada.ajuste) {
+    fijarBase(jornada.ajuste);
+    if (cupos === base) fijarCupos(jornada.ajuste);
+  }
   const ajustar = useAjustarCupos(jornada.id);
   const boton =
     'flex h-11 w-11 items-center justify-center rounded-xl border border-outline text-on-surface disabled:opacity-40';

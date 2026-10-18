@@ -78,6 +78,9 @@ export class ReservasService {
     if (r.estado === 'CANCELADA') {
       throw new ErrorDominio('RESERVA_CANCELADA', 'La reserva está cancelada', 409);
     }
+    if (r.jornada.estado === 'CANCELADA') {
+      throw new ErrorDominio('JORNADA_CANCELADA', 'La jornada está cancelada', 409);
+    }
     if (!puedeMarcarAsistencia(r.jornada.inicio, r.jornada.fin, this.ahora())) {
       throw new ErrorDominio(
         'FUERA_DE_PLAZO_ASISTENCIA',

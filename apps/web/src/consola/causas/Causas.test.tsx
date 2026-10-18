@@ -1,5 +1,6 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { Route, Routes } from 'react-router';
 import { vi } from 'vitest';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
 import { causaGestionDePrueba } from '../../pruebas/datos-causas';
@@ -11,7 +12,7 @@ import {
   peticiones,
   responderSegun,
 } from '../../pruebas/utilidades';
-import { Causas } from './Causas';
+import { CausaConsola, Causas } from './Causas';
 
 const ADMIN = { id: 'a', username: 'admin', nombre: 'Joseph Quintero', rol: 'ADMIN' as const };
 const entidad = (datos: Record<string, unknown>) => ({
@@ -70,7 +71,17 @@ const RESPUESTAS = {
   'POST /api/causas/*/reactivar': ATENDIDA,
   'POST /api/causas/*/archivar': ATENDIDA,
 };
-const pantalla = () => render(envolver(<Causas />, '/consola/causas', clienteFalso(ADMIN)));
+const pantalla = (ruta = '/consola/causas') =>
+  render(
+    envolver(
+      <Routes>
+        <Route path="/consola/causas" element={<Causas />} />
+        <Route path="/consola/causas/:id" element={<CausaConsola />} />
+      </Routes>,
+      ruta,
+      clienteFalso(ADMIN),
+    ),
+  );
 
 beforeEach(() => {
   // 17 de octubre de 2026, 10:00 en Bogotá: el tope de cierre es el 17 de abril de 2027
@@ -216,4 +227,21 @@ it('reactivar una atendida también pide confirmar', async () => {
     cierraEl: '2027-01-15',
     confirmo: true,
   });
+});
+
+it('cada causa tiene su ruta: /consola/causas/:id abre esa causa', async () => {
+  responderSegun(RESPUESTAS);
+  pantalla('/consola/causas/c2');
+  expect(
+    await screen.findByRole('heading', { level: 1, name: 'Kits escolares para niños de Mocoa' }),
+  ).toBeInTheDocument();
+  expect(screen.getByLabelText('Renovar hasta')).toBeInTheDocument();
+});
+
+it('una ruta de causa que no existe lo dice y vuelve a la lista', async () => {
+  responderSegun(RESPUESTAS);
+  pantalla('/consola/causas/no-existe');
+  expect(await screen.findByText('No encontramos esa causa')).toBeInTheDocument();
+  await userEvent.click(screen.getByRole('link', { name: 'Volver a las causas' }));
+  expect(await screen.findByRole('heading', { level: 1, name: 'Causas' })).toBeInTheDocument();
 });

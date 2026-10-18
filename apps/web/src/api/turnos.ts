@@ -171,8 +171,8 @@ export const useAjustarCupos = (id: string) =>
       ),
   );
 
-/** La clave de la jornada solo agrupa; la invalidación de `['turnos']` refresca sus inscritos. */
-export const useMarcarAsistencia = (_jornadaId: string) =>
+/** La invalidación de `['turnos']` refresca los inscritos. */
+export const useMarcarAsistencia = () =>
   useCambio(
     async ({ reservaId, estado }: { reservaId: string; estado: 'ASISTIO' | 'NO_ASISTIO' }) =>
       await desenvolver(

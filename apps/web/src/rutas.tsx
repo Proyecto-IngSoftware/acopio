@@ -133,6 +133,9 @@ const CausasAtendidas = lazy(() =>
 const CausasConsola = lazy(() =>
   import('./consola/causas/Causas').then((m) => ({ default: m.Causas })),
 );
+const CausaConsola = lazy(() =>
+  import('./consola/causas/Causas').then((m) => ({ default: m.CausaConsola })),
+);
 const FichaCausa = lazy(() => import('./portal/causas/Ficha').then((m) => ({ default: m.Ficha })));
 
 const Jornadas = lazy(() =>
@@ -239,6 +242,7 @@ export function Rutas() {
             ['consola/usuarios/:id', <DetalleUsuario key="d" />, false],
             ['consola/entidades', <Entidades key="e" />, true],
             ['consola/causas', <CausasConsola key="ca" />, true],
+            ['consola/causas/:id', <CausaConsola key="cc" />, true],
             ['consola/acopios', <Acopios key="a" />, true],
             ['consola/acopios/nuevo', <FormularioAcopio key="an" />, true],
             ['consola/acopios/:id', <FormularioAcopio key="ae" />, true],

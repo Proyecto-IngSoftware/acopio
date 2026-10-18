@@ -132,10 +132,12 @@ export class EntidadesService {
     return this.cambiarLogo(admin, id, null);
   }
 
-  /** El logotipo es la miniatura de la imagen guardada. */
+  /** El logotipo es la miniatura de la imagen guardada. Solo se muestra el de una verificada. */
   async leerLogo(id: string) {
     const e = await this.dao.porId(id);
-    if (!e?.logo_key) throw new ErrorDominio('SIN_LOGO', 'La entidad no tiene logotipo', 404);
+    if (!e?.logo_key || e.verificacion !== 'VERIFICADA') {
+      throw new ErrorDominio('SIN_LOGO', 'La entidad no tiene logotipo', 404);
+    }
     return this.almacenamiento.leerImagen(miniatura(e.logo_key));
   }
 

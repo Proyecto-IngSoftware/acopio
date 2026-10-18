@@ -133,29 +133,43 @@ export class JornadasService {
     }
     if (antes.entidad_id) Object.assign(datos, lugarPropio(c, true));
     return this.transacciones.ejecutar(async (tx) => {
-      await this.dao.bloquear(id, tx);
+      // Desde aquí se compara contra `vigente`: otra edición pudo cambiar la fila antes del bloqueo
+      const vigente = await this.releerBloqueada(id, tx);
+      const cambiaLugar =
+        (datos.direccion !== undefined && datos.direccion !== vigente.direccion) ||
+        (datos.municipio !== undefined && datos.municipio !== vigente.municipio);
+      if (
+        cambiaLugar &&
+        vigente.inicio.getTime() - ahora.getTime() <= LIMITES_TURNOS.horasCierre * MS_HORA
+      ) {
+        throw new ErrorDominio(
+          'JORNADA_INVALIDA',
+          'Faltan 12 horas o menos: ya no se puede cambiar el lugar',
+          422,
+        );
+      }
       if (c.cupoMaximo !== undefined) {
         const ocupados = await this.reservas.ocupados(id, tx);
-        if (c.cupoMaximo < ocupados + antes.cupos_ajuste_manual) {
+        if (c.cupoMaximo < ocupados + vigente.cupos_ajuste_manual) {
           throw new ErrorDominio(
             'CUPO_MENOR_QUE_OCUPADOS',
-            `El cupo no puede quedar por debajo de ${ocupados + antes.cupos_ajuste_manual}: ya hay reservas y ajuste manual`,
+            `El cupo no puede quedar por debajo de ${ocupados + vigente.cupos_ajuste_manual}: ya hay reservas y ajuste manual`,
             409,
           );
         }
       }
       let despues = await this.dao.actualizar(id, datos, tx);
       const movida =
-        despues.inicio.getTime() !== antes.inicio.getTime() ||
-        despues.fin.getTime() !== antes.fin.getTime() ||
-        despues.direccion !== antes.direccion ||
-        despues.municipio !== antes.municipio;
+        despues.inicio.getTime() !== vigente.inicio.getTime() ||
+        despues.fin.getTime() !== vigente.fin.getTime() ||
+        despues.direccion !== vigente.direccion ||
+        despues.municipio !== vigente.municipio;
       if (movida) {
         // La hora del cambio: P8 avisa a quien reservó antes (P-070)
         despues = await this.dao.actualizar(id, { movida_en: ahora }, tx);
         await this.avisos.cambiada(tx, await this.reservas.activas(id, tx), despues);
       }
-      return this.registrar(tx, usuario, 'jornada.editada', antes, despues, ahora);
+      return this.registrar(tx, usuario, 'jornada.editada', vigente, despues, ahora);
     });
   }
 
@@ -215,14 +229,15 @@ export class JornadasService {
 
   async ajustar(usuario: UsuarioAutenticado, id: string, cupos: number) {
     const ahora = this.ahora();
-    const antes = await this.exigirGestionable(usuario, id);
+    // Solo revisa el acceso: el cupo y el ajuste se leen después del bloqueo
+    await this.exigirGestionable(usuario, id);
     return this.transacciones.ejecutar(async (tx) => {
-      await this.dao.bloquear(id, tx);
+      const vigente = await this.releerBloqueada(id, tx);
       const ocupados = await this.reservas.ocupados(id, tx);
-      if (cupos > antes.cupo_maximo - ocupados) {
+      if (cupos > vigente.cupo_maximo - ocupados) {
         throw new ErrorDominio(
           'AJUSTE_SIN_CUPO',
-          `Con ${ocupados} reservas, el ajuste llega como máximo a ${Math.max(0, antes.cupo_maximo - ocupados)}`,
+          `Con ${ocupados} reservas, el ajuste llega como máximo a ${Math.max(0, vigente.cupo_maximo - ocupados)}`,
           409,
         );
       }
@@ -231,7 +246,7 @@ export class JornadasService {
         { cupos_ajuste_manual: cupos, ajuste_actualizado_en: ahora },
         tx,
       );
-      return this.registrar(tx, usuario, 'jornada.ajustada', antes, despues, ahora);
+      return this.registrar(tx, usuario, 'jornada.ajustada', vigente, despues, ahora);
     });
   }
 
@@ -314,6 +329,17 @@ export class JornadasService {
 
   private async exigirGestionable(usuario: UsuarioAutenticado, id: string) {
     const j = await this.exigirAcceso(usuario, id);
+    if (j.estado === 'CANCELADA') {
+      throw new ErrorDominio('JORNADA_CANCELADA', 'La jornada está cancelada', 409);
+    }
+    return j;
+  }
+
+  /** Cupo y ajuste se leen después del bloqueo: antes, otra edición pudo cambiarlos. */
+  private async releerBloqueada(id: string, tx: ClienteBd) {
+    await this.dao.bloquear(id, tx);
+    const j = await this.dao.porId(id, tx);
+    if (!j) throw new ErrorDominio('JORNADA_NO_ENCONTRADA', 'La jornada no existe', 404);
     if (j.estado === 'CANCELADA') {
       throw new ErrorDominio('JORNADA_CANCELADA', 'La jornada está cancelada', 409);
     }

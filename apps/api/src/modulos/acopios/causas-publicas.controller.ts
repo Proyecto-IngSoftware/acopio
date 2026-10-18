@@ -15,7 +15,7 @@ import { crearDto } from '../../comun/dto';
 import { CausaPublicaDto } from '../../comun/respuestas';
 import { CausasService } from './causas.service';
 
-class FiltroCategoriaDto extends crearDto(
+class FiltroCategoriaCausaDto extends crearDto(
   z.object({ categoria: z.enum(CATEGORIAS_CAUSA).optional() }),
 ) {}
 
@@ -28,13 +28,13 @@ export class CausasPublicasController {
 
   @Get()
   @ApiOkResponse({ type: CausaPublicaDto, isArray: true })
-  listar(@Query() filtro: FiltroCategoriaDto) {
+  listar(@Query() filtro: FiltroCategoriaCausaDto) {
     return this.causas.listarPublicas(filtro.categoria);
   }
 
   @Get('atendidas')
   @ApiOkResponse({ type: CausaPublicaDto, isArray: true })
-  atendidas(@Query() filtro: FiltroCategoriaDto) {
+  atendidas(@Query() filtro: FiltroCategoriaCausaDto) {
     return this.causas.listarAtendidas(filtro.categoria);
   }
 

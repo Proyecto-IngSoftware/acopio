@@ -71,7 +71,7 @@ export function EstadoCupos({ jornada }: { jornada: ConCupos }) {
           />
         </span>
       )}
-      {jornada.ajusteActualizadoEn && (
+      {jornada.ajuste > 0 && jornada.ajusteActualizadoEn && (
         <span className="flex items-center gap-1 text-body-sm text-on-surface-variant">
           <Icono nombre="edit_note" className="text-[16px]" />
           Ajustado {haceCuanto(jornada.ajusteActualizadoEn)}

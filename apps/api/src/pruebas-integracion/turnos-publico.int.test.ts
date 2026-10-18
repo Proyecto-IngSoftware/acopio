@@ -90,11 +90,17 @@ describe('turnos: público e inscritos', () => {
   const titulos = (js: { titulo: string }[]) =>
     js.map((j) => j.titulo.replace(`${marca} `, '')).sort();
 
-  const reservar = (jornadaId: string, nombre: string, correo: string, perfil = false) =>
+  const reservar = (
+    jornadaId: string,
+    nombre: string,
+    correo: string,
+    perfil = false,
+    telefono?: string,
+  ) =>
     a
       .http()
       .post(`/api/turnos/jornadas/${jornadaId}/reservas`)
-      .send({ nombre, correo, perfilDeclarado: perfil, consentimiento: true })
+      .send({ nombre, correo, telefono, perfilDeclarado: perfil, consentimiento: true })
       .expect(201);
 
   it('lista las jornadas vigentes, con filtros por perfil, acopio y día', async () => {
@@ -211,7 +217,7 @@ describe('turnos: público e inscritos', () => {
       inicio: new Date(AHORA + 13 * HORA),
       fin: new Date(AHORA + 16 * HORA),
     });
-    const r2 = await reservar(hoy.id, 'Marta Gil', 'marta@demo.test');
+    const r2 = await reservar(hoy.id, 'Marta Gil', 'marta@demo.test', false, '3105550123');
     await a.prisma.jornada.update({
       where: { id: hoy.id },
       data: { inicio: new Date(AHORA - HORA), fin: new Date(AHORA + 2 * HORA) },
@@ -231,11 +237,38 @@ describe('turnos: público e inscritos', () => {
     const texto = JSON.stringify(evento);
     expect(texto).not.toContain('Marta');
     expect(texto).not.toContain('marta@demo.test');
+    expect(texto).not.toContain('3105550123');
     await a
       .http()
       .put(`/api/turnos/gestion/reservas/${id2}/asistencia`)
       .set(como(operador))
       .send({ estado: 'NO_ASISTIO' })
       .expect(200);
+  });
+
+  it('no se marca asistencia en una jornada cancelada', async () => {
+    const j = await insertar('asistencia cancelada', {
+      inicio: new Date(AHORA + 13 * HORA),
+      fin: new Date(AHORA + 16 * HORA),
+    });
+    const r = await reservar(j.id, 'Luis Mora', 'luis@demo.test');
+    await a.prisma.jornada.update({
+      where: { id: j.id },
+      data: { inicio: new Date(AHORA - HORA), fin: new Date(AHORA + 2 * HORA) },
+    });
+    await a
+      .http()
+      .post(`/api/turnos/gestion/jornadas/${j.id}/cancelar`)
+      .set(como(operador))
+      .send({ motivo: 'Se suspendió por lluvia' })
+      .expect(200);
+    const id = (await a.prisma.reserva.findUniqueOrThrow({ where: { codigo: r.body.codigo } })).id;
+    const res = await a
+      .http()
+      .put(`/api/turnos/gestion/reservas/${id}/asistencia`)
+      .set(como(operador))
+      .send({ estado: 'ASISTIO' })
+      .expect(409);
+    expect(res.body.codigo).toBe('JORNADA_CANCELADA');
   });
 });

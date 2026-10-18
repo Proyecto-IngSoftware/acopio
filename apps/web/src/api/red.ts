@@ -68,9 +68,10 @@ export function useAcopiosPublicos(filtro: FiltroPublico) {
   return useQuery(opcionesAcopiosPublicos(filtro));
 }
 
-export function useAcopio(id: string) {
+export function useAcopio(id: string, activo = true) {
   return useQuery<AcopioPublico, ErrorApi>({
     queryKey: ['acopios', id],
+    enabled: activo,
     queryFn: async () =>
       await desenvolver(api.GET('/api/acopios/{id}', { params: { path: { id } } })),
   });

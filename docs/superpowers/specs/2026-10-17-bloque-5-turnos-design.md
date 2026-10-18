@@ -355,3 +355,9 @@ Interfaz, rama `bloque-5-interfaz` ([plan](../../05-planes/2026-10-17-bloque-5-i
   `jornadaCambiadaEn` si ese cambio es igual o posterior al consentimiento de la reserva; la
   comparación usa el reloj de la API para las dos horas. P8 muestra «La jornada cambió» con la
   fecha. Quien reservó después del cambio no ve el aviso.
+- Cierre del 2026-10-18 ([P-068 y P-069](../../01-requerimientos/pendientes.md)). Cambiar la
+  dirección o el municipio de una jornada de entidad a 12 horas o menos del inicio responde 422
+  `JORNADA_INVALIDA`, igual que moverla de hora. Marcar asistencia en una jornada cancelada
+  responde 409 `JORNADA_CANCELADA`. P7 ignora un `dia`, un `acopio` o una `entidad` mal escritos
+  en la URL en vez de mandarlos a la API, y si el acopio del filtro no tiene jornadas busca su
+  nombre aparte para el chip. P6 enlaza a todas las jornadas del acopio cuando hay más de tres.

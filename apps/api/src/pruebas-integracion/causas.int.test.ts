@@ -415,9 +415,11 @@ describe('causas', () => {
 
     it('si la entidad perdió la verificación, la ficha no trae sello ni enlace', async () => {
       const id = await entidadVerificada();
+      await a.prisma.entidad.update({ where: { id }, data: { logo_key: 'logos/prueba.webp' } });
       const c = (await crearCausa(id).expect(201)).body;
       const antes = (await a.http().get(`/api/causas/${c.id}`).expect(200)).body;
       expect(antes.urlOficial).toBe('https://www.fundacion.org/donar');
+      expect(antes.entidad.tieneLogo).toBe(true);
       expect(antes.entidad.verificadaEn).toBe(new Date(AHORA).toISOString());
       await a.http().post(`/api/entidades/${id}/quitar-verificacion`).set(como(admin)).expect(200);
       const despues = (await a.http().get(`/api/causas/${c.id}`).expect(200)).body;
@@ -428,6 +430,7 @@ describe('causas', () => {
         cerroEl: '2026-10-17',
       });
       expect(despues.entidad.verificadaEn).toBeNull();
+      expect(despues.entidad.tieneLogo).toBe(false);
     });
 
     it('lo público nunca dice quién creó o archivó la causa', async () => {
@@ -504,6 +507,9 @@ describe('causas', () => {
         .set(como(admin))
         .attach('logo', jpeg, 'logo.jpg')
         .expect(200);
+      // Sin verificar, el logotipo no se sirve (P-066)
+      await a.http().get(`/api/entidades/${id}/logo`).expect(404);
+      await verificar(id).expect(200);
       const r = await a.http().get(`/api/entidades/${id}/logo`).expect(200);
       expect(r.headers['content-type']).toMatch(/image\/webp/);
       expect(r.headers['cache-control']).toBe('public, max-age=300');

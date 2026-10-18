@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useSearchParams } from 'react-router';
+import { useAcopio } from '../../api/red';
 import {
   useJornadas,
   type FiltroJornadas,
@@ -16,6 +17,8 @@ import { NOMBRE_PERFIL } from './piezas';
 import { TarjetaJornada } from './TarjetaJornada';
 
 type Clave = 'lugar' | 'dia' | 'perfil';
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const DIA = /^\d{4}-\d{2}-\d{2}$/;
 interface Opcion {
   valor: string;
   texto: string;
@@ -28,9 +31,10 @@ function filtroDe(p: URLSearchParams): FiltroJornadas {
   const entidad = p.get('entidad');
   const dia = p.get('dia');
   const perfil = p.get('perfil');
-  if (acopio) f.acopio = acopio;
-  else if (entidad) f.entidad = entidad;
-  if (dia) {
+  // Como en la API: lo mal escrito se ignora en vez de dejar la pantalla en un error
+  if (acopio && UUID.test(acopio)) f.acopio = acopio;
+  else if (entidad && UUID.test(entidad)) f.entidad = entidad;
+  if (dia && DIA.test(dia)) {
     f.desde = dia;
     f.hasta = dia;
   }
@@ -52,6 +56,12 @@ export function Jornadas() {
       texto: j.lugar.nombre,
     })),
   );
+  // Un acopio sin jornadas no sale en las opciones: su nombre se pide aparte
+  const sinOpcion =
+    Boolean(filtro.acopio) && !lugares.some((o) => o.valor === `acopio:${filtro.acopio}`);
+  const acopio = useAcopio(filtro.acopio ?? '', sinOpcion && todas.isSuccess);
+  if (sinOpcion && acopio.data)
+    lugares.push({ valor: `acopio:${acopio.data.id}`, texto: acopio.data.nombre });
   const dias = unicos(
     (todas.data ?? []).map((j) => ({ valor: diaBogota(j.inicio), texto: diaSemana(j.inicio) })),
   );
@@ -64,7 +74,7 @@ export function Jornadas() {
       : null;
   const actual: Record<Clave, string | null> = {
     lugar: lugarActual,
-    dia: parametros.get('dia'),
+    dia: filtro.desde ?? null,
     perfil: filtro.perfil ?? null,
   };
   const opciones: Record<Clave, Opcion[]> = { lugar: lugares, dia: dias, perfil: perfiles };
@@ -113,6 +123,7 @@ export function Jornadas() {
               key={clave}
               type="button"
               aria-pressed={Boolean(valor)}
+              aria-haspopup="dialog"
               onClick={() => abrir(clave)}
               className={`flex min-h-[40px] shrink-0 items-center gap-1 rounded-full border px-space-md text-label-md ${
                 valor

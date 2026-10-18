@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-1, causas]
 estado: vigente
 bloque: 1
-actualizado: 2026-10-17
+actualizado: 2026-10-18
 ---
 
 # Pieza C · Verificación de entidades y causas · especificación
@@ -329,7 +329,12 @@ inventadas como si fueran de ellas.
   las entidades que ya estuvieran `VERIFICADA`, para que el despliegue no falle.
 - **C15.** Tocar una entidad abre su hoja (logotipo, verificar o quitar la verificación,
   «Editar datos»), como en la maqueta aprobada; antes abría el formulario.
-- **C22** cambia de vista dentro de `/consola/causas` (lista, causa y formulario), sin rutas
-  por causa. La imagen de una causa nueva se sube después de crearla.
+- **C22** cambia de vista dentro de `/consola/causas` (lista y formulario) y abre cada causa
+  en `/consola/causas/:id` desde el 2026-10-18 ([P-066](../../01-requerimientos/pendientes.md)).
+  La causa se busca en las listas de activas y atendidas, sin un endpoint nuevo. La imagen de
+  una causa nueva se sube después de crearla.
+- **Logotipo.** Desde el 2026-10-18, `GET /api/entidades/:id/logo` responde 404 si la entidad
+  no está verificada, y lo público dice `tieneLogo: false` en ese caso. Una causa atendida de
+  una entidad que perdió la verificación sale sin logotipo.
 - **Demo.** Los enlaces de las causas «(demo)» van al sitio principal de cada organización, no
   a una página de donaciones, para no inventar rutas.

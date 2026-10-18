@@ -5,7 +5,7 @@ import { vi } from 'vitest';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
 import { acopioDePrueba } from '../../pruebas/datos-red';
 import { jornadaDe } from '../../pruebas/datos-turnos';
-import { envolver, peticiones, responderSegun } from '../../pruebas/utilidades';
+import { conEstado, envolver, peticiones, responderSegun } from '../../pruebas/utilidades';
 import { FichaAcopio } from './FichaAcopio';
 
 const HORARIO = {
@@ -132,6 +132,30 @@ it('el bloque de voluntariado lista las próximas jornadas del acopio', async ()
   expect(within(llena).getByText('Llena')).toBeInTheDocument();
   expect(within(bloque).getByText(/Puede haber gente que llegó sin reserva/)).toBeInTheDocument();
   expect(peticiones()).toContain('GET /api/turnos/jornadas?acopio=x1');
+});
+
+it('con más de tres jornadas muestra tres y un enlace a todas', async () => {
+  responderSegun({
+    ...RESPUESTAS,
+    'GET /api/turnos/jornadas': [1, 2, 3, 4, 5].map((n) =>
+      jornadaDe({ id: `j${n}`, titulo: `Jornada ${n}` }),
+    ),
+  });
+  ficha();
+  const bloque = await screen.findByRole('region', { name: 'Voluntariado' });
+  await within(bloque).findByRole('link', { name: /Jornada 1/ });
+  expect(within(bloque).getAllByRole('link', { name: /^Jornada/ })).toHaveLength(3);
+  expect(within(bloque).getByRole('link', { name: 'Ver todas las jornadas' })).toHaveAttribute(
+    'href',
+    '/voluntariado?acopio=x1',
+  );
+});
+
+it('si fallan las jornadas, el bloque de voluntariado lo dice', async () => {
+  responderSegun({ ...RESPUESTAS, 'GET /api/turnos/jornadas': conEstado(500, {}) });
+  ficha();
+  expect(await screen.findByText('No se pudieron cargar las jornadas')).toBeInTheDocument();
+  expect(screen.queryByText('Este acopio no tiene jornadas abiertas')).not.toBeInTheDocument();
 });
 
 it('sin jornadas, el bloque de voluntariado lo dice', async () => {

@@ -1,6 +1,7 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
+import { acopioDePrueba } from '../../pruebas/datos-red';
 import { jornadaDe } from '../../pruebas/datos-turnos';
 import { envolver, peticiones, responderSegun } from '../../pruebas/utilidades';
 import { Jornadas } from './Jornadas';
@@ -95,10 +96,14 @@ it('sin jornadas lo dice', async () => {
   expect(await screen.findByText('Por ahora no hay jornadas abiertas')).toBeInTheDocument();
 });
 
+const UUID = '11111111-1111-4111-8111-111111111111';
+
 it('abierta con ?acopio= filtra por ese acopio', async () => {
-  responderSegun({ 'GET /api/turnos/jornadas': [jornadaDe()] });
-  render(envolver(<Jornadas />, '/voluntariado?acopio=a1'));
-  await waitFor(() => expect(peticiones()).toContain('GET /api/turnos/jornadas?acopio=a1'));
+  responderSegun({
+    'GET /api/turnos/jornadas': [jornadaDe({ lugar: { ...jornadaDe().lugar, id: UUID } })],
+  });
+  render(envolver(<Jornadas />, `/voluntariado?acopio=${UUID}`));
+  await waitFor(() => expect(peticiones()).toContain(`GET /api/turnos/jornadas?acopio=${UUID}`));
   expect(await screen.findByRole('button', { name: /Acopio Chapinero/ })).toHaveAttribute(
     'aria-pressed',
     'true',
@@ -118,4 +123,46 @@ it('con ajuste manual, los cupos dicen cuántos llegaron sin reserva', async () 
   });
   render(envolver(<Jornadas />, '/voluntariado'));
   expect(await screen.findByText('3 de 10 cupos reservados · 2 sin reserva')).toBeInTheDocument();
+});
+
+it('ignora un día o un acopio mal escritos en la URL', async () => {
+  responderSegun({ 'GET /api/turnos/jornadas': [jornadaDe()] });
+  render(envolver(<Jornadas />, '/voluntariado?dia=mañana&acopio=no-es-uuid'));
+  expect(await screen.findByText('Armar mercados')).toBeInTheDocument();
+  expect(peticiones().filter((p) => p.startsWith('GET /api/turnos/jornadas'))).toEqual([
+    'GET /api/turnos/jornadas',
+  ]);
+  expect(screen.getByRole('button', { name: /Lugar/ })).toHaveAttribute('aria-pressed', 'false');
+});
+
+it('el filtro de lugar dice el nombre del acopio aunque no tenga jornadas', async () => {
+  responderSegun({
+    'GET /api/turnos/jornadas': [],
+    [`GET /api/acopios/${UUID}`]: acopioDePrueba({ nombre: 'Acopio Suba' }),
+  });
+  render(envolver(<Jornadas />, `/voluntariado?acopio=${UUID}`));
+  expect(await screen.findByRole('button', { name: /Acopio Suba/ })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+});
+
+it('los filtros avisan que abren un diálogo', async () => {
+  responderSegun({ 'GET /api/turnos/jornadas': [jornadaDe()] });
+  render(envolver(<Jornadas />, '/voluntariado'));
+  await screen.findByText('Armar mercados');
+  for (const nombre of [/Lugar/, /Día/, /Perfil/]) {
+    expect(screen.getByRole('button', { name: nombre })).toHaveAttribute('aria-haspopup', 'dialog');
+  }
+});
+
+it('con el ajuste en 0 no dice «Ajustado»', async () => {
+  responderSegun({
+    'GET /api/turnos/jornadas': [
+      jornadaDe({ ajuste: 0, ajusteActualizadoEn: new Date().toISOString() }),
+    ],
+  });
+  render(envolver(<Jornadas />, '/voluntariado'));
+  await screen.findByText('Armar mercados');
+  expect(screen.queryByText(/Ajustado/)).not.toBeInTheDocument();
 });
