@@ -1,14 +1,19 @@
 %%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Segoe UI, Arial, sans-serif","fontSize":"15px","primaryColor":"#E6F4F4","primaryTextColor":"#1C1917","primaryBorderColor":"#0F6E6E","secondaryColor":"#C7E8E8","tertiaryColor":"#FAFAF9","lineColor":"#57534E","textColor":"#1C1917","mainBkg":"#E6F4F4","nodeBorder":"#0F6E6E","clusterBkg":"#F5F5F4","clusterBorder":"#A8A29E","edgeLabelBackground":"#FFFFFF","attributeBackgroundColorOdd":"#FFFFFF","attributeBackgroundColorEven":"#F5F5F4"},"er":{"useMaxWidth":false},"flowchart":{"useMaxWidth":false,"htmlLabels":true,"curve":"basis"}}}%%
 erDiagram
     ACOPIO ||--o{ JORNADA : abre
+    ENTIDAD ||--o{ JORNADA : "pide gente"
     JORNADA ||--o{ RESERVA : recibe
 
     ACOPIO {
         uuid id PK "clúster Red"
     }
+    ENTIDAD {
+        uuid id PK "clúster Red"
+    }
     JORNADA {
         uuid id PK
-        uuid acopio_id FK
+        uuid acopio_id FK "o entidad_id"
+        uuid entidad_id FK
         timestamptz inicio
         timestamptz fin
         int cupo_maximo

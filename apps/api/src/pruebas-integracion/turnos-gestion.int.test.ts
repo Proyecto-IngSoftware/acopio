@@ -236,6 +236,42 @@ describe('turnos: gestión', () => {
     expect(mal.body.codigo).toBe('JORNADA_INVALIDA');
   });
 
+  it('cambiar solo la dirección a menos de 12 horas se rechaza', async () => {
+    const entidadId = await crearEntidad();
+    await a
+      .http()
+      .post(`/api/entidades/${entidadId}/verificar`)
+      .set(como(admin))
+      .send({ confirmo: true })
+      .expect(200);
+    const lugar = {
+      acopioId: undefined,
+      entidadId,
+      direccion: 'Calle 10 # 5-20',
+      municipio: 'Bogotá',
+    };
+    const [j] = (await crear(admin, datos(lugar)).expect(201)).body;
+    const ruta = `/api/turnos/gestion/jornadas/${j.id}`;
+    const mover = (horas: number) =>
+      a.prisma.jornada.update({
+        where: { id: j.id },
+        data: {
+          inicio: new Date(AHORA + horas * 3_600_000),
+          fin: new Date(AHORA + (horas + 3) * 3_600_000),
+        },
+      });
+    await mover(11);
+    const cerca = await a
+      .http()
+      .patch(ruta)
+      .set(como(admin))
+      .send({ direccion: 'Otra calle 1' })
+      .expect(422);
+    expect(cerca.body.codigo).toBe('JORNADA_INVALIDA');
+    await mover(14);
+    await a.http().patch(ruta).set(como(admin)).send({ direccion: 'Otra calle 1' }).expect(200);
+  });
+
   it('cada quien ve las jornadas que le tocan', async () => {
     const entidadId = await crearEntidad();
     await a

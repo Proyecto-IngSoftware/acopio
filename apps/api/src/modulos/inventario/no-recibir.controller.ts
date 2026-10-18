@@ -34,7 +34,7 @@ class MarcarDto extends crearDto(
       .describe('Fecha de reapertura; sin ella, hasta que se desmarque'),
   }),
 ) {}
-class FiltroCategoriaDto extends crearDto(z.object({ categoria: z.uuid() })) {}
+class FiltroCategoriaNoRecibirDto extends crearDto(z.object({ categoria: z.uuid() })) {}
 
 const errores = {
   status: 'default' as const,
@@ -63,7 +63,7 @@ export class NoRecibirController {
   })
   @Get('no-recibir')
   @ApiOkResponse({ type: AcopioNoRecibeDto, isArray: true })
-  porCategoria(@Query() filtro: FiltroCategoriaDto) {
+  porCategoria(@Query() filtro: FiltroCategoriaNoRecibirDto) {
     return this.noRecibir.porCategoria(filtro.categoria);
   }
 

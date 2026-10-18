@@ -2,8 +2,7 @@
 erDiagram
     EMERGENCIA ||--o{ ZONA : contiene
     ENTIDAD ||--o{ ACOPIO : administra
-    ENTIDAD ||--o{ CAUSA : "publica · Bloque 6"
-    EMERGENCIA |o--o{ CAUSA : "enfoca · opcional"
+    ENTIDAD ||--o{ CAUSA : "publica · pieza C del Bloque 1"
 
     EMERGENCIA {
         uuid id PK "clúster Raíz y catálogo"
@@ -33,7 +32,7 @@ erDiagram
         text estado
     }
     CAUSA {
-        uuid id PK "Bloque 6"
+        uuid id PK "pieza C del Bloque 1"
         uuid entidad_id FK
-        uuid emergencia_id FK "opcional"
+        date cierra_el
     }
