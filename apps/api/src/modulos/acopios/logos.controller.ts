@@ -11,7 +11,9 @@ export class LogosController {
 
   @Publico()
   @Get(':id/logo')
-  @Header('Cache-Control', 'public, max-age=300')
+  // Sin max-age: un logotipo reemplazado o de una entidad que perdió la verificación no se queda
+  // en el navegador, y la URL pública no lleva versión
+  @Header('Cache-Control', 'public, no-cache')
   @ApiProduces('image/webp')
   @ApiOkResponse({ description: 'La imagen del logotipo, en WebP' })
   async leer(@Param('id', ParseUUIDPipe) id: string) {

@@ -51,16 +51,15 @@ export function CausaConsola() {
   const [editando, fijarEditando] = useState(false);
   const { causa, isPending, error, refetch } = useCausaGestion(id);
   const volver = () => void navegar('/consola/causas');
-  if (isPending) return <Esqueleto etiqueta="Cargando la causa" className="m-margin h-64" />;
+  // La ruta ya pone el margen lateral (RequiereRol con `margen`)
+  if (isPending) return <Esqueleto etiqueta="Cargando la causa" className="h-64" />;
   if (error)
     return (
-      <div className="px-margin py-space-lg">
-        <EstadoError mensaje="No se pudo cargar la causa." alReintentar={() => void refetch()} />
-      </div>
+      <EstadoError mensaje="No se pudo cargar la causa." alReintentar={() => void refetch()} />
     );
   if (!causa)
     return (
-      <div className="flex flex-col gap-space-md px-margin py-space-lg">
+      <div className="flex flex-col gap-space-md">
         <EstadoVacio titulo="No encontramos esa causa">
           Puede que el enlace esté mal escrito.
         </EstadoVacio>

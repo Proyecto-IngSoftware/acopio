@@ -23,7 +23,7 @@ class ReservarDto extends crearDto(
   }),
 ) {}
 
-const dia = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Usa el formato AAAA-MM-DD');
+const dia = z.iso.date('Usa una fecha que exista, con el formato AAAA-MM-DD');
 
 class FiltroJornadasPublicoDto extends crearDto(
   z.object({

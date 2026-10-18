@@ -16,6 +16,7 @@ import { MiReserva } from './MiReserva';
 const reservaDe = (extra: Partial<ReservaPublica> = {}): ReservaPublica => ({
   codigo: 'K7QM4XPA',
   estado: 'ACTIVA',
+  puedeCancelar: true,
   nombre: 'Ana Gómez',
   perfilDeclarado: false,
   jornadaCambiadaEn: null,
@@ -178,15 +179,9 @@ it.each([
   expect(screen.queryByText('No encontramos esa reserva')).not.toBeInTheDocument();
 });
 
-it('después del inicio ya no ofrece cancelar', async () => {
-  responderSegun({
-    [CONSULTAR]: reservaDe({
-      jornada: jornadaDe({
-        inicio: new Date(Date.now() - 3_600_000).toISOString(),
-        fin: new Date(Date.now() + 3_600_000).toISOString(),
-      }),
-    }),
-  });
+it('si la API dice que ya no se cancela, no lo ofrece aunque el navegador vea la jornada en el futuro', async () => {
+  // El reloj del navegador puede estar adelantado o atrasado: manda `puedeCancelar` (P-070)
+  responderSegun({ [CONSULTAR]: reservaDe({ puedeCancelar: false, jornada: jornadaDe() }) });
   pantalla();
   await screen.findByText('K7QM4XPA');
   expect(screen.queryByRole('button', { name: 'Cancelar reserva' })).not.toBeInTheDocument();

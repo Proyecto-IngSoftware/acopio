@@ -1003,19 +1003,9 @@ repositorio no lo tiene.
 **Estado:** ABIERTO. Versionarlo en `.claude/hooks/` cuando se sume otra persona
 
 
-### P-070 · Turnos: avisar en P8 que la jornada cambió, y los plazos que mira el navegador
-**Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la revisión final de la interfaz del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))
-**Qué:**
-- Resuelto el 2026-10-18, a pedido de Joseph: P8 avisa si la jornada cambió. `jornada` guarda
-  `movida_en` cuando cambian el inicio, el fin o el lugar. La consulta de la reserva devuelve
-  `jornadaCambiadaEn` si el cambio fue en el momento de reservar o después, y P8 muestra
-  «La jornada cambió» con la fecha del cambio.
-- P8 oculta «Cancelar reserva» después del inicio y C14 habilita la asistencia según el reloj
-  del navegador, aunque las restricciones del plan dicen que la web no calcula plazos. La API
-  valida igual. Si se prefiere, la API puede mandar `puedeCancelar` y `puedeMarcarAsistencia`.
-**Por qué:** la primera era un requisito de la especificación sin construir; Joseph pidió
-construirlo. La segunda sigue abierta: es una excepción a una regla del plan.
-**Estado:** ABIERTO
+---
+
+## Resueltos
 
 ### P-071 · Menores de la revisión del cierre del Bloque 5
 **Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la revisión de la rama `bloque-5-cierre` ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36), [#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48))
@@ -1039,11 +1029,28 @@ construirlo. La segunda sigue abierta: es una excepción a una regla del plan.
   datos ya cargados; debería ser `error && !data`
 **Por qué:** ninguno rompe un flujo de la especificación. El único importante de la revisión
 (dos ediciones a la vez dejaban mal la bitácora y repetían el aviso) se arregló en la rama.
-**Estado:** ABIERTO
+**Estado:** RESUELTO el 2026-10-18 ([#129](https://github.com/Proyecto-IngSoftware/acopio/issues/129)) →
+P7 usa el mismo patrón de UUID que la API, pasa el lugar a minúsculas e ignora un día que no
+existe. La API valida las fechas con `z.iso.date()` en turnos y en causas, así que
+`2026-13-01` y `2026-02-30` dan 400 `VALIDACION`. El logotipo sale con
+`Cache-Control: public, no-cache`. En C22 la causa editada entra a las listas en cuanto
+responde el PATCH, y sus estados de error y de causa inexistente ya no suman `px-margin`. P6
+solo muestra el error de jornadas si no hay datos cargados
 
----
-
-## Resueltos
+### P-070 · Turnos: avisar en P8 que la jornada cambió, y los plazos que mira el navegador
+**Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la revisión final de la interfaz del Bloque 5 ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36))
+**Qué:**
+- Resuelto el 2026-10-18, a pedido de Joseph: P8 avisa si la jornada cambió. `jornada` guarda
+  `movida_en` cuando cambian el inicio, el fin o el lugar. La consulta de la reserva devuelve
+  `jornadaCambiadaEn` si el cambio fue en el momento de reservar o después, y P8 muestra
+  «La jornada cambió» con la fecha del cambio.
+- P8 ocultaba «Cancelar reserva» después del inicio y C14 habilitaba la asistencia según el
+  reloj del navegador, aunque las restricciones del plan dicen que la web no calcula plazos.
+**Por qué:** la primera era un requisito de la especificación sin construir; Joseph pidió
+construirlo. La segunda sigue abierta: es una excepción a una regla del plan.
+**Estado:** RESUELTO el 2026-10-18 ([#129](https://github.com/Proyecto-IngSoftware/acopio/issues/129)) → la
+reserva trae `puedeCancelar` y la jornada de la consola trae `puedeMarcarAsistencia`, las dos
+calculadas con el reloj de la API. P8 y C14 solo leen esos campos
 
 ### P-073 · El balance de la portada nunca se conectó a la API
 **Fecha:** 2026-10-18 · **Propuesto por:** Claude, al tomar las capturas del Avance 5 ([#50](https://github.com/Proyecto-IngSoftware/acopio/issues/50))

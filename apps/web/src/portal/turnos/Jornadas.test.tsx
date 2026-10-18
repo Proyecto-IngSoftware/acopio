@@ -135,6 +135,33 @@ it('ignora un día o un acopio mal escritos en la URL', async () => {
   expect(screen.getByRole('button', { name: /Lugar/ })).toHaveAttribute('aria-pressed', 'false');
 });
 
+it('ignora un día que no existe y un UUID sin versión, como la API (P-071)', async () => {
+  responderSegun({ 'GET /api/turnos/jornadas': [jornadaDe()] });
+  render(
+    envolver(
+      <Jornadas />,
+      '/voluntariado?dia=2026-02-30&acopio=11111111-1111-1111-1111-111111111111',
+    ),
+  );
+  expect(await screen.findByText('Armar mercados')).toBeInTheDocument();
+  expect(peticiones().filter((p) => p.startsWith('GET /api/turnos/jornadas'))).toEqual([
+    'GET /api/turnos/jornadas',
+  ]);
+});
+
+it('un acopio en mayúsculas en la URL coincide con su opción (P-071)', async () => {
+  const id = 'aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee';
+  responderSegun({
+    'GET /api/turnos/jornadas': [jornadaDe({ lugar: { ...jornadaDe().lugar, id } })],
+  });
+  render(envolver(<Jornadas />, `/voluntariado?acopio=${id.toUpperCase()}`));
+  await waitFor(() => expect(peticiones()).toContain(`GET /api/turnos/jornadas?acopio=${id}`));
+  expect(await screen.findByRole('button', { name: /Acopio Chapinero/ })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+});
+
 it('el filtro de lugar dice el nombre del acopio aunque no tenga jornadas', async () => {
   responderSegun({
     'GET /api/turnos/jornadas': [],

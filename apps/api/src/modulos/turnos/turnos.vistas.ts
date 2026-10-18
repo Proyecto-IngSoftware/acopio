@@ -1,4 +1,9 @@
-import { cuposLibres, LIMITES_TURNOS, motivoSinReserva } from '@acopio/shared';
+import {
+  cuposLibres,
+  LIMITES_TURNOS,
+  motivoSinReserva,
+  puedeMarcarAsistencia,
+} from '@acopio/shared';
 import type { Prisma } from '../../generado/prisma/client';
 import type { EstadoReserva } from '../../generado/prisma/enums';
 
@@ -77,10 +82,12 @@ export function presentarJornadaPublica(j: FilaJornada, ahora: Date) {
 }
 export type JornadaPublica = ReturnType<typeof presentarJornadaPublica>;
 
-/** Lo que ve la consola: lo público más la serie y quién la creó. */
+/** Lo que ve la consola: lo público más la serie, quién la creó y si ya se marca la asistencia. */
 export function presentarJornadaGestion(j: FilaJornada, ahora: Date) {
   return {
     ...presentarJornadaPublica(j, ahora),
+    puedeMarcarAsistencia:
+      j.estado !== 'CANCELADA' && puedeMarcarAsistencia(j.inicio, j.fin, ahora),
     serieId: j.serie_id,
     creadaPor: j.creada_por,
     creadoEn: j.creado_en.toISOString(),

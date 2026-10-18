@@ -1,4 +1,3 @@
-import { puedeMarcarAsistencia } from '@acopio/shared';
 import { useState } from 'react';
 import {
   useAjustarCupos,
@@ -37,9 +36,8 @@ export function DetalleJornada({
   const inscritos = useInscritos(jornada.id);
   const vigentes = (inscritos.data ?? []).filter((i) => i.estado !== 'CANCELADA');
   const cancelada = jornada.estado === 'CANCELADA';
-  const asistenciaAbierta =
-    !cancelada &&
-    puedeMarcarAsistencia(new Date(jornada.inicio), new Date(jornada.fin), new Date());
+  // El plazo lo decide la API con su reloj (P-070)
+  const asistenciaAbierta = jornada.puedeMarcarAsistencia;
 
   return (
     <div className="flex flex-col gap-space-md">

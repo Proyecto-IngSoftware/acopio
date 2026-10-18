@@ -512,7 +512,7 @@ describe('causas', () => {
       await verificar(id).expect(200);
       const r = await a.http().get(`/api/entidades/${id}/logo`).expect(200);
       expect(r.headers['content-type']).toMatch(/image\/webp/);
-      expect(r.headers['cache-control']).toBe('public, max-age=300');
+      expect(r.headers['cache-control']).toBe('public, no-cache');
       await a.http().delete(`/api/entidades/${id}/logo`).set(como(admin)).expect(200);
       await a.http().get(`/api/entidades/${id}/logo`).expect(404);
     });

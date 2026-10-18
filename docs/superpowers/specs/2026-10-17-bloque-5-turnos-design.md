@@ -361,3 +361,9 @@ Interfaz, rama `bloque-5-interfaz` ([plan](../../05-planes/2026-10-17-bloque-5-i
   responde 409 `JORNADA_CANCELADA`. P7 ignora un `dia`, un `acopio` o una `entidad` mal escritos
   en la URL en vez de mandarlos a la API, y si el acopio del filtro no tiene jornadas busca su
   nombre aparte para el chip. P6 enlaza a todas las jornadas del acopio cuando hay más de tres.
+- Deuda del cierre, 2026-10-18 ([P-070 y P-071](../../01-requerimientos/pendientes.md),
+  [#129](https://github.com/Proyecto-IngSoftware/acopio/issues/129)). La reserva pública trae
+  `puedeCancelar` y la jornada de gestión trae `puedeMarcarAsistencia`, calculados con el reloj
+  de la API; P8 y C14 ya no miran el reloj del navegador. `dia`, `desde`, `hasta` y `fecha`
+  rechazan con 400 una fecha que no existe. P7 descarta un UUID sin versión ni variante y pasa a
+  minúsculas el que llega en mayúsculas.

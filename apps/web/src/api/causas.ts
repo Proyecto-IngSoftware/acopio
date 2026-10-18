@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, type QueryClient } from '@tanstack/react-query';
 import { api, desenvolver, type ErrorApi } from './cliente';
 import type { components } from './esquema';
 import type { Entidad } from './red';
@@ -79,14 +79,26 @@ export function useCausaGestion(id: string) {
   };
 }
 
-function useCambio<T, R>(hacer: (datos: T) => Promise<R>, claves: string[][] = [['causas']]) {
+function useCambio<T, R>(
+  hacer: (datos: T) => Promise<R>,
+  claves: string[][] = [['causas']],
+  antes?: (consultas: QueryClient, respuesta: R) => void,
+) {
   const consultas = useQueryClient();
   return useMutation<R, ErrorApi, T>({
     mutationFn: hacer,
-    onSuccess: () => {
+    onSuccess: (respuesta) => {
+      antes?.(consultas, respuesta);
       for (const c of claves) void consultas.invalidateQueries({ queryKey: c });
     },
   });
+}
+
+/** La causa editada entra a las listas de la consola sin esperar la recarga (C22 la lee de ahí). */
+function ponerEnListas(consultas: QueryClient, causa: CausaGestion) {
+  consultas.setQueriesData<CausaGestion[]>({ queryKey: ['causas', 'gestion'] }, (lista) =>
+    lista?.map((c) => (c.id === causa.id ? causa : c)),
+  );
 }
 
 const conEntidades = [['causas'], ['entidades']];
@@ -103,6 +115,8 @@ export const useEditarCausa = (id: string) =>
   useCambio(
     async (cambios: Partial<DatosCausa> & { confirmo?: boolean }) =>
       await desenvolver(api.PATCH('/api/causas/{id}', { params: { path: { id } }, body: cambios })),
+    undefined,
+    ponerEnListas,
   );
 
 const usePlazo = (id: string, que: 'renovar' | 'reactivar') =>
