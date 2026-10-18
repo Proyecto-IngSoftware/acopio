@@ -3,7 +3,7 @@ title: "Modelo de datos"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-16
+actualizado: 2026-10-17
 ---
 
 # Modelo de datos
@@ -102,17 +102,21 @@ necesidad no se puede defender.
 
 ```
 entidad
-  id · nombre · tipo · nit · sitio_web · contacto · logo_url
+  id · nombre · tipo · nit · sitio_web · contacto · logo_key?
   verificacion  SIN_VERIFICAR | VERIFICADA | RECHAZADA
-  verificada_por · verificada_en · vence_en · documento_soporte_key
+  verificada_por? · verificada_en?          sin documento ni vencimiento (P-065)
+  CHECK ((verificacion = 'VERIFICADA') = (verificada_en IS NOT NULL))
 
 causa
-  id · entidad_id · emergencia_id? · titulo · categoria_causa · descripcion · imagen_url
-  pasos jsonb   [{orden, texto}]
-  url_oficial · publicada bool
-  vigente_hasta date?          opcional · pasada, se archiva sola
-  archivada bool DEFAULT false · archivada_en timestamptz?
-  CHECK (NOT archivada OR archivada_en IS NOT NULL)
+  id · entidad_id · categoria  PERSONAS | ANIMALES | ADULTOS_MAYORES | RESCATISTAS
+  titulo · descripcion · imagen_key?
+  pasos jsonb   ["texto", …]   1 a 10
+  url_oficial   https
+  cierra_el date               obligatoria, hasta 6 meses · pasada, se archiva sola
+  publicada_en timestamptz     orden del directorio; cambia al crear, renovar y reactivar
+  archivada_en? · archivo_motivo  VENCIDA | MANUAL | ENTIDAD_SIN_VERIFICAR ? · archivada_por?
+  creada_por · creado_en · actualizado_en
+  CHECK ((archivada_en IS NULL) = (archivo_motivo IS NULL))
 
 acopio
   id · entidad_id? · nombre · direccion · lat · lng
@@ -135,12 +139,13 @@ zona
 **La emergencia es de la zona, no del acopio (2026-09-14,
 [ADR-0010](adr/ADR-0010-varias-emergencias-activas.md)).** Pueden estar activas
 varias emergencias, y un mismo acopio atiende a todas: por eso `acopio`, `entidad` y
-`movimiento` no tienen `emergencia_id`. `zona` sí lo tiene, y `causa` de forma
-opcional. La emergencia de una `RECEPCION` se conoce por su zona.
+`movimiento` no tienen `emergencia_id`. `zona` sí lo tiene; `causa` no lo lleva por ahora
+(pieza C, fuera de alcance). La emergencia de una `RECEPCION` se conoce por su zona.
 
-**`causa.archivada` no es lo mismo que despublicar.** Una causa archivada sigue
-visible, con su sello y su fecha — solo sale del espacio principal para dejarle
-lugar a lo que necesita atención ahora (2026-09-12, P-019). Ver
+**Archivar una causa no es lo mismo que despublicarla.** Una causa archivada sigue
+visible en «causas atendidas», con su sello y su fecha mientras su entidad siga
+verificada. Solo sale del espacio principal para dejarle lugar a lo que necesita
+atención ahora (2026-09-12, P-019; 2026-10-17, P-065). Ver
 [RF-RED-010](../01-requerimientos/funcionales/red.md#rf-red-010--archivar-una-causa).
 
 **Dos clases de acopio (2026-09-14, P-022).** Un acopio `OPERADO` usa Acopio:
@@ -560,7 +565,7 @@ operaciones simultáneas se ordenen.
 
 Actualizado el 2026-10-06 con el esquema construido hasta el Bloque 3
 (`prisma/schema.prisma`). Las tablas que todavía no existen se dibujan con la nota
-«Bloque N», el bloque que las construye: `causa` (Bloque 6), `remision`,
+«Bloque N», el bloque que las construye: `causa` (pieza C del Bloque 1), `remision`,
 `linea_remision`, `remision_comprobante`, `sugerencia`, `reporte_necesidad` y
 `configuracion_motor` (Bloque 4), y `jornada` y `reserva` (Bloque 5).
 
@@ -630,8 +635,7 @@ erDiagram
 erDiagram
     EMERGENCIA ||--o{ ZONA : contiene
     ENTIDAD ||--o{ ACOPIO : administra
-    ENTIDAD ||--o{ CAUSA : "publica · Bloque 6"
-    EMERGENCIA |o--o{ CAUSA : "enfoca · opcional"
+    ENTIDAD ||--o{ CAUSA : "publica · pieza C del Bloque 1"
 
     EMERGENCIA {
         uuid id PK "clúster Raíz y catálogo"
@@ -661,9 +665,9 @@ erDiagram
         text estado
     }
     CAUSA {
-        uuid id PK "Bloque 6"
+        uuid id PK "pieza C del Bloque 1"
         uuid entidad_id FK
-        uuid emergencia_id FK "opcional"
+        date cierra_el
     }
 ```
 

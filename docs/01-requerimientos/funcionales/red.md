@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: red
 bloque: 1
-actualizado: 2026-10-06
+actualizado: 2026-10-17
 ---
 
 # RF-RED · Acopios, zonas, entidades y causas
@@ -93,27 +93,41 @@ estafa es el mayor riesgo reputacional del proyecto.
 
 **Criterios de aceptación:**
 - [ ] Estado: `SIN_VERIFICAR`, `VERIFICADA`, `RECHAZADA`
-- [ ] Verificar exige adjuntar un documento soporte y dejar constancia de quién
-      verificó y cuándo
+- [ ] Verificar es una marca del Administrador, sin documento soporte. Queda
+      constancia de quién verificó y cuándo, y una entidad sin sitio web no se
+      puede verificar
+- [ ] En esta etapa solo se verifican organizaciones longevas y reconocidas en
+      todo el mundo. Antes de verificar, el Administrador lee un aviso de seguridad
+      y marca una casilla de confirmación
 - [ ] El sello se muestra con su fecha: «Verificada el 12 de agosto de 2026»
 - [ ] **Una entidad sin verificar no aparece en el carrusel de la portada ni en el
       directorio de causas**
-- [ ] La verificación caduca a los 6 meses y exige renovación
-- [ ] Si caduca sin renovarse, las causas de esa entidad se archivan solas — no se
-      despublican del todo, ver
+- [ ] La verificación no vence; el plazo de revisión vive en cada causa
+      ([RF-RED-007](#rf-red-007--gestionar-causas))
+- [ ] Quitar la verificación archiva las causas activas de la entidad, y en sus
+      causas atendidas ya no se muestran el sello ni el enlace, ver
       [RF-RED-010](#rf-red-010--archivar-una-causa)
+
+Cambiado el 2026-10-17 ([P-065](../pendientes.md)): antes pedía un documento soporte
+y vencía a los 6 meses.
 
 ### RF-RED-007 · Gestionar causas
 **Actor:** Administrador · **Prioridad:** DEBE
 
 **Criterios de aceptación:**
-- [ ] Título, categoría, entidad responsable, descripción, imagen
-- [ ] Categorías: personas, animales, adultos mayores, personas desaparecidas,
-      rescatistas
+- [ ] Título, categoría, entidad responsable, descripción e imagen opcional
+- [ ] Categorías: personas, animales, adultos mayores y rescatistas. Personas
+      desaparecidas no admite causas: sus enlaces son fijos
+      ([RF-RED-008](#rf-red-008--directorio-y-ficha-de-causa))
 - [ ] **Pasos numerados** para donar, en texto estructurado
-- [ ] URL oficial de destino
-- [ ] Duración opcional: pasada esa fecha, se archiva sola
-- [ ] Solo se publica si su entidad está `VERIFICADA`
+- [ ] URL oficial de destino, solo `https`
+- [ ] Fecha de cierre obligatoria, como máximo a 6 meses. Se puede renovar con otro
+      plazo de hasta 6 meses; pasada la fecha, se archiva sola
+- [ ] Solo se publica si su entidad está `VERIFICADA`, y publicar, renovar o
+      reactivar pide confirmar la entidad y el dominio de destino
+- [ ] El directorio muestra primero las causas más recientes, nuevas o renovadas
+
+Cambiado el 2026-10-17 ([P-065](../pendientes.md)): la duración era opcional.
 
 ### RF-RED-008 · Directorio y ficha de causa
 **Actor:** Cualquiera · **Prioridad:** DEBE
@@ -122,8 +136,8 @@ estafa es el mayor riesgo reputacional del proyecto.
 - [ ] Directorio filtrable por categoría, con la de personas desaparecidas siempre
       presente
 - [ ] La ficha muestra entidad, sello de verificación con fecha y pasos numerados
-- [ ] Filtro aparte para ver también las archivadas — «causas atendidas», visibles
-      por transparencia, fuera del listado principal
+- [ ] Pantalla aparte para las archivadas, «causas atendidas», visibles por
+      transparencia y fuera del listado principal ([P-064](../pendientes.md))
 - [ ] El botón de salida advierte que se abandona la plataforma
 - [ ] Aviso permanente: **esta plataforma no recibe dinero**
 - [ ] **La categoría de personas desaparecidas solo enlaza a UBPD, Cruz Roja y
@@ -138,17 +152,17 @@ el espacio principal quede libre para lo que sí necesita atención ahora, sin
 borrar la rendición de cuentas de lo anterior.
 
 **Criterios de aceptación:**
-- [ ] Se archiva sola al pasar su duración
-      ([RF-RED-007](#rf-red-007--gestionar-causas)), o cuando la verificación de
-      su entidad caduca sin renovarse
+- [ ] Se archiva sola al pasar su fecha de cierre
+      ([RF-RED-007](#rf-red-007--gestionar-causas)), o cuando el Administrador le
+      quita la verificación a su entidad
       ([RF-RED-006](#rf-red-006--verificar-entidad))
 - [ ] El Administrador también puede archivarla o reactivarla a mano, en
       cualquier momento
 - [ ] Una causa archivada deja de destacarse en la portada
       ([RF-HOM-003](home.md#rf-hom-003--gestionar-contenido)) y sale del
       directorio principal, pero sigue visible en el filtro de archivadas
-      ([RF-RED-008](#rf-red-008--directorio-y-ficha-de-causa)) — con su sello de
-      verificación y su fecha, igual que antes
+      ([RF-RED-008](#rf-red-008--directorio-y-ficha-de-causa)), con su sello de
+      verificación y su fecha mientras la entidad siga verificada
 - [ ] Archivar una causa no afecta a los acopios de la entidad: siguen operando
       según su propio estado ([RF-RED-001](#rf-red-001--gestionar-centros-de-acopio)),
       decisión aparte del Administrador

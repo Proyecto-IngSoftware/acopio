@@ -26,8 +26,10 @@ pasos. La ficha sola salió de editar esa pantalla. Las dos quedan guardadas.
 La ficha pública de una causa. Cubre el criterio 2 de HU-02 y RF-RED-008.
 
 - Imagen, categoría y título.
-- La entidad responsable con su logotipo, el sello con su fecha y una nota: Acopio revisó un
-  documento soporte y la verificación se renueva cada 6 meses.
+- La entidad responsable con su logotipo, el sello con su fecha y la nota «Verificada por el
+  equipo de Acopio». Stitch y la primera versión de la maqueta decían que Acopio revisó un
+  documento soporte; la [especificación de la pieza C](../../../superpowers/specs/2026-10-17-pieza-c-causas-design.md)
+  quitó el documento (C-01, P-065) y la nota cambió.
 - «Sobre la causa» y «Cómo donar», con los pasos numerados.
 - El aviso de que Acopio no recibe dinero y el botón «Ir al sitio oficial».
 - Al tocar el botón aparece una hoja inferior con «Vas a salir de Acopio» y el dominio de
