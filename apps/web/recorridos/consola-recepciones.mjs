@@ -7,7 +7,8 @@
 // Necesita el Compose con seed y seed:demo corridos, y el build servido:
 //   bun run --filter @acopio/web build && (cd apps/web && bunx vite preview)
 //   node apps/web/recorridos/consola-recepciones.mjs
-// Escribe las capturas en docs/03-diseno/stitch/ salvo con CAPTURAS=no. Sale con 1 si falla un paso.
+// Escribe las capturas en docs/03-diseno/stitch/ salvo con CAPTURAS=no.
+// Con CAPTURAS_WORD=<carpeta> guarda además cada captura del alto de la pantalla, para el Word. Sale con 1 si falla un paso.
 // window y document se usan dentro de page.evaluate, que corre en el navegador
 /* global window, document */
 import { createRequire } from 'node:module';
@@ -54,6 +55,10 @@ async function revisar(p, nombre, archivo) {
   }
   if (archivo && process.env.CAPTURAS !== 'no') {
     await p.screenshot({ path: `${DISENO}${archivo}`, fullPage: true });
+  }
+  // Para el Word de los avances: del alto de la pantalla, sin la cabecera fija en medio
+  if (archivo && process.env.CAPTURAS_WORD) {
+    await p.screenshot({ path: `${process.env.CAPTURAS_WORD}/${archivo.replaceAll('/', '-')}` });
   }
 }
 

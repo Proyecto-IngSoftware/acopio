@@ -6,6 +6,7 @@
 //   bun run --filter @acopio/web build && (cd apps/web && bunx vite preview)
 //   node apps/web/recorridos/consola-causas.mjs
 // ADMIN_CONTRASENA cambia la del administrador del seed. Escribe capturas salvo con CAPTURAS=no.
+// Con CAPTURAS_WORD=<carpeta> guarda además cada captura del alto de la pantalla, para el Word.
 /* global window, document */
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -49,6 +50,10 @@ async function revisar(p, nombre, archivo) {
   }
   if (archivo && process.env.CAPTURAS !== 'no') {
     await p.screenshot({ path: `${DISENO}${archivo}`, fullPage: true });
+  }
+  // Para el Word de los avances: del alto de la pantalla, sin la cabecera fija en medio
+  if (archivo && process.env.CAPTURAS_WORD) {
+    await p.screenshot({ path: `${process.env.CAPTURAS_WORD}/${archivo.replaceAll('/', '-')}` });
   }
 }
 
