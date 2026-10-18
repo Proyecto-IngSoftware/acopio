@@ -8,6 +8,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { crearDto } from '../../comun/dto';
+import { MAXIMO_TRAMOS } from '@acopio/shared';
 import { z } from 'zod';
 import { Publico, Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
@@ -18,13 +19,13 @@ const lat = z.number().min(-5).max(14);
 const lng = z.number().min(-82).max(-66);
 const tramo = z.object({ abre: z.string(), cierra: z.string() });
 const horario = z.object({
-  dom: z.array(tramo).max(4),
-  lun: z.array(tramo).max(4),
-  mar: z.array(tramo).max(4),
-  mie: z.array(tramo).max(4),
-  jue: z.array(tramo).max(4),
-  vie: z.array(tramo).max(4),
-  sab: z.array(tramo).max(4),
+  dom: z.array(tramo).max(MAXIMO_TRAMOS),
+  lun: z.array(tramo).max(MAXIMO_TRAMOS),
+  mar: z.array(tramo).max(MAXIMO_TRAMOS),
+  mie: z.array(tramo).max(MAXIMO_TRAMOS),
+  jue: z.array(tramo).max(MAXIMO_TRAMOS),
+  vie: z.array(tramo).max(MAXIMO_TRAMOS),
+  sab: z.array(tramo).max(MAXIMO_TRAMOS),
 });
 const texto = (max: number) => z.string().trim().min(1).max(max);
 

@@ -196,11 +196,13 @@
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary text-[20px]">local_shipping</span>
           <div>
-            <strong class="text-on-surface">Folio ${val}:</strong> Despachado en camión Col-684 hacia Chinchiná. 
+            <strong class="text-on-surface" data-folio></strong> Despachado en camión Col-684 hacia Chinchiná. 
             <span class="text-primary font-bold">En tránsito veredal</span>.
           </div>
         </div>
       `;
+      // El folio lo escribe la persona: va como texto, nunca como HTML
+      folioResult.querySelector('[data-folio]').textContent = `Folio ${val}:`;
       folioResult.classList.remove('hidden');
     });
   }

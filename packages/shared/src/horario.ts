@@ -19,6 +19,9 @@ export const HORARIO_VACIO: Horario = {
   sab: [],
 };
 
+/** Lo mismo que acepta la API (`acopios.controller.ts`). */
+export const MAXIMO_TRAMOS = 4;
+
 const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/;
 const minutos = (h: string) => Number(h.slice(0, 2)) * 60 + Number(h.slice(3, 5));
 
@@ -26,8 +29,14 @@ const minutos = (h: string) => Number(h.slice(0, 2)) * 60 + Number(h.slice(3, 5)
 export function erroresHorario(h: Horario): string[] {
   const errores: string[] = [];
   for (const dia of DIAS) {
+    const tramos = h[dia] ?? [];
+    // El horario llega del formulario o de la API: se acota antes de recorrerlo
+    if (tramos.length > MAXIMO_TRAMOS) {
+      errores.push(`${dia}: máximo ${MAXIMO_TRAMOS} tramos por día`);
+      continue;
+    }
     const validos: Tramo[] = [];
-    for (const t of h[dia] ?? []) {
+    for (const t of tramos) {
       const mala = [t.abre, t.cierra].find((x) => !HHMM.test(x));
       if (mala !== undefined) {
         errores.push(`${dia}: «${mala}» no es una hora válida (HH:MM, hasta 23:59)`);

@@ -30,7 +30,9 @@ export function conEstado(estado: number, cuerpo: unknown) {
 export function responderSegun(mapa: Record<string, unknown>): void {
   const reglas = Object.entries(mapa).map(([clave, cuerpo]) => {
     const [metodo, ruta] = clave.split(' ');
-    const patron = new RegExp(`^${ruta!.replace(/[.?]/g, '\\$&').replace(/\*/g, '[^/]+')}$`);
+    // Todo se toma literal menos `*`, que vale por un segmento de la ruta
+    const literal = (t: string) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const patron = new RegExp(`^${ruta!.split('*').map(literal).join('[^/]+')}$`);
     return { metodo, patron, cuerpo };
   });
   vi.spyOn(globalThis, 'fetch').mockImplementation((entrada) => {

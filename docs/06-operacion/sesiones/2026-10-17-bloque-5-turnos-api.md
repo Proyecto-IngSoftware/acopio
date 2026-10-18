@@ -18,10 +18,35 @@ de la API y la API completa. La interfaz queda para la siguiente sesión.
 | PR o commit | Qué trae |
 |---|---|
 | [#119](https://github.com/Proyecto-IngSoftware/acopio/pull/119), rama `bloque-5-especificacion` | Especificación aprobada; RF-TUR-001, 003 y 007 y RNF-09 reescritos; modelo de datos, vista general, cronograma e índices; [P-067](../../01-requerimientos/pendientes.md) |
-| Rama `bloque-5-api` | Plan de la API; reglas puras en `packages/shared/src/turnos.ts`; tablas `jornada` y `reserva` con sus restricciones; módulo `turnos` con DAO (gestión, reserva pública, listado, inscritos, asistencia, correos y dos tareas programadas); demo de turnos; contrato y tipos regenerados |
+| [#120](https://github.com/Proyecto-IngSoftware/acopio/pull/120), rama `bloque-5-api` | Plan de la API; reglas puras en `packages/shared/src/turnos.ts`; tablas `jornada` y `reserva` con sus restricciones; módulo `turnos` con DAO (gestión, reserva pública, listado, inscritos, asistencia, correos y dos tareas programadas); demo de turnos; contrato y tipos regenerados |
 
 Fuera del repositorio: en el Compose local se aplicó la migración, se corrió `seed:demo` y se
 reconstruyó la API. `GET /api/turnos/jornadas` devuelve las cuatro jornadas de la demo.
+
+## Alertas de CodeQL
+
+Joseph pidió corregir las diez alertas que CodeQL tenía abiertas en `main`, sin dejar ninguna
+para después. Van en la rama `seguridad-codeql`:
+
+| Alerta | Dónde | Qué se hizo |
+|---|---|---|
+| #1, #2 | `.github/workflows/ci.yml` | `permissions: contents: read` para todo el workflow; ningún job publica |
+| #3 a #6 | Cuatro HTML de Stitch en `docs/03-diseno/stitch/` | El folio que escribe la persona se pone con `textContent`, ya no dentro de `innerHTML` |
+| #7 | `docs/02-arquitectura/diagramas/build.mjs` | `esc()` escapa también comillas dobles y simples, porque se usa dentro de `aria-label` |
+| #8 | `apps/web/src/pruebas/utilidades.tsx` | `responderSegun` escapa todos los caracteres especiales menos el comodín `*`, con su prueba |
+| #9 | `apps/web/vite.config.ts` | Los datos del script de precarga escapan `<`, `>`, `&` y los separadores de línea de Unicode |
+| #10 | `packages/shared/src/horario.ts` | `erroresHorario` rechaza más de 4 tramos por día antes de recorrerlos. El límite es `MAXIMO_TRAMOS`, que ahora usa también la API |
+
+Las tres lecciones de la sesión quedaron como observaciones del task-observer (0023 a 0025):
+
+- revisar al planear y en la revisión final los patrones que marca el análisis estático;
+- declarar `permissions` en todo workflow de CI;
+- buscar el nombre de un DTO en el repositorio antes de fijarlo, para que no choque en el
+  contrato.
+
+Al regenerar los diagramas salieron cambios ajenos a esta corrección: los SVG y el diagrama de
+turnos estaban desactualizados respecto del modelo. No se incluyeron; quedan en
+[P-068](../../01-requerimientos/pendientes.md).
 
 ## Pruebas
 
@@ -32,6 +57,8 @@ reconstruyó la API. `GET /api/turnos/jornadas` devuelve las cuatro jornadas de 
   repetido con mayúsculas y espacios, la entidad que pierde la verificación y el borrado a los
   30 días.
 - Se comparó el contrato viejo con el nuevo: ninguna ruta ni esquema existente cambió.
+- Rama `seguridad-codeql`: verificación completa con código de salida 0; la web sube a 854
+  pruebas y shared suma la del límite de tramos.
 - Sin recorridos todavía: llegan con la interfaz.
 
 ## Decisiones
