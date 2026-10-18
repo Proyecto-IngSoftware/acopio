@@ -78,6 +78,57 @@ export const plantillas = {
       `Tu donación ${d.folio} no se pudo conciliar`,
       `Hola, ${d.nombre}.\n\nEl equipo del acopio revisó tu donación ${d.folio} y no la pudo conciliar.\n\nMotivo: ${d.motivo}${d.nota ? `. ${d.nota}` : ''}\n\nLo que llegó sigue en el acopio. Si crees que es un error, responde a este correo.`,
     )) satisfies Plantilla<never>,
+
+  reservaConfirmada: ((d: {
+    nombre: string;
+    titulo: string;
+    lugar: string;
+    inicio: Date;
+    queLlevar: string | null;
+    codigo: string;
+    enlace: string;
+  }) =>
+    redactar(
+      `Tu reserva en Acopio: ${d.titulo}`,
+      `Hola, ${d.nombre}.\n\nReservaste un cupo en «${d.titulo}».\n\nCuándo: ${fecha(d.inicio)}\nDónde: ${d.lugar}${d.queLlevar ? `\nQué llevar: ${d.queLlevar}` : ''}\nCódigo de reserva: ${d.codigo}\n\nGuarda este enlace: con él ves tu reserva o la cancelas. Es el único, no se puede recuperar:\n${d.enlace}\n\nSi no puedes ir, cancela para que otra persona tome el cupo. El cupo es una reserva: en el lugar puede haber gente que llegó sin reservar.`,
+    )) satisfies Plantilla<never>,
+
+  reservaCancelada: ((d: { nombre: string; titulo: string; inicio: Date }) =>
+    redactar(
+      `Cancelaste tu reserva: ${d.titulo}`,
+      `Hola, ${d.nombre}.\n\nCancelaste tu cupo en «${d.titulo}» del ${fecha(d.inicio)}. Gracias por liberarlo: otra persona puede tomarlo.`,
+    )) satisfies Plantilla<never>,
+
+  jornadaCambiada: ((d: {
+    nombre: string;
+    titulo: string;
+    lugar: string;
+    inicio: Date;
+    enlaceJornada: string;
+  }) =>
+    redactar(
+      `Cambió la jornada: ${d.titulo}`,
+      `Hola, ${d.nombre}.\n\nLa jornada «${d.titulo}» en la que tienes cupo cambió.\n\nAhora es: ${fecha(d.inicio)}\nDónde: ${d.lugar}\n\nMira el detalle aquí:\n${d.enlaceJornada}\n\nSi ya no puedes ir, cancela con el enlace de tu primer correo.`,
+    )) satisfies Plantilla<never>,
+
+  jornadaCancelada: ((d: { nombre: string; titulo: string; inicio: Date; motivo: string }) =>
+    redactar(
+      `Se canceló la jornada: ${d.titulo}`,
+      `Hola, ${d.nombre}.\n\nSe canceló la jornada «${d.titulo}» del ${fecha(d.inicio)}, en la que tenías cupo.\n\nMotivo: ${d.motivo}\n\nNo tienes que hacer nada. Gracias por querer ayudar.`,
+    )) satisfies Plantilla<never>,
+
+  recordatorioJornada: ((d: {
+    nombre: string;
+    titulo: string;
+    lugar: string;
+    inicio: Date;
+    queLlevar: string | null;
+    enlaceJornada: string;
+  }) =>
+    redactar(
+      `Mañana: ${d.titulo}`,
+      `Hola, ${d.nombre}.\n\nTe recordamos tu cupo en «${d.titulo}».\n\nCuándo: ${fecha(d.inicio)}\nDónde: ${d.lugar}${d.queLlevar ? `\nQué llevar: ${d.queLlevar}` : ''}\n\nDetalle de la jornada:\n${d.enlaceJornada}\n\nSi ya no puedes ir, cancela con el enlace de tu primer correo.`,
+    )) satisfies Plantilla<never>,
 };
 
 function fecha(d: Date): string {

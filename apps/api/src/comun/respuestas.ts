@@ -771,3 +771,84 @@ export class CausaGestionDto extends crearDto(
     creadaPor: z.uuid(),
   }),
 ) {}
+
+const lugarJornada = z.object({
+  tipo: z.enum(['ACOPIO', 'ENTIDAD']),
+  id: z.uuid(),
+  nombre: z.string(),
+  direccion: z.string(),
+  municipio: z.string(),
+  lat: z.number().nullable(),
+  lng: z.number().nullable(),
+});
+
+const jornadaPublica = z.object({
+  id: z.uuid(),
+  titulo: z.string(),
+  descripcion: z.string(),
+  queLlevar: z.string().nullable(),
+  inicio: fecha,
+  fin: fecha,
+  cierreReservas: fecha.describe('Desde aquí ya no se reserva: 12 horas antes del inicio'),
+  cupoMaximo: z.number().int(),
+  ocupados: z.number().int().describe('Cupos reservados, no personas presentes'),
+  ajuste: z.number().int().describe('Personas sin reserva que el responsable sumó a mano'),
+  ajusteActualizadoEn: fecha.nullable(),
+  libres: z.number().int(),
+  requisitos: z.object({
+    edadMinima: z.number().int().optional(),
+    ropaCerrada: z.boolean(),
+    carga: z.boolean(),
+  }),
+  perfilRequerido: z
+    .enum(['VETERINARIO', 'MEDICO', 'PSICOLOGO', 'CUIDADOR_ADULTO_MAYOR', 'CONDUCTOR_C2'])
+    .nullable(),
+  estado: z.enum(['ABIERTA', 'CERRADA', 'CANCELADA']),
+  motivoCancelacion: z.string().nullable(),
+  aceptaReservas: z.boolean(),
+  motivoSinReserva: z.enum(['CANCELADA', 'CERRADA', 'PLAZO', 'LLENA', 'ENTIDAD']).nullable(),
+  lugar: lugarJornada,
+});
+
+export class JornadaPublicaDto extends crearDto(jornadaPublica) {}
+
+export class JornadaGestionDto extends crearDto(
+  jornadaPublica.extend({ serieId: z.uuid().nullable(), creadaPor: z.uuid(), creadoEn: fecha }),
+) {}
+
+export class ReservaCreadaDto extends crearDto(
+  z.object({
+    codigo: z.string(),
+    secreto: z
+      .string()
+      .describe('Va después del # en el enlace de la reserva. Acopio no lo guarda: no se recupera'),
+    jornada: jornadaPublica,
+  }),
+) {}
+
+export class ReservaPublicaDto extends crearDto(
+  z.object({
+    codigo: z.string(),
+    estado: z.enum(['ACTIVA', 'CANCELADA', 'ASISTIO', 'NO_ASISTIO']),
+    nombre: z.string().nullable().describe('Nulo cuando ya se borraron los datos (30 días)'),
+    perfilDeclarado: z.boolean(),
+    jornada: jornadaPublica,
+  }),
+) {}
+
+const estadoReserva = z.enum(['ACTIVA', 'CANCELADA', 'ASISTIO', 'NO_ASISTIO']);
+
+export class InscritoDto extends crearDto(
+  z.object({
+    id: z.uuid(),
+    codigo: z.string(),
+    nombre: z.string().nullable(),
+    correo: z.string().nullable(),
+    telefono: z.string().nullable(),
+    perfilDeclarado: z.boolean(),
+    estado: estadoReserva,
+    creadaEn: fecha,
+  }),
+) {}
+
+export class AsistenciaDto extends crearDto(z.object({ id: z.uuid(), estado: estadoReserva })) {}

@@ -20,6 +20,7 @@ import { AlmacenamientoModule } from './modulos/almacenamiento/almacenamiento.mo
 import { MotorModule } from './modulos/motor/motor.module';
 import { NotificacionesModule } from './modulos/notificaciones/notificaciones.module';
 import { SaludModule } from './modulos/salud/salud.module';
+import { TurnosModule } from './modulos/turnos/turnos.module';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { SaludModule } from './modulos/salud/salud.module';
     InventarioModule,
     ComprobantesModule,
     MotorModule,
+    TurnosModule,
     SaludModule,
   ],
   providers: [
