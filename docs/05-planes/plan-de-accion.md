@@ -39,9 +39,9 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 
 | Fecha | Qué pasa |
 |---|---|
-| Viernes 23 de octubre | Sustentación del segundo corte |
+| Viernes 23 de octubre | Sustentación del segundo corte y Review del Sprint 2 |
+| Domingo 25 de octubre | Fin del Sprint 2 ([P-047](../01-requerimientos/pendientes.md)) |
 | Lunes 26 de octubre | Planning del Sprint 3 |
-| Domingo 1 de noviembre | Fin del Sprint 2 |
 | Domingo 15 de noviembre | Piezas D y E del Bloque 1 |
 | Viernes 20 de noviembre | Review del Sprint 3 |
 | Domingo 29 de noviembre | Congelamiento y calidad |
@@ -53,22 +53,22 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 |---|---|---|---|---|
 | 1 | Fecha de la Review del Sprint 2: el viernes 23, según la guía ([P-072](../01-requerimientos/pendientes.md)) | P-072 | 2026-10-18 | ✅ |
 | 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio. Generado y revisado renderizado; faltan la captura del tablero, la del seguimiento y subirlo | #47 | 2026-10-22 | 🟡 |
-| 3 | Lo que falta del Word de avances anteriores: seguimiento y captura del Avance 4, revisión del Avance 2 y captura del tablero | #45, #23, #21 | 2026-10-22 | ⬜ |
+| 3 | Lo que falta del Word de avances anteriores. Del Avance 4 ya está la captura del tablero; faltan el seguimiento del 9 de octubre con su captura, las filas de Brayan, Alejandra y Michael, la retrospectiva confirmada y regenerar el Word. Del Avance 2, la revisión de redacción ([P-012](../01-requerimientos/pendientes.md)) y la captura de la vista Board | #45, #23, #21 | 2026-10-22 | ⬜ |
 | 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes. La demo del servidor ya tiene el balance de la portada y las causas con imagen, y el diagrama de paquetes está al día con turnos | #47 | 2026-10-23 | ⬜ |
 | 5 | Ronda de pruebas en el servidor, por rol, con los escenarios de `escenarios-por-rol.md`; cada hallazgo entra como issue `hallazgo` | #58 | 2026-10-25 | ⬜ |
+| 6 | Cierre del Sprint 2: Review historia por historia el 23, seguimiento de la semana 12 con captura y retrospectiva con una acción para el Sprint 3 | #47 | 2026-10-25 | ⬜ |
 
 ## Sprint 3: del 26 de octubre al 22 de noviembre
 
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
-| 6 | Planning del Sprint 3 | #51 | 2026-10-26 | ⬜ |
-| 7 | Review y retrospectiva del Sprint 2 | #47 | 2026-11-01 | ⬜ |
+| 7 | Planning del Sprint 3 | #51 | 2026-10-26 | ⬜ |
 | 8 | Pieza E: importador de RedAcopio y carga por CSV, criterio 2 de HU-01. Necesita especificación, el módulo `importacion` y su prueba contra una copia del JSON | #49 | 2026-11-15 | ⬜ |
 | 9 | Pieza D: contenido del home, páginas legales y Open Graph, con su ADR. El balance de la portada (P-073) ya quedó hecho | #50 | 2026-11-15 | ⬜ |
 | 10 | Escáner probado con un teléfono y un código real contra el servidor | #40 | 2026-11-15 | ⬜ |
 | 11 | Review y retrospectiva del Sprint 3 | #51 | 2026-11-20 | ⬜ |
 | 12 | Bloque 6: bitácora enriquecida, transparencia y publicaciones. Es lo primero que se recorta | #37 | 2026-11-22 | ⬜ |
-| 13 | Deuda de las revisiones: menores de los bloques 1 a 3 y del cierre del Bloque 5 (P-070, P-071) | #43, #129 | 2026-11-22 | ⬜ |
+| 13 | Deuda de las revisiones: menores de los bloques 1 a 3 (P-034, P-038 y los del Bloque 3), del cierre del Bloque 5 (P-070, P-071) y la imagen que falta en Garage (P-058) | #43, #129 | 2026-11-22 | ⬜ |
 | 14 | P5 de Stitch con el filtro viejo | #39 | 2026-11-22 | ⬜ |
 | 15 | Íconos que se ven como texto mientras baja su fuente | #41 | 2026-11-22 | ⬜ |
 
@@ -87,7 +87,9 @@ Estos pendientes no tienen issue propio. Se revisan cuando se toca su tema:
 [P-057](../01-requerimientos/pendientes.md) (fallos de red intermitentes contra el servidor,
 dentro de #58), P-060 (el usuario recordado no vence, para después de la presentación),
 P-063 (el hook de commits fuera del repositorio, cuando se sume otra persona) y P-050 (DAO en
-el Avance 5).
+el Avance 5). P-043 (pantalla del simulador del motor) y P-044 (estado automático de una
+zona) son mejoras del motor que ninguna historia Must pide; se revisan en el Planning del
+Sprint 3.
 
 ## Hecho
 
@@ -126,3 +128,8 @@ el Avance 5).
   tabla «Hecho» suma lo terminado en el día. El resumen completo está en el
   [informe de la jornada](../06-operacion/sesiones/2026-10-18-resumen-de-la-jornada.md). Lo
   siguiente es la fila 2: las dos capturas del Avance 5 y subirlo a OneDrive.
+- 2026-10-18: el Sprint 2 cierra el domingo 25 de octubre, como dicen P-047 y el cronograma;
+  el plan y #47 todavía decían el 1 de noviembre. La Review y la retrospectiva pasan a la
+  fila 6, antes del Planning del Sprint 3. En #45 queda marcada la captura del tablero del
+  Avance 4, que estaba desde el 16 de octubre. La fila 13 nombra P-034, P-038 y P-058, y
+  P-043 y P-044 quedan en «Se vigila sin fecha».
