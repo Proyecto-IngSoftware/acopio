@@ -9,16 +9,17 @@ actualizado: 2026-10-19
 # Sesión 2026-10-19 · Plataformas en Causas y mapa por tipo
 
 Joseph vio la pieza E en el servidor y pidió tres cambios: llevar las otras plataformas a Causas,
-darles imagen real y hacer que el mapa distinga los puntos. Quedaron hechos en la rama
-`causas-plataformas`, con la maqueta aprobada.
+darles imagen real y hacer que el mapa distinga los puntos. Quedaron hechos con la maqueta
+aprobada, fusionados en #143 y desplegados en el servidor de pruebas.
 
 ## Qué cambió
 
 | PR o commit | Qué trae |
 |---|---|
-| Rama `causas-plataformas` | Plataformas al final de Causas con foto; `imagen_key` en `plataforma` y `GET /api/publico/plataformas/{id}/imagen`; fotos de 5 sitios en el seed; causas de la demo con la ilustración nueva; mapa con grupos por tipo y pines tipo píldora |
+| #143 | Plataformas al final de Causas con foto; `imagen_key` en `plataforma` y `GET /api/publico/plataformas/{id}/imagen`; fotos de 5 sitios en el seed; causas de la demo con la ilustración nueva; mapa con grupos por tipo y pines tipo píldora |
 
 Fuera del repositorio: la maqueta se publicó en <https://claude.ai/artifact/78TAzib9qjFjXkRgLJSSz3>.
+Dokploy desplegó #143 y el servidor sirve las 5 fotos de las plataformas.
 
 ## Pruebas
 
@@ -27,6 +28,7 @@ Fuera del repositorio: la maqueta se publicó en <https://claude.ai/artifact/78T
 - En local, con la API reconstruida: `referenciados.mjs` 6 de 6 (ahora revisa la sección de
   Causas y la redirección de `/plataformas`), `portal-causas.mjs` 4 de 4 y
   `validacion-general.mjs` 60 de 60.
+- Contra el servidor de pruebas, `referenciados.mjs` dio 6 de 6.
 - `seed:demo` subió las 5 fotos de las plataformas y las ilustraciones nuevas de las causas.
 
 ## Decisiones
@@ -54,4 +56,3 @@ Fuera del repositorio: la maqueta se publicó en <https://claude.ai/artifact/78T
   Emergencia daba «Page not found» y Puntos en Google Maps es un mapa de Google. Se ven con el ícono
   de su categoría. Si sus sitios vuelven, la foto se agrega en
   `apps/api/src/seed/imagenes-plataformas/` ([P-078](../../01-requerimientos/pendientes.md#p-078--fotos-de-las-plataformas-sin-sitio-disponible)).
-- Desplegar en Dokploy y revisar Causas y el mapa en el servidor tras la fusión.
