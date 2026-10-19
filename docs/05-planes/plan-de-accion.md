@@ -42,7 +42,7 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | Viernes 23 de octubre | Sustentación del segundo corte y Review del Sprint 2 |
 | Domingo 25 de octubre | Fin del Sprint 2 ([P-047](../01-requerimientos/pendientes.md)) |
 | Lunes 26 de octubre | Planning del Sprint 3 |
-| Miércoles 21 de octubre | Pieza E desplegada en el servidor de pruebas |
+| Miércoles 21 de octubre | Pieza E desplegada en el servidor de pruebas (hecho el 19) |
 | Domingo 15 de noviembre | Pieza D del Bloque 1 |
 | Viernes 20 de noviembre | Review del Sprint 3 |
 | Domingo 29 de noviembre | Congelamiento y calidad |
@@ -53,32 +53,18 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
 | 1 | Fecha de la Review del Sprint 2: el viernes 23, según la guía ([P-072](../01-requerimientos/pendientes.md)) | P-072 | 2026-10-18 | ✅ |
-| 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio. Generado y revisado renderizado; faltan la captura del tablero, la del seguimiento y subirlo | #47 | 2026-10-22 | 🟡 |
+| 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio. Generado y revisado renderizado; faltan la captura del tablero, la del seguimiento y subirlo. Las capturas del mapa y de Causas cambiaron el 19 y hay que tomarlas de nuevo con `CAPTURAS_WORD` | #47 | 2026-10-22 | 🟡 |
 | 3 | Lo que falta del Word de avances anteriores. Del Avance 4 ya está la captura del tablero; faltan el seguimiento del 9 de octubre con su captura, las filas de Brayan, Alejandra y Michael, la retrospectiva confirmada y regenerar el Word. Del Avance 2, la revisión de redacción ([P-012](../01-requerimientos/pendientes.md)) y la captura de la vista Board | #45, #23, #21 | 2026-10-22 | ⬜ |
-| 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes. La demo del servidor ya tiene el balance de la portada y las causas con imagen, y el diagrama de paquetes está al día con turnos | #47 | 2026-10-23 | ⬜ |
+| 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes. La demo ya tiene el balance de la portada, los 85 puntos de RedAcopio en el mapa, las causas con su ilustración y los logos reales de sus fundaciones, y las otras plataformas con foto al final de Causas. Falta ensayar el recorrido de la demo y regenerar el diagrama de paquetes con `importacion` | #47 | 2026-10-23 | ⬜ |
 | 5 | Ronda de pruebas en el servidor, por rol, con los escenarios de `escenarios-por-rol.md`; cada hallazgo entra como issue `hallazgo` | #58 | 2026-10-25 | ⬜ |
 | 6 | Cierre del Sprint 2: Review historia por historia el 23, seguimiento de la semana 12 con captura y retrospectiva con una acción para el Sprint 3 | #47 | 2026-10-25 | ⬜ |
-
-### Pieza E en esta semana
-
-Joseph decidió el 2026-10-18 adelantar la pieza E y mostrarla en el servidor para la
-sustentación. Si las maquetas no están aprobadas el martes 20 por la noche, se despliega solo el
-backend con los puntos ocultos en el portal, y las pantallas pasan a después del 23.
-
-| # | Qué | Issue | Fecha | Estado |
-|---|---|---|---|---|
-| 8a | Especificación: acopio referenciado, módulo `importacion`, copia guardada de RedAcopio, carga por CSV para todos los módulos (solo backend, con los endpoints listos para una pantalla futura) y lista de «otras plataformas» de `/herramientas`. La lectura programada cada 60 minutos queda escrita y apagada | #49 | 2026-10-18 | ✅ |
-| 8b | Maquetas en Stitch: marcador de referenciado en P05, ficha de referenciado en P06 y lista de otras plataformas. Las aprueba Joseph | #49 | 2026-10-19 | ✅ |
-| 8c | Backend: migración, importador con la copia guardada, carga por CSV y sus pruebas | #49 | 2026-10-20 | ✅ |
-| 8d | Pantallas P05, P06 y otras plataformas | #49 | 2026-10-21 | ✅ |
-| 8e | Despliegue en Dokploy con los puntos de RedAcopio (85 con coordenadas) y recorridos contra el servidor | #49 | 2026-10-21 | ✅ |
 
 ## Sprint 3: del 26 de octubre al 22 de noviembre
 
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
 | 7 | Planning del Sprint 3 | #51 | 2026-10-26 | ⬜ |
-| 8 | Pieza E: hecha en las filas 8a a 8e. Lo que falta de RF-RED-011 está en P-076 y los menores de la revisión en P-077 | #49 | 2026-11-15 | ✅ |
+| 8 | Pieza E, lo que queda: las cuatro casillas de RF-RED-011 (P-076), los menores de la revisión final (P-077) y las fotos de cuatro plataformas (P-078). Va antes de prender la lectura programada | P-076 | 2026-11-15 | ⬜ |
 | 9 | Pieza D: contenido del home, páginas legales y Open Graph, con su ADR. El balance de la portada (P-073) ya quedó hecho. Joseph la une a la pieza E: el Open Graph de la ficha del acopio, referenciado u operado, sigue a la ficha de la fila 8d | #50 | 2026-11-15 | ⬜ |
 | 10 | Escáner probado con un teléfono y un código real contra el servidor | #40 | 2026-11-15 | ⬜ |
 | 11 | Review y retrospectiva del Sprint 3 | #51 | 2026-11-20 | ⬜ |
@@ -110,6 +96,9 @@ Sprint 3.
 
 | Qué | Issue | Cerrado | Estado |
 |---|---|---|---|
+| Logos reales de Cruz Roja Colombiana y UNICEF Colombia en las causas de la demo (PR 145) | | 2026-10-19 | ✅ |
+| Otras plataformas al final de Causas con foto de cada sitio, causas de la demo con la ilustración nueva y mapa con grupos por tipo y pines de Stitch (PR 143 y 144) | | 2026-10-19 | ✅ |
+| Pieza E: puntos de RedAcopio como referenciados desde la copia guardada, carga por CSV para ocho formatos, P05 y P06 del referenciado, desplegada en el servidor (PR 140, 141 y 142) | #49 | 2026-10-19 | ✅ |
 | Grises piedra en fondos y bordes (ADR-0020), íconos por grupo de categoría y en la bitácora, «Lo que urge» y jornadas de la portada conectados (P-074) | | 2026-10-18 | ✅ |
 | Bloque 5, turnos: API, interfaz y cierre, con HU-03 revisada en el servidor | #36 | 2026-10-18 | ✅ |
 | Pieza C: verificación de entidades y causas, con HU-02 y HU-15 | #48 | 2026-10-18 | ✅ |
@@ -175,3 +164,9 @@ Sprint 3.
 - 2026-10-19: Joseph pidió llevar las otras plataformas a Causas, con foto real de cada sitio, y
   que el mapa distinga los puntos. Ya está: sección al final de Causas, grupos del mapa por tipo y
   pines tipo píldora de Stitch. Las cuatro plataformas sin foto quedan en P-078.
+- 2026-10-19: cierre de la jornada. La pieza E y los cambios que pidió Joseph después (plataformas
+  en Causas con foto, mapa por tipo y logos reales de las fundaciones) pasan a «Hecho». La
+  sección «Pieza E en esta semana» sale del plan porque sus filas 8a a 8e quedaron hechas, y la
+  fila 8 junta lo que queda (P-076, P-077 y P-078). Las filas 2 y 4 suman lo que falta para el 23:
+  volver a tomar las capturas del mapa y de Causas, ensayar la demo y regenerar el diagrama de
+  paquetes con `importacion`.
