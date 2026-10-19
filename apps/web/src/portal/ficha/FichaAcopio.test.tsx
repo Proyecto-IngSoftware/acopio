@@ -26,6 +26,7 @@ const ACOPIO = acopioDePrueba({
 });
 const RESPUESTAS = {
   'GET /api/acopios/x1': ACOPIO,
+  'GET /api/publico/acopios/x1/urgente': { categorias: [] },
   'GET /api/acopios/x1/no-recibir': [
     {
       categoriaId: 'c2',
@@ -101,7 +102,32 @@ it('cómo entrar, llamar y compartir por WhatsApp', async () => {
     'href',
     expect.stringContaining('https://wa.me/?text=Acopio%20Chapinero'),
   );
-  expect(screen.getByText('Llega pronto con el inventario.')).toBeInTheDocument();
+});
+
+it('«lo que urge» nombra lo que está bajo el mínimo, sin cantidades (RF-RED-003)', async () => {
+  responderSegun({
+    ...RESPUESTAS,
+    'GET /api/publico/acopios/x1/urgente': {
+      categorias: [
+        { categoriaId: 'c1', categoria: 'Agua potable' },
+        { categoriaId: 'c3', categoria: 'Arroz' },
+      ],
+    },
+  });
+  ficha();
+  const bloque = await screen.findByRole('region', { name: 'Lo que urge' });
+  expect(await within(bloque).findByText('Agua potable')).toBeInTheDocument();
+  expect(within(bloque).getByText('Arroz')).toBeInTheDocument();
+  expect(within(bloque).getByText('Necesitamos:')).toBeInTheDocument();
+});
+
+it('sin nada bajo el mínimo, «lo que urge» lo dice', async () => {
+  responderSegun(RESPUESTAS);
+  ficha();
+  const bloque = await screen.findByRole('region', { name: 'Lo que urge' });
+  expect(
+    await within(bloque).findByText('Por ahora no le falta nada por debajo de su mínimo'),
+  ).toBeInTheDocument();
 });
 
 it('el bloque de voluntariado lista las próximas jornadas del acopio', async () => {

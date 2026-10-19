@@ -82,4 +82,21 @@ describe('balance público', () => {
     const b = await balance();
     expect(b.noTraigan.find((f) => f.categoriaId === sobra)).toMatchObject({ acopios: 1 });
   });
+
+  it('«lo que urge» de un acopio nombra lo que está bajo el mínimo, sin cantidades', async () => {
+    const r = await a.http().get(`/api/publico/acopios/${ACOPIO_A}/urgente`).expect(200);
+    const ids = (r.body.categorias as { categoriaId: string }[]).map((c) => c.categoriaId);
+    expect(ids).toContain(falta);
+    expect(ids).not.toContain(sobra);
+    expect(JSON.stringify(r.body)).not.toMatch(/cantidad|minimo|maximo/);
+  });
+
+  it('«lo que urge» de un acopio que no existe da la lista vacía', async () => {
+    const r = await a
+      .http()
+      .get('/api/publico/acopios/aaaaaaaa-bbbb-4ccc-8ddd-eeeeeeeeeeee/urgente')
+      .expect(200);
+    expect(r.body).toEqual({ categorias: [] });
+    await a.http().get('/api/publico/acopios/no-es-uuid/urgente').expect(400);
+  });
 });

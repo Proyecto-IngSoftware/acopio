@@ -18,6 +18,7 @@ import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
 import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
+import { IconoGrupo } from '../../componentes/IconoGrupo';
 import { FormularioError } from './FormularioError';
 
 const GRUPO_ORDEN = Object.keys(GRUPOS) as Grupo[];
@@ -102,7 +103,11 @@ export function PestanaCategorias() {
       {porGrupo.map(({ grupo: g, categorias }) => (
         <section key={g} aria-labelledby={`grupo-${g}`} className="flex flex-col gap-space-xs">
           <div className="flex items-center justify-between px-space-xs">
-            <h2 id={`grupo-${g}`} className="text-label-caps tracking-wider text-primary uppercase">
+            <h2
+              id={`grupo-${g}`}
+              className="flex items-center gap-space-xs text-label-caps tracking-wider text-primary uppercase"
+            >
+              <IconoGrupo grupo={g} tamano="sm" />
               {GRUPOS[g]}
             </h2>
             <span className="text-body-sm text-on-surface-variant">

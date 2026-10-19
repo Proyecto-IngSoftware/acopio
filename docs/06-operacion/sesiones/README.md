@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-10-18 | [2026-10-18-estetica-piedra](2026-10-18-estetica-piedra.md) | Grises piedra, auditoría de las pantallas e íconos |
 | 2026-10-18 | [2026-10-18-deuda-turnos](2026-10-18-deuda-turnos.md) | Deuda de turnos (#129) y arranque de la pieza E |
 | 2026-10-18 | [2026-10-18-plan-sprint-2](2026-10-18-plan-sprint-2.md) | Fechas del Sprint 2 y casillas de #45 y #47 |
 | 2026-10-18 | [2026-10-18-resumen-de-la-jornada](2026-10-18-resumen-de-la-jornada.md) | Resumen de la jornada: PR #128 a #134 |

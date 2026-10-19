@@ -14,6 +14,7 @@ import { Boton } from '../../componentes/Boton';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
+import { IconoGrupo } from '../../componentes/IconoGrupo';
 import { EstadoError } from '../../componentes/EstadoError';
 import { TarjetaNoTraigan } from '../../componentes/TarjetaNoTraigan';
 import { haceCuanto } from '../../formato';
@@ -110,8 +111,9 @@ export function NoRecibir() {
           >
             <h2
               id={`grupo-${grupo}`}
-              className="text-label-caps tracking-wider text-on-surface-variant uppercase"
+              className="flex items-center gap-space-xs text-label-caps tracking-wider text-on-surface-variant uppercase"
             >
+              <IconoGrupo grupo={grupo} tamano="sm" />
               {GRUPOS[grupo]}
             </h2>
             <ul className="flex flex-col divide-y divide-outline-variant overflow-hidden rounded-xl border border-outline-variant bg-surface-container-lowest">

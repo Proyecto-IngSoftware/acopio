@@ -3,7 +3,7 @@ title: "Sistema de diseño"
 type: diseno
 tags: [diseno]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-18
 ---
 
 # Sistema de diseño
@@ -36,7 +36,9 @@ Ninguna decisión visual de este documento es estética. Todas salen de esa fras
 
 La paleta sale del tema «Acopio Field Command» del proyecto de Stitch
 ([ADR-0013](../02-arquitectura/adr/ADR-0013-estetica-desde-stitch.md)). Los tokens
-llevan los mismos nombres que en Stitch.
+llevan los mismos nombres que en Stitch. Desde el 2026-10-18 los fondos y bordes son grises
+piedra en vez del tinte azul violeta de Stitch
+([ADR-0020](../02-arquitectura/adr/ADR-0020-grises-piedra.md)); la marca y el texto no cambian.
 
 ### La regla que manda sobre todas
 
@@ -59,18 +61,18 @@ ajustado por ADR-0013.
 --surface-tint:              #2a685d;
 
 /* Superficies y texto */
---background:                #faf8ff;
---surface:                   #faf8ff;
+--background:                #fafaf9;  /* piedra, ADR-0020 */
+--surface:                   #fafaf9;
 --surface-container-lowest:  #ffffff;  /* tarjetas */
---surface-container-low:     #f2f3ff;  /* filas dentro de una tarjeta */
---surface-container:         #eaedff;
---surface-container-high:    #e2e7ff;  /* avisos, botones terciarios */
---surface-container-highest: #dae2fd;
+--surface-container-low:     #f5f5f4;  /* filas dentro de una tarjeta */
+--surface-container:         #f5f5f4;
+--surface-container-high:    #e7e5e4;  /* rellenos fuertes, botones terciarios */
+--surface-container-highest: #d6d3d1;
 --on-surface:                #131b2e;  /* texto principal */
 --on-surface-variant:        #3f4946;  /* texto secundario */
 --outline:                   #707976;
---outline-variant:           #bfc9c5;  /* bordes */
---inverse-surface:           #283044;
+--outline-variant:           #d6d3d1;  /* bordes, visibles al sol */
+--inverse-surface:           #292524;
 
 /* Detente: no traer y acciones destructivas */
 --secondary:                 #b51d04;

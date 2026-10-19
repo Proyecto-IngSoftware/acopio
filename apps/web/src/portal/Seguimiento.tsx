@@ -133,7 +133,17 @@ export function Seguimiento() {
     <section className="flex flex-col gap-space-md px-margin py-space-lg">
       <h1 className="text-headline-lg-mobile text-on-surface">Seguir una donación</h1>
       <Buscador folio={folio ?? ''} />
-      {folio && <Resultado key={folio} folio={folio} />}
+      {folio ? (
+        <Resultado key={folio} folio={folio} />
+      ) : (
+        <p className="flex items-start gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md text-body-sm text-on-surface-variant">
+          <Icono nombre="tag" className="text-[22px] text-primary-container" />
+          <span>
+            El folio está en el comprobante que recibiste al preparar la donación, por ejemplo
+            ACO-2026-7KQ4M. Con él ves en qué va, sin mostrar quién donó.
+          </span>
+        </p>
+      )}
     </section>
   );
 }

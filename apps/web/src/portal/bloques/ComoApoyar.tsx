@@ -2,8 +2,8 @@ import { Link } from 'react-router';
 import { Icono } from '../../componentes/Icono';
 
 const CANALES = [
-  { a: '/mapa', texto: 'Donar Productos', icono: 'package_2' },
-  { a: '/causas', texto: 'Donar a una Causa', icono: 'assured_workload' },
+  { a: '/mapa', texto: 'Donar productos', icono: 'package_2' },
+  { a: '/causas', texto: 'Donar a una causa', icono: 'assured_workload' },
   { a: '/voluntariado', texto: 'Ser voluntario', icono: 'group_add' },
 ];
 

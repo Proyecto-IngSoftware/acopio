@@ -110,6 +110,7 @@ Sprint 3.
 
 | Qué | Issue | Cerrado | Estado |
 |---|---|---|---|
+| Grises piedra en fondos y bordes (ADR-0020), íconos por grupo de categoría y en la bitácora, «Lo que urge» y jornadas de la portada conectados (P-074) | | 2026-10-18 | ✅ |
 | Bloque 5, turnos: API, interfaz y cierre, con HU-03 revisada en el servidor | #36 | 2026-10-18 | ✅ |
 | Pieza C: verificación de entidades y causas, con HU-02 y HU-15 | #48 | 2026-10-18 | ✅ |
 | Bloque 4, motor: API y los tres ciclos de interfaz | #35 | 2026-10-18 | ✅ |
@@ -159,3 +160,7 @@ Sprint 3.
   lectura programada queda apagada. La pieza D queda unida a la E por el Open Graph de la ficha.
   No sale ninguna fila: Joseph prefiere sesiones largas para avanzar más cada día, y las fechas
   de lo demás pueden adelantarse.
+- 2026-10-18: la app pasa a grises piedra en fondos y bordes (ADR-0020), con el verde bosque, el
+  texto y los radios de antes. La auditoría de las 25 pantallas encontró dos bloques sin conectar
+  y 22 acciones de la bitácora sin frase (P-074, resuelto) y dos pruebas que se cortan con carga
+  (P-075, abierto). Las capturas del Avance 5 se vuelven a tomar con la paleta nueva (fila 2).

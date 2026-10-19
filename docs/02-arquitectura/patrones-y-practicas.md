@@ -3,7 +3,7 @@ title: "Patrones y prácticas de código"
 type: arquitectura
 tags: [arquitectura, patrones, buenas-practicas]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-18
 ---
 
 # Patrones y prácticas de código
@@ -143,6 +143,7 @@ Servicios de otros módulos que se usan desde cualquier parte: `BitacoraService.
 | `componentes/EtiquetaSemaforo.tsx` | `EtiquetaSemaforo`, `ORDEN_URGENCIA` |
 | `componentes/Hoja.tsx` | `Hoja`, panel inferior |
 | `componentes/Icono.tsx` | `Icono` de Material Symbols |
+| `componentes/IconoGrupo.tsx` | `IconoGrupo`: el ícono del grupo de una categoría en el recuadro menta; el mapa es `ICONO_GRUPO` de `api/catalogo.ts` (ADR-0020) |
 | `componentes/Menu.tsx` | `SeccionMenu`, `FilaMenu` |
 | `componentes/Pildora.tsx`, `componentes/Segmentado.tsx` | `Pildora`, `Segmentado` |
 | `componentes/Qr.tsx` | `Qr`, un código QR como imagen SVG a partir de un texto |

@@ -3,7 +3,7 @@ title: "Registro de decisiones de arquitectura"
 type: moc
 tags: [moc, adr]
 estado: vigente
-actualizado: 2026-10-09
+actualizado: 2026-10-18
 ---
 
 # Registro de decisiones de arquitectura
@@ -38,6 +38,7 @@ documento que se reescribe hasta perder la historia.
 | [0017](ADR-0017-factura-servida-por-la-api.md) | La API sirve la foto de la factura y Garage no se expone | aceptada |
 | [0018](ADR-0018-movimientos-de-zona.md) | Las zonas reciben en el mismo libro de movimientos que los acopios | aceptada |
 | [0019](ADR-0019-dao-sobre-prisma.md) | El acceso a datos pasa por DAO sobre Prisma | aceptada |
+| [0020](ADR-0020-grises-piedra.md) | Grises piedra en los fondos y bordes, e íconos por grupo de categoría | aceptada |
 
 ## Cuándo escribir una
 

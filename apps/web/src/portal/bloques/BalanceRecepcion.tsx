@@ -33,7 +33,7 @@ export function BalanceRecepcion() {
       <div className="flex items-center gap-space-xs">
         <Icono nombre="swap_vert" className="text-[22px] text-primary" />
         <h2 id="balance-titulo" className="text-label-md font-bold text-on-surface">
-          Balance de Recepción
+          Balance de recepción
         </h2>
       </div>
       <div role="tablist" className="grid grid-cols-2 gap-1 rounded-xl bg-surface-container p-1">

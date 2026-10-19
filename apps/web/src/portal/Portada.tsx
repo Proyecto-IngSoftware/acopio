@@ -5,6 +5,7 @@ import { EstadoError } from '../componentes/EstadoError';
 import { AvisoSinDinero } from './bloques/AvisoSinDinero';
 import { BalanceRecepcion } from './bloques/BalanceRecepcion';
 import { ComoApoyar } from './bloques/ComoApoyar';
+import { JornadasPortada } from './bloques/JornadasPortada';
 import { RastrearFolio } from './bloques/RastrearFolio';
 import { SeccionVacia } from './bloques/SeccionVacia';
 import { SelectorEmergencia } from './bloques/SelectorEmergencia';
@@ -60,10 +61,8 @@ export function Portada() {
         <RastrearFolio />
         {elegida && (
           <>
-            <SeccionVacia id="jornadas" titulo="Jornadas de Voluntariado">
-              Todavía no hay jornadas publicadas. Aquí podrás reservar un cupo.
-            </SeccionVacia>
-            <SeccionVacia id="reporte" titulo="Reporte en Terreno">
+            <JornadasPortada />
+            <SeccionVacia id="reporte" titulo="Reporte en terreno" icono="campaign">
               Todavía no hay reportes. Aquí verás las novedades de las entidades que atienden la
               emergencia.
             </SeccionVacia>
