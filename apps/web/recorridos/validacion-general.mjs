@@ -109,7 +109,8 @@ for (const [ruta, titulo] of [
   ['/privacidad', 'Cómo usamos tus datos'],
   ['/mas', 'Más'],
   ['/donador', 'Tu cuenta de Donador'],
-  ['/causas', 'Próximamente'],
+  ['/causas', 'Causas'],
+  ['/plataformas', 'Otras plataformas que ayudan'],
 ]) {
   await paso(`público ${ruta}`, () => visitar(publico, ruta, { titulo }));
 }

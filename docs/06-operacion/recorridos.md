@@ -115,7 +115,7 @@ Con la demo recién sembrada, conviene correr `consola-motor.mjs` antes que
 
 | Script | Cubre | Pasos | Captura en |
 |---|---|--:|---|
-| `validacion-general.mjs` | Cada pantalla con cada rol, accesos negados, invitar y activar, salida, conteo y bitácora | 59 | No guarda capturas |
+| `validacion-general.mjs` | Cada pantalla con cada rol, accesos negados, invitar y activar, salida, conteo y bitácora | 60 | No guarda capturas |
 | `donador.mjs` | El Donador de punta a punta (Bloque 3, ciclo 1) | 8 | P09, P10, P12 y P13 |
 | `consola-comprobantes.mjs` | Recibir, conciliar, rechazar y vincular (Bloque 3, ciclo 2) | 10 | C04-recibir-folio, C08-comprobantes y C08-conciliacion |
 | `consola-motor.mjs` | El motor para el Administrador: ficha de zona, recálculo, aprobar con la cantidad editada, descartar con motivo, pesos con vista previa e informe de descartes (Bloque 4, interfaz ciclo 1) | 9 | C10-ficha-zona y C11-motor |
@@ -193,6 +193,24 @@ Si se corren varios seguidos, el límite de 5 inicios de sesión por minuto hace
 entra después; hay que esperar un minuto entre uno y otro.
 
 ## Últimos resultados
+
+**2026-10-19, en local, con la pieza E** (rama `pieza-e`, API reconstruida con
+`servicios:todo`, `CAPTURAS=no` salvo en `referenciados.mjs`):
+
+| Script | Resultado |
+|---|---|
+| `referenciados.mjs` | 6 de 6 |
+| `validacion-general.mjs` | 60 de 60. La primera corrida dio 58 de 59: esperaba «Próximamente» en `/causas`, que existe desde la pieza C. Ahora espera «Causas» y suma `/plataformas` |
+| `donador.mjs` | 8 de 8 |
+| `consola-comprobantes.mjs` | 10 de 10 |
+| `consola-motor.mjs` | 9 de 9 |
+| `consola-remisiones.mjs` | 7 de 7 |
+| `consola-recepciones.mjs` | 7 de 7 |
+| `sin-conexion.mjs` | 12 de 12 |
+| `portal-causas.mjs` | 4 de 4 |
+| `consola-causas.mjs` | 6 de 6 |
+| `portal-turnos.mjs` | 6 de 6 |
+| `consola-turnos.mjs` | 7 de 7. La primera corrida falló al entrar, por el límite de inicios de sesión |
 
 **2026-10-18, en local, con el balance de la portada y las imágenes de la demo** (rama
 `portada-y-capturas`, API reconstruida con `servicios:todo`, `CAPTURAS_WORD` activo):
