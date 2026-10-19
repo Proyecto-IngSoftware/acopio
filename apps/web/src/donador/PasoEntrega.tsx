@@ -155,7 +155,10 @@ export function PasoEntrega({ lineas, acopioId, factura, alElegir, alFactura, al
                 {s.noRecibe.length > 0 && (
                   <span className="flex items-center gap-space-2xs text-body-sm text-on-surface-variant">
                     <Icono nombre="block" className="text-[18px]" />
-                    No está recibiendo {s.noRecibe.join(', ')}
+                    No está recibiendo{' '}
+                    {s.noRecibe
+                      .map((id) => lineas.find((l) => l.categoriaId === id)?.nombre ?? id)
+                      .join(', ')}
                   </span>
                 )}
               </span>

@@ -114,6 +114,15 @@ it('las marcas de un acopio dicen la categoría', () => {
   );
 });
 
+it('el reporte de una zona distingue lo que falta de lo que se resolvió', () => {
+  expect(frase(registro('reporte.necesidad', { categoria: 'Sal', resuelta: false }))).toBe(
+    'Reportó necesidad de Sal',
+  );
+  expect(frase(registro('reporte.necesidad', { categoria: 'Sal', resuelta: true }))).toBe(
+    'Marcó Sal como resuelta',
+  );
+});
+
 it('las acciones del motor y de las remisiones se leen en español, no como código', () => {
   const acciones = [
     'motor.configuracion',

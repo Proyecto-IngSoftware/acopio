@@ -197,6 +197,8 @@ export function frase(r: RegistroBitacora): string {
     case 'necesidad.manual':
       return categoria ? `Corrigió la necesidad de ${categoria}` : 'Corrigió una necesidad';
     case 'reporte.necesidad':
+      if (despues?.resuelta === true)
+        return categoria ? `Marcó ${categoria} como resuelta` : 'Marcó una necesidad como resuelta';
       return categoria ? `Reportó necesidad de ${categoria}` : 'Reportó una necesidad';
     case 'sugerencia.aprobada':
       return 'Aprobó una sugerencia del motor';

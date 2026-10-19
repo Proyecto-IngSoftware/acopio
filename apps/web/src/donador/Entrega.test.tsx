@@ -38,7 +38,8 @@ const SUGERENCIAS = [
     direccion: 'Usaquén',
     abiertoAhora: false,
     distanciaKm: [],
-    noRecibe: ['Agua potable'],
+    // La API manda los id de las categorías, no sus nombres
+    noRecibe: [ARROZ.id],
     lineasAceptadas: 0,
   },
 ];
@@ -107,7 +108,7 @@ describe('P9, paso 2: dónde entregar', () => {
     expect(screen.getByText('1,2 km')).toBeInTheDocument();
     expect(screen.getByText('Recibe 1 de 1 producto')).toBeInTheDocument();
     expect(screen.getByText(/Usaquén · cerrado ahora/)).toBeInTheDocument();
-    expect(screen.getByText('No está recibiendo Agua potable')).toBeInTheDocument();
+    expect(screen.getByText('No está recibiendo Arroz')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Ver todos en el mapa/ })).toHaveAttribute(
       'href',
       '/mapa',
