@@ -4,7 +4,7 @@
   "private": true,
   "description": "API REST de Acopio",
   "scripts": {
-    "build": "bun run shared && tsc -p tsconfig.build.json && cp -r src/modulos/importacion/fuentes/redacopio/copia dist/modulos/importacion/fuentes/redacopio/ && cp -r src/seed/imagenes-plataformas dist/seed/",
+    "build": "bun run shared && tsc -p tsconfig.build.json && cp -r src/modulos/importacion/fuentes/redacopio/copia dist/modulos/importacion/fuentes/redacopio/ && cp -r src/seed/imagenes-plataformas src/seed/logos-entidades dist/seed/",
     "start": "node dist/main.js",
     "start:dev": "bun run shared && prisma generate >/dev/null && node --watch -r @swc-node/register src/main.ts",
     "typecheck": "bun run shared && prisma generate >/dev/null && tsc -p tsconfig.json --noEmit",

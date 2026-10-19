@@ -80,4 +80,21 @@ describe('imágenes de la demo', () => {
       (await a.prisma.plataforma.findUniqueOrThrow({ where: { id: conFoto.id } })).imagen_key,
     ).toBe(clave);
   });
+
+  it('las entidades de la demo con logo guardado para su sitio lo reciben en lugar del abstracto', async () => {
+    const causas = await demo();
+    const cruz = causas.find((c) => c.entidad.nombre === 'Cruz Roja Colombiana')!.entidad;
+    await a.prisma.entidad.update({
+      where: { id: cruz.id },
+      data: { logo_key: `entidades/${cruz.id}/viejo.webp` },
+    });
+    await sembrarImagenesDemo(a.prisma, a.app.get(AlmacenamientoService));
+    const despues = await a.prisma.entidad.findUniqueOrThrow({ where: { id: cruz.id } });
+    expect(despues.logo_key).toContain('/logo-real/');
+    const antes = despues.logo_key;
+    await sembrarImagenesDemo(a.prisma, a.app.get(AlmacenamientoService));
+    expect((await a.prisma.entidad.findUniqueOrThrow({ where: { id: cruz.id } })).logo_key).toBe(
+      antes,
+    );
+  });
 });
