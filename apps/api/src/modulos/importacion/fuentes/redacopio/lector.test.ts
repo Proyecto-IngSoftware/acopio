@@ -65,3 +65,15 @@ describe('lector de RedAcopio', () => {
     );
   });
 });
+
+describe('texto de las tarjetas de herramientas', () => {
+  it('una etiqueta escrita como entidades no vuelve a ser HTML', () => {
+    const html =
+      '<div class="tool-card"><div class="tool-tag">Mapa</div>' +
+      '<h3 class="tool-name">Uno &lt;script&gt;alert(1)&lt;/script&gt;</h3>' +
+      '<p class="tool-desc">Ayuda &amp; más</p><a href="https://uno.test/">Ir</a></div>';
+    const [p] = leerHerramientas(html);
+    expect(p!.nombre).not.toMatch(/[<>]/);
+    expect(p!.descripcion).toBe('Ayuda & más');
+  });
+});

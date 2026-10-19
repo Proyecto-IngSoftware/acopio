@@ -103,10 +103,12 @@ const ENTIDADES: Record<string, string> = {
   '&#x27;': "'",
   '&#39;': "'",
 };
+// Sin < ni > al final: «&lt;script&gt;» decodificado volvería a parecer una etiqueta
 const texto = (html: string) =>
   html
     .replace(/<[^>]+>/g, '')
     .replace(/&(amp|lt|gt|quot|#x27|#39);/g, (e) => ENTIDADES[e] ?? e)
+    .replace(/[<>]/g, '')
     .trim();
 
 /** Las tarjetas de `/herramientas`: categoría, nombre, descripción y el enlace «Ir al sitio». */
