@@ -43,28 +43,36 @@ export class CausasService {
   ) {}
 
   async crear(admin: UsuarioAutenticado, datos: DatosCausa, confirmo: boolean) {
+    return this.transacciones.ejecutar((tx) => this.crearEnTransaccion(tx, admin, datos, confirmo));
+  }
+
+  /** La creación en la transacción de quien llama: la usa también la carga por CSV (pieza E). */
+  async crearEnTransaccion(
+    tx: ClienteBd,
+    admin: UsuarioAutenticado,
+    datos: DatosCausa,
+    confirmo: boolean,
+  ) {
     exigirConfirmacion(confirmo);
     exigirUrl(datos.urlOficial);
     const ahora = this.ahora();
     exigirCierre(datos.cierraEl, hoyBogota(ahora));
-    return this.transacciones.ejecutar(async (tx) => {
-      await this.exigirEntidadVerificada(datos.entidadId, tx);
-      const c = await this.dao.crear(
-        {
-          entidad_id: datos.entidadId,
-          categoria: datos.categoria,
-          titulo: datos.titulo.trim(),
-          descripcion: datos.descripcion.trim(),
-          pasos: datos.pasos.map((p) => p.trim()),
-          url_oficial: datos.urlOficial,
-          cierra_el: comoFecha(datos.cierraEl),
-          publicada_en: ahora,
-          creada_por: admin.id,
-        },
-        tx,
-      );
-      return this.registrar(tx, admin, 'causa.creada', null, c);
-    });
+    await this.exigirEntidadVerificada(datos.entidadId, tx);
+    const c = await this.dao.crear(
+      {
+        entidad_id: datos.entidadId,
+        categoria: datos.categoria,
+        titulo: datos.titulo.trim(),
+        descripcion: datos.descripcion.trim(),
+        pasos: datos.pasos.map((p) => p.trim()),
+        url_oficial: datos.urlOficial,
+        cierra_el: comoFecha(datos.cierraEl),
+        publicada_en: ahora,
+        creada_por: admin.id,
+      },
+      tx,
+    );
+    return this.registrar(tx, admin, 'causa.creada', null, c);
   }
 
   /**

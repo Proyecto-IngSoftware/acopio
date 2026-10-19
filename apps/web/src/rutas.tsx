@@ -111,6 +111,9 @@ const Preparar = lazy(() => import('./donador/Preparar').then((m) => ({ default:
 const Seguimiento = lazy(() =>
   import('./portal/Seguimiento').then((m) => ({ default: m.Seguimiento })),
 );
+const Plataformas = lazy(() =>
+  import('./portal/plataformas/Plataformas').then((m) => ({ default: m.Plataformas })),
+);
 const Privacidad = lazy(() =>
   import('./portal/Privacidad').then((m) => ({ default: m.Privacidad })),
 );
@@ -178,6 +181,7 @@ export function Rutas() {
         <Route path="seguimiento" element={<Seguimiento />} />
         <Route path="seguimiento/:folio" element={<Seguimiento />} />
         <Route path="privacidad" element={<Privacidad />} />
+        <Route path="plataformas" element={<Plataformas />} />
         <Route
           path="consola/bitacora"
           element={

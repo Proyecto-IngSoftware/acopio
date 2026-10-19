@@ -8,3 +8,6 @@ coverage/
 apps/api/src/generado/
 apps/web/src/api/esquema.d.ts
 *.md
+
+# Copias tal cual de fuentes externas (pieza E)
+apps/api/src/modulos/importacion/fuentes/*/copia/

@@ -43,7 +43,7 @@ export function Entidades() {
 
   const porEntidad = new Map<string, number>();
   for (const a of acopios ?? [])
-    porEntidad.set(a.entidad.id, (porEntidad.get(a.entidad.id) ?? 0) + 1);
+    if (a.entidad) porEntidad.set(a.entidad.id, (porEntidad.get(a.entidad.id) ?? 0) + 1);
   const texto = q.trim().toLocaleLowerCase('es-CO');
   const visibles = (data ?? []).filter((e) => e.nombre.toLocaleLowerCase('es-CO').includes(texto));
 

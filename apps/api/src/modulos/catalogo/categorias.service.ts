@@ -1,11 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import type { ClienteBd } from '../../comun/prisma/cliente-bd';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import { restriccionUnicaViolada } from '../../comun/prisma/errores-prisma';
 import type { Prisma } from '../../generado/prisma/client';
 import type { GrupoCategoria, UnidadBase } from '../../generado/prisma/enums';
 import { BitacoraService } from '../auditoria/bitacora.service';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
+import { CategoriaDao } from './dao/categoria.dao';
 
 export interface DatosCategoria {
   nombre: string;
@@ -30,15 +32,13 @@ export interface ResultadoBusqueda {
 @Injectable()
 export class CategoriasService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly dao: CategoriaDao,
+    private readonly transacciones: Transacciones,
     private readonly bitacora: BitacoraService,
   ) {}
 
   async listar(filtro: { grupo?: GrupoCategoria; incluirArchivadas?: boolean }) {
-    const filas = await this.prisma.categoria.findMany({
-      where: { grupo: filtro.grupo, ...(filtro.incluirArchivadas ? {} : { archivada: false }) },
-      orderBy: [{ grupo: 'asc' }, { nombre: 'asc' }],
-    });
+    const filas = await this.dao.listar(filtro);
     return filas.map(presentar);
   }
 
@@ -53,27 +53,7 @@ export class CategoriasService {
   async buscar(q: string, limite = 10): Promise<ResultadoBusqueda[]> {
     const consulta = q.trim();
     if (!consulta) return [];
-    const filas = await this.prisma.$queryRaw<
-      {
-        id: string;
-        nombre: string;
-        grupo: GrupoCategoria;
-        unidad_base: UnidadBase;
-        perecedero: boolean;
-        puntaje: number;
-      }[]
-    >`
-      WITH c AS (SELECT acopio_sin_tildes(${consulta}) AS q)
-      SELECT cat.id, cat.nombre, cat.grupo, cat.unidad_base, cat.perecedero,
-             GREATEST(
-               word_similarity(c.q, acopio_sin_tildes(cat.nombre)),
-               COALESCE((SELECT max(word_similarity(c.q, acopio_sin_tildes(s)))
-                         FROM unnest(cat.sinonimos) AS s), 0)
-             )::float AS puntaje
-      FROM categoria cat, c
-      WHERE NOT cat.archivada
-      ORDER BY puntaje DESC, cat.nombre
-      LIMIT ${limite * 3}`;
+    const filas = await this.dao.buscarTexto(consulta, limite * 3);
     return filas
       .filter((f) => f.puntaje >= UMBRAL_BUSQUEDA)
       .slice(0, limite)
@@ -88,24 +68,27 @@ export class CategoriasService {
   }
 
   async obtener(id: string) {
-    const categoria = await this.prisma.categoria.findUnique({ where: { id } });
+    const categoria = await this.dao.buscar(id);
     if (!categoria)
       throw new ErrorDominio('CATEGORIA_NO_ENCONTRADA', 'La categoría no existe', 404);
     return presentar(categoria);
   }
 
   async crear(admin: UsuarioAutenticado, datos: DatosCategoria) {
-    return this.prisma.$transaction(async (tx) => {
-      const categoria = await tx.categoria.create({ data: aFila(datos) }).catch(nombreDuplicado);
-      await this.bitacora.registrar(tx, {
-        usuarioId: admin.id,
-        accion: 'categoria.creada',
-        entidad: 'categoria',
-        entidadId: categoria.id,
-        despues: datos,
-      });
-      return presentar(categoria);
+    return this.transacciones.ejecutar((tx) => this.crearEnTransaccion(tx, admin, datos));
+  }
+
+  /** La creación en la transacción de quien llama: la usa también la carga por CSV (pieza E). */
+  async crearEnTransaccion(tx: ClienteBd, admin: UsuarioAutenticado, datos: DatosCategoria) {
+    const categoria = await this.dao.crear(aFila(datos), tx).catch(nombreDuplicado);
+    await this.bitacora.registrar(tx, {
+      usuarioId: admin.id,
+      accion: 'categoria.creada',
+      entidad: 'categoria',
+      entidadId: categoria.id,
+      despues: datos,
     });
+    return presentar(categoria);
   }
 
   /** La unidad base es fija una vez creada: no se mezclan unidades (RF-CAT-001). */
@@ -114,19 +97,20 @@ export class CategoriasService {
     id: string,
     cambios: Partial<Omit<DatosCategoria, 'unidadBase'>>,
   ) {
-    return this.prisma.$transaction(async (tx) => {
-      const antes = await tx.categoria.findUnique({ where: { id } });
+    return this.transacciones.ejecutar(async (tx) => {
+      const antes = await this.dao.buscar(id, tx);
       if (!antes) throw new ErrorDominio('CATEGORIA_NO_ENCONTRADA', 'La categoría no existe', 404);
-      const despues = await tx.categoria
-        .update({
-          where: { id },
-          data: {
+      const despues = await this.dao
+        .actualizar(
+          id,
+          {
             nombre: cambios.nombre,
             grupo: cambios.grupo,
             perecedero: cambios.perecedero,
             sinonimos: cambios.sinonimos?.map((s) => s.trim()).filter(Boolean),
           },
-        })
+          tx,
+        )
         .catch(nombreDuplicado);
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
@@ -142,12 +126,10 @@ export class CategoriasService {
 
   /** Una categoría usada no se elimina: se archiva (RF-CAT-001). */
   async archivar(admin: UsuarioAutenticado, id: string, archivada: boolean) {
-    return this.prisma.$transaction(async (tx) => {
-      const categoria = await tx.categoria
-        .update({ where: { id }, data: { archivada } })
-        .catch(() => {
-          throw new ErrorDominio('CATEGORIA_NO_ENCONTRADA', 'La categoría no existe', 404);
-        });
+    return this.transacciones.ejecutar(async (tx) => {
+      const categoria = await this.dao.actualizar(id, { archivada }, tx).catch(() => {
+        throw new ErrorDominio('CATEGORIA_NO_ENCONTRADA', 'La categoría no existe', 404);
+      });
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
         accion: archivada ? 'categoria.archivada' : 'categoria.reactivada',
@@ -163,11 +145,8 @@ export class CategoriasService {
    * canasta; desde el Bloque 2 también cuentan movimientos, umbrales y códigos.
    */
   async eliminar(admin: UsuarioAutenticado, id: string) {
-    return this.prisma.$transaction(async (tx) => {
-      const categoria = await tx.categoria.findUnique({
-        where: { id },
-        include: { _count: { select: { canasta: true } } },
-      });
+    return this.transacciones.ejecutar(async (tx) => {
+      const categoria = await this.dao.conUso(id, tx);
       if (!categoria)
         throw new ErrorDominio('CATEGORIA_NO_ENCONTRADA', 'La categoría no existe', 404);
       if (categoria._count.canasta > 0) {
@@ -177,7 +156,7 @@ export class CategoriasService {
           409,
         );
       }
-      await tx.categoria.delete({ where: { id } });
+      await this.dao.eliminar(id, tx);
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
         accion: 'categoria.eliminada',

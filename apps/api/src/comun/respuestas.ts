@@ -227,7 +227,7 @@ export class AcopioPublicoDto extends crearDto(
   z.object({
     id: z.uuid(),
     nombre: z.string(),
-    entidad: z.object({ id: z.uuid(), nombre: z.string() }),
+    entidad: z.object({ id: z.uuid(), nombre: z.string() }).nullable(),
     direccion: z.string(),
     municipio: z.string(),
     lat: z.number(),
@@ -239,6 +239,59 @@ export class AcopioPublicoDto extends crearDto(
     abiertoAhora: z.boolean(),
     actualizadoEn: fecha,
     distanciaKm: z.number().optional(),
+    tipo: z.enum(['OPERADO', 'REFERENCIADO']),
+    fuente: z
+      .object({
+        nombre: z.string(),
+        nombreCorto: z.string(),
+        url: z.string().nullable(),
+        actualizadoEn: fecha.nullable(),
+        estadoOriginal: z.string(),
+        necesidades: z.array(z.object({ nivel: z.string(), texto: z.string() })),
+        horario: z.string().nullable(),
+        contacto: z.record(z.string(), z.string()),
+      })
+      .nullable()
+      .describe('Solo en un referenciado: lo que trae su fuente, tal cual'),
+  }),
+) {}
+
+export class ReporteCsvDto extends crearDto(
+  z.object({
+    filas: z.array(
+      z.object({
+        numero: z.number().int(),
+        valida: z.boolean(),
+        errores: z.array(z.object({ columna: z.string().nullable(), mensaje: z.string() })),
+      }),
+    ),
+    validas: z.number().int(),
+    invalidas: z.number().int(),
+  }),
+) {}
+
+export class FormatoCsvDto extends crearDto(
+  z.object({
+    tipo: z.string(),
+    descripcion: z.string(),
+    columnas: z.array(
+      z.object({
+        nombre: z.string(),
+        obligatoria: z.boolean(),
+        descripcion: z.string(),
+        ejemplo: z.string(),
+      }),
+    ),
+  }),
+) {}
+
+export class PlataformaDto extends crearDto(
+  z.object({
+    id: z.uuid(),
+    nombre: z.string(),
+    categoria: z.string(),
+    descripcion: z.string(),
+    url: z.string(),
   }),
 ) {}
 
@@ -294,6 +347,16 @@ const filaBalance = z.object({
   categoria: z.string(),
   acopios: z.number().int().describe('Cuántos acopios abiertos están en ese caso'),
 });
+
+export class ResultadoImportacionDto extends crearDto(
+  z.object({
+    resultado: z.enum(['OK', 'ABORTADA']),
+    creados: z.number().int(),
+    actualizados: z.number().int(),
+    cerrados: z.number().int(),
+    motivo: z.string().nullable(),
+  }),
+) {}
 
 export class UrgenteDto extends crearDto(
   z.object({ categorias: z.array(z.object({ categoriaId: z.uuid(), categoria: z.string() })) }),

@@ -21,6 +21,7 @@ import { MotorModule } from './modulos/motor/motor.module';
 import { NotificacionesModule } from './modulos/notificaciones/notificaciones.module';
 import { SaludModule } from './modulos/salud/salud.module';
 import { TurnosModule } from './modulos/turnos/turnos.module';
+import { ImportacionModule } from './modulos/importacion/importacion.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { TurnosModule } from './modulos/turnos/turnos.module';
     ComprobantesModule,
     MotorModule,
     TurnosModule,
+    ImportacionModule,
     SaludModule,
   ],
   providers: [

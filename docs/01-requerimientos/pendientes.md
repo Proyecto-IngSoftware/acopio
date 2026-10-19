@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-18
+actualizado: 2026-10-19
 ---
 
 # Pendientes — bandeja de entrada
@@ -1012,6 +1012,44 @@ al repetirla.
 **Por qué:** una prueba que falla a veces en CI frena un PR sin que haya un error real.
 **Estado:** ABIERTO. Revisar si alguna espera usa el límite por defecto de 5 s y subirlo, o
 partir esas pruebas, antes de que aparezcan en CI.
+
+
+### P-076 · Lo que falta de RF-RED-011 después de la pieza E
+**Fecha:** 2026-10-19 · **Propuesto por:** Claude, al cerrar la pieza E (#49)
+**Qué:** la pieza E dejó el importador, la copia de RedAcopio, la carga por CSV y las pantallas.
+Quedan cuatro casillas de RF-RED-011: avisar al Administrador cuando una lectura aborta (hoy
+solo queda la ejecución con resultado `ABORTADA` y la respuesta del endpoint), ocultar un
+referenciado desde la consola (la columna `oculto_por_admin` existe y el portal y el importador
+la respetan, pero no hay endpoint), convertir un referenciado en operado y cargar referenciados
+por CSV (el formato `acopios` crea operados).
+**Por qué:** la especificación de la pieza E pidió solo backend para el CSV y ninguna pantalla
+de consola; estas cuatro necesitan consola o una decisión sobre el aviso.
+**Estado:** ABIERTO. Entran con la consola de importación, después del 23.
+
+
+### P-077 · Menores de la revisión final de la pieza E
+**Fecha:** 2026-10-19 · **Propuesto por:** Claude, en la revisión de la rama `pieza-e`
+**Qué:** la revisión no encontró nada crítico. Sus dos hallazgos importantes se corrigieron
+antes de fusionar. Quedan estos menores:
+- `PATCH /api/acopios/:id` acepta un referenciado; debería responder 409 `ACOPIO_REFERENCIADO`
+  en `actualizar` y `operar`.
+- Si RedAcopio cambia el valor de `verification_status`, quedan cero verificados y el importador
+  cierra todos los puntos con resultado `OK`. Debería abortar.
+- `cerrarReferenciados` cambia `estado` pero deja `fuente_estado`, y la ficha muestra «Abierto
+  según RedAcopio» en un punto cerrado porque desapareció de la fuente.
+- Ninguna prueba usa `importacion/ejemplos/*.csv`, y `jornadas.csv` y `causas.csv` traen fechas
+  fijas que vencen en noviembre y diciembre.
+- Un CSV de más de 2 MB cortado por multer responde «La foto pesa más de 8 MB».
+- `cargar-csv.ts` con `--como` sin valor carga a nombre del primer administrador sin avisar.
+- En `seed/demo.ts` el comentario del script quedó sobre `importarRedAcopioDemo`, y una
+  importación abortada imprime «0 nuevos…» sin decir que abortó.
+- Faltan pruebas de `name` vacío en el lector y de una donación sobre un referenciado.
+- `plataforma.dao.ts` usa la `url` como clave: dos tarjetas con la misma URL se pisan.
+- Dos lecturas simultáneas de la misma fuente podrían chocar en la llave única; no se pudo
+  reproducir en las pruebas y no se tomó candado.
+**Por qué:** ninguno cambia lo que se muestra en la sustentación con la copia guardada, y cada
+uno necesita su prueba.
+**Estado:** ABIERTO. Antes de prender la lectura programada (`IMPORTACION_PROGRAMADA`).
 
 ---
 

@@ -3,7 +3,7 @@ title: "Plan de acción del proyecto"
 type: plan
 tags: [plan, seguimiento, cronograma]
 estado: vigente
-actualizado: 2026-10-18
+actualizado: 2026-10-19
 ---
 
 # Plan de acción del proyecto
@@ -67,11 +67,11 @@ backend con los puntos ocultos en el portal, y las pantallas pasan a después de
 
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
-| 8a | Especificación: acopio referenciado, módulo `importacion`, copia guardada de RedAcopio, carga por CSV para todos los módulos (solo backend, con los endpoints listos para una pantalla futura) y lista de «otras plataformas» de `/herramientas`. La lectura programada cada 60 minutos queda escrita y apagada | #49 | 2026-10-18 | 🟡 |
-| 8b | Maquetas en Stitch: marcador de referenciado en P05, ficha de referenciado en P06 y lista de otras plataformas. Las aprueba Joseph | #49 | 2026-10-19 | ⬜ |
-| 8c | Backend: migración, importador con la copia guardada, carga por CSV y sus pruebas | #49 | 2026-10-20 | ⬜ |
-| 8d | Pantallas P05, P06 y otras plataformas | #49 | 2026-10-21 | ⬜ |
-| 8e | Despliegue en Dokploy con los 88 puntos y recorridos contra el servidor | #49 | 2026-10-21 | ⬜ |
+| 8a | Especificación: acopio referenciado, módulo `importacion`, copia guardada de RedAcopio, carga por CSV para todos los módulos (solo backend, con los endpoints listos para una pantalla futura) y lista de «otras plataformas» de `/herramientas`. La lectura programada cada 60 minutos queda escrita y apagada | #49 | 2026-10-18 | ✅ |
+| 8b | Maquetas en Stitch: marcador de referenciado en P05, ficha de referenciado en P06 y lista de otras plataformas. Las aprueba Joseph | #49 | 2026-10-19 | ✅ |
+| 8c | Backend: migración, importador con la copia guardada, carga por CSV y sus pruebas | #49 | 2026-10-20 | ✅ |
+| 8d | Pantallas P05, P06 y otras plataformas | #49 | 2026-10-21 | ✅ |
+| 8e | Despliegue en Dokploy con los puntos de RedAcopio (85 con coordenadas) y recorridos contra el servidor | #49 | 2026-10-21 | 🟡 |
 
 ## Sprint 3: del 26 de octubre al 22 de noviembre
 
@@ -164,3 +164,7 @@ Sprint 3.
   texto y los radios de antes. La auditoría de las 25 pantallas encontró dos bloques sin conectar
   y 22 acciones de la bitácora sin frase (P-074, resuelto) y dos pruebas que se cortan con carga
   (P-075, abierto). Las capturas del Avance 5 se vuelven a tomar con la paleta nueva (fila 2).
+- 2026-10-19: filas 8a a 8d hechas en la rama `pieza-e`. La demo importa 85 puntos de la copia
+  de RedAcopio (tres vienen en 0, 0 y se omiten) y las 9 plataformas de `/herramientas`. Hay
+  carga por CSV para ocho formatos y las pantallas P05, P06 y P14. La fila 8e queda en curso
+  hasta revisar el servidor. Lo que falta de RF-RED-011 pasa a P-076.

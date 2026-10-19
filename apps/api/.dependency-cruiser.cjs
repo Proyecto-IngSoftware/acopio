@@ -28,6 +28,8 @@ const MIGRADOS_A_DAO = [
   'notificaciones',
   'acopios',
   'turnos',
+  'catalogo',
+  'importacion',
 ];
 
 /** módulo → módulos que lo pueden importar */
@@ -36,12 +38,12 @@ const PERMITIDOS = {
   auditoria: TODOS,
   notificaciones: ['identidad', 'acopios', 'comprobantes', 'turnos'],
   almacenamiento: ['acopios', 'comprobantes', 'motor'],
-  catalogo: ['inventario', 'comprobantes', 'motor'],
+  catalogo: ['inventario', 'comprobantes', 'motor', 'importacion'],
   acopios: ['inventario', 'comprobantes', 'motor', 'turnos', 'importacion'],
-  inventario: ['comprobantes', 'motor'],
+  inventario: ['comprobantes', 'motor', 'importacion'],
   comprobantes: ['motor'],
   motor: [],
-  turnos: [],
+  turnos: ['importacion'],
   importacion: [],
   salud: [],
 };

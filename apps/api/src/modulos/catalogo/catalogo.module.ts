@@ -4,6 +4,8 @@ import { CatalogoController } from './catalogo.controller';
 import { CodigosBarrasController } from './codigos-barras.controller';
 import { CodigosBarrasService } from './codigos-barras.service';
 import { CategoriasService } from './categorias.service';
+import { CanastaDao } from './dao/canasta.dao';
+import { EmergenciaDao } from './dao/emergencia.dao';
 import { CategoriaDao } from './dao/categoria.dao';
 import { CodigoBarrasDao } from './dao/codigo-barras.dao';
 import { EmergenciasService } from './emergencias.service';
@@ -13,6 +15,8 @@ import { EmergenciasService } from './emergencias.service';
   providers: [
     CategoriaDao,
     CodigoBarrasDao,
+    CanastaDao,
+    EmergenciaDao,
     CategoriasService,
     CanastaService,
     EmergenciasService,

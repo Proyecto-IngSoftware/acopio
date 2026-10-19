@@ -60,7 +60,7 @@ function Contenido({ acopio }: { acopio: Acopio }) {
     <>
       <section className="flex flex-col gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md">
         <p className="text-body-lg font-semibold text-on-surface">{acopio.nombre}</p>
-        <p className="text-body-md text-on-surface-variant">{acopio.entidad.nombre}</p>
+        <p className="text-body-md text-on-surface-variant">{acopio.entidad?.nombre}</p>
         <p className="flex items-center gap-1 text-body-md text-on-surface">
           <Icono nombre="location_on" className="text-[18px] text-primary-container" />
           {acopio.direccion} · {acopio.municipio}

@@ -274,6 +274,55 @@ enum EstadoAcopio {
   CERRADO
 }
 
+enum TipoAcopio {
+  OPERADO
+  REFERENCIADO
+}
+
+enum OrigenImportacion {
+  ARCHIVO
+  HTTP
+}
+
+enum ResultadoImportacion {
+  OK
+  ABORTADA
+}
+
+/// Otras plataformas que coordinan ayuda (pieza E). No son causas: no tienen verificación.
+model Plataforma {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre         String
+  categoria      String
+  descripcion    String
+  url            String
+  orden          Int      @default(0)
+  fuente         String?
+  fuente_id      String?
+  activa         Boolean  @default(true)
+  actualizado_en DateTime @default(now()) @updatedAt @db.Timestamptz
+
+  @@unique([fuente, fuente_id])
+  @@map("plataforma")
+}
+
+/// Cada lectura de una fuente externa, buena o abortada (RF-RED-011).
+model ImportacionEjecucion {
+  id           String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  fuente       String
+  origen       OrigenImportacion
+  inicio       DateTime             @db.Timestamptz
+  fin          DateTime             @db.Timestamptz
+  resultado    ResultadoImportacion
+  creados      Int                  @default(0)
+  actualizados Int                  @default(0)
+  cerrados     Int                  @default(0)
+  motivo       String?
+
+  @@index([fuente, inicio])
+  @@map("importacion_ejecucion")
+}
+
 enum EstadoZona {
   SIN_ATENDER
   EN_ATENCION
@@ -283,23 +332,23 @@ enum EstadoZona {
 /// RF-RED-005 y RF-RED-006. Verificar es una marca del Administrador, sin documento (P-065).
 /// CHECK: VERIFICADA si y solo si tiene verificada_en.
 model Entidad {
-  id              String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  nombre          String             @unique @db.Citext
-  tipo            String
-  nit             String?
-  sitio_web       String?
-  telefono        String?
-  correo          String?
-  descripcion     String?
-  verificacion    EstadoVerificacion @default(SIN_VERIFICAR)
-  verificada_por  String?            @db.Uuid
-  verificador     Usuario?           @relation("entidades_verificadas", fields: [verificada_por], references: [id])
-  verificada_en   DateTime?          @db.Timestamptz
-  logo_key        String?
-  creado_en       DateTime           @default(now()) @db.Timestamptz
-  acopios         Acopio[]
-  causas          Causa[]
-  jornadas        Jornada[]
+  id             String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nombre         String             @unique @db.Citext
+  tipo           String
+  nit            String?
+  sitio_web      String?
+  telefono       String?
+  correo         String?
+  descripcion    String?
+  verificacion   EstadoVerificacion @default(SIN_VERIFICAR)
+  verificada_por String?            @db.Uuid
+  verificador    Usuario?           @relation("entidades_verificadas", fields: [verificada_por], references: [id])
+  verificada_en  DateTime?          @db.Timestamptz
+  logo_key       String?
+  creado_en      DateTime           @default(now()) @db.Timestamptz
+  acopios        Acopio[]
+  causas         Causa[]
+  jornadas       Jornada[]
 
   @@map("entidad")
 }
@@ -347,30 +396,44 @@ model Causa {
 
 /// RF-RED-001. Los acopios referenciados (tipo, fuente) llegan con el importador.
 model Acopio {
-  id                  String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  entidad_id          String        @db.Uuid
-  entidad             Entidad       @relation(fields: [entidad_id], references: [id])
-  nombre              String
-  direccion           String
-  municipio           String
-  lat                 Decimal       @db.Decimal(9, 6)
-  lng                 Decimal       @db.Decimal(9, 6)
-  telefono            String?
-  indicaciones_acceso String?
+  id                    String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  /// Nulo solo en un REFERENCIADO (CHECK en la migración)
+  entidad_id            String?       @db.Uuid
+  entidad               Entidad?      @relation(fields: [entidad_id], references: [id], onDelete: Restrict)
+  /// OPERADO usa Acopio; REFERENCIADO llega de una fuente externa, sin inventario (P-022)
+  tipo                  TipoAcopio    @default(OPERADO)
+  nombre                String
+  direccion             String
+  municipio             String
+  lat                   Decimal       @db.Decimal(9, 6)
+  lng                   Decimal       @db.Decimal(9, 6)
+  telefono              String?
+  indicaciones_acceso   String?
   /// { lun: [{ abre: "08:00", cierra: "12:00" }], … } en hora de Bogotá
-  horario             Json
-  estado              EstadoAcopio  @default(ACTIVO)
-  creado_en           DateTime      @default(now()) @db.Timestamptz
-  actualizado_en      DateTime      @default(now()) @updatedAt @db.Timestamptz
-  no_recibir          NoRecibir[]
-  movimientos         Movimiento[]
-  saldos              Saldo[]
-  umbrales            Umbral[]
-  comprobantes        Comprobante[]
-  remisiones          Remision[]
-  sugerencias         Sugerencia[]
-  jornadas            Jornada[]
+  horario               Json
+  estado                EstadoAcopio  @default(ACTIVO)
+  /// Datos de la fuente de un REFERENCIADO, copiados tal cual (RF-RED-011)
+  fuente                String?
+  fuente_id             String?
+  fuente_actualizado_en DateTime?     @db.Timestamptz
+  fuente_estado         String?
+  fuente_necesidades    Json?
+  fuente_horario        String?
+  fuente_contacto       Json?
+  fuente_url            String?
+  oculto_por_admin      Boolean       @default(false)
+  creado_en             DateTime      @default(now()) @db.Timestamptz
+  actualizado_en        DateTime      @default(now()) @updatedAt @db.Timestamptz
+  no_recibir            NoRecibir[]
+  movimientos           Movimiento[]
+  saldos                Saldo[]
+  umbrales              Umbral[]
+  comprobantes          Comprobante[]
+  remisiones            Remision[]
+  sugerencias           Sugerencia[]
+  jornadas              Jornada[]
 
+  @@unique([fuente, fuente_id])
   @@index([estado])
   @@map("acopio")
 }

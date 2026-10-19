@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import { restriccionUnicaViolada } from '../../comun/prisma/errores-prisma';
-import type { Prisma } from '../../generado/prisma/client';
 import { BitacoraService } from '../auditoria/bitacora.service';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
+import { CanastaDao } from './dao/canasta.dao';
+import { CategoriaDao } from './dao/categoria.dao';
 
 /**
  * Canasta estándar (RF-CAT-003). Versionada por vigente_desde: un cambio agrega una
@@ -13,29 +14,15 @@ import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autent
 @Injectable()
 export class CanastaService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly canasta: CanastaDao,
+    private readonly categorias: CategoriaDao,
+    private readonly transacciones: Transacciones,
     private readonly bitacora: BitacoraService,
   ) {}
 
   /** La versión vigente hoy (o en `fecha`) de cada categoría que tiene canasta. */
   async vigente(fecha = new Date()) {
-    const filas = await this.prisma.$queryRaw<
-      {
-        categoria_id: string;
-        categoria: string;
-        unidad_base: string;
-        cantidad_persona_dia: Prisma.Decimal;
-        fuente: string;
-        vigente_desde: Date;
-      }[]
-    >`
-      SELECT DISTINCT ON (ce.categoria_id)
-             ce.categoria_id, c.nombre AS categoria, c.unidad_base,
-             ce.cantidad_persona_dia, ce.fuente, ce.vigente_desde
-      FROM canasta_estandar ce
-      JOIN categoria c ON c.id = ce.categoria_id
-      WHERE ce.vigente_desde <= ${fecha}::date AND NOT c.archivada
-      ORDER BY ce.categoria_id, ce.vigente_desde DESC`;
+    const filas = await this.canasta.vigente(fecha);
     return filas
       .map((f) => ({
         categoriaId: f.categoria_id,
@@ -49,10 +36,7 @@ export class CanastaService {
   }
 
   async historial(categoriaId: string) {
-    const filas = await this.prisma.canastaEstandar.findMany({
-      where: { categoria_id: categoriaId },
-      orderBy: { vigente_desde: 'desc' },
-    });
+    const filas = await this.canasta.historial(categoriaId);
     return filas.map((f) => ({
       id: f.id,
       cantidadPersonaDia: Number(f.cantidad_persona_dia),
@@ -66,19 +50,20 @@ export class CanastaService {
     categoriaId: string,
     datos: { cantidadPersonaDia: number; fuente: string; vigenteDesde: Date },
   ) {
-    return this.prisma.$transaction(async (tx) => {
-      const categoria = await tx.categoria.findUnique({ where: { id: categoriaId } });
+    return this.transacciones.ejecutar(async (tx) => {
+      const categoria = await this.categorias.buscar(categoriaId, tx);
       if (!categoria)
         throw new ErrorDominio('CATEGORIA_NO_ENCONTRADA', 'La categoría no existe', 404);
-      const fila = await tx.canastaEstandar
-        .create({
-          data: {
+      const fila = await this.canasta
+        .crear(
+          {
             categoria_id: categoriaId,
             cantidad_persona_dia: datos.cantidadPersonaDia,
             fuente: datos.fuente.trim(),
             vigente_desde: datos.vigenteDesde,
           },
-        })
+          tx,
+        )
         .catch((error: unknown) => {
           if (restriccionUnicaViolada(error) === null) throw error;
           throw new ErrorDominio(

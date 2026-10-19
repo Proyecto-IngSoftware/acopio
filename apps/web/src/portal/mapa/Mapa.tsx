@@ -26,6 +26,7 @@ import { filtroDelMapa } from './filtro';
 import { TarjetaAcopio, aperturaPublica, km } from './TarjetaAcopio';
 import { TarjetaZona } from './TarjetaZona';
 import { useLlevarALaVista } from './llevarALaVista';
+import { ElegidoReferenciado, TarjetaReferenciado, esReferenciado } from './referenciado';
 
 const SIN_ZONAS: ZonaPublica[] = [];
 
@@ -36,6 +37,7 @@ export function Mapa() {
   const vista = parametros.get('vista') === 'lista' ? 'lista' : 'mapa';
   const { abiertoAhora: abierto, cerca } = filtroDelMapa(parametros);
   const lleva = parametros.get('lleva');
+  const conReferenciados = parametros.get('redacopio') !== '0';
   const [elegido, fijarElegido] = useState<string | null>(null);
   const [zonaElegida, fijarZonaElegida] = useState<string | null>(null);
   // Elegir un acopio cierra la zona y al revés: debajo del mapa va una sola tarjeta
@@ -64,13 +66,25 @@ export function Mapa() {
   const noReciben = useAcopiosQueNoReciben(lleva);
   const categoria = categorias.data?.find((c) => c.id === lleva);
   const ocultos = (acopios.data ?? []).filter((a) => noReciben.data?.has(a.id)).length;
-  // Memorizado: un arreglo nuevo en cada render volvería a encuadrar el mapa al elegir algo
+  // Memorizado: un arreglo nuevo en cada render volvería a encuadrar el mapa al elegir algo.
+  // «¿Qué vas a llevar?» solo filtra los acopios: un punto de RedAcopio no dice qué recibe
   const visibles = useMemo(
-    () => (acopios.data ?? []).filter((a) => !noReciben.data?.has(a.id)),
+    () => (acopios.data ?? []).filter((a) => !esReferenciado(a) && !noReciben.data?.has(a.id)),
     [acopios.data, noReciben.data],
   );
+  const referenciados = useMemo(
+    () => (conReferenciados ? (acopios.data ?? []).filter(esReferenciado) : []),
+    [acopios.data, conReferenciados],
+  );
+  const fuente = (acopios.data ?? []).find(esReferenciado)?.fuente;
+  // En el mapa no se dibuja un punto cerrado; en la lista sí sale, con su estado
+  const enMapa = useMemo(
+    () => [...visibles, ...referenciados.filter((r) => r.estado !== 'CERRADO')],
+    [visibles, referenciados],
+  );
+  const refsEnMapa = enMapa.length - visibles.length;
   const sufijo = cerca ? `?cerca=${encodeURIComponent(`${cerca.lat},${cerca.lng}`)}` : '';
-  const seleccionado = visibles.find((a) => a.id === elegido);
+  const seleccionado = enMapa.find((a) => a.id === elegido);
   // La capa de zonas es un extra: si falla, el mapa de acopios sigue igual
   const zonas = useZonasConNecesidad().data ?? SIN_ZONAS;
   const zona = zonas.find((z) => z.zonaId === zonaElegida);
@@ -117,6 +131,23 @@ export function Mapa() {
             {categoria.nombre.toLocaleLowerCase('es-CO')}.
           </p>
         )}
+        {fuente && (
+          <label className="flex min-h-[48px] w-fit items-center gap-space-sm text-body-md text-on-surface">
+            <input
+              type="checkbox"
+              checked={conReferenciados}
+              onChange={() => cambiar('redacopio', conReferenciados ? '0' : null)}
+              className="size-5 accent-primary-container"
+            />
+            Mostrar puntos de {fuente.nombreCorto}
+          </label>
+        )}
+        {lleva && referenciados.length > 0 && fuente && (
+          <p className="text-body-sm text-on-surface-variant">
+            «¿Qué vas a llevar?» solo filtra los acopios; los puntos de {fuente.nombreCorto} no
+            dicen qué reciben por categoría.
+          </p>
+        )}
       </div>
 
       <Segmentado
@@ -133,17 +164,17 @@ export function Mapa() {
       {acopios.error && (
         <EstadoError mensaje={acopios.error.message} alReintentar={() => void acopios.refetch()} />
       )}
-      {acopios.data && visibles.length === 0 && (
+      {acopios.data && visibles.length === 0 && referenciados.length === 0 && (
         <EstadoVacio titulo="Ningún acopio con esos filtros">
           Quita algún filtro para ver más acopios.
         </EstadoVacio>
       )}
 
-      {acopios.data && vista === 'mapa' && visibles.length > 0 && (
+      {acopios.data && vista === 'mapa' && enMapa.length > 0 && (
         <>
           <div className="isolate h-[55vh] min-h-72 overflow-hidden rounded-xl border border-outline-variant">
             <MapaAcopios
-              acopios={visibles}
+              acopios={enMapa}
               cerca={cerca}
               elegido={elegido}
               alElegir={elegirAcopio}
@@ -152,28 +183,42 @@ export function Mapa() {
               alElegirZona={elegirZona}
             />
           </div>
-          {zonas.length > 0 && (
+          {(zonas.length > 0 || refsEnMapa > 0) && (
             <div className="flex flex-col gap-space-xs">
               <p className="flex flex-wrap gap-x-space-md gap-y-space-xs text-body-sm text-on-surface-variant">
                 <span className="inline-flex items-center gap-space-xs">
                   <span className="size-4 rounded-full border-2 border-surface-container-lowest bg-primary-container shadow-sm" />
-                  Acopio
+                  {refsEnMapa > 0 ? 'Acopio: inventario al día' : 'Acopio'}
                 </span>
-                <span className="inline-flex items-center gap-space-xs">
-                  <span className="size-4 rounded-full border-2 border-dashed border-primary-container bg-primary-fixed/45" />
-                  Zona con necesidad reportada
-                </span>
+                {refsEnMapa > 0 && fuente && (
+                  <span className="inline-flex items-center gap-space-xs">
+                    <span className="size-4 rounded-full border-2 border-primary-container bg-surface-container-lowest shadow-sm" />
+                    {fuente.nombre}: datos de su fuente
+                  </span>
+                )}
+                {zonas.length > 0 && (
+                  <span className="inline-flex items-center gap-space-xs">
+                    <span className="size-4 rounded-full border-2 border-dashed border-primary-container bg-primary-fixed/45" />
+                    Zona con necesidad reportada
+                  </span>
+                )}
               </p>
-              {!zona && (
+              {zonas.length > 0 && !zona && (
                 <p className="text-body-sm text-on-surface-variant">
                   Toca una zona para ver qué falta.
                 </p>
               )}
             </div>
           )}
-          {seleccionado && (
-            <Elegido acopio={seleccionado} enlace={`/acopios/${seleccionado.id}${sufijo}`} />
-          )}
+          {seleccionado &&
+            (esReferenciado(seleccionado) ? (
+              <ElegidoReferenciado
+                punto={seleccionado}
+                enlace={`/acopios/${seleccionado.id}${sufijo}`}
+              />
+            ) : (
+              <Elegido acopio={seleccionado} enlace={`/acopios/${seleccionado.id}${sufijo}`} />
+            ))}
           {zona && (
             <TarjetaZona
               zona={zona}
@@ -203,13 +248,54 @@ export function Mapa() {
       )}
 
       {acopios.data && vista === 'lista' && (
-        <ul className="flex flex-col gap-space-sm">
-          {visibles.map((a) => (
-            <li key={a.id}>
-              <TarjetaAcopio acopio={a} enlace={`/acopios/${a.id}${sufijo}`} />
-            </li>
-          ))}
-        </ul>
+        <>
+          {referenciados.length > 0 && visibles.length > 0 && (
+            <h2 className="text-label-md tracking-wide text-on-surface-variant uppercase">
+              Acopios
+            </h2>
+          )}
+          <ul className="flex flex-col gap-space-sm">
+            {visibles.map((a) => (
+              <li key={a.id}>
+                <TarjetaAcopio acopio={a} enlace={`/acopios/${a.id}${sufijo}`} />
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+
+      {acopios.data && vista === 'lista' && referenciados.length > 0 && fuente && (
+        <section aria-labelledby="referenciados-titulo" className="flex flex-col gap-space-sm">
+          <h2
+            id="referenciados-titulo"
+            className="text-label-md tracking-wide text-on-surface-variant uppercase"
+          >
+            Puntos de {fuente.nombre}
+          </h2>
+          <ul className="flex flex-col gap-space-sm">
+            {referenciados.map((r) => (
+              <li key={r.id}>
+                <TarjetaReferenciado punto={r} enlace={`/acopios/${r.id}${sufijo}`} />
+              </li>
+            ))}
+          </ul>
+          <p className="text-body-sm text-on-surface-variant">
+            Datos de{' '}
+            {fuente.url ? (
+              <a
+                href={fuente.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary-container underline"
+              >
+                {fuente.nombre}
+              </a>
+            ) : (
+              fuente.nombre
+            )}
+            , la red de puntos de acopio que mantiene la comunidad.
+          </p>
+        </section>
       )}
     </div>
   );
@@ -236,7 +322,7 @@ function Elegido({ acopio, enlace }: { acopio: AcopioPublico; enlace: string }) 
       </div>
       <div>
         <p className="text-body-lg font-semibold text-on-surface">{acopio.nombre}</p>
-        <p className="text-body-md text-on-surface-variant">{acopio.entidad.nombre}</p>
+        <p className="text-body-md text-on-surface-variant">{acopio.entidad?.nombre}</p>
       </div>
       <p className="flex items-center gap-1 text-body-sm text-on-surface-variant">
         <Icono nombre="location_on" className="text-[18px]" />

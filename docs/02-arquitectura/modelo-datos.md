@@ -125,10 +125,20 @@ acopio
   tipo    OPERADO | REFERENCIADO      REFERENCIADO = importado, sin inventario
   fuente text? · fuente_id text? · fuente_actualizado_en timestamptz?
   fuente_estado text? · fuente_necesidades jsonb?   copia textual de la fuente
+  fuente_horario text? · fuente_contacto jsonb? · fuente_url text?
   oculto_por_admin bool DEFAULT false
   UNIQUE (fuente, fuente_id)
   CHECK (tipo = 'OPERADO' OR fuente IS NOT NULL)
   CHECK (tipo = 'REFERENCIADO' OR entidad_id IS NOT NULL)
+
+plataforma                          otras plataformas de ayuda (pieza E); no son causas
+  id · nombre · categoria · descripcion · url · orden int
+  fuente text? · fuente_id text? · activa bool DEFAULT true · actualizado_en
+  UNIQUE (fuente, fuente_id)
+
+importacion_ejecucion               cada lectura de una fuente externa
+  id · fuente · origen ARCHIVO | HTTP · inicio · fin
+  resultado OK | ABORTADA · creados · actualizados · cerrados · motivo text?
 
 zona
   id · emergencia_id · nombre · municipio · lat · lng

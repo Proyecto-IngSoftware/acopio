@@ -188,3 +188,12 @@ describe('sin emergencias vigentes', () => {
     for (const texto of FIJOS) expect(screen.getByText(texto)).toBeInTheDocument();
   });
 });
+
+it('el pie lleva a las otras plataformas que ayudan', async () => {
+  responder(DOS);
+  render(envolver(<Portada />));
+  expect(await screen.findByRole('link', { name: /Otras plataformas que ayudan/ })).toHaveAttribute(
+    'href',
+    '/plataformas',
+  );
+});

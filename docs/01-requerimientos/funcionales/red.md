@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: red
 bloque: 1
-actualizado: 2026-10-17
+actualizado: 2026-10-19
 ---
 
 # RF-RED · Acopios, zonas, entidades y causas
@@ -196,18 +196,18 @@ fuente, pero no operan inventario en Acopio. Decisión y riesgo aceptado en
 [I-003](../../00-contexto/investigaciones.md).
 
 **Criterios de aceptación:**
-- [ ] Un importador programado lee la fuente cada 60 minutos, con un User-Agent
+- [x] Un importador programado lee la fuente cada 60 minutos, con un User-Agent
       que identifica a Acopio y un contacto
-- [ ] Primera fuente: RedAcopio Bogotá. Cada fuente es un adaptador aparte:
+- [x] Primera fuente: RedAcopio Bogotá. Cada fuente es un adaptador aparte:
       agregar otra no toca el resto del sistema
-- [ ] Solo se importan los puntos que la fuente marca como verificados
-- [ ] Cada punto se identifica por `fuente` + `fuente_id`: reimportar actualiza,
+- [x] Solo se importan los puntos que la fuente marca como verificados
+- [x] Cada punto se identifica por `fuente` + `fuente_id`: reimportar actualiza,
       nunca duplica
-- [ ] Estado: abierto → `ACTIVO` · lleno → `PAUSADO` · cerrado → `CERRADO` ·
+- [x] Estado: abierto → `ACTIVO` · lleno → `PAUSADO` · cerrado → `CERRADO` ·
       cualquier otro valor → `PAUSADO`. El texto original queda en `fuente_estado`
-- [ ] Las necesidades se guardan y se muestran en el texto de la fuente; no se
+- [x] Las necesidades se guardan y se muestran en el texto de la fuente; no se
       traducen a categorías del catálogo
-- [ ] Un punto que deja de aparecer en la fuente se cierra, no se borra
+- [x] Un punto que deja de aparecer en la fuente se cierra, no se borra
 - [ ] Si la lectura falla o el formato cambió —cero puntos, campos faltantes—, la
       sincronización se aborta completa, se conservan los últimos datos buenos y se
       avisa al Administrador
@@ -218,5 +218,10 @@ fuente, pero no operan inventario en Acopio. Decisión y riesgo aceptado en
       sincronizarse
 - [ ] Alternativa siempre disponible: carga de puntos referenciados por CSV, con
       las mismas reglas
+
+La pieza E (2026-10-19) cumplió las siete primeras. La lectura programada está escrita y
+apagada (`IMPORTACION_PROGRAMADA=false`) por decisión de Joseph; la demo y el servidor leen la
+copia guardada. Las cuatro casillas que faltan están en
+[P-076](../pendientes.md#p-076--lo-que-falta-de-rf-red-011-después-de-la-pieza-e).
 
 **Depende de:** RF-RED-001, RF-RED-002

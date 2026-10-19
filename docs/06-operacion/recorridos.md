@@ -3,7 +3,7 @@ title: "Recorridos de punta a punta"
 type: operacion
 tags: [operacion, pruebas, web]
 estado: vigente
-actualizado: 2026-10-18
+actualizado: 2026-10-19
 ---
 
 # Recorridos de punta a punta
@@ -44,6 +44,7 @@ node apps/web/recorridos/portal-causas.mjs
 node apps/web/recorridos/consola-causas.mjs
 node apps/web/recorridos/portal-turnos.mjs
 node apps/web/recorridos/consola-turnos.mjs
+node apps/web/recorridos/referenciados.mjs
 ```
 
 - La web se sirve en el puerto 5173 porque la API rechaza escrituras con la cookie desde un
@@ -114,7 +115,7 @@ Con la demo recién sembrada, conviene correr `consola-motor.mjs` antes que
 
 | Script | Cubre | Pasos | Captura en |
 |---|---|--:|---|
-| `validacion-general.mjs` | Cada pantalla con cada rol, accesos negados, invitar y activar, salida, conteo y bitácora | 59 | No guarda capturas |
+| `validacion-general.mjs` | Cada pantalla con cada rol, accesos negados, invitar y activar, salida, conteo y bitácora | 60 | No guarda capturas |
 | `donador.mjs` | El Donador de punta a punta (Bloque 3, ciclo 1) | 8 | P09, P10, P12 y P13 |
 | `consola-comprobantes.mjs` | Recibir, conciliar, rechazar y vincular (Bloque 3, ciclo 2) | 10 | C04-recibir-folio, C08-comprobantes y C08-conciliacion |
 | `consola-motor.mjs` | El motor para el Administrador: ficha de zona, recálculo, aprobar con la cantidad editada, descartar con motivo, pesos con vista previa e informe de descartes (Bloque 4, interfaz ciclo 1) | 9 | C10-ficha-zona y C11-motor |
@@ -125,6 +126,7 @@ Con la demo recién sembrada, conviene correr `consola-motor.mjs` antes que
 | `consola-causas.mjs` | La consola de la pieza C: crea una entidad nueva por corrida, la verifica con el aviso (el botón empieza inactivo), publica una causa con la confirmación de destino, la renueva, archiva otra y le quita la verificación a la entidad; en P4 el enlace desaparece. Entra como `admin` con `ADMIN_CONTRASENA` y no toca las causas «(demo)» | 6 | C15-entidades, C22-causas y P04-ficha-causa |
 | `portal-turnos.mjs` | Lo público de turnos sin iniciar sesión (HU-03): P7 con «Clasificar ropa donada (demo)» marcada «Llena», reservar en «Armar mercados (demo)» con un correo nuevo, P8 con el código y el secreto después del `#`, el `.ics`, cancelar y comprobar en la API que `ocupados` volvió a su valor, y P8 sin `#`. Deja la demo como estaba | 6 | P07-voluntariado y P08-mi-reserva |
 | `consola-turnos.mjs` | C14 con `operador1` y `DEMO_CONTRASENA`: llega desde «Más», crea una serie de dos fechas y comprueba en la API que comparten serie, mueve una (cambia la hora de fin) y revisa `fin` en la API, ve los inscritos de «Armar mercados (demo)», suma un cupo de ajuste, cierra y reabre las reservas (con el portal sin aceptar reservas mientras está cerrada). Al final devuelve el ajuste y borra la serie desde la pantalla | 7 | C14-turnos |
+| `referenciados.mjs` | La pieza E sin iniciar sesión: P5 con la leyenda de RedAcopio y la casilla «Mostrar puntos de RedAcopio» (apagarla quita la leyenda), la sección «Puntos de RedAcopio Bogotá» de la lista con «según RedAcopio» y el enlace a la fuente, la ficha de Sugoi Taller Creativo con su antigüedad, «Ver en RedAcopio» y «Lo que piden», sin «Preparar donación», «Lo que urge» ni «Voluntariado», y P14 con las 9 plataformas, a la que se llega desde «Más» y desde el pie de la portada | 6 | P05-mapa (construida-referenciados), P06-ficha-referenciado y P14-plataformas |
 
 ### `validacion-general.mjs`
 
@@ -191,6 +193,24 @@ Si se corren varios seguidos, el límite de 5 inicios de sesión por minuto hace
 entra después; hay que esperar un minuto entre uno y otro.
 
 ## Últimos resultados
+
+**2026-10-19, en local, con la pieza E** (rama `pieza-e`, API reconstruida con
+`servicios:todo`, `CAPTURAS=no` salvo en `referenciados.mjs`):
+
+| Script | Resultado |
+|---|---|
+| `referenciados.mjs` | 6 de 6 |
+| `validacion-general.mjs` | 60 de 60. La primera corrida dio 58 de 59: esperaba «Próximamente» en `/causas`, que existe desde la pieza C. Ahora espera «Causas» y suma `/plataformas` |
+| `donador.mjs` | 8 de 8 |
+| `consola-comprobantes.mjs` | 10 de 10 |
+| `consola-motor.mjs` | 9 de 9 |
+| `consola-remisiones.mjs` | 7 de 7 |
+| `consola-recepciones.mjs` | 7 de 7 |
+| `sin-conexion.mjs` | 12 de 12 |
+| `portal-causas.mjs` | 4 de 4 |
+| `consola-causas.mjs` | 6 de 6 |
+| `portal-turnos.mjs` | 6 de 6 |
+| `consola-turnos.mjs` | 7 de 7. La primera corrida falló al entrar, por el límite de inicios de sesión |
 
 **2026-10-18, en local, con el balance de la portada y las imágenes de la demo** (rama
 `portada-y-capturas`, API reconstruida con `servicios:todo`, `CAPTURAS_WORD` activo):

@@ -57,6 +57,16 @@ import { ZonasService } from './zonas.service';
     { provide: GEOCODIFICADOR, useExisting: GeocodificadorNominatim },
     { provide: RELOJ, useValue: relojReal },
   ],
-  exports: [AcopioDao, EntidadDao, ZonaDao, AcopiosService, VERIFICADOR_UBICACIONES, RELOJ],
+  exports: [
+    AcopioDao,
+    EntidadDao,
+    ZonaDao,
+    AcopiosService,
+    EntidadesService,
+    ZonasService,
+    CausasService,
+    VERIFICADOR_UBICACIONES,
+    RELOJ,
+  ],
 })
 export class AcopiosModule {}

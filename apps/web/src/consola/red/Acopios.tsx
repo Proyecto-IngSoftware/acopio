@@ -86,7 +86,7 @@ export function Acopios() {
                 <span className="text-body-lg font-semibold text-on-surface">{a.nombre}</span>
                 <span className="flex items-center gap-1 text-body-md text-on-surface">
                   <Icono nombre="handshake" className="text-[18px] text-on-surface-variant" />
-                  {a.entidad.nombre}
+                  {a.entidad?.nombre}
                 </span>
                 <span className="flex items-center gap-1 text-body-sm text-on-surface-variant">
                   <Icono nombre="location_on" className="text-[18px]" />

@@ -2,15 +2,15 @@
 title: "Pieza E · Importación de RedAcopio y carga por CSV · especificación"
 type: spec
 tags: [spec, bloque-1, importacion]
-estado: borrador
+estado: vigente
 bloque: 1
-actualizado: 2026-10-18
+actualizado: 2026-10-19
 ---
 
 # Pieza E · Importación de RedAcopio y carga por CSV · especificación
 
 **Fecha:** 2026-10-18
-**Estado:** borrador, para aprobación de Joseph
+**Estado:** aprobada por Joseph el 2026-10-18
 **Deriva de:** [especificación del Bloque 1](2026-09-30-bloque-1-red-design.md) §2 (pieza E),
 [RF-RED-011](../../01-requerimientos/funcionales/red.md#rf-red-011--importar-acopios-de-una-fuente-externa),
 RF-RED-002 y RF-RED-003 (acopio referenciado en el mapa y en la ficha), criterio 2 de HU-01,
@@ -18,6 +18,7 @@ RF-RED-002 y RF-RED-003 (acopio referenciado en el mapa y en la ficha), criterio
 [modelo-datos.md](../../02-arquitectura/modelo-datos.md) (dos clases de acopio)
 **Issue:** [#49](https://github.com/Proyecto-IngSoftware/acopio/issues/49), filas 8a a 8e del
 [plan de acción](../../05-planes/plan-de-accion.md), con despliegue el miércoles 21 de octubre
+**Plan:** [2026-10-18-pieza-e.md](../../05-planes/2026-10-18-pieza-e.md)
 
 ---
 
@@ -318,4 +319,38 @@ Ninguna pantalla se escribe sin su maqueta aprobada por Joseph en
 
 ## 14. Cambios al construir
 
-(vacío)
+- **85 puntos y no 88.** Tres puntos verificados de RedAcopio vienen en 0, 0 y la base los
+  rechaza por el CHECK `acopio_coordenadas_colombia`. El importador omite los que caen fuera de
+  Colombia y los cuenta en la bitácora como `omitidos`. La demo queda con 85: 54 activos,
+  2 pausados y 29 cerrados.
+- **Comparación de coordenadas con tolerancia.** La huella del punto no lleva las coordenadas:
+  PostgreSQL guarda -74.1352285 como -74.135229 y `toFixed(6)` de JavaScript da -74.135228, así
+  que cada reimportación marcaba un punto como actualizado. Se comparan aparte, con una
+  diferencia menor a 0,000001.
+- **El importador y los formatos viven en `importacion`.** La tabla de dependencias se lee
+  «módulo → quién puede importarlo»; `importacion` importa a `acopios`, `catalogo`,
+  `inventario` y `turnos`, y nadie la importa a ella.
+- **Nombre corto de la fuente.** La fuente de un referenciado trae `nombreCorto`
+  («RedAcopio») además de `nombre` («RedAcopio Bogotá»), para la línea aprobada «Datos de
+  RedAcopio actualizados hace 3 h · Ver en RedAcopio».
+- **La casilla del mapa va con los filtros.** «Mostrar puntos de RedAcopio» vale para el mapa
+  y la lista y queda en la URL como `redacopio=0`. La maqueta la ponía bajo el mapa.
+- **El nivel «no» de RedAcopio** sale en la ficha como «No reciben», junto a «Urgente» y
+  «Normal».
+- **El CSV de plataformas rechaza nombres repetidos**, contra la lista o dentro del archivo, en
+  la columna `nombre`. El recorrido lo encontró: cargar el ejemplo dos veces duplicaba dos
+  plataformas en P14.
+- **Acopios por CSV entran con el horario vacío**, porque el CSV no lo pide. Salen «cerrado
+  ahora» hasta que el Administrador les ponga horario en la consola.
+- **Revisión final.** `revisar` del CSV ahora ve todo lo que haría fallar `aplicar`: el rango
+  de coordenadas de Colombia en acopios y zonas, el enlace https y el rango de cierre de las
+  causas, el acopio cerrado en inventario y jornadas y los nombres repetidos de categorías. Si
+  aun así un servicio lanza un error de dominio en `aplicar`, sale como 422 `CSV_INVALIDO`. El
+  importador aborta con `FORMATO_FUENTE` ante ids repetidos o fechas que no son fechas, y deja
+  la ejecución `ABORTADA` ante cualquier error. Los menores quedaron en
+  [P-077](../../01-requerimientos/pendientes.md#p-077--menores-de-la-revisión-final-de-la-pieza-e).
+- **`catalogo` e `importacion` entran a `MIGRADOS_A_DAO`.** La pieza E tocó `catalogo`, que
+  seguía sin migrar; sus cuatro servicios pasan a `CategoriaDao`, `CanastaDao`, `EmergenciaDao`
+  y `CodigoBarrasDao`.
+- Lo que falta de RF-RED-011 quedó en
+  [P-076](../../01-requerimientos/pendientes.md#p-076--lo-que-falta-de-rf-red-011-después-de-la-pieza-e).

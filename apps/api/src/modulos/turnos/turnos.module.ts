@@ -19,5 +19,6 @@ import { TareasTurnosService } from './tareas-turnos.service';
     ReservasService,
     TareasTurnosService,
   ],
+  exports: [JornadasService],
 })
 export class TurnosModule {}

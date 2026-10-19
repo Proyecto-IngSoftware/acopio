@@ -15,6 +15,10 @@ const esquema = z
     SUPABASE_ANON_KEY: z.string().optional(),
     SUPABASE_SERVICE_ROLE_KEY: z.string().optional(),
 
+    // Pieza E: de dónde lee RedAcopio y si la lectura cada 60 minutos está encendida
+    IMPORTACION_ORIGEN: z.enum(['archivo', 'http']).default('archivo'),
+    IMPORTACION_PROGRAMADA: z.stringbool().default(false),
+
     // P-055: apagado, la API no encola ni envía correo; los enlaces se comparten a mano
     CORREO_ACTIVO: z.stringbool().default(true),
     SMTP_HOST: z.string().optional(),

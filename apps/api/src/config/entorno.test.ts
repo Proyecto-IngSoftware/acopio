@@ -50,6 +50,22 @@ describe('leerEntorno', () => {
     expect(() => leerEntorno(sinCorreo)).toThrow(/CORREO_ACTIVO=true exige SMTP_HOST/);
   });
 
+  it('la importación lee la copia guardada y la lectura programada viene apagada (pieza E)', () => {
+    const e = leerEntorno(valido);
+    expect(e.IMPORTACION_ORIGEN).toBe('archivo');
+    expect(e.IMPORTACION_PROGRAMADA).toBe(false);
+  });
+
+  it('la importación acepta leer por red y encender la lectura programada', () => {
+    const e = leerEntorno({
+      ...valido,
+      IMPORTACION_ORIGEN: 'http',
+      IMPORTACION_PROGRAMADA: 'true',
+    });
+    expect(e.IMPORTACION_ORIGEN).toBe('http');
+    expect(e.IMPORTACION_PROGRAMADA).toBe(true);
+  });
+
   it('nombra la variable que falta', () => {
     const { DATABASE_URL: _omitida, ...incompleto } = valido;
     expect(() => leerEntorno(incompleto)).toThrow(/DATABASE_URL/);

@@ -1886,6 +1886,91 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/importacion/fuentes/redacopio/ejecutar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Importa los puntos de RedAcopio desde la fuente configurada */
+        post: operations["ImportacionController_ejecutar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/publico/plataformas": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Otras plataformas de ayuda, en su orden. No exige sesión */
+        get: operations["PlataformasController_listar"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/importacion/formatos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Tipos de CSV que se pueden cargar, con sus columnas */
+        get: operations["CsvController_formatos"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/importacion/csv/{tipo}/revisar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revisa un CSV fila por fila, sin escribir nada */
+        post: operations["CsvController_revisar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/importacion/csv/{tipo}/aplicar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Carga un CSV: todas las filas o ninguna (422 con el reporte) */
+        post: operations["CsvController_aplicar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/salud": {
         parameters: {
             query?: never;
@@ -2440,7 +2525,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 nombre: string;
-            };
+            } | null;
             direccion: string;
             municipio: string;
             lat: number;
@@ -2483,6 +2568,25 @@ export interface components {
             /** Format: date-time */
             actualizadoEn: string;
             distanciaKm?: number;
+            /** @enum {string} */
+            tipo: "OPERADO" | "REFERENCIADO";
+            /** @description Solo en un referenciado: lo que trae su fuente, tal cual */
+            fuente: {
+                nombre: string;
+                nombreCorto: string;
+                url: string | null;
+                /** Format: date-time */
+                actualizadoEn: string | null;
+                estadoOriginal: string;
+                necesidades: {
+                    nivel: string;
+                    texto: string;
+                }[];
+                horario: string | null;
+                contacto: {
+                    [key: string]: string;
+                };
+            } | null;
         };
         AcopioDto: {
             /** Format: uuid */
@@ -2492,7 +2596,7 @@ export interface components {
                 /** Format: uuid */
                 id: string;
                 nombre: string;
-            };
+            } | null;
             direccion: string;
             municipio: string;
             lat: number;
@@ -2535,6 +2639,25 @@ export interface components {
             /** Format: date-time */
             actualizadoEn: string;
             distanciaKm?: number;
+            /** @enum {string} */
+            tipo: "OPERADO" | "REFERENCIADO";
+            /** @description Solo en un referenciado: lo que trae su fuente, tal cual */
+            fuente: {
+                nombre: string;
+                nombreCorto: string;
+                url: string | null;
+                /** Format: date-time */
+                actualizadoEn: string | null;
+                estadoOriginal: string;
+                necesidades: {
+                    nivel: string;
+                    texto: string;
+                }[];
+                horario: string | null;
+                contacto: {
+                    [key: string]: string;
+                };
+            } | null;
             /** Format: date-time */
             creadoEn: string;
         };
@@ -3885,6 +4008,44 @@ export interface components {
                     lng: number | null;
                 };
             };
+        };
+        ResultadoImportacionDto: {
+            /** @enum {string} */
+            resultado: "OK" | "ABORTADA";
+            creados: number;
+            actualizados: number;
+            cerrados: number;
+            motivo: string | null;
+        };
+        PlataformaDto: {
+            /** Format: uuid */
+            id: string;
+            nombre: string;
+            categoria: string;
+            descripcion: string;
+            url: string;
+        };
+        FormatoCsvDto: {
+            tipo: string;
+            descripcion: string;
+            columnas: {
+                nombre: string;
+                obligatoria: boolean;
+                descripcion: string;
+                ejemplo: string;
+            }[];
+        };
+        ReporteCsvDto: {
+            filas: {
+                numero: number;
+                valida: boolean;
+                errores: {
+                    columna: string | null;
+                    mensaje: string;
+                }[];
+            }[];
+            validas: number;
+            invalidas: number;
         };
         SaludDto: {
             /** @enum {string} */
@@ -5600,6 +5761,8 @@ export interface operations {
         parameters: {
             query?: {
                 abiertoAhora?: string;
+                /** @description OPERADO, REFERENCIADO o los dos separados por coma. Sin él, solo operados */
+                tipos?: string;
                 cerca?: string;
             };
             header?: never;
@@ -7960,6 +8123,105 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ReservaPublicaDto"];
+                };
+            };
+        };
+    };
+    ImportacionController_ejecutar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ResultadoImportacionDto"];
+                };
+            };
+        };
+    };
+    PlataformasController_listar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PlataformaDto"][];
+                };
+            };
+        };
+    };
+    CsvController_formatos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FormatoCsvDto"][];
+                };
+            };
+        };
+    };
+    CsvController_revisar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tipo: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReporteCsvDto"];
+                };
+            };
+        };
+    };
+    CsvController_aplicar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tipo: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReporteCsvDto"];
                 };
             };
         };

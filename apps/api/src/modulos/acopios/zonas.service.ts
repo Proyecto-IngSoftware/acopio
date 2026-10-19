@@ -35,32 +35,35 @@ export class ZonasService {
   }
 
   async crear(admin: UsuarioAutenticado, datos: DatosZona) {
-    return this.transacciones.ejecutar(async (tx) => {
-      await this.exigirEmergenciaAbierta(tx, datos.emergenciaId);
-      const z = await this.dao.crear(
-        {
-          emergencia_id: datos.emergenciaId,
-          nombre: datos.nombre.trim(),
-          municipio: datos.municipio.trim(),
-          lat: datos.lat,
-          lng: datos.lng,
-          poblacion_estimada: datos.poblacionEstimada,
-          poblacion_fuente: datos.poblacionFuente.trim(),
-          poblacion_fecha: datos.poblacionFecha,
-          estado: datos.estado ?? 'SIN_ATENDER',
-        },
-        tx,
-      );
-      await this.bitacora.registrar(tx, {
-        usuarioId: admin.id,
-        accion: 'zona.creada',
-        entidad: 'zona',
-        entidadId: z.id,
-        ubicacionId: z.id,
-        despues: presentarZona(z),
-      });
-      return presentarZona(z);
+    return this.transacciones.ejecutar((tx) => this.crearEnTransaccion(tx, admin, datos));
+  }
+
+  /** La creación en la transacción de quien llama: la usa también la carga por CSV (pieza E). */
+  async crearEnTransaccion(tx: ClienteBd, admin: UsuarioAutenticado, datos: DatosZona) {
+    await this.exigirEmergenciaAbierta(tx, datos.emergenciaId);
+    const z = await this.dao.crear(
+      {
+        emergencia_id: datos.emergenciaId,
+        nombre: datos.nombre.trim(),
+        municipio: datos.municipio.trim(),
+        lat: datos.lat,
+        lng: datos.lng,
+        poblacion_estimada: datos.poblacionEstimada,
+        poblacion_fuente: datos.poblacionFuente.trim(),
+        poblacion_fecha: datos.poblacionFecha,
+        estado: datos.estado ?? 'SIN_ATENDER',
+      },
+      tx,
+    );
+    await this.bitacora.registrar(tx, {
+      usuarioId: admin.id,
+      accion: 'zona.creada',
+      entidad: 'zona',
+      entidadId: z.id,
+      ubicacionId: z.id,
+      despues: presentarZona(z),
     });
+    return presentarZona(z);
   }
 
   async actualizar(

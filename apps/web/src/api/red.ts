@@ -55,7 +55,12 @@ export function opcionesAcopiosPublicos(filtro: FiltroPublico) {
       const filas = await desenvolver(
         api.GET('/api/acopios', {
           params: {
-            query: { abiertoAhora: filtro.abiertoAhora ? 'true' : undefined, cerca } as never,
+            // Los puntos de RedAcopio vienen siempre; el mapa decide si los muestra (pieza E)
+            query: {
+              abiertoAhora: filtro.abiertoAhora ? 'true' : undefined,
+              cerca,
+              tipos: 'OPERADO,REFERENCIADO',
+            } as never,
           },
         }),
       );

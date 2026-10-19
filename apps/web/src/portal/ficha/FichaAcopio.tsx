@@ -1,5 +1,4 @@
 import { diaEnBogota, distanciaKm } from '@acopio/shared';
-import type { ReactNode } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import { useUrgente } from '../../api/inventario';
 import { useAcopio, useNoRecibir, type AcopioPublico } from '../../api/red';
@@ -13,9 +12,8 @@ import { diaSemana, haceCuanto, rangoHoras } from '../../formato';
 import { AvisoSinDinero } from '../bloques/AvisoSinDinero';
 import { aperturaPublica, km } from '../mapa/TarjetaAcopio';
 import { Marca, marcaJornada, textoCupos } from '../turnos/piezas';
-
-const BOTON =
-  'inline-flex min-h-[48px] w-full items-center justify-center gap-space-xs rounded-xl px-space-md text-label-md';
+import { FichaReferenciado } from './FichaReferenciado';
+import { BOTON, Tarjeta } from './piezas';
 
 /** P6 Ficha pública de un acopio (RF-RED-003). */
 export function FichaAcopio() {
@@ -38,31 +36,8 @@ export function FichaAcopio() {
       </div>
     );
   }
+  if (data.fuente) return <FichaReferenciado punto={data} cerca={cerca} />;
   return <Contenido acopio={data} cerca={cerca} />;
-}
-
-function Tarjeta({
-  titulo,
-  icono,
-  children,
-}: {
-  titulo: string;
-  icono: string;
-  children: ReactNode;
-}) {
-  const id = `ficha-${titulo.replace(/\W+/g, '-')}`;
-  return (
-    <section
-      aria-labelledby={id}
-      className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md"
-    >
-      <h2 id={id} className="flex items-center gap-space-xs text-headline-sm text-on-surface">
-        <Icono nombre={icono} className="text-[22px] text-primary-container" />
-        {titulo}
-      </h2>
-      {children}
-    </section>
-  );
 }
 
 function Contenido({ acopio, cerca }: { acopio: AcopioPublico; cerca: string | null }) {
@@ -92,7 +67,7 @@ function Contenido({ acopio, cerca }: { acopio: AcopioPublico; cerca: string | n
 
       <div className="flex flex-col gap-space-xs">
         <h1 className="text-headline-lg-mobile tracking-tight text-on-surface">{acopio.nombre}</h1>
-        <p className="text-body-md text-on-surface-variant">{acopio.entidad.nombre}</p>
+        <p className="text-body-md text-on-surface-variant">{acopio.entidad?.nombre}</p>
         <div className="flex flex-wrap items-center gap-space-xs text-body-sm text-on-surface">
           <EtiquetaEstado estado={acopio.estado} />
           <span>{aperturaPublica(acopio)}</span>

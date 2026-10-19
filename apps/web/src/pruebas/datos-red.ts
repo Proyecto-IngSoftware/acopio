@@ -15,5 +15,32 @@ export const acopioDePrueba = (datos: Partial<AcopioPublico> = {}): AcopioPublic
   estado: 'ACTIVO',
   abiertoAhora: true,
   actualizadoEn: '2026-09-30T12:00:00.000Z',
+  tipo: 'OPERADO',
+  fuente: null,
   ...datos,
 });
+
+/** Un punto de RedAcopio (pieza E): sin entidad, con lo que trae su fuente. */
+export const referenciadoDePrueba = (datos: Partial<AcopioPublico> = {}): AcopioPublico =>
+  acopioDePrueba({
+    id: '22222222-2222-4222-8222-222222222222',
+    nombre: 'Sugoi Taller Creativo',
+    entidad: null,
+    direccion: 'Calle 128A No. 45A-74 piso 3',
+    abiertoAhora: false,
+    tipo: 'REFERENCIADO',
+    fuente: {
+      nombre: 'RedAcopio Bogotá',
+      nombreCorto: 'RedAcopio',
+      url: 'https://redacopiobogota.com/',
+      actualizadoEn: new Date(Date.now() - 3 * 3_600_000).toISOString(),
+      estadoOriginal: 'abierto',
+      necesidades: [
+        { nivel: 'urgente', texto: 'Camión' },
+        { nivel: 'normal', texto: 'Agua' },
+      ],
+      horario: '10:00 am - 7:00 pm',
+      contacto: { phone: '3024821367', notes: 'Timbre de acceso en la puerta principal' },
+    },
+    ...datos,
+  });
