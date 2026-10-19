@@ -199,6 +199,9 @@ await paso('quitar la verificación corta el enlace en la ficha pública', async
   const confirmar = p.getByRole('dialog', { name: '¿Quitar la verificación?' });
   await confirmar.getByText(/Su única causa activa pasa a atendidas/).waitFor();
   await confirmar.getByRole('button', { name: 'Quitar verificación' }).click();
+  // La hoja se cierra cuando la API respondió; si se navega antes, la ficha puede leer la
+  // entidad todavía verificada y no volver a pedirla en 60 s (staleTime)
+  await confirmar.waitFor({ state: 'detached' });
   await p.goto(`${WEB}/causas/${causaId}`);
   await p.getByText('Esta entidad ya no está verificada por Acopio.').waitFor();
   if (await p.getByRole('button', { name: /Ir al sitio oficial/ }).count()) {
