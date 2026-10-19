@@ -92,7 +92,7 @@ function Contenido({ acopio, cerca }: { acopio: AcopioPublico; cerca: string | n
 
       <div className="flex flex-col gap-space-xs">
         <h1 className="text-headline-lg-mobile tracking-tight text-on-surface">{acopio.nombre}</h1>
-        <p className="text-body-md text-on-surface-variant">{acopio.entidad.nombre}</p>
+        <p className="text-body-md text-on-surface-variant">{acopio.entidad?.nombre}</p>
         <div className="flex flex-wrap items-center gap-space-xs text-body-sm text-on-surface">
           <EtiquetaEstado estado={acopio.estado} />
           <span>{aperturaPublica(acopio)}</span>

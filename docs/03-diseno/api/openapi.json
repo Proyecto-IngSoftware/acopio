@@ -2760,6 +2760,15 @@
             }
           },
           {
+            "name": "tipos",
+            "required": false,
+            "in": "query",
+            "description": "OPERADO, REFERENCIADO o los dos separados por coma. Sin él, solo operados",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "cerca",
             "required": false,
             "in": "query",
@@ -6691,6 +6700,59 @@
         ]
       }
     },
+    "/api/importacion/fuentes/redacopio/ejecutar": {
+      "post": {
+        "operationId": "ImportacionController_ejecutar",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultadoImportacionDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Importa los puntos de RedAcopio desde la fuente configurada",
+        "tags": [
+          "importacion"
+        ]
+      }
+    },
+    "/api/publico/plataformas": {
+      "get": {
+        "operationId": "PlataformasController_listar",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PlataformaDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "summary": "Otras plataformas de ayuda, en su orden. No exige sesión",
+        "tags": [
+          "importacion"
+        ]
+      }
+    },
     "/api/salud": {
       "get": {
         "operationId": "SaludController_revisar",
@@ -8780,6 +8842,10 @@
           },
           "entidad": {
             "type": "object",
+            "required": [
+              "id",
+              "nombre"
+            ],
             "properties": {
               "id": {
                 "type": "string",
@@ -8790,10 +8856,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id",
-              "nombre"
-            ]
+            "nullable": true
           },
           "direccion": {
             "type": "string"
@@ -8973,6 +9036,77 @@
           },
           "distanciaKm": {
             "type": "number"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "OPERADO",
+              "REFERENCIADO"
+            ]
+          },
+          "fuente": {
+            "description": "Solo en un referenciado: lo que trae su fuente, tal cual",
+            "type": "object",
+            "required": [
+              "nombre",
+              "url",
+              "actualizadoEn",
+              "estadoOriginal",
+              "necesidades",
+              "horario",
+              "contacto"
+            ],
+            "properties": {
+              "nombre": {
+                "type": "string"
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "actualizadoEn": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "nullable": true
+              },
+              "estadoOriginal": {
+                "type": "string"
+              },
+              "necesidades": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "nivel": {
+                      "type": "string"
+                    },
+                    "texto": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "nivel",
+                    "texto"
+                  ]
+                }
+              },
+              "horario": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "contacto": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            },
+            "nullable": true
           }
         },
         "required": [
@@ -8988,7 +9122,9 @@
           "horario",
           "estado",
           "abiertoAhora",
-          "actualizadoEn"
+          "actualizadoEn",
+          "tipo",
+          "fuente"
         ]
       },
       "AcopioDto": {
@@ -9004,6 +9140,10 @@
           },
           "entidad": {
             "type": "object",
+            "required": [
+              "id",
+              "nombre"
+            ],
             "properties": {
               "id": {
                 "type": "string",
@@ -9014,10 +9154,7 @@
                 "type": "string"
               }
             },
-            "required": [
-              "id",
-              "nombre"
-            ]
+            "nullable": true
           },
           "direccion": {
             "type": "string"
@@ -9197,6 +9334,77 @@
           },
           "distanciaKm": {
             "type": "number"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "OPERADO",
+              "REFERENCIADO"
+            ]
+          },
+          "fuente": {
+            "description": "Solo en un referenciado: lo que trae su fuente, tal cual",
+            "type": "object",
+            "required": [
+              "nombre",
+              "url",
+              "actualizadoEn",
+              "estadoOriginal",
+              "necesidades",
+              "horario",
+              "contacto"
+            ],
+            "properties": {
+              "nombre": {
+                "type": "string"
+              },
+              "url": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "actualizadoEn": {
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z))$",
+                "nullable": true
+              },
+              "estadoOriginal": {
+                "type": "string"
+              },
+              "necesidades": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "nivel": {
+                      "type": "string"
+                    },
+                    "texto": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "nivel",
+                    "texto"
+                  ]
+                }
+              },
+              "horario": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "contacto": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            },
+            "nullable": true
           },
           "creadoEn": {
             "type": "string",
@@ -9218,6 +9426,8 @@
           "estado",
           "abiertoAhora",
           "actualizadoEn",
+          "tipo",
+          "fuente",
           "creadoEn"
         ]
       },
@@ -14641,6 +14851,73 @@
           "perfilDeclarado",
           "jornadaCambiadaEn",
           "jornada"
+        ]
+      },
+      "ResultadoImportacionDto": {
+        "type": "object",
+        "properties": {
+          "resultado": {
+            "type": "string",
+            "enum": [
+              "OK",
+              "ABORTADA"
+            ]
+          },
+          "creados": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "actualizados": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "cerrados": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "motivo": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "required": [
+          "resultado",
+          "creados",
+          "actualizados",
+          "cerrados",
+          "motivo"
+        ]
+      },
+      "PlataformaDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "categoria": {
+            "type": "string"
+          },
+          "descripcion": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "nombre",
+          "categoria",
+          "descripcion",
+          "url"
         ]
       },
       "SaludDto": {

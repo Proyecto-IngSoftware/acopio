@@ -236,7 +236,7 @@ function Elegido({ acopio, enlace }: { acopio: AcopioPublico; enlace: string }) 
       </div>
       <div>
         <p className="text-body-lg font-semibold text-on-surface">{acopio.nombre}</p>
-        <p className="text-body-md text-on-surface-variant">{acopio.entidad.nombre}</p>
+        <p className="text-body-md text-on-surface-variant">{acopio.entidad?.nombre}</p>
       </div>
       <p className="flex items-center gap-1 text-body-sm text-on-surface-variant">
         <Icono nombre="location_on" className="text-[18px]" />

@@ -72,7 +72,7 @@ function Seccion({
 function Formulario({ acopio, entidades }: { acopio: Acopio | null; entidades: Entidad[] }) {
   const navegar = useNavigate();
   const guardar = useGuardarAcopio();
-  const [entidadId, fijarEntidadId] = useState(acopio?.entidad.id ?? '');
+  const [entidadId, fijarEntidadId] = useState(acopio?.entidad?.id ?? '');
   const [nombre, fijarNombre] = useState(acopio?.nombre ?? '');
   const [direccion, fijarDireccion] = useState(acopio?.direccion ?? '');
   const [municipio, fijarMunicipio] = useState(acopio?.municipio ?? '');

@@ -1,7 +1,10 @@
 import { ErrorDominio } from '../../../../comun/errores/error-dominio';
+import { datosFuente } from '@acopio/shared';
 import type { FuenteAcopios } from '../fuente-acopios';
 import type { LecturaFuente } from '../tipos';
 import { leerHerramientas, leerPortada } from './lector';
+
+const REDACOPIO = datosFuente('redacopio');
 
 /** Identifica a Acopio ante el operador del sitio, con un contacto (P-022). */
 export const AGENTE = 'Acopio/1.0 (proyecto académico ETITC; +https://acopio.josephqaz.dev)';
@@ -11,9 +14,9 @@ const BASE = 'https://redacopiobogota.com';
 /** RedAcopio leído de la página. Apagado por defecto: lo enciende `IMPORTACION_ORIGEN=http`. */
 export class RedAcopioHttp implements FuenteAcopios {
   readonly nombre = 'redacopio';
-  readonly etiqueta = 'RedAcopio Bogotá';
-  readonly url = 'https://redacopiobogota.com/';
-  readonly municipio = 'Bogotá';
+  readonly etiqueta = REDACOPIO.etiqueta;
+  readonly url = REDACOPIO.url!;
+  readonly municipio = REDACOPIO.municipio!;
   readonly origen = 'HTTP' as const;
 
   constructor(private readonly pedir: typeof fetch = fetch) {}

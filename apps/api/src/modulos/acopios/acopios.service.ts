@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import {
   abiertoAhora,
+  datosFuente,
   distanciaKm,
   erroresHorario,
   type Horario,
@@ -11,7 +12,7 @@ import { ErrorDominio } from '../../comun/errores/error-dominio';
 import type { ClienteBd } from '../../comun/prisma/cliente-bd';
 import { Transacciones } from '../../comun/prisma/transacciones';
 import type { Prisma } from '../../generado/prisma/client';
-import type { EstadoAcopio } from '../../generado/prisma/enums';
+import type { EstadoAcopio, TipoAcopio } from '../../generado/prisma/enums';
 import { BitacoraService } from '../auditoria/bitacora.service';
 import { AlcanceService } from '../identidad/autenticacion/alcance.service';
 import { AcopioDao, type FilaAcopio } from './dao/acopio.dao';
@@ -51,10 +52,15 @@ export class AcopiosService {
     private readonly alcance: AlcanceService,
   ) {}
 
-  async listarPublicos(filtro: { abiertoAhora?: boolean; cerca?: Punto }, ahora = new Date()) {
-    const filas = await this.dao.publicos();
+  async listarPublicos(
+    filtro: { abiertoAhora?: boolean; cerca?: Punto; tipos?: TipoAcopio[] },
+    ahora = new Date(),
+  ) {
+    const filas = await this.dao.publicos(filtro.tipos);
     let vistas = filas.map((f) => presentarAcopio(f, ahora));
-    if (filtro.abiertoAhora) vistas = vistas.filter((v) => v.abiertoAhora);
+    // «Abierto ahora» filtra los operados; un referenciado no tiene horario que comparar
+    if (filtro.abiertoAhora)
+      vistas = vistas.filter((v) => v.tipo === 'REFERENCIADO' || v.abiertoAhora);
     if (filtro.cerca) {
       const desde = filtro.cerca;
       vistas = vistas
@@ -66,7 +72,9 @@ export class AcopiosService {
 
   async obtenerPublico(id: string) {
     const f = await this.dao.conEntidad(id);
-    if (!f || f.estado === 'CERRADO') {
+    // Un referenciado cerrado sí tiene ficha (la lista lo muestra); uno oculto no existe para el público
+    const visible = f && (f.tipo === 'REFERENCIADO' ? !f.oculto_por_admin : f.estado !== 'CERRADO');
+    if (!visible) {
       throw new ErrorDominio('ACOPIO_NO_ENCONTRADO', 'El acopio no existe o ya cerró', 404);
     }
     return presentarAcopio(f);
@@ -240,8 +248,24 @@ export function presentarAcopio(f: FilaAcopio, ahora = new Date()) {
     indicacionesAcceso: f.indicaciones_acceso,
     horario,
     estado: f.estado,
-    abiertoAhora: f.estado === 'ACTIVO' && abiertoAhora(horario, ahora),
+    // Un referenciado no tiene horario estructurado: su horario es el texto de la fuente
+    abiertoAhora: f.tipo === 'OPERADO' && f.estado === 'ACTIVO' && abiertoAhora(horario, ahora),
     actualizadoEn: f.actualizado_en,
+    tipo: f.tipo,
+    fuente: f.tipo === 'REFERENCIADO' ? presentarFuente(f) : null,
+  };
+}
+
+/** Lo que trae la fuente de un referenciado, tal cual (RF-RED-003). */
+function presentarFuente(f: FilaAcopio) {
+  return {
+    nombre: datosFuente(f.fuente ?? '').etiqueta,
+    url: f.fuente_url,
+    actualizadoEn: f.fuente_actualizado_en,
+    estadoOriginal: f.fuente_estado ?? '',
+    necesidades: (f.fuente_necesidades ?? []) as { nivel: string; texto: string }[],
+    horario: f.fuente_horario,
+    contacto: (f.fuente_contacto ?? {}) as Record<string, string>,
   };
 }
 

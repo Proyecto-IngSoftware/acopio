@@ -1,15 +1,18 @@
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
+import { datosFuente } from '@acopio/shared';
 import type { FuenteAcopios } from '../fuente-acopios';
 import type { LecturaFuente } from '../tipos';
 import { leerHerramientas, leerPortada } from './lector';
 
+const REDACOPIO = datosFuente('redacopio');
+
 /** RedAcopio desde la copia guardada en el repositorio: la base de desarrollo y de pruebas. */
 export class RedAcopioArchivo implements FuenteAcopios {
   readonly nombre = 'redacopio';
-  readonly etiqueta = 'RedAcopio Bogotá';
-  readonly url = 'https://redacopiobogota.com/';
-  readonly municipio = 'Bogotá';
+  readonly etiqueta = REDACOPIO.etiqueta;
+  readonly url = REDACOPIO.url!;
+  readonly municipio = REDACOPIO.municipio!;
   readonly origen = 'ARCHIVO' as const;
 
   constructor(private readonly carpeta = join(__dirname, 'copia')) {}

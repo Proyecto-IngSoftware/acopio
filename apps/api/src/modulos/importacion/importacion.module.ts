@@ -6,6 +6,7 @@ import { FUENTE_ACOPIOS } from './fuentes/fuente-acopios';
 import { RedAcopioArchivo } from './fuentes/redacopio/redacopio-archivo';
 import { RedAcopioHttp } from './fuentes/redacopio/redacopio-http';
 import { ImportacionController } from './importacion.controller';
+import { PlataformasController } from './plataformas.controller';
 import { ImportadorReferenciadosService } from './importador-referenciados.service';
 import { TareaImportacionService } from './tarea-importacion.service';
 
@@ -14,7 +15,7 @@ import { TareaImportacionService } from './tarea-importacion.service';
  * importa los módulos cuyos datos escribe y nadie la importa a ella.
  */
 @Module({
-  controllers: [ImportacionController],
+  controllers: [ImportacionController, PlataformasController],
   providers: [
     ImportadorReferenciadosService,
     TareaImportacionService,

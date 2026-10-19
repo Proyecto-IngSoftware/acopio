@@ -32,6 +32,12 @@ const texto = (max: number) => z.string().trim().min(1).max(max);
 class FiltroPublicoDto extends crearDto(
   z.object({
     abiertoAhora: z.stringbool().default(false),
+    tipos: z
+      .string()
+      .transform((s) => s.split(',').map((t) => t.trim()))
+      .pipe(z.array(z.enum(['OPERADO', 'REFERENCIADO'])).min(1))
+      .optional()
+      .describe('OPERADO, REFERENCIADO o los dos separados por coma. Sin él, solo operados'),
     cerca: z
       .string()
       .regex(/^-?\d+(\.\d+)?,-?\d+(\.\d+)?$/, 'Usa «lat,lng», por ejemplo 4.61,-74.08')

@@ -29,7 +29,7 @@ export function TarjetaAcopio({ acopio, enlace }: { acopio: AcopioPublico; enlac
             </span>
           )}
         </span>
-        <span className="text-body-md text-on-surface-variant">{acopio.entidad.nombre}</span>
+        <span className="text-body-md text-on-surface-variant">{acopio.entidad?.nombre}</span>
         <span className="flex items-center gap-1 text-body-sm text-on-surface-variant">
           <Icono nombre="location_on" className="text-[18px]" />
           {acopio.direccion} · {acopio.municipio}

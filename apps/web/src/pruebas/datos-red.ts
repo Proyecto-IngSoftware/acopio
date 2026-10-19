@@ -15,5 +15,7 @@ export const acopioDePrueba = (datos: Partial<AcopioPublico> = {}): AcopioPublic
   estado: 'ACTIVO',
   abiertoAhora: true,
   actualizadoEn: '2026-09-30T12:00:00.000Z',
+  tipo: 'OPERADO',
+  fuente: null,
   ...datos,
 });

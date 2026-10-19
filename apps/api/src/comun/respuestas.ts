@@ -227,7 +227,7 @@ export class AcopioPublicoDto extends crearDto(
   z.object({
     id: z.uuid(),
     nombre: z.string(),
-    entidad: z.object({ id: z.uuid(), nombre: z.string() }),
+    entidad: z.object({ id: z.uuid(), nombre: z.string() }).nullable(),
     direccion: z.string(),
     municipio: z.string(),
     lat: z.number(),
@@ -239,6 +239,29 @@ export class AcopioPublicoDto extends crearDto(
     abiertoAhora: z.boolean(),
     actualizadoEn: fecha,
     distanciaKm: z.number().optional(),
+    tipo: z.enum(['OPERADO', 'REFERENCIADO']),
+    fuente: z
+      .object({
+        nombre: z.string(),
+        url: z.string().nullable(),
+        actualizadoEn: fecha.nullable(),
+        estadoOriginal: z.string(),
+        necesidades: z.array(z.object({ nivel: z.string(), texto: z.string() })),
+        horario: z.string().nullable(),
+        contacto: z.record(z.string(), z.string()),
+      })
+      .nullable()
+      .describe('Solo en un referenciado: lo que trae su fuente, tal cual'),
+  }),
+) {}
+
+export class PlataformaDto extends crearDto(
+  z.object({
+    id: z.uuid(),
+    nombre: z.string(),
+    categoria: z.string(),
+    descripcion: z.string(),
+    url: z.string(),
   }),
 ) {}
 
