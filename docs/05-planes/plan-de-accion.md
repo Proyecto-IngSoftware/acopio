@@ -68,7 +68,7 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | 10 | Escáner probado con un teléfono y un código real contra el servidor | #40 | 2026-11-15 | ⬜ |
 | 11 | Review y retrospectiva del Sprint 3 | #51 | 2026-11-20 | ⬜ |
 | 12 | Bloque 6: bitácora enriquecida, transparencia y publicaciones. Es lo primero que se recorta | #37 | 2026-11-22 | ⬜ |
-| 13 | Deuda de las revisiones: menores de los bloques 1 a 3 (P-034, P-038 y los del Bloque 3), del cierre del Bloque 5 (P-070, P-071) y la imagen que falta en Garage (P-058) | #43, #129 | 2026-11-22 | ⬜ |
+| 13 | Deuda de las revisiones: menores de los bloques 1 a 3 (P-034, P-038 y los del Bloque 3) y la imagen que falta en Garage (P-058). Los del cierre del Bloque 5 (P-070, P-071, #129) quedaron hechos el 18 de octubre | #43 | 2026-11-22 | 🟡 |
 | 14 | P5 de Stitch con el filtro viejo | #39 | 2026-11-22 | ⬜ |
 | 15 | Íconos que se ven como texto mientras baja su fuente | #41 | 2026-11-22 | ⬜ |
 
@@ -133,3 +133,8 @@ Sprint 3.
   fila 6, antes del Planning del Sprint 3. En #45 queda marcada la captura del tablero del
   Avance 4, que estaba desde el 16 de octubre. La fila 13 nombra P-034, P-038 y P-058, y
   P-043 y P-044 quedan en «Se vigila sin fecha».
+- 2026-10-18: #129 cerrado. P-070 y P-071 quedan resueltos: los plazos de cancelar y de marcar
+  asistencia los decide la API, las fechas que no existen dan 400 y salen los demás menores de
+  turnos y causas. La fila 13 sigue con #43. La pieza E (#49) suma dos casillas pedidas por
+  Joseph: una copia de trabajo de RedAcopio para desarrollar sin pedir la página en cada prueba,
+  y la lista de plataformas de `/herramientas`, que irá aparte de las causas.

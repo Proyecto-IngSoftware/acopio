@@ -141,7 +141,12 @@ describe('turnos: reservas', () => {
     const ruta = `/api/turnos/reservas/${codigo}`;
 
     const vista = await a.http().post(`${ruta}/consultar`).send({ secreto }).expect(200);
-    expect(vista.body).toMatchObject({ codigo, estado: 'ACTIVA', nombre: 'Ana Pérez' });
+    expect(vista.body).toMatchObject({
+      codigo,
+      estado: 'ACTIVA',
+      nombre: 'Ana Pérez',
+      puedeCancelar: true,
+    });
     expect(vista.body.jornada.id).toBe(j.id);
     const ajeno = await a.http().post(`${ruta}/consultar`).send({ secreto: 'otro' }).expect(404);
     expect(ajeno.body.codigo).toBe('RESERVA_NO_ENCONTRADA');
@@ -150,7 +155,7 @@ describe('turnos: reservas', () => {
     expect(await libresEnGestion(j.id)).toBe(2);
     await a.http().post(`${ruta}/cancelar`).send({ secreto: 'otro' }).expect(404);
     const c = await a.http().post(`${ruta}/cancelar`).send({ secreto }).expect(200);
-    expect(c.body.estado).toBe('CANCELADA');
+    expect(c.body).toMatchObject({ estado: 'CANCELADA', puedeCancelar: false });
     expect(await libresEnGestion(j.id)).toBe(3);
     await a.http().post(`${ruta}/cancelar`).send({ secreto }).expect(200);
 
@@ -208,6 +213,12 @@ describe('turnos: reservas', () => {
       where: { id: j.id },
       data: { inicio: new Date(AHORA - HORA), fin: new Date(AHORA + HORA) },
     });
+    const vista = await a
+      .http()
+      .post(`/api/turnos/reservas/${r.body.codigo}/consultar`)
+      .send({ secreto: r.body.secreto })
+      .expect(200);
+    expect(vista.body).toMatchObject({ estado: 'ACTIVA', puedeCancelar: false });
     const c = await a
       .http()
       .post(`/api/turnos/reservas/${r.body.codigo}/cancelar`)

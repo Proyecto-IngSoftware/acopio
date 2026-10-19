@@ -207,9 +207,12 @@ export class ReservasService {
   }
 
   private presentar(r: FilaReserva) {
+    const ahora = this.ahora();
     return {
       codigo: r.codigo,
       estado: r.estado,
+      // La misma regla que `cancelar`: hasta la hora de inicio
+      puedeCancelar: r.estado === 'ACTIVA' && ahora < r.jornada.inicio,
       nombre: r.nombre,
       perfilDeclarado: r.perfil_declarado,
       // Solo si la jornada se movió después de reservar; las dos horas salen del reloj de la API
@@ -217,7 +220,7 @@ export class ReservasService {
         r.jornada.movida_en && r.jornada.movida_en >= r.consentimiento_en
           ? r.jornada.movida_en.toISOString()
           : null,
-      jornada: presentarJornadaPublica(r.jornada, this.ahora()),
+      jornada: presentarJornadaPublica(r.jornada, ahora),
     };
   }
 

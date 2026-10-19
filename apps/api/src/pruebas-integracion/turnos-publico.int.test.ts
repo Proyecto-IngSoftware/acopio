@@ -87,6 +87,12 @@ describe('turnos: público e inscritos', () => {
     const r = await a.http().get(`/api/turnos/jornadas${consulta}`).expect(200);
     return r.body.filter((j: { titulo: string }) => j.titulo.startsWith(marca));
   };
+  const enGestion = async (jornadaId: string) => {
+    const r = await a.http().get('/api/turnos/gestion/jornadas').set(como(operador)).expect(200);
+    return r.body.find((j: { id: string }) => j.id === jornadaId) as {
+      puedeMarcarAsistencia: boolean;
+    };
+  };
   const titulos = (js: { titulo: string }[]) =>
     js.map((j) => j.titulo.replace(`${marca} `, '')).sort();
 
@@ -120,6 +126,13 @@ describe('turnos: público e inscritos', () => {
     expect(titulos(await listar(`?entidad=${entidadId}`))).toEqual(['entidad']);
     // 22 de octubre en Bogotá: la de entidad empieza a las 08:00 de ese día
     expect(titulos(await listar('?desde=2026-10-22&hasta=2026-10-22'))).toEqual(['entidad']);
+  });
+
+  it('un día que no existe da 400, no 500 (P-071)', async () => {
+    for (const dia of ['2026-13-01', '2026-02-30']) {
+      const r = await a.http().get(`/api/turnos/jornadas?desde=${dia}`).expect(400);
+      expect(r.body.codigo).toBe('VALIDACION');
+    }
   });
 
   it('el listado y el detalle no llevan datos de los inscritos', async () => {
@@ -212,6 +225,7 @@ describe('turnos: público e inscritos', () => {
       .send({ estado: 'ASISTIO' })
       .expect(409);
     expect(fuera.body.codigo).toBe('FUERA_DE_PLAZO_ASISTENCIA');
+    expect((await enGestion(futura.id)).puedeMarcarAsistencia).toBe(false);
 
     const hoy = await insertar('asistencia hoy', {
       inicio: new Date(AHORA + 13 * HORA),
@@ -224,6 +238,7 @@ describe('turnos: público e inscritos', () => {
     });
     const id2 = (await a.prisma.reserva.findUniqueOrThrow({ where: { codigo: r2.body.codigo } }))
       .id;
+    expect((await enGestion(hoy.id)).puedeMarcarAsistencia).toBe(true);
     const ok = await a
       .http()
       .put(`/api/turnos/gestion/reservas/${id2}/asistencia`)
@@ -263,6 +278,7 @@ describe('turnos: público e inscritos', () => {
       .send({ motivo: 'Se suspendió por lluvia' })
       .expect(200);
     const id = (await a.prisma.reserva.findUniqueOrThrow({ where: { codigo: r.body.codigo } })).id;
+    expect((await enGestion(j.id)).puedeMarcarAsistencia).toBe(false);
     const res = await a
       .http()
       .put(`/api/turnos/gestion/reservas/${id}/asistencia`)

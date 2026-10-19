@@ -21,7 +21,7 @@ import { AsistenciaDto, InscritoDto, JornadaGestionDto } from '../../comun/respu
 import { JornadasService } from './jornadas.service';
 import { ReservasService } from './reservas.service';
 
-const fecha = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Usa el formato AAAA-MM-DD');
+const fecha = z.iso.date('Usa una fecha que exista, con el formato AAAA-MM-DD');
 const hora = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'Usa el formato HH:MM');
 
 const contenido = z.object({

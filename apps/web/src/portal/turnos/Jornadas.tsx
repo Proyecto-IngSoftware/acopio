@@ -17,8 +17,12 @@ import { NOMBRE_PERFIL } from './piezas';
 import { TarjetaJornada } from './TarjetaJornada';
 
 type Clave = 'lugar' | 'dia' | 'perfil';
-const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+// El mismo patrón que `z.uuid()` de la API: con el dígito de versión y la variante
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const DIA = /^\d{4}-\d{2}-\d{2}$/;
+/** `2026-02-30` tiene la forma, pero no existe: el Date lo corre al 2 de marzo. */
+const diaExiste = (dia: string) =>
+  DIA.test(dia) && new Date(`${dia}T00:00:00Z`).toISOString().startsWith(dia);
 interface Opcion {
   valor: string;
   texto: string;
@@ -27,14 +31,15 @@ interface Opcion {
 /** El lugar va en la URL como `acopio=<id>` o `entidad=<id>`; el día, como `dia=AAAA-MM-DD`. */
 function filtroDe(p: URLSearchParams): FiltroJornadas {
   const f: FiltroJornadas = {};
-  const acopio = p.get('acopio');
-  const entidad = p.get('entidad');
+  // Las opciones llegan en minúsculas; un enlace en mayúsculas debe coincidir con ellas
+  const acopio = p.get('acopio')?.toLowerCase();
+  const entidad = p.get('entidad')?.toLowerCase();
   const dia = p.get('dia');
   const perfil = p.get('perfil');
   // Como en la API: lo mal escrito se ignora en vez de dejar la pantalla en un error
   if (acopio && UUID.test(acopio)) f.acopio = acopio;
   else if (entidad && UUID.test(entidad)) f.entidad = entidad;
-  if (dia && DIA.test(dia)) {
+  if (dia && diaExiste(dia)) {
     f.desde = dia;
     f.hasta = dia;
   }

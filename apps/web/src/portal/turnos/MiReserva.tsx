@@ -235,8 +235,8 @@ function Reserva({ reserva, secreto }: { reserva: ReservaPublica; secreto: strin
           {aviso}
         </p>
       )}
-      {/* La API acepta cancelar hasta la hora de inicio (§4) */}
-      {reserva.estado === 'ACTIVA' && new Date(j.inicio) > new Date() ? (
+      {/* El plazo lo decide la API (hasta la hora de inicio, §4), no el reloj del navegador */}
+      {reserva.puedeCancelar ? (
         <button
           type="button"
           onClick={() => fijarConfirmando(true)}

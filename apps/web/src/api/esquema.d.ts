@@ -2356,6 +2356,7 @@ export interface components {
             descripcion: string;
             pasos: string[];
             urlOficial: string;
+            /** Format: date */
             cierraEl: string;
             /** @description Confirmo que revisé la entidad y el sitio de destino (C-09) */
             confirmo?: boolean;
@@ -2369,11 +2370,13 @@ export interface components {
             descripcion?: string;
             pasos?: string[];
             urlOficial?: string;
+            /** Format: date */
             cierraEl?: string;
             /** @description Confirmo que revisé la entidad y el sitio de destino (C-09) */
             confirmo?: boolean;
         };
         PlazoDto: {
+            /** Format: date */
             cierraEl: string;
             /** @description Confirmo que revisé la entidad y el sitio de destino (C-09) */
             confirmo?: boolean;
@@ -3612,6 +3615,8 @@ export interface components {
             creadaPor: string;
             /** Format: date-time */
             creadoEn: string;
+            /** @description Desde 2 horas antes del inicio hasta 7 días después, si no está cancelada */
+            puedeMarcarAsistencia: boolean;
         };
         CrearJornadaDto: {
             titulo: string;
@@ -3657,6 +3662,7 @@ export interface components {
             municipio?: string;
             lat?: number | null;
             lng?: number | null;
+            /** Format: date */
             fecha?: string;
             horaInicio?: string;
             horaFin?: string;
@@ -3797,6 +3803,8 @@ export interface components {
             codigo: string;
             /** @enum {string} */
             estado: "ACTIVA" | "CANCELADA" | "ASISTIO" | "NO_ASISTIO";
+            /** @description Activa y antes de la hora de inicio, según el reloj de la API */
+            puedeCancelar: boolean;
             /** @description Nulo cuando ya se borraron los datos (30 días) */
             nombre: string | null;
             perfilDeclarado: boolean;

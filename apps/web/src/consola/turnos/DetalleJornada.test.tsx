@@ -18,7 +18,7 @@ import { DetalleJornada } from './DetalleJornada';
 const OPERADOR: UsuarioSesion = { id: 'o', username: 'o', nombre: 'Daniela', rol: 'OPERADOR' };
 const hace = (h: number) => new Date(Date.now() - h * 3_600_000).toISOString();
 /** Empezó hace una hora: la asistencia ya se puede marcar. */
-const EN_CURSO = gestionDe({ inicio: hace(1), fin: hace(-3) });
+const EN_CURSO = gestionDe({ inicio: hace(1), fin: hace(-3), puedeMarcarAsistencia: true });
 const INSCRITOS = 'GET /api/turnos/gestion/jornadas/j1/reservas';
 
 const pantalla = (jornada: JornadaGestion = EN_CURSO, alVolver = vi.fn()) => {
@@ -73,9 +73,9 @@ it('marca la asistencia cuando la jornada ya empezó', async () => {
   });
 });
 
-it('lejos del inicio la asistencia no se puede marcar', async () => {
+it('fuera del plazo que dice la API la asistencia no se puede marcar, aunque el reloj del navegador diga otra cosa', async () => {
   responderSegun({ [INSCRITOS]: [inscritoDe()] });
-  pantalla(gestionDe());
+  pantalla({ ...EN_CURSO, puedeMarcarAsistencia: false });
   const fila = await screen.findByRole('listitem', { name: 'María Fernanda Ruiz' });
   expect(within(fila).getByRole('button', { name: 'Asistió' })).toBeDisabled();
   expect(

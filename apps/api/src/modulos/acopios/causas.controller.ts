@@ -33,7 +33,7 @@ import { CausaGestionDto, ErrorDto } from '../../comun/respuestas';
 import { TAMANO_MAXIMO } from '../almacenamiento/imagenes';
 import { CausasService } from './causas.service';
 
-const fechaCierre = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Usa el formato AAAA-MM-DD');
+const fechaCierre = z.iso.date('Usa una fecha que exista, con el formato AAAA-MM-DD');
 const confirmo = z
   .boolean()
   .optional()

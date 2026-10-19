@@ -216,7 +216,8 @@ function Voluntariado({ acopioId }: { acopioId: string }) {
         <Icono nombre="groups" className="text-[22px] text-primary-container" />
         Voluntariado
       </h2>
-      {error && (
+      {/* Si falla una recarga con datos ya cargados, se siguen mostrando esos */}
+      {error && !data && (
         <p className="text-body-sm text-on-surface-variant">No se pudieron cargar las jornadas</p>
       )}
       {data && proximas.length === 0 && (

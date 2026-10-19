@@ -38,6 +38,7 @@ export const gestionDe = (extra: Partial<JornadaGestion> = {}): JornadaGestion =
   serieId: null,
   creadaPor: 'u1',
   creadoEn: '2026-10-17T15:00:00.000Z',
+  puedeMarcarAsistencia: false,
   ...extra,
 });
 

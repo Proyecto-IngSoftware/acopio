@@ -823,7 +823,14 @@ const jornadaPublica = z.object({
 export class JornadaPublicaDto extends crearDto(jornadaPublica) {}
 
 export class JornadaGestionDto extends crearDto(
-  jornadaPublica.extend({ serieId: z.uuid().nullable(), creadaPor: z.uuid(), creadoEn: fecha }),
+  jornadaPublica.extend({
+    serieId: z.uuid().nullable(),
+    creadaPor: z.uuid(),
+    creadoEn: fecha,
+    puedeMarcarAsistencia: z
+      .boolean()
+      .describe('Desde 2 horas antes del inicio hasta 7 días después, si no está cancelada'),
+  }),
 ) {}
 
 export class ReservaCreadaDto extends crearDto(
@@ -840,6 +847,9 @@ export class ReservaPublicaDto extends crearDto(
   z.object({
     codigo: z.string(),
     estado: z.enum(['ACTIVA', 'CANCELADA', 'ASISTIO', 'NO_ASISTIO']),
+    puedeCancelar: z
+      .boolean()
+      .describe('Activa y antes de la hora de inicio, según el reloj de la API'),
     nombre: z.string().nullable().describe('Nulo cuando ya se borraron los datos (30 días)'),
     perfilDeclarado: z.boolean(),
     jornadaCambiadaEn: fecha
