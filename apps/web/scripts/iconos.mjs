@@ -19,6 +19,9 @@ export function iconosUsados(dir = new URL('../src', import.meta.url).pathname) 
         // function iconoDe(...) { return '...' }: cada texto que devuelve
         for (const m of src.matchAll(/function icono\w*\([^]*?\n\}/g))
           for (const t of m[0].matchAll(/return ["'`]([a-z0-9_]+)["'`]/g)) nombres.add(t[1]);
+        // const ICONO_GRUPO = { ALIMENTOS: 'nutrition', … }: cada valor del mapa
+        for (const m of src.matchAll(/const ICONO_\w+[^=]*=\s*\{([^}]*)\}/g))
+          for (const t of m[1].matchAll(/:\s*["'`]([a-z0-9_]+)["'`]/g)) nombres.add(t[1]);
       }
     }
   };

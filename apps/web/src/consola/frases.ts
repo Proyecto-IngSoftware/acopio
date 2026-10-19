@@ -15,6 +15,12 @@ function nombreDe(d: Datos): string {
 const conCodigo = (verbo: string, d: Datos) =>
   typeof d?.codigo === 'string' ? `${verbo} ${d.codigo}` : verbo;
 
+/** Causas y jornadas guardan su título, no un nombre. */
+const conTitulo = (verbo: string, ...ds: Datos[]) => {
+  const titulo = ds.map((d) => d?.titulo).find((t) => typeof t === 'string');
+  return typeof titulo === 'string' ? `${verbo} «${titulo}»` : verbo;
+};
+
 /** La acción de un registro de la bitácora, en lenguaje llano. */
 export function frase(r: RegistroBitacora): string {
   const antes = datos(r.datos_antes);
@@ -39,12 +45,16 @@ export function frase(r: RegistroBitacora): string {
       return con('Revocó la invitación de');
     case 'acceso.restablecido':
       return con('Restableció el acceso de');
+    case 'acceso.restablecimiento_canjeado':
+      return 'Entró con su enlace para restablecer la contraseña';
     case 'usuario.suspendido':
       return con('Suspendió a');
     case 'usuario.reactivado':
       return con('Reactivó a');
     case 'usuario.actualizado':
       return con('Editó a');
+    case 'usuario.rol_cambiado':
+      return con('Cambió el rol de');
     case 'asignacion.creada':
       return 'Asignó una ubicación';
     case 'asignacion.eliminada':
@@ -59,6 +69,10 @@ export function frase(r: RegistroBitacora): string {
       return con('Editó la categoría');
     case 'categoria.eliminada':
       return con('Borró la categoría');
+    case 'categoria.archivada':
+      return con('Archivó la categoría');
+    case 'categoria.reactivada':
+      return con('Reactivó la categoría');
     case 'canasta.version_agregada':
       return con('Actualizó la canasta de');
     case 'emergencia.creada':
@@ -83,6 +97,42 @@ export function frase(r: RegistroBitacora): string {
       return con('Creó la entidad');
     case 'entidad.actualizada':
       return con('Editó la entidad');
+    case 'entidad.verificada':
+      return con('Verificó la entidad');
+    case 'entidad.verificacion_quitada':
+      return con('Quitó la verificación de');
+    case 'entidad.logo_cambiado':
+      return con('Cambió el logotipo de');
+    case 'causa.creada':
+      return conTitulo('Publicó la causa', despues);
+    case 'causa.editada':
+      return conTitulo('Editó la causa', despues, antes);
+    case 'causa.renovada':
+      return conTitulo('Renovó la causa', despues, antes);
+    case 'causa.reactivada':
+      return conTitulo('Reactivó la causa', despues, antes);
+    case 'causa.archivada':
+      return conTitulo('Archivó la causa', despues, antes);
+    case 'causa.imagen_cambiada':
+      return conTitulo('Cambió la imagen de la causa', despues, antes);
+    case 'jornada.creada':
+      return conTitulo('Creó la jornada', despues);
+    case 'jornada.editada':
+      return conTitulo('Editó la jornada', despues, antes);
+    case 'jornada.ajustada':
+      return conTitulo('Ajustó los cupos de la jornada', despues, antes);
+    case 'jornada.cerrada':
+      return conTitulo('Cerró las reservas de la jornada', despues, antes);
+    case 'jornada.reabierta':
+      return conTitulo('Reabrió las reservas de la jornada', despues, antes);
+    case 'jornada.cancelada':
+      return conTitulo('Canceló la jornada', despues, antes);
+    case 'jornada.borrada':
+      return conTitulo('Borró la jornada', antes);
+    case 'reserva.asistencia':
+      return 'Marcó la asistencia de una reserva';
+    case 'reservas.datos_borrados':
+      return 'Se borraron los datos personales de reservas pasadas';
     case 'zona.creada':
       return con('Registró la zona');
     case 'zona.actualizada':
@@ -180,10 +230,29 @@ export function iconoDe(r: RegistroBitacora): string {
   if (r.accion.startsWith('invitacion.')) return 'link';
   if (r.accion.startsWith('asignacion.')) return 'add_location_alt';
   if (r.accion.startsWith('canasta.')) return 'shopping_basket';
+  if (r.accion === 'usuario.reactivado') return 'person_check';
+  if (r.accion.startsWith('usuario.')) return 'manage_accounts';
+  if (r.accion.startsWith('acceso.')) return 'lock_reset';
+  if (r.accion === 'entidad.verificada') return 'verified';
+  if (r.accion === 'entidad.verificacion_quitada') return 'gpp_bad';
+  if (r.accion.startsWith('codigo_barras.')) return 'barcode_scanner';
+  if (r.accion.startsWith('no_recibir.')) return 'block';
+  if (r.accion.startsWith('umbral.')) return 'tune';
+  if (r.accion === 'movimiento.recepcion' || r.accion === 'remision.recibida')
+    return 'move_to_inbox';
+  if (r.accion.startsWith('reporte.') || r.accion.startsWith('necesidad.')) return 'campaign';
+  if (r.accion.startsWith('sugerencia.') || r.accion.startsWith('motor.')) return 'alt_route';
+  if (r.accion.startsWith('remision.')) return 'local_shipping';
+  if (r.accion.startsWith('donador.')) return 'volunteer_activism';
+  if (r.accion.startsWith('jornada.') || r.accion.startsWith('reserva')) return 'groups';
+  if (r.accion.startsWith('causa.')) return 'favorite';
   if (r.entidad === 'categoria') return 'inventory_2';
   if (r.entidad === 'emergencia') return 'emergency';
   if (r.entidad === 'comprobante') return 'receipt_long';
   if (r.entidad === 'movimiento') return 'swap_vert';
+  if (r.entidad === 'acopio') return 'warehouse';
+  if (r.entidad === 'entidad') return 'handshake';
+  if (r.entidad === 'zona') return 'location_on';
   return 'history';
 }
 

@@ -3,12 +3,12 @@ import { Icono } from '../../componentes/Icono';
 /** RF-HOM-001: aviso permanente de que la plataforma no recibe dinero. */
 export function AvisoSinDinero() {
   return (
-    <footer className="flex flex-col gap-space-xs rounded-xl bg-surface-container-high p-space-md text-on-surface">
+    <footer className="flex flex-col gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md text-on-surface">
       <div className="flex items-start gap-space-xs">
         <Icono nombre="verified_user" className="mt-0.5 text-[20px] text-primary-container" />
         <div className="flex flex-col">
           <p className="text-label-md font-bold text-on-surface">
-            Canal Oficial Sin Intermediación Financiera
+            Canal oficial sin intermediación financiera
           </p>
           <p className="pt-0.5 text-body-sm text-on-surface-variant">
             Esta plataforma no capta ni administra fondos monetarios directamente. Todas las

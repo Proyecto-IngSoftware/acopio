@@ -14,6 +14,7 @@ import {
   type EstadoSemaforo,
 } from '../../componentes/EtiquetaSemaforo';
 import { Icono } from '../../componentes/Icono';
+import { IconoGrupo } from '../../componentes/IconoGrupo';
 import { Segmentado } from '../../componentes/Segmentado';
 import { diaLargo, haceCuanto } from '../../formato';
 import { useSesion } from '../../sesion/Sesion';
@@ -46,6 +47,7 @@ function Fila({ s, acopioId }: { s: Saldo; acopioId: string }) {
         to={`/consola/acopios/${acopioId}/inventario/${s.categoriaId}`}
         className="flex items-center gap-space-sm rounded-xl bg-surface-container-lowest p-space-md shadow-sm active:bg-surface-container"
       >
+        <IconoGrupo grupo={s.grupo} />
         <span className="flex min-w-0 flex-1 flex-col gap-1">
           <span data-categoria className="text-body-lg font-bold text-on-surface">
             {s.categoria}

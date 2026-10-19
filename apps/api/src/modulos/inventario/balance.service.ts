@@ -65,4 +65,27 @@ export class BalanceService {
     );
     return { faltan: agrupar(bajos), noTraigan: agrupar(marcas) };
   }
+
+  /**
+   * «Lo que urge» de la ficha de un acopio (RF-RED-003): las categorías bajo el mínimo, con el
+   * mismo semáforo. Solo los nombres, sin cantidades. Un id que no existe da la lista vacía.
+   */
+  async urgente(acopioId: string) {
+    const [umbrales, saldos] = await Promise.all([
+      this.umbrales.delAcopioConCategoria(acopioId),
+      this.saldos.deVarios([acopioId]),
+    ]);
+    const cantidad = new Map(saldos.map((s) => [s.categoria_id, Number(s.cantidad)]));
+    const categorias = umbrales
+      .filter(
+        (u) =>
+          semaforo(cantidad.get(u.categoria_id) ?? 0, {
+            minimo: Number(u.minimo),
+            maximo: Number(u.maximo),
+          }) === 'BAJO',
+      )
+      .map((u) => ({ categoriaId: u.categoria_id, categoria: u.categoria.nombre }))
+      .sort((a, b) => a.categoria.localeCompare(b.categoria, 'es'));
+    return { categorias };
+  }
 }

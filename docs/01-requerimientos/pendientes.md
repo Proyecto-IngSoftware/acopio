@@ -1003,9 +1003,35 @@ repositorio no lo tiene.
 **Estado:** ABIERTO. Versionarlo en `.claude/hooks/` cuando se sume otra persona
 
 
+### P-075 · Dos pruebas de la web se cortan a los 5 s cuando corre toda la suite
+**Fecha:** 2026-10-18 · **Propuesto por:** Claude, al verificar la rama `estetica-piedra`
+**Qué:** «un 401 con un Donador en sesión lo lleva a /donador» (`cabeceras.test.tsx`) y
+«publicar confirma la entidad y el dominio» (`Causas.test.tsx`) fallaron una vez cada una por
+tiempo con las 1000 pruebas de la web en paralelo. Solas pasan siempre, y la suite completa pasó
+al repetirla.
+**Por qué:** una prueba que falla a veces en CI frena un PR sin que haya un error real.
+**Estado:** ABIERTO. Revisar si alguna espera usa el límite por defecto de 5 s y subirlo, o
+partir esas pruebas, antes de que aparezcan en CI.
+
 ---
 
 ## Resueltos
+
+### P-074 · Bloques de la portada y la ficha sin conectar, y frases de la bitácora
+**Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la auditoría visual de las 25 pantallas
+**Qué:** la portada decía «Todavía no hay jornadas publicadas» aunque Voluntariado mostraba
+cuatro; la ficha del acopio decía «Lo que urge · Llega pronto con el inventario» con el
+inventario construido desde el Bloque 2; la bitácora mostraba 22 acciones con su código interno
+(«jornada.creada», «causa.renovada»…); y la portada escribía títulos con mayúscula en cada palabra.
+**Por qué:** los dos bloques se dejaron vacíos antes de que existieran sus módulos y nadie volvió
+a conectarlos, igual que el balance (P-073). La lista de acciones de la prueba de frases se
+escribía a mano y no siguió a la API.
+**Estado:** RESUELTO el 2026-10-18 → la portada lista las próximas tres jornadas;
+`GET /api/publico/acopios/{id}/urgente` da las categorías bajo el mínimo, sin cantidades, y la
+ficha las muestra; la bitácora tiene frase para cada acción, y `frases.test.ts` lee las acciones
+del código de la API, así que una nueva sin frase hace fallar la prueba; los títulos de la portada
+van con mayúscula solo al inicio.
+
 
 ### P-071 · Menores de la revisión del cierre del Bloque 5
 **Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la revisión de la rama `bloque-5-cierre` ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36), [#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48))

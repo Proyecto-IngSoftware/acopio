@@ -1,3 +1,5 @@
+import { readdirSync, readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { cambios, frase } from './frases';
 
 const base = {
@@ -51,40 +53,29 @@ const registro = (accion: string, despues: object | null = null, antes: object |
     datos_antes: antes,
   }) as unknown as Registro;
 
-// Las acciones que escribe la API en la bitácora (apps/api/src/modulos/**). Ninguna debe
-// mostrarse con su código interno.
+// Las acciones que escribe la API en la bitácora, leídas de su código (apps/api/src/modulos).
+// Ninguna debe mostrarse con su código interno; una acción nueva sin frase hace fallar esta prueba.
+const MODULOS = join(process.cwd(), '../api/src/modulos');
+const ENTIDADES =
+  'acopio|entidad|zona|codigo_barras|movimiento|no_recibir|umbral|donador|comprobante|causa|' +
+  'jornada|reservas?|categoria|usuario|invitacion|acceso|asignacion|canasta|emergencia|motor|' +
+  'necesidad|reporte|sugerencia|remision|seed';
 const ACCIONES_API = [
-  'acopio.creado',
-  'acopio.actualizado',
-  'acopio.cerrado',
-  'acopio.operado',
-  'entidad.creada',
-  'entidad.actualizada',
-  'zona.creada',
-  'zona.actualizada',
-  'codigo_barras.asociado',
-  'codigo_barras.editado',
-  'movimiento.entrada',
-  'movimiento.salida',
-  'movimiento.ajuste',
-  'no_recibir.marcado',
-  'no_recibir.desmarcado',
-  'umbral.fijado',
-  'umbral.quitado',
-  'donador.registrado',
-  'donador.confirmado',
-  'donador.correo_confirmado',
-  'comprobante.preparado',
-  'comprobante.cancelado',
-  'comprobante.vencido',
-  'comprobante.factura',
-  'comprobante.factura_borrada',
-  'comprobante.recibido',
-  'comprobante.vinculado',
-  'comprobante.conciliado',
-  'comprobante.rechazado',
-  'comprobante.rechazo_revertido',
-];
+  ...new Set(
+    readdirSync(MODULOS, { recursive: true, encoding: 'utf8' })
+      .filter((f) => f.endsWith('.ts') && !f.endsWith('.test.ts'))
+      .flatMap((f) => [
+        ...readFileSync(join(MODULOS, f), 'utf8').matchAll(
+          new RegExp(`'((?:${ENTIDADES})\\.[a-z_]+)'`, 'g'),
+        ),
+      ])
+      .map((m) => m[1]!),
+  ),
+].sort();
+
+it('la lista de acciones de la API no está vacía', () => {
+  expect(ACCIONES_API.length).toBeGreaterThan(40);
+});
 
 it.each(ACCIONES_API)('%s se lee en lenguaje llano y no con su código', (accion) => {
   const texto = frase(registro(accion));

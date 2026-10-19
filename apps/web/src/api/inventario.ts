@@ -7,6 +7,7 @@ export type Saldo = S['SaldoDto'];
 export type FilaHistorial = S['PaginaHistorialDto']['filas'][number];
 export type ResultadoMovimiento = S['ResultadoMovimientoDto'];
 export type Balance = S['BalanceDto'];
+export type Urgente = S['UrgenteDto'];
 type PaginaHistorial = S['PaginaHistorialDto'];
 
 const ruta = (id: string) => ({ params: { path: { id } } });
@@ -16,6 +17,14 @@ export function useBalance() {
   return useQuery<Balance, ErrorApi>({
     queryKey: ['balance'],
     queryFn: () => desenvolver(api.GET('/api/publico/balance')),
+  });
+}
+
+/** P6: «Lo que urge» de un acopio, las categorías bajo el mínimo (RF-RED-003). No exige sesión. */
+export function useUrgente(acopioId: string) {
+  return useQuery<Urgente, ErrorApi>({
+    queryKey: ['urgente', acopioId],
+    queryFn: () => desenvolver(api.GET('/api/publico/acopios/{id}/urgente', ruta(acopioId))),
   });
 }
 
