@@ -7,6 +7,9 @@ import { leerHerramientas, leerPortada } from './lector';
 /** RedAcopio desde la copia guardada en el repositorio: la base de desarrollo y de pruebas. */
 export class RedAcopioArchivo implements FuenteAcopios {
   readonly nombre = 'redacopio';
+  readonly etiqueta = 'RedAcopio Bogotá';
+  readonly url = 'https://redacopiobogota.com/';
+  readonly municipio = 'Bogotá';
   readonly origen = 'ARCHIVO' as const;
 
   constructor(private readonly carpeta = join(__dirname, 'copia')) {}

@@ -215,6 +215,10 @@ export function frase(r: RegistroBitacora): string {
       return 'Subió una foto de evidencia';
     case 'remision.recibida':
       return 'Confirmó la recepción de una remisión';
+    case 'importacion.ejecutada': {
+      const n = (k: string) => (typeof despues?.[k] === 'number' ? despues[k] : 0);
+      return `Importó los puntos de RedAcopio (${n('creados')} nuevos, ${n('actualizados')} actualizados, ${n('cerrados')} cerrados)`;
+    }
     default:
       return r.accion;
   }
@@ -245,6 +249,7 @@ export function iconoDe(r: RegistroBitacora): string {
   if (r.accion.startsWith('remision.')) return 'local_shipping';
   if (r.accion.startsWith('donador.')) return 'volunteer_activism';
   if (r.accion.startsWith('jornada.') || r.accion.startsWith('reserva')) return 'groups';
+  if (r.accion.startsWith('importacion.')) return 'sync';
   if (r.accion.startsWith('causa.')) return 'favorite';
   if (r.entidad === 'categoria') return 'inventory_2';
   if (r.entidad === 'emergencia') return 'emergency';

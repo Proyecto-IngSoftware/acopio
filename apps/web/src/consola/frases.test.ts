@@ -59,7 +59,7 @@ const MODULOS = join(process.cwd(), '../api/src/modulos');
 const ENTIDADES =
   'acopio|entidad|zona|codigo_barras|movimiento|no_recibir|umbral|donador|comprobante|causa|' +
   'jornada|reservas?|categoria|usuario|invitacion|acceso|asignacion|canasta|emergencia|motor|' +
-  'necesidad|reporte|sugerencia|remision|seed';
+  'necesidad|reporte|sugerencia|remision|seed|importacion';
 const ACCIONES_API = [
   ...new Set(
     readdirSync(MODULOS, { recursive: true, encoding: 'utf8' })

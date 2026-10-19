@@ -295,6 +295,16 @@ const filaBalance = z.object({
   acopios: z.number().int().describe('Cuántos acopios abiertos están en ese caso'),
 });
 
+export class ResultadoImportacionDto extends crearDto(
+  z.object({
+    resultado: z.enum(['OK', 'ABORTADA']),
+    creados: z.number().int(),
+    actualizados: z.number().int(),
+    cerrados: z.number().int(),
+    motivo: z.string().nullable(),
+  }),
+) {}
+
 export class UrgenteDto extends crearDto(
   z.object({ categorias: z.array(z.object({ categoriaId: z.uuid(), categoria: z.string() })) }),
 ) {}

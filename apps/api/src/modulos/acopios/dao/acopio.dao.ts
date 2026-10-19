@@ -92,6 +92,33 @@ export class AcopioDao {
     await bd.$queryRaw`SELECT id FROM acopio WHERE id = ${id}::uuid FOR UPDATE`;
   }
 
+  /** Los puntos de una fuente externa, con lo que hace falta para comparar (pieza E). */
+  referenciadosDe(fuente: string, bd: ClienteBd) {
+    return bd.acopio.findMany({ where: { tipo: 'REFERENCIADO', fuente } });
+  }
+
+  crearReferenciado(datos: Prisma.AcopioUncheckedCreateInput, bd: ClienteBd) {
+    return bd.acopio.create({ data: { ...datos, tipo: 'REFERENCIADO' } });
+  }
+
+  actualizarReferenciado(id: string, datos: Prisma.AcopioUncheckedUpdateInput, bd: ClienteBd) {
+    return bd.acopio.update({ where: { id }, data: datos });
+  }
+
+  /** Cierra los puntos de la fuente que ya no aparecen en ella; no los borra (RF-RED-011). */
+  async cerrarReferenciados(fuente: string, conservar: string[], bd: ClienteBd): Promise<number> {
+    const r = await bd.acopio.updateMany({
+      where: {
+        tipo: 'REFERENCIADO',
+        fuente,
+        fuente_id: { notIn: conservar },
+        estado: { not: 'CERRADO' },
+      },
+      data: { estado: 'CERRADO' },
+    });
+    return r.count;
+  }
+
   estado(id: string, bd: ClienteBd = this.prisma) {
     return bd.acopio.findUnique({ where: { id }, select: { estado: true, tipo: true } });
   }

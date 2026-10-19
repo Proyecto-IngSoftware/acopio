@@ -19,7 +19,8 @@
     "openapi": "bun run shared && prisma generate >/dev/null && node -r @swc-node/register src/exportar-openapi.ts",
     "shared": "bun run --cwd ../../packages/shared build >/dev/null",
     "seed:demo": "bun run shared && prisma generate >/dev/null && node -r @swc-node/register src/seed/demo.ts",
-    "simular": "bun run shared && node -r @swc-node/register src/scripts/simular.ts"
+    "simular": "bun run shared && node -r @swc-node/register src/scripts/simular.ts",
+    "importar:redacopio": "prisma generate >/dev/null && node -r @swc-node/register src/importar-redacopio.ts"
   },
   "dependencies": {
     "@acopio/shared": "workspace:*",

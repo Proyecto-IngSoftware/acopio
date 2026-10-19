@@ -11,6 +11,9 @@ const BASE = 'https://redacopiobogota.com';
 /** RedAcopio leído de la página. Apagado por defecto: lo enciende `IMPORTACION_ORIGEN=http`. */
 export class RedAcopioHttp implements FuenteAcopios {
   readonly nombre = 'redacopio';
+  readonly etiqueta = 'RedAcopio Bogotá';
+  readonly url = 'https://redacopiobogota.com/';
+  readonly municipio = 'Bogotá';
   readonly origen = 'HTTP' as const;
 
   constructor(private readonly pedir: typeof fetch = fetch) {}
