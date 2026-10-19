@@ -87,34 +87,37 @@ export class AcopiosService {
   }
 
   async crear(admin: UsuarioAutenticado, datos: DatosAcopio) {
+    return this.transacciones.ejecutar((tx) => this.crearEnTransaccion(tx, admin, datos));
+  }
+
+  /** La creación en la transacción de quien llama: la usa también la carga por CSV (pieza E). */
+  async crearEnTransaccion(tx: ClienteBd, admin: UsuarioAutenticado, datos: DatosAcopio) {
     exigirHorario(datos.horario);
-    return this.transacciones.ejecutar(async (tx) => {
-      await this.exigirEntidad(tx, datos.entidadId);
-      const f = await this.dao.crear(
-        {
-          entidad_id: datos.entidadId,
-          nombre: datos.nombre.trim(),
-          direccion: datos.direccion.trim(),
-          municipio: datos.municipio.trim(),
-          lat: datos.lat,
-          lng: datos.lng,
-          telefono: datos.telefono ?? null,
-          indicaciones_acceso: datos.indicacionesAcceso ?? null,
-          horario: json(datos.horario)!,
-          estado: datos.estado ?? 'ACTIVO',
-        },
-        tx,
-      );
-      await this.bitacora.registrar(tx, {
-        usuarioId: admin.id,
-        accion: 'acopio.creado',
-        entidad: 'acopio',
-        entidadId: f.id,
-        ubicacionId: f.id,
-        despues: presentarGestion(f),
-      });
-      return presentarGestion(f);
+    await this.exigirEntidad(tx, datos.entidadId);
+    const f = await this.dao.crear(
+      {
+        entidad_id: datos.entidadId,
+        nombre: datos.nombre.trim(),
+        direccion: datos.direccion.trim(),
+        municipio: datos.municipio.trim(),
+        lat: datos.lat,
+        lng: datos.lng,
+        telefono: datos.telefono ?? null,
+        indicaciones_acceso: datos.indicacionesAcceso ?? null,
+        horario: json(datos.horario)!,
+        estado: datos.estado ?? 'ACTIVO',
+      },
+      tx,
+    );
+    await this.bitacora.registrar(tx, {
+      usuarioId: admin.id,
+      accion: 'acopio.creado',
+      entidad: 'acopio',
+      entidadId: f.id,
+      ubicacionId: f.id,
+      despues: presentarGestion(f),
     });
+    return presentarGestion(f);
   }
 
   async actualizar(admin: UsuarioAutenticado, id: string, cambios: Partial<DatosAcopio>) {

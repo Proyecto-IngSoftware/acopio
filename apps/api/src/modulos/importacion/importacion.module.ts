@@ -2,7 +2,12 @@ import { Module } from '@nestjs/common';
 import { ENTORNO, type Entorno } from '../../config/entorno';
 import { CsvController } from './csv/csv.controller';
 import { CsvService } from './csv/csv.service';
+import { AcopiosFormato } from './csv/formatos/acopios.formato';
+import { CausasFormato } from './csv/formatos/causas.formato';
+import { EntidadesFormato } from './csv/formatos/entidades.formato';
 import { PlataformasFormato } from './csv/formatos/plataformas.formato';
+import { ZonasFormato } from './csv/formatos/zonas.formato';
+import { ReferenciasDao } from './dao/referencias.dao';
 import { RegistroFormatos } from './csv/registro-formatos';
 import { EjecucionDao } from './dao/ejecucion.dao';
 import { PlataformaDao } from './dao/plataforma.dao';
@@ -29,6 +34,11 @@ import { TareaImportacionService } from './tarea-importacion.service';
     CsvService,
     RegistroFormatos,
     PlataformasFormato,
+    EntidadesFormato,
+    AcopiosFormato,
+    ZonasFormato,
+    CausasFormato,
+    ReferenciasDao,
     EjecucionDao,
     {
       provide: FUENTE_ACOPIOS,

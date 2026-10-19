@@ -1,15 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { ErrorDominio } from '../../../comun/errores/error-dominio';
 import type { FormatoCsv } from './formato-csv';
+import { AcopiosFormato } from './formatos/acopios.formato';
+import { CausasFormato } from './formatos/causas.formato';
+import { EntidadesFormato } from './formatos/entidades.formato';
 import { PlataformasFormato } from './formatos/plataformas.formato';
+import { ZonasFormato } from './formatos/zonas.formato';
 
 /** Los formatos de CSV que se pueden cargar, por su tipo (el que va en la URL y en el script). */
 @Injectable()
 export class RegistroFormatos {
   private readonly formatos: Map<string, FormatoCsv>;
 
-  constructor(plataformas: PlataformasFormato) {
-    const lista: FormatoCsv[] = [plataformas as FormatoCsv];
+  constructor(
+    plataformas: PlataformasFormato,
+    entidades: EntidadesFormato,
+    acopios: AcopiosFormato,
+    zonas: ZonasFormato,
+    causas: CausasFormato,
+  ) {
+    const lista = [plataformas, entidades, acopios, zonas, causas] as FormatoCsv[];
     this.formatos = new Map(lista.map((f) => [f.tipo, f]));
   }
 

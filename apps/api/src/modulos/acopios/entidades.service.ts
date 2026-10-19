@@ -3,6 +3,7 @@ import { hoyBogota } from '@acopio/shared';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { restriccionUnicaViolada } from '../../comun/prisma/errores-prisma';
+import type { ClienteBd } from '../../comun/prisma/cliente-bd';
 import { Transacciones } from '../../comun/prisma/transacciones';
 import type { Entidad } from '../../generado/prisma/client';
 import { AlmacenamientoService } from '../almacenamiento/almacenamiento.service';
@@ -178,21 +179,24 @@ export class EntidadesService {
 
   async crear(admin: UsuarioAutenticado, datos: DatosEntidad) {
     return this.transacciones
-      .ejecutar(async (tx) => {
-        const e = await this.dao.crear(
-          { ...aFila(datos), nombre: datos.nombre.trim(), tipo: datos.tipo.trim() },
-          tx,
-        );
-        await this.bitacora.registrar(tx, {
-          usuarioId: admin.id,
-          accion: 'entidad.creada',
-          entidad: 'entidad',
-          entidadId: e.id,
-          despues: presentarEntidad(e),
-        });
-        return presentarEntidad(e);
-      })
+      .ejecutar((tx) => this.crearEnTransaccion(tx, admin, datos))
       .catch(traducirDuplicado);
+  }
+
+  /** La creación en la transacción de quien llama: la usa también la carga por CSV (pieza E). */
+  async crearEnTransaccion(tx: ClienteBd, admin: UsuarioAutenticado, datos: DatosEntidad) {
+    const e = await this.dao.crear(
+      { ...aFila(datos), nombre: datos.nombre.trim(), tipo: datos.tipo.trim() },
+      tx,
+    );
+    await this.bitacora.registrar(tx, {
+      usuarioId: admin.id,
+      accion: 'entidad.creada',
+      entidad: 'entidad',
+      entidadId: e.id,
+      despues: presentarEntidad(e),
+    });
+    return presentarEntidad(e);
   }
 
   async actualizar(admin: UsuarioAutenticado, id: string, cambios: Partial<DatosEntidad>) {
