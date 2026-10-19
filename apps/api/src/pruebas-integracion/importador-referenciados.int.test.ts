@@ -138,6 +138,35 @@ describe('importador de referenciados', () => {
     fuente.fallar = false;
   });
 
+  it('un punto sin coordenadas en Colombia se omite, se cuenta y no frena a los demás', async () => {
+    const otra = new FuenteFalsa();
+    otra.puntos = [punto('ok'), punto('sin-ubicacion', { lat: 0, lng: 0 })];
+    const r = await importador.ejecutar(otra, null);
+    expect(r).toMatchObject({ resultado: 'OK', creados: 1 });
+    expect(
+      await a.prisma.acopio.count({ where: { fuente: otra.nombre, fuente_id: 'sin-ubicacion' } }),
+    ).toBe(0);
+    const evento = await a.prisma.bitacora.findFirstOrThrow({
+      where: { accion: 'importacion.ejecutada', entidad_id: otra.nombre },
+    });
+    expect(evento.datos_despues).toMatchObject({ omitidos: 1 });
+  });
+
+  it('reimportar no cuenta cambios por el orden del JSON ni por el redondeo de las coordenadas', async () => {
+    const otra = new FuenteFalsa();
+    otra.puntos = [
+      punto('orden', {
+        lat: 4.71328765,
+        // PostgreSQL redondea a -74.135229 y toFixed(6) de JavaScript da -74.135228
+        lng: -74.1352285,
+        contacto: { phone: '300', notes: 'Timbre', instagram: 'https://ig.test/x' },
+        necesidades: [{ nivel: 'normal', texto: 'Agua' }],
+      }),
+    ];
+    expect(await importador.ejecutar(otra, null)).toMatchObject({ creados: 1 });
+    expect(await importador.ejecutar(otra, null)).toMatchObject({ creados: 0, actualizados: 0 });
+  });
+
   it('un Operador no puede correr la importación', async () => {
     const admin = await iniciarSesion(a, ADMIN.username, ADMIN.contrasena);
     const op = await crearUsuarioActivo(a, admin, { rol: 'OPERADOR' });

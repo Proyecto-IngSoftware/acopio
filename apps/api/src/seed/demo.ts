@@ -11,6 +11,14 @@ import { AlmacenS3 } from '../modulos/almacenamiento/almacen-s3';
 import { AlmacenamientoService } from '../modulos/almacenamiento/almacenamiento.service';
 import { contrasenaDemo, crearCuentaDemo, proveedorDelSeed } from './credenciales';
 import { sembrarImagenesDemo } from './imagenes-demo';
+import { AcopioDao } from '../modulos/acopios/dao/acopio.dao';
+import { relojReal } from '../modulos/acopios/geocodificacion';
+import { BitacoraService } from '../modulos/auditoria/bitacora.service';
+import { EjecucionDao } from '../modulos/importacion/dao/ejecucion.dao';
+import { PlataformaDao } from '../modulos/importacion/dao/plataforma.dao';
+import { RedAcopioArchivo } from '../modulos/importacion/fuentes/redacopio/redacopio-archivo';
+import { ImportadorReferenciadosService } from '../modulos/importacion/importador-referenciados.service';
+import { Transacciones } from '../comun/prisma/transacciones';
 
 const semana: Horario = {
   ...HORARIO_VACIO,
@@ -633,6 +641,22 @@ async function sembrarInventarioDemo(prisma: PrismaService, acopioId: string) {
 }
 
 /** `bun run --filter @acopio/api seed:demo`. Corre como dueño de la base. */
+/**
+ * Pieza E: los puntos de RedAcopio y sus plataformas, leídos de la copia guardada. Reimportar no
+ * cambia nada si la copia es la misma.
+ */
+export function importarRedAcopioDemo(prisma: PrismaService) {
+  const importador = new ImportadorReferenciadosService(
+    new AcopioDao(prisma),
+    new PlataformaDao(prisma),
+    new EjecucionDao(prisma),
+    new Transacciones(prisma),
+    new BitacoraService(prisma),
+    relojReal,
+  );
+  return importador.ejecutar(new RedAcopioArchivo(), null);
+}
+
 if (require.main === module) {
   config({ path: path.resolve(__dirname, '../../../../.env'), quiet: true });
   // Antes de abrir la base: en producción, sin la variable, no se toca nada
@@ -655,6 +679,10 @@ if (require.main === module) {
           `No se subieron las imágenes de la demo: ${error instanceof Error ? error.message : error}`,
         );
       }
+      const red = await importarRedAcopioDemo(prisma);
+      console.log(
+        `RedAcopio desde la copia: ${red.creados} nuevos, ${red.actualizados} actualizados, ${red.cerrados} cerrados.`,
+      );
     })
     .catch((error: unknown) => {
       console.error(error instanceof Error ? error.message : error);

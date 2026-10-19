@@ -20,6 +20,10 @@ export interface ResultadoImportacion {
   motivo: string | null;
 }
 
+/** El mismo rango que el CHECK `acopio_coordenadas_colombia` de la base. */
+export const enColombia = (p: { lat: number; lng: number }) =>
+  p.lat >= -5 && p.lat <= 14 && p.lng >= -82 && p.lng <= -66;
+
 /** RF-RED-011: abierto → ACTIVO, lleno → PAUSADO, cerrado → CERRADO, lo demás → PAUSADO. */
 export function estadoDe(estadoFuente: string): EstadoAcopio {
   if (estadoFuente === 'abierto') return 'ACTIVO';
@@ -49,8 +53,11 @@ export class ImportadorReferenciadosService {
     try {
       const lectura = await fuente.leer();
       const verificados = lectura.puntos.filter((p) => p.verificado);
+      // Sin coordenadas en Colombia (la fuente trae algunos en 0, 0) no hay dónde ponerlos en el mapa
+      const ubicados = verificados.filter(enColombia);
+      const omitidos = verificados.length - ubicados.length;
       const conteo = await this.transacciones.ejecutar(async (tx) => {
-        const c = await this.aplicar(fuente, verificados, tx);
+        const c = await this.aplicar(fuente, ubicados, tx);
         await this.plataformas.reemplazarDeFuente(fuente.nombre, lectura.plataformas, tx);
         const fin = new Date(this.reloj.ahora());
         await this.ejecuciones.registrar({ ...base, fin, resultado: 'OK', ...c }, tx);
@@ -59,7 +66,12 @@ export class ImportadorReferenciadosService {
           accion: 'importacion.ejecutada',
           entidad: 'importacion',
           entidadId: fuente.nombre,
-          despues: { origen: fuente.origen, ...c, plataformas: lectura.plataformas.length },
+          despues: {
+            origen: fuente.origen,
+            ...c,
+            omitidos,
+            plataformas: lectura.plataformas.length,
+          },
         });
         return c;
       });
@@ -110,7 +122,7 @@ export class ImportadorReferenciadosService {
           tx,
         );
         creados++;
-      } else if (huella(datos) !== huella(previo)) {
+      } else if (cambio(datos, previo)) {
         // oculto_por_admin no se toca: lo decide el Administrador, no la fuente
         await this.acopios.actualizarReferenciado(previo.id, datos, tx);
         actualizados++;
@@ -125,12 +137,13 @@ export class ImportadorReferenciadosService {
   }
 }
 
-/** Lo que se copia de la fuente, en un texto comparable: si no cambió, no se reescribe. */
+/**
+ * Lo que se copia de la fuente, sin las coordenadas, en un texto comparable. El JSON va con sus
+ * llaves ordenadas, porque `jsonb` las reordena al guardar.
+ */
 function huella(f: {
   nombre: string;
   direccion: string;
-  lat: unknown;
-  lng: unknown;
   estado: string;
   fuente_estado: string | null;
   fuente_horario: string | null;
@@ -138,16 +151,39 @@ function huella(f: {
   fuente_contacto: unknown;
   fuente_actualizado_en: Date | null;
 }): string {
-  return JSON.stringify([
+  return canonico([
     f.nombre,
     f.direccion,
-    Number(f.lat),
-    Number(f.lng),
     f.estado,
     f.fuente_estado,
     f.fuente_horario,
-    f.fuente_necesidades,
-    f.fuente_contacto,
+    f.fuente_necesidades ?? null,
+    f.fuente_contacto ?? null,
     f.fuente_actualizado_en ? new Date(f.fuente_actualizado_en).toISOString() : null,
   ]);
+}
+
+/**
+ * Si el punto cambió en la fuente. Las coordenadas se comparan con tolerancia: la columna guarda
+ * 6 decimales y PostgreSQL no redondea igual que JavaScript (-74.1352285 → -74.135229).
+ */
+function cambio(
+  datos: Parameters<typeof huella>[0] & { lat: number; lng: number },
+  previo: Parameters<typeof huella>[0] & { lat: unknown; lng: unknown },
+): boolean {
+  const lejos = (x: number, y: unknown) => Math.abs(x - Number(y)) >= 1e-6;
+  return (
+    huella(datos) !== huella(previo) || lejos(datos.lat, previo.lat) || lejos(datos.lng, previo.lng)
+  );
+}
+
+/** JSON con las llaves de cada objeto en orden alfabético. */
+function canonico(v: unknown): string {
+  if (Array.isArray(v)) return `[${v.map(canonico).join(',')}]`;
+  if (v && typeof v === 'object' && !(v instanceof Date))
+    return `{${Object.keys(v)
+      .sort()
+      .map((k) => `${JSON.stringify(k)}:${canonico((v as Record<string, unknown>)[k])}`)
+      .join(',')}}`;
+  return JSON.stringify(v);
 }
