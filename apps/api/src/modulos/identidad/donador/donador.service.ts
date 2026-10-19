@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { ErrorDominio } from '../../../comun/errores/error-dominio';
 import { Transacciones } from '../../../comun/prisma/transacciones';
 import type { ClienteBd } from '../../../comun/prisma/cliente-bd';
@@ -11,10 +11,10 @@ import { plantillas } from '../../notificaciones/plantillas';
 import { motivoRechazo } from '../invitaciones/politica-contrasena';
 import { generarToken, hashToken } from '../invitaciones/token-invitacion';
 import { PROVEEDOR_IDENTIDAD, type ProveedorIdentidad } from '../proveedor/proveedor-identidad';
+import { SesionService } from '../sesion/sesion.service';
 
 const LARGO_MAXIMO_TOKEN = 200;
 const VIGENCIA_ENLACE_MS = 48 * 3600_000;
-const CREDENCIALES_INVALIDAS = () => new UnauthorizedException('Correo o contraseña incorrectos');
 const ENLACE_INVALIDO = () =>
   new ErrorDominio(
     'ENLACE_INVALIDO',
@@ -33,6 +33,7 @@ export class DonadorService {
 
   constructor(
     private readonly transacciones: Transacciones,
+    private readonly sesion: SesionService,
     private readonly usuarios: UsuarioDao,
     private readonly enlaces: VerificacionCorreoDao,
     private readonly bitacora: BitacoraService,
@@ -165,22 +166,6 @@ export class DonadorService {
       });
       throw error;
     }
-    return this.iniciarSesion(correo, contrasena);
-  }
-
-  async iniciarSesion(correoCrudo: string, contrasena: string) {
-    const correo = correoCrudo.trim().toLowerCase();
-    const usuario = await this.usuarios.paraSesion({ correo });
-    if (!usuario || usuario.rol !== 'DONADOR' || usuario.estado !== 'ACTIVO') {
-      await this.proveedor.iniciarSesion('no-existe@acopio.local', contrasena);
-      throw CREDENCIALES_INVALIDAS();
-    }
-    const sesion = await this.proveedor.iniciarSesion(correo, contrasena);
-    if (!sesion) throw CREDENCIALES_INVALIDAS();
-    return {
-      accessToken: sesion.accessToken,
-      expiraEn: sesion.expiraEn,
-      usuario: { id: usuario.id, username: null, nombre: usuario.nombre, rol: usuario.rol },
-    };
+    return this.sesion.iniciar(correo, contrasena);
   }
 }

@@ -5,9 +5,9 @@ import { PROVEEDOR_IDENTIDAD, type ProveedorIdentidad } from '../proveedor/prove
 const CREDENCIALES_INVALIDAS = () => new UnauthorizedException('Usuario o contraseña incorrectos');
 
 /**
- * Inicio de sesión con nombre de usuario (RF-IDE-004). La API resuelve el usuario a
- * su correo y se lo pasa al proveedor: el correo nunca sale hacia el navegador, y no
- * hace falta un endpoint público que lo revele.
+ * Inicio de sesión de todas las cuentas, con correo o nombre de usuario (RF-IDE-004,
+ * RF-IDE-013). La API resuelve la cuenta a su correo y se lo pasa al proveedor: el correo
+ * de una cuenta del equipo nunca sale hacia el navegador.
  */
 @Injectable()
 export class SesionService {
@@ -16,11 +16,16 @@ export class SesionService {
     @Inject(PROVEEDOR_IDENTIDAD) private readonly proveedor: ProveedorIdentidad,
   ) {}
 
-  async iniciar(username: string, contrasena: string) {
-    const usuario = await this.usuarios.paraSesion({ username });
-    // Mismo mensaje para usuario inexistente, contraseña equivocada, invitado o
-    // suspendido: no se revela cuál de las cuatro fue
-    if (!usuario?.correo || usuario.estado !== 'ACTIVO' || usuario.rol === 'DONADOR') {
+  async iniciar(identificador: string, contrasena: string) {
+    // Un nombre de usuario no admite «@», así que la arroba decide cómo se busca
+    const usuario = await this.usuarios.paraSesion(
+      identificador.includes('@')
+        ? { correo: identificador.trim().toLowerCase() }
+        : { username: identificador },
+    );
+    // Mismo mensaje para cuenta inexistente, contraseña equivocada, invitada o
+    // suspendida: no se revela cuál de las cuatro fue
+    if (!usuario?.correo || usuario.estado !== 'ACTIVO') {
       await this.proveedor.iniciarSesion('no-existe@acopio.local', contrasena);
       throw CREDENCIALES_INVALIDAS();
     }

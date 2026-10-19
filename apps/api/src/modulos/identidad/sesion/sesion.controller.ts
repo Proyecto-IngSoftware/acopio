@@ -14,7 +14,7 @@ import { SesionService } from './sesion.service';
 
 class IniciarSesionDto extends crearDto(
   z.object({
-    usuario: z.string().trim().min(1).max(64).describe('Nombre de usuario, no correo'),
+    usuario: z.string().trim().min(1).max(254).describe('Correo o nombre de usuario'),
     contrasena: z.string().min(1).max(256),
   }),
 ) {}
@@ -28,8 +28,8 @@ export class SesionController {
     @Inject(ENTORNO) private readonly entorno: Entorno,
   ) {}
 
-  /** Inicia sesión con nombre de usuario y contraseña (RF-IDE-004). Límite por IP. Deja la
-   *  sesión en la cookie acopio_sesion. */
+  /** Inicia sesión con correo o nombre de usuario y contraseña, para cualquier cuenta
+   *  (RF-IDE-004, RF-IDE-013). Límite por IP. Deja la sesión en la cookie acopio_sesion. */
   @Publico()
   @Throttle({ default: { limit: 5, ttl: 60_000 } })
   @Post('sesion')
