@@ -77,8 +77,9 @@ export class InventarioFormato implements FormatoCsv<Fila> {
         filas,
         'acopio',
         (f) => f.acopio,
-        (n) => acopios.has(clave(n)),
-        (n) => `«${n}» no es un acopio que use Acopio`,
+        (n) => acopios.has(clave(n)) && acopios.get(clave(n))!.estado !== 'CERRADO',
+        (n) =>
+          acopios.has(clave(n)) ? `«${n}» está cerrado` : `«${n}» no es un acopio que use Acopio`,
       ),
       ...faltantes(
         filas,

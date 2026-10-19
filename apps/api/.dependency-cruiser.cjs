@@ -28,6 +28,8 @@ const MIGRADOS_A_DAO = [
   'notificaciones',
   'acopios',
   'turnos',
+  'catalogo',
+  'importacion',
 ];
 
 /** módulo → módulos que lo pueden importar */

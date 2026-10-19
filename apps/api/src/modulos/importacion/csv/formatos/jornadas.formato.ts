@@ -116,6 +116,10 @@ export class JornadasFormato implements FormatoCsv<Fila> {
             mensaje: `«${f.datos.acopio}» no es un acopio que use Acopio`,
           },
         ];
+      if (acopios.get(clave(f.datos.acopio))!.estado === 'CERRADO')
+        return [
+          { numero: f.numero, columna: 'acopio', mensaje: `«${f.datos.acopio}» está cerrado` },
+        ];
       const error = validarJornada(
         { fechas: [f.datos.fecha], horaInicio: f.datos.hora_inicio, horaFin: f.datos.hora_fin },
         ahora,

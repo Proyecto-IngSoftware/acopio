@@ -2,14 +2,11 @@ import { Injectable } from '@nestjs/common';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { esLlaveDuplicada } from '../../comun/prisma/errores';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import type { ClienteBd } from '../../comun/prisma/cliente-bd';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import { BitacoraService } from '../auditoria/bitacora.service';
-
-const conCategoria = {
-  categoria: {
-    select: { nombre: true, unidad_base: true, archivada: true, grupo: true, perecedero: true },
-  },
-} as const;
+import { CategoriaDao } from './dao/categoria.dao';
+import { CodigoBarrasDao } from './dao/codigo-barras.dao';
 
 type Fila = {
   ean: string;
@@ -40,18 +37,6 @@ const vista = (f: Fila) => ({
   creadoEn: f.creado_en,
 });
 
-type Lector = Pick<PrismaService, 'usuario'>;
-
-/** La vista con el nombre de quien asoció cada código (C18). Los nombres salen en una sola consulta. */
-async function conAutores(db: Lector, filas: Fila[]) {
-  const ids = [...new Set(filas.map((f) => f.creado_por))];
-  const nombres = new Map(
-    (
-      await db.usuario.findMany({ where: { id: { in: ids } }, select: { id: true, nombre: true } })
-    ).map((u) => [u.id, u.nombre]),
-  );
-  return filas.map((f) => ({ ...vista(f), creadoPor: nombres.get(f.creado_por) ?? null }));
-}
 /** En una categoría por unidades, una presentación trae un número entero de unidades. */
 function exigirContenidoEntero(unidad: string, contenido: number | null) {
   if (unidad === 'UNIDAD' && contenido !== null && !Number.isInteger(contenido))
@@ -62,35 +47,40 @@ function exigirContenidoEntero(unidad: string, contenido: number | null) {
     );
 }
 
-const conAutor = async (db: Lector, f: Fila) => (await conAutores(db, [f]))[0]!;
-
 /** EAN → categoría (RF-CAT-004). Un EAN de un Operador queda sin revisar. */
 @Injectable()
 export class CodigosBarrasService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly dao: CodigoBarrasDao,
+    private readonly categorias: CategoriaDao,
+    private readonly transacciones: Transacciones,
     private readonly bitacora: BitacoraService,
   ) {}
 
+  /** La vista con el nombre de quien asoció cada código (C18). Los nombres salen en una sola consulta. */
+  private async conAutores(filas: Fila[], bd?: ClienteBd) {
+    const ids = [...new Set(filas.map((f) => f.creado_por))];
+    const nombres = new Map((await this.dao.autores(ids, bd)).map((u) => [u.id, u.nombre]));
+    return filas.map((f) => ({ ...vista(f), creadoPor: nombres.get(f.creado_por) ?? null }));
+  }
+
+  private async conAutor(f: Fila, bd?: ClienteBd) {
+    return (await this.conAutores([f], bd))[0]!;
+  }
+
   async obtener(ean: string) {
-    const f = await this.prisma.codigoBarras.findUnique({ where: { ean }, include: conCategoria });
+    const f = await this.dao.conCategoria(ean);
     if (!f || f.categoria.archivada)
       throw new ErrorDominio(
         'EAN_DESCONOCIDO',
         'Este código no está asociado a ninguna categoría',
         404,
       );
-    return conAutor(this.prisma, f);
+    return this.conAutor(f);
   }
 
   listar(filtro: { revisado?: boolean }) {
-    return this.prisma.codigoBarras
-      .findMany({
-        where: { revisado: filtro.revisado },
-        include: conCategoria,
-        orderBy: { creado_en: 'desc' },
-      })
-      .then((filas) => conAutores(this.prisma, filas));
+    return this.dao.listar(filtro.revisado).then((filas) => this.conAutores(filas));
   }
 
   async asociar(
@@ -102,7 +92,7 @@ export class CodigosBarrasService {
       descripcion: string | null;
     },
   ) {
-    const cat = await this.prisma.categoria.findUnique({ where: { id: datos.categoriaId } });
+    const cat = await this.categorias.buscar(datos.categoriaId);
     if (!cat || cat.archivada)
       throw new ErrorDominio(
         'CATEGORIA_NO_ENCONTRADA',
@@ -110,7 +100,7 @@ export class CodigosBarrasService {
         404,
       );
     exigirContenidoEntero(cat.unidad_base, datos.contenido);
-    if (await this.prisma.codigoBarras.findUnique({ where: { ean: datos.ean } })) {
+    if (await this.dao.buscar(datos.ean)) {
       throw new ErrorDominio(
         'EAN_YA_ASOCIADO',
         'Este código ya está asociado a una categoría',
@@ -118,9 +108,9 @@ export class CodigosBarrasService {
       );
     }
     try {
-      return await this.prisma.$transaction(async (tx) => {
-        const f = await tx.codigoBarras.create({
-          data: {
+      return await this.transacciones.ejecutar(async (tx) => {
+        const f = await this.dao.crear(
+          {
             ean: datos.ean,
             categoria_id: datos.categoriaId,
             contenido: datos.contenido,
@@ -128,8 +118,8 @@ export class CodigosBarrasService {
             creado_por: usuario.id,
             revisado: usuario.rol === 'ADMIN',
           },
-          include: conCategoria,
-        });
+          tx,
+        );
         await this.bitacora.registrar(tx, {
           usuarioId: usuario.id,
           accion: 'codigo_barras.asociado',
@@ -137,7 +127,7 @@ export class CodigosBarrasService {
           entidadId: datos.ean,
           despues: vista(f),
         });
-        return conAutor(tx, f);
+        return this.conAutor(f, tx);
       });
     } catch (e) {
       if (esLlaveDuplicada(e)) {
@@ -163,7 +153,7 @@ export class CodigosBarrasService {
   ) {
     let unidadNueva: string | undefined;
     if (cambios.categoriaId) {
-      const cat = await this.prisma.categoria.findUnique({ where: { id: cambios.categoriaId } });
+      const cat = await this.categorias.buscar(cambios.categoriaId);
       unidadNueva = cat?.unidad_base;
       if (!cat || cat.archivada) {
         throw new ErrorDominio(
@@ -173,8 +163,8 @@ export class CodigosBarrasService {
         );
       }
     }
-    return this.prisma.$transaction(async (tx) => {
-      const antes = await tx.codigoBarras.findUnique({ where: { ean }, include: conCategoria });
+    return this.transacciones.ejecutar(async (tx) => {
+      const antes = await this.dao.conCategoria(ean, tx);
       if (!antes)
         throw new ErrorDominio(
           'EAN_DESCONOCIDO',
@@ -190,16 +180,16 @@ export class CodigosBarrasService {
             ? null
             : Number(antes.contenido),
       );
-      const f = await tx.codigoBarras.update({
-        where: { ean },
-        data: {
+      const f = await this.dao.actualizar(
+        ean,
+        {
           categoria_id: cambios.categoriaId,
           contenido: cambios.contenido,
           descripcion: cambios.descripcion,
           revisado: cambios.revisado,
         },
-        include: conCategoria,
-      });
+        tx,
+      );
       await this.bitacora.registrar(tx, {
         usuarioId: usuario.id,
         accion: 'codigo_barras.editado',
@@ -208,7 +198,7 @@ export class CodigosBarrasService {
         antes: vista(antes),
         despues: vista(f),
       });
-      return conAutor(tx, f);
+      return this.conAutor(f, tx);
     });
   }
 }

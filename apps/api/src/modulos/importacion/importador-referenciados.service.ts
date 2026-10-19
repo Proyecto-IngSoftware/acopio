@@ -52,6 +52,7 @@ export class ImportadorReferenciadosService {
     const base = { fuente: fuente.nombre, origen: fuente.origen, inicio };
     try {
       const lectura = await fuente.leer();
+      exigirCoherente(lectura.puntos);
       const verificados = lectura.puntos.filter((p) => p.verificado);
       // Sin coordenadas en Colombia (la fuente trae algunos en 0, 0) no hay dónde ponerlos en el mapa
       const ubicados = verificados.filter(enColombia);
@@ -77,10 +78,12 @@ export class ImportadorReferenciadosService {
       });
       return { resultado: 'OK', ...conteo, motivo: null };
     } catch (e) {
-      if (!(e instanceof ErrorDominio) || e.codigo !== 'FORMATO_FUENTE') throw e;
+      // Toda lectura queda registrada, también la que falló por algo distinto del formato
+      const motivo = e instanceof Error ? e.message : String(e);
       const fin = new Date(this.reloj.ahora());
-      await this.ejecuciones.registrar({ ...base, fin, resultado: 'ABORTADA', motivo: e.message });
-      return { resultado: 'ABORTADA', creados: 0, actualizados: 0, cerrados: 0, motivo: e.message };
+      await this.ejecuciones.registrar({ ...base, fin, resultado: 'ABORTADA', motivo });
+      if (!(e instanceof ErrorDominio) || e.codigo !== 'FORMATO_FUENTE') throw e;
+      return { resultado: 'ABORTADA', creados: 0, actualizados: 0, cerrados: 0, motivo };
     }
   }
 
@@ -161,6 +164,26 @@ function huella(f: {
     f.fuente_contacto ?? null,
     f.fuente_actualizado_en ? new Date(f.fuente_actualizado_en).toISOString() : null,
   ]);
+}
+
+/** Lo que el lector no ve punto por punto: ids repetidos y fechas que no son fechas. */
+function exigirCoherente(puntos: PuntoFuente[]) {
+  const vistos = new Set<string>();
+  for (const p of puntos) {
+    if (vistos.has(p.fuenteId))
+      throw new ErrorDominio(
+        'FORMATO_FUENTE',
+        `La fuente trae dos puntos con el id «${p.fuenteId}»`,
+        502,
+      );
+    vistos.add(p.fuenteId);
+    if (p.actualizadoEn && Number.isNaN(p.actualizadoEn.getTime()))
+      throw new ErrorDominio(
+        'FORMATO_FUENTE',
+        `El punto «${p.fuenteId}» trae una fecha de actualización que no es fecha`,
+        502,
+      );
+  }
 }
 
 /**

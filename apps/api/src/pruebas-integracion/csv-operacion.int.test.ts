@@ -64,6 +64,52 @@ describe('CSV de catálogo, inventario y turnos', () => {
     expect(errorDe(r.body, 1)).toMatchObject({ columna: 'grupo' });
   });
 
+  it('categorías: el mismo nombre dos veces en el archivo falla en la segunda', async () => {
+    const nombre = unico('Doble ');
+    const r = await enviar(
+      'categorias',
+      'revisar',
+      csv([
+        'nombre,grupo,unidad_base,perecedero,sinonimos',
+        `${nombre},ALIMENTOS,KILOGRAMO,no,`,
+        `${nombre.toUpperCase()},ALIMENTOS,KILOGRAMO,no,`,
+      ]),
+    ).expect(200);
+    expect(r.body).toMatchObject({ validas: 1, invalidas: 1 });
+    expect(errorDe(r.body, 2)).toMatchObject({ columna: 'nombre' });
+  });
+
+  it('inventario y jornadas: un acopio cerrado falla en revisar con la columna acopio', async () => {
+    const cerrado = await a.prisma.acopio.create({
+      data: {
+        entidad_id: (await a.prisma.acopio.findUniqueOrThrow({ where: { id: ACOPIO_A } }))
+          .entidad_id,
+        nombre: unico('Cerrado CSV '),
+        direccion: 'Calle 1',
+        municipio: 'Bogotá',
+        lat: 4.6,
+        lng: -74.1,
+        horario: HORARIO_VACIO as unknown as Prisma.InputJsonValue,
+        estado: 'CERRADO',
+      },
+    });
+    const inv = await enviar(
+      'inventario',
+      'revisar',
+      csv(['acopio,categoria,cantidad,vence_en', `${cerrado.nombre},Arroz,2,`]),
+    ).expect(200);
+    expect(errorDe(inv.body, 1)).toMatchObject({ columna: 'acopio' });
+    const jor = await enviar(
+      'jornadas',
+      'revisar',
+      csv([
+        'acopio,titulo,descripcion,fecha,hora_inicio,hora_fin,cupo_maximo,que_llevar,perfil_requerido',
+        `${cerrado.nombre},${unico('T ')},D,2026-10-25,08:00,12:00,8,,`,
+      ]),
+    ).expect(200);
+    expect(errorDe(jor.body, 1)).toMatchObject({ columna: 'acopio' });
+  });
+
   it('inventario: cada fila es una entrada y el saldo es la suma del archivo', async () => {
     const categoria = await a.prisma.categoria.create({
       data: { nombre: unico('Arroz CSV '), grupo: 'ALIMENTOS', unidad_base: 'KILOGRAMO' },

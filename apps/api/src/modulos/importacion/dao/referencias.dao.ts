@@ -41,7 +41,7 @@ export class ReferenciasDao {
         tipo: 'OPERADO',
         OR: nombres.map((n) => ({ nombre: { equals: n, mode: 'insensitive' as const } })),
       },
-      select: { id: true, nombre: true },
+      select: { id: true, nombre: true, estado: true },
     });
     return porNombre(filas);
   }

@@ -342,5 +342,15 @@ Ninguna pantalla se escribe sin su maqueta aprobada por Joseph en
   plataformas en P14.
 - **Acopios por CSV entran con el horario vacío**, porque el CSV no lo pide. Salen «cerrado
   ahora» hasta que el Administrador les ponga horario en la consola.
+- **Revisión final.** `revisar` del CSV ahora ve todo lo que haría fallar `aplicar`: el rango
+  de coordenadas de Colombia en acopios y zonas, el enlace https y el rango de cierre de las
+  causas, el acopio cerrado en inventario y jornadas y los nombres repetidos de categorías. Si
+  aun así un servicio lanza un error de dominio en `aplicar`, sale como 422 `CSV_INVALIDO`. El
+  importador aborta con `FORMATO_FUENTE` ante ids repetidos o fechas que no son fechas, y deja
+  la ejecución `ABORTADA` ante cualquier error. Los menores quedaron en
+  [P-077](../../01-requerimientos/pendientes.md#p-077--menores-de-la-revisión-final-de-la-pieza-e).
+- **`catalogo` e `importacion` entran a `MIGRADOS_A_DAO`.** La pieza E tocó `catalogo`, que
+  seguía sin migrar; sus cuatro servicios pasan a `CategoriaDao`, `CanastaDao`, `EmergenciaDao`
+  y `CodigoBarrasDao`.
 - Lo que falta de RF-RED-011 quedó en
   [P-076](../../01-requerimientos/pendientes.md#p-076--lo-que-falta-de-rf-red-011-después-de-la-pieza-e).

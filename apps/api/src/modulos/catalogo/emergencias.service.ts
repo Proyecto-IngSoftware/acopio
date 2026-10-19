@@ -1,10 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
-import { PrismaService } from '../../comun/prisma/prisma.service';
+import type { ClienteBd } from '../../comun/prisma/cliente-bd';
+import { Transacciones } from '../../comun/prisma/transacciones';
 import type { EstadoEmergencia } from '../../generado/prisma/enums';
 import { BitacoraService } from '../auditoria/bitacora.service';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
+import { EmergenciaDao } from './dao/emergencia.dao';
 
 export interface DatosEmergencia {
   nombre: string;
@@ -29,25 +31,23 @@ export class EmergenciasService {
   private readonly log = new Logger(EmergenciasService.name);
 
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly dao: EmergenciaDao,
+    private readonly transacciones: Transacciones,
     private readonly bitacora: BitacoraService,
   ) {}
 
   /** Activas primero, de la más reciente a la más antigua; después en seguimiento. */
   async listar(estado?: EstadoEmergencia) {
-    const filas = await this.prisma.emergencia.findMany({
-      where: { estado },
-      orderBy: [{ inicio: 'desc' }],
-    });
+    const filas = await this.dao.listar(estado);
     const orden: Record<EstadoEmergencia, number> = { ACTIVA: 0, EN_SEGUIMIENTO: 1, CERRADA: 2 };
     return filas.sort((a, b) => orden[a.estado] - orden[b.estado]).map(presentar);
   }
 
   async crear(admin: UsuarioAutenticado, datos: DatosEmergencia) {
     exigirFechas(datos.inicio, datos.destacadaHasta);
-    return this.prisma.$transaction(async (tx) => {
-      const e = await tx.emergencia.create({
-        data: {
+    return this.transacciones.ejecutar(async (tx) => {
+      const e = await this.dao.crear(
+        {
           nombre: datos.nombre.trim(),
           tipo: datos.tipo.trim(),
           inicio: datos.inicio,
@@ -55,7 +55,8 @@ export class EmergenciasService {
           destacada_hasta: datos.destacadaHasta,
           estado: datos.destacadaHasta < hoyEnBogota() ? 'EN_SEGUIMIENTO' : 'ACTIVA',
         },
-      });
+        tx,
+      );
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
         accion: 'emergencia.creada',
@@ -72,7 +73,7 @@ export class EmergenciasService {
    * emergencia en seguimiento la devuelve a ACTIVA (RF-CAT-005).
    */
   async actualizar(admin: UsuarioAutenticado, id: string, cambios: Partial<DatosEmergencia>) {
-    return this.prisma.$transaction(async (tx) => {
+    return this.transacciones.ejecutar(async (tx) => {
       const antes = await this.obtenerFila(tx, id);
       if (antes.estado === 'CERRADA') {
         throw new ErrorDominio(
@@ -84,9 +85,9 @@ export class EmergenciasService {
       const destacadaHasta = cambios.destacadaHasta ?? antes.destacada_hasta;
       exigirFechas(cambios.inicio ?? antes.inicio, destacadaHasta);
       const estado: EstadoEmergencia = destacadaHasta < hoyEnBogota() ? 'EN_SEGUIMIENTO' : 'ACTIVA';
-      const despues = await tx.emergencia.update({
-        where: { id },
-        data: {
+      const despues = await this.dao.actualizar(
+        id,
+        {
           nombre: cambios.nombre?.trim(),
           tipo: cambios.tipo?.trim(),
           inicio: cambios.inicio,
@@ -94,7 +95,8 @@ export class EmergenciasService {
           destacada_hasta: destacadaHasta,
           estado,
         },
-      });
+        tx,
+      );
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
         accion: 'emergencia.actualizada',
@@ -112,13 +114,14 @@ export class EmergenciasService {
    * en tránsito de sus zonas se agrega en los bloques 1 y 4, cuando existan.
    */
   async cerrar(admin: UsuarioAutenticado, id: string, motivo: string) {
-    return this.prisma.$transaction(async (tx) => {
+    return this.transacciones.ejecutar(async (tx) => {
       const antes = await this.obtenerFila(tx, id);
       if (antes.estado === 'CERRADA') return presentar(antes);
-      const despues = await tx.emergencia.update({
-        where: { id },
-        data: { estado: 'CERRADA', cerrada_en: new Date(), motivo_cierre: motivo.trim() },
-      });
+      const despues = await this.dao.actualizar(
+        id,
+        { estado: 'CERRADA', cerrada_en: new Date(), motivo_cierre: motivo.trim() },
+        tx,
+      );
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
         accion: 'emergencia.cerrada',
@@ -135,13 +138,10 @@ export class EmergenciasService {
   /** Cada día a las 00:05 en Colombia: las que pasaron su fecha bajan a EN_SEGUIMIENTO. */
   @Cron('5 0 * * *', { name: 'emergencias-en-seguimiento', timeZone: 'America/Bogota' })
   async pasarASeguimiento(): Promise<number> {
-    return this.prisma.$transaction(async (tx) => {
-      const vencidas = await tx.emergencia.findMany({
-        where: { estado: 'ACTIVA', destacada_hasta: { lt: hoyEnBogota() } },
-        select: { id: true },
-      });
+    return this.transacciones.ejecutar(async (tx) => {
+      const vencidas = await this.dao.vencidas(hoyEnBogota(), tx);
       for (const { id } of vencidas) {
-        await tx.emergencia.update({ where: { id }, data: { estado: 'EN_SEGUIMIENTO' } });
+        await this.dao.actualizar(id, { estado: 'EN_SEGUIMIENTO' }, tx);
         await this.bitacora.registrar(tx, {
           usuarioId: null,
           accion: 'emergencia.en_seguimiento',
@@ -156,8 +156,8 @@ export class EmergenciasService {
     });
   }
 
-  private async obtenerFila(tx: Pick<PrismaService, 'emergencia'>, id: string) {
-    const e = await tx.emergencia.findUnique({ where: { id } });
+  private async obtenerFila(tx: ClienteBd, id: string) {
+    const e = await this.dao.buscar(id, tx);
     if (!e) throw new ErrorDominio('EMERGENCIA_NO_ENCONTRADA', 'La emergencia no existe', 404);
     return e;
   }

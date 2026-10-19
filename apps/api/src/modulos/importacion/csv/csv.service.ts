@@ -45,7 +45,16 @@ export class CsvService {
             reporte,
           );
         }
-        await formato.aplicar(validas, usuario, tx);
+        try {
+          await formato.aplicar(validas, usuario, tx);
+        } catch (e) {
+          // Una regla que revisar no alcanzó a ver: sigue siendo un archivo inválido, no un 409 suelto
+          if (!(e instanceof ErrorDominio)) throw e;
+          throw new ErrorDominio('CSV_INVALIDO', `No se cargó ninguna fila: ${e.message}`, 422, {
+            ...reporte,
+            codigo: e.codigo,
+          });
+        }
         return reporte;
       },
       { timeout: 60_000 },

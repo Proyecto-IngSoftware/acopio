@@ -167,6 +167,38 @@ describe('importador de referenciados', () => {
     expect(await importador.ejecutar(otra, null)).toMatchObject({ creados: 0, actualizados: 0 });
   });
 
+  const ultimaDe = (f: FuenteFalsa) =>
+    a.prisma.importacionEjecucion.findFirst({
+      where: { fuente: f.nombre },
+      orderBy: { inicio: 'desc' },
+    });
+
+  it('dos puntos con el mismo id en la fuente abortan la lectura y la registran', async () => {
+    const otra = new FuenteFalsa();
+    otra.puntos = [punto('d'), punto('d', { nombre: 'Otro con el mismo id' })];
+    const r = await importador.ejecutar(otra, null);
+    expect(r).toMatchObject({ resultado: 'ABORTADA', motivo: expect.stringContaining('«d»') });
+    expect(await a.prisma.acopio.count({ where: { fuente: otra.nombre } })).toBe(0);
+    expect(await ultimaDe(otra)).toMatchObject({ resultado: 'ABORTADA' });
+  });
+
+  it('una fecha de actualización que no es fecha aborta la lectura y la registran', async () => {
+    const otra = new FuenteFalsa();
+    otra.puntos = [punto('e', { actualizadoEn: new Date('no es fecha') })];
+    const r = await importador.ejecutar(otra, null);
+    expect(r).toMatchObject({ resultado: 'ABORTADA' });
+    expect(await ultimaDe(otra)).toMatchObject({ resultado: 'ABORTADA' });
+  });
+
+  it('un error inesperado también deja la ejecución abortada antes de salir', async () => {
+    const otra = new FuenteFalsa();
+    otra.leer = async () => {
+      throw new Error('se cayó la red');
+    };
+    await expect(importador.ejecutar(otra, null)).rejects.toThrow('se cayó la red');
+    expect(await ultimaDe(otra)).toMatchObject({ resultado: 'ABORTADA', motivo: 'se cayó la red' });
+  });
+
   it('un Operador no puede correr la importación', async () => {
     const admin = await iniciarSesion(a, ADMIN.username, ADMIN.contrasena);
     const op = await crearUsuarioActivo(a, admin, { rol: 'OPERADOR' });

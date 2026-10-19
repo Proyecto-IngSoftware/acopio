@@ -4,15 +4,15 @@ import type { UsuarioAutenticado } from '../../../../comun/autorizacion/usuario-
 import type { ClienteBd } from '../../../../comun/prisma/cliente-bd';
 import { ZonasService } from '../../../acopios/zonas.service';
 import { clave, ReferenciasDao } from '../../dao/referencias.dao';
-import { entero, faltantes, fecha, numero, texto } from '../columnas';
+import { entero, faltantes, fecha, latitud, longitud, texto } from '../columnas';
 import type { FilaCsv, FormatoCsv } from '../formato-csv';
 
 const esquema = z.object({
   emergencia: texto('Falta la emergencia'),
   nombre: texto('Falta el nombre'),
   municipio: texto('Falta el municipio'),
-  lat: numero('Falta la latitud'),
-  lng: numero('Falta la longitud'),
+  lat: latitud,
+  lng: longitud,
   poblacion_estimada: entero('Falta la población estimada'),
   poblacion_fuente: texto('Falta de dónde sale la población'),
   poblacion_fecha: fecha('Falta la fecha de la población'),

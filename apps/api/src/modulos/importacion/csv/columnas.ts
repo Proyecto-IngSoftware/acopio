@@ -18,6 +18,19 @@ export const entero = (falta: string) =>
   numero(falta).pipe(
     z.number().int('Debe ser un número entero').nonnegative('No puede ser negativo'),
   );
+// Los mismos rangos de los formularios: la base rechaza lo que cae fuera de Colombia
+export const latitud = numero('Falta la latitud').pipe(
+  z
+    .number()
+    .min(-5, 'La latitud va de -5 a 14 (Colombia)')
+    .max(14, 'La latitud va de -5 a 14 (Colombia)'),
+);
+export const longitud = numero('Falta la longitud').pipe(
+  z
+    .number()
+    .min(-82, 'La longitud va de -82 a -66 (Colombia)')
+    .max(-66, 'La longitud va de -82 a -66 (Colombia)'),
+);
 export const fecha = (falta: string) => z.iso.date(`${falta} (AAAA-MM-DD)`);
 
 /** Errores de `revisar` para las filas cuyo nombre no aparece en la base. */

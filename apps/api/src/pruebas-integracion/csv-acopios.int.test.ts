@@ -89,6 +89,54 @@ describe('CSV de la red', () => {
     });
   });
 
+  it('acopios y zonas: coordenadas fuera de Colombia fallan en revisar, no con un 500', async () => {
+    const acopio = await enviar(
+      'acopios',
+      'revisar',
+      csv([
+        'entidad,nombre,direccion,municipio,lat,lng,telefono,indicaciones',
+        `${entidadPrueba},${unico('Fuera ')},Calle 1,Bogotá,400,-74.06,,`,
+        `${entidadPrueba},${unico('Cero ')},Calle 1,Bogotá,4.6,0,,`,
+      ]),
+    ).expect(200);
+    expect(errorDe(acopio.body, 1)).toMatchObject({ columna: 'lat' });
+    expect(errorDe(acopio.body, 2)).toMatchObject({ columna: 'lng' });
+    const zona = await enviar(
+      'zonas',
+      'revisar',
+      csv([
+        'emergencia,nombre,municipio,lat,lng,poblacion_estimada,poblacion_fuente,poblacion_fecha',
+        `${emergenciaPrueba},${unico('Zona 0 ')},Mocoa,0,0,10,Censo,2026-09-01`,
+      ]),
+    ).expect(200);
+    expect(errorDe(zona.body, 1)).toMatchObject({ columna: 'lng' });
+  });
+
+  it('causas: un enlace sin https o un cierre fuera de rango fallan en revisar con su columna', async () => {
+    const verificada = unico('Verificada R ');
+    await a.prisma.entidad.create({
+      data: {
+        nombre: verificada,
+        tipo: 'ONG',
+        sitio_web: 'https://ong.test',
+        verificacion: 'VERIFICADA',
+        verificada_en: new Date(),
+      },
+    });
+    const bien = new Date(Date.now() + 30 * 86_400_000).toISOString().slice(0, 10);
+    const r = await enviar(
+      'causas',
+      'revisar',
+      csv([
+        'entidad,categoria,titulo,descripcion,url_oficial,cierra_el,paso_1',
+        `${verificada},PERSONAS,${unico('Http ')},D,http://ong.test/donar,${bien},Entra`,
+        `${verificada},PERSONAS,${unico('Vieja ')},D,https://ong.test/donar,2020-01-01,Entra`,
+      ]),
+    ).expect(200);
+    expect(errorDe(r.body, 1)).toMatchObject({ columna: 'url_oficial' });
+    expect(errorDe(r.body, 2)).toMatchObject({ columna: 'cierra_el' });
+  });
+
   it('zonas: busca la emergencia por su nombre', async () => {
     const nombre = unico('Zona CSV ');
     await enviar(

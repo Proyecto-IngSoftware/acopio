@@ -76,13 +76,25 @@ export class CategoriasFormato implements FormatoCsv<Fila> {
       filas.map((f) => f.datos.nombre),
       tx,
     );
-    return filas
-      .filter((f) => existentes.has(clave(f.datos.nombre)))
-      .map((f) => ({
-        numero: f.numero,
-        columna: 'nombre',
-        mensaje: 'Ya existe una categoría con ese nombre',
-      }));
+    const vistos = new Set<string>();
+    return filas.flatMap((f) => {
+      const k = clave(f.datos.nombre);
+      const repetida = vistos.has(k);
+      vistos.add(k);
+      if (existentes.has(k))
+        return [
+          {
+            numero: f.numero,
+            columna: 'nombre',
+            mensaje: 'Ya existe una categoría con ese nombre',
+          },
+        ];
+      if (repetida)
+        return [
+          { numero: f.numero, columna: 'nombre', mensaje: 'El nombre se repite en el archivo' },
+        ];
+      return [];
+    });
   }
 
   async aplicar(filas: Fila[], usuario: UsuarioAutenticado, tx: ClienteBd) {

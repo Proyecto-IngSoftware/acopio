@@ -5,7 +5,7 @@ import type { UsuarioAutenticado } from '../../../../comun/autorizacion/usuario-
 import type { ClienteBd } from '../../../../comun/prisma/cliente-bd';
 import { AcopiosService } from '../../../acopios/acopios.service';
 import { clave, ReferenciasDao } from '../../dao/referencias.dao';
-import { faltantes, numero, opcional, texto } from '../columnas';
+import { faltantes, latitud, longitud, opcional, texto } from '../columnas';
 import type { FilaCsv, FormatoCsv } from '../formato-csv';
 
 const esquema = z.object({
@@ -13,8 +13,8 @@ const esquema = z.object({
   nombre: texto('Falta el nombre'),
   direccion: texto('Falta la dirección'),
   municipio: texto('Falta el municipio'),
-  lat: numero('Falta la latitud'),
-  lng: numero('Falta la longitud'),
+  lat: latitud,
+  lng: longitud,
   telefono: opcional,
   indicaciones: opcional,
 });
