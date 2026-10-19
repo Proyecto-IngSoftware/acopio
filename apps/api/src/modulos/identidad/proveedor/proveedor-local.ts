@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 import { SignJWT, type JSONWebKeySet } from 'jose';
-import { PrismaService } from '../../../comun/prisma/prisma.service';
+import { IdentidadLocalDao } from '../dao/identidad-local.dao';
 import { ENTORNO, type Entorno } from '../../../config/entorno';
 import { ALGORITMO, cargarOCrearLlaves, type LlavesLocales } from './llaves-locales';
 import type { ProveedorIdentidad, SesionEmitida } from './proveedor-identidad';
@@ -21,7 +21,7 @@ export class ProveedorLocal implements ProveedorIdentidad {
   private llaves?: Promise<LlavesLocales>;
 
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly identidades: IdentidadLocalDao,
     @Inject(ENTORNO) private readonly entorno: Entorno,
   ) {}
 
@@ -31,30 +31,23 @@ export class ProveedorLocal implements ProveedorIdentidad {
   }
 
   async crearUsuario(correo: string, contrasena: string): Promise<{ uid: string }> {
-    const identidad = await this.prisma.identidadLocal.create({
-      data: {
-        correo,
-        password_hash: await bcrypt.hash(contrasena, COSTO_BCRYPT),
-        // Nace confirmada: la invitación o el enlace del Donador ya probaron el correo
-        correo_confirmado_en: new Date(),
-      },
+    const identidad = await this.identidades.crear({
+      correo,
+      passwordHash: await bcrypt.hash(contrasena, COSTO_BCRYPT),
     });
     return { uid: identidad.id };
   }
 
   async cambiarContrasena(uid: string, contrasena: string): Promise<void> {
-    await this.prisma.identidadLocal.update({
-      where: { id: uid },
-      data: { password_hash: await bcrypt.hash(contrasena, COSTO_BCRYPT) },
-    });
+    await this.identidades.cambiarHash(uid, await bcrypt.hash(contrasena, COSTO_BCRYPT));
   }
 
   async eliminarUsuario(uid: string): Promise<void> {
-    await this.prisma.identidadLocal.deleteMany({ where: { id: uid } });
+    await this.identidades.borrar(uid);
   }
 
   async iniciarSesion(correo: string, contrasena: string): Promise<SesionEmitida | null> {
-    const identidad = await this.prisma.identidadLocal.findUnique({ where: { correo } });
+    const identidad = await this.identidades.porCorreo(correo);
     // Se compara igual aunque no exista, para no revelar por tiempo si el correo existe
     const hash = identidad?.password_hash ?? HASH_SENUELO;
     const coincide = await bcrypt.compare(contrasena, hash);

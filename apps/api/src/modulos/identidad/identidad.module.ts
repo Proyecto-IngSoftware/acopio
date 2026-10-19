@@ -1,6 +1,10 @@
 import { Global, Module } from '@nestjs/common';
 import { ENTORNO } from '../../config/entorno';
+import { AsignacionDao } from './dao/asignacion.dao';
+import { IdentidadLocalDao } from './dao/identidad-local.dao';
+import { InvitacionDao } from './dao/invitacion.dao';
 import { UsuarioDao } from './dao/usuario.dao';
+import { VerificacionCorreoDao } from './dao/verificacion-correo.dao';
 import { AlcanceService } from './autenticacion/alcance.service';
 import { AutenticacionGuard } from './autenticacion/autenticacion.guard';
 import { VerificadorToken } from './autenticacion/verificador-token';
@@ -23,6 +27,10 @@ import { UsuariosService } from './usuarios/usuarios.service';
   controllers: [SesionController, DonadorController, InvitacionesController, UsuariosController],
   providers: [
     UsuarioDao,
+    AsignacionDao,
+    IdentidadLocalDao,
+    InvitacionDao,
+    VerificacionCorreoDao,
     ProveedorLocal,
     ProveedorSupabase,
     {

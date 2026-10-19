@@ -5,7 +5,7 @@ tags: [arquitectura, adr, patrones, persistencia]
 estado: vigente
 adr: 19
 decision: aceptada
-actualizado: 2026-10-09
+actualizado: 2026-10-19
 ---
 
 # ADR-0019 · El acceso a datos pasa por DAO sobre Prisma
@@ -71,6 +71,10 @@ cubre el agregado entero: el comprobante, sus líneas y sus vínculos con movimi
 `acopios`, `identidad` y `catalogo` ya exportan DAO para otros módulos, pero sus
 servicios todavía usan Prisma. Los módulos que faltan se migran cuando se toquen, y al
 migrar uno se agrega a `MIGRADOS_A_DAO`.
+
+El 2026-10-19, con la entrada única, se migró `identidad`: `UsuarioDao`, `InvitacionDao`,
+`VerificacionCorreoDao`, `AsignacionDao` e `IdentidadLocalDao`. El guard y el proveedor local
+también leen por DAO.
 
 ## Alternativas
 

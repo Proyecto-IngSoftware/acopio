@@ -1,6 +1,9 @@
 import { Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { ErrorDominio } from '../../../comun/errores/error-dominio';
-import { PrismaService } from '../../../comun/prisma/prisma.service';
+import { Transacciones } from '../../../comun/prisma/transacciones';
+import type { ClienteBd } from '../../../comun/prisma/cliente-bd';
+import { UsuarioDao } from '../dao/usuario.dao';
+import { VerificacionCorreoDao } from '../dao/verificacion-correo.dao';
 import { ENTORNO, type Entorno } from '../../../config/entorno';
 import { BitacoraService } from '../../auditoria/bitacora.service';
 import { NotificacionService } from '../../notificaciones/notificacion.service';
@@ -29,7 +32,9 @@ export class DonadorService {
   private readonly log = new Logger(DonadorService.name);
 
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly transacciones: Transacciones,
+    private readonly usuarios: UsuarioDao,
+    private readonly enlaces: VerificacionCorreoDao,
     private readonly bitacora: BitacoraService,
     private readonly correo: NotificacionService,
     @Inject(PROVEEDOR_IDENTIDAD) private readonly proveedor: ProveedorIdentidad,
@@ -42,16 +47,14 @@ export class DonadorService {
    */
   async registrar(datos: { correo: string; nombre: string }) {
     const correo = datos.correo.trim().toLowerCase();
-    const existente = await this.prisma.usuario.findUnique({
-      where: { correo },
-      select: { id: true, rol: true, estado: true, nombre: true },
-    });
+    const existente = await this.usuarios.porCorreo(correo);
     try {
-      await this.prisma.$transaction(async (tx) => {
+      await this.transacciones.ejecutar(async (tx) => {
         if (!existente) {
-          const usuario = await tx.usuario.create({
-            data: { nombre: datos.nombre.trim(), correo, rol: 'DONADOR', estado: 'INVITADO' },
-          });
+          const usuario = await this.usuarios.crearDonador(
+            { nombre: datos.nombre.trim(), correo },
+            tx,
+          );
           await this.bitacora.registrar(tx, {
             usuarioId: usuario.id,
             accion: 'donador.registrado',
@@ -77,17 +80,10 @@ export class DonadorService {
     }
   }
 
-  private async emitirEnlace(
-    tx: Parameters<Parameters<PrismaService['$transaction']>[0]>[0],
-    usuarioId: string,
-    nombre: string,
-    correo: string,
-  ) {
+  private async emitirEnlace(tx: ClienteBd, usuarioId: string, nombre: string, correo: string) {
     const token = generarToken();
     const venceEn = new Date(Date.now() + VIGENCIA_ENLACE_MS);
-    await tx.verificacionCorreo.create({
-      data: { usuario_id: usuarioId, token_hash: hashToken(token), vence_en: venceEn },
-    });
+    await this.enlaces.crear({ usuarioId, tokenHash: hashToken(token), venceEn }, tx);
     await this.correo.encolar(
       tx,
       correo,
@@ -107,12 +103,7 @@ export class DonadorService {
   }
 
   private async enlaceVigente(token: string) {
-    const fila = await this.prisma.verificacionCorreo.findUnique({
-      where: { token_hash: hashToken(token) },
-      include: {
-        usuario: { select: { id: true, nombre: true, correo: true, estado: true, rol: true } },
-      },
-    });
+    const fila = await this.enlaces.conUsuario(hashToken(token));
     if (
       !fila ||
       fila.usado_en ||
@@ -143,27 +134,21 @@ export class DonadorService {
       throw error;
     }
     try {
-      await this.prisma.$transaction(async (tx) => {
+      await this.transacciones.ejecutar(async (tx) => {
         // Gana quien cierre primero el enlace; el otro falla y compensa
-        const gastado = await tx.verificacionCorreo.updateMany({
-          where: { id: fila.id, usado_en: null },
-          data: { usado_en: new Date() },
-        });
-        if (gastado.count === 0) throw ENLACE_INVALIDO();
+        if (!(await this.enlaces.gastar(fila.id, tx))) throw ENLACE_INVALIDO();
         // Un enlace confirma la cuenta: los demás pendientes del mismo usuario se cierran
-        await tx.verificacionCorreo.updateMany({
-          where: { usuario_id: fila.usuario_id, usado_en: null },
-          data: { usado_en: new Date() },
-        });
-        await tx.usuario.update({
-          where: { id: fila.usuario_id },
-          data: {
+        await this.enlaces.cerrarPendientes(fila.usuario_id, tx);
+        await this.usuarios.marcar(
+          fila.usuario_id,
+          {
             supabase_uid: uid,
             estado: 'ACTIVO',
             tokens_validos_desde: new Date(),
             nombre: nombreFinal,
           },
-        });
+          tx,
+        );
         await this.bitacora.registrar(tx, {
           usuarioId: fila.usuario_id,
           accion: 'donador.confirmado',
@@ -185,10 +170,7 @@ export class DonadorService {
 
   async iniciarSesion(correoCrudo: string, contrasena: string) {
     const correo = correoCrudo.trim().toLowerCase();
-    const usuario = await this.prisma.usuario.findUnique({
-      where: { correo },
-      select: { id: true, nombre: true, rol: true, estado: true },
-    });
+    const usuario = await this.usuarios.paraSesion({ correo });
     if (!usuario || usuario.rol !== 'DONADOR' || usuario.estado !== 'ACTIVO') {
       await this.proveedor.iniciarSesion('no-existe@acopio.local', contrasena);
       throw CREDENCIALES_INVALIDAS();
