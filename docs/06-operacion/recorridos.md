@@ -192,7 +192,42 @@ CAPTURAS=no SIN_CORREO=1 CAPTURAS_WORD=/tmp/capturas node apps/web/recorridos/co
 Si se corren varios seguidos, el límite de 5 inicios de sesión por minuto hace fallar el que
 entra después; hay que esperar un minuto entre uno y otro.
 
+En local, `ADMIN_CONTRASENA` no se pasa: el administrador del Compose tiene la contraseña por
+defecto del script. La de `SEED_ADMIN_CONTRASENA` en el `.env` es la del servidor.
+
+Cada captura se copia a `docs/entregas/evidencia/avance-05/` con otro nombre:
+
+| Recorrido | Captura | En el Word |
+|---|---|---|
+| `portal-causas.mjs` | `P03-causas-construida.png` | `causas-1-directorio.png` |
+| `portal-causas.mjs` | `P04-ficha-causa-construida.png` | `causas-2-ficha.png` |
+| `portal-causas.mjs` | `P04-ficha-causa-construida-salida.png` | `causas-3-salida.png` |
+| `consola-causas.mjs` | `C15-entidades-construida-verificar.png` | `causas-4-verificar.png` |
+| `consola-causas.mjs` | `C22-causas-construida-formulario.png` | `causas-5-publicar.png` |
+| `consola-causas.mjs` | `P04-ficha-causa-construida-sin-verificar.png` | `causas-6-sin-verificar.png` |
+| `consola-recepciones.mjs` | `P05-mapa-construida-zona.png` | `otras-mapa-zona.png` |
+
+`causas-7-plataformas.png` y `otras-mapa-puntos.png` no salen de un recorrido. Las capturas de
+`CAPTURAS_WORD` muestran el comienzo de la página, y la sección de plataformas y los pines del
+mapa quedan más abajo. Esas dos se tomaron el 2026-10-19 con un script de Playwright aparte:
+baja hasta la sección «Otras plataformas que ayudan» de `/causas` y, en `/mapa`, toca el grupo
+de Bogotá para que se vean los dos tipos de punto.
+
 ## Últimos resultados
+
+**2026-10-19, en local, capturas del Avance 5** (`CAPTURAS=no`, `CAPTURAS_WORD` activo, web
+reconstruida): `portal-causas.mjs` 4 de 4, `referenciados.mjs` 6 de 6, `consola-causas.mjs` 6
+de 6 y `consola-recepciones.mjs` 7 de 7. Hubo tres fallas antes:
+
+- `consola-causas.mjs` no entró con la contraseña del servidor en `ADMIN_CONTRASENA`; sin
+  ella, entró.
+- `consola-recepciones.mjs` no encontraba el pin de la zona. Desde #144 el texto de la píldora
+  («3 faltantes») tapaba el `title` del marcador como nombre accesible, y lo mismo pasaba con
+  el nombre de los acopios. La píldora va ahora con `aria-hidden`, y `marcador.test.ts` lo
+  prueba.
+- `consola-causas.mjs` abría la ficha antes de que la API terminara de quitar la verificación,
+  y la ficha mostraba la entidad todavía verificada. Ahora espera a que se cierre la hoja de
+  confirmación.
 
 **2026-10-19, contra el servidor de pruebas, antes de la sustentación** (`CAPTURAS=no`):
 `referenciados.mjs` 6 de 6, `portal-causas.mjs` 4 de 4 y `portal-turnos.mjs` 6 de 6, sin

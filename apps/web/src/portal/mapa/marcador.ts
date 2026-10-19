@@ -26,9 +26,10 @@ const icono = (nombre: string) =>
 const escapar = (texto: string) =>
   texto.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 
-/** La píldora de Stitch con su sombra debajo; el ancla del marcador es la punta de abajo. */
+/** La píldora de Stitch con su sombra debajo; el ancla del marcador es la punta de abajo.
+ *  Va con aria-hidden: el lector de pantalla anuncia el title del marcador, no el texto corto. */
 function pildora(clases: string, nombreIcono: string, texto: string, elegido: boolean) {
-  return `<div class="flex flex-col items-center"><div class="flex items-center gap-1 whitespace-nowrap rounded-[999px] px-2.5 py-1 text-label-sm font-semibold shadow-md ${clases} ${anillo(elegido)}">${icono(nombreIcono)}${escapar(texto)}</div><div class="mt-0.5 h-1.5 w-4 rounded-[999px] bg-on-surface/25 blur-[1px]"></div></div>`;
+  return `<div aria-hidden="true" class="flex flex-col items-center"><div class="flex items-center gap-1 whitespace-nowrap rounded-[999px] px-2.5 py-1 text-label-sm font-semibold shadow-md ${clases} ${anillo(elegido)}">${icono(nombreIcono)}${escapar(texto)}</div><div class="mt-0.5 h-1.5 w-4 rounded-[999px] bg-on-surface/25 blur-[1px]"></div></div>`;
 }
 
 /** Cada punto se distingue por forma e ícono, no solo por color (RNF-11): el acopio verde con

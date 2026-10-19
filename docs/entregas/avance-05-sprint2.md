@@ -3,7 +3,7 @@ title: "Avance 5 — Sprint 2: interfaz funcional y patrones de diseño"
 type: entrega
 tags: [entrega, is1, sprint-2]
 estado: vigente
-actualizado: 2026-10-18
+actualizado: 2026-10-19
 ---
 
 # Avance 5 — Sprint 2: interfaz funcional y patrones de diseño
@@ -132,12 +132,16 @@ Historias HU-02 Donar a una causa real y HU-15 No dirigir donantes a una estafa.
 
 ![Ficha de una causa cuya entidad perdió la verificación: sin sello ni enlace.](evidencia/avance-05/causas-6-sin-verificar.png)
 
+![Al final de Causas, otras plataformas que ayudan, con la foto de su sitio. Acopio no las verifica.](evidencia/avance-05/causas-7-plataformas.png)
+
 ### 1c. Otras pantallas del incremento
 
 El incremento tiene más pantallas que las de los dos flujos. Estas también leen la base de la
 demo; la portada ya muestra el balance de recepción con datos de inventario.
 
 ![Portada (P1): el balance dice qué hace falta y qué no traer.](evidencia/avance-05/portada-balance.png)
+
+![Mapa (P5): los acopios en verde y los puntos de RedAcopio en blanco, agrupados por tipo.](evidencia/avance-05/otras-mapa-puntos.png)
 
 ![Mapa (P5): una zona con necesidad y lo que reportó.](evidencia/avance-05/otras-mapa-zona.png)
 
@@ -151,7 +155,7 @@ demo; la portada ya muestra el balance de recepción con datos de inventario.
 
 ### 1d. Diagramas
 
-Los diagramas están al día con el código del 18 de octubre. El de paquetes es el que pide la
+Los diagramas están al día con el código del 19 de octubre. El de paquetes es el que pide la
 sustentación; se dibuja a mano en `docs/02-arquitectura/diagramas/paquetes.html` y sus
 dependencias salen de dependency-cruiser. Los modelos de datos de la red y de turnos se
 generan con Mermaid desde la misma carpeta; el resto de los diagramas está en la bóveda,
@@ -159,7 +163,7 @@ en `docs/02-arquitectura/`.
 
 ![Paquetes del monorepo: la web, la API y los paquetes compartidos.](../assets/diagramas/arquitectura-03-paquetes-del-monorepo.png)
 
-![Paquetes de la API: los módulos de dominio arriba, los transversales abajo. Incluye turnos.](../assets/diagramas/arquitectura-04-paquetes-de-la-api.png)
+![Paquetes de la API: los módulos de dominio arriba, los transversales abajo. Incluye turnos e importacion.](../assets/diagramas/arquitectura-04-paquetes-de-la-api.png)
 
 ![Modelo de datos de la red: emergencias, zonas, entidades, acopios y causas.](../assets/diagramas/er-02-red.png)
 
