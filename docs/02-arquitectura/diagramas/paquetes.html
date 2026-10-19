@@ -89,7 +89,7 @@ figcaption p { color: var(--muted); }
         <text x="1160" y="62" text-anchor="end" style="font:13px var(--sans);fill:var(--muted)">NestJS · monolito modular</text>
         <rect x="810" y="74" width="340" height="52" rx="3" style="fill:var(--inner);stroke:var(--pkg-line)"/>
         <text x="822" y="96" style="font:600 13px var(--mono);fill:currentColor">src/modulos/</text>
-        <text x="822" y="115" style="font:13px var(--sans);fill:var(--muted)">10 módulos: ver el diagrama 2</text>
+        <text x="822" y="115" style="font:13px var(--sans);fill:var(--muted)">12 módulos: ver el diagrama 2</text>
         <rect x="810" y="140" width="340" height="56" rx="3" style="fill:var(--inner);stroke:var(--pkg-line)"/>
         <text x="822" y="163" style="font:600 13px var(--mono);fill:currentColor">src/comun/ · src/config/</text>
         <text x="822" y="182" style="font:13px var(--sans);fill:var(--muted)">autorización, errores, PrismaService</text>
@@ -157,15 +157,35 @@ figcaption p { color: var(--muted); }
   <figure>
     <h2>2. Paquetes de la API</h2>
     <div class="lamina">
-      <svg viewBox="0 0 1200 900" role="img" aria-label="Los módulos de dominio de la API se apilan en capas: motor y turnos arriba, luego comprobantes e inventario, luego acopios y catálogo. Todos importan hacia abajo; ningún módulo de abajo importa a uno de arriba.">
+      <svg viewBox="0 0 1200 1100" role="img" aria-label="Los módulos de dominio de la API se apilan en capas: importacion arriba, luego motor y turnos, luego comprobantes e inventario, luego acopios y catálogo. Todos importan hacia abajo; ningún módulo de abajo importa a uno de arriba.">
         <defs>
           <marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
         </defs>
 
         <!-- grupo de dominio -->
-        <rect x="15" y="8" width="1170" height="572" rx="8" style="fill:none;stroke:var(--pkg-line)" stroke-dasharray="8 6"/>
+        <rect x="15" y="8" width="1170" height="772" rx="8" style="fill:none;stroke:var(--pkg-line)" stroke-dasharray="8 6"/>
         <text x="1170" y="32" text-anchor="end" style="font:600 13px var(--sans);fill:var(--muted)">módulos de dominio · apps/api/src/modulos/</text>
 
+        <!-- importacion: nadie lo importa, por eso va arriba de todo -->
+        <rect x="430" y="30" width="168" height="20" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <text x="440" y="45" style="font:600 12.5px var(--mono);fill:currentColor">modulos/importacion</text>
+        <rect x="430" y="50" width="340" height="120" style="fill:var(--pkg);stroke:var(--pkg-line)"/>
+        <g style="font:13px var(--sans);fill:currentColor">
+          <text x="444" y="75"><tspan style="fill:var(--muted)">«servicio» </tspan>ImportadorReferenciadosService</text>
+          <text x="444" y="96"><tspan style="fill:var(--muted)">«servicio» </tspan>CsvService · PlataformasService</text>
+          <text x="444" y="117"><tspan style="fill:var(--muted)">«interfaz» </tspan>FuenteAcopios</text>
+          <text x="444" y="138">RedAcopioHttp · RedAcopioArchivo</text>
+          <text x="444" y="159" style="font:12px var(--sans);fill:var(--muted)">puntos de RedAcopio y carga por CSV</text>
+        </g>
+        <!-- importacion → turnos, acopios (se une a la flecha de turnos), inventario y catalogo -->
+        <g style="stroke:currentColor;fill:none" stroke-width="1.6">
+          <polyline points="430,110 210,110 210,248" marker-end="url(#m2)"/>
+          <polyline points="412,110 412,520"/>
+          <polyline points="770,110 1140,110 1140,648" marker-end="url(#m2)"/>
+          <polyline points="1040,110 1040,510 1002,510" marker-end="url(#m2)"/>
+        </g>
+
+        <g transform="translate(0,200)">
         <!-- motor -->
         <rect x="430" y="30" width="138" height="20" style="fill:var(--accent-soft);stroke:var(--accent)"/>
         <text x="440" y="45" style="font:600 12.5px var(--mono);fill:currentColor">modulos/motor</text>
@@ -311,7 +331,8 @@ figcaption p { color: var(--muted); }
           <line x1="500" y1="725" x2="453" y2="725" marker-end="url(#m2)"/>
         </g>
         <g style="font:12.5px var(--sans);fill:currentColor">
-          <text x="568" y="604">AlcanceService: todos menos catalogo</text>
+          <text x="568" y="597">AlcanceService: todos menos</text>
+          <text x="568" y="613">catalogo e importacion</text>
           <text x="868" y="604">BitacoraService: todos</text>
           <text x="476" y="716" text-anchor="middle">correo</text>
         </g>
@@ -329,10 +350,11 @@ figcaption p { color: var(--muted); }
           <text x="820" y="833"><tspan style="font:600 12.5px var(--mono)">config/ </tspan>entorno validado con Zod</text>
           <text x="820" y="858"><tspan style="font:600 12.5px var(--mono)">generado/ </tspan>cliente de Prisma</text>
         </g>
+        </g>
       </svg>
     </div>
     <figcaption>
-      <p>Las flechas son las importaciones reales entre módulos, medidas con dependency-cruiser el 18 de octubre de 2026; el CI rechaza cualquier importación que no esté permitida. Todas bajan: el motor depende de comprobantes, inventario, acopios y catálogo; turnos, de acopios y de notificaciones para sus correos; y ningún módulo de abajo importa a uno de arriba. Además de comprobantes, usan almacenamiento acopios, para los logotipos y las imágenes de las causas, y motor, para las fotos de la recepción; esas flechas no se dibujan para no cruzar las cajas.</p>
+      <p>Las flechas son las importaciones reales entre módulos, medidas con dependency-cruiser el 19 de octubre de 2026; el CI rechaza cualquier importación que no esté permitida. Todas bajan. Arriba va importacion, que ningún módulo importa: guarda en turnos, inventario, acopios y catálogo lo que llega de RedAcopio o de un CSV. El motor depende de comprobantes, inventario, acopios y catálogo; turnos, de acopios y de notificaciones para sus correos. Ningún módulo de abajo importa a uno de arriba. Para no cruzar las cajas faltan algunas flechas: comprobantes también importa catálogo, y almacenamiento lo usan, además de comprobantes, acopios para los logotipos y las imágenes de las causas, motor para las fotos de la recepción e importacion para las fotos de las plataformas.</p>
       <p><code>identidad</code> no importa <code>acopios</code>: valida las ubicaciones de una asignación con la interfaz <code>VerificadorUbicaciones</code> de <code>comun/</code>, que <code>acopios</code> implementa. Así no se forma un ciclo entre los dos.</p>
     </figcaption>
   </figure>

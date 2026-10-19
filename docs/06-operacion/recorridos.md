@@ -194,6 +194,10 @@ entra después; hay que esperar un minuto entre uno y otro.
 
 ## Últimos resultados
 
+**2026-10-19, contra el servidor de pruebas, antes de la sustentación** (`CAPTURAS=no`):
+`referenciados.mjs` 6 de 6, `portal-causas.mjs` 4 de 4 y `portal-turnos.mjs` 6 de 6, sin
+errores de página. `portal-turnos.mjs` cancela la reserva que crea, así que la demo no se gasta.
+
 **2026-10-19, plataformas en Causas y mapa por tipo** (después de #143): en local con la API
 reconstruida, `referenciados.mjs` 6 de 6, `portal-causas.mjs` 4 de 4 y `validacion-general.mjs`
 60 de 60. Contra el servidor de pruebas, `referenciados.mjs` 6 de 6.

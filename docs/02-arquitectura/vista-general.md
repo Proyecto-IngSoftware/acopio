@@ -187,8 +187,8 @@ Cada caja es una carpeta del repositorio, con su ruta escrita. Adentro van las c
 interfaces y componentes que más pesan en ese paquete, con su nombre real. Una flecha
 `A → B` dice que A importa algo de B. Las dependencias entre módulos de la API salen
 del grafo que mide dependency-cruiser (`bun run --filter @acopio/api depcruise`) el
-2026-10-07, no de la tabla de arriba: `motor` todavía no importa `almacenamiento` y
-`acopios` todavía no importa `notificaciones`, aunque la tabla los permite.
+2026-10-19, no de la tabla de arriba: `acopios` todavía no importa `notificaciones`,
+aunque la tabla lo permite.
 
 Los dos diagramas se dibujan a mano en SVG en
 [diagramas/paquetes.html](diagramas/paquetes.html), que también se publica como página
