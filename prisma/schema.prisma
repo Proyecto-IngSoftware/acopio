@@ -300,6 +300,7 @@ model Plataforma {
   fuente         String?
   fuente_id      String?
   activa         Boolean  @default(true)
+  imagen_key     String?
   actualizado_en DateTime @default(now()) @updatedAt @db.Timestamptz
 
   @@unique([fuente, fuente_id])

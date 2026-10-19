@@ -1,39 +1,39 @@
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
 import sharp from 'sharp';
 import type { PrismaService } from '../comun/prisma/prisma.service';
 import type { AlmacenamientoService } from '../modulos/almacenamiento/almacenamiento.service';
+import { ICONOS } from './iconos-material';
 
 /**
- * Imágenes de la demo: una ilustración por categoría de causa y un logotipo por entidad, para
- * que P3 y P4 no muestren recuadros vacíos. Son figuras geométricas generadas aquí, sin texto
+ * Imágenes de la demo. Cada causa lleva una ilustración de su categoría: el ícono de Material
+ * Symbols que usa la app, sobre una baldosa blanca y un fondo claro de la paleta (maqueta
+ * P03-causas/maqueta-plataformas-y-mapa.html). Cada entidad lleva un logotipo abstracto. Sin texto
  * (el contenedor puede no tener fuentes) y sin emblemas de las organizaciones reales.
  */
-const FONDO: Record<string, [string, string]> = {
-  PERSONAS: ['#0F6E6E', '#C7E8E8'],
-  ANIMALES: ['#7A4E1D', '#F3DFC1'],
-  ADULTOS_MAYORES: ['#4B3F8A', '#DCD7F5'],
-  RESCATISTAS: ['#9A2A1F', '#F6D5CF'],
+const TONOS: Record<string, { tinta: string; fondo: string; icono: string }> = {
+  PERSONAS: { tinta: '#085046', fondo: '#b0efe1', icono: ICONOS.personas },
+  ANIMALES: { tinta: '#6e3900', fondo: '#ffdcc3', icono: ICONOS.animales },
+  ADULTOS_MAYORES: { tinta: '#085046', fondo: '#e7e5e4', icono: ICONOS.adultosMayores },
+  RESCATISTAS: { tinta: '#8f1100', fondo: '#ffdad3', icono: ICONOS.rescatistas },
 };
 
-/** Una canasta para personas, una huella para animales, un bastón para adultos mayores y un casco para rescatistas. */
-const FIGURA: Record<string, string> = {
-  PERSONAS:
-    '<rect x="430" y="300" width="340" height="190" rx="24"/><path d="M470 300 L560 190 M730 300 L640 190" stroke-width="26" stroke-linecap="round" fill="none"/>',
-  ANIMALES:
-    '<ellipse cx="600" cy="400" rx="110" ry="90"/><circle cx="470" cy="270" r="48"/><circle cx="560" cy="215" r="48"/><circle cx="640" cy="215" r="48"/><circle cx="730" cy="270" r="48"/>',
-  ADULTOS_MAYORES:
-    '<circle cx="560" cy="210" r="60"/><rect x="510" y="285" width="100" height="220" rx="40"/><path d="M690 250 L690 510 M690 250 Q690 210 650 210" stroke-width="22" stroke-linecap="round" fill="none"/>',
-  RESCATISTAS:
-    '<path d="M420 420 Q420 230 600 230 Q780 230 780 420 Z"/><rect x="390" y="415" width="420" height="45" rx="20"/><rect x="580" y="200" width="40" height="80" rx="12"/>',
-};
+/** La carpeta de la ilustración vigente: una causa con otra clave se vuelve a dibujar. */
+const VERSION_ILUSTRACION = 'ilustracion-v2';
 
-function svgCausa(categoria: string) {
-  const [oscuro, claro] = FONDO[categoria] ?? FONDO.PERSONAS!;
-  const figura = FIGURA[categoria] ?? FIGURA.PERSONAS!;
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675">
-  <rect width="1200" height="675" fill="${claro}"/>
-  <circle cx="1050" cy="110" r="220" fill="${oscuro}" opacity="0.12"/>
-  <circle cx="130" cy="600" r="260" fill="${oscuro}" opacity="0.10"/>
-  <g fill="${oscuro}" stroke="${oscuro}">${figura}</g>
+function svgCausa(categoria: string, ancho = 1200, alto = 675) {
+  const { tinta, fondo, icono } = TONOS[categoria] ?? TONOS.PERSONAS!;
+  const lado = Math.min(ancho, alto);
+  const baldosa = lado * 0.42;
+  const x = (ancho - baldosa) / 2;
+  const y = (alto - baldosa) / 2;
+  const escala = (baldosa * 0.62) / 960;
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="${ancho}" height="${alto}" viewBox="0 0 ${ancho} ${alto}">
+  <rect width="${ancho}" height="${alto}" fill="${fondo}"/>
+  <circle cx="${ancho * 0.88}" cy="${alto * 0.16}" r="${lado * 0.34}" fill="${tinta}" opacity="0.08"/>
+  <circle cx="${ancho * 0.1}" cy="${alto * 0.92}" r="${lado * 0.4}" fill="${tinta}" opacity="0.07"/>
+  <rect x="${x}" y="${y}" width="${baldosa}" height="${baldosa}" rx="${baldosa * 0.22}" fill="#ffffff"/>
+  <g transform="translate(${x + baldosa * 0.19},${y + baldosa * 0.81}) scale(${escala})" fill="${tinta}"><path d="${icono}"/></g>
 </svg>`;
 }
 
@@ -51,7 +51,7 @@ function svgLogo(indice: number) {
 const png = (svg: string) => sharp(Buffer.from(svg)).png().toBuffer();
 
 /**
- * Sube las imágenes que falten: la de cada causa «(demo)» sin imagen y el logotipo de cada
+ * Sube las imágenes que falten: la de cada causa «(demo)» sin la ilustración vigente y el logotipo de cada
  * entidad de esas causas que no tenga. Idempotente: lo que ya tiene imagen no se toca.
  */
 export async function sembrarImagenesDemo(
@@ -75,12 +75,39 @@ export async function sembrarImagenesDemo(
     subidas++;
   }
   for (const c of causas) {
-    if (c.imagen_key) continue;
+    if (c.imagen_key?.includes(`/${VERSION_ILUSTRACION}/`)) continue;
     const { clave } = await almacenamiento.guardarImagen(
-      `causas/${c.id}`,
+      `causas/${c.id}/${VERSION_ILUSTRACION}`,
       await png(svgCausa(c.categoria)),
     );
     await prisma.causa.update({ where: { id: c.id }, data: { imagen_key: clave } });
+    subidas++;
+  }
+  return subidas;
+}
+
+/** Las fotos de las plataformas, por dominio: la imagen de vista previa de cada sitio o una captura de su portada (LEEME.md). */
+const CARPETA_PLATAFORMAS = join(__dirname, 'imagenes-plataformas');
+
+/**
+ * Sube la foto de cada plataforma activa que no tenga imagen y cuyo dominio tenga archivo en
+ * `imagenes-plataformas/`. Las demás se ven con el ícono de su categoría. Idempotente.
+ */
+export async function sembrarImagenesPlataformas(
+  prisma: PrismaService,
+  almacenamiento: AlmacenamientoService,
+) {
+  const plataformas = await prisma.plataforma.findMany({
+    where: { activa: true, imagen_key: null },
+  });
+  let subidas = 0;
+  for (const p of plataformas) {
+    const datos = await readFile(join(CARPETA_PLATAFORMAS, `${new URL(p.url).hostname}.jpg`)).catch(
+      () => null,
+    );
+    if (!datos) continue;
+    const { clave } = await almacenamiento.guardarImagen(`plataformas/${p.id}`, datos);
+    await prisma.plataforma.update({ where: { id: p.id }, data: { imagen_key: clave } });
     subidas++;
   }
   return subidas;

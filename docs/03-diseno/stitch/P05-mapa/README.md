@@ -3,7 +3,7 @@ title: "P5 · Mapa de acopios · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portal]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-19
 ---
 
 # P5 · Mapa de acopios · diseño en Stitch
@@ -28,6 +28,23 @@ los acopios. Solo se dibujan las zonas con algo que falta.
 
 El encuadre abarca acopios y zonas. Con la demo, que junta Bogotá y Mocoa, el mapa abre muy
 alejado: se ve el pin, y el círculo aparece al acercarse.
+
+## Grupos por tipo y pines de Stitch (2026-10-19)
+
+Maqueta en [P03-causas/maqueta-plataformas-y-mapa.html](../P03-causas/maqueta-plataformas-y-mapa.html),
+aprobada por Joseph el 2026-10-19.
+
+- Los grupos se separan por tipo y nunca mezclan: círculos verdes llenos para los acopios de
+  Acopio (pausados incluidos) y blancos con borde para los puntos de RedAcopio, cada uno con su
+  número. Antes un solo grupo juntaba todo lo cercano y no se distinguía nada.
+- De cerca, cada punto es la píldora de Stitch con ícono y nombre corto (hasta 14 letras, sin el
+  «Acopio» del comienzo): `warehouse` para el acopio, `pause` para el pausado y `link` con borde
+  para RedAcopio.
+- La zona con necesidad es una píldora con borde punteado y el ícono `campaign`. La maqueta le
+  ponía el nombre de la zona, pero la API pública no lo trae, así que dice cuántas cosas faltan
+  («2 faltantes»).
+- `rounded-full` del tema vale 0.75rem, así que los grupos y las píldoras usan `rounded-[999px]`
+  para quedar redondos.
 
 ## Diferencias
 

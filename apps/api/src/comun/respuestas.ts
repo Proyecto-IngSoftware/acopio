@@ -292,6 +292,8 @@ export class PlataformaDto extends crearDto(
     categoria: z.string(),
     descripcion: z.string(),
     url: z.string(),
+    tieneImagen: z.boolean(),
+    actualizadoEn: fecha,
   }),
 ) {}
 

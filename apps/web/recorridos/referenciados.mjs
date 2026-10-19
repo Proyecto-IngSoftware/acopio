@@ -1,5 +1,5 @@
 // Recorrido público de la pieza E: los puntos de RedAcopio en el mapa (P5), la ficha de uno
-// (P6) y las otras plataformas (P14), a 360 × 640, contra la API del Compose con el seed:demo,
+// (P6) y las otras plataformas al final de Causas (P3), a 360 × 640, contra la API del Compose con el seed:demo,
 // que importa la copia guardada de RedAcopio. No inicia sesión.
 //
 //   bun run --filter @acopio/web build && (cd apps/web && bunx vite preview)
@@ -104,24 +104,26 @@ await paso('P6 de Sugoi Taller Creativo muestra la fuente y no ofrece donar', as
   await revisar(p, 'P6 referenciado', 'P06-ficha-referenciado/construida.png');
 });
 
-await paso('P14 lista las plataformas desde «Más»', async () => {
-  await p.goto(`${WEB}/mas`);
-  await p.getByRole('link', { name: /Otras plataformas/ }).click();
-  await p.getByRole('heading', { level: 1, name: 'Otras plataformas que ayudan' }).waitFor();
-  await p
+await paso('Causas lista las otras plataformas al final, con sus fotos', async () => {
+  await p.goto(`${WEB}/causas`);
+  const seccion = p.getByRole('region', { name: 'Otras plataformas que ayudan' });
+  await seccion.waitFor();
+  await seccion
     .getByRole('link', { name: /Ir al sitio de/ })
     .first()
     .waitFor();
-  const enlaces = await p.getByRole('link', { name: /Ir al sitio de/ }).count();
+  const enlaces = await seccion.getByRole('link', { name: /Ir al sitio de/ }).count();
   if (enlaces !== 9) throw new Error(`${enlaces} plataformas`);
-  await p.getByText(/Acopio no las verifica/).waitFor();
-  await revisar(p, 'P14', 'P14-plataformas/construida.png');
+  const fotos = await seccion.locator('img').count();
+  if (fotos < 1) throw new Error('ninguna plataforma con foto');
+  await seccion.getByText(/Acopio no los verifica/).waitFor();
+  await revisar(p, 'Causas con plataformas', 'P03-causas/construida-plataformas.png');
 });
 
-await paso('la portada lleva a las plataformas desde su pie', async () => {
-  await p.goto(`${WEB}/`);
-  await p.getByRole('link', { name: /Otras plataformas que ayudan/ }).click();
-  await p.getByRole('heading', { level: 1, name: 'Otras plataformas que ayudan' }).waitFor();
+await paso('/plataformas lleva a esa sección de Causas', async () => {
+  await p.goto(`${WEB}/plataformas`);
+  await p.getByRole('heading', { level: 1, name: 'Causas' }).waitFor();
+  await p.getByRole('region', { name: 'Otras plataformas que ayudan' }).waitFor();
 });
 
 await b.close();

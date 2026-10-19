@@ -1920,6 +1920,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/publico/plataformas/{id}/imagen": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** La imagen de una plataforma, en WebP. No exige sesión */
+        get: operations["PlataformasController_imagen"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/importacion/formatos": {
         parameters: {
             query?: never;
@@ -4024,6 +4041,9 @@ export interface components {
             categoria: string;
             descripcion: string;
             url: string;
+            tieneImagen: boolean;
+            /** Format: date-time */
+            actualizadoEn: string;
         };
         FormatoCsvDto: {
             tipo: string;
@@ -8162,6 +8182,26 @@ export interface operations {
                 content: {
                     "application/json": components["schemas"]["PlataformaDto"][];
                 };
+            };
+        };
+    };
+    PlataformasController_imagen: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description La imagen de la plataforma, en WebP */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };

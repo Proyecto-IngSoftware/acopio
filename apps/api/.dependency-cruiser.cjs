@@ -37,7 +37,7 @@ const PERMITIDOS = {
   identidad: TODOS,
   auditoria: TODOS,
   notificaciones: ['identidad', 'acopios', 'comprobantes', 'turnos'],
-  almacenamiento: ['acopios', 'comprobantes', 'motor'],
+  almacenamiento: ['acopios', 'comprobantes', 'motor', 'importacion'],
   catalogo: ['inventario', 'comprobantes', 'motor', 'importacion'],
   acopios: ['inventario', 'comprobantes', 'motor', 'turnos', 'importacion'],
   inventario: ['comprobantes', 'motor', 'importacion'],

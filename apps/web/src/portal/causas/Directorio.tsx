@@ -12,10 +12,12 @@ import {
   NOMBRE_CATEGORIA,
   TarjetaCausa,
 } from './piezas';
+import { OtrasPlataformas } from './OtrasPlataformas';
 
 type Filtro = CategoriaCausa | 'TODAS' | 'DESAPARECIDAS';
 
-/** P3 Directorio de causas (RF-RED-008, HU-02). Solo causas de entidades verificadas. */
+/** P3 Directorio de causas (RF-RED-008, HU-02). Solo causas de entidades verificadas; al final,
+ *  las otras plataformas que ayudan, aparte y sin sello (pieza E). */
 export function Directorio() {
   const [filtro, fijarFiltro] = useState<Filtro>('TODAS');
   const categoria = filtro === 'TODAS' || filtro === 'DESAPARECIDAS' ? undefined : filtro;
@@ -34,6 +36,7 @@ export function Directorio() {
       </AvisoNoRecibeDinero>
       <Chips activa={filtro} alElegir={fijarFiltro} desaparecidas />
       {filtro === 'DESAPARECIDAS' ? <Desaparecidas /> : <Lista categoria={categoria} />}
+      {filtro === 'TODAS' && <OtrasPlataformas />}
       <Link
         to="/causas/atendidas"
         className="flex min-h-[56px] items-center gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest px-space-md py-space-sm"

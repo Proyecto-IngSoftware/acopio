@@ -10,7 +10,7 @@ import type { Prisma } from '../generado/prisma/client';
 import { AlmacenS3 } from '../modulos/almacenamiento/almacen-s3';
 import { AlmacenamientoService } from '../modulos/almacenamiento/almacenamiento.service';
 import { contrasenaDemo, crearCuentaDemo, proveedorDelSeed } from './credenciales';
-import { sembrarImagenesDemo } from './imagenes-demo';
+import { sembrarImagenesDemo, sembrarImagenesPlataformas } from './imagenes-demo';
 import { AcopioDao } from '../modulos/acopios/dao/acopio.dao';
 import { relojReal } from '../modulos/acopios/geocodificacion';
 import { BitacoraService } from '../modulos/auditoria/bitacora.service';
@@ -689,6 +689,16 @@ if (require.main === module) {
         );
       } catch (error: unknown) {
         console.warn(`No se importó RedAcopio: ${error instanceof Error ? error.message : error}`);
+      }
+      // Después de importar: las plataformas ya existen y cada una busca la foto de su dominio
+      try {
+        const almacenamiento = new AlmacenamientoService(new AlmacenS3(entorno));
+        const fotos = await sembrarImagenesPlataformas(prisma, almacenamiento);
+        console.log(`Fotos de las plataformas: ${fotos} nuevas.`);
+      } catch (error: unknown) {
+        console.warn(
+          `No se subieron las fotos de las plataformas: ${error instanceof Error ? error.message : error}`,
+        );
       }
     })
     .catch((error: unknown) => {

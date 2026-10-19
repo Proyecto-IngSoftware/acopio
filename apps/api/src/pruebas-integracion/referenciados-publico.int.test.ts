@@ -1,5 +1,7 @@
 import { HORARIO_VACIO } from '@acopio/shared';
 import type { Prisma } from '../generado/prisma/client';
+import sharp from 'sharp';
+import { AlmacenamientoService } from '../modulos/almacenamiento/almacenamiento.service';
 import { crearAppPrueba, unico, type AppPrueba } from '../../test/app-prueba';
 
 interface Publico {
@@ -96,6 +98,41 @@ describe('referenciados en la API pública', () => {
     expect(r.body.find((p: { nombre: string }) => p.nombre === nombre)).toMatchObject({
       categoria: 'Donaciones',
       url: 'https://x.test/',
+      tieneImagen: false,
     });
+  });
+
+  it('la imagen de una plataforma se sirve sin sesión; sin imagen da 404', async () => {
+    const { clave } = await a.app.get(AlmacenamientoService).guardarImagen(
+      'plataformas/prueba',
+      await sharp({ create: { width: 40, height: 20, channels: 3, background: '#085046' } })
+        .png()
+        .toBuffer(),
+    );
+    const con = await a.prisma.plataforma.create({
+      data: {
+        nombre: unico('Con imagen '),
+        categoria: 'Mapa',
+        descripcion: 'D',
+        url: 'https://c.test/',
+        imagen_key: clave,
+      },
+    });
+    const sin = await a.prisma.plataforma.create({
+      data: {
+        nombre: unico('Sin imagen '),
+        categoria: 'Mapa',
+        descripcion: 'D',
+        url: 'https://s.test/',
+      },
+    });
+    const lista = await a.http().get('/api/publico/plataformas').expect(200);
+    expect(lista.body.find((p: { id: string }) => p.id === con.id)).toMatchObject({
+      tieneImagen: true,
+    });
+    const r = await a.http().get(`/api/publico/plataformas/${con.id}/imagen`).expect(200);
+    expect(r.headers['content-type']).toMatch(/image\/webp/);
+    const no = await a.http().get(`/api/publico/plataformas/${sin.id}/imagen`).expect(404);
+    expect(no.body.codigo).toBe('SIN_IMAGEN');
   });
 });

@@ -3,7 +3,7 @@ title: "Vista general de arquitectura"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-18
+actualizado: 2026-10-19
 ---
 
 # Vista general de arquitectura
@@ -127,7 +127,7 @@ completo (cálculo, sugerencias, remisiones, recepción y reportes) y `turnos` (
 | `turnos` | Jornadas de acopio y de entidad, reservas sin cuenta, aforo, asistencia, recordatorios y borrado de datos a los 30 días | `JornadasService`, `ReservasService` |
 | `auditoria` | Bitácora. Cada servicio la escribe en la misma transacción que el cambio; no hay interceptor | `BitacoraService` |
 | `notificaciones` | Correo por SMTP: invitaciones, reservas, avisos de folio y de acopio cerrado. Envío con reintentos | `NotificacionService` |
-| `almacenamiento` | Archivos en Garage, por la API de S3: facturas, evidencias de remisión, documentos de verificación, logotipos. La API lee el objeto y entrega los bytes | `AlmacenamientoService` |
+| `almacenamiento` | Archivos en Garage, por la API de S3: facturas, evidencias de remisión, documentos de verificación, logotipos e imágenes de causas y plataformas. La API lee el objeto y entrega los bytes | `AlmacenamientoService` |
 | `importacion` | Puntos referenciados desde fuentes externas, un adaptador por fuente ([RF-RED-011](../01-requerimientos/funcionales/red.md#rf-red-011--importar-acopios-de-una-fuente-externa)) | `ImportadorService` |
 
 **Validación del 2026-09-14 ([P-023](../01-requerimientos/pendientes.md)):**
@@ -145,7 +145,7 @@ dominio.
 identidad      ← todos           (autorización)
 auditoria      ← todos           (registro)
 notificaciones ← identidad, acopios, comprobantes, turnos
-almacenamiento ← acopios, comprobantes, motor
+almacenamiento ← acopios, comprobantes, motor, importacion
 catalogo       ← inventario, comprobantes, motor, importacion
 acopios        ← inventario, comprobantes, motor, turnos, importacion
 inventario     ← comprobantes, motor, importacion

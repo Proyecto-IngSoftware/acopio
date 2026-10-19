@@ -172,3 +172,6 @@ Sprint 3.
   RedAcopio y las 9 plataformas, y `referenciados.mjs` pasó 6 de 6 contra él. El primer
   despliegue no arrancó la versión nueva porque la imagen no traía la copia de RedAcopio; #141
   lo arregló.
+- 2026-10-19: Joseph pidió llevar las otras plataformas a Causas, con foto real de cada sitio, y
+  que el mapa distinga los puntos. Ya está: sección al final de Causas, grupos del mapa por tipo y
+  pines tipo píldora de Stitch. Las cuatro plataformas sin foto quedan en P-078.

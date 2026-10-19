@@ -2,11 +2,15 @@
 title: "P14 · Otras plataformas que ayudan"
 type: diseno
 tags: [diseno, stitch, portal, pieza-e]
-estado: vigente
+estado: reemplazada
 actualizado: 2026-10-19
 ---
 
 # P14 · Otras plataformas que ayudan
+
+Desde el 2026-10-19 esta pantalla ya no existe: las plataformas viven al final de Causas, con
+foto (ver [P03-causas](../P03-causas/README.md)). `/plataformas` lleva a esa sección. Esta nota
+queda como registro de la versión del 18 de octubre.
 
 Lista pública de las plataformas que RedAcopio Bogotá enumera en `/herramientas`. Se llega
 desde «Más» (sección «Información y transparencia») y desde un enlace al pie de la portada.

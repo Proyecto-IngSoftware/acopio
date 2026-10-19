@@ -1,10 +1,10 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Header, Param, ParseUUIDPipe, StreamableFile } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiProduces, ApiTags } from '@nestjs/swagger';
 import { Publico } from '../../comun/autorizacion/decoradores';
 import { PlataformaDto } from '../../comun/respuestas';
 import { PlataformasService } from './plataformas.service';
 
-/** P14: otras plataformas que coordinan ayuda. No son causas: Acopio no las verifica. */
+/** Otras plataformas que coordinan ayuda, al final de Causas (P3). Acopio no las verifica. */
 @ApiTags('importacion')
 @Controller('publico/plataformas')
 export class PlataformasController {
@@ -19,5 +19,16 @@ export class PlataformasController {
   @ApiOkResponse({ type: PlataformaDto, isArray: true })
   listar() {
     return this.plataformas.listar();
+  }
+
+  @Publico()
+  @ApiOperation({ summary: 'La imagen de una plataforma, en WebP. No exige sesión', security: [] })
+  @Get(':id/imagen')
+  @Header('Cache-Control', 'public, max-age=300')
+  @ApiProduces('image/webp')
+  @ApiOkResponse({ description: 'La imagen de la plataforma, en WebP' })
+  async imagen(@Param('id', ParseUUIDPipe) id: string) {
+    const { datos, tipo } = await this.plataformas.leerImagen(id);
+    return new StreamableFile(datos, { type: tipo });
   }
 }

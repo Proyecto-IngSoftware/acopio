@@ -73,3 +73,82 @@ it('sin causas publicadas lo dice, y deja personas desaparecidas', async () => {
   expect(await screen.findByText('Aún no hay causas')).toBeInTheDocument();
   expect(screen.getByRole('heading', { name: 'Personas desaparecidas' })).toBeInTheDocument();
 });
+
+describe('otras plataformas que ayudan (al final de Causas)', () => {
+  const PLATAFORMAS = [
+    {
+      id: 'p1',
+      nombre: 'Reconstruyo Colombia',
+      categoria: 'Donaciones',
+      descripcion: 'Iniciativa nacional para canalizar donaciones económicas.',
+      url: 'https://reconstruyocolombia.com/',
+      tieneImagen: true,
+      actualizadoEn: '2026-10-19T12:00:00.000Z',
+    },
+    {
+      id: 'p2',
+      nombre: 'Donando Talento',
+      categoria: 'Voluntariado profesional',
+      descripcion: 'Conecta profesionales con proyectos que necesitan sus habilidades.',
+      url: 'https://donandotalento.com/',
+      tieneImagen: false,
+      actualizadoEn: '2026-10-19T12:00:00.000Z',
+    },
+  ];
+  const conPlataformas = () =>
+    responderSegun({ 'GET /api/causas': DOS, 'GET /api/publico/plataformas': PLATAFORMAS });
+
+  it('lista cada plataforma con su foto o el ícono de su categoría y un enlace que abre afuera', async () => {
+    conPlataformas();
+    render(envolver(<Directorio />, '/causas'));
+    const seccion = await screen.findByRole('region', { name: 'Otras plataformas que ayudan' });
+    const reconstruyo = within(seccion)
+      .getByRole('heading', { name: 'Reconstruyo Colombia' })
+      .closest('li')!;
+    expect(reconstruyo.querySelector('img')).toHaveAttribute(
+      'src',
+      '/api/publico/plataformas/p1/imagen?v=2026-10-19T12%3A00%3A00.000Z',
+    );
+    const ir = within(reconstruyo).getByRole('link', {
+      name: /Ir al sitio de Reconstruyo Colombia/,
+    });
+    expect(ir).toHaveAttribute('href', 'https://reconstruyocolombia.com/');
+    expect(ir).toHaveAttribute('target', '_blank');
+    const talento = within(seccion)
+      .getByRole('heading', { name: 'Donando Talento' })
+      .closest('li')!;
+    expect(talento.querySelector('img')).toBeNull();
+    expect(talento).toHaveTextContent('Voluntariado profesional');
+    expect(within(seccion).getByText(/Acopio no los verifica/)).toBeInTheDocument();
+  });
+
+  it('va después de las causas y antes de «Causas atendidas», sin sello de verificación', async () => {
+    conPlataformas();
+    render(envolver(<Directorio />, '/causas'));
+    const seccion = await screen.findByRole('region', { name: 'Otras plataformas que ayudan' });
+    const causa = screen.getByRole('link', { name: /Mercados para familias/ });
+    const atendidas = screen.getByRole('link', { name: /Causas atendidas/ });
+    expect(causa.compareDocumentPosition(seccion) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(
+      seccion.compareDocumentPosition(atendidas) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    expect(within(seccion).queryByText(/Verificada el/)).not.toBeInTheDocument();
+  });
+
+  it('con un filtro de categoría no se muestra', async () => {
+    conPlataformas();
+    render(envolver(<Directorio />, '/causas'));
+    await screen.findByRole('region', { name: 'Otras plataformas que ayudan' });
+    await userEvent.click(screen.getByRole('button', { name: 'Animales' }));
+    expect(
+      screen.queryByRole('region', { name: 'Otras plataformas que ayudan' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('no tiene violaciones graves de accesibilidad', async () => {
+    conPlataformas();
+    const { container } = render(envolver(<Directorio />, '/causas'));
+    await screen.findByRole('region', { name: 'Otras plataformas que ayudan' });
+    expect(await violacionesGraves(container)).toEqual([]);
+  });
+});
