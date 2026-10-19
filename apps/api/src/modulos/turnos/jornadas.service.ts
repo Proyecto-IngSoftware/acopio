@@ -91,8 +91,22 @@ export class JornadasService {
     } else {
       await this.alcance.exigir(usuario, 'ACOPIO', d.acopioId!);
     }
+    return this.transacciones.ejecutar((tx) => this.crearEnTransaccion(tx, usuario, d, ahora));
+  }
+
+  /**
+   * La creación en la transacción de quien llama, después de validar fechas, rol y alcance: la
+   * usa también la carga por CSV (pieza E).
+   */
+  async crearEnTransaccion(
+    tx: ClienteBd,
+    usuario: UsuarioAutenticado,
+    d: DatosJornada,
+    ahora = this.ahora(),
+  ) {
+    exigirValida(validarJornada(d, ahora));
     const serieId = d.fechas.length > 1 ? randomUUID() : null;
-    return this.transacciones.ejecutar(async (tx) => {
+    {
       if (d.entidadId) await this.exigirEntidadVerificada(d.entidadId, tx);
       else await this.acopios.exigirAbierto(d.acopioId!, tx);
       const creadas = [];
@@ -113,7 +127,7 @@ export class JornadasService {
         creadas.push(await this.registrar(tx, usuario, 'jornada.creada', null, j, ahora));
       }
       return creadas;
-    });
+    }
   }
 
   /** Mover la jornada pide las mismas 13 horas de anticipación que crearla. */

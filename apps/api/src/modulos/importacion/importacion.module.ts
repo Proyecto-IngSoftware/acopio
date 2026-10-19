@@ -1,9 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ENTORNO, type Entorno } from '../../config/entorno';
+import { CatalogoModule } from '../catalogo/catalogo.module';
+import { InventarioModule } from '../inventario/inventario.module';
+import { TurnosModule } from '../turnos/turnos.module';
 import { CsvController } from './csv/csv.controller';
 import { CsvService } from './csv/csv.service';
 import { AcopiosFormato } from './csv/formatos/acopios.formato';
+import { CategoriasFormato } from './csv/formatos/categorias.formato';
 import { CausasFormato } from './csv/formatos/causas.formato';
+import { InventarioFormato } from './csv/formatos/inventario.formato';
+import { JornadasFormato } from './csv/formatos/jornadas.formato';
 import { EntidadesFormato } from './csv/formatos/entidades.formato';
 import { PlataformasFormato } from './csv/formatos/plataformas.formato';
 import { ZonasFormato } from './csv/formatos/zonas.formato';
@@ -25,6 +31,7 @@ import { TareaImportacionService } from './tarea-importacion.service';
  * importa los módulos cuyos datos escribe y nadie la importa a ella.
  */
 @Module({
+  imports: [CatalogoModule, InventarioModule, TurnosModule],
   controllers: [ImportacionController, PlataformasController, CsvController],
   providers: [
     ImportadorReferenciadosService,
@@ -38,6 +45,9 @@ import { TareaImportacionService } from './tarea-importacion.service';
     AcopiosFormato,
     ZonasFormato,
     CausasFormato,
+    CategoriasFormato,
+    InventarioFormato,
+    JornadasFormato,
     ReferenciasDao,
     EjecucionDao,
     {

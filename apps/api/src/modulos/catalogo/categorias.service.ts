@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
+import type { ClienteBd } from '../../comun/prisma/cliente-bd';
 import { PrismaService } from '../../comun/prisma/prisma.service';
 import { restriccionUnicaViolada } from '../../comun/prisma/errores-prisma';
 import type { Prisma } from '../../generado/prisma/client';
@@ -95,17 +96,20 @@ export class CategoriasService {
   }
 
   async crear(admin: UsuarioAutenticado, datos: DatosCategoria) {
-    return this.prisma.$transaction(async (tx) => {
-      const categoria = await tx.categoria.create({ data: aFila(datos) }).catch(nombreDuplicado);
-      await this.bitacora.registrar(tx, {
-        usuarioId: admin.id,
-        accion: 'categoria.creada',
-        entidad: 'categoria',
-        entidadId: categoria.id,
-        despues: datos,
-      });
-      return presentar(categoria);
+    return this.prisma.$transaction((tx) => this.crearEnTransaccion(tx, admin, datos));
+  }
+
+  /** La creación en la transacción de quien llama: la usa también la carga por CSV (pieza E). */
+  async crearEnTransaccion(tx: ClienteBd, admin: UsuarioAutenticado, datos: DatosCategoria) {
+    const categoria = await tx.categoria.create({ data: aFila(datos) }).catch(nombreDuplicado);
+    await this.bitacora.registrar(tx, {
+      usuarioId: admin.id,
+      accion: 'categoria.creada',
+      entidad: 'categoria',
+      entidadId: categoria.id,
+      despues: datos,
     });
+    return presentar(categoria);
   }
 
   /** La unidad base es fija una vez creada: no se mezclan unidades (RF-CAT-001). */

@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ErrorDominio } from '../../../comun/errores/error-dominio';
 import type { FormatoCsv } from './formato-csv';
 import { AcopiosFormato } from './formatos/acopios.formato';
+import { CategoriasFormato } from './formatos/categorias.formato';
 import { CausasFormato } from './formatos/causas.formato';
+import { InventarioFormato } from './formatos/inventario.formato';
+import { JornadasFormato } from './formatos/jornadas.formato';
 import { EntidadesFormato } from './formatos/entidades.formato';
 import { PlataformasFormato } from './formatos/plataformas.formato';
 import { ZonasFormato } from './formatos/zonas.formato';
@@ -18,8 +21,20 @@ export class RegistroFormatos {
     acopios: AcopiosFormato,
     zonas: ZonasFormato,
     causas: CausasFormato,
+    categorias: CategoriasFormato,
+    inventario: InventarioFormato,
+    jornadas: JornadasFormato,
   ) {
-    const lista = [plataformas, entidades, acopios, zonas, causas] as FormatoCsv[];
+    const lista = [
+      plataformas,
+      entidades,
+      acopios,
+      zonas,
+      causas,
+      categorias,
+      inventario,
+      jornadas,
+    ] as FormatoCsv[];
     this.formatos = new Map(lista.map((f) => [f.tipo, f]));
   }
 
