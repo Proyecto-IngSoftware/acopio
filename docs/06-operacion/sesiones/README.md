@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-10-19 | [2026-10-19-diagrama-y-ensayo](2026-10-19-diagrama-y-ensayo.md) | Diagrama de paquetes con importacion y revisión de la demo en el servidor |
 | 2026-10-19 | [2026-10-19-causas-y-mapa](2026-10-19-causas-y-mapa.md) | Plataformas en Causas con foto y mapa con grupos por tipo |
 | 2026-10-19 | [2026-10-19-pieza-e](2026-10-19-pieza-e.md) | Pieza E: RedAcopio, CSV y otras plataformas |
 | 2026-10-18 | [2026-10-18-estetica-piedra](2026-10-18-estetica-piedra.md) | Grises piedra, auditoría de las pantallas e íconos |

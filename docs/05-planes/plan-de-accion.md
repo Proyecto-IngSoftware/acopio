@@ -53,9 +53,9 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
 | 1 | Fecha de la Review del Sprint 2: el viernes 23, según la guía ([P-072](../01-requerimientos/pendientes.md)) | P-072 | 2026-10-18 | ✅ |
-| 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio. Generado y revisado renderizado; faltan la captura del tablero, la del seguimiento y subirlo. Las capturas del mapa y de Causas cambiaron el 19 y hay que tomarlas de nuevo con `CAPTURAS_WORD` | #47 | 2026-10-22 | 🟡 |
+| 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio. Generado y revisado renderizado; faltan la captura del tablero, la del seguimiento y subirlo. Las capturas del mapa y de Causas cambiaron el 19 y hay que tomarlas de nuevo con `CAPTURAS_WORD`. Al regenerar el Word entra también el diagrama de paquetes nuevo | #47 | 2026-10-22 | 🟡 |
 | 3 | Lo que falta del Word de avances anteriores. Del Avance 4 ya está la captura del tablero; faltan el seguimiento del 9 de octubre con su captura, las filas de Brayan, Alejandra y Michael, la retrospectiva confirmada y regenerar el Word. Del Avance 2, la revisión de redacción ([P-012](../01-requerimientos/pendientes.md)) y la captura de la vista Board | #45, #23, #21 | 2026-10-22 | ⬜ |
-| 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes. La demo ya tiene el balance de la portada, los 85 puntos de RedAcopio en el mapa, las causas con su ilustración y los logos reales de sus fundaciones, y las otras plataformas con foto al final de Causas. Falta ensayar el recorrido de la demo y regenerar el diagrama de paquetes con `importacion` | #47 | 2026-10-23 | ⬜ |
+| 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes. La demo ya tiene el balance de la portada, los 85 puntos de RedAcopio en el mapa, las causas con su ilustración y los logos reales de sus fundaciones, y las otras plataformas con foto al final de Causas. El diagrama de paquetes tiene `importacion` desde el 19, medido con dependency-cruiser. Ese día, en el servidor, pasaron los recorridos públicos y entraron las cuatro cuentas de rol. Falta que Joseph ensaye la presentación | #47 | 2026-10-23 | 🟡 |
 | 5 | Ronda de pruebas en el servidor, por rol, con los escenarios de `escenarios-por-rol.md`; cada hallazgo entra como issue `hallazgo` | #58 | 2026-10-25 | ⬜ |
 | 6 | Cierre del Sprint 2: Review historia por historia el 23, seguimiento de la semana 12 con captura y retrospectiva con una acción para el Sprint 3 | #47 | 2026-10-25 | ⬜ |
 
@@ -170,3 +170,7 @@ Sprint 3.
   fila 8 junta lo que queda (P-076, P-077 y P-078). Las filas 2 y 4 suman lo que falta para el 23:
   volver a tomar las capturas del mapa y de Causas, ensayar la demo y regenerar el diagrama de
   paquetes con `importacion`.
+- 2026-10-19: la fila 4 pasa a en curso. El diagrama de paquetes de la API suma `importacion`
+  arriba de todo, con las dependencias medidas ese día, y la página publicada quedó al día. En el
+  servidor pasaron `referenciados.mjs`, `portal-causas.mjs` y `portal-turnos.mjs`, y entraron
+  `operador1`, `operador2`, `auditor1` y `receptor1`. Falta que Joseph ensaye la presentación.
