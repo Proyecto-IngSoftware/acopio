@@ -18,6 +18,13 @@ capturas del tablero y del seguimiento, y la subida a OneDrive, que dependen de 
 |---|---|
 | Rama `capturas-avance-5` | Las seis capturas de Causas y la de la zona en el mapa, tomadas de nuevo. Dos figuras nuevas: `causas-7-plataformas.png` y `otras-mapa-puntos.png`. [avance-05-sprint2.md](../../entregas/avance-05-sprint2.md) con sus pies y la fecha de los diagramas. Los dos Word regenerados. La píldora de los pines del mapa con `aria-hidden`, con su prueba. `consola-causas.mjs` espera a que se cierre la hoja antes de abrir la ficha. [recorridos.md](../recorridos.md) dice de dónde sale cada captura del Word |
 
+En GitHub, el tablero del Project quedó al día con el Sprint 2. HU-02, HU-15, HU-10a y HU-10b
+seguían en «Sprint 1», aunque el Planning las pasó al Sprint 2, y ahora tienen «Sprint 2». HU-03
+pasó de «Sprint 3» a «Sprint 2», porque el Bloque 5 se construyó en este sprint fuera del
+Planning. Las ocho historias y los nueve issues cerrados del sprint quedaron en Done; #47
+quedó en In Progress. En la vista «Sprint 2» hay 17 tarjetas en Done, una en In Progress y dos
+en To Do (#26 y #58). La captura del Avance 4 ya estaba tomada, así que no cambia.
+
 ## Pruebas
 
 - En local, con la API reconstruida, `seed:demo` y la web servida con `vite preview`:
