@@ -679,10 +679,17 @@ if (require.main === module) {
           `No se subieron las imágenes de la demo: ${error instanceof Error ? error.message : error}`,
         );
       }
-      const red = await importarRedAcopioDemo(prisma);
-      console.log(
-        `RedAcopio desde la copia: ${red.creados} nuevos, ${red.actualizados} actualizados, ${red.cerrados} cerrados.`,
-      );
+      // Como las imágenes: si la copia de RedAcopio no se puede leer, la demo arranca sin esos puntos
+      try {
+        const red = await importarRedAcopioDemo(prisma);
+        console.log(
+          red.resultado === 'OK'
+            ? `RedAcopio desde la copia: ${red.creados} nuevos, ${red.actualizados} actualizados, ${red.cerrados} cerrados.`
+            : `RedAcopio desde la copia: la lectura abortó (${red.motivo}).`,
+        );
+      } catch (error: unknown) {
+        console.warn(`No se importó RedAcopio: ${error instanceof Error ? error.message : error}`);
+      }
     })
     .catch((error: unknown) => {
       console.error(error instanceof Error ? error.message : error);
