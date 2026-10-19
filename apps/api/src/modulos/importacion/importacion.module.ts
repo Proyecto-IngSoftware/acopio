@@ -1,5 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ENTORNO, type Entorno } from '../../config/entorno';
+import { CsvController } from './csv/csv.controller';
+import { CsvService } from './csv/csv.service';
+import { PlataformasFormato } from './csv/formatos/plataformas.formato';
+import { RegistroFormatos } from './csv/registro-formatos';
 import { EjecucionDao } from './dao/ejecucion.dao';
 import { PlataformaDao } from './dao/plataforma.dao';
 import { FUENTE_ACOPIOS } from './fuentes/fuente-acopios';
@@ -7,6 +11,7 @@ import { RedAcopioArchivo } from './fuentes/redacopio/redacopio-archivo';
 import { RedAcopioHttp } from './fuentes/redacopio/redacopio-http';
 import { ImportacionController } from './importacion.controller';
 import { PlataformasController } from './plataformas.controller';
+import { PlataformasService } from './plataformas.service';
 import { ImportadorReferenciadosService } from './importador-referenciados.service';
 import { TareaImportacionService } from './tarea-importacion.service';
 
@@ -15,11 +20,15 @@ import { TareaImportacionService } from './tarea-importacion.service';
  * importa los módulos cuyos datos escribe y nadie la importa a ella.
  */
 @Module({
-  controllers: [ImportacionController, PlataformasController],
+  controllers: [ImportacionController, PlataformasController, CsvController],
   providers: [
     ImportadorReferenciadosService,
     TareaImportacionService,
     PlataformaDao,
+    PlataformasService,
+    CsvService,
+    RegistroFormatos,
+    PlataformasFormato,
     EjecucionDao,
     {
       provide: FUENTE_ACOPIOS,

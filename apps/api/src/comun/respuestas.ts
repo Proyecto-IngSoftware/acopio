@@ -255,6 +255,35 @@ export class AcopioPublicoDto extends crearDto(
   }),
 ) {}
 
+export class ReporteCsvDto extends crearDto(
+  z.object({
+    filas: z.array(
+      z.object({
+        numero: z.number().int(),
+        valida: z.boolean(),
+        errores: z.array(z.object({ columna: z.string().nullable(), mensaje: z.string() })),
+      }),
+    ),
+    validas: z.number().int(),
+    invalidas: z.number().int(),
+  }),
+) {}
+
+export class FormatoCsvDto extends crearDto(
+  z.object({
+    tipo: z.string(),
+    descripcion: z.string(),
+    columnas: z.array(
+      z.object({
+        nombre: z.string(),
+        obligatoria: z.boolean(),
+        descripcion: z.string(),
+        ejemplo: z.string(),
+      }),
+    ),
+  }),
+) {}
+
 export class PlataformaDto extends crearDto(
   z.object({
     id: z.uuid(),

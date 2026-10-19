@@ -20,7 +20,8 @@
     "shared": "bun run --cwd ../../packages/shared build >/dev/null",
     "seed:demo": "bun run shared && prisma generate >/dev/null && node -r @swc-node/register src/seed/demo.ts",
     "simular": "bun run shared && node -r @swc-node/register src/scripts/simular.ts",
-    "importar:redacopio": "prisma generate >/dev/null && node -r @swc-node/register src/importar-redacopio.ts"
+    "importar:redacopio": "prisma generate >/dev/null && node -r @swc-node/register src/importar-redacopio.ts",
+    "cargar": "prisma generate >/dev/null && node -r @swc-node/register src/cargar-csv.ts"
   },
   "dependencies": {
     "@acopio/shared": "workspace:*",
@@ -35,6 +36,7 @@
     "@prisma/client": "~7.10.0",
     "@supabase/supabase-js": "^2.117.2",
     "bcryptjs": "^3.0.3",
+    "csv-parse": "^7.0.3",
     "jose": "^5",
     "nestjs-zod": "^5.5.0",
     "nodemailer": "^10.0.12",
