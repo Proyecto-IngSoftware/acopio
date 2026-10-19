@@ -7,15 +7,12 @@ import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import type { AcopioPublico, ZonaPublica } from '../../api/red';
 import { ATRIBUCION, CENTRO_INICIAL, MOSAICOS } from '../../componentes/mapa/MapaLeaflet';
 import { claveEncuadre, leerClave } from './encuadre';
+import { etiquetaMarcador, htmlMarcador } from './marcador';
 
-// Marcadores con el color del tema; los pausados en gris con su ícono, no solo color (RNF-11)
 const marcador = (a: AcopioPublico, elegido: boolean) =>
   L.divIcon({
     className: '',
-    html:
-      a.estado === 'PAUSADO'
-        ? `<div class="flex size-9 items-center justify-center rounded-full border-2 border-surface-container-lowest bg-outline text-on-primary shadow-md ${elegido ? 'ring-4 ring-primary' : ''}"><span aria-hidden="true" class="material-symbols-outlined text-[18px]">pause_circle</span></div>`
-        : `<div class="flex size-9 items-center justify-center rounded-full border-2 border-surface-container-lowest bg-primary-container text-on-primary shadow-md ${elegido ? 'ring-4 ring-primary' : ''}"><span aria-hidden="true" class="material-symbols-outlined text-[18px]">inventory_2</span></div>`,
+    html: htmlMarcador(a, elegido),
     iconSize: [36, 36],
     iconAnchor: [18, 18],
   });
@@ -42,8 +39,8 @@ function Marcadores({
     for (const a of acopios) {
       L.marker([a.lat, a.lng], {
         icon: marcador(a, a.id === elegido),
-        title: a.nombre,
-        alt: a.nombre,
+        title: etiquetaMarcador(a),
+        alt: etiquetaMarcador(a),
         keyboard: true,
       })
         .on('click', () => alElegir(a.id))

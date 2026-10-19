@@ -243,6 +243,7 @@ export class AcopioPublicoDto extends crearDto(
     fuente: z
       .object({
         nombre: z.string(),
+        nombreCorto: z.string(),
         url: z.string().nullable(),
         actualizadoEn: fecha.nullable(),
         estadoOriginal: z.string(),

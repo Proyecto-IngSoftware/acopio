@@ -295,6 +295,12 @@ export function Mas() {
           titulo="Emergencias anteriores"
           descripcion="Historial de las emergencias cerradas"
         />
+        <FilaMenu
+          a="/plataformas"
+          icono="hub"
+          titulo="Otras plataformas"
+          descripcion="Proyectos que ayudan en paralelo"
+        />
       </SeccionMenu>
 
       {usuario && (

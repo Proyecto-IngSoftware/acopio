@@ -2,7 +2,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
-import { acopioDePrueba } from '../../pruebas/datos-red';
+import { acopioDePrueba, referenciadoDePrueba } from '../../pruebas/datos-red';
 import { envolver, peticiones, responderSegun } from '../../pruebas/utilidades';
 import { Mapa } from './Mapa';
 
@@ -98,7 +98,9 @@ it('«Abierto ahora» filtra en la API y queda en la URL', async () => {
   pantalla();
   await screen.findByRole('link', { name: /Acopio Chapinero/ });
   await userEvent.click(screen.getByRole('button', { name: 'Abierto ahora' }));
-  await waitFor(() => expect(peticiones()).toContain('GET /api/acopios?abiertoAhora=true'));
+  await waitFor(() =>
+    expect(peticiones().some((u) => u.startsWith('GET /api/acopios?abiertoAhora=true'))).toBe(true),
+  );
 });
 
 it('lo que vas a llevar oculta los acopios que no lo reciben y lo dice', async () => {
@@ -124,7 +126,11 @@ it('«Cerca de mí» ordena por distancia y la ficha recibe el punto', async () 
   });
   pantalla();
   await userEvent.click(await screen.findByRole('button', { name: 'Cerca de mí' }));
-  await waitFor(() => expect(peticiones()).toContain('GET /api/acopios?cerca=4.65%2C-74.06'));
+  await waitFor(() =>
+    expect(peticiones().some((u) => u.startsWith('GET /api/acopios?cerca=4.65%2C-74.06'))).toBe(
+      true,
+    ),
+  );
   expect(await screen.findByRole('link', { name: /Acopio Chapinero/ })).toHaveAttribute(
     'href',
     '/acopios/x1?cerca=4.65%2C-74.06',
@@ -137,7 +143,11 @@ it('buscar una dirección usa la geocodificación y centra la búsqueda ahí', a
   await userEvent.type(await screen.findByLabelText('Buscar una dirección'), 'Calle 72');
   await userEvent.click(screen.getByRole('button', { name: 'Buscar' }));
   await userEvent.click(await screen.findByRole('button', { name: /Calle 72, Bogotá/ }));
-  await waitFor(() => expect(peticiones()).toContain('GET /api/acopios?cerca=4.658%2C-74.06'));
+  await waitFor(() =>
+    expect(peticiones().some((u) => u.startsWith('GET /api/acopios?cerca=4.658%2C-74.06'))).toBe(
+      true,
+    ),
+  );
 });
 
 it('la vista de mapa carga el mapa y deja pasar a la lista', async () => {
@@ -240,4 +250,90 @@ it('la hoja del acopio elegido lleva a sus jornadas', async () => {
     'href',
     `/voluntariado?acopio=${acopioDePrueba().id}`,
   );
+});
+
+describe('puntos de RedAcopio (pieza E)', () => {
+  const REF = referenciadoDePrueba({ id: 'r1' });
+  const REF_CERRADO = referenciadoDePrueba({
+    id: 'r2',
+    nombre: 'Parroquia del Divino Niño',
+    estado: 'CERRADO',
+    fuente: { ...REF.fuente!, estadoOriginal: 'cerrado' },
+  });
+  const conRef = () =>
+    responderSegun({ ...RESPUESTAS, 'GET /api/acopios': [...ACOPIOS, REF, REF_CERRADO] });
+
+  it('pide a la API los dos tipos de punto', async () => {
+    conRef();
+    pantalla();
+    await screen.findByRole('link', { name: /Acopio Chapinero/ });
+    expect(peticiones().some((u) => u.includes('tipos=OPERADO%2CREFERENCIADO'))).toBe(true);
+  });
+
+  it('el mapa dibuja el referenciado abierto, no el cerrado, y la leyenda nombra los dos tipos', async () => {
+    conRef();
+    pantalla('/mapa');
+    expect(await screen.findByRole('button', { name: 'acopio r1' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'acopio r2' })).not.toBeInTheDocument();
+    expect(screen.getByText('Acopio: inventario al día')).toBeInTheDocument();
+    expect(screen.getByText('RedAcopio Bogotá: datos de su fuente')).toBeInTheDocument();
+  });
+
+  it('con la casilla apagada no dibuja referenciados y queda en la URL', async () => {
+    conRef();
+    pantalla('/mapa');
+    await screen.findByRole('button', { name: 'acopio r1' });
+    await userEvent.click(screen.getByRole('checkbox', { name: /Mostrar puntos de RedAcopio/ }));
+    expect(screen.queryByRole('button', { name: 'acopio r1' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'acopio x1' })).toBeInTheDocument();
+  });
+
+  it('en la lista van en su propia sección, después de los acopios, cerrados incluidos', async () => {
+    conRef();
+    pantalla();
+    const seccion = await screen.findByRole('region', { name: 'Puntos de RedAcopio Bogotá' });
+    const sugoi = within(seccion).getByRole('link', { name: /Sugoi Taller Creativo/ });
+    expect(sugoi).toHaveTextContent('Abierto según RedAcopio · hace 3 h');
+    expect(sugoi).toHaveAttribute('href', '/acopios/r1');
+    expect(
+      within(seccion).getByRole('link', { name: /Parroquia del Divino Niño/ }),
+    ).toHaveTextContent('Cerrado según RedAcopio');
+    const acopio = screen.getByRole('link', { name: /Acopio Chapinero/ });
+    expect(acopio.compareDocumentPosition(seccion) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(within(seccion).getByRole('link', { name: 'RedAcopio Bogotá' })).toHaveAttribute(
+      'href',
+      'https://redacopiobogota.com/',
+    );
+  });
+
+  it('«¿Qué vas a llevar?» no filtra los referenciados', async () => {
+    conRef();
+    pantalla();
+    await screen.findByRole('option', { name: 'Ropa usada' });
+    await userEvent.selectOptions(screen.getByLabelText('¿Qué vas a llevar?'), 'Ropa usada');
+    await screen.findByText('Ocultamos 1 acopio que hoy no recibe ropa usada.');
+    expect(screen.getByRole('link', { name: /Sugoi Taller Creativo/ })).toBeInTheDocument();
+  });
+
+  it('al tocar un referenciado, su tarjeta dice la fuente y no ofrece jornadas', async () => {
+    conRef();
+    pantalla('/mapa');
+    await userEvent.click(await screen.findByRole('button', { name: 'acopio r1' }));
+    const hoja = await screen.findByRole('region', { name: /Punto elegido: Sugoi/ });
+    expect(hoja).toHaveTextContent('Punto de RedAcopio Bogotá');
+    expect(hoja).toHaveTextContent('según RedAcopio');
+    expect(hoja).toHaveTextContent('Datos de RedAcopio actualizados hace 3 h');
+    expect(within(hoja).getByRole('link', { name: 'Ver ficha' })).toHaveAttribute(
+      'href',
+      '/acopios/r1',
+    );
+    expect(within(hoja).queryByRole('link', { name: 'Ver jornadas' })).not.toBeInTheDocument();
+  });
+
+  it('el mapa y la lista con referenciados no tienen violaciones graves', async () => {
+    conRef();
+    const { container } = pantalla();
+    await screen.findByRole('region', { name: 'Puntos de RedAcopio Bogotá' });
+    expect(await violacionesGraves(container)).toEqual([]);
+  });
 });

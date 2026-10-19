@@ -3,7 +3,7 @@ import { HORARIO_VACIO } from '@acopio/shared';
 import { Route, Routes } from 'react-router';
 import { vi } from 'vitest';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
-import { acopioDePrueba } from '../../pruebas/datos-red';
+import { acopioDePrueba, referenciadoDePrueba } from '../../pruebas/datos-red';
 import { jornadaDe } from '../../pruebas/datos-turnos';
 import { conEstado, envolver, peticiones, responderSegun } from '../../pruebas/utilidades';
 import { FichaAcopio } from './FichaAcopio';
@@ -207,4 +207,59 @@ it('no tiene violaciones graves de accesibilidad', async () => {
   const { container } = ficha();
   await screen.findByRole('region', { name: 'No traigan' });
   expect(await violacionesGraves(container)).toEqual([]);
+});
+
+describe('un punto de RedAcopio (pieza E)', () => {
+  const conPunto = () => {
+    const punto = referenciadoDePrueba({ id: 'r1' });
+    responderSegun({ 'GET /api/acopios/r1': punto });
+    render(
+      envolver(
+        <Routes>
+          <Route path="/acopios/:id" element={<FichaAcopio />} />
+        </Routes>,
+        '/acopios/r1',
+      ),
+    );
+    return punto;
+  };
+
+  it('dice de dónde vienen los datos, con su antigüedad y el enlace a la fuente', async () => {
+    conPunto();
+    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(
+      'Sugoi Taller Creativo',
+    );
+    expect(screen.getByText('Punto de RedAcopio Bogotá')).toBeInTheDocument();
+    expect(screen.getByText(/según RedAcopio/)).toBeInTheDocument();
+    expect(screen.getByText(/Datos de RedAcopio actualizados hace 3 h/)).toBeInTheDocument();
+    const fuente = screen.getByRole('link', { name: /Ver en RedAcopio/ });
+    expect(fuente).toHaveAttribute('href', 'https://redacopiobogota.com/');
+    expect(fuente).toHaveAttribute('target', '_blank');
+  });
+
+  it('muestra lo que piden con su nivel, el horario y el contacto tal como vienen', async () => {
+    conPunto();
+    const piden = await screen.findByRole('region', { name: /Lo que piden/ });
+    expect(within(piden).getByText('Camión').closest('li')).toHaveTextContent('Urgente');
+    expect(within(piden).getByText('Agua').closest('li')).toHaveTextContent('Normal');
+    expect(screen.getByText('10:00 am - 7:00 pm')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Llamar/ })).toHaveAttribute('href', 'tel:3024821367');
+    expect(screen.getByText(/Timbre de acceso en la puerta principal/)).toBeInTheDocument();
+    expect(screen.getByText(/Este punto no usa Acopio/)).toBeInTheDocument();
+  });
+
+  it('no muestra lo que urge, lo que no traigan ni voluntariado, y no los pide a la API', async () => {
+    conPunto();
+    await screen.findByRole('heading', { level: 1 });
+    expect(screen.queryByText('Lo que urge')).not.toBeInTheDocument();
+    expect(screen.queryByText(/No traigan/)).not.toBeInTheDocument();
+    expect(screen.queryByText('Voluntariado')).not.toBeInTheDocument();
+    expect(peticiones()).toEqual(['GET /api/acopios/r1']);
+  });
+
+  it('no tiene violaciones graves de accesibilidad', async () => {
+    conPunto();
+    await screen.findByRole('region', { name: /Lo que piden/ });
+    expect(await violacionesGraves(document.body)).toEqual([]);
+  });
 });

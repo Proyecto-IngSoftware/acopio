@@ -30,15 +30,15 @@ const ESTADOS: Record<EstadoRed, { texto: string; icono: string; clases: string 
   CUBIERTA: { texto: 'Cubierta', icono: 'check_circle', clases: 'bg-exito-container text-exito' },
 };
 
-/** Estado de un acopio o de una zona. */
-export function EtiquetaEstado({ estado }: { estado: EstadoRed }) {
+/** Estado de un acopio o de una zona. `texto` lo cambia por el que trae una fuente externa. */
+export function EtiquetaEstado({ estado, texto }: { estado: EstadoRed; texto?: string }) {
   const e = ESTADOS[estado];
   return (
     <span
       className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-label-md ${e.clases}`}
     >
       <Icono nombre={e.icono} className="text-[16px]" />
-      {e.texto}
+      {texto ?? e.texto}
     </span>
   );
 }

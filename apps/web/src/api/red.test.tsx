@@ -13,7 +13,9 @@ it('pide los acopios con sus filtros y entrega los campos vacíos como null', as
   responderSegun({ 'GET /api/acopios': [acopioDePrueba({ telefono: null })] });
   render(envolver(<Lista />));
   expect(await screen.findByText('Acopio Chapinero:sin teléfono')).toBeInTheDocument();
-  expect(peticiones()[0]).toBe('GET /api/acopios?abiertoAhora=true&cerca=4.6%2C-74.08');
+  expect(peticiones()[0]).toBe(
+    'GET /api/acopios?abiertoAhora=true&cerca=4.6%2C-74.08&tipos=OPERADO%2CREFERENCIADO',
+  );
 });
 
 function NoRecibe() {

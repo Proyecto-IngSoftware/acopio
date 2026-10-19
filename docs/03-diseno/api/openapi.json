@@ -6753,6 +6753,108 @@
         ]
       }
     },
+    "/api/importacion/formatos": {
+      "get": {
+        "operationId": "CsvController_formatos",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FormatoCsvDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Tipos de CSV que se pueden cargar, con sus columnas",
+        "tags": [
+          "importacion"
+        ]
+      }
+    },
+    "/api/importacion/csv/{tipo}/revisar": {
+      "post": {
+        "operationId": "CsvController_revisar",
+        "parameters": [
+          {
+            "name": "tipo",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReporteCsvDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Revisa un CSV fila por fila, sin escribir nada",
+        "tags": [
+          "importacion"
+        ]
+      }
+    },
+    "/api/importacion/csv/{tipo}/aplicar": {
+      "post": {
+        "operationId": "CsvController_aplicar",
+        "parameters": [
+          {
+            "name": "tipo",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReporteCsvDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "summary": "Carga un CSV: todas las filas o ninguna (422 con el reporte)",
+        "tags": [
+          "importacion"
+        ]
+      }
+    },
     "/api/salud": {
       "get": {
         "operationId": "SaludController_revisar",
@@ -9049,6 +9151,7 @@
             "type": "object",
             "required": [
               "nombre",
+              "nombreCorto",
               "url",
               "actualizadoEn",
               "estadoOriginal",
@@ -9058,6 +9161,9 @@
             ],
             "properties": {
               "nombre": {
+                "type": "string"
+              },
+              "nombreCorto": {
                 "type": "string"
               },
               "url": {
@@ -9347,6 +9453,7 @@
             "type": "object",
             "required": [
               "nombre",
+              "nombreCorto",
               "url",
               "actualizadoEn",
               "estadoOriginal",
@@ -9356,6 +9463,9 @@
             ],
             "properties": {
               "nombre": {
+                "type": "string"
+              },
+              "nombreCorto": {
                 "type": "string"
               },
               "url": {
@@ -14918,6 +15028,110 @@
           "categoria",
           "descripcion",
           "url"
+        ]
+      },
+      "FormatoCsvDto": {
+        "type": "object",
+        "properties": {
+          "tipo": {
+            "type": "string"
+          },
+          "descripcion": {
+            "type": "string"
+          },
+          "columnas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "nombre": {
+                  "type": "string"
+                },
+                "obligatoria": {
+                  "type": "boolean"
+                },
+                "descripcion": {
+                  "type": "string"
+                },
+                "ejemplo": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "nombre",
+                "obligatoria",
+                "descripcion",
+                "ejemplo"
+              ]
+            }
+          }
+        },
+        "required": [
+          "tipo",
+          "descripcion",
+          "columnas"
+        ]
+      },
+      "ReporteCsvDto": {
+        "type": "object",
+        "properties": {
+          "filas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "numero": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "valida": {
+                  "type": "boolean"
+                },
+                "errores": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "columna": {
+                        "type": [
+                          "string",
+                          "null"
+                        ]
+                      },
+                      "mensaje": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "columna",
+                      "mensaje"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "numero",
+                "valida",
+                "errores"
+              ]
+            }
+          },
+          "validas": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "invalidas": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "filas",
+          "validas",
+          "invalidas"
         ]
       },
       "SaludDto": {

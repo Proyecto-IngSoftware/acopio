@@ -1920,6 +1920,57 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/importacion/formatos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Tipos de CSV que se pueden cargar, con sus columnas */
+        get: operations["CsvController_formatos"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/importacion/csv/{tipo}/revisar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Revisa un CSV fila por fila, sin escribir nada */
+        post: operations["CsvController_revisar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/importacion/csv/{tipo}/aplicar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Carga un CSV: todas las filas o ninguna (422 con el reporte) */
+        post: operations["CsvController_aplicar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/salud": {
         parameters: {
             query?: never;
@@ -2522,6 +2573,7 @@ export interface components {
             /** @description Solo en un referenciado: lo que trae su fuente, tal cual */
             fuente: {
                 nombre: string;
+                nombreCorto: string;
                 url: string | null;
                 /** Format: date-time */
                 actualizadoEn: string | null;
@@ -2592,6 +2644,7 @@ export interface components {
             /** @description Solo en un referenciado: lo que trae su fuente, tal cual */
             fuente: {
                 nombre: string;
+                nombreCorto: string;
                 url: string | null;
                 /** Format: date-time */
                 actualizadoEn: string | null;
@@ -3971,6 +4024,28 @@ export interface components {
             categoria: string;
             descripcion: string;
             url: string;
+        };
+        FormatoCsvDto: {
+            tipo: string;
+            descripcion: string;
+            columnas: {
+                nombre: string;
+                obligatoria: boolean;
+                descripcion: string;
+                ejemplo: string;
+            }[];
+        };
+        ReporteCsvDto: {
+            filas: {
+                numero: number;
+                valida: boolean;
+                errores: {
+                    columna: string | null;
+                    mensaje: string;
+                }[];
+            }[];
+            validas: number;
+            invalidas: number;
         };
         SaludDto: {
             /** @enum {string} */
@@ -8086,6 +8161,67 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["PlataformaDto"][];
+                };
+            };
+        };
+    };
+    CsvController_formatos: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["FormatoCsvDto"][];
+                };
+            };
+        };
+    };
+    CsvController_revisar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tipo: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReporteCsvDto"];
+                };
+            };
+        };
+    };
+    CsvController_aplicar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                tipo: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ReporteCsvDto"];
                 };
             };
         };

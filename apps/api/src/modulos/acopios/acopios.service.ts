@@ -261,8 +261,10 @@ export function presentarAcopio(f: FilaAcopio, ahora = new Date()) {
 
 /** Lo que trae la fuente de un referenciado, tal cual (RF-RED-003). */
 function presentarFuente(f: FilaAcopio) {
+  const datos = datosFuente(f.fuente ?? '');
   return {
-    nombre: datosFuente(f.fuente ?? '').etiqueta,
+    nombre: datos.etiqueta,
+    nombreCorto: datos.corto,
     url: f.fuente_url,
     actualizadoEn: f.fuente_actualizado_en,
     estadoOriginal: f.fuente_estado ?? '',

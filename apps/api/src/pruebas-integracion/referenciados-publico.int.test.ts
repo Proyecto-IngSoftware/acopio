@@ -57,6 +57,7 @@ describe('referenciados en la API pública', () => {
       entidad: null,
       fuente: {
         nombre: 'RedAcopio Bogotá',
+        nombreCorto: 'RedAcopio',
         estadoOriginal: 'cerrado',
         necesidades: [{ nivel: 'urgente', texto: 'Camión' }],
       },
