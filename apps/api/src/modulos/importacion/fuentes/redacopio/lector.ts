@@ -103,13 +103,19 @@ const ENTIDADES: Record<string, string> = {
   '&#x27;': "'",
   '&#39;': "'",
 };
-// Sin < ni > al final: «&lt;script&gt;» decodificado volvería a parecer una etiqueta
-const texto = (html: string) =>
-  html
-    .replace(/<[^>]+>/g, '')
+/** Quita las etiquetas hasta que no quede ninguna: una partida por otra (`<scr<b>ipt>`) sale en
+ *  la segunda vuelta. Al final no deja < ni >: «&lt;script&gt;» decodificado parecería una etiqueta. */
+function texto(html: string) {
+  let limpio = html;
+  for (let antes = ''; antes !== limpio;) {
+    antes = limpio;
+    limpio = limpio.replace(/<[^<>]*>/g, '');
+  }
+  return limpio
     .replace(/&(amp|lt|gt|quot|#x27|#39);/g, (e) => ENTIDADES[e] ?? e)
     .replace(/[<>]/g, '')
     .trim();
+}
 
 /** Las tarjetas de `/herramientas`: categoría, nombre, descripción y el enlace «Ir al sitio». */
 export function leerHerramientas(html: string): PlataformaFuente[] {

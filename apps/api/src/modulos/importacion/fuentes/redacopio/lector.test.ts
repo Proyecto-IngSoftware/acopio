@@ -76,4 +76,12 @@ describe('texto de las tarjetas de herramientas', () => {
     expect(p!.nombre).not.toMatch(/[<>]/);
     expect(p!.descripcion).toBe('Ayuda & más');
   });
+
+  it('una etiqueta partida por otra tampoco sobrevive', () => {
+    const html =
+      '<div class="tool-card"><div class="tool-tag">Mapa</div>' +
+      '<h3 class="tool-name">Dos <scr<b>ipt>x</h3>' +
+      '<p class="tool-desc">D</p><a href="https://dos.test/">Ir</a></div>';
+    expect(leerHerramientas(html)[0]!.nombre).toBe('Dos x');
+  });
 });
