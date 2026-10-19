@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-18
+actualizado: 2026-10-19
 ---
 
 # Pendientes — bandeja de entrada
@@ -1012,6 +1012,19 @@ al repetirla.
 **Por qué:** una prueba que falla a veces en CI frena un PR sin que haya un error real.
 **Estado:** ABIERTO. Revisar si alguna espera usa el límite por defecto de 5 s y subirlo, o
 partir esas pruebas, antes de que aparezcan en CI.
+
+
+### P-076 · Lo que falta de RF-RED-011 después de la pieza E
+**Fecha:** 2026-10-19 · **Propuesto por:** Claude, al cerrar la pieza E (#49)
+**Qué:** la pieza E dejó el importador, la copia de RedAcopio, la carga por CSV y las pantallas.
+Quedan cuatro casillas de RF-RED-011: avisar al Administrador cuando una lectura aborta (hoy
+solo queda la ejecución con resultado `ABORTADA` y la respuesta del endpoint), ocultar un
+referenciado desde la consola (la columna `oculto_por_admin` existe y el portal y el importador
+la respetan, pero no hay endpoint), convertir un referenciado en operado y cargar referenciados
+por CSV (el formato `acopios` crea operados).
+**Por qué:** la especificación de la pieza E pidió solo backend para el CSV y ninguna pantalla
+de consola; estas cuatro necesitan consola o una decisión sobre el aviso.
+**Estado:** ABIERTO. Entran con la consola de importación, después del 23.
 
 ---
 

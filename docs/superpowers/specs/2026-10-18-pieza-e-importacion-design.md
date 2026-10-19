@@ -4,7 +4,7 @@ type: spec
 tags: [spec, bloque-1, importacion]
 estado: vigente
 bloque: 1
-actualizado: 2026-10-18
+actualizado: 2026-10-19
 ---
 
 # Pieza E · Importación de RedAcopio y carga por CSV · especificación
@@ -319,4 +319,28 @@ Ninguna pantalla se escribe sin su maqueta aprobada por Joseph en
 
 ## 14. Cambios al construir
 
-(vacío)
+- **85 puntos y no 88.** Tres puntos verificados de RedAcopio vienen en 0, 0 y la base los
+  rechaza por el CHECK `acopio_coordenadas_colombia`. El importador omite los que caen fuera de
+  Colombia y los cuenta en la bitácora como `omitidos`. La demo queda con 85: 54 activos,
+  2 pausados y 29 cerrados.
+- **Comparación de coordenadas con tolerancia.** La huella del punto no lleva las coordenadas:
+  PostgreSQL guarda -74.1352285 como -74.135229 y `toFixed(6)` de JavaScript da -74.135228, así
+  que cada reimportación marcaba un punto como actualizado. Se comparan aparte, con una
+  diferencia menor a 0,000001.
+- **El importador y los formatos viven en `importacion`.** La tabla de dependencias se lee
+  «módulo → quién puede importarlo»; `importacion` importa a `acopios`, `catalogo`,
+  `inventario` y `turnos`, y nadie la importa a ella.
+- **Nombre corto de la fuente.** La fuente de un referenciado trae `nombreCorto`
+  («RedAcopio») además de `nombre` («RedAcopio Bogotá»), para la línea aprobada «Datos de
+  RedAcopio actualizados hace 3 h · Ver en RedAcopio».
+- **La casilla del mapa va con los filtros.** «Mostrar puntos de RedAcopio» vale para el mapa
+  y la lista y queda en la URL como `redacopio=0`. La maqueta la ponía bajo el mapa.
+- **El nivel «no» de RedAcopio** sale en la ficha como «No reciben», junto a «Urgente» y
+  «Normal».
+- **El CSV de plataformas rechaza nombres repetidos**, contra la lista o dentro del archivo, en
+  la columna `nombre`. El recorrido lo encontró: cargar el ejemplo dos veces duplicaba dos
+  plataformas en P14.
+- **Acopios por CSV entran con el horario vacío**, porque el CSV no lo pide. Salen «cerrado
+  ahora» hasta que el Administrador les ponga horario en la consola.
+- Lo que falta de RF-RED-011 quedó en
+  [P-076](../../01-requerimientos/pendientes.md#p-076--lo-que-falta-de-rf-red-011-después-de-la-pieza-e).

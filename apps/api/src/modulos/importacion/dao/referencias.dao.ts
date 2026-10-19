@@ -15,6 +15,18 @@ export class ReferenciasDao {
     return porNombre(filas);
   }
 
+  /** Las plataformas activas con esos nombres, sin importar mayúsculas. */
+  async plataformas(nombres: string[], bd: ClienteBd) {
+    const filas = await bd.plataforma.findMany({
+      where: {
+        activa: true,
+        OR: nombres.map((n) => ({ nombre: { equals: n, mode: 'insensitive' as const } })),
+      },
+      select: { id: true, nombre: true },
+    });
+    return porNombre(filas);
+  }
+
   async emergencias(nombres: string[], bd: ClienteBd) {
     const filas = await bd.emergencia.findMany({
       where: { OR: nombres.map((n) => ({ nombre: { equals: n, mode: 'insensitive' as const } })) },

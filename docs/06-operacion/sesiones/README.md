@@ -3,7 +3,7 @@ title: "Informes de sesión — índice"
 type: moc
 tags: [moc, operacion, sesion]
 estado: vigente
-actualizado: 2026-10-18
+actualizado: 2026-10-19
 ---
 
 # Informes de sesión
@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-10-19 | [2026-10-19-pieza-e](2026-10-19-pieza-e.md) | Pieza E: RedAcopio, CSV y otras plataformas |
 | 2026-10-18 | [2026-10-18-estetica-piedra](2026-10-18-estetica-piedra.md) | Grises piedra, auditoría de las pantallas e íconos |
 | 2026-10-18 | [2026-10-18-deuda-turnos](2026-10-18-deuda-turnos.md) | Deuda de turnos (#129) y arranque de la pieza E |
 | 2026-10-18 | [2026-10-18-plan-sprint-2](2026-10-18-plan-sprint-2.md) | Fechas del Sprint 2 y casillas de #45 y #47 |

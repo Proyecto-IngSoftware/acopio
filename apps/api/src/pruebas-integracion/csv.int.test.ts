@@ -64,6 +64,27 @@ describe('carga por CSV', () => {
     expect(await creadas(prefijo)).toBe(10);
   });
 
+  it('una plataforma que ya está en la lista, o repetida en el archivo, falla en su nombre', async () => {
+    const prefijo = unico('Repetida ');
+    await enviar('aplicar', archivo(prefijo)).expect(200);
+    const fila = `${prefijo} 1,Donaciones,Otra vez,https://otra.test/`;
+    const r = await enviar(
+      'revisar',
+      Buffer.from(
+        [
+          'nombre,categoria,descripcion,url',
+          fila.toUpperCase().replace('HTTPS://OTRA.TEST/', 'https://otra.test/'),
+          `${prefijo} nueva,Donaciones,Una,https://u.test/`,
+          `${prefijo} nueva,Donaciones,Dos,https://d.test/`,
+        ].join('\n'),
+      ),
+    ).expect(200);
+    expect(r.body).toMatchObject({ validas: 1, invalidas: 2 });
+    const errores = r.body.filas.filter((f: { valida: boolean }) => !f.valida);
+    expect(errores.map((f: { numero: number }) => f.numero)).toEqual([1, 3]);
+    expect(errores[0].errores[0]).toMatchObject({ columna: 'nombre' });
+  });
+
   it('lista los formatos con sus columnas, para la pantalla futura', async () => {
     const r = await a.http().get('/api/importacion/formatos').set(conAdmin()).expect(200);
     const plataformas = r.body.find((f: { tipo: string }) => f.tipo === 'plataformas');
