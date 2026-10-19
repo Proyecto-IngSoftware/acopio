@@ -42,7 +42,8 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | Viernes 23 de octubre | Sustentación del segundo corte y Review del Sprint 2 |
 | Domingo 25 de octubre | Fin del Sprint 2 ([P-047](../01-requerimientos/pendientes.md)) |
 | Lunes 26 de octubre | Planning del Sprint 3 |
-| Domingo 15 de noviembre | Piezas D y E del Bloque 1 |
+| Miércoles 21 de octubre | Pieza E desplegada en el servidor de pruebas |
+| Domingo 15 de noviembre | Pieza D del Bloque 1 |
 | Viernes 20 de noviembre | Review del Sprint 3 |
 | Domingo 29 de noviembre | Congelamiento y calidad |
 | Semana 18, hasta el 6 de diciembre | Entrega final y sustentación |
@@ -58,13 +59,27 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | 5 | Ronda de pruebas en el servidor, por rol, con los escenarios de `escenarios-por-rol.md`; cada hallazgo entra como issue `hallazgo` | #58 | 2026-10-25 | ⬜ |
 | 6 | Cierre del Sprint 2: Review historia por historia el 23, seguimiento de la semana 12 con captura y retrospectiva con una acción para el Sprint 3 | #47 | 2026-10-25 | ⬜ |
 
+### Pieza E en esta semana
+
+Joseph decidió el 2026-10-18 adelantar la pieza E y mostrarla en el servidor para la
+sustentación. Si las maquetas no están aprobadas el martes 20 por la noche, se despliega solo el
+backend con los puntos ocultos en el portal, y las pantallas pasan a después del 23.
+
+| # | Qué | Issue | Fecha | Estado |
+|---|---|---|---|---|
+| 8a | Especificación: acopio referenciado, módulo `importacion`, copia guardada de RedAcopio, carga por CSV para todos los módulos (solo backend, con los endpoints listos para una pantalla futura) y lista de «otras plataformas» de `/herramientas`. La lectura programada cada 60 minutos queda escrita y apagada | #49 | 2026-10-18 | 🟡 |
+| 8b | Maquetas en Stitch: marcador de referenciado en P05, ficha de referenciado en P06 y lista de otras plataformas. Las aprueba Joseph | #49 | 2026-10-19 | ⬜ |
+| 8c | Backend: migración, importador con la copia guardada, carga por CSV y sus pruebas | #49 | 2026-10-20 | ⬜ |
+| 8d | Pantallas P05, P06 y otras plataformas | #49 | 2026-10-21 | ⬜ |
+| 8e | Despliegue en Dokploy con los 88 puntos y recorridos contra el servidor | #49 | 2026-10-21 | ⬜ |
+
 ## Sprint 3: del 26 de octubre al 22 de noviembre
 
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
 | 7 | Planning del Sprint 3 | #51 | 2026-10-26 | ⬜ |
-| 8 | Pieza E: importador de RedAcopio y carga por CSV, criterio 2 de HU-01. Necesita especificación, el módulo `importacion` y su prueba contra una copia del JSON | #49 | 2026-11-15 | ⬜ |
-| 9 | Pieza D: contenido del home, páginas legales y Open Graph, con su ADR. El balance de la portada (P-073) ya quedó hecho | #50 | 2026-11-15 | ⬜ |
+| 8 | Pieza E: pasó a esta semana, filas 8a a 8e. Lo que no alcance antes del 23 vuelve aquí | #49 | 2026-11-15 | 🟡 |
+| 9 | Pieza D: contenido del home, páginas legales y Open Graph, con su ADR. El balance de la portada (P-073) ya quedó hecho. Joseph la une a la pieza E: el Open Graph de la ficha del acopio, referenciado u operado, sigue a la ficha de la fila 8d | #50 | 2026-11-15 | ⬜ |
 | 10 | Escáner probado con un teléfono y un código real contra el servidor | #40 | 2026-11-15 | ⬜ |
 | 11 | Review y retrospectiva del Sprint 3 | #51 | 2026-11-20 | ⬜ |
 | 12 | Bloque 6: bitácora enriquecida, transparencia y publicaciones. Es lo primero que se recorta | #37 | 2026-11-22 | ⬜ |
@@ -138,3 +153,9 @@ Sprint 3.
   turnos y causas. La fila 13 sigue con #43. La pieza E (#49) suma dos casillas pedidas por
   Joseph: una copia de trabajo de RedAcopio para desarrollar sin pedir la página en cada prueba,
   y la lista de plataformas de `/herramientas`, que irá aparte de las causas.
+- 2026-10-18: la pieza E (#49) pasa a esta semana en cinco filas, 8a a 8e, con despliegue en el
+  servidor el miércoles 21. Joseph pidió la carga por CSV para todos los módulos, solo backend y
+  lista para una pantalla futura, y la lista de otras plataformas aparte de las causas. La
+  lectura programada queda apagada. La pieza D queda unida a la E por el Open Graph de la ficha.
+  No sale ninguna fila: Joseph prefiere sesiones largas para avanzar más cada día, y las fechas
+  de lo demás pueden adelantarse.
