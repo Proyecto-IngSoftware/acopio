@@ -57,3 +57,16 @@ Dokploy desplegó #143 y el servidor sirve las 5 fotos de las plataformas.
   Emergencia daba «Page not found» y Puntos en Google Maps es un mapa de Google. Se ven con el ícono
   de su categoría. Si sus sitios vuelven, la foto se agrega en
   `apps/api/src/seed/imagenes-plataformas/` ([P-078](../../01-requerimientos/pendientes.md#p-078--fotos-de-las-plataformas-sin-sitio-disponible)).
+
+## Siguientes pasos
+
+Quedan en el [plan de acción](../../05-planes/plan-de-accion.md), en orden:
+
+- Antes de la sustentación del 23 (fila 4): ensayar el recorrido de la demo en el servidor y
+  regenerar el diagrama de paquetes, que se midió el 18 y no tiene el módulo `importacion`.
+- Avance 5 (fila 2, [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47)): volver a
+  tomar con `CAPTURAS_WORD` las capturas del mapa y de Causas, que cambiaron hoy, y subir el Word.
+- Ronda de pruebas por rol en el servidor (fila 5,
+  [#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58)) y cierre del Sprint 2 (fila 6).
+- Después del 23 (fila 8): P-076, P-077 y P-078, antes de prender la lectura programada de
+  RedAcopio.
