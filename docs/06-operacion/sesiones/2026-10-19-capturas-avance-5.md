@@ -59,14 +59,16 @@ en To Do (#26 y #58). La captura del Avance 4 ya estaba tomada, así que no camb
 
 ## Pendiente
 
-- Capturas del tablero del Sprint 2 y del seguimiento, y subir «Acopio - Avances IS1.docx» a
-  OneDrive (fila 2 del [plan de acción](../../05-planes/plan-de-accion.md),
+- Subir «Acopio - Avances IS1.docx» a OneDrive (fila 2 del
+  [plan de acción](../../05-planes/plan-de-accion.md),
   [#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47)).
+
+Joseph tomó las capturas del tablero y del seguimiento con el tablero ya al día. Las guardó como
+`avance-05/backlog.png` y `avance-04/historiasbacklog.png`, y se renombraron a `seguimiento.png`
+(la vista «Sprint 2» completa) y `tablero.png` (solo las historias). Con ellas, el Word del
+Avance 5 quedó en 19 páginas, revisado renderizado.
 
 ## Depende de Joseph
 
-- Las dos capturas, porque el Project es privado y solo se ve con su sesión de GitHub. Van en
-  `docs/entregas/evidencia/avance-05/tablero.png` y `seguimiento.png`; después se corren
-  `generar-avance-05.py` y `unificar-avances.py`
+- Subir el Word unificado a OneDrive
   ([#47](https://github.com/Proyecto-IngSoftware/acopio/issues/47)).
-- Subir el Word unificado a OneDrive.

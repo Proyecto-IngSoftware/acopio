@@ -17,10 +17,9 @@ que va desde «## 1. Incremento funcional» lo vuelca
 
 ## Lo que falta
 
-- La captura del tablero del Project con las historias del Sprint 2, en
-  `evidencia/avance-05/tablero.png`. Mientras no esté, el Word deja un recuadro.
-- La captura del seguimiento, en `evidencia/avance-05/seguimiento.png`.
-- Subir el Word unificado a OneDrive.
+- Subir el Word unificado a OneDrive. Las capturas del tablero (`tablero.png`, vista «Sprint 2»
+  con solo las historias) y del seguimiento (`seguimiento.png`, la misma vista con los issues)
+  están desde el 2026-10-19.
 
 ## Qué pide la guía y dónde está
 
