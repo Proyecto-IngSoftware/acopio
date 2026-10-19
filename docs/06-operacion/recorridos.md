@@ -126,7 +126,7 @@ Con la demo recién sembrada, conviene correr `consola-motor.mjs` antes que
 | `consola-causas.mjs` | La consola de la pieza C: crea una entidad nueva por corrida, la verifica con el aviso (el botón empieza inactivo), publica una causa con la confirmación de destino, la renueva, archiva otra y le quita la verificación a la entidad; en P4 el enlace desaparece. Entra como `admin` con `ADMIN_CONTRASENA` y no toca las causas «(demo)» | 6 | C15-entidades, C22-causas y P04-ficha-causa |
 | `portal-turnos.mjs` | Lo público de turnos sin iniciar sesión (HU-03): P7 con «Clasificar ropa donada (demo)» marcada «Llena», reservar en «Armar mercados (demo)» con un correo nuevo, P8 con el código y el secreto después del `#`, el `.ics`, cancelar y comprobar en la API que `ocupados` volvió a su valor, y P8 sin `#`. Deja la demo como estaba | 6 | P07-voluntariado y P08-mi-reserva |
 | `consola-turnos.mjs` | C14 con `operador1` y `DEMO_CONTRASENA`: llega desde «Más», crea una serie de dos fechas y comprueba en la API que comparten serie, mueve una (cambia la hora de fin) y revisa `fin` en la API, ve los inscritos de «Armar mercados (demo)», suma un cupo de ajuste, cierra y reabre las reservas (con el portal sin aceptar reservas mientras está cerrada). Al final devuelve el ajuste y borra la serie desde la pantalla | 7 | C14-turnos |
-| `referenciados.mjs` | La pieza E sin iniciar sesión: P5 con la leyenda de RedAcopio y la casilla «Mostrar puntos de RedAcopio» (apagarla quita la leyenda), la sección «Puntos de RedAcopio Bogotá» de la lista con «según RedAcopio» y el enlace a la fuente, la ficha de Sugoi Taller Creativo con su antigüedad, «Ver en RedAcopio» y «Lo que piden», sin «Preparar donación», «Lo que urge» ni «Voluntariado», y P14 con las 9 plataformas, a la que se llega desde «Más» y desde el pie de la portada | 6 | P05-mapa (construida-referenciados), P06-ficha-referenciado y P14-plataformas |
+| `referenciados.mjs` | La pieza E sin iniciar sesión: P5 con la leyenda de RedAcopio y la casilla «Mostrar puntos de RedAcopio» (apagarla quita la leyenda), la sección «Puntos de RedAcopio Bogotá» de la lista con «según RedAcopio» y el enlace a la fuente, la ficha de Sugoi Taller Creativo con su antigüedad, «Ver en RedAcopio» y «Lo que piden», sin «Preparar donación», «Lo que urge» ni «Voluntariado», y las 9 plataformas al final de Causas, con al menos una foto; `/plataformas` lleva a esa sección | 6 | P05-mapa (construida-referenciados), P06-ficha-referenciado y P03-causas (construida-plataformas) |
 
 ### `validacion-general.mjs`
 
@@ -193,6 +193,10 @@ Si se corren varios seguidos, el límite de 5 inicios de sesión por minuto hace
 entra después; hay que esperar un minuto entre uno y otro.
 
 ## Últimos resultados
+
+**2026-10-19, plataformas en Causas y mapa por tipo** (después de #143): en local con la API
+reconstruida, `referenciados.mjs` 6 de 6, `portal-causas.mjs` 4 de 4 y `validacion-general.mjs`
+60 de 60. Contra el servidor de pruebas, `referenciados.mjs` 6 de 6.
 
 **2026-10-19, contra el servidor de pruebas** (después de #140 y #141, `CAPTURAS=no`):
 `referenciados.mjs` 6 de 6.

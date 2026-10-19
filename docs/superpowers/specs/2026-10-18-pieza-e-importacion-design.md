@@ -352,5 +352,9 @@ Ninguna pantalla se escribe sin su maqueta aprobada por Joseph en
 - **`catalogo` e `importacion` entran a `MIGRADOS_A_DAO`.** La pieza E tocó `catalogo`, que
   seguía sin migrar; sus cuatro servicios pasan a `CategoriaDao`, `CanastaDao`, `EmergenciaDao`
   y `CodigoBarrasDao`.
+- **Las plataformas pasaron a Causas** (#143). Joseph pidió sacarlas de P14: van en una sección
+  al final de Causas, con una foto real de cada sitio, y `/plataformas` lleva ahí. El mapa
+  agrupa por tipo y usa los pines tipo píldora de Stitch. Detalle en las notas de
+  [P03](../../03-diseno/stitch/P03-causas/README.md) y [P05](../../03-diseno/stitch/P05-mapa/README.md).
 - Lo que falta de RF-RED-011 quedó en
   [P-076](../../01-requerimientos/pendientes.md#p-076--lo-que-falta-de-rf-red-011-después-de-la-pieza-e).
