@@ -184,6 +184,14 @@ export class AcopiosService {
   async exigirAbierto(id: string, bd?: ClienteBd): Promise<void> {
     const f = await this.dao.estado(id, bd);
     if (!f) throw new ErrorDominio('ACOPIO_NO_ENCONTRADO', 'El acopio no existe', 404);
+    // Un punto de una fuente externa no usa Acopio: no recibe movimientos, jornadas ni donaciones
+    if (f.tipo === 'REFERENCIADO') {
+      throw new ErrorDominio(
+        'ACOPIO_REFERENCIADO',
+        'Este punto viene de una fuente externa y no usa Acopio',
+        409,
+      );
+    }
     if (f.estado === 'CERRADO') {
       throw new ErrorDominio('ACOPIO_CERRADO', 'El acopio está cerrado', 409);
     }

@@ -2,6 +2,10 @@ import { Injectable } from '@nestjs/common';
 import type { ClienteBd } from '../../../comun/prisma/cliente-bd';
 import { PrismaService } from '../../../comun/prisma/prisma.service';
 import type { Prisma } from '../../../generado/prisma/client';
+import type { TipoAcopio } from '../../../generado/prisma/enums';
+
+/** Lo que usa Acopio. Los referenciados solo salen en el mapa y la ficha (pieza E). */
+const OPERADO = { tipo: 'OPERADO' } as const;
 
 export const conEntidad = { entidad: { select: { id: true, nombre: true } } } as const;
 export type FilaAcopio = Prisma.AcopioGetPayload<{ include: typeof conEntidad }>;
@@ -14,7 +18,7 @@ export class AcopioDao {
   /** Los activos, con lo que hace falta para sugerirlos a un Donador. */
   activos() {
     return this.prisma.acopio.findMany({
-      where: { estado: 'ACTIVO' },
+      where: { ...OPERADO, estado: 'ACTIVO' },
       select: { id: true, nombre: true, direccion: true, lat: true, lng: true, horario: true },
     });
   }
@@ -22,7 +26,9 @@ export class AcopioDao {
   /** Los que pueden despachar (ACTIVO y PAUSADO), o los pedidos. */
   paraMotor(bd: ClienteBd, acopioIds?: string[]) {
     return bd.acopio.findMany({
-      where: acopioIds ? { id: { in: acopioIds } } : { estado: { in: ['ACTIVO', 'PAUSADO'] } },
+      where: acopioIds
+        ? { ...OPERADO, id: { in: acopioIds } }
+        : { ...OPERADO, estado: { in: ['ACTIVO', 'PAUSADO'] } },
       select: { id: true, nombre: true, lat: true, lng: true },
       orderBy: { nombre: 'asc' },
     });
@@ -30,15 +36,23 @@ export class AcopioDao {
 
   nombres(ids: string[]) {
     return this.prisma.acopio.findMany({
-      where: { id: { in: ids } },
+      where: { ...OPERADO, id: { in: ids } },
       select: { id: true, nombre: true },
     });
   }
 
-  /** Para el mapa: los que no están cerrados, con su entidad. */
-  publicos() {
+  /**
+   * Para el mapa: los operados que no están cerrados, con su entidad, y si se piden, los
+   * referenciados que el Administrador no ocultó, cerrados incluidos (la lista los muestra).
+   */
+  publicos(tipos: TipoAcopio[] = ['OPERADO']) {
+    const condiciones: Prisma.AcopioWhereInput[] = [];
+    if (tipos.includes('OPERADO'))
+      condiciones.push({ ...OPERADO, estado: { in: ['ACTIVO', 'PAUSADO'] } });
+    if (tipos.includes('REFERENCIADO'))
+      condiciones.push({ tipo: 'REFERENCIADO', oculto_por_admin: false });
     return this.prisma.acopio.findMany({
-      where: { estado: { in: ['ACTIVO', 'PAUSADO'] } },
+      where: { OR: condiciones },
       include: conEntidad,
       orderBy: { nombre: 'asc' },
     });
@@ -51,7 +65,7 @@ export class AcopioDao {
   /** Todos (`ids` nulo) o los pedidos, cerrados incluidos. */
   paraGestion(ids: string[] | null) {
     return this.prisma.acopio.findMany({
-      where: ids === null ? {} : { id: { in: ids } },
+      where: ids === null ? OPERADO : { ...OPERADO, id: { in: ids } },
       include: conEntidad,
       orderBy: { nombre: 'asc' },
     });
@@ -59,7 +73,10 @@ export class AcopioDao {
 
   /** Acopios cuyo nombre cumple el filtro, para el buscador de ubicaciones. */
   buscar(filtro: Prisma.AcopioWhereInput) {
-    return this.prisma.acopio.findMany({ where: filtro, orderBy: { nombre: 'asc' } });
+    return this.prisma.acopio.findMany({
+      where: { ...filtro, ...OPERADO },
+      orderBy: { nombre: 'asc' },
+    });
   }
 
   crear(datos: Prisma.AcopioUncheckedCreateInput, bd: ClienteBd) {
@@ -76,6 +93,6 @@ export class AcopioDao {
   }
 
   estado(id: string, bd: ClienteBd = this.prisma) {
-    return bd.acopio.findUnique({ where: { id }, select: { estado: true } });
+    return bd.acopio.findUnique({ where: { id }, select: { estado: true, tipo: true } });
   }
 }
