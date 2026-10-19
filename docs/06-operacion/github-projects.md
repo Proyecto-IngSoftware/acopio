@@ -3,7 +3,7 @@ title: "GitHub — organización y Project"
 type: operacion
 tags: [operacion]
 estado: borrador
-actualizado: 2026-10-07
+actualizado: 2026-10-19
 ---
 
 # GitHub — organización y Project
@@ -114,7 +114,7 @@ Progress · Review · Done**, que son las opciones del campo «Status».
 | Milestones «Semana N · hasta el …» | Fecha máxima de cada issue, según el [cronograma](../05-planes/cronograma.md) |
 | [View 1](https://github.com/orgs/Proyecto-IngSoftware/projects/1/views/1) | Tabla con todo |
 | [Sprint 1](https://github.com/orgs/Proyecto-IngSoftware/projects/1/views/2) | Board por Status, filtro `sprint:"Sprint 1" is:draft`: solo las historias del Sprint 1. Es la vista de la captura del Avance 4 |
-| [Sprint 2](https://github.com/orgs/Proyecto-IngSoftware/projects/1/views/3) | Board por Status, filtro `sprint:"Sprint 2"`: historias e issues del Sprint 2 |
+| [Sprint 2](https://github.com/orgs/Proyecto-IngSoftware/projects/1/views/3) | Board por Status, filtro `sprint:"Sprint 2"`: historias e issues del Sprint 2. Con `?filterQuery=sprint%3A%22Sprint+2%22+is%3Adraft` muestra solo las historias, como la captura del Avance 4 |
 
 Las historias de usuario son draft issues del Project, una por HU, con su sprint y su
 estado. Las vistas se pueden crear desde la web o con la API REST
