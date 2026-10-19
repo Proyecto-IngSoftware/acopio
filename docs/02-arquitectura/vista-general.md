@@ -57,7 +57,7 @@ flowchart TB
         Web["web<br/>nginx + build de Vite"]
 
         subgraph API["api · NestJS · monolito modular"]
-            Dominio["Módulos de dominio<br/>identidad · catalogo · acopios · inventario · comprobantes · motor · turnos<br/>pendiente: importacion"]
+            Dominio["Módulos de dominio<br/>identidad · catalogo · acopios · inventario · comprobantes · motor · turnos · importacion"]
             Transversales["Módulos transversales<br/>auditoria · notificaciones · almacenamiento · salud"]
             Tareas["Tareas programadas<br/>@nestjs/schedule"]
         end
@@ -146,14 +146,17 @@ identidad      ← todos           (autorización)
 auditoria      ← todos           (registro)
 notificaciones ← identidad, acopios, comprobantes, turnos
 almacenamiento ← acopios, comprobantes, motor
-catalogo       ← inventario, comprobantes, motor
+catalogo       ← inventario, comprobantes, motor, importacion
 acopios        ← inventario, comprobantes, motor, turnos, importacion
-inventario     ← comprobantes, motor
+inventario     ← comprobantes, motor, importacion
+turnos         ← importacion
 comprobantes   ← motor           (solo lectura, para trazabilidad)
 ```
 
 `notificaciones` y `almacenamiento` no dependen de ningún módulo de dominio: son
-hojas del grafo, y por eso no pueden crear ciclos.
+hojas del grafo, y por eso no pueden crear ciclos. `importacion` está en la otra punta: escribe
+en `acopios`, `catalogo`, `inventario` y `turnos` con sus servicios, y nadie la importa
+(pieza E, 2026-10-18).
 
 **2026-10-09.** `comprobantes` puede importar `catalogo`: lee categorías y códigos de
 barras por sus DAO ([ADR-0019](adr/ADR-0019-dao-sobre-prisma.md)).
