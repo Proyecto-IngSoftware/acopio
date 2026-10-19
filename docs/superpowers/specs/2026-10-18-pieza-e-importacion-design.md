@@ -18,6 +18,7 @@ RF-RED-002 y RF-RED-003 (acopio referenciado en el mapa y en la ficha), criterio
 [modelo-datos.md](../../02-arquitectura/modelo-datos.md) (dos clases de acopio)
 **Issue:** [#49](https://github.com/Proyecto-IngSoftware/acopio/issues/49), filas 8a a 8e del
 [plan de acción](../../05-planes/plan-de-accion.md), con despliegue el miércoles 21 de octubre
+**Plan:** [2026-10-18-pieza-e.md](../../05-planes/2026-10-18-pieza-e.md)
 
 ---
 
