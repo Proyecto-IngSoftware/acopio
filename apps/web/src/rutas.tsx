@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Route, Routes } from 'react-router';
+import { Navigate, Route, Routes } from 'react-router';
 import { MarcoAcceso } from './portal/MarcoAcceso';
 import { RequiereDonador } from './donador/RequiereDonador';
 import { RequiereRol } from './consola/RequiereRol';
@@ -111,9 +111,6 @@ const Preparar = lazy(() => import('./donador/Preparar').then((m) => ({ default:
 const Seguimiento = lazy(() =>
   import('./portal/Seguimiento').then((m) => ({ default: m.Seguimiento })),
 );
-const Plataformas = lazy(() =>
-  import('./portal/plataformas/Plataformas').then((m) => ({ default: m.Plataformas })),
-);
 const Privacidad = lazy(() =>
   import('./portal/Privacidad').then((m) => ({ default: m.Privacidad })),
 );
@@ -181,7 +178,7 @@ export function Rutas() {
         <Route path="seguimiento" element={<Seguimiento />} />
         <Route path="seguimiento/:folio" element={<Seguimiento />} />
         <Route path="privacidad" element={<Privacidad />} />
-        <Route path="plataformas" element={<Plataformas />} />
+        <Route path="plataformas" element={<Navigate to="/causas#plataformas" replace />} />
         <Route
           path="consola/bitacora"
           element={

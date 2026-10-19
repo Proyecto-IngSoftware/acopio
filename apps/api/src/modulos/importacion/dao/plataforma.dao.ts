@@ -38,6 +38,10 @@ export class PlataformaDao {
     return bd.plataforma.create({ data: datos });
   }
 
+  porId(id: string) {
+    return this.prisma.plataforma.findUnique({ where: { id } });
+  }
+
   activas() {
     return this.prisma.plataforma.findMany({
       where: { activa: true },

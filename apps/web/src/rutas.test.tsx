@@ -271,3 +271,10 @@ describe('margen lateral de la consola', () => {
     expect(margenes).toHaveLength(1);
   });
 });
+
+it('/plataformas lleva a la sección de otras plataformas en Causas', async () => {
+  responderSegun({ 'GET /api/causas': [], 'GET /api/publico/plataformas': [] });
+  render(envolver(<Rutas />, '/plataformas'));
+  expect(await screen.findByRole('heading', { level: 1, name: 'Causas' })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Causas' })).toHaveAttribute('aria-current', 'page');
+});

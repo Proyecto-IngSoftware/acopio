@@ -3,7 +3,7 @@ title: "P3 · Directorio de causas · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portal, causas]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-19
 ---
 
 # P3 · Directorio de causas · diseño en Stitch
@@ -52,6 +52,22 @@ Joseph las tomó al aprobar, el 2026-10-17. Quedaron en
   secciones. Las archivadas conservan su sello y su fecha, y dicen cuándo cerraron.
 - Mientras ninguna entidad esté verificada, el directorio muestra la vista sin causas, con la
   tarjeta de personas desaparecidas en «Todas».
+
+## Otras plataformas e ilustraciones (2026-10-19)
+
+Maqueta [maqueta-plataformas-y-mapa.html](maqueta-plataformas-y-mapa.html)
+(<https://claude.ai/artifact/78TAzib9qjFjXkRgLJSSz3>), aprobada por Joseph el 2026-10-19. La pantalla
+construida es [construida-plataformas.png](construida-plataformas.png).
+
+- Las 9 plataformas de RedAcopio van en una sección al final de «Todas», después de Personas
+  desaparecidas y antes de «Causas atendidas». No llevan sello y el aviso dice que Acopio no las
+  verifica. Con un filtro de categoría la sección no se muestra. `/plataformas` lleva a
+  `/causas#plataformas`; ya no hay fila en «Más» ni enlace al pie de la portada.
+- Cada plataforma lleva una foto real de su sitio: la imagen de vista previa (`og:image`) o una
+  captura de la portada, guardadas en `apps/api/src/seed/imagenes-plataformas/`. Joseph pidió
+  fotos y no ilustraciones. Las que no tienen foto se ven con el ícono de su categoría sobre menta.
+- Las causas de la demo pasan a la ilustración de la maqueta: el ícono de Material Symbols de su
+  categoría sobre una baldosa blanca y un fondo de la paleta.
 
 ## Diferencias
 

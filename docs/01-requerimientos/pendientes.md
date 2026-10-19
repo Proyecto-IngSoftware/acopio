@@ -1051,6 +1051,17 @@ antes de fusionar. Quedan estos menores:
 uno necesita su prueba.
 **Estado:** ABIERTO. Antes de prender la lectura programada (`IMPORTACION_PROGRAMADA`).
 
+
+
+### P-078 · Fotos de las plataformas sin sitio disponible
+**Fecha:** 2026-10-19 · **Propuesto por:** Claude, al bajar las fotos de las plataformas
+**Qué:** Donando Talento y Colombia Te Amo no respondieron, Mapa de Emergencia mostraba «Page not
+found» y Puntos en Google Maps es un mapa de Google. Las cuatro se ven en Causas con el ícono de su
+categoría.
+**Por qué:** Joseph pidió una foto real por plataforma.
+**Estado:** ABIERTO. Si los sitios vuelven, guardar la foto como `<dominio>.jpg` en
+`apps/api/src/seed/imagenes-plataformas/` y anotarla en su `LEEME.md`.
+
 ---
 
 ## Resueltos

@@ -7,22 +7,26 @@ import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import type { AcopioPublico, ZonaPublica } from '../../api/red';
 import { ATRIBUCION, CENTRO_INICIAL, MOSAICOS } from '../../componentes/mapa/MapaLeaflet';
 import { claveEncuadre, leerClave } from './encuadre';
-import { etiquetaMarcador, htmlMarcador } from './marcador';
+import {
+  etiquetaMarcador,
+  htmlGrupo,
+  htmlMarcador,
+  htmlZona,
+  tipoDeGrupo,
+  type TipoGrupo,
+} from './marcador';
 
+// La píldora mide hasta unos 140 px; el ancla es su punta de abajo, sobre el punto
 const marcador = (a: AcopioPublico, elegido: boolean) =>
   L.divIcon({
     className: '',
     html: htmlMarcador(a, elegido),
-    iconSize: [36, 36],
-    iconAnchor: [18, 18],
+    iconSize: [140, 36],
+    iconAnchor: [70, 36],
   });
 
-const grupo = (c: L.MarkerCluster) =>
-  L.divIcon({
-    className: '',
-    html: `<div class="flex size-10 items-center justify-center rounded-full border-2 border-surface-container-lowest bg-primary text-on-primary text-label-md font-bold shadow-md">${c.getChildCount()}</div>`,
-    iconSize: [40, 40],
-  });
+const grupo = (tipo: TipoGrupo) => (c: L.MarkerCluster) =>
+  L.divIcon({ className: '', html: htmlGrupo(tipo, c.getChildCount()), iconSize: [40, 40] });
 
 function Marcadores({
   acopios,
@@ -35,7 +39,17 @@ function Marcadores({
 }) {
   const mapa = useMap();
   useEffect(() => {
-    const capa = L.markerClusterGroup({ iconCreateFunction: grupo, showCoverageOnHover: false });
+    // Una capa de agrupación por tipo: un grupo nunca mezcla acopios con puntos de RedAcopio
+    const capas = {
+      acopio: L.markerClusterGroup({
+        iconCreateFunction: grupo('acopio'),
+        showCoverageOnHover: false,
+      }),
+      referenciado: L.markerClusterGroup({
+        iconCreateFunction: grupo('referenciado'),
+        showCoverageOnHover: false,
+      }),
+    };
     for (const a of acopios) {
       L.marker([a.lat, a.lng], {
         icon: marcador(a, a.id === elegido),
@@ -44,11 +58,13 @@ function Marcadores({
         keyboard: true,
       })
         .on('click', () => alElegir(a.id))
-        .addTo(capa);
+        .addTo(capas[tipoDeGrupo(a)]);
     }
-    mapa.addLayer(capa);
+    mapa.addLayer(capas.acopio);
+    mapa.addLayer(capas.referenciado);
     return () => {
-      mapa.removeLayer(capa);
+      mapa.removeLayer(capas.acopio);
+      mapa.removeLayer(capas.referenciado);
     };
   }, [mapa, acopios, elegido, alElegir]);
   return null;
@@ -56,12 +72,12 @@ function Marcadores({
 
 // La zona: el círculo de su radio y un pin para tocarla. Los colores van en estilos.css
 // (.zona-necesidad), con tokens de la marca y no con los del inventario (ADR-0006)
-const pinZona = (elegida: boolean) =>
+const pinZona = (faltantes: number, elegida: boolean) =>
   L.divIcon({
     className: '',
-    html: `<div class="flex size-8 items-center justify-center rounded-full border-2 border-primary-container bg-surface-container-lowest text-primary-container shadow-md ${elegida ? 'ring-4 ring-primary' : ''}"><span aria-hidden="true" class="material-symbols-outlined text-[18px]">campaign</span></div>`,
-    iconSize: [32, 32],
-    iconAnchor: [16, 16],
+    html: htmlZona(faltantes, elegida),
+    iconSize: [140, 36],
+    iconAnchor: [70, 36],
   });
 
 function Zonas({
@@ -85,7 +101,7 @@ function Zonas({
         .on('click', () => alElegir(z.zonaId))
         .addTo(capa);
       L.marker(centro, {
-        icon: pinZona(z.zonaId === elegida),
+        icon: pinZona(z.necesidades.length, z.zonaId === elegida),
         title: 'Zona con necesidad',
         alt: 'Zona con necesidad',
         keyboard: true,

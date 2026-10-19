@@ -348,11 +348,8 @@ it('el Auditor no ve Turnos', async () => {
   expect(screen.queryByRole('link', { name: /Turnos/ })).not.toBeInTheDocument();
 });
 
-it('«Otras plataformas» lleva a la lista de plataformas', async () => {
+it('«Más» ya no lista las otras plataformas: viven al final de Causas', async () => {
   pantalla();
   const info = await screen.findByRole('region', { name: 'Información y transparencia' });
-  expect(within(info).getByRole('link', { name: /Otras plataformas/ })).toHaveAttribute(
-    'href',
-    '/plataformas',
-  );
+  expect(within(info).queryByRole('link', { name: /Otras plataformas/ })).not.toBeInTheDocument();
 });

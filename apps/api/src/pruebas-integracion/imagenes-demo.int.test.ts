@@ -1,7 +1,8 @@
 import { ADMIN, crearAppPrueba, type AppPrueba } from '../../test/app-prueba';
 import { AlmacenamientoService } from '../modulos/almacenamiento/almacenamiento.service';
 import { sembrarCausasDemo } from '../seed/demo';
-import { sembrarImagenesDemo } from '../seed/imagenes-demo';
+import { sembrarImagenesDemo, sembrarImagenesPlataformas } from '../seed/imagenes-demo';
+import { unico } from '../../test/app-prueba';
 
 /** Las causas de la demo con imagen y sus entidades con logotipo (P3 y P4 sin recuadros vacíos). */
 describe('imágenes de la demo', () => {
@@ -37,5 +38,46 @@ describe('imágenes de la demo', () => {
     const antes = (await demo()).map((c) => [c.imagen_key, c.entidad.logo_key]);
     await sembrarImagenesDemo(a.prisma, a.app.get(AlmacenamientoService));
     expect((await demo()).map((c) => [c.imagen_key, c.entidad.logo_key])).toEqual(antes);
+  });
+
+  it('una causa de la demo con la ilustración vieja pasa a la nueva', async () => {
+    const [c] = await demo();
+    await a.prisma.causa.update({
+      where: { id: c!.id },
+      data: { imagen_key: `causas/${c!.id}/vieja.webp` },
+    });
+    await sembrarImagenesDemo(a.prisma, a.app.get(AlmacenamientoService));
+    const despues = await a.prisma.causa.findUniqueOrThrow({ where: { id: c!.id } });
+    expect(despues.imagen_key).toContain('/ilustracion-v2/');
+  });
+
+  it('cada plataforma con imagen guardada para su dominio la recibe, una sola vez', async () => {
+    const conFoto = await a.prisma.plataforma.create({
+      data: {
+        nombre: unico('Reconstruyo '),
+        categoria: 'Donaciones',
+        descripcion: 'D',
+        url: 'https://reconstruyocolombia.com/',
+      },
+    });
+    const sinFoto = await a.prisma.plataforma.create({
+      data: {
+        nombre: unico('Sin foto '),
+        categoria: 'Mapa',
+        descripcion: 'D',
+        url: 'https://no-hay-foto.test/',
+      },
+    });
+    await sembrarImagenesPlataformas(a.prisma, a.app.get(AlmacenamientoService));
+    const clave = (await a.prisma.plataforma.findUniqueOrThrow({ where: { id: conFoto.id } }))
+      .imagen_key;
+    expect(clave).toMatch(/^plataformas\//);
+    expect(
+      (await a.prisma.plataforma.findUniqueOrThrow({ where: { id: sinFoto.id } })).imagen_key,
+    ).toBeNull();
+    await sembrarImagenesPlataformas(a.prisma, a.app.get(AlmacenamientoService));
+    expect(
+      (await a.prisma.plataforma.findUniqueOrThrow({ where: { id: conFoto.id } })).imagen_key,
+    ).toBe(clave);
   });
 });

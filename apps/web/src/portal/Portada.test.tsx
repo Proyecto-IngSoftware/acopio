@@ -189,11 +189,9 @@ describe('sin emergencias vigentes', () => {
   });
 });
 
-it('el pie lleva a las otras plataformas que ayudan', async () => {
+it('la portada ya no enlaza las otras plataformas en su pie', async () => {
   responder(DOS);
   render(envolver(<Portada />));
-  expect(await screen.findByRole('link', { name: /Otras plataformas que ayudan/ })).toHaveAttribute(
-    'href',
-    '/plataformas',
-  );
+  await screen.findByText(TITULO);
+  expect(screen.queryByRole('link', { name: /Otras plataformas/ })).not.toBeInTheDocument();
 });

@@ -1,8 +1,7 @@
-import { Link, useSearchParams } from 'react-router';
+import { useSearchParams } from 'react-router';
 import { useEmergenciasVigentes } from '../api/emergencias';
 import { Esqueleto } from '../componentes/Esqueleto';
 import { EstadoError } from '../componentes/EstadoError';
-import { Icono } from '../componentes/Icono';
 import { AvisoSinDinero } from './bloques/AvisoSinDinero';
 import { BalanceRecepcion } from './bloques/BalanceRecepcion';
 import { ComoApoyar } from './bloques/ComoApoyar';
@@ -70,13 +69,6 @@ export function Portada() {
           </>
         )}
         <AvisoSinDinero />
-        <Link
-          to="/plataformas"
-          className="flex min-h-[48px] items-center gap-space-xs self-center text-label-md text-primary-container"
-        >
-          <Icono nombre="hub" className="text-[20px]" />
-          Otras plataformas que ayudan
-        </Link>
       </div>
     </div>
   );
