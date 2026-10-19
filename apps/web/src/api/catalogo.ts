@@ -24,6 +24,19 @@ export const GRUPOS: Record<Grupo, string> = {
   ANIMALES: 'Animales',
   HERRAMIENTAS: 'Herramientas',
 };
+/** Ícono de cada grupo, tomado de lo que Stitch usó para esas categorías (ADR-0020). */
+export const ICONO_GRUPO: Record<Grupo, string> = {
+  ALIMENTOS: 'nutrition',
+  AGUA_Y_BEBIDAS: 'water_drop',
+  ASEO_PERSONAL: 'soap',
+  ASEO_DEL_HOGAR: 'cleaning_services',
+  SALUD: 'medical_services',
+  ROPA_Y_ABRIGO: 'checkroom',
+  BEBE: 'child_care',
+  ADULTO_MAYOR: 'elderly',
+  ANIMALES: 'pets',
+  HERRAMIENTAS: 'handyman',
+};
 export const UNIDADES: Record<Unidad, string> = { KILOGRAMO: 'kg', LITRO: 'L', UNIDAD: 'unidad' };
 
 /** «0,15 kg por persona al día» */

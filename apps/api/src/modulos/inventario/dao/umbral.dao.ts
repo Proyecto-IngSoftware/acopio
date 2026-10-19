@@ -15,6 +15,14 @@ export class UmbralDao {
     return bd.umbral.findMany({ where: { acopio_id: acopioId } });
   }
 
+  /** Los umbrales de un acopio, con el nombre de la categoría. */
+  delAcopioConCategoria(acopioId: string, bd: ClienteBd = this.prisma) {
+    return bd.umbral.findMany({
+      where: { acopio_id: acopioId },
+      include: { categoria: { select: { nombre: true } } },
+    });
+  }
+
   /** Los umbrales de los acopios que no están cerrados, con el nombre de la categoría. */
   deAcopiosAbiertos(bd: ClienteBd = this.prisma) {
     return bd.umbral.findMany({

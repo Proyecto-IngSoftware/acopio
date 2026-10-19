@@ -3292,6 +3292,38 @@
         ]
       }
     },
+    "/api/publico/acopios/{id}/urgente": {
+      "get": {
+        "operationId": "BalanceController_urgente",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UrgenteDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "summary": "Lo que urge en un acopio: las categorías bajo el mínimo, sin cantidades. No exige sesión",
+        "tags": [
+          "inventario"
+        ]
+      }
+    },
     "/api/acopios/{id}/no-recibir": {
       "get": {
         "operationId": "NoRecibirController_listar",
@@ -10064,6 +10096,34 @@
         "required": [
           "faltan",
           "noTraigan"
+        ]
+      },
+      "UrgenteDto": {
+        "type": "object",
+        "properties": {
+          "categorias": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "categoria": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "categoriaId",
+                "categoria"
+              ]
+            }
+          }
+        },
+        "required": [
+          "categorias"
         ]
       },
       "NoRecibirDto": {

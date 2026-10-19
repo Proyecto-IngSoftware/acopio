@@ -40,6 +40,8 @@ const ACOPIOS = [
     entidad: 0,
     nombre: 'Acopio Chapinero (prueba)',
     direccion: 'Carrera 13 # 60-20',
+    telefono: '601 555 0101',
+    indicaciones: 'Entrada por la puerta lateral de la calle 60. Toca el timbre del local 2.',
     lat: 4.6486,
     lng: -74.0628,
   },
@@ -48,6 +50,8 @@ const ACOPIOS = [
     entidad: 0,
     nombre: 'Acopio Kennedy (prueba)',
     direccion: 'Avenida 1 de Mayo # 72-10',
+    telefono: '601 555 0102',
+    indicaciones: 'Recibimos en el parqueadero del salón comunal, al fondo a la derecha.',
     lat: 4.6097,
     lng: -74.1498,
   },
@@ -56,6 +60,8 @@ const ACOPIOS = [
     entidad: 1,
     nombre: 'Acopio Suba (prueba)',
     direccion: 'Calle 145 # 91-19',
+    telefono: '601 555 0103',
+    indicaciones: 'Bodega detrás de la parroquia; si está cerrada, llama antes de llegar.',
     lat: 4.7411,
     lng: -74.0835,
   },
@@ -64,6 +70,8 @@ const ACOPIOS = [
     entidad: 1,
     nombre: 'Acopio Usme (prueba)',
     direccion: 'Carrera 14 # 76-50 sur',
+    telefono: '601 555 0104',
+    indicaciones: 'Portón verde junto a la tienda. Hay rampa para descargar.',
     lat: 4.4734,
     lng: -74.1263,
   },
@@ -75,10 +83,13 @@ export async function sembrarDemo(prisma: PrismaService) {
     await prisma.entidad.upsert({ where: { id: e.id }, update: {}, create: e });
   }
   for (const x of ACOPIOS) {
+    // Teléfono e indicaciones también en una demo ya sembrada: son los que llenan «Cómo entrar»
+    const contacto = { telefono: x.telefono, indicaciones_acceso: x.indicaciones };
     await prisma.acopio.upsert({
       where: { id: x.id },
-      update: {},
+      update: contacto,
       create: {
+        ...contacto,
         id: x.id,
         entidad_id: ENTIDADES[x.entidad]!.id,
         nombre: x.nombre,

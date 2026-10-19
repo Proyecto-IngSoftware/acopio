@@ -81,10 +81,19 @@ export function Entidades() {
                   <span className="text-body-sm text-on-surface-variant">
                     {[e.tipo, e.nit && `NIT ${e.nit}`].filter(Boolean).join(' · ')}
                   </span>
-                  <span className="flex flex-wrap items-center gap-space-xs text-body-sm text-on-surface-variant">
-                    {n === 0 ? 'Sin acopios' : n === 1 ? '1 acopio' : `${n} acopios`}
-                    {!!e.causasActivas &&
-                      ` · ${e.causasActivas === 1 ? '1 causa activa' : `${e.causasActivas} causas activas`}`}
+                  <span className="flex flex-wrap items-center gap-x-space-sm gap-y-1 text-body-sm text-on-surface-variant">
+                    <span className="flex items-center gap-1">
+                      <Icono nombre="warehouse" className="text-[18px]" />
+                      {n === 0 ? 'Sin acopios' : n === 1 ? '1 acopio' : `${n} acopios`}
+                    </span>
+                    {!!e.causasActivas && (
+                      <span className="flex items-center gap-1">
+                        <Icono nombre="favorite" className="text-[18px]" />
+                        {e.causasActivas === 1
+                          ? '1 causa activa'
+                          : `${e.causasActivas} causas activas`}
+                      </span>
+                    )}
                   </span>
                   {e.verificadaEn ? (
                     <Sello verificadaEn={e.verificadaEn} />

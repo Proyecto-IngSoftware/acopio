@@ -132,6 +132,7 @@ export function Comprobantes() {
                   className="flex flex-col gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md"
                 >
                   <span className="flex items-center gap-space-sm">
+                    <Icono nombre="receipt" className="text-[22px] text-primary-container" />
                     <span className="font-mono text-body-lg font-bold text-on-surface">
                       {c.folio}
                     </span>

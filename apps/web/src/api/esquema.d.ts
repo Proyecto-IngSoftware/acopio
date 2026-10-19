@@ -890,6 +890,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/publico/acopios/{id}/urgente": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Lo que urge en un acopio: las categorías bajo el mínimo, sin cantidades. No exige sesión */
+        get: operations["BalanceController_urgente"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/acopios/{id}/no-recibir": {
         parameters: {
             query?: never;
@@ -2716,6 +2733,13 @@ export interface components {
                 categoria: string;
                 /** @description Cuántos acopios abiertos están en ese caso */
                 acopios: number;
+            }[];
+        };
+        UrgenteDto: {
+            categorias: {
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
             }[];
         };
         NoRecibirDto: {
@@ -5915,6 +5939,27 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BalanceDto"];
+                };
+            };
+        };
+    };
+    BalanceController_urgente: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["UrgenteDto"];
                 };
             };
         };

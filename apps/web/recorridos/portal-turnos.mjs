@@ -82,7 +82,8 @@ await paso('P7 lista las jornadas y marca la llena', async () => {
   await p.goto(`${WEB}/voluntariado`);
   await p.getByRole('heading', { level: 1, name: 'Voluntariado' }).waitFor();
   const llena = p.getByRole('link', { name: /Clasificar ropa donada \(demo\)/ });
-  await llena.getByText('Llena').waitFor();
+  // Sembrada hace días, la llena puede quedar a menos de 12 horas: «Reservas cerradas» le gana a «Llena»
+  await llena.getByText(/^(Llena|Reservas cerradas)$/).waitFor();
   if (await p.getByText(/personas presentes/i).count()) throw new Error('dice personas presentes');
   await revisar(p, 'P7', 'P07-voluntariado/construida.png');
 });

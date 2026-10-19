@@ -7,7 +7,7 @@ export function CabeceraPublica() {
     <CabeceraBase>
       <Link
         to="/entrar"
-        className="flex min-h-[44px] items-center justify-center rounded-xl bg-surface-container-high px-space-md py-space-xs text-label-md text-primary"
+        className="flex min-h-[44px] items-center justify-center rounded-xl bg-primary-fixed px-space-md py-space-xs text-label-md text-primary"
       >
         Entrar
       </Link>

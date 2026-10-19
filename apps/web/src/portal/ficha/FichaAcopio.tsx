@@ -1,6 +1,7 @@
 import { diaEnBogota, distanciaKm } from '@acopio/shared';
 import type { ReactNode } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
+import { useUrgente } from '../../api/inventario';
 import { useAcopio, useNoRecibir, type AcopioPublico } from '../../api/red';
 import { useJornadas } from '../../api/turnos';
 import { DIAS_SEMANA, NOMBRE_DIA } from '../../componentes/EditorHorario';
@@ -173,7 +174,7 @@ function Contenido({ acopio, cerca }: { acopio: AcopioPublico; cerca: string | n
         </Tarjeta>
       )}
 
-      <Pronto titulo="Lo que urge" icono="inventory_2" texto="Llega pronto con el inventario." />
+      <LoQueUrge acopioId={acopio.id} />
       <Voluntariado acopioId={acopio.id} />
 
       <a
@@ -191,14 +192,42 @@ function Contenido({ acopio, cerca }: { acopio: AcopioPublico; cerca: string | n
   );
 }
 
-function Pronto({ titulo, icono, texto }: { titulo: string; icono: string; texto: string }) {
+/** «Lo que urge» (RF-RED-003): lo que está bajo el mínimo, en positivo y sin cantidades. */
+function LoQueUrge({ acopioId }: { acopioId: string }) {
+  const { data, error } = useUrgente(acopioId);
+  const categorias = data?.categorias ?? [];
   return (
-    <section className="flex items-start gap-space-sm rounded-xl border border-outline-variant bg-surface-container-low p-space-md">
-      <Icono nombre={icono} className="text-[22px] text-on-surface-variant" />
-      <div>
-        <h2 className="text-label-md text-on-surface">{titulo}</h2>
-        <p className="text-body-sm text-on-surface-variant">{texto}</p>
-      </div>
+    <section
+      aria-label="Lo que urge"
+      className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md"
+    >
+      <h2 className="flex items-center gap-space-xs text-label-md text-on-surface">
+        <Icono nombre="inventory_2" className="text-[22px] text-primary-container" />
+        Lo que urge
+      </h2>
+      {error && !data && (
+        <p className="text-body-sm text-on-surface-variant">No se pudo cargar lo que urge</p>
+      )}
+      {data && categorias.length === 0 && (
+        <p className="text-body-sm text-on-surface-variant">
+          Por ahora no le falta nada por debajo de su mínimo
+        </p>
+      )}
+      {categorias.length > 0 && (
+        <>
+          <p className="text-body-sm text-on-surface-variant">Necesitamos:</p>
+          <ul className="flex flex-wrap gap-space-xs">
+            {categorias.map((c) => (
+              <li
+                key={c.categoriaId}
+                className="rounded-full bg-error-container px-space-sm py-1 text-label-md text-on-error-container"
+              >
+                {c.categoria}
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
     </section>
   );
 }

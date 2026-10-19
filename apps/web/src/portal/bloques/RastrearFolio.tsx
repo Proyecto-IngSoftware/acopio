@@ -14,7 +14,7 @@ export function RastrearFolio() {
       <div className="flex items-center gap-space-xs">
         <Icono nombre="quick_reference" className="text-[20px] text-primary" />
         <h2 id="rastrear-folio" className="text-label-md font-bold text-on-surface">
-          Rastrear Folio de Donación
+          Rastrear folio de donación
         </h2>
       </div>
       <form

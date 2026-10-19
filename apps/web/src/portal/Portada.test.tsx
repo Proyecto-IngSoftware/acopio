@@ -4,6 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { vi } from 'vitest';
 import type { Emergencia } from '../api/emergencias';
 import { violacionesGraves } from '../pruebas/accesibilidad';
+import { jornadaDe } from '../pruebas/datos-turnos';
 import { envolver, responderError, responderSegun } from '../pruebas/utilidades';
 import { Portada } from './Portada';
 
@@ -23,7 +24,7 @@ const DOS = [
   emergencia({ id: 'a', nombre: 'Sismo en Caldas' }),
   emergencia({ id: 'b', nombre: 'Inundación en La Mojana', estado: 'EN_SEGUIMIENTO' }),
 ];
-const FIJOS = ['¿Cómo apoyar?', 'Canal Oficial Sin Intermediación Financiera'];
+const FIJOS = ['¿Cómo apoyar?', 'Canal oficial sin intermediación financiera'];
 const TITULO = 'Revisa qué hace falta antes de donar.';
 const BALANCE_VACIO = { faltan: [], noTraigan: [] };
 /** La portada pide las emergencias y el balance; cada uno con su respuesta. */
@@ -31,6 +32,7 @@ const responder = (emergencias: unknown) =>
   responderSegun({
     'GET /api/emergencias': emergencias,
     'GET /api/publico/balance': BALANCE_VACIO,
+    'GET /api/turnos/jornadas': [],
   });
 
 describe('con emergencias', () => {
@@ -75,14 +77,29 @@ describe('con emergencias', () => {
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
-  it('los bloques sin backend explican por qué están vacíos y no inventan datos', async () => {
+  it('sin jornadas ni reportes, sus bloques lo dicen y no inventan datos', async () => {
     responder(DOS);
     render(envolver(<Portada />));
     await screen.findByRole('heading', { level: 1 });
     for (const titulo of [/Jornadas de voluntariado/i, /Reporte en terreno/i]) {
       const bloque = screen.getByRole('region', { name: titulo });
-      expect(within(bloque).getByText(/Todavía no/)).toBeInTheDocument();
+      expect(await within(bloque).findByText(/Todavía no/)).toBeInTheDocument();
     }
+  });
+
+  it('las jornadas de voluntariado salen de la API, con el enlace a todas', async () => {
+    responderSegun({
+      'GET /api/emergencias': DOS,
+      'GET /api/publico/balance': BALANCE_VACIO,
+      'GET /api/turnos/jornadas': [jornadaDe({ titulo: 'Armar mercados' })],
+    });
+    render(envolver(<Portada />));
+    const bloque = await screen.findByRole('region', { name: /Jornadas de voluntariado/i });
+    expect(await within(bloque).findByText('Armar mercados')).toBeInTheDocument();
+    expect(within(bloque).getByRole('link', { name: /Ver todas las jornadas/ })).toHaveAttribute(
+      'href',
+      '/voluntariado',
+    );
   });
 
   it('el balance sin datos lo dice en cada pestaña', async () => {
