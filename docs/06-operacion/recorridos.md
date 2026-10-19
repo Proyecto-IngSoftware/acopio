@@ -194,6 +194,9 @@ entra después; hay que esperar un minuto entre uno y otro.
 
 ## Últimos resultados
 
+**2026-10-19, contra el servidor de pruebas** (después de #140 y #141, `CAPTURAS=no`):
+`referenciados.mjs` 6 de 6.
+
 **2026-10-19, en local, con la pieza E** (rama `pieza-e`, API reconstruida con
 `servicios:todo`, `CAPTURAS=no` salvo en `referenciados.mjs`):
 

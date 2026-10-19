@@ -71,14 +71,14 @@ backend con los puntos ocultos en el portal, y las pantallas pasan a después de
 | 8b | Maquetas en Stitch: marcador de referenciado en P05, ficha de referenciado en P06 y lista de otras plataformas. Las aprueba Joseph | #49 | 2026-10-19 | ✅ |
 | 8c | Backend: migración, importador con la copia guardada, carga por CSV y sus pruebas | #49 | 2026-10-20 | ✅ |
 | 8d | Pantallas P05, P06 y otras plataformas | #49 | 2026-10-21 | ✅ |
-| 8e | Despliegue en Dokploy con los puntos de RedAcopio (85 con coordenadas) y recorridos contra el servidor | #49 | 2026-10-21 | 🟡 |
+| 8e | Despliegue en Dokploy con los puntos de RedAcopio (85 con coordenadas) y recorridos contra el servidor | #49 | 2026-10-21 | ✅ |
 
 ## Sprint 3: del 26 de octubre al 22 de noviembre
 
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
 | 7 | Planning del Sprint 3 | #51 | 2026-10-26 | ⬜ |
-| 8 | Pieza E: pasó a esta semana, filas 8a a 8e. Lo que no alcance antes del 23 vuelve aquí | #49 | 2026-11-15 | 🟡 |
+| 8 | Pieza E: hecha en las filas 8a a 8e. Lo que falta de RF-RED-011 está en P-076 y los menores de la revisión en P-077 | #49 | 2026-11-15 | ✅ |
 | 9 | Pieza D: contenido del home, páginas legales y Open Graph, con su ADR. El balance de la portada (P-073) ya quedó hecho. Joseph la une a la pieza E: el Open Graph de la ficha del acopio, referenciado u operado, sigue a la ficha de la fila 8d | #50 | 2026-11-15 | ⬜ |
 | 10 | Escáner probado con un teléfono y un código real contra el servidor | #40 | 2026-11-15 | ⬜ |
 | 11 | Review y retrospectiva del Sprint 3 | #51 | 2026-11-20 | ⬜ |
@@ -168,3 +168,7 @@ Sprint 3.
   de RedAcopio (tres vienen en 0, 0 y se omiten) y las 9 plataformas de `/herramientas`. Hay
   carga por CSV para ocho formatos y las pantallas P05, P06 y P14. La fila 8e queda en curso
   hasta revisar el servidor. Lo que falta de RF-RED-011 pasa a P-076.
+- 2026-10-19: fila 8e hecha y #49 cerrado. El servidor de pruebas tiene los 85 puntos de
+  RedAcopio y las 9 plataformas, y `referenciados.mjs` pasó 6 de 6 contra él. El primer
+  despliegue no arrancó la versión nueva porque la imagen no traía la copia de RedAcopio; #141
+  lo arregló.
