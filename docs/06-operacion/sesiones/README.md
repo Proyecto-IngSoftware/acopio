@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-10-19 | [2026-10-19-ronda-por-rol](2026-10-19-ronda-por-rol.md) | Ronda de pruebas por rol en el servidor y sus hallazgos |
 | 2026-10-19 | [2026-10-19-capturas-avance-5](2026-10-19-capturas-avance-5.md) | Capturas nuevas del Avance 5 y nombre accesible de los pines del mapa |
 | 2026-10-19 | [2026-10-19-diagrama-y-ensayo](2026-10-19-diagrama-y-ensayo.md) | Diagrama de paquetes con importacion y revisión de la demo en el servidor |
 | 2026-10-19 | [2026-10-19-causas-y-mapa](2026-10-19-causas-y-mapa.md) | Plataformas en Causas con foto y mapa con grupos por tipo |

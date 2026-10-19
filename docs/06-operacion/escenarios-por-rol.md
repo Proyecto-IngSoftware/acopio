@@ -3,7 +3,7 @@ title: "Escenarios de prueba por rol"
 type: guia
 tags: [pruebas, operacion, servidor]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-19
 ---
 
 # Escenarios de prueba por rol
@@ -20,14 +20,17 @@ el número del escenario y una captura.
 Las crea `seed:demo` al arrancar el servidor. Todas usan la contraseña de la demo
 (`DEMO_CONTRASENA`), que Joseph comparte por el chat del equipo y nunca va en el repositorio.
 
-| Rol | Cuenta | Qué tiene asignado |
-|---|---|---|
-| Administrador | `admin@acopio.co` | Todo (contraseña propia, no la de la demo) |
-| Operador | `joseph@acopio.co` | Acopio Chapinero (prueba) |
-| Operador | `brayan@acopio.co` | Acopio Kennedy (prueba) |
-| Auditor | `michael@acopio.co` | Acopio Chapinero (prueba) |
-| Receptor | `alejandra@acopio.co` | Barrio San Agustín (prueba), en Mocoa |
-| Donador | `donador1@demo.acopio.local` | Cuenta confirmada |
+La consola se entra con el nombre de usuario, no con el correo. Solo el Donador entra con su
+correo, desde «Entrar» en `/donador`.
+
+| Rol | Usuario | Correo | Qué tiene asignado |
+|---|---|---|---|
+| Administrador | `admin` | `admin@acopio.co` | Todo (contraseña propia, no la de la demo) |
+| Operador | `operador1` | `joseph@acopio.co` | Acopio Chapinero (prueba) |
+| Operador | `operador2` | `brayan@acopio.co` | Acopio Kennedy (prueba) |
+| Auditor | `auditor1` | `michael@acopio.co` | Acopio Chapinero (prueba) |
+| Receptor | `receptor1` | `alejandra@acopio.co` | Barrio San Agustín (prueba), en Mocoa |
+| Donador | | `donador1@demo.acopio.local` | Cuenta confirmada |
 
 Mientras el correo esté apagado (P-055), nadie recibe correos. El registro de un Donador nuevo
 no se prueba de punta a punta (P-056), y los enlaces de invitación se copian desde la consola.
@@ -48,9 +51,11 @@ practicar la recepción.
 
 ## Portal, sin sesión
 
-1. HU-01.1. Entro sin sesión al mapa, filtro por «qué no recibe» y elijo una categoría
-   marcada como «no recibir» en algún acopio. Debería ver ese acopio con el aviso de no traer
-   esa categoría y la antigüedad del dato.
+1. HU-01.1. Entro sin sesión al mapa y en «¿Qué vas a llevar?» elijo una categoría marcada
+   como «no recibir» en algún acopio (en la demo, Azúcar y panela en Chapinero). El mapa
+   debería ocultar ese acopio y decir cuántos ocultó, y la ficha del acopio debería mostrar
+   «No traigan» con esa categoría y la antigüedad del dato. Que lo oculte en vez de mostrarlo
+   con un aviso es una decisión del Bloque 1 (RF-RED-002).
 2. HU-01.3. Niego el permiso de ubicación del navegador y toco «cerca de mí». Debería
    poder buscar por dirección en su lugar.
 3. HU-09.1. Abro el seguimiento con el folio conciliado `ACO-2026-DEMB2`. Debería ver qué
@@ -79,7 +84,7 @@ practicar la recepción.
 11. HU-04.3. Registro la entrada de una categoría que mi acopio tiene en «no recibir».
     Debería advertirme y dejarme guardar igual.
 12. HU-05.1. Abro el inventario. Una categoría por debajo de su mínimo debería decir
-    «Escaso» con ícono y texto, además del color.
+    «Bajo el mínimo» con ícono y texto, además del color.
 13. HU-05.2. En el inventario, una categoría cuyo último movimiento tiene más de 6 horas
     debería verse atenuada y con advertencia. La demo siembra los movimientos al arrancar el
     servidor, así que esto se ve 6 horas después del despliegue en lo que nadie haya tocado.
@@ -141,13 +146,24 @@ desplegados, se saltan.
 
 ## No probar todavía
 
-Estas historias o criterios no están construidos. Si alguien llega a ellos, no es un fallo.
+Si alguien llega a esto, no es un fallo.
 
-- HU-01.2, la ficha de un acopio importado de RedAcopio: el importador es la pieza E del
-  Bloque 1 ([#49](https://github.com/Proyecto-IngSoftware/acopio/issues/49)).
-- HU-02, causas verificadas, y HU-15, verificación de entidades con aviso de seguridad: pieza C del
-  Bloque 1 ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)).
-- HU-03, turnos de voluntariado: Bloque 5
-  ([#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36)).
 - El registro de un Donador nuevo con confirmación por correo, mientras el correo siga
   apagado (P-056).
+
+HU-01.2 (pieza E), HU-02 y HU-15 (pieza C) y HU-03 (Bloque 5) ya están construidas. Sus
+recorridos (`referenciados.mjs`, `portal-causas.mjs`, `consola-causas.mjs`, `portal-turnos.mjs`
+y `consola-turnos.mjs`) pasan contra el servidor; todavía no tienen escenarios en esta guía.
+
+## Resultados de la primera ronda
+
+El 2026-10-19 Joseph hizo la ronda solo, con un script de Playwright a 360 × 640 contra el
+servidor, sin gastar los datos de la demo antes de la sustentación del 23. Pasaron 1 a 6, 9 a 12
+(el 11 sin guardar la entrada), 14, 17, 21 y 24 a 27. El 16 deja abrir la pantalla, aunque la
+API rechaza el cambio (#152), y el 13 falla (#151). El 15 quedó marcado (Sal en Chapinero hasta
+el 20 de octubre) y se revisa ese día. Hallazgos: #150 y #153, arreglados en el PR de la ronda;
+#151, #152 y #154, que es esta guía.
+
+Quedan para el sábado 24, porque gastan datos de la demo: 7 y 8 (Donador), 18 (despachar), 19 y
+20 (conciliar), 22 y 23 (recibir `R-2026-DEMA2` y `R-2026-DEMA3`), 28 (aprobar una sugerencia) y
+29 a 31 (usuarios). El escáner con un teléfono real (#40) depende de un teléfono.
