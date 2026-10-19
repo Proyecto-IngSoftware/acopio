@@ -8,8 +8,9 @@ import { ICONOS } from './iconos-material';
 /**
  * Imágenes de la demo. Cada causa lleva una ilustración de su categoría: el ícono de Material
  * Symbols que usa la app, sobre una baldosa blanca y un fondo claro de la paleta (maqueta
- * P03-causas/maqueta-plataformas-y-mapa.html). Cada entidad lleva un logotipo abstracto. Sin texto
- * (el contenedor puede no tener fuentes) y sin emblemas de las organizaciones reales.
+ * P03-causas/maqueta-plataformas-y-mapa.html). Cada entidad lleva su logo real si está guardado en
+ * `logos-entidades/` y, si no, uno abstracto. Las ilustraciones no llevan texto: el contenedor puede
+ * no tener fuentes.
  */
 const TONOS: Record<string, { tinta: string; fondo: string; icono: string }> = {
   PERSONAS: { tinta: '#085046', fondo: '#b0efe1', icono: ICONOS.personas },
@@ -50,6 +51,15 @@ function svgLogo(indice: number) {
 
 const png = (svg: string) => sharp(Buffer.from(svg)).png().toBuffer();
 
+/** Los logos de las entidades reales de la demo, por dominio de su sitio (LEEME.md). */
+const CARPETA_LOGOS = join(__dirname, 'logos-entidades');
+const LOGO_REAL = 'logo-real';
+
+function logoReal(sitio: string | null) {
+  if (!sitio) return Promise.resolve(null);
+  return readFile(join(CARPETA_LOGOS, `${new URL(sitio).hostname}.png`)).catch(() => null);
+}
+
 /**
  * Sube las imágenes que falten: la de cada causa «(demo)» sin la ilustración vigente y el logotipo de cada
  * entidad de esas causas que no tenga. Idempotente: lo que ya tiene imagen no se toca.
@@ -66,10 +76,12 @@ export async function sembrarImagenesDemo(
   let subidas = 0;
   const entidades = [...new Map(causas.map((c) => [c.entidad_id, c.entidad])).values()];
   for (const [i, e] of entidades.entries()) {
-    if (e.logo_key) continue;
+    // Con logo guardado para su sitio, ese reemplaza al abstracto; sin él, el abstracto se queda
+    const real = await logoReal(e.sitio_web);
+    if (real ? e.logo_key?.includes(`/${LOGO_REAL}/`) : e.logo_key) continue;
     const { clave } = await almacenamiento.guardarImagen(
-      `entidades/${e.id}`,
-      await png(svgLogo(i)),
+      real ? `entidades/${e.id}/${LOGO_REAL}` : `entidades/${e.id}`,
+      real ?? (await png(svgLogo(i))),
     );
     await prisma.entidad.update({ where: { id: e.id }, data: { logo_key: clave } });
     subidas++;

@@ -17,6 +17,7 @@ aprobada, fusionados en #143 y desplegados en el servidor de pruebas.
 | PR o commit | Qué trae |
 |---|---|
 | #143 | Plataformas al final de Causas con foto; `imagen_key` en `plataforma` y `GET /api/publico/plataformas/{id}/imagen`; fotos de 5 sitios en el seed; causas de la demo con la ilustración nueva; mapa con grupos por tipo y pines tipo píldora |
+| Logos de las fundaciones | Cruz Roja Colombiana y UNICEF Colombia, las entidades de las causas de la demo, llevan su logo real bajado de su sitio (`apps/api/src/seed/logos-entidades/`) en vez del corazón abstracto. Lo pidió Joseph |
 
 Fuera del repositorio: la maqueta se publicó en <https://claude.ai/artifact/78TAzib9qjFjXkRgLJSSz3>.
 Dokploy desplegó #143 y el servidor sirve las 5 fotos de las plataformas.
