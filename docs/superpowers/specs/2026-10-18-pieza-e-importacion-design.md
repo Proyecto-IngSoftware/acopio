@@ -2,7 +2,7 @@
 title: "Pieza E · Importación de RedAcopio y carga por CSV · especificación"
 type: spec
 tags: [spec, bloque-1, importacion]
-estado: borrador
+estado: vigente
 bloque: 1
 actualizado: 2026-10-18
 ---
@@ -10,7 +10,7 @@ actualizado: 2026-10-18
 # Pieza E · Importación de RedAcopio y carga por CSV · especificación
 
 **Fecha:** 2026-10-18
-**Estado:** borrador, para aprobación de Joseph
+**Estado:** aprobada por Joseph el 2026-10-18
 **Deriva de:** [especificación del Bloque 1](2026-09-30-bloque-1-red-design.md) §2 (pieza E),
 [RF-RED-011](../../01-requerimientos/funcionales/red.md#rf-red-011--importar-acopios-de-una-fuente-externa),
 RF-RED-002 y RF-RED-003 (acopio referenciado en el mapa y en la ficha), criterio 2 de HU-01,

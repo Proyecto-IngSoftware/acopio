@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html class="h-full" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acopio CO - Sugoi Taller Creativo</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "tertiary": "#125454",
+            "tertiary-fixed-dim": "#96d1d0",
+            "on-primary-fixed-variant": "#004f50",
+            "on-primary": "#ffffff",
+            "on-primary-container": "#9eedec",
+            "surface-container-highest": "#e9e1dd",
+            "surface": "#fff8f5",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "on-primary-fixed": "#002020",
+            "on-tertiary-container": "#afebea",
+            "inverse-surface": "#33302d",
+            "error-container": "#ffdad6",
+            "surface-dim": "#e0d8d5",
+            "on-background": "#1e1b19",
+            "inverse-primary": "#85d4d3",
+            "surface-container-low": "#faf2ee",
+            "outline-variant": "#bec9c8",
+            "on-tertiary": "#ffffff",
+            "primary": "#005454",
+            "on-secondary-fixed-variant": "#4a4642",
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed": "#1e1b18",
+            "on-error": "#ffffff",
+            "secondary-fixed": "#e9e1db",
+            "background": "#fff8f5",
+            "tertiary-container": "#316c6c",
+            "outline": "#6e7979",
+            "on-surface": "#1e1b19",
+            "surface-bright": "#fff8f5",
+            "primary-fixed": "#a1f0ef",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-high": "#eee7e3",
+            "inverse-on-surface": "#f7efeb",
+            "primary-container": "#0f6e6e",
+            "on-error-container": "#93000a",
+            "surface-variant": "#e9e1dd",
+            "on-surface-variant": "#3e4948",
+            "on-secondary-container": "#68635f",
+            "tertiary-fixed": "#b2eded",
+            "primary-fixed-dim": "#85d4d3",
+            "secondary": "#625e59",
+            "surface-container": "#f4ece8",
+            "on-tertiary-fixed": "#002020",
+            "error": "#ba1a1a",
+            "secondary-container": "#e9e1db",
+            "secondary-fixed-dim": "#ccc5c0",
+            "surface-tint": "#03696a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter"],
+            "display": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #FAFAF9;
+      color: #1C1917;
+    }
+    .pb-safe {
+      padding-bottom: env(safe-area-inset-bottom, 1rem);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#FAFAF9] text-[#1C1917] min-h-full flex flex-col antialiased selection:bg-[#C7E8E8] selection:text-[#0A4F4F]">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-4 h-14 bg-surface-container-lowest dark:bg-surface-container-lowest border-b border-surface-variant dark:border-outline-variant z-40 sticky top-0">
+<div class="flex items-center space-x-2">
+<span class="font-headline text-lg font-bold text-primary dark:text-primary-fixed">Acopio</span>
+<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#E6F4F4] text-[#0A4F4F] border border-[#C7E8E8]">CO</span>
+</div>
+<button class="px-3.5 py-1.5 rounded-[10px] text-sm font-semibold bg-[#0F6E6E] text-white hover:bg-[#0A4F4F] active:opacity-80 transition-opacity">
+      Entrar
+    </button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 w-full max-w-xl mx-auto px-4 py-4 pb-28 space-y-4">
+<!-- Volver al mapa -->
+<div>
+<a class="inline-flex items-center text-sm font-medium text-[#57534E] hover:text-[#0F6E6E] transition-colors" href="#">
+<span class="material-symbols-outlined text-lg mr-1">arrow_back</span>
+        Volver al mapa
+      </a>
+</div>
+<!-- Título y Estado -->
+<div class="space-y-2">
+<div class="flex flex-wrap items-center gap-2">
+<h1 class="font-headline text-2xl font-bold tracking-tight text-[#1C1917]">Sugoi Taller Creativo</h1>
+</div>
+<div class="flex flex-wrap items-center gap-2">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-[#F5F5F4] text-[#57534E] border border-[#E7E5E4]">
+<span class="material-symbols-outlined text-sm mr-1 text-[#57534E]">link</span>
+          Punto de RedAcopio Bogotá
+        </span>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-[#E6F4F4] text-[#16A34A] border border-[#C7E8E8]">
+<span class="material-symbols-outlined text-sm mr-1" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+          Abierto
+        </span>
+</div>
+</div>
+<!-- Banda de Atribución -->
+<div class="bg-[#F5F5F4] border border-[#E7E5E4] rounded-xl px-4 py-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-sm text-[#57534E]">
+<span>Fuente: RedAcopio Bogotá · actualizado hace 3 h</span>
+<a class="inline-flex items-center font-medium text-[#0F6E6E] hover:underline" href="#">
+        Ver en RedAcopio
+        <span class="material-symbols-outlined text-base ml-1">north_east</span>
+</a>
+</div>
+<!-- Tarjeta de Ubicación -->
+<div class="bg-white border border-[#E7E5E4] rounded-[12px] p-4 space-y-3 shadow-none">
+<div class="flex items-start justify-between">
+<div class="space-y-1">
+<div class="text-xs font-semibold uppercase tracking-wider text-[#57534E]">Ubicación</div>
+<div class="text-base font-medium text-[#1C1917]">Calle 128a #45a-74 piso 3, Bogotá</div>
+</div>
+<div class="w-10 h-10 rounded-full bg-[#E6F4F4] flex items-center justify-center text-[#0F6E6E]">
+<span class="material-symbols-outlined">location_on</span>
+</div>
+</div>
+<div>
+<button class="w-full h-11 px-4 rounded-[10px] border border-[#E7E5E4] bg-white text-[#1C1917] font-medium text-sm hover:bg-[#F5F5F4] active:opacity-80 transition-colors flex items-center justify-center">
+<span class="material-symbols-outlined text-lg mr-2 text-[#57534E]">directions</span>
+          Cómo llegar
+        </button>
+</div>
+</div>
+<!-- Tarjeta de Horario -->
+<div class="bg-white border border-[#E7E5E4] rounded-[12px] p-4 flex items-center justify-between shadow-none">
+<div class="space-y-0.5">
+<div class="text-xs font-semibold uppercase tracking-wider text-[#57534E]">Horario de atención</div>
+<div class="text-base font-medium text-[#1C1917] tabular-nums">10:00 am - 7:00 pm</div>
+</div>
+<div class="w-10 h-10 rounded-full bg-[#F5F5F4] flex items-center justify-center text-[#57534E]">
+<span class="material-symbols-outlined">schedule</span>
+</div>
+</div>
+<!-- Tarjeta Lo que piden -->
+<div class="bg-white border border-[#E7E5E4] rounded-[12px] p-4 space-y-3 shadow-none">
+<div class="flex items-center justify-between">
+<div class="text-xs font-semibold uppercase tracking-wider text-[#57534E]">Lo que piden (texto de la fuente)</div>
+<span class="material-symbols-outlined text-[#57534E]">inventory_2</span>
+</div>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-[#F5F5F4] border border-[#E7E5E4]">
+<span class="text-sm font-medium text-[#1C1917]">Camión</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-[#FEF2F2] text-[#DC2626] border border-[#FCA5A5]">Urgente</span>
+</div>
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-[#F5F5F4] border border-[#E7E5E4]">
+<span class="text-sm font-medium text-[#1C1917]">Agua</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#F3F4F6] text-[#4B5563] border border-[#E5E7EB]">Normal</span>
+</div>
+<div class="flex items-center justify-between p-2.5 rounded-lg bg-[#F5F5F4] border border-[#E7E5E4]">
+<span class="text-sm font-medium text-[#1C1917]">Pañales</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-[#F3F4F6] text-[#4B5563] border border-[#E5E7EB]">Normal</span>
+</div>
+</div>
+</div>
+<!-- Tarjeta de Contacto -->
+<div class="bg-white border border-[#E7E5E4] rounded-[12px] p-4 space-y-4 shadow-none">
+<div class="text-xs font-semibold uppercase tracking-wider text-[#57534E]">Contacto y acceso</div>
+<div class="flex items-center justify-between">
+<div>
+<div class="text-sm font-medium text-[#1C1917] tabular-nums">+57 (310) 456-7890</div>
+<div class="text-xs text-[#57534E]">Línea directa del punto</div>
+</div>
+<button class="px-4 h-10 rounded-[10px] bg-[#0F6E6E] text-white font-medium text-sm hover:bg-[#0A4F4F] active:opacity-80 transition-colors flex items-center">
+<span class="material-symbols-outlined text-lg mr-1.5">call</span>
+          Llamar
+        </button>
+</div>
+<div class="border-t border-[#E7E5E4] pt-3 flex items-center justify-between">
+<div class="flex items-center space-x-2">
+<span class="material-symbols-outlined text-[#57534E]">share</span>
+<span class="text-sm font-medium text-[#1C1917]">@sugoi_taller</span>
+</div>
+<a class="text-xs font-medium text-[#0F6E6E] hover:underline" href="#">Ver Instagram</a>
+</div>
+<div class="bg-[#F5F5F4] p-3 rounded-lg border border-[#E7E5E4] text-xs text-[#57534E] flex items-start space-x-2">
+<span class="material-symbols-outlined text-base mt-0.5 flex-shrink-0">info</span>
+<span>Nota de acceso: Timbre de acceso disponible en la puerta principal. Tocar dos veces.</span>
+</div>
+</div>
+<!-- Aviso suave institucional -->
+<div class="bg-[#E6F4F4] border border-[#C7E8E8] rounded-xl p-4 text-sm text-[#0A4F4F] flex items-start space-x-3">
+<span class="material-symbols-outlined text-xl flex-shrink-0 mt-0.5">verified</span>
+<p class="leading-relaxed">Este punto no usa Acopio: no muestra inventario ni recibe donaciones preparadas aquí.</p>
+</div>
+<!-- Botón de ancho completo secundario/corporativo -->
+<div>
+<button class="w-full h-14 rounded-[10px] border border-[#E7E5E4] bg-white text-[#1C1917] font-semibold text-base hover:bg-[#F5F5F4] active:opacity-80 transition-colors flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-xl mr-2 text-[#16A34A]" style="font-variation-settings: 'FILL' 1;">chat</span>
+        Compartir por WhatsApp
+      </button>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface-container-lowest dark:bg-surface-container-lowest border-t border-surface-variant dark:border-outline-variant pb-safe">
+<!-- Inicio (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">home</span>
+<span class="font-label text-xs mt-0.5">Inicio</span>
+</a>
+<!-- Mapa (Active) -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed font-bold min-h-[48px] px-3 py-1" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">map</span>
+<span class="font-label text-xs mt-0.5">Mapa</span>
+</a>
+<!-- Causas (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">favorite</span>
+<span class="font-label text-xs mt-0.5">Causas</span>
+</a>
+<!-- Voluntariado (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">volunteer_activism</span>
+<span class="font-label text-xs mt-0.5">Voluntariado</span>
+</a>
+<!-- Más (Inactive) -->
+<a class="flex flex-col items-center justify-center text-secondary dark:text-secondary font-normal min-h-[48px] px-3 py-1 hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">menu</span>
+<span class="font-label text-xs mt-0.5">Más</span>
+</a>
+</nav>
+</body></html>
