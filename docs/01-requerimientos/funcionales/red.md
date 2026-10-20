@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: red
 bloque: 1
-actualizado: 2026-10-19
+actualizado: 2026-10-20
 ---
 
 # RF-RED · Acopios, zonas, entidades y causas
@@ -54,6 +54,15 @@ Administrador.
       descarga mosaicos para uso sin conexión
 - [ ] La búsqueda por dirección pasa por la API, que consulta Nominatim con caché
       y a no más de una petición por segundo — nunca desde el navegador
+- [ ] Cada acopio operado y activo lleva sobre su punto una etiqueta con el estado de su
+      inventario frente a sus umbrales: «FALTA», «DE SOBRA», «AL DÍA» o «NO RECIBE», con la
+      categoría y un ícono por estado. No dice cantidades. Los pausados y los puntos de
+      RedAcopio van sin etiqueta
+- [ ] Los chips «Todos», «Falta», «De sobra» y «No recibe» dicen cuántos acopios hay en cada
+      estado y dejan en el mapa y en la lista solo los de ese estado
+- [ ] Con una categoría elegida en «¿Qué vas a llevar?», los acopios que no la reciben se
+      ven apagados y sin etiqueta, y en la lista van al final. Antes se ocultaban; cambió el
+      2026-10-20 con el [mapa de necesidades](../../superpowers/specs/2026-10-20-mapa-de-necesidades-design.md)
 
 ### RF-RED-003 · Ficha pública de acopio
 **Actor:** Cualquiera · **Prioridad:** DEBE
