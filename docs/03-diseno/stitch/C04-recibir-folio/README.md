@@ -3,7 +3,7 @@ title: "Recibir por folio · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, custodia]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-20
 ---
 
 # Recibir por folio · diseño en Stitch
@@ -36,3 +36,24 @@ actualizado: 2026-10-06
 - Las vistas de buscar y de «Recibido» no salieron de Stitch; se armaron con los tokens.
 - El total del botón cuenta las líneas con cantidad mayor que cero.
 - Sin red, la pantalla muestra `NecesitaRed` con la indicación de registrar en C4.
+
+## Códigos propuestos en la recepción (2026-10-20)
+
+Pendiente de revisión por Joseph. Parte de la [maqueta de la idea](../../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
+
+| | |
+|---|---|
+| Proyecto | ACOPIO DISEÑO (`10306891818878200068`) |
+| Pantalla | `cdca04ba49e6404f9b352cf0856ffdd0`, editada |
+| Exportada | 2026-10-20 |
+| Archivos | [captura-presentaciones.jpg](captura-presentaciones.jpg) (Stitch) · [pantalla-presentaciones.html](pantalla-presentaciones.html) · [render-presentaciones.png](render-presentaciones.png) (el HTML en Chromium a 360 px, página completa) |
+| Aprobación | Pendiente de Joseph |
+
+### Diferencias
+
+- La captura de Stitch salió en baja resolución (487 px) y puede estar desactualizada; el render del HTML es la referencia.
+- La línea «Agua potable» trae el chip «Código propuesto», lo que dijo el donador, «Declaradas: 24 · Recibidas: 24» y los botones «Corregir» y «Es correcto». «Arroz · Bolsa 500 g» lleva el chip «Validado».
+- Stitch dejó el botón final como «Registrar recepción (2 entradas)»; la idea decía «Terminar recepción».
+- «Declaradas» y «Recibidas» van como texto de 12 px. La idea los trae en el tamaño del cuerpo.
+- El chip «Código propuesto» usa ámbar (`#D97706`), reservado al estado del inventario. «Es correcto» y «Corregir» quedan a 36 px de alto, menos que los 48 px que pide el diseño.
+- La pantalla de corrección (elegir otra presentación) no tiene maqueta.

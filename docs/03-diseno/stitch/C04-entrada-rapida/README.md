@@ -3,7 +3,7 @@ title: "C4 · Entrada rápida · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, inventario]
 estado: vigente
-actualizado: 2026-10-01
+actualizado: 2026-10-20
 ---
 
 # C4 · Entrada rápida · diseño en Stitch
@@ -43,3 +43,23 @@ Aprobadas por Joseph el 2026-10-01:
   hay que desplazar un poco para tocarlo. Se revisa con el uso real antes de achicar las
   teclas, que hoy miden 56 px.
 
+
+## Selector de unidad kg / g (2026-10-20)
+
+Pendiente de revisión por Joseph. Parte de la [maqueta de la idea](../../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
+
+| | |
+|---|---|
+| Proyecto | ACOPIO DISEÑO (`10306891818878200068`) |
+| Pantalla | `3ed55c1d3809424d93b7308fe91260a4`, editada |
+| Exportada | 2026-10-20 |
+| Archivos | [pantalla-presentaciones.html](pantalla-presentaciones.html) · [render-presentaciones.png](render-presentaciones.png) (el HTML en Chromium a 360 px) |
+| Aprobación | Pendiente de Joseph |
+
+### Diferencias
+
+- No hay captura de Stitch: la exportada seguía mostrando la versión anterior («25 kg»). El HTML exportado tampoco traía la edición, así que se aplicó a mano lo que Stitch devolvió: «500» con el selector «kg | g» (g activo) al lado, el aviso «Se registran 0,5 kg» y el botón «Registrar 0,5 kg».
+- Se quitó del script de ejemplo la línea que reescribía el botón al teclear, para que el render conserve el texto.
+- El selector es pequeño (texto de 12 px, botones de unos 28 px). El diseño pide 48 px tocables; hay que agrandarlo al construir.
+- El aviso «Se registran 0,5 kg» va en 12 px, menos que los 14 px mínimos. Falta el tope de 10.000 por línea.
+- Se mantiene el resto de la pantalla aprobada: «Unidad: kg» en la tarjeta de categoría, teclado y fecha de vencimiento.
