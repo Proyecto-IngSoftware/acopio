@@ -1,7 +1,7 @@
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Publico } from '../../comun/autorizacion/decoradores';
-import { BalanceDto, UrgenteDto } from '../../comun/respuestas';
+import { BalanceDto, NecesidadAcopioDto, UrgenteDto } from '../../comun/respuestas';
 import { BalanceService } from './balance.service';
 
 /** P1: «Qué hace falta» y «No traigan» de la portada (P-073); P6: «Lo que urge» de la ficha. */
@@ -19,6 +19,18 @@ export class BalanceController {
   @ApiOkResponse({ type: BalanceDto })
   leer() {
     return this.balance.balance();
+  }
+
+  @Publico()
+  @ApiOperation({
+    summary:
+      'Qué falta, qué sobra, qué está al día y qué no recibe cada acopio, solo por categoría. No exige sesión',
+    security: [],
+  })
+  @Get('necesidades')
+  @ApiOkResponse({ type: NecesidadAcopioDto, isArray: true })
+  necesidades() {
+    return this.balance.necesidades();
   }
 
   @Publico()

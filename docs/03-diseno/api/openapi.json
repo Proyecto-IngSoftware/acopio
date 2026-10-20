@@ -3447,6 +3447,32 @@
         ]
       }
     },
+    "/api/publico/necesidades": {
+      "get": {
+        "operationId": "BalanceController_necesidades",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/NecesidadAcopioDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [],
+        "summary": "Qué falta, qué sobra, qué está al día y qué no recibe cada acopio, solo por categoría. No exige sesión",
+        "tags": [
+          "inventario"
+        ]
+      }
+    },
     "/api/publico/acopios/{id}/urgente": {
       "get": {
         "operationId": "BalanceController_urgente",
@@ -10785,6 +10811,103 @@
         "required": [
           "faltan",
           "noTraigan"
+        ]
+      },
+      "NecesidadAcopioDto": {
+        "type": "object",
+        "properties": {
+          "acopioId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "faltan": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "categoria": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "categoriaId",
+                "categoria"
+              ]
+            }
+          },
+          "sobran": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "categoria": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "categoriaId",
+                "categoria"
+              ]
+            }
+          },
+          "alDia": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "categoria": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "categoriaId",
+                "categoria"
+              ]
+            }
+          },
+          "noRecibe": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "categoriaId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "categoria": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "categoriaId",
+                "categoria"
+              ]
+            }
+          }
+        },
+        "required": [
+          "acopioId",
+          "faltan",
+          "sobran",
+          "alDia",
+          "noRecibe"
         ]
       },
       "UrgenteDto": {

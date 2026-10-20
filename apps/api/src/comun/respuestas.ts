@@ -368,6 +368,18 @@ export class BalanceDto extends crearDto(
   z.object({ faltan: z.array(filaBalance), noTraigan: z.array(filaBalance) }),
 ) {}
 
+const categoriaNombrada = z.object({ categoriaId: z.uuid(), categoria: z.string() });
+
+export class NecesidadAcopioDto extends crearDto(
+  z.object({
+    acopioId: z.uuid(),
+    faltan: z.array(categoriaNombrada),
+    sobran: z.array(categoriaNombrada),
+    alDia: z.array(categoriaNombrada),
+    noRecibe: z.array(categoriaNombrada),
+  }),
+) {}
+
 const tipoMovimiento = z.enum(['ENTRADA', 'SALIDA', 'AJUSTE']);
 const motivoSalida = z.enum(['ENTREGA_FAMILIAS', 'TRASLADO', 'VENCIDO', 'OTRO']);
 
