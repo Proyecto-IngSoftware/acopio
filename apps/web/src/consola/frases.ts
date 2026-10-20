@@ -144,6 +144,24 @@ export function frase(r: RegistroBitacora): string {
       if (!ean) return `${verbo} un código de barras`;
       return categoria ? `${verbo} el código ${ean} a ${categoria}` : `${verbo} el código ${ean}`;
     }
+    case 'codigo_barras.propuesto':
+    case 'codigo_barras.validado': {
+      const ean = texto(despues?.ean) || texto(antes?.ean);
+      const verbo = r.accion === 'codigo_barras.propuesto' ? 'Propuso' : 'Validó';
+      return ean ? `${verbo} el código ${ean}` : `${verbo} un código de barras`;
+    }
+    case 'codigo_barras.marcado': {
+      const ean = texto(despues?.ean) || texto(antes?.ean);
+      return ean
+        ? `Marcó el código ${ean} para revisión`
+        : 'Marcó un código de barras para revisión';
+    }
+    case 'presentacion.creada':
+    case 'presentacion.editada': {
+      const nombre = texto(despues?.nombre) || texto(antes?.nombre);
+      const verbo = r.accion === 'presentacion.creada' ? 'Creó' : 'Editó';
+      return nombre ? `${verbo} la presentación ${nombre}` : `${verbo} una presentación`;
+    }
     case 'movimiento.entrada':
       return categoria ? `Registró una entrada de ${categoria}` : 'Registró una entrada';
     case 'movimiento.salida':
@@ -186,6 +204,8 @@ export function frase(r: RegistroBitacora): string {
       return 'Vinculó entradas a una donación';
     case 'comprobante.conciliado':
       return 'Concilió una donación';
+    case 'comprobante.linea_corregida':
+      return 'Corrigió una línea de la donación al recibirla';
     case 'comprobante.rechazado':
       return 'Rechazó una donación';
     case 'comprobante.rechazo_revertido':
@@ -243,7 +263,8 @@ export function iconoDe(r: RegistroBitacora): string {
   if (r.accion.startsWith('acceso.')) return 'lock_reset';
   if (r.accion === 'entidad.verificada') return 'verified';
   if (r.accion === 'entidad.verificacion_quitada') return 'gpp_bad';
-  if (r.accion.startsWith('codigo_barras.')) return 'barcode_scanner';
+  if (r.accion.startsWith('codigo_barras.') || r.accion.startsWith('presentacion.'))
+    return 'barcode_scanner';
   if (r.accion.startsWith('no_recibir.')) return 'block';
   if (r.accion.startsWith('umbral.')) return 'tune';
   if (r.accion === 'movimiento.recepcion' || r.accion === 'remision.recibida')
