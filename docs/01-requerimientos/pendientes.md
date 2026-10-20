@@ -1062,6 +1062,17 @@ categoría.
 **Estado:** ABIERTO. Si los sitios vuelven, guardar la foto como `<dominio>.jpg` en
 `apps/api/src/seed/imagenes-plataformas/` y anotarla en su `LEEME.md`.
 
+### P-080 · Cambiar el correo de una cuenta activa no cambia su credencial
+**Fecha:** 2026-10-19 · **Propuesto por:** el revisor de la entrada única (PR #156)
+**Qué:** `UsuariosService.actualizar` cambia `usuario.correo`, pero la credencial del proveedor
+(`identidad_local` o Supabase) sigue con el correo anterior. Como el inicio de sesión pasa al
+proveedor el correo de `usuario`, la persona deja de poder entrar hasta que se le restablece el
+acceso. Ya pasaba antes de la entrada única.
+**Por qué:** El Administrador puede corregir el correo de alguien del equipo desde la consola sin
+saber que lo deja afuera.
+**Estado:** ABIERTO. Opciones: actualizar el correo en el proveedor dentro del mismo cambio, o no
+dejar cambiar el correo de una cuenta activa sin restablecer su acceso.
+
 ---
 
 ## Resueltos

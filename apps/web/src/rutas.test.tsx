@@ -106,6 +106,15 @@ describe('rutas del Donador', () => {
     expect(screen.getByRole('navigation', { name: 'Secciones' })).toBeInTheDocument();
   });
 
+  it('/entrar carga dentro del portal, con la barra de secciones y el botón «Entrar»', async () => {
+    render(envolver(<Rutas />, '/entrar'));
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Entrar a Acopio' }),
+    ).toBeInTheDocument();
+    expect(screen.getByRole('navigation', { name: 'Secciones' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Entrar' })).toHaveAttribute('href', '/entrar');
+  });
+
   it('/donador/confirmar/abc carga su pantalla dentro del portal', async () => {
     const cliente = clienteFalso();
     cliente.validarEnlace.mockResolvedValue({ nombre: 'Ana Ruiz', correo: 'ana@correo.co' });

@@ -10,6 +10,9 @@ it('rechaza lo que saldría del sitio o no es una ruta', () => {
   // El navegador lee «/\\» como «//»
   expect(rutaDeVuelta('/\\x.com')).toBeNull();
   expect(rutaDeVuelta('https://x.com')).toBeNull();
+  // El navegador quita tabuladores y saltos de línea: «/\t/x.com» sería «//x.com»
+  expect(rutaDeVuelta('/\t/x.com')).toBeNull();
+  expect(rutaDeVuelta('/\n/x.com')).toBeNull();
   expect(rutaDeVuelta('donar')).toBeNull();
   expect(rutaDeVuelta(null)).toBeNull();
 });

@@ -148,3 +148,36 @@ describe('una sola entrada para todas las cuentas', () => {
     );
   });
 });
+
+describe('cuando falla algo que no son las credenciales', () => {
+  it('sin red avisa y no deja enviar', async () => {
+    vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+    pantalla();
+    expect(await screen.findByRole('button', { name: 'Entrar' })).toBeDisabled();
+    expect(screen.getByText(/Sin conexión/)).toBeInTheDocument();
+  });
+
+  it('si no llega a la API no dice que la contraseña está mal', async () => {
+    const cliente = clienteFalso();
+    cliente.iniciarSesion.mockRejectedValue(
+      new ErrorApi(0, 'SIN_RED', 'No pudimos conectar con Acopio. Revisa tu conexión.'),
+    );
+    pantalla('/entrar', cliente);
+    await llenar('ana@correo.co', 'una frase larga');
+    await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
+    const alerta = await screen.findByRole('alert');
+    expect(alerta).toHaveTextContent('No pudimos conectar con Acopio');
+    expect(alerta).not.toHaveTextContent('incorrectos');
+  });
+
+  it('un 500 muestra el mensaje de la API', async () => {
+    const cliente = clienteFalso();
+    cliente.iniciarSesion.mockRejectedValue(
+      new ErrorApi(500, 'ERROR_INTERNO', 'Algo falló de nuestro lado.'),
+    );
+    pantalla('/entrar', cliente);
+    await llenar('d.mendez', 'una frase larga');
+    await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Algo falló de nuestro lado.');
+  });
+});

@@ -165,6 +165,8 @@ export function Rutas() {
         <Route path="mas" element={<Mas />} />
         <Route path="mapa" element={<Mapa />} />
         <Route path="acopios/:id" element={<FichaAcopio />} />
+        {/* La única pantalla de entrada va dentro del portal, con su cabecera y su barra */}
+        <Route path="entrar" element={<Entrar />} />
         <Route path="donador" element={<MiCuenta />} />
         <Route path="donador/confirmar/:token" element={<Confirmar />} />
         <Route
@@ -383,7 +385,6 @@ export function Rutas() {
         }
       />
       <Route element={<MarcoAcceso />}>
-        <Route path="entrar" element={<Entrar />} />
         <Route path="invitacion/:token" element={<ActivarCuenta />} />
       </Route>
     </Routes>
