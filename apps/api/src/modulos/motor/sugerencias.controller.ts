@@ -12,7 +12,7 @@ import {
   RecalculoDto,
   SugerenciaDto,
 } from '../../comun/respuestas';
-import { cantidadPositiva } from '../../comun/validacion/cantidades';
+import { cantidadDeLinea } from '../../comun/validacion/cantidades';
 import { SugerenciasService } from './sugerencias.service';
 
 class FiltroSugerenciasDto extends crearDto(
@@ -24,7 +24,7 @@ class FiltroSugerenciasDto extends crearDto(
   }),
 ) {}
 
-class AprobarDto extends crearDto(z.object({ cantidad: cantidadPositiva.optional() })) {}
+class AprobarDto extends crearDto(z.object({ cantidad: cantidadDeLinea.optional() })) {}
 class DescartarDto extends crearDto(z.object({ motivo: z.string().trim().min(10).max(280) })) {}
 const dia = z.iso.date().transform((d) => new Date(`${d}T00:00:00Z`));
 const finDelDia = z.iso.date().transform((d) => new Date(`${d}T23:59:59.999Z`));

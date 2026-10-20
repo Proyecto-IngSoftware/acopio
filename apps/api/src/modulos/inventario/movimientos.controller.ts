@@ -12,10 +12,10 @@ import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDto, ResultadoMovimientoDto } from '../../comun/respuestas';
-import { cantidadNoNegativa, cantidadPositiva } from '../../comun/validacion/cantidades';
+import { cantidadContadaDeLinea, cantidadDeLinea } from '../../comun/validacion/cantidades';
 import { MovimientosService } from './movimientos.service';
 
-export const cantidad = cantidadPositiva;
+export const cantidad = cantidadDeLinea;
 
 const dia = z.iso.date().transform((d) => new Date(`${d}T00:00:00Z`));
 
@@ -45,7 +45,7 @@ class SalidaDto extends crearDto(
 class AjusteDto extends crearDto(
   z.object({
     categoriaId: z.uuid(),
-    cantidadContada: cantidadNoNegativa,
+    cantidadContada: cantidadContadaDeLinea,
     motivo: z.string().trim().min(10, 'El motivo necesita al menos 10 caracteres').max(500),
   }),
 ) {}

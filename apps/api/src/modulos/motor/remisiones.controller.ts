@@ -5,11 +5,11 @@ import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDto, FolioVinculableDto, RemisionDto } from '../../comun/respuestas';
-import { cantidadPositiva } from '../../comun/validacion/cantidades';
+import { cantidadDeLinea } from '../../comun/validacion/cantidades';
 import { RemisionesService } from './remisiones.service';
 
 const lineas = z
-  .array(z.object({ categoriaId: z.uuid(), cantidad: cantidadPositiva }))
+  .array(z.object({ categoriaId: z.uuid(), cantidad: cantidadDeLinea }))
   .min(1)
   .max(40);
 const responsable = z.string().trim().max(120).nullable();

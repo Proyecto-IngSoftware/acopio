@@ -1,3 +1,4 @@
+import { TOPES } from '@acopio/shared';
 import { z } from 'zod';
 
 // La base guarda numeric(12,3): se trabaja en milésimas
@@ -22,3 +23,15 @@ export const cantidadNoNegativa = z
   .lt(1_000_000_000)
   .refine(tresDecimales, 'Máximo 3 decimales')
   .transform(redondear);
+
+/** Una línea de movimiento o remisión: como `cantidadPositiva`, hasta `TOPES.linea`. */
+export const cantidadDeLinea = cantidadPositiva.refine(
+  (n) => n <= TOPES.linea,
+  `Una línea llega hasta ${TOPES.linea}`,
+);
+
+/** Conteo físico de una línea: como `cantidadNoNegativa`, hasta `TOPES.linea`. */
+export const cantidadContadaDeLinea = cantidadNoNegativa.refine(
+  (n) => n <= TOPES.linea,
+  `Una línea llega hasta ${TOPES.linea}`,
+);
