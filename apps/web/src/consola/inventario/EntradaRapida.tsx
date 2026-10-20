@@ -2,7 +2,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
-import { formatearCantidad, formatearNumero } from '@acopio/shared';
+import { errorDeLinea, formatearCantidad, formatearNumero } from '@acopio/shared';
 import type { ResultadoBusqueda } from '../../api/catalogo';
 import { useRegistrarEntrada, useSaldos, type DatosEntrada } from '../../api/inventario';
 import { useAcopio, useNoRecibir } from '../../api/red';
@@ -79,8 +79,10 @@ export function EntradaRapida() {
   const leida = categoria
     ? leerCantidad(cantidad, factor, categoria.unidadBase)
     : { base: tecleado, error: null };
-  const errorCantidad = porPresentacion ? null : leida.error;
   const n = porPresentacion ? Math.round(tecleado * porPresentacion * 1000) / 1000 : leida.base;
+  // Contando presentaciones, el tope de la línea va sobre el total en la unidad base
+  const errorCantidad =
+    porPresentacion && categoria ? errorDeLinea(n, categoria.unidadBase) : leida.error;
   const falta = categoria?.perecedero && !vence;
   const noRecibe = sinRed ? noRecibirLocal.data : noRecibir.data;
   const noSeRecibe = categoria && noRecibe?.some((x) => x.categoriaId === categoria.id);

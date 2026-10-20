@@ -1,4 +1,4 @@
-import type { UnidadBase } from '@acopio/shared';
+import { errorDeLinea, type UnidadBase } from '@acopio/shared';
 import { leerCantidad } from '../componentes/cantidad-base';
 
 export interface CategoriaElegida {
@@ -62,9 +62,10 @@ export function cantidadBase(l: Pick<Linea, 'cantidad' | 'contenido'>): number {
 export const esLibre = (l: Pick<Linea, 'contenido' | 'unidad'>) =>
   l.contenido === null && l.unidad !== 'UNIDAD';
 
-/** Por qué no se puede avanzar con una línea libre; `null` si está bien. */
+/** Por qué no se puede avanzar con la línea; `null` si está bien. Con presentaciones o en
+ *  unidades, el tope de la línea va sobre el total en unidad base (2000 × 7,2 L no cabe). */
 export function errorDeEscritura(l: Linea): string | null {
-  if (!esLibre(l)) return null;
+  if (!esLibre(l)) return errorDeLinea(cantidadBase(l), l.unidad);
   const { base, error } = leerCantidad(l.texto, l.factor, l.unidad);
   if (error) return error;
   return base > 0 ? null : 'Escribe una cantidad';

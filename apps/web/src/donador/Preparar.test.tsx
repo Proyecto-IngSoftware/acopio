@@ -196,6 +196,19 @@ describe('P9, paso 1: qué llevas', () => {
     expect(within(linea).getByText('= 7,2 L')).toBeInTheDocument();
   });
 
+  it('una línea de presentaciones que pasa el tope avisa y no deja avanzar', async () => {
+    leera(EAN);
+    pantalla({ [`GET /api/donaciones/codigos/${EAN}`]: { ...AGUA, contenido: 4000 } });
+    await escanear();
+    const linea = await screen.findByRole('listitem', { name: 'Agua potable' });
+    await userEvent.click(within(linea).getByRole('button', { name: /^Más/ }));
+    expect(within(linea).queryByRole('alert')).not.toBeInTheDocument();
+    await userEvent.click(within(linea).getByRole('button', { name: /^Más/ }));
+    // 3 × 4000 L = 12.000 L
+    expect(within(linea).getByRole('alert')).toHaveTextContent('Una línea llega hasta 10.000 L');
+    expect(screen.getByRole('button', { name: 'Siguiente: dónde entregar' })).toBeDisabled();
+  });
+
   it('escanear dos veces el mismo código suma a la misma línea', async () => {
     leera(EAN);
     pantalla({ [`GET /api/donaciones/codigos/${EAN}`]: AGUA });

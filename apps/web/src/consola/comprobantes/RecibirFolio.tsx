@@ -20,6 +20,7 @@ import {
   cantidadDe,
   cuerpoRecepcion,
   entradas,
+  errorDeTope,
   faltaVencimiento,
   iniciar,
   listoParaRegistrar,
@@ -359,6 +360,7 @@ function LineaFolio({
   despachar: (a: Parameters<typeof recepcion>[1]) => void;
 }) {
   const cantidad = cantidadDe(l);
+  const tope = errorDeTope(l);
   const [corrigiendo, fijarCorrigiendo] = useState(false);
   const presentacion = l.corregida ?? codigo?.presentacion ?? null;
   const propuesto = codigo?.estado === 'PROPUESTO' && !l.codigoConfirmado;
@@ -434,6 +436,11 @@ function LineaFolio({
         <span className="text-right text-body-sm text-on-surface-variant">
           = {formatearCantidad(enBase(cantidad, l.contenido), l.unidad)}
         </span>
+      )}
+      {tope && (
+        <p role="alert" className="text-right text-body-sm text-error">
+          {tope}
+        </p>
       )}
       {cantidad === 0 && (
         <span className="flex items-center gap-space-xs text-body-sm text-on-surface-variant">

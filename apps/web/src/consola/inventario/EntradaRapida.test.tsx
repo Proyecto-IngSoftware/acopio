@@ -242,6 +242,15 @@ describe('C4 Entrada rápida', () => {
     expect(screen.getByRole('button', { name: 'Registrar' })).toBeDisabled();
   });
 
+  it('2000 paquetes de 7,2 L pasan el tope de la línea: avisa y no deja registrar', async () => {
+    pantalla({ 'GET /api/codigos-barras/7702001045231': { ...BOTELLA, contenido: 7.2 } });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    await screen.findByRole('region', { name: 'Categoría elegida' });
+    await teclear('2', '0', '0', '0');
+    expect(screen.getByRole('alert')).toHaveTextContent('Una línea llega hasta 10.000 L');
+    expect(screen.getByRole('button', { name: /^Registrar/ })).toBeDisabled();
+  });
+
   it('con un código que trae presentación no hay selector de unidad', async () => {
     pantalla({ 'GET /api/codigos-barras/7702001045231': BOTELLA });
     await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));

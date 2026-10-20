@@ -149,6 +149,28 @@ it('con presentaciones cuenta enteros y muestra la unidad base', async () => {
   expect(agua).toHaveTextContent('= 5,5 L');
 });
 
+it('2000 presentaciones de 7,2 L pasan el tope de la línea: avisa y no deja registrar', async () => {
+  pantalla({
+    'GET /api/comprobantes/*': {
+      ...COMPROBANTE,
+      lineas: [
+        linea('l3', 'Agua potable', {
+          unidad: 'LITRO',
+          contenidoUnitario: 7.2,
+          cantidadDeclarada: 12,
+        }),
+      ],
+    },
+  });
+  await buscar();
+  const agua = await screen.findByRole('listitem', { name: 'Agua potable' });
+  const campo = within(agua).getByRole('textbox', { name: 'Llegó de Agua potable' });
+  await userEvent.clear(campo);
+  await userEvent.type(campo, '2000');
+  expect(within(agua).getByRole('alert')).toHaveTextContent('Una línea llega hasta 10.000 L');
+  expect(screen.getByRole('button', { name: /^Registrar/ })).toBeDisabled();
+});
+
 it('si llega menos pregunta qué pasó; en cero dice «No llegó»', async () => {
   pantalla();
   await buscar();

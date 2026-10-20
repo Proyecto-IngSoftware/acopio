@@ -1,5 +1,6 @@
+import { errorDeLinea } from '@acopio/shared';
 import type { Presentacion } from '../../api/catalogo';
-import type { Comprobante, DatosRecepcion } from '../../api/comprobantes';
+import { enBase, type Comprobante, type DatosRecepcion } from '../../api/comprobantes';
 import { aNumero, limpiarCantidad } from '../inventario/TecladoCantidad';
 
 /** Una línea del folio mientras el Operador confirma lo que llegó. Cantidades en presentaciones. */
@@ -65,7 +66,12 @@ export const faltaVencimiento = (l: LineaRecepcion) =>
 export const entradas = (lineas: LineaRecepcion[]) =>
   lineas.filter((l) => cantidadDe(l) > 0).length;
 
-export const listoParaRegistrar = (lineas: LineaRecepcion[]) => !lineas.some(faltaVencimiento);
+/** El tope de la línea va sobre el total en unidad base: 2000 × 7,2 L no cabe. */
+export const errorDeTope = (l: LineaRecepcion) =>
+  errorDeLinea(enBase(cantidadDe(l), l.contenido), l.unidad);
+
+export const listoParaRegistrar = (lineas: LineaRecepcion[]) =>
+  !lineas.some((l) => faltaVencimiento(l) || errorDeTope(l));
 
 export function recepcion(lineas: LineaRecepcion[], a: Accion): LineaRecepcion[] {
   return lineas.map((l) => {

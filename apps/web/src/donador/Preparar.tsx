@@ -154,6 +154,11 @@ function LineaDonacion({
               SIMBOLO_UNIDAD[linea.unidad]
             )}
           </span>
+          {error && (
+            <p role="alert" className="w-full text-body-sm text-error">
+              {error}
+            </p>
+          )}
         </div>
       )}
       {linea.perecedero && (

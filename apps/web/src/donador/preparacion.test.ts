@@ -77,6 +77,21 @@ describe('preparación de la donación', () => {
     expect(reducir(base, { tipo: 'cantidad', id, cantidad: 12 }).lineas[0]!.cantidad).toBe(12);
   });
 
+  it('con presentaciones o en unidades, el tope de la línea va sobre el total en unidad base', () => {
+    const base = con({ tipo: 'agregar', categoria: AGUA, leido: { ean: EAN, contenido: 7.2 } });
+    const id = base.lineas[0]!.id;
+    const grande = reducir(base, { tipo: 'cantidad', id, cantidad: 2000 });
+    expect(errorDeEscritura(grande.lineas[0]!)).toBe('Una línea llega hasta 10.000 L');
+    const cabe = reducir(base, { tipo: 'cantidad', id, cantidad: 1388 });
+    expect(errorDeEscritura(cabe.lineas[0]!)).toBeNull();
+    const pan = con({
+      tipo: 'agregar',
+      categoria: { id: 'c3', nombre: 'Pañal', unidadBase: 'UNIDAD' as const, perecedero: false },
+    });
+    const unidades = reducir(pan, { tipo: 'cantidad', id: pan.lineas[0]!.id, cantidad: 10_001 });
+    expect(errorDeEscritura(unidades.lineas[0]!)).toBe('Una línea llega hasta 10.000 und.');
+  });
+
   it('en kg o L sin presentación se escribe en g o ml y la cantidad queda en unidad base', () => {
     const e = con({ tipo: 'agregar', categoria: AGUA });
     const id = e.lineas[0]!.id;
