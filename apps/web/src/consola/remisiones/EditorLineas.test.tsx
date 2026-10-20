@@ -57,6 +57,24 @@ it('guarda las líneas con cantidad', async () => {
   expect(alGuardar).toHaveBeenCalledWith([{ categoriaId: 'c-arroz', cantidad: 12 }]);
 });
 
+it('«600» en ml guarda 0,6 L', async () => {
+  responderSegun({ 'GET /api/acopios/*/excedentes': EXCEDENTE_KENNEDY });
+  const alGuardar = editor();
+  await userEvent.type(await screen.findByLabelText('Cantidad de Agua potable (L)'), '600');
+  await userEvent.click(screen.getByRole('radio', { name: 'ml' }));
+  await userEvent.click(screen.getByRole('button', { name: 'Crear borrador' }));
+  expect(alGuardar).toHaveBeenCalledWith([{ categoriaId: 'c-agua', cantidad: 0.6 }]);
+});
+
+it('«0,5» en g avisa que va sin decimales y no deja guardar', async () => {
+  responderSegun({ 'GET /api/acopios/*/excedentes': EXCEDENTE_KENNEDY });
+  editor();
+  await userEvent.type(await screen.findByLabelText('Cantidad de Arroz (kg)'), '0.5');
+  await userEvent.click(screen.getByRole('radio', { name: 'g' }));
+  expect(screen.getByText('En g, la cantidad va sin decimales')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Crear borrador' })).toBeDisabled();
+});
+
 it('una línea propia sin movible sigue editable hasta su propia cantidad', async () => {
   responderSegun({
     'GET /api/acopios/*/excedentes': [excedente({ movible: 0, superavit: 40, comprometido: 40 })],

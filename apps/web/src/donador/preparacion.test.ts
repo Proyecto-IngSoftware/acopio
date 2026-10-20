@@ -1,4 +1,11 @@
-import { agregarLinea, cantidadBase, estadoInicial, reducir, type Linea } from './preparacion';
+import {
+  agregarLinea,
+  cantidadBase,
+  errorDeEscritura,
+  estadoInicial,
+  reducir,
+  type Linea,
+} from './preparacion';
 
 const AGUA = { id: 'c1', nombre: 'Agua potable', unidadBase: 'LITRO' as const, perecedero: false };
 const ARROZ = { id: 'c2', nombre: 'Arroz', unidadBase: 'KILOGRAMO' as const, perecedero: true };
@@ -68,6 +75,18 @@ describe('preparación de la donación', () => {
     expect(reducir(base, { tipo: 'cantidad', id, cantidad: 0 }).lineas[0]!.cantidad).toBe(1);
     expect(reducir(base, { tipo: 'cantidad', id, cantidad: 3.7 }).lineas[0]!.cantidad).toBe(3);
     expect(reducir(base, { tipo: 'cantidad', id, cantidad: 12 }).lineas[0]!.cantidad).toBe(12);
+  });
+
+  it('en kg o L sin presentación se escribe en g o ml y la cantidad queda en unidad base', () => {
+    const e = con({ tipo: 'agregar', categoria: AGUA });
+    const id = e.lineas[0]!.id;
+    const r = reducir(e, { tipo: 'escribir', id, texto: '600', factor: 0.001 });
+    expect(r.lineas[0]).toMatchObject({ cantidad: 0.6, texto: '600', factor: 0.001 });
+    expect(errorDeEscritura(r.lineas[0]!)).toBeNull();
+    const mal = reducir(e, { tipo: 'escribir', id, texto: '0,5', factor: 0.001 });
+    expect(errorDeEscritura(mal.lineas[0]!)).toBe('En ml, la cantidad va sin decimales');
+    const vacia = reducir(e, { tipo: 'escribir', id, texto: '', factor: 1 });
+    expect(errorDeEscritura(vacia.lineas[0]!)).toBe('Escribe una cantidad');
   });
 
   it('en unidades la cantidad también es entera', () => {

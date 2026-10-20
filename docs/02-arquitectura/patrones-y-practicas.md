@@ -3,7 +3,7 @@ title: "Patrones y prácticas de código"
 type: arquitectura
 tags: [arquitectura, patrones, buenas-practicas]
 estado: vigente
-actualizado: 2026-10-18
+actualizado: 2026-10-20
 ---
 
 # Patrones y prácticas de código
@@ -147,6 +147,7 @@ Servicios de otros módulos que se usan desde cualquier parte: `BitacoraService.
 | `componentes/Menu.tsx` | `SeccionMenu`, `FilaMenu` |
 | `componentes/Pildora.tsx`, `componentes/Segmentado.tsx` | `Pildora`, `Segmentado` |
 | `componentes/Qr.tsx` | `Qr`, un código QR como imagen SVG a partir de un texto |
+| `componentes/SelectorUnidad.tsx`, `componentes/cantidad-base.ts` | `SelectorUnidad`: elige kg o g, L o ml junto a un campo de cantidad (en `UNIDAD` solo muestra el símbolo). `leerCantidad(texto, factor, unidad)` convierte lo escrito a la unidad base y devuelve el error de decimales o de tope de línea; `simboloDe` da el símbolo del factor. Cada pantalla guarda su `factor`, que arranca en 1 y vuelve a 1 al cambiar de categoría |
 | `componentes/SubirAlNavegar.tsx` | `SubirAlNavegar` |
 | `componentes/TarjetaNoTraigan.tsx` | `TarjetaNoTraigan` |
 | `componentes/mapa/MapaLeaflet.tsx`, `componentes/mapa/MapaConPin.tsx`, `componentes/mapa/BuscadorDireccion.tsx` | Mapa base, mapa con pin y buscador de direcciones |
@@ -164,6 +165,17 @@ Servicios de otros módulos que se usan desde cualquier parte: `BitacoraService.
 | `pruebas/datos-red.ts` | `acopioDePrueba` |
 | `pruebas/datos-turnos.ts` | `jornadaDe`, `gestionDe` e `inscritoDe`, con valores válidos por defecto |
 | `pruebas/preparar.ts` | Hace fallar como sin red toda petición no simulada |
+
+### Regla de separación en la web
+
+Joseph la fijó el 2026-10-20 y aplica a toda pantalla nueva o tocada:
+
+1. Un ícono con texto va en un contenedor `flex items-center gap-space-xs`, y el ícono lleva `shrink-0`. No se usan espacios sueltos ni márgenes en el ícono.
+2. Entre grupos de una misma fila (título y acciones, texto y chip, número y botón) va `gap-space-sm` como mínimo.
+3. El texto que puede crecer (títulos, nombres, placeholders) lleva `min-w-0` y `truncate` o salto de línea, y no pasa por debajo de un ícono ni de un botón. Los placeholders caben enteros a 360 px.
+4. Las acciones de un encabezado llevan `shrink-0`. Si el título y la acción no caben a 360 px, la fila se parte con `flex-wrap` y la acción baja. `consola/Encabezado.tsx` ya lo hace.
+5. Las áreas táctiles miden al menos 48 px, y un botón con solo ícono lleva `aria-label`.
+6. Cada pantalla cambiada se captura con Playwright a 360 px y a 320 px, y se mira la zona superior y el campo de cantidad.
 
 ## Cómo se mantiene
 

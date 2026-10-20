@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useParams } from 'react-router';
-import { formatearCantidad, SIMBOLO_UNIDAD } from '@acopio/shared';
+import { formatearCantidad } from '@acopio/shared';
 import type { ResultadoBusqueda } from '../../api/catalogo';
 import { useRegistrarSalida, useSaldos, type DatosSalida } from '../../api/inventario';
 import { useAcopio } from '../../api/red';
@@ -9,7 +9,9 @@ import { Boton } from '../../componentes/Boton';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
 import { EtiquetaSemaforo } from '../../componentes/EtiquetaSemaforo';
+import { leerCantidad } from '../../componentes/cantidad-base';
 import { Icono } from '../../componentes/Icono';
+import { SelectorUnidad } from '../../componentes/SelectorUnidad';
 import { diaLargo } from '../../formato';
 import { useEnLinea } from '../../sin-conexion/en-linea';
 import { Encabezado } from '../Encabezado';
@@ -38,6 +40,8 @@ export function Salida() {
   const [q, fijarQ] = useState('');
   const [categoria, fijarCategoria] = useState<ResultadoBusqueda | null>(null);
   const [cantidad, fijarCantidad] = useState('');
+  // En qué unidad se escribe: 1 es la unidad base (kg, L); 0,001 son g o ml
+  const [factor, fijarFactor] = useState(1);
   const [motivo, fijarMotivo] = useState<Motivo>('ENTREGA_FAMILIAS');
   const [nota, fijarNota] = useState('');
   const [aviso, fijarAviso] = useState('');
@@ -48,7 +52,11 @@ export function Salida() {
   const registrar = useRegistrarSalida(acopioId);
 
   const decimales = categoria?.unidadBase !== 'UNIDAD';
-  const n = aNumero(cantidad);
+  const leida = categoria
+    ? leerCantidad(cantidad, factor, categoria.unidadBase)
+    : { base: aNumero(cantidad), error: null };
+  const errorCantidad = leida.error;
+  const n = leida.base;
   // Escrita con el teclado del equipo, la coma puede llegar donde no van decimales
   const fraccion = Boolean(categoria) && !decimales && cantidad.includes(',');
   const fila = saldos.data?.find((s) => s.categoriaId === categoria?.id);
@@ -65,6 +73,7 @@ export function Salida() {
 
   const limpiar = () => {
     fijarCantidad('');
+    fijarFactor(1);
     fijarMotivo('ENTREGA_FAMILIAS');
     fijarNota('');
     registrar.reset();
@@ -78,7 +87,8 @@ export function Salida() {
 
   const enviar = (e: FormEvent) => {
     e.preventDefault();
-    if (!categoria || n <= 0 || excede || fraccion || (pideNota && !nota.trim())) return;
+    if (!categoria || n <= 0 || excede || fraccion || errorCantidad || (pideNota && !nota.trim()))
+      return;
     const elegida = categoria;
     registrar.mutate(
       {
@@ -128,12 +138,14 @@ export function Salida() {
       <p
         role="status"
         className={
-          aviso ? 'rounded-xl bg-exito-container p-space-sm font-bold text-exito' : 'sr-only'
+          aviso
+            ? 'flex items-center gap-space-xs rounded-xl bg-exito-container p-space-sm font-bold text-exito'
+            : 'sr-only'
         }
       >
         {aviso && (
           <>
-            <Icono nombre="check_circle" className="mr-1 text-[20px]" />
+            <Icono nombre="check_circle" className="shrink-0 text-[20px]" />
             {aviso}
           </>
         )}
@@ -187,13 +199,13 @@ export function Salida() {
             </section>
           )}
 
-          <label
+          <div
             className={`flex flex-col items-center gap-space-xs rounded-xl bg-surface-container-lowest p-space-md ${
               sinSaldo !== undefined ? 'border-2 border-error' : 'border border-outline-variant'
             }`}
           >
             <span className="text-label-md text-on-surface-variant">Cantidad que sale</span>
-            <span className="flex items-baseline gap-space-xs">
+            <span className="flex flex-wrap items-center justify-center gap-x-space-sm gap-y-space-xs">
               <input
                 id="salida-cantidad"
                 aria-label="Cantidad"
@@ -209,9 +221,11 @@ export function Salida() {
                 className="max-w-[60vw] bg-transparent text-center text-display-hero-mobile font-bold text-on-surface tabular-nums"
               />
               {categoria && (
-                <span className="text-headline-sm text-on-surface-variant">
-                  {SIMBOLO_UNIDAD[categoria.unidadBase]}
-                </span>
+                <SelectorUnidad
+                  unidad={categoria.unidadBase}
+                  factor={factor}
+                  alCambiar={fijarFactor}
+                />
               )}
             </span>
             {categoria && n > 0 && sinSaldo === undefined && (
@@ -219,14 +233,24 @@ export function Salida() {
                 Quedan {formatearCantidad(saldoActual - n, categoria.unidadBase)}
               </span>
             )}
-          </label>
+          </div>
+
+          {errorCantidad && (
+            <p
+              role="alert"
+              className="flex items-center gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
+            >
+              <Icono nombre="error" className="shrink-0 text-[20px]" />
+              {errorCantidad}
+            </p>
+          )}
 
           {categoria && sinSaldo !== undefined && (
             <p
               role="alert"
-              className="flex gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
+              className="flex items-center gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
             >
-              <Icono nombre="error" className="text-[20px]" />
+              <Icono nombre="error" className="shrink-0 text-[20px]" />
               {conPunto(`Solo hay ${formatearCantidad(sinSaldo, categoria.unidadBase)}`)} Escribe
               una cantidad igual o menor.
             </p>
@@ -235,9 +259,9 @@ export function Salida() {
           {fraccion && (
             <p
               role="alert"
-              className="flex gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
+              className="flex items-center gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
             >
-              <Icono nombre="error" className="text-[20px]" />
+              <Icono nombre="error" className="shrink-0 text-[20px]" />
               En unidades, la cantidad va sin decimales.
             </p>
           )}

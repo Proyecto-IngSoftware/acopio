@@ -35,6 +35,22 @@ const ARROZ = {
   perecedero: true,
   puntaje: 0.9,
 };
+const JUGO = {
+  id: 'c4',
+  nombre: 'Jugo',
+  grupo: 'AGUA_Y_BEBIDAS',
+  unidadBase: 'LITRO',
+  perecedero: false,
+  puntaje: 0.5,
+};
+const PANAL = {
+  id: 'c3',
+  nombre: 'Pañal adulto',
+  grupo: 'ADULTO_MAYOR',
+  unidadBase: 'UNIDAD',
+  perecedero: false,
+  puntaje: 0.8,
+};
 const preparada = (n: number) => ({
   id: `d${n}`,
   folio: `ACO-2026-0000${n}`,
@@ -99,16 +115,33 @@ describe('P9, paso 1: qué llevas', () => {
     await userEvent.type(screen.getByRole('searchbox', { name: 'Categoría' }), 'arroz');
     await userEvent.click(await screen.findByRole('button', { name: /Arroz/ }));
     const linea = screen.getByRole('listitem', { name: 'Arroz' });
-    expect(within(linea).getByText('1')).toBeInTheDocument();
-    expect(within(linea).getByText('kg')).toBeInTheDocument();
+    expect(within(linea).getByRole('textbox', { name: 'Cantidad de Arroz' })).toHaveValue('1');
+    expect(within(linea).getByRole('radio', { name: 'kg' })).toBeChecked();
     expect(siguiente()).toBeEnabled();
   });
 
+  it('«600» en ml cuenta 0,6 L; «0,5» en g avisa y no deja avanzar', async () => {
+    pantalla({ 'GET /api/categorias/buscar': [JUGO, ARROZ] });
+    await userEvent.type(await screen.findByRole('searchbox'), 'jugo');
+    await userEvent.click(await screen.findByRole('button', { name: /Jugo/ }));
+    const linea = screen.getByRole('listitem', { name: 'Jugo' });
+    const campo = within(linea).getByRole('textbox', { name: 'Cantidad de Jugo' });
+    await userEvent.clear(campo);
+    await userEvent.type(campo, '600');
+    await userEvent.click(within(linea).getByRole('radio', { name: 'ml' }));
+    expect(within(linea).getByText('Se cuentan 0,6 L')).toBeInTheDocument();
+    expect(siguiente()).toBeEnabled();
+    await userEvent.clear(campo);
+    await userEvent.type(campo, '0,5');
+    expect(within(linea).getByText('En ml, la cantidad va sin decimales')).toBeInTheDocument();
+    expect(siguiente()).toBeDisabled();
+  });
+
   it('el − y el + cambian la cantidad, con mínimo 1', async () => {
-    pantalla();
-    await userEvent.type(await screen.findByRole('searchbox'), 'arroz');
-    await userEvent.click(await screen.findByRole('button', { name: /Arroz/ }));
-    const linea = screen.getByRole('listitem', { name: 'Arroz' });
+    pantalla({ 'GET /api/categorias/buscar': [PANAL] });
+    await userEvent.type(await screen.findByRole('searchbox'), 'pañal');
+    await userEvent.click(await screen.findByRole('button', { name: /Pañal/ }));
+    const linea = screen.getByRole('listitem', { name: 'Pañal adulto' });
     expect(within(linea).getByRole('button', { name: /^Menos/ })).toBeDisabled();
     await userEvent.click(within(linea).getByRole('button', { name: /^Más/ }));
     await userEvent.click(within(linea).getByRole('button', { name: /^Más/ }));

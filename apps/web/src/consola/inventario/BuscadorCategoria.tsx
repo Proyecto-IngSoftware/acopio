@@ -116,14 +116,14 @@ export function BuscadorCategoria({
       {aviso && (
         <p
           role="status"
-          className="flex gap-space-xs rounded-xl border border-outline-variant bg-surface-container-low p-space-sm text-on-surface"
+          className="flex items-center gap-space-xs rounded-xl border border-outline-variant bg-surface-container-low p-space-sm text-on-surface"
         >
-          <Icono nombre="info" className="text-[20px]" />
+          <Icono nombre="info" className="shrink-0 text-[20px]" />
           {aviso}
         </p>
       )}
-      <div className="flex gap-space-xs">
-        <label className="relative min-w-0 flex-1">
+      <div className="flex flex-wrap gap-space-sm">
+        <label className="relative min-w-[15rem] flex-1">
           <span className="sr-only">Categoría</span>
           <Icono
             nombre="search"
@@ -150,15 +150,15 @@ export function BuscadorCategoria({
             fijarAviso('');
             fijarEscaneo({ paso: 'camara' });
           }}
-          className="flex min-h-[56px] shrink-0 items-center gap-space-xs rounded-xl bg-primary-container px-space-md font-bold text-on-primary"
+          className="flex min-h-[56px] flex-1 shrink-0 items-center justify-center gap-space-xs rounded-xl bg-primary-container px-space-md font-bold text-on-primary"
         >
-          <Icono nombre="barcode_scanner" className="text-[22px]" />
+          <Icono nombre="barcode_scanner" className="shrink-0 text-[22px]" />
           Escanear
         </button>
       </div>
       {sinRed && (
         <p className="flex items-center gap-space-xs text-body-sm text-on-surface-variant">
-          <Icono nombre="smartphone" className="text-[18px]" />
+          <Icono nombre="smartphone" className="shrink-0 text-[18px]" />
           Busca en la copia guardada en el teléfono
         </p>
       )}

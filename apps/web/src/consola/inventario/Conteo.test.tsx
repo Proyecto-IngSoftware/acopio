@@ -36,6 +36,14 @@ const busqueda = [
     perecedero: false,
     puntaje: 0.8,
   },
+  {
+    id: 'c1',
+    nombre: 'Agua potable',
+    grupo: 'AGUA_Y_BEBIDAS',
+    unidadBase: 'LITRO',
+    perecedero: false,
+    puntaje: 0.7,
+  },
 ];
 const resultado = (cantidad: number, signo: 1 | -1, saldo: number) => ({
   movimiento: {
@@ -106,6 +114,20 @@ describe('C6 Conteo físico', () => {
     expect(screen.getByRole('region', { name: 'Diferencia' })).toHaveTextContent(
       'Diferencia +8 und.',
     );
+  });
+
+  it('«600» en ml cuenta 0,6 L', async () => {
+    pantalla({ 'POST /api/acopios/x1/ajustes': resultado(39.4, -1, 0.6) });
+    await elegir('agua', /Agua potable/);
+    await userEvent.click(screen.getByRole('radio', { name: 'ml' }));
+    await teclear('6', '0', '0');
+    await userEvent.type(motivo(), 'Conteo semanal completo');
+    await userEvent.click(registrar());
+    await screen.findByRole('status');
+    expect(await cuerpoDe('POST /api/acopios/x1/ajustes')).toMatchObject({
+      categoriaId: 'c1',
+      cantidadContada: 0.6,
+    });
   });
 
   it('si lo contado coincide con el sistema no deja registrar', async () => {

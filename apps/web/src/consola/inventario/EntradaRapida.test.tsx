@@ -204,6 +204,53 @@ describe('C4 Entrada rápida', () => {
     expect(screen.getByRole('button', { name: 'Registrar 5 L' })).toBeEnabled();
   });
 
+  it('«500» en g registra 0,5 kg', async () => {
+    pantalla({ 'POST /api/acopios/x1/entradas': resultado(0.5, 120.5) });
+    await elegir('arroz', /Arroz/);
+    await userEvent.click(screen.getByRole('radio', { name: 'g' }));
+    await teclear('5', '0', '0');
+    expect(screen.getByText('Se registran 0,5 kg')).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText('Vence el'), '2026-10-30');
+    await userEvent.click(screen.getByRole('button', { name: 'Registrar 0,5 kg' }));
+    await screen.findByRole('status');
+    expect(await cuerpoDe('POST /api/acopios/x1/entradas')).toMatchObject({ cantidad: 0.5 });
+  });
+
+  it('«0,5» en g avisa y no deja registrar', async () => {
+    pantalla();
+    await elegir('arroz', /Arroz/);
+    await userEvent.click(screen.getByRole('radio', { name: 'g' }));
+    await teclear('0', ',', '5');
+    await userEvent.type(screen.getByLabelText('Vence el'), '2026-10-30');
+    expect(screen.getByRole('alert')).toHaveTextContent('En g, la cantidad va sin decimales');
+    expect(screen.getByRole('button', { name: 'Registrar' })).toBeDisabled();
+  });
+
+  it('«10001» kg avisa el tope de la línea y no deja registrar', async () => {
+    pantalla();
+    await elegir('arroz', /Arroz/);
+    await teclear('1', '0', '0', '0', '1');
+    await userEvent.type(screen.getByLabelText('Vence el'), '2026-10-30');
+    expect(screen.getByRole('alert')).toHaveTextContent('Una línea llega hasta 10.000 kg');
+    expect(screen.getByRole('button', { name: 'Registrar' })).toBeDisabled();
+  });
+
+  it('con un código que trae presentación no hay selector de unidad', async () => {
+    pantalla({ 'GET /api/codigos-barras/7702001045231': BOTELLA });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    await screen.findByRole('region', { name: 'Categoría elegida' });
+    expect(screen.queryByRole('radio', { name: 'ml' })).not.toBeInTheDocument();
+  });
+
+  it('elegir otra categoría vuelve la unidad a kg', async () => {
+    pantalla();
+    await elegir('arroz', /Arroz/);
+    await userEvent.click(screen.getByRole('radio', { name: 'g' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Cambiar' }));
+    await elegir('arroz', /Arroz/);
+    expect(screen.getByRole('radio', { name: 'kg' })).toBeChecked();
+  });
+
   it('registra con el teclado de la pantalla, muestra el saldo resultante y queda lista para otra', async () => {
     pantalla();
     await elegir('panal', /Pañal adulto/);
