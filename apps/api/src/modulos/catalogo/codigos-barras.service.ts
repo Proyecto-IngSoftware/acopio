@@ -227,6 +227,62 @@ export class CodigosBarrasService {
   }
 
   /**
+   * Camino de la recepción, seguro ante recepciones simultáneas del mismo código. Con la
+   * presentación dada (o la del código, si está `PROPUESTO`): un `PROPUESTO` pasa a `VALIDADO`
+   * con un UPDATE condicionado; quien pierde la carrera, o un código ya `VALIDADO` cuya
+   * presentación es otra, lo deja igual y lo marca `por_revisar`. La presentación destino, si
+   * estaba `PROPUESTO`, también se valida. Nunca da `CODIGO_YA_VALIDADO` (a diferencia de
+   * `validarEnTransaccion`, que usa la ruta del Operador). Devuelve la presentación destino o
+   * `null` si no hay nada que aplicar.
+   */
+  async resolverEnRecepcion(
+    tx: ClienteBd,
+    usuario: UsuarioAutenticado,
+    ean: string,
+    presentacionId: string | undefined,
+  ): Promise<string | null> {
+    const antes = await this.dao.conCategoria(ean, tx);
+    if (!antes) throw desconocido();
+    const destinoId =
+      presentacionId ?? (antes.estado === 'PROPUESTO' ? antes.presentacion_id : null);
+    if (!destinoId) return null;
+    const p = await this.presentacionActiva(tx, destinoId);
+    let validado = false;
+    if (antes.estado === 'PROPUESTO') {
+      const cambiadas = await this.dao.validarSiPropuesto(
+        ean,
+        { presentacion_id: p.id, categoria_id: p.categoria_id },
+        tx,
+      );
+      if (cambiadas === 1) {
+        validado = true;
+        await this.bitacora.registrar(tx, {
+          usuarioId: usuario.id,
+          accion: 'codigo_barras.validado',
+          entidad: 'codigo_barras',
+          entidadId: ean,
+          antes: vista(antes),
+          despues: vista((await this.dao.conCategoria(ean, tx))!),
+        });
+      }
+    }
+    await this.validarPresentacion(tx, usuario, p);
+    if (!validado) {
+      // Ya estaba validado (o lo validó otra recepción): solo se compara con lo vigente
+      const vigente = await this.dao.conCategoria(ean, tx);
+      if (vigente && vigente.presentacion_id !== p.id) {
+        await this.marcarParaRevisarEnTransaccion(
+          tx,
+          usuario,
+          ean,
+          'La recepción de una donación la corrigió a otra presentación',
+        );
+      }
+    }
+    return p.id;
+  }
+
+  /**
    * Una recepción vio algo que no cuadra con la presentación del código: queda `por_revisar`
    * para el Administrador. Si ya lo estaba, no escribe nada. 404 `EAN_DESCONOCIDO` si no existe.
    */

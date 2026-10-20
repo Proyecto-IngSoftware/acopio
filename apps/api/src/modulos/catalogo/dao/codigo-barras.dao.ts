@@ -72,6 +72,22 @@ export class CodigoBarrasDao {
     return bd.codigoBarras.update({ where: { ean }, data: datos, include: completa });
   }
 
+  /**
+   * Pasa a `VALIDADO` solo si sigue `PROPUESTO`; devuelve cuántas filas cambió (0 o 1). El
+   * UPDATE toma el candado de la fila: quien llega después espera y ve que ya no coincide.
+   */
+  async validarSiPropuesto(
+    ean: string,
+    datos: { presentacion_id: string; categoria_id: string },
+    bd: ClienteBd,
+  ): Promise<number> {
+    const { count } = await bd.codigoBarras.updateMany({
+      where: { ean, estado: 'PROPUESTO' },
+      data: { estado: 'VALIDADO', ...datos },
+    });
+    return count;
+  }
+
   /** El nombre de quien asoció cada código, en una sola consulta (C18). */
   autores(ids: string[], bd: ClienteBd = this.prisma) {
     return bd.usuario.findMany({ where: { id: { in: ids } }, select: { id: true, nombre: true } });

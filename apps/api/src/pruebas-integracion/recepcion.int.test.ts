@@ -445,5 +445,117 @@ describe('recibir una donación preparada (RF-CMP-001C)', () => {
       }).expect(422);
       expect(r.body.codigo).toBe('CANTIDAD_FUERA_DE_TOPE');
     });
+
+    it('dos recepciones a la vez del mismo PROPUESTO con presentaciones distintas: una valida, la otra corrige la línea', async () => {
+      const cat = await categoriaNueva();
+      const base = await presentacion(cat.id, 1, 'PROPUESTO');
+      const p2 = await presentacion(cat.id, 2);
+      const p3 = await presentacion(cat.id, 3);
+      const ean = eanNuevo();
+      await codigo(ean, cat.id, base.id, 'PROPUESTO');
+      const x = await donacion(cat.id, ean, 1);
+      const y = await donacion(cat.id, ean, 1);
+      const cuerpo = (d: typeof x, presentacionId: string) => ({
+        acopioId: ACOPIO_A,
+        lineas: [{ lineaId: d.lineas[0]!.id, cantidadConfirmada: 1, presentacionId }],
+      });
+      const [rx, ry] = await Promise.all([
+        recibir(opA.token, x.folio, cuerpo(x, p2.id)),
+        recibir(opA2.token, y.folio, cuerpo(y, p3.id)),
+      ]);
+      expect([rx.status, ry.status]).toEqual([200, 200]);
+      const c = await a.prisma.codigoBarras.findUniqueOrThrow({ where: { ean } });
+      expect(c.estado).toBe('VALIDADO');
+      expect([p2.id, p3.id]).toContain(c.presentacion_id);
+      expect(c.por_revisar).toBe(true);
+      expect(
+        await a.prisma.bitacora.count({
+          where: { accion: 'codigo_barras.validado', entidad_id: ean },
+        }),
+      ).toBe(1);
+      expect(await saldo(cat.id)).toBe(5);
+    });
+
+    it('un comprobante con dos líneas del mismo PROPUESTO valida una vez', async () => {
+      const cat = await categoriaNueva();
+      const p = await presentacion(cat.id, 2, 'PROPUESTO');
+      const ean = eanNuevo();
+      await codigo(ean, cat.id, p.id, 'PROPUESTO');
+      const d = await donacion(cat.id, ean, 1);
+      const primera = await a.prisma.lineaComprobante.findUniqueOrThrow({
+        where: { id: d.lineas[0]!.id },
+      });
+      const segunda = await a.prisma.lineaComprobante.create({
+        data: {
+          comprobante_id: primera.comprobante_id,
+          categoria_id: cat.id,
+          ean,
+          contenido_unitario: 2,
+          cantidad_declarada: 3,
+        },
+      });
+      await recibir(opA.token, d.folio, {
+        acopioId: ACOPIO_A,
+        lineas: [primera.id, segunda.id].map((lineaId) => ({ lineaId, cantidadConfirmada: 1 })),
+      }).expect(200);
+      expect(
+        await a.prisma.bitacora.count({
+          where: { accion: 'codigo_barras.validado', entidad_id: ean },
+        }),
+      ).toBe(1);
+      expect((await a.prisma.codigoBarras.findUniqueOrThrow({ where: { ean } })).estado).toBe(
+        'VALIDADO',
+      );
+    });
+
+    it('corregir a una presentación PROPUESTO la valida', async () => {
+      const cat = await categoriaNueva();
+      const base = await presentacion(cat.id, 1);
+      const nueva = await presentacion(cat.id, 4, 'PROPUESTO');
+      const ean = eanNuevo();
+      await codigo(ean, cat.id, base.id, 'VALIDADO');
+      const d = await donacion(cat.id, ean, 1);
+      await recibir(opA.token, d.folio, {
+        acopioId: ACOPIO_A,
+        lineas: [{ lineaId: d.lineas[0]!.id, cantidadConfirmada: 1, presentacionId: nueva.id }],
+      }).expect(200);
+      expect(
+        (await a.prisma.presentacion.findUniqueOrThrow({ where: { id: nueva.id } })).estado,
+      ).toBe('VALIDADO');
+    });
+
+    it('dos recepciones con los mismos EAN en orden cruzado no se traban', async () => {
+      const cat = await categoriaNueva();
+      const pa = await presentacion(cat.id, 1, 'PROPUESTO');
+      const pb = await presentacion(cat.id, 2, 'PROPUESTO');
+      const e1 = eanNuevo();
+      const e2 = e1.slice(0, -1) + ((Number(e1.slice(-1)) + 1) % 10);
+      await codigo(e1, cat.id, pa.id, 'PROPUESTO');
+      await codigo(e2, cat.id, pb.id, 'PROPUESTO');
+      const dos = async (orden: string[]) => {
+        const donador = await crearDonador(a);
+        const r = await a
+          .http()
+          .post('/api/donaciones')
+          .set('authorization', `Bearer ${donador.token}`)
+          .send({
+            acopioId: ACOPIO_A,
+            lineas: orden.map((ean) => ({ categoriaId: cat.id, ean, cantidad: 1 })),
+          })
+          .expect(201);
+        return r.body as { folio: string; lineas: { id: string }[] };
+      };
+      const x = await dos([e1, e2]);
+      const y = await dos([e2, e1]);
+      const cuerpo = (d: typeof x) => ({
+        acopioId: ACOPIO_A,
+        lineas: d.lineas.map((l) => ({ lineaId: l.id, cantidadConfirmada: 1 })),
+      });
+      const [rx, ry] = await Promise.all([
+        recibir(opA.token, x.folio, cuerpo(x)),
+        recibir(opA2.token, y.folio, cuerpo(y)),
+      ]);
+      expect([rx.status, ry.status]).toEqual([200, 200]);
+    });
   });
 });
