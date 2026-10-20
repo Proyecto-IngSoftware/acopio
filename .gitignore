@@ -29,3 +29,4 @@ apps/api/src/generado/
 # Llaves del adaptador de autenticación local
 .llaves/
 apps/api/.llaves/
+.superpowers/
