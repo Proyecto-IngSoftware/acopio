@@ -11,6 +11,7 @@ import { claveEncuadre, leerClave } from './encuadre';
 import {
   altoPunto,
   anchoPunto,
+  capitalizar,
   etiquetaMarcador,
   htmlGrupo,
   htmlMarcador,
@@ -38,10 +39,6 @@ const marcador = (
     iconAnchor: [ancho / 2, alto],
   });
 };
-
-// «FALTA: Arroz» se lee «Falta: Arroz»: solo la palabra en mayúsculas del comienzo baja a minúsculas
-const capitalizar = (t: string) =>
-  t.replace(/^[A-ZÁÉÍÓÚÑ ]+/, (m) => m.charAt(0) + m.slice(1).toLowerCase());
 
 const grupo = (tipo: TipoGrupo) => (c: L.MarkerCluster) =>
   L.divIcon({ className: '', html: htmlGrupo(tipo, c.getChildCount()), iconSize: [40, 40] });

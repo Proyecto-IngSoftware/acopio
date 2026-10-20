@@ -5,6 +5,12 @@ import type { EstadoMapa, EtiquetaMapa } from './necesidad';
 export const etiquetaMarcador = (a: AcopioPublico) =>
   a.fuente ? `Punto de ${a.fuente.nombre}: ${a.nombre}` : a.nombre;
 
+/** «FALTA: Arroz» se lee «Falta: Arroz» y «FALTAN 18 PERSONAS», «Faltan 18 personas»: solo la parte
+ *  en mayúsculas del comienzo baja a minúsculas. Un número cuenta si lo sigue un espacio, así
+ *  «AGUA 5L» conserva su «5L». */
+export const capitalizar = (t: string) =>
+  t.replace(/^(?:[A-ZÁÉÍÓÚÑ ]|\d+(?= ))+/, (m) => m.charAt(0) + m.slice(1).toLowerCase());
+
 const LARGO_PIN = 14;
 
 /** El nombre que cabe en el pin: sin el «Acopio» del comienzo y cortado en una palabra entera. */

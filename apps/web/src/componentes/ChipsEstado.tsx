@@ -14,12 +14,13 @@ interface Props<T extends string> {
 }
 
 /** Fila de chips que filtran por estado, cada uno con cuántos hay («Todos 6», «Falta 2»). Un chip
- *  con 0 no se dibuja, salvo el elegido, para que siempre se vea qué filtro está puesto. */
+ *  con 0 no se dibuja, salvo el elegido, para que siempre se vea qué filtro está puesto, y el
+ *  primero («Todos»), que es el que lo quita. */
 export function ChipsEstado<T extends string>({ etiqueta, valor, alCambiar, opciones }: Props<T>) {
   return (
     <div role="group" aria-label={etiqueta} className="flex flex-wrap gap-space-xs">
       {opciones
-        .filter((o) => o.cuenta > 0 || o.valor === valor)
+        .filter((o, i) => i === 0 || o.cuenta > 0 || o.valor === valor)
         .map((o) => (
           <button
             key={o.valor}

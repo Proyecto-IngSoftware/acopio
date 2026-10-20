@@ -100,4 +100,14 @@ describe('ChipsEstado', () => {
       'true',
     );
   });
+
+  it('el primero, que quita el filtro, se dibuja aunque cuente 0', () => {
+    const sinNada = opciones.map((o) => ({ ...o, cuenta: 0 }));
+    render(<ChipsEstado etiqueta="Filtrar" valor="sobra" alCambiar={vi.fn()} opciones={sinNada} />);
+    expect(screen.getByRole('button', { name: 'Todos 0' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
+    expect(screen.queryByRole('button', { name: /Falta/ })).not.toBeInTheDocument();
+  });
 });

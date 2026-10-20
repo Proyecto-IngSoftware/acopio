@@ -4,6 +4,7 @@ import { acopioDePrueba, referenciadoDePrueba } from '../../pruebas/datos-red';
 import {
   altoPunto,
   anchoPunto,
+  capitalizar,
   etiquetaCorta,
   etiquetaMarcador,
   htmlGrupo,
@@ -183,4 +184,11 @@ it('anchoPunto: el círculo sin etiqueta y lo que mida la etiqueta con ella', ()
   expect(anchoPunto(false, 'FALTA: Alimento para animales +2')).toBe(
     anchoPunto(false, 'X'.repeat(24)),
   );
+});
+
+it('capitalizar baja la parte en mayúsculas del comienzo y deja el resto', () => {
+  expect(capitalizar('FALTA: Arroz')).toBe('Falta: Arroz');
+  expect(capitalizar('ARROZ DE SOBRA')).toBe('Arroz de sobra');
+  expect(capitalizar('FALTAN 18 PERSONAS')).toBe('Faltan 18 personas');
+  expect(capitalizar('FALTA AGUA 5L')).toBe('Falta agua 5L');
 });

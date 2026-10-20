@@ -187,6 +187,31 @@ it('los chips cuentan y filtran por estado, y quedan en la URL', async () => {
   expect(screen.getAllByRole('link')).toEqual([chapinero]);
 });
 
+it('un ?estado= sin acopios activos deja su chip visible para quitarlo', async () => {
+  responderSegun({
+    ...RESPUESTAS,
+    'GET /api/acopios': [acopioDePrueba({ id: 'x2', nombre: 'Acopio Suba', estado: 'PAUSADO' })],
+    'GET /api/publico/necesidades': [{ ...vacia, acopioId: 'x2', faltan: [AGUA] }],
+  });
+  function Ubicacion() {
+    return <p data-testid="busqueda">{useLocation().search}</p>;
+  }
+  render(
+    envolver(
+      <>
+        <Mapa />
+        <Ubicacion />
+      </>,
+      '/mapa?vista=lista&estado=falta',
+    ),
+  );
+  const falta = await screen.findByRole('button', { name: 'Falta 0' });
+  expect(falta).toHaveAttribute('aria-pressed', 'true');
+  await userEvent.click(screen.getByRole('button', { name: 'Todos 0' }));
+  expect(screen.getByTestId('busqueda')).not.toHaveTextContent('estado=');
+  expect(screen.getByTestId('busqueda')).toHaveTextContent('vista=lista');
+});
+
 it('la tarjeta del acopio elegido dice qué falta y qué sobra', async () => {
   responderSegun(RESPUESTAS);
   pantalla('/mapa');

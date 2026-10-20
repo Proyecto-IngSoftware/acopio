@@ -207,7 +207,7 @@ export function Mapa() {
             {categoria.nombre.toLocaleLowerCase('es-CO')}.
           </p>
         )}
-        {necesidades && cuentas.todos > 0 && (
+        {necesidades && (cuentas.todos > 0 || chip !== 'todos') && (
           <ChipsEstado
             etiqueta="Ver por estado"
             valor={chip}
