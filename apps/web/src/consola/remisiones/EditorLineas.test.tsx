@@ -75,6 +75,14 @@ it('«0,5» en g avisa que va sin decimales y no deja guardar', async () => {
   expect(screen.getByRole('button', { name: 'Crear borrador' })).toBeDisabled();
 });
 
+it('una cantidad negativa se marca y no deja guardar', async () => {
+  responderSegun({ 'GET /api/acopios/*/excedentes': EXCEDENTE_KENNEDY });
+  editor();
+  await userEvent.type(await screen.findByLabelText('Cantidad de Arroz (kg)'), '-5');
+  expect(screen.getByText('La cantidad no puede ser negativa')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Crear borrador' })).toBeDisabled();
+});
+
 it('una línea propia sin movible sigue editable hasta su propia cantidad', async () => {
   responderSegun({
     'GET /api/acopios/*/excedentes': [excedente({ movible: 0, superavit: 40, comprometido: 40 })],

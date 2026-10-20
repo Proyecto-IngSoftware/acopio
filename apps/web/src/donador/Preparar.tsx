@@ -1,7 +1,7 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router';
-import { formatearCantidad, formatearNumero } from '@acopio/shared';
+import { formatearCantidad, formatearNumero, SIMBOLO_UNIDAD } from '@acopio/shared';
 import type { ResultadoBusqueda } from '../api/catalogo';
 import { consultarCodigoDonador, useMisDonaciones, type Donacion } from '../api/donaciones';
 import { Boton, EnlaceBoton } from '../componentes/Boton';
@@ -144,7 +144,7 @@ function LineaDonacion({
             {conPresentacion ? (
               <>= {formatearCantidad(cantidadBase(linea), linea.unidad)}</>
             ) : (
-              <SelectorUnidad unidad={linea.unidad} factor={1} alCambiar={() => {}} />
+              SIMBOLO_UNIDAD[linea.unidad]
             )}
           </span>
         </div>

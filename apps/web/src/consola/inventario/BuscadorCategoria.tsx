@@ -123,7 +123,7 @@ export function BuscadorCategoria({
         </p>
       )}
       <div className="flex flex-wrap gap-space-sm">
-        <label className="relative min-w-[15rem] flex-1">
+        <label className="relative min-w-0 flex-[4_1_12rem]">
           <span className="sr-only">Categoría</span>
           <Icono
             nombre="search"
@@ -138,10 +138,10 @@ export function BuscadorCategoria({
             id={id}
             type="search"
             aria-label="Categoría"
-            placeholder="Busca: arroz, pañal, agua…"
+            placeholder="Busca: arroz…"
             value={q}
             onChange={(e) => onQ(e.target.value)}
-            className="min-h-[56px] w-full rounded-xl border-[1.5px] border-outline bg-surface-container-lowest pr-space-md pl-12 text-body-lg text-on-surface"
+            className="min-h-[56px] w-full rounded-xl border-[1.5px] border-outline bg-surface-container-lowest pr-space-xs pl-11 text-body-lg text-on-surface"
           />
         </label>
         <button
@@ -150,7 +150,7 @@ export function BuscadorCategoria({
             fijarAviso('');
             fijarEscaneo({ paso: 'camara' });
           }}
-          className="flex min-h-[56px] flex-1 shrink-0 items-center justify-center gap-space-xs rounded-xl bg-primary-container px-space-md font-bold text-on-primary"
+          className="flex min-h-[56px] flex-[1_0_auto] items-center justify-center gap-space-xs rounded-xl bg-primary-container px-space-sm font-bold text-on-primary"
         >
           <Icono nombre="barcode_scanner" className="shrink-0 text-[22px]" />
           Escanear

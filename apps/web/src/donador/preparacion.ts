@@ -129,7 +129,8 @@ export function reducir(e: Preparacion, a: Accion): Preparacion {
     case 'escribir':
       return cambiar(e, a.id, (l) => {
         const { base, error } = leerCantidad(a.texto, a.factor, l.unidad);
-        const cantidad = !error && base > 0 ? base : l.cantidad;
+        // Sin texto válido la línea no cuenta nada: `errorDeEscritura` bloquea el avance
+        const cantidad = !error && base > 0 ? base : 0;
         return { ...l, texto: a.texto, factor: a.factor, cantidad };
       });
     case 'vence':

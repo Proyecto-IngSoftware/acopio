@@ -87,6 +87,9 @@ describe('preparación de la donación', () => {
     expect(errorDeEscritura(mal.lineas[0]!)).toBe('En ml, la cantidad va sin decimales');
     const vacia = reducir(e, { tipo: 'escribir', id, texto: '', factor: 1 });
     expect(errorDeEscritura(vacia.lineas[0]!)).toBe('Escribe una cantidad');
+    // Con texto inválido o vacío la cantidad no queda con el valor de antes
+    expect(mal.lineas[0]!.cantidad).toBe(0);
+    expect(vacia.lineas[0]!.cantidad).toBe(0);
   });
 
   it('en unidades la cantidad también es entera', () => {

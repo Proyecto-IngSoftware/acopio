@@ -35,6 +35,12 @@ describe('leerCantidad', () => {
   it('vacío no es error ni cantidad', () => {
     expect(leerCantidad('', 1, 'KILOGRAMO')).toEqual({ base: 0, error: null });
   });
+  it('un valor negativo es un error', () => {
+    expect(leerCantidad('-5', 1, 'KILOGRAMO')).toEqual({
+      base: 0,
+      error: 'La cantidad no puede ser negativa',
+    });
+  });
   it('rechaza decimales de más y topes', () => {
     expect(leerCantidad('0,5', 0.001, 'KILOGRAMO').error).toMatch(/sin decimales/);
     expect(leerCantidad('10001', 1, 'KILOGRAMO').error).toBe('Una línea llega hasta 10.000 kg');

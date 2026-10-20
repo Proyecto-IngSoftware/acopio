@@ -13,7 +13,8 @@ export function leerCantidad(
   unidad: UnidadBase,
 ): { base: number; error: string | null } {
   const n = Number(texto.replace(',', '.'));
-  if (!Number.isFinite(n) || n <= 0) return { base: 0, error: null };
+  if (n < 0) return { base: 0, error: 'La cantidad no puede ser negativa' };
+  if (!Number.isFinite(n) || n === 0) return { base: 0, error: null };
   const base = aUnidadBase(n, factor);
   if (base === null) {
     return {
