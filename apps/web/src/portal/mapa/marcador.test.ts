@@ -78,6 +78,12 @@ it('el lector de pantalla anuncia el title del marcador y no el texto de la píl
   ref.remove();
 });
 
+const textoDe = (html: string) => {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent ?? '';
+};
+
 describe('el punto del acopio activo con la etiqueta de su estado', () => {
   const casos = [
     ['falta', 'FALTA: Arroz', 'priority_high', 'bg-secondary-container'],
@@ -98,12 +104,7 @@ describe('el punto del acopio activo con la etiqueta de su estado', () => {
     const html = htmlMarcador(acopioDePrueba(), false);
     expect(html).toContain('bg-primary-container');
     expect(html).toContain('warehouse');
-    expect(
-      html
-        .replace(/<[^>]*>/g, '')
-        .replace('warehouse', '')
-        .trim(),
-    ).toBe('');
+    expect(textoDe(html).replace('warehouse', '').trim()).toBe('');
   });
 
   it('apagado añade opacity-45 y quita la etiqueta', () => {
