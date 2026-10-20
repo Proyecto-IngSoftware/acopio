@@ -108,7 +108,8 @@ export class CodigosBarrasService {
     p: { id: string; estado: EstadoCatalogo },
   ) {
     if (p.estado === 'VALIDADO') return;
-    await this.presentaciones.actualizar(p.id, { estado: 'VALIDADO' }, tx);
+    // Condicionado: dos transacciones a la vez no escriben la bitácora dos veces
+    if ((await this.presentaciones.validarSiPropuesta(p.id, tx)) === 0) return;
     await this.bitacora.registrar(tx, {
       usuarioId: usuario.id,
       accion: 'presentacion.editada',
@@ -247,7 +248,6 @@ export class CodigosBarrasService {
       presentacionId ?? (antes.estado === 'PROPUESTO' ? antes.presentacion_id : null);
     if (!destinoId) return null;
     const p = await this.presentacionActiva(tx, destinoId);
-    let validado = false;
     if (antes.estado === 'PROPUESTO') {
       const cambiadas = await this.dao.validarSiPropuesto(
         ean,
@@ -255,7 +255,6 @@ export class CodigosBarrasService {
         tx,
       );
       if (cambiadas === 1) {
-        validado = true;
         await this.bitacora.registrar(tx, {
           usuarioId: usuario.id,
           accion: 'codigo_barras.validado',
@@ -264,22 +263,45 @@ export class CodigosBarrasService {
           antes: vista(antes),
           despues: vista((await this.dao.conCategoria(ean, tx))!),
         });
+        return p.id;
       }
     }
-    await this.validarPresentacion(tx, usuario, p);
-    if (!validado) {
-      // Ya estaba validado (o lo validó otra recepción): solo se compara con lo vigente
-      const vigente = await this.dao.conCategoria(ean, tx);
-      if (vigente && vigente.presentacion_id !== p.id) {
-        await this.marcarParaRevisarEnTransaccion(
-          tx,
-          usuario,
-          ean,
-          'La recepción de una donación la corrigió a otra presentación',
-        );
-      }
+    // Ya estaba validado, o lo validó otra recepción: solo se compara con lo vigente
+    const vigente = await this.dao.conCategoria(ean, tx);
+    if (!vigente) throw desconocido();
+    // Sin presentación indicada no hay corrección: vale la que dejó quien validó primero
+    if (presentacionId === undefined) return vigente.presentacion_id;
+    if (vigente.presentacion_id !== p.id) {
+      await this.marcarParaRevisarEnTransaccion(
+        tx,
+        usuario,
+        ean,
+        'La recepción de una donación la corrigió a otra presentación',
+      );
     }
     return p.id;
+  }
+
+  /**
+   * Primer paso de la recepción: valida las presentaciones `PROPUESTO` que van a usarse (las
+   * indicadas o, en un código `PROPUESTO`, la suya) en orden ascendente de id, así dos
+   * recepciones no toman esas filas en orden cruzado. Solo lee los códigos.
+   */
+  async validarPresentacionesDeRecepcion(
+    tx: ClienteBd,
+    usuario: UsuarioAutenticado,
+    pedidos: { ean: string; presentacionId?: string }[],
+  ) {
+    const ids = new Set<string>();
+    for (const { ean, presentacionId } of pedidos) {
+      const c = await this.dao.conCategoria(ean, tx);
+      if (!c) throw desconocido();
+      const id = presentacionId ?? (c.estado === 'PROPUESTO' ? c.presentacion_id : null);
+      if (id) ids.add(id);
+    }
+    for (const id of [...ids].sort()) {
+      await this.validarPresentacion(tx, usuario, await this.presentacionActiva(tx, id));
+    }
   }
 
   /**

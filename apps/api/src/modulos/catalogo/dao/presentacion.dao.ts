@@ -55,6 +55,15 @@ export class PresentacionDao {
     return bd.presentacion.update({ where: { id }, data: datos, include: completa });
   }
 
+  /** Pasa a `VALIDADO` solo si sigue `PROPUESTO`; devuelve cuántas filas cambió (0 o 1). */
+  async validarSiPropuesta(id: string, bd: ClienteBd): Promise<number> {
+    const { count } = await bd.presentacion.updateMany({
+      where: { id, estado: 'PROPUESTO' },
+      data: { estado: 'VALIDADO' },
+    });
+    return count;
+  }
+
   paquetesQueContienen(id: string, bd: ClienteBd = this.prisma) {
     return bd.presentacion.findMany({
       where: { contiene_id: id },

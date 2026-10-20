@@ -97,11 +97,16 @@ export class RecepcionService {
       const porId = [...previo.lineas].sort((x, y) => x.id.localeCompare(y.id));
       const destinos = new Map<string, string | null>();
       const eans = [...new Set(porId.flatMap((l) => (l.ean ? [l.ean] : [])))].sort();
-      for (const ean of eans) {
-        const dada = porId
+      const pedidos = eans.map((ean) => ({
+        ean,
+        presentacionId: porId
           .filter((l) => l.ean === ean)
           .map((l) => porLinea.get(l.id)!.presentacionId)
-          .find((id) => id !== undefined);
+          .find((id) => id !== undefined),
+      }));
+      // Primero las presentaciones (por id) y luego los códigos (por EAN): un solo orden de filas
+      await this.codigosServicio.validarPresentacionesDeRecepcion(tx, usuario, pedidos);
+      for (const { ean, presentacionId: dada } of pedidos) {
         destinos.set(ean, await this.codigosServicio.resolverEnRecepcion(tx, usuario, ean, dada));
       }
       const resueltas = [];

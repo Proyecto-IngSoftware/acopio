@@ -557,5 +557,56 @@ describe('recibir una donación preparada (RF-CMP-001C)', () => {
       ]);
       expect([rx.status, ry.status]).toEqual([200, 200]);
     });
+
+    it('correcciones cruzadas a presentaciones PROPUESTO a la vez no se traban y validan cada una una vez', async () => {
+      const cat = await categoriaNueva();
+      const base = await presentacion(cat.id, 1);
+      const p1 = await presentacion(cat.id, 2, 'PROPUESTO');
+      const p2 = await presentacion(cat.id, 3, 'PROPUESTO');
+      const e1 = eanNuevo();
+      const e2 = e1.slice(0, -1) + ((Number(e1.slice(-1)) + 1) % 10);
+      await codigo(e1, cat.id, base.id, 'VALIDADO');
+      await codigo(e2, cat.id, base.id, 'VALIDADO');
+      const dos = async () => {
+        const donador = await crearDonador(a);
+        const r = await a
+          .http()
+          .post('/api/donaciones')
+          .set('authorization', `Bearer ${donador.token}`)
+          .send({
+            acopioId: ACOPIO_A,
+            lineas: [e1, e2].map((ean) => ({ categoriaId: cat.id, ean, cantidad: 1 })),
+          })
+          .expect(201);
+        return r.body as { folio: string; lineas: { id: string }[] };
+      };
+      const x = await dos();
+      const y = await dos();
+      const cuerpo = async (d: typeof x, orden: string[]) => {
+        const filas = await a.prisma.lineaComprobante.findMany({
+          where: { id: { in: d.lineas.map((l) => l.id) } },
+        });
+        return {
+          acopioId: ACOPIO_A,
+          lineas: filas.map((l) => ({
+            lineaId: l.id,
+            cantidadConfirmada: 1,
+            presentacionId: l.ean === e1 ? orden[0] : orden[1],
+          })),
+        };
+      };
+      const [rx, ry] = await Promise.all([
+        recibir(opA.token, x.folio, await cuerpo(x, [p2.id, p1.id])),
+        recibir(opA2.token, y.folio, await cuerpo(y, [p1.id, p2.id])),
+      ]);
+      expect([rx.status, ry.status]).toEqual([200, 200]);
+      for (const id of [p1.id, p2.id]) {
+        expect(
+          await a.prisma.bitacora.count({
+            where: { accion: 'presentacion.editada', entidad_id: id },
+          }),
+        ).toBe(1);
+      }
+    });
   });
 });
