@@ -39,6 +39,7 @@ documento que se reescribe hasta perder la historia.
 | [0018](ADR-0018-movimientos-de-zona.md) | Las zonas reciben en el mismo libro de movimientos que los acopios | aceptada |
 | [0019](ADR-0019-dao-sobre-prisma.md) | El acceso a datos pasa por DAO sobre Prisma | aceptada |
 | [0020](ADR-0020-grises-piedra.md) | Grises piedra en los fondos y bordes, e íconos por grupo de categoría | aceptada |
+| [0021](ADR-0021-presentaciones-y-estado-del-codigo.md) | Presentaciones como entidad y estado en el código de barras | aceptada |
 
 ## Cuándo escribir una
 
