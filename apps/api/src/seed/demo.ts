@@ -506,7 +506,7 @@ async function sembrarRemisionesDemo(
 /**
  * Presentaciones y códigos de barras de la demostración (ADR-0021). Idempotente: busca por
  * categoría y nombre, y por EAN. Los EAN-13 llevan dígito de control válido; uno queda
- * propuesto por la donadora para que C18 muestre un propuesto.
+ * propuesto por la donadora, con la bolsa de arroz de 500 g, para que C18 muestre un propuesto.
  */
 async function sembrarPresentacionesDemo(
   prisma: PrismaService,
@@ -533,7 +533,7 @@ async function sembrarPresentacionesDemo(
     contiene_id: botella.id,
     unidades: 12,
   });
-  await asegurar(arroz.id, 'Bolsa de arroz 500 g', { tamano: 0.5 });
+  const bolsa = await asegurar(arroz.id, 'Bolsa de arroz 500 g', { tamano: 0.5 });
 
   await prisma.codigoBarras.upsert({
     where: { ean: '4006381333931' },
@@ -552,9 +552,21 @@ async function sembrarPresentacionesDemo(
     create: {
       ean: '7501031311309',
       categoria_id: arroz.id,
+      presentacion_id: bolsa.id,
       estado: 'PROPUESTO',
       creado_por: donador,
     },
+  });
+  // Una base sembrada antes de este cambio lo tiene propuesto sin presentación, un estado al
+  // que la aplicación no llega (el Donador siempre propone con una). Solo se completa ese caso
+  await prisma.codigoBarras.updateMany({
+    where: {
+      ean: '7501031311309',
+      estado: 'PROPUESTO',
+      categoria_id: arroz.id,
+      presentacion_id: null,
+    },
+    data: { presentacion_id: bolsa.id },
   });
 }
 
