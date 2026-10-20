@@ -264,6 +264,29 @@ describe('preparar una donación (RF-CMP-001B)', () => {
       expect(g.body.estado).toBe('PROPUESTO');
     });
 
+    it.each([
+      ['nombres distintos', false],
+      ['el mismo nombre', true],
+    ])('dos Donadores proponen a la vez el mismo EAN nuevo (%s): ambos 201', async (_n, igual) => {
+      const nuevo = `79${Math.floor(Math.random() * 1e11)
+        .toString()
+        .padStart(11, '0')}`;
+      const otro = await crearDonador(a);
+      const propone = (token: string, i: number) =>
+        como(token).post('/api/donaciones/codigos', {
+          ean: nuevo,
+          presentacionNueva: {
+            categoriaId: agua,
+            nombre: igual ? `Carrera ${nuevo}` : `Carrera ${nuevo} ${i}`,
+            tamano: 0.5,
+          },
+        });
+      const [r1, r2] = await Promise.all([propone(donador.token, 1), propone(otro.token, 2)]);
+      expect([r1.status, r2.status]).toEqual([201, 201]);
+      expect(r1.body.ean).toBe(nuevo);
+      expect(r2.body.presentacion.id).toBe(r1.body.presentacion.id);
+    });
+
     it('el Operador lo ve PROPUESTO', async () => {
       const admin = await iniciarSesion(a, ADMIN.username, ADMIN.contrasena);
       const r = await a

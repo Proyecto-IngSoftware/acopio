@@ -256,10 +256,14 @@ export class DonacionesService {
       });
     } catch (e) {
       // Dos pedidos a la vez: si el EAN ya quedó, se responde lo que hay
-      if (esLlaveDuplicada(e)) {
+      const choque =
+        esLlaveDuplicada(e) ||
+        (e instanceof ErrorDominio &&
+          (e.codigo === 'EAN_YA_ASOCIADO' || e.codigo === 'PRESENTACION_DUPLICADA'));
+      if (choque) {
         const ya = await this.codigos.conCategoria(datos.ean);
         if (ya) return vistaDonador(ya);
-        return duplicadaComoErrorDominio(e);
+        if (esLlaveDuplicada(e)) return duplicadaComoErrorDominio(e);
       }
       return eanYaAsociadoComoErrorDominio(e);
     }
