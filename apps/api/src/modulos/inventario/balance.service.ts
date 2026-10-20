@@ -127,7 +127,10 @@ export class BalanceService {
       }
       return fila;
     };
+    // Una marca vigente de «no recibir» manda sobre el umbral: la categoría solo sale en noRecibe.
+    const marcadas = new Set(marcas.map((m) => `${m.acopio_id}:${m.categoria_id}`));
     for (const u of umbrales) {
+      if (marcadas.has(`${u.acopio_id}:${u.categoria_id}`)) continue;
       const estado = semaforo(cantidad.get(`${u.acopio_id}:${u.categoria_id}`) ?? 0, {
         minimo: Number(u.minimo),
         maximo: Number(u.maximo),

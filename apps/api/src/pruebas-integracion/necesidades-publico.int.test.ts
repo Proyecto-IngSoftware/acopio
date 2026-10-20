@@ -87,6 +87,31 @@ describe('necesidades públicas', () => {
     expect(idsDe(fila.noRecibe)).toContain(ids.noRecibe);
   });
 
+  it('una categoría con umbral y marca vigente solo sale en noRecibe', async () => {
+    const id = (
+      await a.prisma.categoria.create({
+        data: { nombre: unico('FaltaMarcada '), grupo: 'ALIMENTOS', unidad_base: 'UNIDAD' },
+      })
+    ).id;
+    await a.prisma.umbral.create({
+      data: {
+        acopio_id: ACOPIO_A,
+        categoria_id: id,
+        minimo: 5,
+        maximo: 20,
+        actualizado_por: adminId,
+      },
+    });
+    await a.prisma.noRecibir.create({
+      data: { acopio_id: ACOPIO_A, categoria_id: id, marcado_por: adminId },
+    });
+    const fila = (await leer()).find((f) => f.acopioId === ACOPIO_A)!;
+    expect(idsDe(fila.noRecibe)).toContain(id);
+    expect(idsDe(fila.faltan)).not.toContain(id);
+    expect(idsDe(fila.sobran)).not.toContain(id);
+    expect(idsDe(fila.alDia)).not.toContain(id);
+  });
+
   it('no publica cantidades', async () => {
     const texto = JSON.stringify(await leer());
     expect(texto).not.toContain('"cantidad"');
