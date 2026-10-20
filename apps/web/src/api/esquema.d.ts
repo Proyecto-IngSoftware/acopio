@@ -2427,14 +2427,13 @@ export interface components {
             /** Format: uuid */
             presentacionId: string;
         };
-        EditarDto: {
-            nombre?: string;
-            tamano?: number;
+        EditarCodigoDto: {
             /** Format: uuid */
-            contieneId?: string;
-            unidades?: number;
+            presentacionId?: string;
             /** @enum {string} */
             estado?: "VALIDADO";
+            /** @enum {boolean} */
+            porRevisar?: false;
         };
         PresentacionDto: {
             /** Format: uuid */
@@ -2465,6 +2464,15 @@ export interface components {
             /** Format: uuid */
             contieneId?: string;
             unidades?: number;
+        };
+        EditarPresentacionDto: {
+            nombre?: string;
+            tamano?: number;
+            /** Format: uuid */
+            contieneId?: string;
+            unidades?: number;
+            /** @enum {string} */
+            estado?: "VALIDADO";
         };
         EntidadDto: {
             /** Format: uuid */
@@ -5278,7 +5286,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditarDto"];
+                "application/json": components["schemas"]["EditarCodigoDto"];
             };
         };
         responses: {
@@ -5372,7 +5380,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["EditarDto"];
+                "application/json": components["schemas"]["EditarPresentacionDto"];
             };
         };
         responses: {

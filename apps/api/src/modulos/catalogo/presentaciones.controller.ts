@@ -11,7 +11,7 @@ import { PresentacionesService } from './presentaciones.service';
 const nombre = z.string().trim().min(1).max(80);
 const unidades = z.number().int().min(2).max(1000);
 
-class FiltroDto extends crearDto(z.object({ categoriaId: z.uuid() })) {}
+class FiltroPresentacionesDto extends crearDto(z.object({ categoriaId: z.uuid() })) {}
 class IdDto extends crearDto(z.object({ id: z.uuid() })) {}
 class CrearDto extends crearDto(
   z
@@ -30,7 +30,7 @@ class CrearDto extends crearDto(
       'Una suelta lleva tamano; un paquete lleva contieneId y unidades',
     ),
 ) {}
-class EditarDto extends crearDto(
+class EditarPresentacionDto extends crearDto(
   z.object({
     nombre: nombre.optional(),
     tamano: cantidadPositiva.optional(),
@@ -50,7 +50,7 @@ export class PresentacionesController {
   @Roles('ADMIN', 'OPERADOR', 'DONADOR')
   @Get()
   @ApiOkResponse({ type: PresentacionDto, isArray: true })
-  listar(@UsuarioActual() usuario: UsuarioAutenticado, @Query() filtro: FiltroDto) {
+  listar(@UsuarioActual() usuario: UsuarioAutenticado, @Query() filtro: FiltroPresentacionesDto) {
     return this.presentaciones.listar(usuario, filtro.categoriaId);
   }
 
@@ -67,7 +67,7 @@ export class PresentacionesController {
   editar(
     @UsuarioActual() usuario: UsuarioAutenticado,
     @Param() p: IdDto,
-    @Body() cambios: EditarDto,
+    @Body() cambios: EditarPresentacionDto,
   ) {
     return this.presentaciones.editar(usuario, p.id, cambios);
   }

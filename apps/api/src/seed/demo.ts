@@ -226,6 +226,7 @@ export async function sembrarEscenariosDemo(
 
   await sembrarCasosInventario(prisma, ids.operador1!, ids.operador2!);
   const donador = await sembrarDonadorDemo(prisma, proveedor, contrasena);
+  await sembrarPresentacionesDemo(prisma, ids.operador1!, donador);
   await sembrarDonacionesDemo(prisma, donador, ids.operador1!);
   await sembrarMotorDemo(prisma, ids.operador1!);
   await sembrarRemisionesDemo(prisma, ids.operador2!, ids.receptor1!, donador);
@@ -502,6 +503,61 @@ async function sembrarRemisionesDemo(
   }
 }
 
+/**
+ * Presentaciones y códigos de barras de la demostración (ADR-0021). Idempotente: busca por
+ * categoría y nombre, y por EAN. Los EAN-13 llevan dígito de control válido; uno queda
+ * propuesto por la donadora para que C18 muestre un propuesto.
+ */
+async function sembrarPresentacionesDemo(
+  prisma: PrismaService,
+  operador1: string,
+  donador: string,
+) {
+  const agua = await prisma.categoria.findFirst({ where: { nombre: 'Agua potable' } });
+  const arroz = await prisma.categoria.findFirst({ where: { nombre: 'Arroz' } });
+  if (!agua || !arroz) return;
+
+  const asegurar = async (
+    categoria_id: string,
+    nombre: string,
+    datos: { tamano?: number; contiene_id?: string; unidades?: number },
+  ) =>
+    prisma.presentacion.upsert({
+      where: { categoria_id_nombre: { categoria_id, nombre } },
+      update: {},
+      create: { categoria_id, nombre, ...datos, estado: 'VALIDADO', creado_por: operador1 },
+    });
+
+  const botella = await asegurar(agua.id, 'Botella de agua 600 ml', { tamano: 0.6 });
+  await asegurar(agua.id, 'Paquete x12 · botella 600 ml', {
+    contiene_id: botella.id,
+    unidades: 12,
+  });
+  await asegurar(arroz.id, 'Bolsa de arroz 500 g', { tamano: 0.5 });
+
+  await prisma.codigoBarras.upsert({
+    where: { ean: '4006381333931' },
+    update: {},
+    create: {
+      ean: '4006381333931',
+      categoria_id: agua.id,
+      presentacion_id: botella.id,
+      estado: 'VALIDADO',
+      creado_por: operador1,
+    },
+  });
+  await prisma.codigoBarras.upsert({
+    where: { ean: '7501031311309' },
+    update: {},
+    create: {
+      ean: '7501031311309',
+      categoria_id: arroz.id,
+      estado: 'PROPUESTO',
+      creado_por: donador,
+    },
+  });
+}
+
 /** Solo la primera vez: se reconoce por los umbrales del acopio de Chapinero. */
 async function sembrarCasosInventario(prisma: PrismaService, operador1: string, operador2: string) {
   const chapinero = ACOPIOS[0]!.id;
@@ -572,22 +628,6 @@ async function sembrarCasosInventario(prisma: PrismaService, operador1: string, 
   }
   await prisma.noRecibir.create({
     data: { acopio_id: chapinero, categoria_id: c[6]!.id, marcado_por: operador1 },
-  });
-
-  // EAN-13 con dígito de control válido: uno revisado y otro por revisar en C18
-  await prisma.codigoBarras.createMany({
-    data: [
-      {
-        ean: '4006381333931',
-        categoria_id: c[2]!.id,
-        contenido: 1,
-        descripcion: 'Presentación de prueba',
-        creado_por: operador1,
-        revisado: true,
-      },
-      { ean: '7501031311309', categoria_id: c[5]!.id, creado_por: operador1 },
-    ],
-    skipDuplicates: true,
   });
 
   for (const [i, cantidad] of [

@@ -12,14 +12,14 @@ const ean = z.string().regex(/^(\d{8}|\d{12,14})$/, 'El código debe tener 8, 12
 
 class AsociarDto extends crearDto(z.object({ ean, presentacionId: z.uuid() })) {}
 class ValidarDto extends crearDto(z.object({ presentacionId: z.uuid() })) {}
-class EditarDto extends crearDto(
+class EditarCodigoDto extends crearDto(
   z.object({
     presentacionId: z.uuid().optional(),
     estado: z.literal('VALIDADO').optional(),
     porRevisar: z.literal(false).optional(),
   }),
 ) {}
-class FiltroDto extends crearDto(
+class FiltroCodigosDto extends crearDto(
   z.object({
     q: z.string().trim().max(120).optional().describe('EAN (prefijo), categoría o presentación'),
     estado: z.enum(['PROPUESTO', 'VALIDADO']).optional(),
@@ -38,7 +38,7 @@ export class CodigosBarrasController {
   @Roles('ADMIN')
   @Get()
   @ApiOkResponse({ type: CodigoBarrasDto, isArray: true })
-  listar(@Query() filtro: FiltroDto) {
+  listar(@Query() filtro: FiltroCodigosDto) {
     return this.codigos.listar(filtro);
   }
 
@@ -73,7 +73,7 @@ export class CodigosBarrasController {
   editar(
     @UsuarioActual() usuario: UsuarioAutenticado,
     @Param() p: EanDto,
-    @Body() cambios: EditarDto,
+    @Body() cambios: EditarCodigoDto,
   ) {
     return this.codigos.editar(usuario, p.ean, cambios);
   }

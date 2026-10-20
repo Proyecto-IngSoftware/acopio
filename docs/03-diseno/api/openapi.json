@@ -1811,7 +1811,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EditarDto"
+                "$ref": "#/components/schemas/EditarCodigoDto"
               }
             }
           }
@@ -1978,7 +1978,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EditarDto"
+                "$ref": "#/components/schemas/EditarPresentacionDto"
               }
             }
           }
@@ -8563,33 +8563,24 @@
           "presentacionId"
         ]
       },
-      "EditarDto": {
+      "EditarCodigoDto": {
         "type": "object",
         "properties": {
-          "nombre": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 80
-          },
-          "tamano": {
-            "type": "number",
-            "exclusiveMaximum": true,
-            "maximum": 1000000000
-          },
-          "contieneId": {
+          "presentacionId": {
             "type": "string",
             "format": "uuid",
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
-          },
-          "unidades": {
-            "type": "integer",
-            "minimum": 2,
-            "maximum": 1000
           },
           "estado": {
             "type": "string",
             "enum": [
               "VALIDADO"
+            ]
+          },
+          "porRevisar": {
+            "type": "boolean",
+            "enum": [
+              false
             ]
           }
         }
@@ -8705,6 +8696,37 @@
           "categoriaId",
           "nombre"
         ]
+      },
+      "EditarPresentacionDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "tamano": {
+            "type": "number",
+            "exclusiveMaximum": true,
+            "maximum": 1000000000
+          },
+          "contieneId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "unidades": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 1000
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "VALIDADO"
+            ]
+          }
+        }
       },
       "EntidadDto": {
         "type": "object",
