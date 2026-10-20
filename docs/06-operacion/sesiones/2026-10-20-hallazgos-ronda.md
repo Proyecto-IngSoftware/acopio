@@ -1,21 +1,24 @@
 ---
-title: "Sesión 2026-10-20 · Dos hallazgos de la ronda y el escenario 15"
+title: "Sesión 2026-10-20 · Hallazgos de la ronda, escenario 15 y escáner"
 type: informe
 tags: [operacion, sesion]
 estado: vigente
 actualizado: 2026-10-20
 ---
 
-# Sesión 2026-10-20 · Dos hallazgos de la ronda y el escenario 15
+# Sesión 2026-10-20 · Hallazgos de la ronda, escenario 15 y escáner
 
 Se confirmó el cierre de la sesión del 19, se revisó el escenario 15 en el servidor y se
-arreglaron dos hallazgos de la ronda por rol: #151 y #152.
+arreglaron dos hallazgos de la ronda por rol: #151 y #152 (PR #160). En una segunda parte se
+cerró la fila 2 del plan y se buscó por qué el escáner no lee en el teléfono (#40).
 
 ## Qué cambió
 
 | PR o commit | Qué trae |
 |---|---|
 | Rama `hallazgos-ronda-19` | #151: en C3 Inventario, una fila con más de 6 horas sin movimientos va con el fondo `surface-container` y dice «Más de 6 horas sin movimientos: puede no estar al día» (RNF-04). La regla vive en `esViejo` de `formato.ts`. #152: C7 «Umbrales y no recibir» muestra «No tienes asignado este acopio.» cuando el acopio no viene en `/acopios/gestion`, sin interruptores ni datos. El escenario 15, dos comentarios, la fila 5 y la 13 del plan, y P-080 |
+
+| Rama `pendientes-20` | `camara.ts` pide la cámara en 1920 × 1080 y con enfoque continuo (#40, P-037), con `camara.test.ts`. La fila 2 del plan queda hecha y la 10 en curso |
 
 No hubo cambios en el servidor, en Supabase ni en Stitch. En el servidor solo se leyó la API
 pública.
@@ -33,6 +36,12 @@ pública.
   antes del cambio.
 - Verificación completa en local: lint, typecheck, depcruise, `revisar-colores.sh`, unitarias e
   integración (46 suites, 506 pruebas, contra un PostgreSQL aparte en el 5439).
+- Escáner: Joseph lo probó en Android con Chrome, y abría sin leer. Para reproducirlo se le pasó
+  un EAN-13 dibujado en un canvas, en lugar de la cámara, al `camara.ts` de la app en el Chromium
+  de Playwright. Con un código del mismo tamaño físico no leyó a 640 × 480, y a 1920 × 1080 leyó
+  en unos 100 ms. Con un desenfoque leve no lee en ningún caso, y `TRY_HARDER` con los formatos
+  limitados no lo mejoró, así que no se dejó. El enfoque continuo no se pudo probar aquí. La
+  prueba nueva falla sin el cambio.
 - Los recorridos no se corrieron: el cambio es de dos pantallas y sus pruebas de Vitest las cubren,
   axe incluido.
 
@@ -63,6 +72,8 @@ todavía no se recibe. Se corrigieron la guía de escenarios y la fila 5 del pla
 
 - Autorizar, o no, la prueba del cambio de correo con Supabase en el servidor usando una cuenta
   desechable ([P-080](../../01-requerimientos/pendientes.md)).
-- Subir `docs/entregas/Acopio - Avances IS1.docx` a OneDrive y ensayar la presentación (filas 2 y 4
-  del [plan de acción](../../05-planes/plan-de-accion.md)).
-- El escáner con un teléfono real ([#40](https://github.com/Proyecto-IngSoftware/acopio/issues/40)).
+- Ensayar la presentación (fila 4 del [plan de acción](../../05-planes/plan-de-accion.md)). El Word
+  llega solo a OneDrive con cada push, y la fila 2 quedó hecha.
+- Repetir el escáner en el teléfono cuando se despliegue el cambio, con un EAN a la distancia de
+  una caja y con poca luz ([#40](https://github.com/Proyecto-IngSoftware/acopio/issues/40),
+  [P-037](../../01-requerimientos/pendientes.md)).
