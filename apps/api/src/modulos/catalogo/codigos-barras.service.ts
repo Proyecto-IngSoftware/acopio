@@ -45,6 +45,8 @@ const vista = (f: Fila) => {
 
 const yaAsociado = () =>
   new ErrorDominio('EAN_YA_ASOCIADO', 'Este código ya está asociado a una categoría', 409);
+const yaValidado = () =>
+  new ErrorDominio('CODIGO_YA_VALIDADO', 'Este código ya está validado', 409);
 const desconocido = () =>
   new ErrorDominio('EAN_DESCONOCIDO', 'Este código no está asociado a ninguna categoría', 404);
 
@@ -197,7 +199,8 @@ export class CodigosBarrasService {
   /**
    * Confirma o corrige un `PROPUESTO`: queda `VALIDADO` con la presentación dada (la categoría
    * la sigue) y valida también la presentación si estaba `PROPUESTO`. 404 `EAN_DESCONOCIDO` si
-   * no existe y 409 `CODIGO_YA_VALIDADO` si ya estaba validado. Solo actualiza una fila.
+   * no existe y 409 `CODIGO_YA_VALIDADO` si ya estaba validado o si otra validación a la vez
+   * ganó. Solo actualiza una fila.
    */
   async validarEnTransaccion(
     tx: ClienteBd,
@@ -207,15 +210,17 @@ export class CodigosBarrasService {
   ) {
     const antes = await this.dao.conCategoria(ean, tx);
     if (!antes) throw desconocido();
-    if (antes.estado === 'VALIDADO')
-      throw new ErrorDominio('CODIGO_YA_VALIDADO', 'Este código ya está validado', 409);
+    if (antes.estado === 'VALIDADO') throw yaValidado();
     const p = await this.presentacionActiva(tx, presentacionId);
     await this.validarPresentacion(tx, usuario, p);
-    const f = await this.dao.actualizar(
+    // Condicionado: de dos validaciones a la vez, la segunda no pisa a la primera
+    const cambiadas = await this.dao.validarSiPropuesto(
       ean,
-      { estado: 'VALIDADO', presentacion_id: p.id, categoria_id: p.categoria_id },
+      { presentacion_id: p.id, categoria_id: p.categoria_id },
       tx,
     );
+    if (cambiadas === 0) throw yaValidado();
+    const f = (await this.dao.conCategoria(ean, tx))!;
     await this.bitacora.registrar(tx, {
       usuarioId: usuario.id,
       accion: 'codigo_barras.validado',
@@ -228,13 +233,14 @@ export class CodigosBarrasService {
   }
 
   /**
-   * Camino de la recepción, seguro ante recepciones simultáneas del mismo código. Con la
-   * presentación dada (o la del código, si está `PROPUESTO`): un `PROPUESTO` pasa a `VALIDADO`
-   * con un UPDATE condicionado; quien pierde la carrera, o un código ya `VALIDADO` cuya
-   * presentación es otra, lo deja igual y lo marca `por_revisar`. La presentación destino, si
-   * estaba `PROPUESTO`, también se valida. Nunca da `CODIGO_YA_VALIDADO` (a diferencia de
-   * `validarEnTransaccion`, que usa la ruta del Operador). Devuelve la presentación destino o
-   * `null` si no hay nada que aplicar.
+   * Camino de la recepción, seguro ante recepciones simultáneas del mismo código. Se llama solo
+   * con los códigos de líneas recibidas en más de cero. Un `PROPUESTO` pasa a `VALIDADO` con la
+   * presentación indicada (o la suya, si la línea no trae corrección) con un UPDATE condicionado;
+   * quien pierde la carrera, o un código ya `VALIDADO` cuya presentación es otra, lo deja igual y
+   * lo marca `por_revisar`. Nunca da `CODIGO_YA_VALIDADO` (a diferencia de
+   * `validarEnTransaccion`, que usa la ruta del Operador). Devuelve la presentación que se aplica
+   * a la línea: solo la indicada; sin corrección, `null`, y la línea queda con su categoría y su
+   * contenido aunque el código haya cambiado después de preparada la donación.
    */
   async resolverEnRecepcion(
     tx: ClienteBd,
@@ -244,33 +250,34 @@ export class CodigosBarrasService {
   ): Promise<string | null> {
     const antes = await this.dao.conCategoria(ean, tx);
     if (!antes) throw desconocido();
-    const destinoId =
-      presentacionId ?? (antes.estado === 'PROPUESTO' ? antes.presentacion_id : null);
-    if (!destinoId) return null;
-    const p = await this.presentacionActiva(tx, destinoId);
     if (antes.estado === 'PROPUESTO') {
-      const cambiadas = await this.dao.validarSiPropuesto(
-        ean,
-        { presentacion_id: p.id, categoria_id: p.categoria_id },
-        tx,
-      );
-      if (cambiadas === 1) {
-        await this.bitacora.registrar(tx, {
-          usuarioId: usuario.id,
-          accion: 'codigo_barras.validado',
-          entidad: 'codigo_barras',
-          entidadId: ean,
-          antes: vista(antes),
-          despues: vista((await this.dao.conCategoria(ean, tx))!),
-        });
-        return p.id;
+      const destinoId = presentacionId ?? antes.presentacion_id;
+      if (destinoId) {
+        const p = await this.presentacionActiva(tx, destinoId);
+        const cambiadas = await this.dao.validarSiPropuesto(
+          ean,
+          { presentacion_id: p.id, categoria_id: p.categoria_id },
+          tx,
+        );
+        if (cambiadas === 1) {
+          await this.bitacora.registrar(tx, {
+            usuarioId: usuario.id,
+            accion: 'codigo_barras.validado',
+            entidad: 'codigo_barras',
+            entidadId: ean,
+            antes: vista(antes),
+            despues: vista((await this.dao.conCategoria(ean, tx))!),
+          });
+          return presentacionId ?? null;
+        }
       }
     }
+    // Sin corrección la línea se queda como la preparó el Donador
+    if (presentacionId === undefined) return null;
+    const p = await this.presentacionActiva(tx, presentacionId);
     // Ya estaba validado, o lo validó otra recepción: solo se compara con lo vigente
     const vigente = await this.dao.conCategoria(ean, tx);
     if (!vigente) throw desconocido();
-    // Sin presentación indicada no hay corrección: vale la que dejó quien validó primero
-    if (presentacionId === undefined) return vigente.presentacion_id;
     if (vigente.presentacion_id !== p.id) {
       await this.marcarParaRevisarEnTransaccion(
         tx,
@@ -285,7 +292,8 @@ export class CodigosBarrasService {
   /**
    * Primer paso de la recepción: valida las presentaciones `PROPUESTO` que van a usarse (las
    * indicadas o, en un código `PROPUESTO`, la suya) en orden ascendente de id, así dos
-   * recepciones no toman esas filas en orden cruzado. Solo lee los códigos.
+   * recepciones no toman esas filas en orden cruzado. Solo lee los códigos. Igual que
+   * `resolverEnRecepcion`, recibe solo los códigos de líneas recibidas en más de cero.
    */
   async validarPresentacionesDeRecepcion(
     tx: ClienteBd,
@@ -337,6 +345,14 @@ export class CodigosBarrasService {
     return this.transacciones.ejecutar(async (tx) => {
       const antes = await this.dao.conCategoria(ean, tx);
       if (!antes) throw desconocido();
+      const aprueba = cambios.estado === 'VALIDADO' || cambios.porRevisar === false;
+      if (aprueba && cambios.presentacionId === undefined && antes.presentacion_id === null) {
+        throw new ErrorDominio(
+          'CODIGO_SIN_PRESENTACION',
+          'Este código no tiene presentación: elige una antes de aprobarlo',
+          422,
+        );
+      }
       const datos: Parameters<CodigoBarrasDao['actualizar']>[1] = {};
       let validaPresentacion: { id: string; estado: EstadoCatalogo } | undefined;
       if (cambios.presentacionId !== undefined) {

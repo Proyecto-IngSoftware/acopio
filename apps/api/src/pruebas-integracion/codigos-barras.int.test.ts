@@ -255,6 +255,29 @@ describe('códigos de barras', () => {
     expect(dos.body.codigo).toBe('CODIGO_YA_VALIDADO');
   });
 
+  it('dos validaciones a la vez del mismo PROPUESTO: una gana, la otra 409, sin pisarla', async () => {
+    const e = nuevoEan();
+    await sembrar(e, { estado: 'PROPUESTO' });
+    const validar = (presentacionId: string) =>
+      a
+        .http()
+        .post(`/api/codigos-barras/${e}/validar`)
+        .set(como(op.token))
+        .send({ presentacionId });
+    const [x, y] = await Promise.all([validar(botella), validar(botellaOtra)]);
+    expect([x.status, y.status].sort()).toEqual([201, 409]);
+    const perdedora = x.status === 409 ? x : y;
+    expect(perdedora.body.codigo).toBe('CODIGO_YA_VALIDADO');
+    const ganadora = x.status === 201 ? botella : botellaOtra;
+    const c = await a.prisma.codigoBarras.findUniqueOrThrow({ where: { ean: e } });
+    expect(c.presentacion_id).toBe(ganadora);
+    expect(
+      await a.prisma.bitacora.count({
+        where: { accion: 'codigo_barras.validado', entidad_id: e },
+      }),
+    ).toBe(1);
+  });
+
   it('validar un EAN desconocido: 404', async () => {
     const r = await a
       .http()
@@ -333,6 +356,31 @@ describe('códigos de barras', () => {
       .send({ estado: 'VALIDADO' })
       .expect(200);
     expect(r.body.estado).toBe('VALIDADO');
+  });
+
+  it('aprobar un código sin presentación: 422 CODIGO_SIN_PRESENTACION, salvo que el PATCH le asigne una', async () => {
+    const e = nuevoEan();
+    await sembrar(e, { estado: 'PROPUESTO', presentacion_id: null, por_revisar: true });
+    for (const cuerpo of [{ estado: 'VALIDADO' }, { porRevisar: false }]) {
+      const r = await a
+        .http()
+        .patch(`/api/codigos-barras/${e}`)
+        .set(como(tokenAdmin))
+        .send(cuerpo)
+        .expect(422);
+      expect(r.body.codigo).toBe('CODIGO_SIN_PRESENTACION');
+    }
+    expect(await a.prisma.codigoBarras.findUniqueOrThrow({ where: { ean: e } })).toMatchObject({
+      estado: 'PROPUESTO',
+      por_revisar: true,
+    });
+    const r = await a
+      .http()
+      .patch(`/api/codigos-barras/${e}`)
+      .set(como(tokenAdmin))
+      .send({ presentacionId: botella, estado: 'VALIDADO', porRevisar: false })
+      .expect(200);
+    expect(r.body).toMatchObject({ estado: 'VALIDADO', porRevisar: false });
   });
 
   it('un contenido de pañal en categoría por unidades sale entero', async () => {

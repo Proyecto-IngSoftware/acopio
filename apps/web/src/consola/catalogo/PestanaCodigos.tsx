@@ -256,6 +256,7 @@ function TarjetaCodigo({
   alCambiar: () => void;
 }) {
   const pendiente = espera(c);
+  const sinPresentacion = c.presentacion === null;
   const estado =
     c.estado === 'PROPUESTO'
       ? {
@@ -296,9 +297,20 @@ function TarjetaCodigo({
       <p className="text-body-sm text-on-surface-variant">
         Asociado por {c.creadoPor ?? 'alguien que ya no está'} · {haceCuanto(c.creadoEn)}
       </p>
+      {pendiente && sinPresentacion && (
+        <p id={`sin-presentacion-${c.ean}`} className="text-body-sm text-on-surface-variant">
+          Para aprobarlo, primero usa «Cambiar de presentación» y elige una.
+        </p>
+      )}
       <div className={`grid gap-space-sm ${pendiente ? 'grid-cols-2' : ''}`}>
         {pendiente && (
-          <Boton className="min-h-[48px]" disabled={aprobando} onClick={alAprobar}>
+          <Boton
+            className="min-h-[48px]"
+            // La API rechaza aprobar un código sin presentación (CODIGO_SIN_PRESENTACION)
+            disabled={aprobando || sinPresentacion}
+            aria-describedby={sinPresentacion ? `sin-presentacion-${c.ean}` : undefined}
+            onClick={alAprobar}
+          >
             <Icono nombre="check" className="shrink-0 text-[20px]" />
             Aprobar
           </Boton>

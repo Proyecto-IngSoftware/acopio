@@ -166,6 +166,18 @@ describe('C18 Códigos', () => {
     );
   });
 
+  it('un código sin presentación no se aprueba: «Aprobar» queda deshabilitado y remite a «Cambiar de presentación»', async () => {
+    pantalla();
+    await userEvent.click(await fila(/Sin presentación/));
+    const huerfano = await screen.findByRole('article', { name: '7702009000006' });
+    const aprobar = within(huerfano).getByRole('button', { name: 'Aprobar' });
+    expect(aprobar).toBeDisabled();
+    expect(aprobar).toHaveAccessibleDescription(
+      'Para aprobarlo, primero usa «Cambiar de presentación» y elige una.',
+    );
+    expect(peticiones().filter((p) => p.startsWith('PATCH'))).toHaveLength(0);
+  });
+
   it('«Cambiar de presentación» deja elegir una de cualquier categoría', async () => {
     pantalla();
     await userEvent.click(await fila(/Sin presentación/));

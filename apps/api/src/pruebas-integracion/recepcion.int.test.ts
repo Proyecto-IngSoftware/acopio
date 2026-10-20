@@ -294,7 +294,7 @@ describe('recibir una donación preparada (RF-CMP-001C)', () => {
       `77${String(Date.now()).slice(-8)}${Math.floor(Math.random() * 1000)
         .toString()
         .padStart(3, '0')}`;
-    const categoriaNueva = (unidad: 'LITRO' | 'UNIDAD' = 'LITRO') =>
+    const categoriaNueva = (unidad: 'LITRO' | 'KILOGRAMO' | 'UNIDAD' = 'LITRO') =>
       a.prisma.categoria.create({
         data: { nombre: `Rec ${sufijo()}`, grupo: 'ALIMENTOS', unidad_base: unidad },
       });
@@ -315,7 +315,7 @@ describe('recibir una donación preparada (RF-CMP-001C)', () => {
     const codigo = (
       ean: string,
       categoriaId: string,
-      presentacionId: string,
+      presentacionId: string | null,
       estado: 'VALIDADO' | 'PROPUESTO',
     ) =>
       a.prisma.codigoBarras.create({
@@ -522,6 +522,109 @@ describe('recibir una donación preparada (RF-CMP-001C)', () => {
       expect(
         (await a.prisma.presentacion.findUniqueOrThrow({ where: { id: nueva.id } })).estado,
       ).toBe('VALIDADO');
+    });
+
+    // La migración deja VALIDADO y sin presentación los códigos que no tenían contenido; un
+    // PROPUESTO sin presentación es el caso en que la línea se reescribía (I-1)
+    it.each(['VALIDADO', 'PROPUESTO'] as const)(
+      'un código %s sin presentación al que el Administrador asigna 0,5 kg después: la línea sin corrección entra con su contenido',
+      async (estado) => {
+        const cat = await categoriaNueva('KILOGRAMO');
+        const media = await presentacion(cat.id, 0.5);
+        const ean = eanNuevo();
+        await codigo(ean, cat.id, null, estado);
+        const d = await donacion(cat.id, ean, 3);
+        expect(
+          Number(
+            (await a.prisma.lineaComprobante.findUniqueOrThrow({ where: { id: d.lineas[0]!.id } }))
+              .contenido_unitario,
+          ),
+        ).toBe(1);
+        const admin = await iniciarSesion(a, ADMIN.username, ADMIN.contrasena);
+        await a
+          .http()
+          .patch(`/api/codigos-barras/${ean}`)
+          .set('authorization', `Bearer ${admin}`)
+          .send({ presentacionId: media.id })
+          .expect(200);
+        await recibir(opA.token, d.folio, {
+          acopioId: ACOPIO_A,
+          lineas: [{ lineaId: d.lineas[0]!.id, cantidadConfirmada: 3 }],
+        }).expect(200);
+        expect(await saldo(cat.id)).toBe(3);
+        const l = await a.prisma.lineaComprobante.findUniqueOrThrow({
+          where: { id: d.lineas[0]!.id },
+        });
+        expect(Number(l.contenido_unitario)).toBe(1);
+        const comprobante = await a.prisma.comprobante.findUniqueOrThrow({
+          where: { folio: d.folio },
+        });
+        expect(
+          await a.prisma.bitacora.count({
+            where: { accion: 'comprobante.linea_corregida', entidad_id: comprobante.id },
+          }),
+        ).toBe(0);
+      },
+    );
+
+    it('dos recepciones a la vez del mismo PROPUESTO, una corrige a P2 y la otra no: la segunda línea guarda su tamaño', async () => {
+      const cat = await categoriaNueva();
+      const base = await presentacion(cat.id, 1, 'PROPUESTO');
+      const p2 = await presentacion(cat.id, 2);
+      const ean = eanNuevo();
+      await codigo(ean, cat.id, base.id, 'PROPUESTO');
+      const x = await donacion(cat.id, ean, 1);
+      const y = await donacion(cat.id, ean, 1);
+      const [rx, ry] = await Promise.all([
+        recibir(opA.token, x.folio, {
+          acopioId: ACOPIO_A,
+          lineas: [{ lineaId: x.lineas[0]!.id, cantidadConfirmada: 1, presentacionId: p2.id }],
+        }),
+        recibir(opA2.token, y.folio, {
+          acopioId: ACOPIO_A,
+          lineas: [{ lineaId: y.lineas[0]!.id, cantidadConfirmada: 1 }],
+        }),
+      ]);
+      expect([rx.status, ry.status]).toEqual([200, 200]);
+      const ly = await a.prisma.lineaComprobante.findUniqueOrThrow({
+        where: { id: y.lineas[0]!.id },
+      });
+      expect(Number(ly.contenido_unitario)).toBe(1);
+      const lx = await a.prisma.lineaComprobante.findUniqueOrThrow({
+        where: { id: x.lineas[0]!.id },
+      });
+      expect(Number(lx.contenido_unitario)).toBe(2);
+      // 1 × 2 L de la corregida y 1 × 1 L de la otra
+      expect(await saldo(cat.id)).toBe(3);
+      const cy = await a.prisma.comprobante.findUniqueOrThrow({ where: { folio: y.folio } });
+      expect(
+        await a.prisma.bitacora.count({
+          where: { accion: 'comprobante.linea_corregida', entidad_id: cy.id },
+        }),
+      ).toBe(0);
+    });
+
+    it('un PROPUESTO en una línea recibida en cero sigue PROPUESTO, y su presentación también', async () => {
+      const cat = await categoriaNueva();
+      const p = await presentacion(cat.id, 1, 'PROPUESTO');
+      const ean = eanNuevo();
+      await codigo(ean, cat.id, p.id, 'PROPUESTO');
+      const d = await donacion(cat.id, ean, 2);
+      await recibir(opA.token, d.folio, {
+        acopioId: ACOPIO_A,
+        lineas: [{ lineaId: d.lineas[0]!.id, cantidadConfirmada: 0 }],
+      }).expect(200);
+      expect((await a.prisma.codigoBarras.findUniqueOrThrow({ where: { ean } })).estado).toBe(
+        'PROPUESTO',
+      );
+      expect((await a.prisma.presentacion.findUniqueOrThrow({ where: { id: p.id } })).estado).toBe(
+        'PROPUESTO',
+      );
+      expect(
+        await a.prisma.bitacora.count({
+          where: { accion: 'codigo_barras.validado', entidad_id: ean },
+        }),
+      ).toBe(0);
     });
 
     it('dos recepciones con los mismos EAN en orden cruzado no se traban', async () => {

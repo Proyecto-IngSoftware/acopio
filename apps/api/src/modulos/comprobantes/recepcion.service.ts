@@ -96,10 +96,13 @@ export class RecepcionService {
       // código y presentación en el mismo orden y no se cruzan
       const porId = [...previo.lineas].sort((x, y) => x.id.localeCompare(y.id));
       const destinos = new Map<string, string | null>();
-      const eans = [...new Set(porId.flatMap((l) => (l.ean ? [l.ean] : [])))].sort();
+      // Una línea confirmada en cero no valida ni corrige nada: nadie tuvo el producto en la
+      // mano. Recibida en más de cero y sin corrección, cuenta como confirmada
+      const recibidas = porId.filter((l) => l.ean && porLinea.get(l.id)!.cantidadConfirmada > 0);
+      const eans = [...new Set(recibidas.map((l) => l.ean!))].sort();
       const pedidos = eans.map((ean) => ({
         ean,
-        presentacionId: porId
+        presentacionId: recibidas
           .filter((l) => l.ean === ean)
           .map((l) => porLinea.get(l.id)!.presentacionId)
           .find((id) => id !== undefined),
@@ -187,9 +190,9 @@ export class RecepcionService {
   }
 
   /**
-   * Devuelve la línea con la categoría y el contenido que valen para la entrada (los de la
-   * presentación destino del código, ya resuelto), y escribe `comprobante.linea_corregida`
-   * si cambiaron. Aplica el tope de línea.
+   * Devuelve la línea con la categoría y el contenido que valen para la entrada: los suyos o,
+   * si el Operador la corrigió, los de la presentación indicada (ya resuelta), y entonces
+   * escribe `comprobante.linea_corregida` si cambiaron. Aplica el tope de línea.
    */
   private async resolver(
     tx: ClienteBd,
