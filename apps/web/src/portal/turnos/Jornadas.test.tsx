@@ -1,10 +1,30 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useLocation } from 'react-router';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
 import { acopioDePrueba } from '../../pruebas/datos-red';
 import { jornadaDe } from '../../pruebas/datos-turnos';
 import { envolver, peticiones, responderSegun } from '../../pruebas/utilidades';
 import { Jornadas } from './Jornadas';
+
+vi.mock('./MapaJornadas', () => ({
+  default: ({
+    grupos = [],
+    alElegir,
+  }: {
+    grupos?: { lugar: { id: string }; jornadas: { id: string }[] }[];
+    alElegir?: (id: string) => void;
+  }) => (
+    <div>
+      mapa de jornadas
+      {grupos.map((g) => (
+        <button key={g.lugar.id} type="button" onClick={() => alElegir?.(g.lugar.id)}>
+          lugar {g.lugar.id} con {g.jornadas.length}
+        </button>
+      ))}
+    </div>
+  ),
+}));
 
 const TRES = [
   jornadaDe(),
@@ -192,4 +212,71 @@ it('con el ajuste en 0 no dice «Ajustado»', async () => {
   render(envolver(<Jornadas />, '/voluntariado'));
   await screen.findByText('Armar mercados');
   expect(screen.queryByText(/Ajustado/)).not.toBeInTheDocument();
+});
+
+function Ubicacion() {
+  return <p data-testid="busqueda">{useLocation().search}</p>;
+}
+
+const CON_CUPOS = jornadaDe({
+  id: 'j4',
+  titulo: 'Cocinar en la olla comunitaria',
+  cupoMaximo: 5,
+  ocupados: 3,
+  libres: 2,
+  lugar: { ...jornadaDe().lugar, id: 'a2', nombre: 'Acopio Suba', lat: 4.74, lng: -74.08 },
+});
+
+it('la vista de mapa queda en la URL y los chips filtran', async () => {
+  responderSegun({ 'GET /api/turnos/jornadas': [...TRES, CON_CUPOS] });
+  render(
+    envolver(
+      <>
+        <Jornadas />
+        <Ubicacion />
+      </>,
+      '/voluntariado',
+    ),
+  );
+  await screen.findByText('Armar mercados');
+  expect(screen.getByRole('button', { name: 'Todas 4' })).toHaveAttribute('aria-pressed', 'true');
+  expect(screen.getByRole('button', { name: 'Falta gente 1' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'Con cupos 1' })).toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('radio', { name: 'Mapa' }));
+  expect(screen.getByTestId('busqueda')).toHaveTextContent('vista=mapa');
+  // En el mapa entran la que falta gente, la de cupos y la llena; la fuera de plazo no
+  expect(await screen.findByText('mapa de jornadas')).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'lugar a1 con 2' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'lugar a2 con 1' })).toBeInTheDocument();
+  expect(screen.queryByRole('link')).not.toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('button', { name: 'lugar a1 con 2' }));
+  expect(screen.getByRole('link', { name: /Armar mercados/ })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: /Clasificar ropa donada/ })).toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('button', { name: 'Falta gente 1' }));
+  expect(screen.getByTestId('busqueda')).toHaveTextContent('estado=faltan');
+  expect(screen.getByRole('button', { name: 'lugar a1 con 1' })).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /lugar a2/ })).not.toBeInTheDocument();
+  expect(screen.queryByRole('link', { name: /Clasificar ropa donada/ })).not.toBeInTheDocument();
+
+  await userEvent.click(screen.getByRole('radio', { name: 'Lista' }));
+  expect(screen.getByTestId('busqueda')).not.toHaveTextContent('vista=mapa');
+  expect(screen.getAllByRole('link')).toHaveLength(1);
+  expect(screen.getByRole('link', { name: /Armar mercados/ })).toBeInTheDocument();
+});
+
+it('una jornada sin coordenadas lo avisa bajo el mapa', async () => {
+  responderSegun({
+    'GET /api/turnos/jornadas': [
+      jornadaDe(),
+      CON_CUPOS,
+      jornadaDe({ id: 'j5', lugar: { ...jornadaDe().lugar, id: 'e1', lat: null, lng: null } }),
+    ],
+  });
+  render(envolver(<Jornadas />, '/voluntariado?vista=mapa'));
+  expect(
+    await screen.findByText('1 jornada no tiene ubicación en el mapa; está en la lista.'),
+  ).toBeInTheDocument();
 });
