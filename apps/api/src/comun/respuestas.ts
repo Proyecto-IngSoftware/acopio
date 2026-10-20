@@ -443,6 +443,22 @@ export class CodigoBarrasDto extends crearDto(
   }),
 ) {}
 
+export class PresentacionDto extends crearDto(
+  z.object({
+    id: z.uuid(),
+    categoriaId: z.uuid(),
+    categoria: z.string(),
+    unidad: z.enum(['LITRO', 'KILOGRAMO', 'UNIDAD']),
+    nombre: z.string(),
+    clase: z.enum(['SUELTA', 'PAQUETE']),
+    tamano: z.number().describe('En unidad base; en un paquete, el calculado'),
+    contieneId: z.uuid().nullable(),
+    unidades: z.number().int().nullable(),
+    estado: z.enum(['PROPUESTO', 'VALIDADO']),
+    codigos: z.number().int().describe('Códigos de barras asociados'),
+  }),
+) {}
+
 export class ComprobanteDto extends crearDto(
   z.object({
     folio: z.string().describe('ACO-AAAA-XXXXX'),
