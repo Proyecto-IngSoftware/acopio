@@ -6,6 +6,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
@@ -136,6 +137,8 @@ export class DonacionesController {
     );
   }
 
+  // Cada propuesta crea filas en el catálogo compartido: el mismo límite que las demás rutas del Donador
+  @Throttle({ default: { limit: 10, ttl: 60_000 } })
   @Post('codigos')
   @ApiCreatedResponse({ type: CodigoDonadorDto })
   @ApiResponse(errores)

@@ -331,3 +331,23 @@ describe('preparar una donación (RF-CMP-001B)', () => {
       .expect(403);
   });
 });
+
+describe('proponer códigos con el límite por IP', () => {
+  it('la undécima propuesta del minuto recibe 429', async () => {
+    const b = await crearAppPrueba({ limiteDeIntentos: true });
+    try {
+      const donador = await crearDonador(b);
+      const proponer = () =>
+        b
+          .http()
+          .post('/api/donaciones/codigos')
+          .set('authorization', `Bearer ${donador.token}`)
+          .send({});
+      // Un cuerpo vacío no crea nada: 400, pero el intento cuenta
+      for (let i = 0; i < 10; i++) await proponer().expect(400);
+      await proponer().expect(429);
+    } finally {
+      await b.cerrar();
+    }
+  });
+});
