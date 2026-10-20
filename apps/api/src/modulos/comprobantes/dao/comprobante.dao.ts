@@ -84,7 +84,11 @@ export class ComprobanteDao {
     return count;
   }
 
-  actualizarLinea(tx: ClienteBd, lineaId: string, data: Prisma.LineaComprobanteUpdateInput) {
+  actualizarLinea(
+    tx: ClienteBd,
+    lineaId: string,
+    data: Prisma.LineaComprobanteUncheckedUpdateInput,
+  ) {
     return tx.lineaComprobante.update({ where: { id: lineaId }, data });
   }
 

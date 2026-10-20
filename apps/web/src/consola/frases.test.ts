@@ -57,7 +57,7 @@ const registro = (accion: string, despues: object | null = null, antes: object |
 // Ninguna debe mostrarse con su código interno; una acción nueva sin frase hace fallar esta prueba.
 const MODULOS = join(process.cwd(), '../api/src/modulos');
 const ENTIDADES =
-  'acopio|entidad|zona|codigo_barras|movimiento|no_recibir|umbral|donador|comprobante|causa|' +
+  'acopio|entidad|zona|codigo_barras|presentacion|movimiento|no_recibir|umbral|donador|comprobante|causa|' +
   'jornada|reservas?|categoria|usuario|invitacion|acceso|asignacion|canasta|emergencia|motor|' +
   'necesidad|reporte|sugerencia|remision|seed|importacion|plataforma';
 const ACCIONES_API = [

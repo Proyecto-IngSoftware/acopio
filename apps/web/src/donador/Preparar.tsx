@@ -1,10 +1,12 @@
 import { useEffect, useReducer, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router';
-import { formatearCantidad, SIMBOLO_UNIDAD, formatearNumero } from '@acopio/shared';
+import { formatearCantidad, formatearNumero, SIMBOLO_UNIDAD } from '@acopio/shared';
 import type { ResultadoBusqueda } from '../api/catalogo';
 import { consultarCodigoDonador, useMisDonaciones, type Donacion } from '../api/donaciones';
 import { Boton, EnlaceBoton } from '../componentes/Boton';
+import { SelectorUnidad } from '../componentes/SelectorUnidad';
+import { limpiarCantidad } from '../consola/inventario/TecladoCantidad';
 import { EstadoError } from '../componentes/EstadoError';
 import { Esqueleto } from '../componentes/Esqueleto';
 import { Icono } from '../componentes/Icono';
@@ -12,12 +14,19 @@ import { BuscadorCategoria, type ResolverCodigo } from '../consola/inventario/Bu
 import { BarraPasos, NOMBRES_PASOS } from './BarraPasos';
 import { PasoEntrega } from './PasoEntrega';
 import { PasoFolio, type FalloFactura } from './PasoFolio';
-import { cantidadBase, estadoInicial, reducir, type Linea } from './preparacion';
+import {
+  cantidadBase,
+  errorDeEscritura,
+  esLibre,
+  estadoInicial,
+  reducir,
+  type Linea,
+} from './preparacion';
 
 /** Lo máximo de donaciones preparadas a la vez (RF-DON). */
 const LIMITE_PREPARADAS = 5;
 
-/** El Donador lee códigos de su propio endpoint: no aprende códigos nuevos. */
+/** El Donador lee códigos de su propio endpoint; uno desconocido lo propone en la hoja. */
 const resolverCodigo: ResolverCodigo = async (ean) => {
   const c = await consultarCodigoDonador(ean);
   if (!c) return null;
@@ -32,27 +41,32 @@ const resolverCodigo: ResolverCodigo = async (ean) => {
       puntaje: 1,
     },
     contenido,
+    sinConfirmar: c.estado === 'PROPUESTO',
   };
 };
 
 function LineaDonacion({
   linea,
   alCambiar,
+  alEscribir,
   alVencer,
   alQuitar,
 }: {
   linea: Linea;
   alCambiar: (cantidad: number) => void;
+  alEscribir: (texto: string, factor: number) => void;
   alVencer: (venceEn: string) => void;
   alQuitar: () => void;
 }) {
   const conPresentacion = linea.contenido !== null;
+  const libre = esLibre(linea);
+  const error = errorDeEscritura(linea);
   return (
     <li
       aria-label={linea.nombre}
       className="flex flex-col gap-space-xs rounded-xl bg-surface-container-lowest p-space-md shadow-sm"
     >
-      <div className="flex items-center gap-space-xs">
+      <div className="flex items-center gap-space-sm">
         <span className="min-w-0 flex-1 text-body-lg font-bold text-on-surface">
           {linea.nombre}
         </span>
@@ -60,50 +74,93 @@ function LineaDonacion({
           type="button"
           aria-label={`Quitar ${linea.nombre}`}
           onClick={alQuitar}
-          className="flex h-12 w-12 items-center justify-center rounded-full text-on-surface-variant"
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-on-surface-variant"
         >
-          <Icono nombre="delete" className="text-[22px]" />
+          <Icono nombre="delete" className="shrink-0 text-[22px]" />
         </button>
       </div>
-      {(linea.ean || conPresentacion) && (
+      {(linea.ean || conPresentacion || linea.sinConfirmar) && (
         <p className="flex flex-wrap gap-x-space-xs text-body-sm text-on-surface-variant">
           {conPresentacion && (
             <span>Cada una trae {formatearCantidad(linea.contenido!, linea.unidad)}</span>
           )}
           {linea.ean && <code>{linea.ean}</code>}
+          {linea.sinConfirmar && (
+            <span className="flex items-center gap-space-xs font-bold">
+              <Icono nombre="info" className="shrink-0 text-[16px]" />
+              Sin confirmar
+            </span>
+          )}
         </p>
       )}
-      <div className="flex items-center gap-space-md">
-        <div className="flex items-center rounded-xl border-[1.5px] border-outline">
-          <button
-            type="button"
-            aria-label={`Menos ${linea.nombre}`}
-            disabled={linea.cantidad <= 1}
-            onClick={() => alCambiar(linea.cantidad - 1)}
-            className="flex h-12 w-12 items-center justify-center text-title-lg text-on-surface disabled:opacity-40"
-          >
-            <Icono nombre="remove" className="text-[22px]" />
-          </button>
-          <span className="min-w-10 text-center text-body-lg font-bold text-on-surface">
-            {formatearNumero(linea.cantidad)}
-          </span>
-          <button
-            type="button"
-            aria-label={`Más ${linea.nombre}`}
-            onClick={() => alCambiar(linea.cantidad + 1)}
-            className="flex h-12 w-12 items-center justify-center text-on-surface"
-          >
-            <Icono nombre="add" className="text-[22px]" />
-          </button>
-        </div>
-        <span className="text-body-md text-on-surface-variant">
-          {conPresentacion ? (
-            <>= {formatearCantidad(cantidadBase(linea), linea.unidad)}</>
+      {libre ? (
+        <div className="flex flex-col gap-space-xs">
+          <div className="flex flex-wrap items-center gap-x-space-sm gap-y-space-xs">
+            <input
+              aria-label={`Cantidad de ${linea.nombre}`}
+              inputMode="decimal"
+              autoComplete="off"
+              value={linea.texto}
+              aria-invalid={error ? true : undefined}
+              onChange={(e) => alEscribir(limpiarCantidad(e.target.value), linea.factor)}
+              className="min-h-[48px] w-28 min-w-0 rounded-xl border-[1.5px] border-outline bg-surface-container-lowest px-space-sm text-right text-body-lg font-bold tabular-nums text-on-surface"
+            />
+            <SelectorUnidad
+              unidad={linea.unidad}
+              factor={linea.factor}
+              alCambiar={(factor) => alEscribir(linea.texto, factor)}
+            />
+          </div>
+          {error ? (
+            <p role="alert" className="text-body-sm text-error">
+              {error}
+            </p>
           ) : (
-            SIMBOLO_UNIDAD[linea.unidad]
+            linea.factor !== 1 && (
+              <p className="text-body-sm text-on-surface-variant">
+                Se cuentan {formatearCantidad(linea.cantidad, linea.unidad)}
+              </p>
+            )
           )}
-        </span>
-      </div>
+        </div>
+      ) : (
+        <div className="flex flex-wrap items-center gap-x-space-md gap-y-space-xs">
+          <div className="flex shrink-0 items-center rounded-xl border-[1.5px] border-outline">
+            <button
+              type="button"
+              aria-label={`Menos ${linea.nombre}`}
+              disabled={linea.cantidad <= 1}
+              onClick={() => alCambiar(linea.cantidad - 1)}
+              className="flex h-12 w-12 items-center justify-center text-title-lg text-on-surface disabled:opacity-40"
+            >
+              <Icono nombre="remove" className="shrink-0 text-[22px]" />
+            </button>
+            <span className="min-w-10 text-center text-body-lg font-bold text-on-surface">
+              {formatearNumero(linea.cantidad)}
+            </span>
+            <button
+              type="button"
+              aria-label={`Más ${linea.nombre}`}
+              onClick={() => alCambiar(linea.cantidad + 1)}
+              className="flex h-12 w-12 items-center justify-center text-on-surface"
+            >
+              <Icono nombre="add" className="shrink-0 text-[22px]" />
+            </button>
+          </div>
+          <span className="text-body-md text-on-surface-variant">
+            {conPresentacion ? (
+              <>= {formatearCantidad(cantidadBase(linea), linea.unidad)}</>
+            ) : (
+              SIMBOLO_UNIDAD[linea.unidad]
+            )}
+          </span>
+          {error && (
+            <p role="alert" className="w-full text-body-sm text-error">
+              {error}
+            </p>
+          )}
+        </div>
+      )}
       {linea.perecedero && (
         <label className="flex flex-col gap-space-2xs text-label-md text-on-surface-variant">
           Vence (opcional)
@@ -213,8 +270,8 @@ export function Preparar() {
   } else if (preparadas.data.length >= LIMITE_PREPARADAS) {
     cuerpo = (
       <div className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-low p-space-md">
-        <p role="status" className="flex gap-space-xs text-body-lg text-on-surface">
-          <Icono nombre="info" className="text-[22px]" />
+        <p role="status" className="flex items-center gap-space-xs text-body-lg text-on-surface">
+          <Icono nombre="info" className="shrink-0 text-[22px]" />
           Ya tienes {LIMITE_PREPARADAS} donaciones preparadas. Entrega o cancela una para preparar
           otra
         </p>
@@ -240,6 +297,9 @@ export function Preparar() {
                 key={l.id}
                 linea={l}
                 alCambiar={(cantidad) => enviar({ tipo: 'cantidad', id: l.id, cantidad })}
+                alEscribir={(texto, factor) =>
+                  enviar({ tipo: 'escribir', id: l.id, texto, factor })
+                }
                 alVencer={(venceEn) => enviar({ tipo: 'vence', id: l.id, venceEn })}
                 alQuitar={() => enviar({ tipo: 'quitar', id: l.id })}
               />
@@ -247,7 +307,7 @@ export function Preparar() {
           </ul>
         )}
         <Boton
-          disabled={estado.lineas.length === 0}
+          disabled={estado.lineas.length === 0 || estado.lineas.some((l) => errorDeEscritura(l))}
           onClick={() => enviar({ tipo: 'paso', paso: 2 })}
         >
           Siguiente: dónde entregar
@@ -264,9 +324,9 @@ export function Preparar() {
           type="button"
           aria-label="Volver"
           onClick={() => enviar({ tipo: 'paso', paso: 1 })}
-          className="flex h-12 w-12 items-center justify-center self-start rounded-full text-on-surface"
+          className="flex h-12 w-12 shrink-0 items-center justify-center self-start rounded-full text-on-surface"
         >
-          <Icono nombre="arrow_back" className="text-[24px]" />
+          <Icono nombre="arrow_back" className="shrink-0 text-[24px]" />
         </button>
       )}
       <BarraPasos paso={paso} />

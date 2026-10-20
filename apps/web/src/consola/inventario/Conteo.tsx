@@ -1,14 +1,16 @@
 import { useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useParams } from 'react-router';
-import { formatearCantidad, SIMBOLO_UNIDAD } from '@acopio/shared';
+import { formatearCantidad } from '@acopio/shared';
 import type { ResultadoBusqueda } from '../../api/catalogo';
 import { useRegistrarAjuste, useSaldos } from '../../api/inventario';
 import { useAcopio } from '../../api/red';
 import { Boton } from '../../componentes/Boton';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
+import { leerCantidad } from '../../componentes/cantidad-base';
 import { Icono } from '../../componentes/Icono';
+import { SelectorUnidad } from '../../componentes/SelectorUnidad';
 import { haceCuanto } from '../../formato';
 import { useEnLinea } from '../../sin-conexion/en-linea';
 import { Encabezado } from '../Encabezado';
@@ -27,6 +29,8 @@ export function Conteo() {
   const [q, fijarQ] = useState('');
   const [categoria, fijarCategoria] = useState<ResultadoBusqueda | null>(null);
   const [cantidad, fijarCantidad] = useState('');
+  // En qué unidad se escribe: 1 es la unidad base (kg, L); 0,001 son g o ml
+  const [factor, fijarFactor] = useState(1);
   const [motivo, fijarMotivo] = useState('');
   const [aviso, fijarAviso] = useState('');
   const busqueda = useRef<HTMLInputElement>(null);
@@ -36,7 +40,11 @@ export function Conteo() {
   const registrar = useRegistrarAjuste(acopioId);
 
   const decimales = categoria?.unidadBase !== 'UNIDAD';
-  const contada = aNumero(cantidad);
+  const leida = categoria
+    ? leerCantidad(cantidad, factor, categoria.unidadBase)
+    : { base: aNumero(cantidad), error: null };
+  const errorCantidad = leida.error;
+  const contada = leida.base;
   // Escrita con el teclado del equipo, la coma puede llegar donde no van decimales
   const fraccion = Boolean(categoria) && !decimales && cantidad.includes(',');
   const fila = saldos.data?.find((s) => s.categoriaId === categoria?.id);
@@ -50,6 +58,7 @@ export function Conteo() {
 
   const limpiar = () => {
     fijarCantidad('');
+    fijarFactor(1);
     fijarMotivo('');
     registrar.reset();
   };
@@ -62,7 +71,7 @@ export function Conteo() {
 
   const enviar = (e: FormEvent) => {
     e.preventDefault();
-    if (!categoria || !escrita || coincide || faltan > 0 || fraccion) return;
+    if (!categoria || !escrita || coincide || faltan > 0 || fraccion || errorCantidad) return;
     const elegida = categoria;
     registrar.mutate(
       { categoriaId: elegida.id, cantidadContada: contada, motivo: motivo.trim() },
@@ -110,12 +119,14 @@ export function Conteo() {
       <p
         role="status"
         className={
-          aviso ? 'rounded-xl bg-exito-container p-space-sm font-bold text-exito' : 'sr-only'
+          aviso
+            ? 'flex items-center gap-space-xs rounded-xl bg-exito-container p-space-sm font-bold text-exito'
+            : 'sr-only'
         }
       >
         {aviso && (
           <>
-            <Icono nombre="check_circle" className="mr-1 text-[20px]" />
+            <Icono nombre="check_circle" className="shrink-0 text-[20px]" />
             {aviso}
           </>
         )}
@@ -152,9 +163,9 @@ export function Conteo() {
             </TarjetaSaldo>
           )}
 
-          <label className="flex flex-col items-center gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md">
+          <div className="flex flex-col items-center gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md">
             <span className="text-label-md text-on-surface-variant">Cantidad contada</span>
-            <span className="flex items-baseline gap-space-xs">
+            <span className="flex flex-wrap items-center justify-center gap-x-space-sm gap-y-space-xs">
               <input
                 id="conteo-cantidad"
                 aria-label="Cantidad"
@@ -170,19 +181,31 @@ export function Conteo() {
                 className="max-w-[60vw] bg-transparent text-center text-display-hero-mobile font-bold text-on-surface tabular-nums"
               />
               {categoria && (
-                <span className="text-headline-sm text-on-surface-variant">
-                  {SIMBOLO_UNIDAD[categoria.unidadBase]}
-                </span>
+                <SelectorUnidad
+                  unidad={categoria.unidadBase}
+                  factor={factor}
+                  alCambiar={fijarFactor}
+                />
               )}
             </span>
-          </label>
+          </div>
+
+          {errorCantidad && (
+            <p
+              role="alert"
+              className="flex items-center gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
+            >
+              <Icono nombre="error" className="shrink-0 text-[20px]" />
+              {errorCantidad}
+            </p>
+          )}
 
           {fraccion && (
             <p
               role="alert"
-              className="flex gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
+              className="flex items-center gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
             >
-              <Icono nombre="error" className="text-[20px]" />
+              <Icono nombre="error" className="shrink-0 text-[20px]" />
               En unidades, la cantidad va sin decimales.
             </p>
           )}
@@ -195,7 +218,7 @@ export function Conteo() {
             }}
           />
 
-          {categoria && escrita && (
+          {categoria && escrita && !errorCantidad && (
             <section
               aria-label="Diferencia"
               className="flex items-center gap-space-sm rounded-xl border border-outline bg-surface-container-low p-space-md"
@@ -268,7 +291,13 @@ export function Conteo() {
             type="submit"
             className="min-h-[56px] w-full text-body-lg"
             disabled={
-              !categoria || !escrita || coincide || faltan > 0 || fraccion || registrar.isPending
+              !categoria ||
+              !escrita ||
+              coincide ||
+              faltan > 0 ||
+              fraccion ||
+              !!errorCantidad ||
+              registrar.isPending
             }
           >
             <Icono nombre="fact_check" className="text-[22px]" />

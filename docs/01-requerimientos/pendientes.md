@@ -1097,6 +1097,107 @@ gramos se escriben mal.
 plan en [2026-10-20-presentaciones.md](../05-planes/2026-10-20-presentaciones.md) e issue #163.
 Arranca después de la sustentación del 23.
 
+### P-082 · Ajustar la demo del servidor de pruebas tras la migración de presentaciones
+**Fecha:** 2026-10-20 · **Propuesto por:** Claude, al cerrar la fase de presentaciones
+**Qué:** el seed de la demo no reescribe filas que ya existen, y el servidor tiene los dos códigos
+de ejemplo sembrados por la demo anterior. Tras migrar, `7501031311309` quedará `VALIDADO`, sin
+presentación, con `por_revisar` y en la categoría que le dio la demo anterior; `4006381333931`
+quedará con la suelta de 1 que creó la migración, también en su categoría de antes. La demo nueva
+define el primero como propuesto por `donador1@demo.acopio.local` en Arroz con «Bolsa de arroz
+500 g», y el segundo como validado en Agua potable con «Botella de agua 600 ml». Hace falta un
+ajuste manual con SQL después de desplegar, sin tocar el resto de la demo. El seed completa
+solo un caso: si `7501031311309` sigue propuesto, en Arroz y sin presentación, le pone la bolsa.
+**Por qué:** la ronda de pruebas y la sustentación usan esos dos códigos como ejemplo de un código
+propuesto y de uno validado con presentación.
+**Estado:** ABIERTO → se hace al desplegar la fase, después del 23
+([plan](../05-planes/2026-10-20-presentaciones.md), tarea 14, paso 3).
+
+### P-083 · Tope de 10.000 en el conteo físico
+**Fecha:** 2026-10-20 · **Propuesto por:** Claude, al construir la tarea 10
+**Qué:** el tope de 10.000 por línea también limita el conteo físico total de una categoría. Un
+acopio con más de 10 t (o 10.000 L, o 10.000 unidades) de algo no puede registrar su conteo.
+**Por qué:** el diseño incluyó el conteo entre las líneas con tope sin pensar en que registra el
+total y no un movimiento.
+**Estado:** ABIERTO → decide Joseph: subir el tope solo para el conteo, o dejarlo.
+
+
+### P-084 · Menores que quedaron de la fase de presentaciones
+**Fecha:** 2026-10-20 · **Propuesto por:** Claude, en la revisión final de la fase
+**Qué:** detalles que las revisiones de cada tarea dejaron para después. Ninguno bloquea la
+sustentación.
+
+Esquema y migración:
+- El `CHECK` de `presentacion` no obliga a que un paquete contenga una suelta de su misma
+  categoría; lo revisa el servicio.
+- `presentacion.creado_por` no tiene llave foránea, igual que las tablas vecinas.
+- Los nombres que creó la migración llevan punto decimal («Arroz 0.5 kg»). No se edita la
+  migración ya aplicada (cambiaría su checksum); se corrigen con la pantalla de
+  [P-085](#p-085--pantalla-para-editar-presentaciones-en-c18) o con SQL.
+
+Paquete compartido:
+- `cantidadConSimbolo` repite lo que hace `formatearCantidad` (`formato.ts`).
+- `aUnidadBase` no rechaza negativos; las pantallas revisan el signo.
+
+Presentaciones y códigos en la API:
+- Hay una carrera poco probable entre leer los paquetes de una suelta y confirmar su nuevo
+  tamaño, sin candado consultivo.
+- Un paquete puede contener una suelta `PROPUESTO`; la regla no está definida.
+- Editar una presentación no revisa si su categoría está archivada.
+- Faltan pruebas de editar un paquete (`unidades`, `contieneId`) y del 404 por un `contieneId`
+  que no existe.
+- `return duplicadaComoErrorDominio(e)` usa una función que siempre lanza, y esas pruebas
+  dependen del orden de los `it`.
+- La búsqueda de códigos corta en 500 filas sin avisar.
+- Un `PATCH` de código sin otros cambios igual valida una presentación `PROPUESTO` si trae
+  `estado: 'VALIDADO'`.
+- `presentacionActiva` no revisa que una presentación `PROPUESTO` pasada por id sea del mismo
+  Donador. El id es un UUID que no se adivina, y la presentación sigue `PROPUESTO`.
+- Falta una prueba de `CODIGO_NO_COINCIDE` con un código `PROPUESTO`.
+- En la recepción, una línea con un EAN que no está en `codigo_barras` ignora `presentacionId`
+  sin avisar.
+- Faltan pruebas de corregir a una categoría perecedera sin `venceEn`.
+- Salida y Conteo aceptan un código `PROPUESTO` sin pedir confirmación. Se deja así; si hace
+  falta, se avisa en esas pantallas como en la recepción.
+- Proponer códigos tiene un límite de 10 por minuto por IP. En un punto de entrega con muchos
+  Donadores detrás de la misma red puede quedarse corto.
+
+Seed de la demo:
+- `if (!agua || !arroz) return;` calla que falten esas categorías.
+
+Pantallas:
+- En Preparar, `agregarLinea` repetida sube de 1 en 1 sin tope, y no hay prueba del símbolo en
+  las líneas que no son libres.
+- En el escáner, «Usar esa» queda un poco desalineado a 320 px, y las acciones no revisan
+  `navigator.onLine` fuera del escaneo.
+- Tras un 409 el botón se rehabilita durante la recarga, y un segundo toque la repite.
+- C18: sin `keepPreviousData` en `useCodigos(q)`, el esqueleto parpadea al buscar; «Propuestos (N)»
+  cuenta lo que trae la búsqueda y no el total; si se mueve el último código de una presentación
+  abierta, el detalle vuelve a la lista sin aviso.
+- Recibir folio: un fallo de red al consultar el código de una línea la deja sin «Corregir» sin
+  aviso; corregir borra la fecha ya escrita aunque la nueva categoría también sea perecedera, y
+  no hay prueba de que se borra.
+
+Recorrido y documentos:
+- El recorrido de presentaciones no comprueba la presentación del código validado ni que la
+  presentación quede `VALIDADO`, y usa una fecha de vencimiento fija (2027-01-31).
+- El [plan de la fase](../05-planes/2026-10-20-presentaciones.md) todavía describe el `DELETE` de
+  códigos; vale lo que dice la sección «Cambios al construir» de la
+  [especificación](../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
+
+**Por qué:** las listas de la revisión viven en un archivo temporal que no se versiona.
+**Estado:** ABIERTO → se toman de a uno cuando toque el área; ninguno necesita decisión.
+
+### P-085 · Pantalla para editar presentaciones en C18
+**Fecha:** 2026-10-20 · **Propuesto por:** Claude, en la revisión final de la fase
+**Qué:** la API ya tiene `PATCH /api/presentaciones/:id`, pero ninguna pantalla lo usa. El
+Administrador no puede renombrar una presentación, corregir su tamaño ni juntar duplicadas
+(mover sus códigos a una y dejar la otra sin uso). Hace falta diseñarla en Stitch y que Joseph
+apruebe la maqueta antes de escribir el código.
+**Por qué:** las sueltas que creó la migración tienen nombres como «Arroz 0.5 kg»
+([P-084](#p-084--menores-que-quedaron-de-la-fase-de-presentaciones)), y los Donadores pueden
+proponer presentaciones repetidas. Mientras no exista, se corrige con SQL si urge.
+**Estado:** ABIERTO → decide Joseph si entra en la próxima fase.
+
 ---
 
 ## Resueltos

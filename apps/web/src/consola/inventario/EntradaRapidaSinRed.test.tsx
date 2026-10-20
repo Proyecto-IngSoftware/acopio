@@ -219,4 +219,16 @@ describe('C4 sin conexión', () => {
     ).toBeInTheDocument();
     expect(screen.queryByRole('dialog', { name: 'Código nuevo' })).not.toBeInTheDocument();
   });
+
+  it('sin red, un código propuesto sin confirmar no pasa a la cantidad', async () => {
+    sinRed();
+    await copiaLocal();
+    await guardarCodigoVisto({ ...BOTELLA, estado: 'PROPUESTO' } as unknown as CodigoBarras);
+    pantalla();
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+
+    expect(await screen.findByText(/este código todavía no está confirmado/)).toBeInTheDocument();
+    expect(screen.queryByRole('region', { name: 'Categoría elegida' })).not.toBeInTheDocument();
+  });
 });

@@ -1,4 +1,6 @@
+import { useState } from 'react';
 import { useSearchParams } from 'react-router';
+import { Boton } from '../../componentes/Boton';
 import { Icono } from '../../componentes/Icono';
 import { Encabezado } from '../Encabezado';
 import { PestanaCanasta } from './PestanaCanasta';
@@ -22,13 +24,19 @@ export function Catalogo() {
   const activa: Pestana = PESTANAS.some((p) => p.id === pedida)
     ? (pedida as Pestana)
     : 'categorias';
+  // «Agregar código» está junto al título y al pie de la pestaña: la hoja es una sola
+  const [agregando, fijarAgregando] = useState(false);
 
   return (
     <div className="flex flex-col gap-space-md px-margin py-space-md">
-      <Encabezado
-        titulo="Catálogo maestro"
-        subtitulo="Categorías, canasta estándar y emergencias"
-      />
+      <Encabezado titulo="Catálogo maestro" subtitulo="Categorías, canasta estándar y emergencias">
+        {activa === 'codigos' && (
+          <Boton className="min-h-[48px]" onClick={() => fijarAgregando(true)}>
+            <Icono nombre="add" className="shrink-0 text-[20px]" />
+            Agregar código
+          </Boton>
+        )}
+      </Encabezado>
       <div
         role="tablist"
         className="flex gap-1 overflow-x-auto rounded-xl bg-surface-container p-1"
@@ -57,7 +65,9 @@ export function Catalogo() {
         {activa === 'categorias' && <PestanaCategorias />}
         {activa === 'canasta' && <PestanaCanasta />}
         {activa === 'emergencias' && <PestanaEmergencias />}
-        {activa === 'codigos' && <PestanaCodigos />}
+        {activa === 'codigos' && (
+          <PestanaCodigos agregando={agregando} alAgregar={fijarAgregando} />
+        )}
       </div>
     </div>
   );

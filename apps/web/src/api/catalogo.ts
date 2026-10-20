@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { guardarCodigoVisto } from '../sin-conexion/datos-locales';
 import { api, desenvolver, type ErrorApi } from './cliente';
 import type { components } from './esquema';
@@ -197,37 +197,105 @@ export async function consultarCodigo(ean: string) {
   return codigo;
 }
 
-export interface DatosAsociar {
-  ean: string;
-  categoriaId: string;
-  contenido?: number;
+/** Recepción: el estado de los códigos de las líneas de un folio, una consulta por número. Un
+ *  código que la API no devuelve queda en `null`: la línea sigue sin marca. */
+export function useCodigosDeLineas(eans: string[]) {
+  const unicos = [...new Set(eans)];
+  const consultas = useQueries({
+    queries: unicos.map((ean) => ({
+      queryKey: ['codigos-barras', 'ean', ean],
+      retry: false,
+      queryFn: async (): Promise<CodigoBarras | null> => {
+        try {
+          return await desenvolver(
+            api.GET('/api/codigos-barras/{ean}', { params: { path: { ean } } }),
+          );
+        } catch {
+          return null;
+        }
+      },
+    })),
+  });
+  return new Map(unicos.map((ean, i) => [ean, consultas[i]?.data ?? null]));
 }
 
-/** Escáner: asocia un código nuevo a una categoría; el de un Operador queda sin revisar (RF-CAT-004). */
+export interface DatosAsociar {
+  ean: string;
+  presentacionId: string;
+}
+
+/** Escáner: asocia un código nuevo a una presentación; el de un Operador queda validado
+ *  (RF-CAT-004). */
 export function useAsociarCodigo() {
   const consultas = useQueryClient();
   return useMutation<CodigoBarras, ErrorApi, DatosAsociar>({
     mutationFn: async (datos) =>
       await desenvolver(api.POST('/api/codigos-barras', { body: datos })),
-    onSuccess: () => void consultas.invalidateQueries({ queryKey: ['codigos-barras'] }),
+    onSuccess: () => {
+      void consultas.invalidateQueries({ queryKey: ['codigos-barras'] });
+      void consultas.invalidateQueries({ queryKey: ['presentaciones'] });
+    },
   });
 }
 
-/** C18: todos los códigos aprendidos, del más nuevo al más viejo (RF-CAT-004). */
-export function useCodigos() {
+/** Escáner: el Operador confirma un código propuesto, o lo corrige con otra presentación. */
+export function useValidarCodigo() {
+  const consultas = useQueryClient();
+  return useMutation<CodigoBarras, ErrorApi, DatosAsociar>({
+    mutationFn: async ({ ean, presentacionId }) =>
+      await desenvolver(
+        api.POST('/api/codigos-barras/{ean}/validar', {
+          params: { path: { ean } },
+          body: { presentacionId },
+        }),
+      ),
+    onSuccess: () => {
+      void consultas.invalidateQueries({ queryKey: ['codigos-barras'] });
+      void consultas.invalidateQueries({ queryKey: ['presentaciones'] });
+    },
+  });
+}
+
+export type Presentacion = S['PresentacionDto'];
+export type DatosPresentacion = S['CrearDto'];
+
+/** Las presentaciones de una categoría (sueltas y paquetes). Sin categoría no consulta. */
+export function usePresentaciones(categoriaId: string | undefined) {
+  return useQuery<Presentacion[], ErrorApi>({
+    queryKey: ['presentaciones', categoriaId],
+    enabled: Boolean(categoriaId),
+    queryFn: () =>
+      desenvolver(
+        api.GET('/api/presentaciones', { params: { query: { categoriaId: categoriaId! } } }),
+      ),
+  });
+}
+
+/** Una presentación nueva: suelta con `tamano`, o paquete con `contieneId` y `unidades`. */
+export function useCrearPresentacion() {
+  const consultas = useQueryClient();
+  return useMutation<Presentacion, ErrorApi, DatosPresentacion>({
+    mutationFn: async (datos) =>
+      await desenvolver(api.POST('/api/presentaciones', { body: datos })),
+    onSuccess: () => void consultas.invalidateQueries({ queryKey: ['presentaciones'] }),
+  });
+}
+
+/** C18: los códigos aprendidos, los propuestos y por revisar primero (RF-CAT-004). `q` busca por
+ *  número, categoría o presentación. El filtro «Propuestos» se aplica en la pantalla: la API
+ *  no junta los `por_revisar` con los `PROPUESTO`. */
+export function useCodigos(q = '') {
   return useQuery<CodigoBarras[], ErrorApi>({
-    queryKey: ['codigos-barras'],
-    queryFn: async () => await desenvolver(api.GET('/api/codigos-barras', {})),
+    queryKey: ['codigos-barras', q],
+    queryFn: async () =>
+      await desenvolver(api.GET('/api/codigos-barras', { params: { query: q ? { q } : {} } })),
   });
 }
 
-export interface CambiosCodigo {
-  categoriaId?: string;
-  contenido?: number | null;
-  revisado?: boolean;
-}
+export type CambiosCodigo = S['EditarCodigoDto'];
 
-/** C18: el Administrador cambia la categoría o el contenido de un código, o lo marca revisado. */
+/** C18: el Administrador aprueba un código (`estado: 'VALIDADO', porRevisar: false`) o lo cambia
+ *  de presentación. Los códigos no se borran. */
 export function useEditarCodigo() {
   const consultas = useQueryClient();
   return useMutation<CodigoBarras, ErrorApi, { ean: string; cambios: CambiosCodigo }>({
@@ -235,6 +303,9 @@ export function useEditarCodigo() {
       await desenvolver(
         api.PATCH('/api/codigos-barras/{ean}', { params: { path: { ean } }, body: cambios }),
       ),
-    onSuccess: () => void consultas.invalidateQueries({ queryKey: ['codigos-barras'] }),
+    onSuccess: () => {
+      void consultas.invalidateQueries({ queryKey: ['codigos-barras'] });
+      void consultas.invalidateQueries({ queryKey: ['presentaciones'] });
+    },
   });
 }

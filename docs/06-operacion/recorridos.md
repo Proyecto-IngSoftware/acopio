@@ -3,7 +3,7 @@ title: "Recorridos de punta a punta"
 type: operacion
 tags: [operacion, pruebas, web]
 estado: vigente
-actualizado: 2026-10-19
+actualizado: 2026-10-20
 ---
 
 # Recorridos de punta a punta
@@ -36,6 +36,7 @@ bun run --filter @acopio/web build
 node apps/web/recorridos/validacion-general.mjs
 node apps/web/recorridos/donador.mjs
 node apps/web/recorridos/consola-comprobantes.mjs
+node apps/web/recorridos/presentaciones.mjs
 node apps/web/recorridos/consola-motor.mjs
 node apps/web/recorridos/consola-remisiones.mjs
 node apps/web/recorridos/consola-recepciones.mjs
@@ -118,6 +119,7 @@ Con la demo recién sembrada, conviene correr `consola-motor.mjs` antes que
 | `validacion-general.mjs` | Cada pantalla con cada rol, accesos negados, invitar y activar, salida, conteo y bitácora | 60 | No guarda capturas |
 | `donador.mjs` | El Donador de punta a punta (Bloque 3, ciclo 1) | 8 | P09, P10, P12 y P13 |
 | `consola-comprobantes.mjs` | Recibir, conciliar, rechazar y vincular (Bloque 3, ciclo 2) | 10 | C04-recibir-folio, C08-comprobantes y C08-conciliacion |
+| `presentaciones.mjs` | Presentaciones y códigos de barras (fase de presentaciones): el Donador escanea con la cámara falsa un EAN que Acopio no conoce, propone una presentación nueva y prepara una donación para Acopio Chapinero; `operador1` recibe el folio y confirma el código con «Es correcto»; el Administrador lo ve «Validado» en C18. Comprueba en la API el estado del código (`PROPUESTO` y luego `VALIDADO`) y que la línea recibida conserva el EAN con cantidad confirmada. Inventa un EAN y una presentación por corrida, así que se puede repetir. Entra como `donador1@demo.acopio.local` y `operador1` con `DEMO_CONTRASENA`, y como `admin` con `ADMIN_CONTRASENA` | 9 | No guarda capturas |
 | `consola-motor.mjs` | El motor para el Administrador: ficha de zona, recálculo, aprobar con la cantidad editada, descartar con motivo, pesos con vista previa e informe de descartes (Bloque 4, interfaz ciclo 1) | 9 | C10-ficha-zona y C11-motor |
 | `consola-remisiones.mjs` | Remisiones para el Operador de Kennedy: la fila de «Más», editar una línea, despachar con responsable y folio comprobando que el saldo baja lo despachado, el documento con QR, cancelar lo despachado comprobando que el saldo vuelve, y un despacho general creado a mano y cancelado (Bloque 4, interfaz ciclo 2). Entra como `operador2` con `DEMO_CONTRASENA`. Al cancelar lo despachado deja la demo como estaba, así se puede repetir | 7 | C12-remisiones |
 | `consola-recepciones.mjs` | El Receptor (Bloque 4, interfaz ciclo 3): la fila «Mi zona» de «Más», la pantalla «Mi zona» y su «Ver todas» hacia «Por recibir», confirmar deshabilitado sin foto, subir una foto y ver su miniatura, confirmar y comprobar en la API que la remisión quedó recibida con la nota y la foto, reportar una categoría en C20, comprobar que un visitante sin sesión la ve en el mapa público y en la lista (HU-13.1) y marcarla resuelta. Entra como `receptor1` con `DEMO_CONTRASENA`. El 2026-10-17 pasó 7/7 en local | 7 | mi-zona, C13-recepcion, C20-reportar y P05-mapa |
@@ -172,6 +174,25 @@ donaciones».
    revierte el rechazo.
 5. Abre la hoja de «Vincular entradas».
 
+### `presentaciones.mjs`
+
+1. El script dibuja un EAN-13 nuevo con `sharp`, lo guarda como video MJPEG y lo da a Chromium con
+   `--use-file-for-fake-video-capture`. La cámara falsa lo muestra y `@zxing/browser` lo lee
+   como lo haría con un envase.
+2. El Donador toca «Escanear» en «Preparar donación». La API no conoce el número, así que sale
+   «Código nuevo». Elige Arroz, crea una presentación suelta y la asocia: la línea queda
+   «Sin confirmar».
+3. Prepara la donación para Acopio Chapinero. Por la API, el código está `PROPUESTO` con la
+   presentación nueva.
+4. `operador1` busca el folio en «Recibir por folio», ve «Código propuesto», toca «Es correcto»
+   y registra la recepción.
+5. Por la API, el código está `VALIDADO` y la línea conserva el EAN con cantidad confirmada. El
+   Administrador abre Catálogo, «Códigos de barras», busca el número, abre la presentación y ve
+   la ficha «Validado».
+
+La API de entrada limita a 5 intentos por minuto, así que el script entra una sola vez como
+administrador por la API y reutiliza esa cookie en la pantalla de C18.
+
 ### `sin-conexion.mjs`
 
 `operador1` abre C4 con red y el service worker toma el control. Sin red, registra arroz, agua y
@@ -214,6 +235,14 @@ baja hasta la sección «Otras plataformas que ayudan» de `/causas` y, en `/map
 de Bogotá para que se vean los dos tipos de punto.
 
 ## Últimos resultados
+
+**2026-10-20, en local, fase de presentaciones** (rama `presentaciones`, API reconstruida con
+`servicios:todo`): `presentaciones.mjs` 9 de 9, sin errores de página. Antes fallaron tres
+corridas: una por el límite de 5 inicios de sesión por minuto, otra porque C18 agrupa los
+códigos por presentación y hay que abrir la del recorrido antes de ver la ficha, y otra por el
+selector de la casilla «Todos». Se repitió tras los arreglos de la revisión final (recepción sin
+corrección, validar sin pisar, tope por línea), con la API reconstruida y la demo sembrada dos
+veces: 9 de 9 a la primera, sin errores de página.
 
 **2026-10-19, en local, con la entrada única** (rama `entrada-unica`, API reconstruida con
 `servicios:todo`, `CAPTURAS=no`): `donador.mjs` 8 de 8, `validacion-general.mjs` 60 de 60,

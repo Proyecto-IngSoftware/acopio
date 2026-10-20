@@ -2,7 +2,14 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes } from 'react-router';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
-import { clienteFalso, cuerpoDe, envolver, responderSegun } from '../../pruebas/utilidades';
+import {
+  clienteFalso,
+  conEstado,
+  cuerpoDe,
+  envolver,
+  peticiones,
+  responderSegun,
+} from '../../pruebas/utilidades';
 import { leerCategorias, leerNoRecibir, leerSaldos } from '../../sin-conexion/datos-locales';
 import { ACOPIO, SALDOS } from './datos-prueba';
 import { EntradaRapida } from './EntradaRapida';
@@ -204,6 +211,62 @@ describe('C4 Entrada rápida', () => {
     expect(screen.getByRole('button', { name: 'Registrar 5 L' })).toBeEnabled();
   });
 
+  it('«500» en g registra 0,5 kg', async () => {
+    pantalla({ 'POST /api/acopios/x1/entradas': resultado(0.5, 120.5) });
+    await elegir('arroz', /Arroz/);
+    await userEvent.click(screen.getByRole('radio', { name: 'g' }));
+    await teclear('5', '0', '0');
+    expect(screen.getByText('Se registran 0,5 kg')).toBeInTheDocument();
+    await userEvent.type(screen.getByLabelText('Vence el'), '2026-10-30');
+    await userEvent.click(screen.getByRole('button', { name: 'Registrar 0,5 kg' }));
+    await screen.findByRole('status');
+    expect(await cuerpoDe('POST /api/acopios/x1/entradas')).toMatchObject({ cantidad: 0.5 });
+  });
+
+  it('«0,5» en g avisa y no deja registrar', async () => {
+    pantalla();
+    await elegir('arroz', /Arroz/);
+    await userEvent.click(screen.getByRole('radio', { name: 'g' }));
+    await teclear('0', ',', '5');
+    await userEvent.type(screen.getByLabelText('Vence el'), '2026-10-30');
+    expect(screen.getByRole('alert')).toHaveTextContent('En g, la cantidad va sin decimales');
+    expect(screen.getByRole('button', { name: 'Registrar' })).toBeDisabled();
+  });
+
+  it('«10001» kg avisa el tope de la línea y no deja registrar', async () => {
+    pantalla();
+    await elegir('arroz', /Arroz/);
+    await teclear('1', '0', '0', '0', '1');
+    await userEvent.type(screen.getByLabelText('Vence el'), '2026-10-30');
+    expect(screen.getByRole('alert')).toHaveTextContent('Una línea llega hasta 10.000 kg');
+    expect(screen.getByRole('button', { name: 'Registrar' })).toBeDisabled();
+  });
+
+  it('2000 paquetes de 7,2 L pasan el tope de la línea: avisa y no deja registrar', async () => {
+    pantalla({ 'GET /api/codigos-barras/7702001045231': { ...BOTELLA, contenido: 7.2 } });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    await screen.findByRole('region', { name: 'Categoría elegida' });
+    await teclear('2', '0', '0', '0');
+    expect(screen.getByRole('alert')).toHaveTextContent('Una línea llega hasta 10.000 L');
+    expect(screen.getByRole('button', { name: /^Registrar/ })).toBeDisabled();
+  });
+
+  it('con un código que trae presentación no hay selector de unidad', async () => {
+    pantalla({ 'GET /api/codigos-barras/7702001045231': BOTELLA });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    await screen.findByRole('region', { name: 'Categoría elegida' });
+    expect(screen.queryByRole('radio', { name: 'ml' })).not.toBeInTheDocument();
+  });
+
+  it('elegir otra categoría vuelve la unidad a kg', async () => {
+    pantalla();
+    await elegir('arroz', /Arroz/);
+    await userEvent.click(screen.getByRole('radio', { name: 'g' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Cambiar' }));
+    await elegir('arroz', /Arroz/);
+    expect(screen.getByRole('radio', { name: 'kg' })).toBeChecked();
+  });
+
   it('registra con el teclado de la pantalla, muestra el saldo resultante y queda lista para otra', async () => {
     pantalla();
     await elegir('panal', /Pañal adulto/);
@@ -274,5 +337,174 @@ describe('C4 Entrada rápida', () => {
     const { container } = pantalla();
     await elegir('panal', /Pañal adulto/);
     expect(await violacionesGraves(container)).toEqual([]);
+  });
+});
+
+describe('C4 con códigos de presentaciones', () => {
+  const EAN = '7702001045231';
+  const desconocido = conEstado(404, {
+    estado: 404,
+    codigo: 'EAN_DESCONOCIDO',
+    mensaje: 'Este código no está asociado a ninguna categoría',
+  });
+  const SUELTA = {
+    id: 'pa',
+    categoriaId: 'c2',
+    categoria: 'Arroz',
+    unidad: 'KILOGRAMO',
+    nombre: 'Bolsa de arroz 500 g',
+    clase: 'SUELTA',
+    tamano: 0.5,
+    contieneId: null,
+    unidades: null,
+    estado: 'VALIDADO',
+    codigos: 0,
+  };
+  const PROPUESTO = {
+    ...BOTELLA,
+    estado: 'PROPUESTO',
+    presentacion: { id: 'p1', nombre: 'Botella de agua 600 ml', tamano: 0.6 },
+  };
+  const elegirArrozEnHoja = async () => {
+    const hoja = await screen.findByRole('dialog', { name: 'Código nuevo' });
+    await userEvent.type(within(hoja).getByRole('searchbox', { name: 'Categoría' }), 'arroz');
+    await userEvent.click(await within(hoja).findByRole('button', { name: /Arroz/ }));
+    await userEvent.click(await within(hoja).findByRole('radio', { name: 'Bolsa de arroz 500 g' }));
+    return hoja;
+  };
+
+  it('«Solo guardar el código» asocia y vuelve a la búsqueda sin pedir cantidad', async () => {
+    pantalla({
+      [`GET /api/codigos-barras/${EAN}`]: desconocido,
+      'GET /api/presentaciones': [SUELTA],
+      'POST /api/codigos-barras': { ...BOTELLA, estado: 'VALIDADO' },
+    });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const hoja = await elegirArrozEnHoja();
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Solo guardar el código' }));
+    expect(await cuerpoDe('POST /api/codigos-barras')).toEqual({ ean: EAN, presentacionId: 'pa' });
+    expect(await screen.findByText(/Código guardado/)).toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.queryByRole('region', { name: 'Categoría elegida' })).not.toBeInTheDocument();
+    expect(screen.getByRole('searchbox', { name: 'Categoría' })).toBeInTheDocument();
+  });
+
+  it('sin red no ofrece «Solo guardar el código»', async () => {
+    vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+    pantalla({ [`GET /api/codigos-barras/${EAN}`]: desconocido });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Código nuevo' });
+    expect(within(hoja).getByRole('button', { name: 'Asociar y seguir' })).toBeInTheDocument();
+    expect(
+      within(hoja).queryByRole('button', { name: 'Solo guardar el código' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('un código propuesto se confirma antes de pedir la cantidad', async () => {
+    pantalla({
+      [`GET /api/codigos-barras/${EAN}`]: PROPUESTO,
+      [`POST /api/codigos-barras/${EAN}/validar`]: { ...PROPUESTO, estado: 'VALIDADO' },
+    });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Confirma el código' });
+    expect(hoja).toHaveTextContent('Agua potable');
+    expect(hoja).toHaveTextContent('Botella de agua 600 ml');
+    expect(screen.queryByRole('region', { name: 'Categoría elegida' })).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Cantidad')).toHaveValue('');
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Es correcto' }));
+    expect(await cuerpoDe(`POST /api/codigos-barras/${EAN}/validar`)).toEqual({
+      presentacionId: 'p1',
+    });
+    const elegida = await screen.findByRole('region', { name: 'Categoría elegida' });
+    expect(elegida).toHaveTextContent('Agua potable');
+  });
+
+  it('«Corregir» valida el código con la presentación que se elija', async () => {
+    pantalla({
+      [`GET /api/codigos-barras/${EAN}`]: PROPUESTO,
+      'GET /api/presentaciones': [SUELTA],
+      [`POST /api/codigos-barras/${EAN}/validar`]: { ...PROPUESTO, estado: 'VALIDADO' },
+    });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const confirma = await screen.findByRole('dialog', { name: 'Confirma el código' });
+    await userEvent.click(within(confirma).getByRole('button', { name: 'Corregir' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Corregir el código' });
+    expect(screen.queryByRole('region', { name: 'Categoría elegida' })).not.toBeInTheDocument();
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Cambiar' }));
+    await userEvent.type(within(hoja).getByRole('searchbox', { name: 'Categoría' }), 'arroz');
+    await userEvent.click(await within(hoja).findByRole('button', { name: /Arroz/ }));
+    await userEvent.click(await within(hoja).findByRole('radio', { name: 'Bolsa de arroz 500 g' }));
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Confirmar y seguir' }));
+    expect(await cuerpoDe(`POST /api/codigos-barras/${EAN}/validar`)).toEqual({
+      presentacionId: 'pa',
+    });
+    expect(peticiones().filter((p) => p === 'POST /api/codigos-barras')).toEqual([]);
+    expect(await screen.findByRole('region', { name: 'Categoría elegida' })).toHaveTextContent(
+      'Arroz',
+    );
+  });
+
+  /** El primer GET del código responde lo de la hoja; los siguientes, lo ya confirmado. */
+  const luegoConfirmado = (refrescado: unknown) => {
+    const base = vi.mocked(globalThis.fetch).getMockImplementation()!;
+    let lecturas = 0;
+    vi.mocked(globalThis.fetch).mockImplementation((entrada, init) => {
+      const p = entrada as Request;
+      if (p.method === 'GET' && p.url.endsWith(`/api/codigos-barras/${EAN}`) && ++lecturas > 1)
+        return Promise.resolve(
+          new Response(JSON.stringify(refrescado), {
+            status: 200,
+            headers: { 'content-type': 'application/json' },
+          }),
+        );
+      return base(entrada, init);
+    });
+  };
+  const YA_VALIDADO = conEstado(409, {
+    estado: 409,
+    codigo: 'CODIGO_YA_VALIDADO',
+    mensaje: 'El código ya está validado',
+  });
+  const ARROZ_VALIDADO = {
+    ...BOTELLA,
+    categoriaId: 'c2',
+    categoria: 'Arroz',
+    unidad: 'KILOGRAMO',
+    contenido: 0.5,
+    estado: 'VALIDADO',
+    presentacion: { id: 'pa', nombre: 'Bolsa de arroz 500 g', tamano: 0.5 },
+  };
+
+  it('«Es correcto» con el código ya confirmado por otro sigue con lo que quedó guardado', async () => {
+    pantalla({
+      [`GET /api/codigos-barras/${EAN}`]: PROPUESTO,
+      [`POST /api/codigos-barras/${EAN}/validar`]: YA_VALIDADO,
+    });
+    luegoConfirmado(ARROZ_VALIDADO);
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Confirma el código' });
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Es correcto' }));
+    const elegida = await screen.findByRole('region', { name: 'Categoría elegida' });
+    expect(elegida).toHaveTextContent('Arroz');
+    expect(elegida).toHaveTextContent('cada una trae 0,5 kg');
+    expect(elegida).toHaveTextContent('Otro operador ya lo había confirmado');
+  });
+
+  it('«Corregir» con el código ya confirmado por otro sigue con lo que quedó guardado', async () => {
+    pantalla({
+      [`GET /api/codigos-barras/${EAN}`]: PROPUESTO,
+      'GET /api/presentaciones': [SUELTA],
+      [`POST /api/codigos-barras/${EAN}/validar`]: YA_VALIDADO,
+    });
+    luegoConfirmado(ARROZ_VALIDADO);
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const confirma = await screen.findByRole('dialog', { name: 'Confirma el código' });
+    await userEvent.click(within(confirma).getByRole('button', { name: 'Corregir' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Corregir el código' });
+    await userEvent.click(await within(hoja).findByRole('radio', { name: 'Bolsa de arroz 500 g' }));
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Confirmar y seguir' }));
+    const elegida = await screen.findByRole('region', { name: 'Categoría elegida' });
+    expect(elegida).toHaveTextContent('Arroz');
+    expect(elegida).toHaveTextContent('Otro operador ya lo había confirmado');
   });
 });

@@ -234,3 +234,67 @@ Joseph decidió todo lo anterior salvo estos puntos, que tomó Claude a partir d
 - Cómo se juntan presentaciones repetidas desde «Códigos».
 - La redacción de mensajes y avisos.
 - Cómo se reparte en ciclos y PR.
+
+## Cambios al construir
+
+Lo que cambió respecto del diseño al construirlo (2026-10-20):
+
+- **Los códigos no se borran.** Joseph decidió mantener la regla del Bloque 2: un código mal
+  puesto se corrige, no se elimina. Salieron la ruta `DELETE /api/codigos-barras/:ean`, el permiso
+  de borrado de `acopio_app`, la migración `20261024110000_codigos_borrado` y la acción de
+  bitácora `codigo_barras.borrado`. Donde este diseño y el plan dicen «se borran», vale esto.
+- **El Administrador puede mover un código de categoría.** Su `PATCH` acepta una presentación de
+  cualquier categoría y `categoria_id` la sigue. No existe el 422 `PRESENTACION_DE_OTRA_CATEGORIA`.
+  Sin borrar, es la única forma de arreglar un código mal clasificado, y el cambio queda en la
+  bitácora con lo de antes y lo de después.
+- **«Escribir el número».** El Operador y el Administrador pueden teclear el código desde la vista
+  de la cámara, útil cuando no lee (#40). El Donador solo escanea.
+- **«Código nuevo» no preselecciona ninguna presentación.** La maqueta marcaba la primera; se
+  quitó para que nadie asocie la equivocada por descuido.
+- **Orden de candados en la recepción.** Cada EAN se resuelve una sola vez por comprobante, en
+  orden de EAN, y las líneas con el mismo EAN toman el resultado de la primera. Las presentaciones
+  de destino se validan en orden de id. El orden de candados es presentación, código y candado
+  consultivo. Así dos recepciones simultáneas no se bloquean entre sí.
+- **Corregir a una presentación `PROPUESTO` la valida.** Si el Operador corrige una línea a una
+  presentación propuesta por un Donador, esa presentación queda `VALIDADO`: el Operador es la
+  fuente de verdad (decisión de Joseph).
+- **«Corregir» en la recepción** abre con la categoría de la línea y llega a las demás buscando.
+  No lista todas de entrada, porque pediría una consulta por categoría.
+- **Preparar usa un campo de texto con selector** en las líneas de kg o L sin presentación, en
+  lugar del contador con + y −. Es la única forma de escribir 600 ml.
+- **Buscadores más cortos.** Los placeholders pasaron a «Busca: arroz…» (buscador de categoría),
+  «Número o nombre» (C18) y «Buscar categoría», para que quepan enteros a 360 px junto a
+  «Escanear». Las diferencias con la maqueta están en las notas de
+  [C04 Escáner](../../03-diseno/stitch/C04-escaner/README.md) y
+  [C04 Entrada rápida](../../03-diseno/stitch/C04-entrada-rapida/README.md).
+- **El tope de 10.000 también limita el conteo físico.** Las líneas de cantidad incluyen el
+  conteo, así que un acopio con más de 10 t de una categoría no puede registrar su conteo. Queda
+  como [P-083](../../01-requerimientos/pendientes.md) para que Joseph decida.
+- **La demo no reescribe filas ya migradas.** En el servidor de pruebas, `7501031311309` seguirá
+  `VALIDADO` y `4006381333931` conservará la suelta que creó la migración. Se ajusta a mano tras
+  el despliegue ([P-082](../../01-requerimientos/pendientes.md)).
+- **Un código propuesto sirve también a otros Donadores.** El ADR-0021 decía que un `PROPUESTO`
+  solo valía para la donación de quien lo propuso. Lo construido deja que otro Donador lo use, con
+  la marca «sin confirmar», y el Operador lo confirma o corrige al recibir. Se ajustó el texto del
+  ADR.
+- **En la recepción, solo las líneas que llegaron validan.** Una línea confirmada en cero no
+  valida el código ni su presentación, porque nadie tuvo el producto en la mano. Una línea
+  recibida en más de cero y sin corrección cuenta como confirmada. Si Joseph quiere una
+  confirmación explícita por línea, se cambia esta regla.
+- **Sin corrección, la línea queda como la preparó el Donador.** Solo una línea con
+  `presentacionId` cambia de categoría o de contenido y escribe `comprobante.linea_corregida`.
+  Si el código cambió de presentación después de preparar la donación (otra recepción lo validó
+  con otra, o el Administrador le asignó una), la línea sin corrección entra con su
+  `contenido_unitario` original.
+- **Aprobar pide presentación.** El `PATCH` del Administrador responde 422
+  `CODIGO_SIN_PRESENTACION` si aprueba (`estado: 'VALIDADO'` o `porRevisar: false`) un código sin
+  presentación sin asignarle una en el mismo pedido. En C18, «Aprobar» queda deshabilitado en esos
+  códigos y remite a «Cambiar de presentación».
+- **Validar no pisa.** `POST /api/codigos-barras/:ean/validar` usa el mismo UPDATE condicionado
+  que la recepción: de dos validaciones simultáneas, la segunda recibe 409 `CODIGO_YA_VALIDADO`.
+- **Proponer códigos tiene límite de intentos**: 10 por minuto, como las demás rutas del Donador.
+- **La demo propone `7501031311309` con la bolsa de arroz de 500 g.** Antes quedaba propuesto sin
+  presentación, un estado al que la aplicación no llega. Una base sembrada antes se completa solo
+  si el código sigue propuesto, en Arroz y sin presentación.
+- Lo menor que quedó para después está en [P-084](../../01-requerimientos/pendientes.md), y la
+  pantalla para editar presentaciones en [P-085](../../01-requerimientos/pendientes.md).

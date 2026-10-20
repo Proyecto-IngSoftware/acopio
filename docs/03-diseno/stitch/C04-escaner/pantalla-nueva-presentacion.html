@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nueva presentación · Acopio CO</title>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-fixed-variant": "#4a4642",
+            "secondary-fixed-dim": "#ccc5c0",
+            "surface-container-high": "#eee7e3",
+            "inverse-surface": "#33302d",
+            "tertiary-fixed": "#b2eded",
+            "surface-dim": "#e0d8d5",
+            "surface": "#fff8f5",
+            "on-background": "#1e1b19",
+            "inverse-on-surface": "#f7efeb",
+            "surface-tint": "#03696a",
+            "outline": "#6e7979",
+            "primary": "#005454",
+            "on-secondary-container": "#68635f",
+            "surface-variant": "#e9e1dd",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "on-error-container": "#93000a",
+            "inverse-primary": "#85d4d3",
+            "on-surface-variant": "#3e4948",
+            "tertiary-fixed-dim": "#96d1d0",
+            "background": "#fff8f5",
+            "primary-container": "#0f6e6e",
+            "error": "#ba1a1a",
+            "on-secondary": "#ffffff",
+            "secondary": "#625e59",
+            "outline-variant": "#bec9c8",
+            "on-primary-fixed-variant": "#004f50",
+            "secondary-fixed": "#e9e1db",
+            "primary-fixed": "#a1f0ef",
+            "error-container": "#ffdad6",
+            "surface-bright": "#fff8f5",
+            "on-primary-container": "#9eedec",
+            "primary-fixed-dim": "#85d4d3",
+            "on-surface": "#1e1b19",
+            "surface-container": "#f4ece8",
+            "on-secondary-fixed": "#1e1b18",
+            "secondary-container": "#e9e1db",
+            "on-tertiary": "#ffffff",
+            "tertiary": "#125454",
+            "on-tertiary-container": "#afebea",
+            "on-primary-fixed": "#002020",
+            "surface-container-lowest": "#ffffff",
+            "on-tertiary-fixed": "#002020",
+            "tertiary-container": "#316c6c",
+            "on-error": "#ffffff",
+            "surface-container-highest": "#e9e1dd",
+            "on-primary": "#ffffff",
+            "surface-container-low": "#faf2ee"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Inter"],
+            "display": ["Inter"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body antialiased selection:bg-primary-container selection:text-on-primary-container pb-24">
+<!-- TopAppBar JSON -->
+<header class="flex justify-between items-center w-full px-4 h-14 bg-surface-container-lowest border-b border-surface-variant z-40 fixed top-0 left-0">
+<div class="flex items-center gap-3">
+<button aria-label="Volver" class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-surface-container-low active:opacity-80 transition-opacity">
+<span class="material-symbols-outlined text-on-surface">arrow_back</span>
+</button>
+<h1 class="font-headline text-base font-bold text-on-surface">Nueva presentación</h1>
+</div>
+<div class="flex items-center">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xs">
+        DM
+      </div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="max-w-md mx-auto px-4 pt-20 pb-12 flex flex-col gap-6">
+<!-- Subtítulo informativo -->
+<div class="flex items-center gap-2 text-secondary text-sm font-normal">
+<span class="material-symbols-outlined text-primary text-lg">water_drop</span>
+<span>Agua potable · se mide en litros</span>
+</div>
+<!-- Selector segmentado -->
+<div class="bg-surface-container p-1 rounded-xl flex gap-1 border border-outline-variant">
+<button class="flex-1 py-3 text-center rounded-lg text-sm font-medium text-secondary hover:text-on-surface transition-colors" type="button">
+        Suelta
+      </button>
+<button class="flex-1 py-3 text-center rounded-lg text-sm font-bold bg-primary text-on-primary shadow-sm" type="button">
+        Paquete
+      </button>
+</div>
+<!-- Sección ¿Qué trae adentro? -->
+<section class="flex flex-col gap-2">
+<h2 class="text-sm font-bold text-on-surface">¿Qué trae adentro?</h2>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-4 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">inventory_2</span>
+</div>
+<div>
+<p class="text-base font-bold text-on-surface">Botella de agua 600 ml</p>
+<p class="text-xs text-secondary">Elemento base seleccionado</p>
+</div>
+</div>
+<button class="text-sm font-bold text-primary hover:underline px-3 py-2" type="button">
+          Cambiar
+        </button>
+</div>
+</section>
+<!-- Sección ¿Cuántas trae? -->
+<section class="flex flex-col gap-2">
+<h2 class="text-sm font-bold text-on-surface">¿Cuántas trae?</h2>
+<div class="relative">
+<input class="w-full h-14 px-4 bg-surface-container-lowest border border-outline-variant rounded-xl text-lg font-bold text-on-surface focus:outline-none focus:border-primary tabular-nums" type="number" value="12"/>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 text-secondary text-sm font-medium">
+          unidades
+        </div>
+</div>
+</section>
+<!-- Aviso o nota explicativa -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-4 flex items-start gap-3">
+<span class="material-symbols-outlined text-primary text-xl mt-0.5">info</span>
+<p class="text-sm text-on-surface font-medium leading-relaxed">
+        Total: <span class="font-bold">12 × 600 ml = 7,2 L</span>
+</p>
+</div>
+<!-- Campo de entrada para el nombre -->
+<section class="flex flex-col gap-2">
+<label class="text-sm font-bold text-on-surface" for="presentation-name">Nombre de la presentación</label>
+<input class="w-full h-14 px-4 bg-surface-container-lowest border border-outline-variant rounded-xl text-base font-normal text-on-surface focus:outline-none focus:border-primary" id="presentation-name" type="text" value="Paquete x12 · botella 600 ml"/>
+</section>
+</main>
+<!-- Botón de acción principal al pie (fijo o estático bien espaciado) -->
+<div class="fixed bottom-16 left-0 w-full px-4 bg-background/90 backdrop-blur-sm py-3 z-30">
+<div class="max-w-md mx-auto">
+<button class="w-full h-14 bg-[#085046] hover:bg-[#064038] text-white font-bold rounded-[10px] text-base flex items-center justify-center shadow-sm active:opacity-90 transition-opacity" type="button">
+        Crear presentación
+      </button>
+</div>
+</div>
+<!-- BottomNavBar JSON -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface-container-lowest border-t border-surface-variant pb-safe md:hidden">
+<!-- Inicio -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] w-full hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">home</span>
+<span class="font-label text-xs">Inicio</span>
+</a>
+<!-- Mapa -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] w-full hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">map</span>
+<span class="font-label text-xs">Mapa</span>
+</a>
+<!-- Causas -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] w-full hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">favorite</span>
+<span class="font-label text-xs">Causas</span>
+</a>
+<!-- Voluntariado -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] w-full hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl">volunteer_activism</span>
+<span class="font-label text-xs">Voluntariado</span>
+</a>
+<!-- Más (Active Tab) -->
+<a class="flex flex-col items-center justify-center text-primary font-bold min-h-[48px] w-full hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">menu</span>
+<span class="font-label text-xs">Más</span>
+</a>
+</nav>
+</body></html>

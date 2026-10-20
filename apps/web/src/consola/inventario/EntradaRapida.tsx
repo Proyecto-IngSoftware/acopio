@@ -2,12 +2,14 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import type { FormEvent } from 'react';
 import { Link, useParams } from 'react-router';
-import { formatearCantidad, formatearNumero, SIMBOLO_UNIDAD } from '@acopio/shared';
+import { errorDeLinea, formatearCantidad, formatearNumero } from '@acopio/shared';
 import type { ResultadoBusqueda } from '../../api/catalogo';
 import { useRegistrarEntrada, useSaldos, type DatosEntrada } from '../../api/inventario';
 import { useAcopio, useNoRecibir } from '../../api/red';
 import { Boton } from '../../componentes/Boton';
+import { leerCantidad } from '../../componentes/cantidad-base';
 import { Icono } from '../../componentes/Icono';
+import { SelectorUnidad } from '../../componentes/SelectorUnidad';
 import { useSesion } from '../../sesion/Sesion';
 import { encolar } from '../../sin-conexion/cola';
 import { leerNoRecibir, leerSaldos } from '../../sin-conexion/datos-locales';
@@ -32,6 +34,8 @@ export function EntradaRapida() {
   const [q, fijarQ] = useState('');
   const [categoria, fijarCategoria] = useState<ResultadoBusqueda | null>(null);
   const [cantidad, fijarCantidad] = useState('');
+  // En qué unidad se escribe: 1 es la unidad base (kg, L); 0,001 son g o ml
+  const [factor, fijarFactor] = useState(1);
   const [vence, fijarVence] = useState('');
   const [aviso, fijarAviso] = useState('');
   // Un código con contenido hace contar presentaciones: 12 × 0,6 L = 7,2 L
@@ -72,7 +76,13 @@ export function EntradaRapida() {
   const tecleado = aNumero(cantidad);
   // Escrita con el teclado del equipo, la coma puede llegar donde no van decimales
   const fraccion = Boolean(categoria) && !decimales && cantidad.includes(',');
-  const n = porPresentacion ? Math.round(tecleado * porPresentacion * 1000) / 1000 : tecleado;
+  const leida = categoria
+    ? leerCantidad(cantidad, factor, categoria.unidadBase)
+    : { base: tecleado, error: null };
+  const n = porPresentacion ? Math.round(tecleado * porPresentacion * 1000) / 1000 : leida.base;
+  // Contando presentaciones, el tope de la línea va sobre el total en la unidad base
+  const errorCantidad =
+    porPresentacion && categoria ? errorDeLinea(n, categoria.unidadBase) : leida.error;
   const falta = categoria?.perecedero && !vence;
   const noRecibe = sinRed ? noRecibirLocal.data : noRecibir.data;
   const noSeRecibe = categoria && noRecibe?.some((x) => x.categoriaId === categoria.id);
@@ -90,6 +100,7 @@ export function EntradaRapida() {
     fijarCategoria(c);
     fijarLeido(l ?? null);
     fijarCantidad('');
+    fijarFactor(1);
     // La fecha de un perecedero no pasa a la categoría siguiente (P-038)
     fijarVence('');
     fijarAviso('');
@@ -102,6 +113,7 @@ export function EntradaRapida() {
     fijarLeido(null);
     fijarQ('');
     fijarCantidad('');
+    fijarFactor(1);
     fijarVence('');
     busqueda.current?.focus();
   };
@@ -125,7 +137,7 @@ export function EntradaRapida() {
 
   const enviar = (e: FormEvent) => {
     e.preventDefault();
-    if (!categoria || n <= 0 || falta || fraccion) return;
+    if (!categoria || n <= 0 || falta || fraccion || errorCantidad) return;
     const elegida = categoria;
     const datos: DatosEntrada = {
       // Un doble toque o un reintento no duplica la entrada (E-04)
@@ -154,8 +166,8 @@ export function EntradaRapida() {
       />
 
       {sinRed && (
-        <p className="flex gap-space-sm rounded-xl border border-outline-variant bg-surface-container-low p-space-sm text-body-md text-on-surface">
-          <Icono nombre="wifi_off" className="text-[22px] text-on-surface-variant" />
+        <p className="flex items-center gap-space-sm rounded-xl border border-outline-variant bg-surface-container-low p-space-sm text-body-md text-on-surface">
+          <Icono nombre="wifi_off" className="shrink-0 text-[22px] text-on-surface-variant" />
           Sin conexión. Las entradas se guardan en este teléfono y se envían solas cuando vuelva la
           señal.
         </p>
@@ -165,23 +177,25 @@ export function EntradaRapida() {
         to={`/consola/acopios/${acopioId}/recibir`}
         className="flex min-h-[64px] items-center gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md text-on-surface-variant"
       >
-        <Icono nombre="qr_code_scanner" className="text-[28px] text-primary-container" />
+        <Icono nombre="qr_code_scanner" className="shrink-0 text-[28px] text-primary-container" />
         <span className="flex flex-1 flex-col">
           <span className="font-bold text-on-surface">Recibir por folio</span>
           <span className="text-body-sm">Escanea o escribe el folio</span>
         </span>
-        <Icono nombre="chevron_right" className="text-[24px]" />
+        <Icono nombre="chevron_right" className="shrink-0 text-[24px]" />
       </Link>
 
       <p
         role="status"
         className={
-          aviso ? 'rounded-xl bg-exito-container p-space-sm font-bold text-exito' : 'sr-only'
+          aviso
+            ? 'flex items-center gap-space-xs rounded-xl bg-exito-container p-space-sm font-bold text-exito'
+            : 'sr-only'
         }
       >
         {aviso && (
           <>
-            <Icono nombre="check_circle" className="mr-1 text-[20px]" />
+            <Icono nombre="check_circle" className="shrink-0 text-[20px]" />
             {aviso}
           </>
         )}
@@ -196,6 +210,8 @@ export function EntradaRapida() {
             onQ={fijarQ}
             onElegir={elegir}
             sinRed={sinRed}
+            soloGuardar
+            confirmarPropuestos
           />
         ) : (
           <TarjetaSaldo
@@ -205,6 +221,7 @@ export function EntradaRapida() {
             onCambiar={() => {
               fijarCategoria(null);
               fijarLeido(null);
+              fijarFactor(1);
             }}
           >
             {sinRed && (
@@ -219,10 +236,11 @@ export function EntradaRapida() {
             )}
             {leido && (
               <span className="flex items-center gap-space-xs text-body-sm text-on-surface-variant">
-                <Icono nombre="barcode" className="text-[18px]" />
+                <Icono nombre="barcode" className="shrink-0 text-[18px]" />
                 Leído: {leido.ean}
                 {leido.contenido !== null &&
                   ` · cada una trae ${formatearCantidad(leido.contenido, categoria.unidadBase)}`}
+                {leido.nota && ` · ${leido.nota}`}
               </span>
             )}
           </TarjetaSaldo>
@@ -231,18 +249,18 @@ export function EntradaRapida() {
         {noSeRecibe && (
           <p
             role="alert"
-            className="flex gap-space-xs rounded-xl bg-tertiary-fixed p-space-sm text-tertiary-container"
+            className="flex items-center gap-space-xs rounded-xl bg-tertiary-fixed p-space-sm text-tertiary-container"
           >
-            <Icono nombre="do_not_disturb_on" className="text-[20px]" />
+            <Icono nombre="do_not_disturb_on" className="shrink-0 text-[20px]" />
             Este acopio marcó «no recibir» para {categoria.nombre}. Si ya llegó, regístralo igual.
           </p>
         )}
 
-        <label className="flex flex-col items-center gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md">
+        <div className="flex flex-col items-center gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md">
           <span className="text-label-caps text-on-surface-variant uppercase">
             {porPresentacion ? 'Presentaciones' : 'Cantidad'}
           </span>
-          <span className="flex items-baseline gap-space-xs">
+          <span className="flex flex-wrap items-center justify-center gap-x-space-sm gap-y-space-xs">
             <input
               id="entrada-cantidad"
               aria-label="Cantidad"
@@ -257,12 +275,29 @@ export function EntradaRapida() {
               className="max-w-[60vw] bg-transparent text-center text-display-hero-mobile font-bold text-on-surface tabular-nums"
             />
             {categoria && !porPresentacion && (
-              <span className="text-headline-sm text-on-surface-variant">
-                {SIMBOLO_UNIDAD[categoria.unidadBase]}
-              </span>
+              <SelectorUnidad
+                unidad={categoria.unidadBase}
+                factor={factor}
+                alCambiar={fijarFactor}
+              />
             )}
           </span>
-        </label>
+          {categoria && !porPresentacion && !errorCantidad && factor !== 1 && n > 0 && (
+            <span className="text-body-sm font-medium text-on-surface-variant tabular-nums">
+              Se registran {formatearCantidad(n, categoria.unidadBase)}
+            </span>
+          )}
+        </div>
+
+        {errorCantidad && (
+          <p
+            role="alert"
+            className="flex items-center gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
+          >
+            <Icono nombre="error" className="shrink-0 text-[20px]" />
+            {errorCantidad}
+          </p>
+        )}
 
         {categoria && porPresentacion && (
           <div className="flex flex-col gap-1 rounded-xl border border-outline-variant bg-surface-container-low p-space-sm tabular-nums">
@@ -292,9 +327,9 @@ export function EntradaRapida() {
         {fraccion && (
           <p
             role="alert"
-            className="flex gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
+            className="flex items-center gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
           >
-            <Icono nombre="error" className="text-[20px]" />
+            <Icono nombre="error" className="shrink-0 text-[20px]" />
             {porPresentacion
               ? 'Las presentaciones se cuentan enteras.'
               : 'En unidades, la cantidad va sin decimales.'}
@@ -332,9 +367,11 @@ export function EntradaRapida() {
         <Boton
           type="submit"
           className="min-h-[56px] w-full text-body-lg"
-          disabled={!categoria || n <= 0 || !!falta || fraccion || registrar.isPending}
+          disabled={
+            !categoria || n <= 0 || !!falta || fraccion || !!errorCantidad || registrar.isPending
+          }
         >
-          <Icono nombre={sinRed ? 'save' : 'check'} className="text-[22px]" />
+          <Icono nombre={sinRed ? 'save' : 'check'} className="shrink-0 text-[22px]" />
           {sinRed
             ? categoria && n > 0
               ? `Guardar ${formatearCantidad(n, categoria.unidadBase)} en el teléfono`

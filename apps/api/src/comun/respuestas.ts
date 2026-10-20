@@ -433,13 +433,33 @@ export class CodigoBarrasDto extends crearDto(
     categoriaId: z.uuid(),
     categoria: z.string(),
     unidad: z.enum(['LITRO', 'KILOGRAMO', 'UNIDAD']),
-    contenido: z.number().nullable().describe('Unidad base que trae una presentación'),
-    descripcion: z.string().nullable(),
-    revisado: z.boolean(),
+    presentacion: z
+      .object({ id: z.uuid(), nombre: z.string(), tamano: z.number() })
+      .nullable()
+      .describe('Presentación a la que apunta; tamano en unidad base'),
+    contenido: z.number().nullable().describe('Tamaño de la presentación, en unidad base'),
+    estado: z.enum(['PROPUESTO', 'VALIDADO']),
+    porRevisar: z.boolean().describe('Una recepción vio algo que no cuadra con la presentación'),
     grupo,
     perecedero: z.boolean(),
     creadoPor: z.string().nullable().describe('Nombre de quien lo asoció'),
     creadoEn: fecha,
+  }),
+) {}
+
+export class PresentacionDto extends crearDto(
+  z.object({
+    id: z.uuid(),
+    categoriaId: z.uuid(),
+    categoria: z.string(),
+    unidad: z.enum(['LITRO', 'KILOGRAMO', 'UNIDAD']),
+    nombre: z.string(),
+    clase: z.enum(['SUELTA', 'PAQUETE']),
+    tamano: z.number().describe('En unidad base; en un paquete, el calculado'),
+    contieneId: z.uuid().nullable(),
+    unidades: z.number().int().nullable(),
+    estado: z.enum(['PROPUESTO', 'VALIDADO']),
+    codigos: z.number().int().describe('Códigos de barras asociados'),
   }),
 ) {}
 
@@ -552,6 +572,8 @@ export class CodigoDonadorDto extends crearDto(
     unidad: z.enum(['LITRO', 'KILOGRAMO', 'UNIDAD']),
     grupo,
     perecedero: z.boolean(),
+    estado: z.enum(['PROPUESTO', 'VALIDADO']),
+    presentacion: z.object({ id: z.uuid(), nombre: z.string(), tamano: z.number() }).nullable(),
     contenido: z.number().nullable(),
   }),
 ) {}

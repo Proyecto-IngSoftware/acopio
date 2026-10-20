@@ -1,9 +1,10 @@
-import { useState } from 'react';
-import { formatearCantidad, SIMBOLO_UNIDAD } from '@acopio/shared';
+import { useEffect, useState } from 'react';
+import { formatearCantidad } from '@acopio/shared';
 import {
   useBuscarCategorias,
   useCodigos,
   useEditarCodigo,
+  usePresentaciones,
   type CodigoBarras,
   type ResultadoBusqueda,
 } from '../../api/catalogo';
@@ -15,31 +16,163 @@ import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
 import { Segmentado } from '../../componentes/Segmentado';
 import { haceCuanto } from '../../formato';
-import { leerContenido } from '../inventario/contenido';
-import { limpiarCantidad } from '../inventario/TecladoCantidad';
+import { HojaCodigoNuevo } from '../inventario/Escaner';
 import { FormularioError } from './FormularioError';
 
-type Filtro = 'sin-revisar' | 'todos';
+type Filtro = 'propuestos' | 'todos';
 
-/** C18, pestaña «Códigos de barras»: el Administrador revisa los códigos que asociaron los
- *  Operadores (RF-CAT-004). Diseño: docs/03-diseno/stitch/C18-codigos-barras. */
-export function PestanaCodigos() {
-  const [filtro, fijarFiltro] = useState<Filtro>('sin-revisar');
+/** Un código espera al Administrador si es propuesto o una recepción lo marcó por revisar. */
+const espera = (c: CodigoBarras) => c.estado === 'PROPUESTO' || c.porRevisar;
+const SIN_PRESENTACION = 'sin-presentacion';
+const plural = (n: number, uno: string, varios: string) => `${n} ${n === 1 ? uno : varios}`;
+
+interface Grupo {
+  /** Id de la presentación, o `SIN_PRESENTACION` en los códigos viejos. */
+  id: string;
+  nombre: string;
+  tamano: number | null;
+  categoria: string;
+  unidad: CodigoBarras['unidad'];
+  codigos: CodigoBarras[];
+}
+
+/** Agrupa por categoría y, dentro, por presentación. El orden de la API se conserva. */
+function agrupar(codigos: CodigoBarras[]): { categoria: string; presentaciones: Grupo[] }[] {
+  const categorias = new Map<string, Map<string, Grupo>>();
+  for (const c of codigos) {
+    const porPresentacion = categorias.get(c.categoria) ?? new Map<string, Grupo>();
+    categorias.set(c.categoria, porPresentacion);
+    const id = c.presentacion?.id ?? SIN_PRESENTACION;
+    const grupo = porPresentacion.get(id) ?? {
+      id,
+      nombre: c.presentacion?.nombre ?? 'Sin presentación',
+      tamano: c.presentacion?.tamano ?? null,
+      categoria: c.categoria,
+      unidad: c.unidad,
+      codigos: [],
+    };
+    grupo.codigos.push(c);
+    porPresentacion.set(id, grupo);
+  }
+  return [...categorias].map(([categoria, p]) => ({ categoria, presentaciones: [...p.values()] }));
+}
+
+/** El número en grupos de cuatro, como lo imprimen los envases: 7702 0010 2345 5. */
+const agruparNumero = (ean: string) => ean.replace(/(\d{4})(?=\d)/g, '$1 ');
+
+/** Espera 300 ms sin cambios antes de devolver el texto, para no pedir con cada tecla. */
+function useEspera(texto: string, ms = 300) {
+  const [valor, fijarValor] = useState(texto);
+  useEffect(() => {
+    const t = setTimeout(() => fijarValor(texto), ms);
+    return () => clearTimeout(t);
+  }, [texto, ms]);
+  return valor;
+}
+
+interface Props {
+  agregando: boolean;
+  alAgregar: (abierta: boolean) => void;
+}
+
+/** C18, pestaña «Códigos»: el Administrador revisa los códigos que propusieron los Donadores o
+ *  que una recepción marcó, agrupados por presentación (RF-CAT-004). Los códigos no se borran:
+ *  se aprueban o se pasan a otra presentación. Diseño: docs/03-diseno/stitch/C18-codigos-barras. */
+export function PestanaCodigos({ agregando, alAgregar }: Props) {
+  const [filtro, fijarFiltro] = useState<Filtro>('propuestos');
+  const [busqueda, fijarBusqueda] = useState('');
+  const [abierta, fijarAbierta] = useState<string | null>(null);
   const [cambiando, fijarCambiando] = useState<CodigoBarras | null>(null);
-  const codigos = useCodigos();
+  const q = useEspera(busqueda.trim());
+  const codigos = useCodigos(q);
   const editar = useEditarCodigo();
   const todos = codigos.data ?? [];
-  const sinRevisar = todos.filter((c) => !c.revisado);
-  const lista = filtro === 'sin-revisar' ? sinRevisar : todos;
+  const propuestos = todos.filter(espera);
+  const visibles = filtro === 'propuestos' ? propuestos : todos;
+  const grupos = agrupar(visibles);
+  // El detalle muestra todos los códigos de la presentación, estén o no en el filtro
+  const detalle = abierta
+    ? (agrupar(todos)
+        .flatMap((g) => g.presentaciones)
+        .find((p) => key(p) === abierta) ?? null)
+    : null;
+
+  const hojas = (
+    <>
+      {cambiando && <HojaCambiar codigo={cambiando} alCerrar={() => fijarCambiando(null)} />}
+      {agregando && (
+        <HojaCodigoNuevo
+          ean=""
+          escribirNumero
+          alCerrar={() => alAgregar(false)}
+          alAsociar={() => alAgregar(false)}
+        />
+      )}
+    </>
+  );
+
+  if (abierta && detalle) {
+    return (
+      <div className="flex flex-col gap-space-md pt-space-md">
+        <button
+          type="button"
+          onClick={() => fijarAbierta(null)}
+          className="-ml-space-xs flex min-h-[48px] w-fit items-center gap-space-xs px-space-xs text-label-md text-primary-container"
+        >
+          <Icono nombre="arrow_back" className="shrink-0 text-[20px]" />
+          Códigos
+        </button>
+        <div className="flex flex-col">
+          <h2 className="text-headline-md text-on-surface">{detalle.nombre}</h2>
+          <p className="text-body-sm text-on-surface-variant">
+            {detalle.categoria}
+            {detalle.tamano !== null &&
+              ` · ${formatearCantidad(detalle.tamano, detalle.unidad)} por presentación`}
+          </p>
+        </div>
+        <FormularioError mensaje={editar.error?.message} />
+        {detalle.codigos.map((c) => (
+          <TarjetaCodigo
+            key={c.ean}
+            codigo={c}
+            aprobando={editar.isPending}
+            alAprobar={() =>
+              editar.mutate({ ean: c.ean, cambios: { estado: 'VALIDADO', porRevisar: false } })
+            }
+            alCambiar={() => fijarCambiando(c)}
+          />
+        ))}
+        <p className="flex items-start gap-space-xs rounded-xl bg-surface-container-low p-space-md text-body-sm text-on-surface-variant">
+          <Icono nombre="info" className="shrink-0 text-[20px]" />
+          <span className="min-w-0">
+            Los códigos no se borran. Si uno está en la presentación equivocada, se cambia de
+            presentación.
+          </span>
+        </p>
+        {hojas}
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-space-md pt-space-md">
+      <label className="flex min-h-[48px] items-center gap-space-xs rounded-xl border-[1.5px] border-outline-variant bg-surface-container-lowest px-space-md">
+        <Icono nombre="search" className="shrink-0 text-[20px] text-on-surface-variant" />
+        <input
+          type="search"
+          aria-label="Buscar códigos"
+          placeholder="Número o nombre"
+          value={busqueda}
+          onChange={(e) => fijarBusqueda(e.target.value)}
+          className="min-h-[44px] w-full min-w-0 bg-transparent text-body-md text-on-surface outline-none"
+        />
+      </label>
       <Segmentado
         etiqueta="Qué códigos ver"
         valor={filtro}
         alCambiar={fijarFiltro}
         opciones={[
-          { valor: 'sin-revisar', texto: `Sin revisar (${sinRevisar.length})` },
+          { valor: 'propuestos', texto: `Propuestos (${propuestos.length})` },
           { valor: 'todos', texto: 'Todos' },
         ]}
       />
@@ -47,83 +180,177 @@ export function PestanaCodigos() {
       {codigos.error && (
         <EstadoError mensaje={codigos.error.message} alReintentar={() => void codigos.refetch()} />
       )}
-      <FormularioError mensaje={editar.error?.message} />
-      {codigos.data && lista.length === 0 && (
+      {codigos.data && visibles.length === 0 && (
         <EstadoVacio
-          titulo={filtro === 'sin-revisar' ? 'No hay códigos por revisar.' : 'No hay códigos.'}
+          titulo={
+            q
+              ? 'Ningún código coincide.'
+              : filtro === 'propuestos'
+                ? 'No hay códigos propuestos.'
+                : 'No hay códigos.'
+          }
         >
-          Aparecen aquí cuando un Operador escanea un código nuevo y lo asocia a una categoría.
+          Aparecen aquí cuando un Donador propone un código o una recepción marca uno por revisar.
         </EstadoVacio>
       )}
-      {lista.map((c) => (
-        <article
-          key={c.ean}
-          aria-label={c.ean}
-          className="flex flex-col gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md"
-        >
-          <span className="flex items-center gap-space-xs">
-            <Icono nombre="barcode" className="text-[22px] text-on-surface-variant" />
-            <b className="text-body-lg text-on-surface tabular-nums">{c.ean}</b>
-            <span className="ml-auto rounded-full bg-surface-container px-2 py-0.5 text-label-md text-on-surface-variant">
-              {c.revisado ? 'Revisado' : 'Sin revisar'}
-            </span>
-          </span>
-          <span className="text-body-lg font-bold text-on-surface">
-            {c.categoria} · {SIMBOLO_UNIDAD[c.unidad]}
-          </span>
-          <span className="text-body-sm text-on-surface-variant">
-            {c.contenido !== null
-              ? `Cada presentación trae ${formatearCantidad(c.contenido, c.unidad)}`
-              : 'Sin contenido'}
-          </span>
-          <span className="text-body-sm text-on-surface-variant">
-            Asociado por {c.creadoPor ?? 'alguien que ya no está'} · {haceCuanto(c.creadoEn)}
-          </span>
-          <span className={`grid gap-space-xs ${c.revisado ? '' : 'grid-cols-2'}`}>
-            <Boton variante="secundario" className="min-h-[48px]" onClick={() => fijarCambiando(c)}>
-              Cambiar
-            </Boton>
-            {!c.revisado && (
-              <Boton
-                className="min-h-[48px]"
-                disabled={editar.isPending}
-                onClick={() => editar.mutate({ ean: c.ean, cambios: { revisado: true } })}
+      {grupos.map((g) => (
+        <section key={g.categoria} className="flex flex-col gap-space-xs">
+          <h2 className="text-label-md font-bold text-on-surface-variant">{g.categoria}</h2>
+          {g.presentaciones.map((p) => {
+            const esperan = p.codigos.filter(espera).length;
+            return (
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => fijarAbierta(key(p))}
+                className="flex min-h-[56px] w-full items-center gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest px-space-md py-space-xs text-left"
               >
-                <Icono nombre="check" className="text-[20px]" />
-                Marcar revisado
-              </Boton>
-            )}
-          </span>
-        </article>
+                <span className="flex min-w-0 flex-1 flex-col gap-space-xs">
+                  <span className="text-body-lg font-bold text-on-surface">{p.nombre}</span>
+                  <span className="flex flex-wrap items-center gap-space-xs">
+                    {(filtro === 'todos' || esperan === 0) && (
+                      <span className="rounded-full bg-surface-container px-space-sm py-0.5 text-label-md text-on-surface-variant">
+                        {plural(p.codigos.length, 'código', 'códigos')}
+                      </span>
+                    )}
+                    {esperan > 0 && (
+                      <span className="rounded-full bg-primary-fixed px-space-sm py-0.5 text-label-md text-primary-container">
+                        {plural(esperan, 'propuesto', 'propuestos')}
+                      </span>
+                    )}
+                  </span>
+                </span>
+                <Icono nombre="chevron_right" className="shrink-0 text-[20px] text-outline" />
+              </button>
+            );
+          })}
+        </section>
       ))}
-      {cambiando && <HojaCambiar codigo={cambiando} alCerrar={() => fijarCambiando(null)} />}
+      <div className="flex flex-col gap-space-xs">
+        <Boton className="min-h-[56px] w-full" onClick={() => alAgregar(true)}>
+          <Icono nombre="add" className="shrink-0 text-[22px]" />
+          Agregar código
+        </Boton>
+        <p className="text-center text-body-sm text-on-surface-variant">
+          Escaneando o escribiendo el número
+        </p>
+      </div>
+      {hojas}
     </div>
   );
 }
 
-const escribir = (n: number | null) => (n === null ? '' : String(n).replace('.', ','));
-/** Cambiar la categoría o el contenido de un código. Guardar no lo marca revisado. */
+/** Los códigos de una presentación viven bajo su categoría: el mismo id no se repite entre
+ *  categorías, salvo `SIN_PRESENTACION`, que se distingue por la categoría. */
+const key = (g: Grupo) => (g.id === SIN_PRESENTACION ? `${SIN_PRESENTACION}:${g.categoria}` : g.id);
+
+function TarjetaCodigo({
+  codigo: c,
+  aprobando,
+  alAprobar,
+  alCambiar,
+}: {
+  codigo: CodigoBarras;
+  aprobando: boolean;
+  alAprobar: () => void;
+  alCambiar: () => void;
+}) {
+  const pendiente = espera(c);
+  const sinPresentacion = c.presentacion === null;
+  const estado =
+    c.estado === 'PROPUESTO'
+      ? {
+          texto: 'Propuesto',
+          icono: 'lightbulb',
+          clases: 'bg-primary-fixed text-primary-container',
+        }
+      : c.porRevisar
+        ? {
+            texto: 'Por revisar',
+            icono: 'flag',
+            clases: 'bg-surface-container text-on-surface-variant',
+          }
+        : {
+            texto: 'Validado',
+            icono: 'check_circle',
+            clases: 'bg-surface-container text-on-surface-variant',
+          };
+  return (
+    <article
+      aria-label={c.ean}
+      className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md"
+    >
+      <div className="flex flex-wrap items-center justify-between gap-x-space-sm gap-y-space-xs">
+        <span className="flex min-w-0 items-center gap-space-xs">
+          <Icono nombre="barcode" className="shrink-0 text-[22px] text-on-surface-variant" />
+          <b className="min-w-0 text-body-lg text-on-surface tabular-nums">
+            {agruparNumero(c.ean)}
+          </b>
+        </span>
+        <span
+          className={`flex shrink-0 items-center gap-space-xs rounded-full px-space-sm py-0.5 text-label-md ${estado.clases}`}
+        >
+          <Icono nombre={estado.icono} className="shrink-0 text-[16px]" />
+          {estado.texto}
+        </span>
+      </div>
+      <p className="text-body-sm text-on-surface-variant">
+        Asociado por {c.creadoPor ?? 'alguien que ya no está'} · {haceCuanto(c.creadoEn)}
+      </p>
+      {pendiente && sinPresentacion && (
+        <p id={`sin-presentacion-${c.ean}`} className="text-body-sm text-on-surface-variant">
+          Para aprobarlo, primero usa «Cambiar de presentación» y elige una.
+        </p>
+      )}
+      <div className={`grid gap-space-sm ${pendiente ? 'grid-cols-2' : ''}`}>
+        {pendiente && (
+          <Boton
+            className="min-h-[48px]"
+            // La API rechaza aprobar un código sin presentación (CODIGO_SIN_PRESENTACION)
+            disabled={aprobando || sinPresentacion}
+            aria-describedby={sinPresentacion ? `sin-presentacion-${c.ean}` : undefined}
+            onClick={alAprobar}
+          >
+            <Icono nombre="check" className="shrink-0 text-[20px]" />
+            Aprobar
+          </Boton>
+        )}
+        <Boton variante="secundario" className="min-h-[48px]" onClick={alCambiar}>
+          Cambiar de presentación
+        </Boton>
+      </div>
+    </article>
+  );
+}
+
+/** Pasa un código a otra presentación, de cualquier categoría: la categoría del código la sigue. */
 function HojaCambiar({ codigo, alCerrar }: { codigo: CodigoBarras; alCerrar: () => void }) {
   const [buscando, fijarBuscando] = useState(false);
   const [q, fijarQ] = useState('');
-  const [categoria, fijarCategoria] = useState<ResultadoBusqueda | null>(null);
-  const [contenido, fijarContenido] = useState(escribir(codigo.contenido));
+  const [categoria, fijarCategoria] = useState<Pick<ResultadoBusqueda, 'id' | 'nombre'>>({
+    id: codigo.categoriaId,
+    nombre: codigo.categoria,
+  });
+  const [eleccion, fijarEleccion] = useState<string | null>(null);
   const resultados = useBuscarCategorias(buscando ? q : '');
+  const presentaciones = usePresentaciones(buscando ? undefined : categoria.id);
   const editar = useEditarCodigo();
-  const unidad = categoria?.unidadBase ?? codigo.unidad;
-  const contenidoLeido = leerContenido(contenido, unidad);
-  const nuevoContenido = contenidoLeido.valor;
 
   return (
-    <Hoja titulo={`Código ${codigo.ean}`} alCerrar={alCerrar}>
+    <Hoja titulo="Cambiar de presentación" alCerrar={alCerrar}>
+      <p className="flex items-center gap-space-xs text-body-md text-on-surface-variant">
+        <Icono nombre="barcode" className="shrink-0 text-[22px]" />
+        <span className="min-w-0 tabular-nums">{agruparNumero(codigo.ean)}</span>
+      </p>
       {!buscando ? (
-        <div className="flex items-center gap-space-xs rounded-xl border border-outline-variant p-space-sm">
-          <span className="font-bold text-on-surface">{categoria?.nombre ?? codigo.categoria}</span>
-          <span className="text-body-sm text-on-surface-variant">{SIMBOLO_UNIDAD[unidad]}</span>
+        <div className="flex items-center gap-space-sm rounded-xl border border-outline-variant p-space-sm pl-space-md">
+          <span className="min-w-0 flex-1 truncate font-bold text-on-surface">
+            {categoria.nombre}
+          </span>
           <button
             type="button"
             onClick={() => fijarBuscando(true)}
-            className="ml-auto min-h-[44px] px-space-sm text-label-md text-primary-container"
+            className="min-h-[48px] shrink-0 px-space-sm text-label-md text-primary-container"
           >
             Otra categoría
           </button>
@@ -136,7 +363,7 @@ function HojaCambiar({ codigo, alCerrar }: { codigo: CodigoBarras; alCerrar: () 
             placeholder="Busca: arroz, pañal, agua…"
             value={q}
             onChange={(e) => fijarQ(e.target.value)}
-            className="min-h-[56px] w-full rounded-xl border-[1.5px] border-outline bg-surface-container-lowest px-space-md text-body-lg text-on-surface"
+            className="min-h-[56px] w-full min-w-0 rounded-xl border-[1.5px] border-outline bg-surface-container-lowest px-space-md text-body-lg text-on-surface"
           />
           {(resultados.data ?? []).map((c) => (
             <button
@@ -144,62 +371,64 @@ function HojaCambiar({ codigo, alCerrar }: { codigo: CodigoBarras; alCerrar: () 
               type="button"
               onClick={() => {
                 fijarCategoria(c);
+                fijarEleccion(null);
                 fijarBuscando(false);
               }}
-              className="flex min-h-[48px] w-full items-center justify-between rounded-xl bg-surface-container-low px-space-md text-left"
+              className="flex min-h-[48px] w-full items-center justify-between gap-space-sm rounded-xl bg-surface-container-low px-space-md text-left"
             >
-              <span className="font-bold text-on-surface">{c.nombre}</span>
-              <Icono nombre="chevron_right" className="text-[20px] text-outline" />
+              <span className="min-w-0 font-bold text-on-surface">{c.nombre}</span>
+              <Icono nombre="chevron_right" className="shrink-0 text-[20px] text-outline" />
             </button>
           ))}
         </div>
       )}
-      <div className="flex flex-col gap-space-xs">
-        <label
-          htmlFor="codigo-cambiar-contenido"
-          className="text-label-md font-bold text-on-surface"
-        >
-          Cada presentación trae (opcional)
-        </label>
-        <span className="con-unidad flex items-baseline gap-space-xs rounded-xl border-[1.5px] border-outline px-space-sm">
-          <input
-            id="codigo-cambiar-contenido"
-            inputMode="decimal"
-            autoComplete="off"
-            value={contenido}
-            onChange={(e) => fijarContenido(limpiarCantidad(e.target.value))}
-            className="min-h-[48px] w-full min-w-0 bg-transparent text-body-lg text-on-surface tabular-nums"
-          />
-          <span className="text-body-md text-on-surface-variant">{SIMBOLO_UNIDAD[unidad]}</span>
-        </span>
-      </div>
-      {contenidoLeido.error && (
-        <p
-          role="alert"
-          className="flex gap-space-xs rounded-xl bg-error-container p-space-sm text-on-error-container"
-        >
-          <Icono nombre="error" className="text-[20px]" />
-          {contenidoLeido.error}
-        </p>
+      {!buscando && (
+        <div className="flex flex-col gap-space-xs">
+          <span id="cambiar-presentacion" className="text-label-md font-bold text-on-surface">
+            ¿A qué presentación pasa?
+          </span>
+          {presentaciones.isPending ? (
+            <Esqueleto etiqueta="Cargando presentaciones" className="h-12" />
+          ) : (
+            <div
+              role="radiogroup"
+              aria-labelledby="cambiar-presentacion"
+              className="flex flex-col gap-space-xs"
+            >
+              {(presentaciones.data ?? []).map((p) => (
+                <label
+                  key={p.id}
+                  className="flex min-h-[48px] cursor-pointer items-center gap-space-sm rounded-xl border border-outline-variant px-space-md has-checked:border-[1.5px] has-checked:border-primary-container has-focus-visible:outline-2 has-focus-visible:outline-primary"
+                >
+                  <input
+                    type="radio"
+                    name="cambiar-presentacion"
+                    checked={eleccion === p.id}
+                    onChange={() => fijarEleccion(p.id)}
+                    className="size-5 shrink-0 accent-primary-container"
+                  />
+                  <span className="min-w-0 flex-1 font-bold text-on-surface">{p.nombre}</span>
+                  <span className="shrink-0 text-body-sm text-on-surface-variant">
+                    {formatearCantidad(p.tamano, p.unidad)}
+                  </span>
+                </label>
+              ))}
+            </div>
+          )}
+        </div>
       )}
       <FormularioError mensaje={editar.error?.message} />
       <Boton
         className="min-h-[56px] w-full"
-        disabled={editar.isPending || buscando || Boolean(contenidoLeido.error)}
+        disabled={editar.isPending || buscando || eleccion === null}
         onClick={() =>
           editar.mutate(
-            {
-              ean: codigo.ean,
-              cambios: {
-                ...(categoria ? { categoriaId: categoria.id } : {}),
-                ...(nuevoContenido !== codigo.contenido ? { contenido: nuevoContenido } : {}),
-              },
-            },
+            { ean: codigo.ean, cambios: { presentacionId: eleccion! } },
             { onSuccess: alCerrar },
           )
         }
       >
-        <Icono nombre="check" className="text-[22px]" />
+        <Icono nombre="check" className="shrink-0 text-[22px]" />
         Guardar
       </Boton>
     </Hoja>

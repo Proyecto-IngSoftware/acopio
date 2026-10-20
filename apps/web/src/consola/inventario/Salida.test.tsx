@@ -36,6 +36,14 @@ const busqueda = [
     perecedero: false,
     puntaje: 0.8,
   },
+  {
+    id: 'c1',
+    nombre: 'Agua potable',
+    grupo: 'AGUA_Y_BEBIDAS',
+    unidadBase: 'LITRO',
+    perecedero: false,
+    puntaje: 0.7,
+  },
 ];
 const resultado = (cantidad: number, saldo: number) => ({
   movimiento: {
@@ -127,6 +135,20 @@ describe('C5 Salida', () => {
     expect(screen.queryByRole('region', { name: 'Categoría elegida' })).not.toBeInTheDocument();
     expect(screen.getByRole('searchbox', { name: 'Categoría' })).toHaveValue('');
     expect(screen.getByLabelText('Cantidad')).toHaveValue('');
+  });
+
+  it('«600» en ml registra 0,6 L', async () => {
+    pantalla({ 'POST /api/acopios/x1/salidas': resultado(0.6, 39.4) });
+    await elegir('agua', /Agua potable/);
+    await userEvent.click(screen.getByRole('radio', { name: 'ml' }));
+    await teclear('6', '0', '0');
+    expect(screen.getByText('Quedan 39,4 L')).toBeInTheDocument();
+    await userEvent.click(registrar());
+    await screen.findByRole('status');
+    expect(await cuerpoDe('POST /api/acopios/x1/salidas')).toMatchObject({
+      categoriaId: 'c1',
+      cantidad: 0.6,
+    });
   });
 
   it('Traslado pide una nota; con solo espacios no deja registrar', async () => {

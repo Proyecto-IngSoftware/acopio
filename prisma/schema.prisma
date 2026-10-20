@@ -213,6 +213,7 @@ model Categoria {
   saldos               Saldo[]
   umbrales             Umbral[]
   codigos_barras       CodigoBarras[]
+  presentaciones       Presentacion[]
   lineas_comprobante   LineaComprobante[]
   lineas_remision      LineaRemision[]
   sugerencias          Sugerencia[]
@@ -560,17 +561,48 @@ model Umbral {
 
 /// RF-CAT-004. Módulo catalogo. Un EAN que asocia un Operador queda sin revisar.
 model CodigoBarras {
-  ean          String    @id
-  categoria_id String    @db.Uuid
-  categoria    Categoria @relation(fields: [categoria_id], references: [id])
-  contenido    Decimal?  @db.Decimal(12, 3)
-  descripcion  String?
-  creado_por   String    @db.Uuid
-  creado_en    DateTime  @default(now()) @db.Timestamptz
-  revisado     Boolean   @default(false)
+  ean             String         @id
+  categoria_id    String         @db.Uuid
+  categoria       Categoria      @relation(fields: [categoria_id], references: [id])
+  presentacion_id String?        @db.Uuid
+  presentacion    Presentacion?  @relation(fields: [presentacion_id], references: [id])
+  estado          EstadoCatalogo @default(VALIDADO)
+  por_revisar     Boolean        @default(false)
+  creado_por      String         @db.Uuid
+  creado_en       DateTime       @default(now()) @db.Timestamptz
 
   @@index([categoria_id])
+  @@index([presentacion_id])
   @@map("codigo_barras")
+}
+
+/// Propuesto por un Donador o validado por el Operador o el Administrador (ADR-0021).
+enum EstadoCatalogo {
+  PROPUESTO
+  VALIDADO
+}
+
+/// Presentación genérica de una categoría (ADR-0021). Suelta: `tamano` en la unidad base.
+/// Paquete: `contiene_id` y `unidades`; su tamaño se calcula, no se guarda.
+model Presentacion {
+  id           String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  categoria_id String         @db.Uuid
+  categoria    Categoria      @relation(fields: [categoria_id], references: [id])
+  nombre       String         @db.Citext
+  tamano       Decimal?       @db.Decimal(12, 3)
+  contiene_id  String?        @db.Uuid
+  contiene     Presentacion?  @relation("PaqueteContiene", fields: [contiene_id], references: [id], onDelete: Restrict)
+  paquetes     Presentacion[] @relation("PaqueteContiene")
+  unidades     Int?
+  estado       EstadoCatalogo
+  creado_por   String         @db.Uuid
+  creado_en    DateTime       @default(now()) @db.Timestamptz
+
+  codigos_barras CodigoBarras[]
+
+  @@unique([categoria_id, nombre])
+  @@index([contiene_id])
+  @@map("presentacion")
 }
 
 /// Confirmación del correo de un Donador (RF-IDE-013, C-03). Solo se guarda el hash.

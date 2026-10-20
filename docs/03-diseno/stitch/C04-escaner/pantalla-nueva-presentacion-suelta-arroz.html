@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+
+<html lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Acopio CO - Código nuevo</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Inter font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary-fixed-dim": "#85d4d3",
+            "on-secondary": "#ffffff",
+            "surface-dim": "#e0d8d5",
+            "surface-container-highest": "#e9e1dd",
+            "on-tertiary-fixed-variant": "#0a4f4f",
+            "on-tertiary-container": "#afebea",
+            "outline": "#6e7979",
+            "on-error-container": "#93000a",
+            "tertiary-fixed-dim": "#96d1d0",
+            "surface-container-lowest": "#ffffff",
+            "inverse-on-surface": "#f7efeb",
+            "on-secondary-fixed": "#1e1b18",
+            "secondary": "#625e59",
+            "primary": "#005454",
+            "surface-container-high": "#eee7e3",
+            "tertiary-fixed": "#b2eded",
+            "on-tertiary": "#ffffff",
+            "secondary-fixed": "#e9e1db",
+            "inverse-primary": "#85d4d3",
+            "secondary-container": "#e9e1db",
+            "on-primary-fixed-variant": "#004f50",
+            "primary-container": "#0f6e6e",
+            "outline-variant": "#bec9c8",
+            "surface-container-low": "#faf2ee",
+            "secondary-fixed-dim": "#ccc5c0",
+            "surface-container": "#f4ece8",
+            "primary-fixed": "#a1f0ef",
+            "on-tertiary-fixed": "#002020",
+            "error": "#ba1a1a",
+            "on-primary-fixed": "#002020",
+            "on-secondary-container": "#68635f",
+            "tertiary": "#125454",
+            "surface": "#fff8f5",
+            "on-primary": "#ffffff",
+            "background": "#fff8f5",
+            "surface-bright": "#fff8f5",
+            "on-primary-container": "#9eedec",
+            "on-background": "#1e1b19",
+            "surface-tint": "#03696a",
+            "error-container": "#ffdad6",
+            "tertiary-container": "#316c6c",
+            "on-secondary-fixed-variant": "#4a4642",
+            "on-error": "#ffffff",
+            "inverse-surface": "#33302d",
+            "on-surface": "#1e1b19",
+            "surface-variant": "#e9e1dd",
+            "on-surface-variant": "#3e4948"
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Inter", "sans-serif"],
+            display: ["Inter", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+            label: ["Inter", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      background-color: #FAFAF9;
+      color: #1C1917;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      line-height: 1;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface antialiased min-h-screen flex flex-col justify-between select-none relative overflow-x-hidden">
+<!-- ========================================== -->
+<!-- SEGUNDO PLANO (Atenuado / Fondo de pantalla) -->
+<!-- Pantalla C4: Entrada rápida - Consola Acopio -->
+<!-- ========================================== -->
+<div class="relative w-full flex-1 flex flex-col pointer-events-none filter blur-[1px] opacity-40 aria-hidden='true'">
+<!-- TopAppBar Compartido (Especificación JSON) -->
+<header class="flex justify-between items-center w-full px-4 h-14 bg-surface-container-lowest border-b border-surface-variant z-10">
+<div class="flex items-center gap-3">
+<button aria-label="Volver" class="w-10 h-10 flex items-center justify-center text-on-surface">
+<span class="material-symbols-outlined text-2xl">arrow_back</span>
+</button>
+<div>
+<span class="font-headline text-lg font-bold text-primary block leading-tight">Acopio CO</span>
+<span class="text-xs text-[#57534E]">Sede: Coliseo El Salitre</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 rounded-full bg-[#E6F4F4] text-[#0A4F4F] flex items-center justify-center font-bold text-sm border border-[#C7E8E8]">
+          DM
+        </div>
+</div>
+</header>
+<!-- Contenido simulado de fondo -->
+<main class="p-4 flex flex-col gap-4">
+<div class="flex items-center justify-between">
+<h1 class="text-xl font-bold text-[#1C1917]">Entrada rápida</h1>
+<span class="text-xs font-semibold px-2 py-1 bg-[#E7E5E4] text-[#57534E] rounded">Modo escáner</span>
+</div>
+<!-- Buscador inactivo de fondo -->
+<div class="w-full h-12 bg-white rounded-xl border border-[#E7E5E4] px-3 flex items-center gap-2">
+<span class="material-symbols-outlined text-[#57534E]">barcode_scanner</span>
+<span class="text-[#57534E] text-base font-mono">7702001234567</span>
+</div>
+<!-- Tarjeta de cantidad de fondo -->
+<div class="bg-white rounded-xl border border-[#E7E5E4] p-4 text-center">
+<span class="text-sm text-[#57534E] block">Cantidad a registrar</span>
+<span class="text-4xl font-bold text-[#1C1917] my-2 block">12</span>
+<span class="text-xs text-[#57534E]">Bultos estándar</span>
+</div>
+<!-- Teclado numérico inactivo -->
+<div class="grid grid-cols-3 gap-2 mt-2">
+<div class="h-12 bg-white rounded-lg border border-[#E7E5E4] flex items-center justify-center font-bold text-lg">1</div>
+<div class="h-12 bg-white rounded-lg border border-[#E7E5E4] flex items-center justify-center font-bold text-lg">2</div>
+<div class="h-12 bg-white rounded-lg border border-[#E7E5E4] flex items-center justify-center font-bold text-lg">3</div>
+<div class="h-12 bg-white rounded-lg border border-[#E7E5E4] flex items-center justify-center font-bold text-lg">4</div>
+<div class="h-12 bg-white rounded-lg border border-[#E7E5E4] flex items-center justify-center font-bold text-lg">5</div>
+<div class="h-12 bg-white rounded-lg border border-[#E7E5E4] flex items-center justify-center font-bold text-lg">6</div>
+</div>
+</main>
+</div>
+<!-- Capa de oscurecimiento (Scrim) accesible -->
+<div aria-hidden="true" class="fixed inset-0 bg-[#1C1917]/50 backdrop-blur-[2px] z-30 transition-opacity"></div>
+<!-- ========================================== -->
+<!-- PRIMER PLANO: HOJA INFERIOR (Bottom Sheet) -->
+<!-- ========================================== -->
+<div aria-labelledby="modal-title" aria-modal="true" class="fixed inset-x-0 bottom-0 z-40 flex flex-col justify-end max-w-lg mx-auto w-full pb-[60px]" role="dialog">
+<div class="bg-white rounded-t-2xl border-t border-x border-[#E7E5E4] shadow-2xl px-5 pt-3 pb-5 flex flex-col"><div class="w-full flex justify-center py-1.5"><div class="w-12 h-1.5 bg-outline-variant rounded-full"></div></div><div class="flex items-center justify-between mt-1"><h2 class="font-headline text-2xl font-bold text-on-surface tracking-tight" id="modal-title">Nueva presentación</h2><button aria-label="Cerrar" class="w-12 h-12 flex items-center justify-center rounded-lg text-on-surface-variant" type="button"><span class="material-symbols-outlined text-2xl">close</span></button></div><p class="text-sm text-on-surface-variant mb-3">Arroz · se mide en kilos</p><div class="flex gap-1 p-1 bg-surface-container border border-outline-variant rounded-xl"><button type="button" class="flex-1 min-h-[48px] rounded-lg text-base font-semibold bg-primary text-on-primary">Suelta</button><button type="button" class="flex-1 min-h-[48px] rounded-lg text-base font-semibold text-on-surface-variant">Paquete</button></div><span class="block text-base font-bold text-on-surface mt-3 mb-1.5">Nombre</span><div class="min-h-[56px] flex items-center rounded-xl border-[1.5px] border-outline bg-surface-container-lowest px-4 text-base text-on-surface tabular-nums ">Bolsa de arroz 500 g</div><span class="block text-base font-bold text-on-surface mt-3 mb-1.5">Tamaño</span><div class="grid grid-cols-[1fr_auto] gap-2 items-stretch"><div class="min-h-[56px] flex items-center rounded-xl border-[1.5px] border-outline bg-surface-container-lowest px-4 text-base text-on-surface tabular-nums ">500</div><div class="w-36"><div class="flex gap-1 p-1 bg-surface-container border border-outline-variant rounded-xl"><button type="button" class="flex-1 min-h-[48px] rounded-lg text-base font-semibold bg-primary text-on-primary">g</button><button type="button" class="flex-1 min-h-[48px] rounded-lg text-base font-semibold text-on-surface-variant">kg</button></div></div></div><div class="flex items-center gap-2 rounded-xl bg-surface-container border border-outline-variant p-3 text-sm text-on-surface mt-3"><span class="material-symbols-outlined text-xl text-on-surface-variant">info</span><span>Se guarda como <b>0,5 kg</b></span></div><p class="text-sm text-on-surface-variant mt-2">Tope: 50 kg por presentación.</p><button type="button" class="w-full h-14 bg-primary-container text-on-primary font-bold text-base rounded-[10px] mt-4">Crear presentación</button></div>
+</div>
+<!-- ========================================== -->
+<!-- 9. BARRA DE NAVEGACIÓN INFERIOR (BottomNavBar) -->
+<!-- Estricta según especificación JSON y Tokens   -->
+<!-- ========================================== -->
+<nav aria-label="Navegación principal" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-2 py-1 bg-surface-container-lowest border-t border-surface-variant pb-safe">
+<!-- Inicio (Activo: flujo de ingreso/consola de acopio) -->
+<a class="flex flex-col items-center justify-center text-primary font-bold min-h-[48px] px-3 transition-opacity duration-150 active:opacity-80" href="#">
+<span class="material-symbols-outlined text-2xl leading-none" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-label text-xs mt-1">Inicio</span>
+</a>
+<!-- Mapa -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3 transition-opacity duration-150 active:opacity-80 hover:text-primary" href="#">
+<span class="material-symbols-outlined text-2xl leading-none">map</span>
+<span class="font-label text-xs mt-1">Mapa</span>
+</a>
+<!-- Causas -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3 transition-opacity duration-150 active:opacity-80 hover:text-primary" href="#">
+<span class="material-symbols-outlined text-2xl leading-none">favorite</span>
+<span class="font-label text-xs mt-1">Causas</span>
+</a>
+<!-- Voluntariado -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3 transition-opacity duration-150 active:opacity-80 hover:text-primary" href="#">
+<span class="material-symbols-outlined text-2xl leading-none">volunteer_activism</span>
+<span class="font-label text-xs mt-1">Voluntariado</span>
+</a>
+<!-- Más -->
+<a class="flex flex-col items-center justify-center text-secondary font-normal min-h-[48px] px-3 transition-opacity duration-150 active:opacity-80 hover:text-primary" href="#">
+<span class="material-symbols-outlined text-2xl leading-none">menu</span>
+<span class="font-label text-xs mt-1">Más</span>
+</a>
+</nav>
+</body></html>

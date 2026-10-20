@@ -3,7 +3,7 @@ title: "Modelo de datos"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-18
+actualizado: 2026-10-20
 ---
 
 # Modelo de datos
@@ -85,14 +85,24 @@ canasta_estandar
   fuente text NOT NULL · vigente_desde date
   UNIQUE (categoria_id, vigente_desde)
 
+presentacion
+  id · categoria_id · nombre citext · estado (PROPUESTO|VALIDADO)
+  tamano numeric?       suelta: en la unidad base de la categoría
+  contiene_id? · unidades int?   paquete: de 2 a 1000 sueltas
+  creado_por · creado_en · UNIQUE (categoria_id, nombre)
+  CHECK presentacion_clase: o suelta o paquete, nunca las dos
+
 codigo_barras
-  ean text PK · categoria_id · creado_por · revisado bool
-  descripcion text? · contenido numeric?    unidad base que trae una unidad
+  ean text PK · categoria_id · presentacion_id? · creado_por
+  estado (PROPUESTO|VALIDADO) · por_revisar bool
 ```
 
-`codigo_barras.contenido` es opcional: con él, quien escanea cuenta presentaciones
-—12 botellas— y el sistema convierte a la unidad base de la categoría; sin él, la
-cantidad se escribe directo en la unidad base.
+Una `presentacion` es suelta (tiene `tamano`) o paquete (contiene N sueltas de la misma
+categoría). El tamaño de un paquete no se guarda: es `unidades` por el tamaño de la suelta de
+adentro ([ADR-0021](adr/ADR-0021-presentaciones-y-estado-del-codigo.md)). Un código apunta a una
+presentación y con ella quien escanea cuenta presentaciones —12 botellas— y el sistema convierte
+a la unidad base; sin presentación (`presentacion_id` nulo), la cantidad se escribe directo en
+la unidad base y el código queda `por_revisar`.
 
 `canasta_estandar` es versionada por `vigente_desde`: cambiar la canasta no
 reescribe el histórico. El campo `fuente` es obligatorio — sin cita, el cálculo de

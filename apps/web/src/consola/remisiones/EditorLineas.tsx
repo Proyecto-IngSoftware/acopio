@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { formatearCantidad, formatearNumero, SIMBOLO_UNIDAD } from '@acopio/shared';
+import { formatearCantidad, formatearNumero } from '@acopio/shared';
 import type { ErrorApi } from '../../api/cliente';
 import {
   topeLinea,
@@ -10,9 +10,11 @@ import {
 } from '../../api/remisiones';
 import { Boton } from '../../componentes/Boton';
 import { Campo } from '../../componentes/Campo';
+import { leerCantidad, simboloDe } from '../../componentes/cantidad-base';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
 import { EstadoVacio } from '../../componentes/EstadoVacio';
+import { SelectorUnidad } from '../../componentes/SelectorUnidad';
 
 /** Una remisión lleva de 1 a 40 categorías (CrearRemisionDto). */
 const MAXIMO_LINEAS = 40;
@@ -87,10 +89,14 @@ export function EditorLineas({
   const [cantidades, fijarCantidades] = useState<Record<string, string>>(() =>
     Object.fromEntries(propias.map((l) => [l.categoriaId, String(l.cantidadPlaneada)])),
   );
+  // En qué unidad se escribe cada fila: 1 es la unidad base (kg, L); 0,001 son g o ml
+  const [factores, fijarFactores] = useState<Record<string, number>>({});
   const [busqueda, fijarBusqueda] = useState('');
   const guardadas = new Map(propias.map((l) => [l.categoriaId, l.cantidadPlaneada]));
   const sucio = Object.entries(cantidades).some(
-    ([id, texto]) => Number(texto.replace(',', '.') || 0) !== (guardadas.get(id) ?? 0),
+    ([id, texto]) =>
+      Math.round(Number(texto.replace(',', '.') || 0) * (factores[id] ?? 1) * 1000) / 1000 !==
+      (guardadas.get(id) ?? 0),
   );
   useEffect(() => alCambiarSucio?.(sucio), [sucio, alCambiarSucio]);
 
@@ -113,20 +119,19 @@ export function EditorLineas({
     );
   }
 
-  const valor = (id: string) => Number((cantidades[id] ?? '').replace(',', '.'));
+  const leida = (f: Fila) =>
+    leerCantidad(cantidades[f.categoriaId] ?? '', factores[f.categoriaId] ?? 1, f.unidad);
+  const valor = (f: Fila) => leida(f).base;
   const lineas: LineaNueva[] = filas
-    .filter((f) => valor(f.categoriaId) > 0)
-    .map((f) => ({ categoriaId: f.categoriaId, cantidad: valor(f.categoriaId) }));
-  const pasadas = new Set(
-    filas.filter((f) => valor(f.categoriaId) > f.tope).map((f) => f.categoriaId),
-  );
-  // Lo que la API rechazaría: CANTIDAD_ENTERA en unidades y más de 3 decimales
+    .filter((f) => valor(f) > 0)
+    .map((f) => ({ categoriaId: f.categoriaId, cantidad: valor(f) }));
+  const pasadas = new Set(filas.filter((f) => valor(f) > f.tope).map((f) => f.categoriaId));
+  // Lo que la API rechazaría: CANTIDAD_ENTERA en unidades, más de 3 decimales y el tope de línea
   const problema = (f: Fila): string | null => {
-    const v = valor(f.categoriaId);
-    if (!(v > 0)) return null;
-    if (f.unidad === 'UNIDAD' && !Number.isInteger(v)) return 'Usa números enteros';
-    if (Math.round(v * 1000) !== v * 1000) return 'Hasta 3 decimales';
-    return null;
+    const texto = cantidades[f.categoriaId] ?? '';
+    const v = Number(texto.replace(',', '.'));
+    if (f.unidad === 'UNIDAD' && v > 0 && !Number.isInteger(v)) return 'Usa números enteros';
+    return leida(f).error;
   };
   const invalidas = filas.filter((f) => problema(f) !== null).length;
   const demasiadas = lineas.length > MAXIMO_LINEAS;
@@ -160,35 +165,44 @@ export function EditorLineas({
               key={f.categoriaId}
               className="flex flex-col gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md"
             >
-              <div className="flex flex-wrap items-center gap-space-xs">
-                <span className="text-body-lg font-bold text-on-surface">{f.categoria}</span>
+              <div className="flex flex-wrap items-center justify-between gap-x-space-sm gap-y-space-xs">
+                <span className="min-w-0 text-body-lg font-bold text-on-surface">
+                  {f.categoria}
+                </span>
                 {f.diasParaVencer !== null && f.diasParaVencer >= 0 && f.diasParaVencer <= 30 && (
-                  <span className="ml-auto rounded-full border border-outline-variant bg-surface-container-low px-space-xs text-body-sm text-on-surface">
+                  <span className="shrink-0 rounded-full border border-outline-variant bg-surface-container-low px-space-xs text-body-sm text-on-surface">
                     Vence en {f.diasParaVencer} {f.diasParaVencer === 1 ? 'día' : 'días'}
                   </span>
                 )}
               </div>
-              <div className="flex items-end justify-between gap-space-sm">
-                <p className="text-body-sm text-on-surface-variant">
+              <div className="flex flex-wrap items-center justify-between gap-x-space-sm gap-y-space-xs">
+                <p className="min-w-0 text-body-sm text-on-surface-variant">
                   Se pueden mandar {formatearCantidad(f.tope, f.unidad)}
                 </p>
-                <div className="w-28">
+                <div className="flex shrink-0 items-center gap-space-sm">
                   <label htmlFor={id} className="sr-only">
-                    Cantidad de {f.categoria} ({SIMBOLO_UNIDAD[f.unidad]})
+                    Cantidad de {f.categoria} ({simboloDe(f.unidad, factores[f.categoriaId] ?? 1)})
                   </label>
                   <input
                     id={id}
                     type="number"
                     inputMode={f.unidad === 'UNIDAD' ? 'numeric' : 'decimal'}
                     min={0}
-                    step={f.unidad === 'UNIDAD' ? 1 : 0.001}
-                    max={f.tope}
+                    step={f.unidad === 'UNIDAD' || (factores[f.categoriaId] ?? 1) < 1 ? 1 : 0.001}
+                    max={f.tope / (factores[f.categoriaId] ?? 1)}
                     value={cantidades[f.categoriaId] ?? ''}
                     aria-invalid={pasada || undefined}
                     onChange={(e) =>
                       fijarCantidades((c) => ({ ...c, [f.categoriaId]: e.target.value }))
                     }
-                    className={`min-h-[48px] w-full rounded-xl border-[1.5px] bg-surface-container-lowest px-space-sm text-right text-body-md font-bold tabular-nums text-on-surface ${pasada ? 'border-error' : 'border-outline-variant'}`}
+                    className={`min-h-[48px] w-24 rounded-xl border-[1.5px] bg-surface-container-lowest px-space-sm text-right text-body-md font-bold tabular-nums text-on-surface ${pasada ? 'border-error' : 'border-outline-variant'}`}
+                  />
+                  <SelectorUnidad
+                    unidad={f.unidad}
+                    factor={factores[f.categoriaId] ?? 1}
+                    alCambiar={(factor) =>
+                      fijarFactores((c) => ({ ...c, [f.categoriaId]: factor }))
+                    }
                   />
                 </div>
               </div>
@@ -199,9 +213,10 @@ export function EditorLineas({
                   <span>Hoy se pueden mandar hasta {formatearCantidad(sugerido, f.unidad)}</span>
                   <Boton
                     variante="terciario"
-                    onClick={() =>
-                      fijarCantidades((c) => ({ ...c, [f.categoriaId]: String(sugerido) }))
-                    }
+                    onClick={() => {
+                      fijarFactores((c) => ({ ...c, [f.categoriaId]: 1 }));
+                      fijarCantidades((c) => ({ ...c, [f.categoriaId]: String(sugerido) }));
+                    }}
                   >
                     Usar {formatearNumero(sugerido)}
                   </Boton>

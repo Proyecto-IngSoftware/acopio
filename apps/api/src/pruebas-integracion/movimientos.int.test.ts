@@ -69,6 +69,10 @@ describe('movimientos', () => {
       expect(b!.ubicacion_id).toBe(ACOPIO_A);
     });
 
+    it('una línea de más de 10.000: 400', async () => {
+      await entrada({ categoriaId: panal, cantidad: 10_001 }).expect(400);
+    });
+
     it('un perecedero sin fecha de vencimiento: 422', async () => {
       const r = await entrada({ categoriaId: arroz, cantidad: 10 }).expect(422);
       expect(r.body.codigo).toBe('VENCIMIENTO_OBLIGATORIO');

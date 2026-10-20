@@ -1,4 +1,6 @@
-import type { Comprobante, DatosRecepcion } from '../../api/comprobantes';
+import { errorDeLinea } from '@acopio/shared';
+import type { Presentacion } from '../../api/catalogo';
+import { enBase, type Comprobante, type DatosRecepcion } from '../../api/comprobantes';
 import { aNumero, limpiarCantidad } from '../inventario/TecladoCantidad';
 
 /** Una línea del folio mientras el Operador confirma lo que llegó. Cantidades en presentaciones. */
@@ -16,13 +18,21 @@ export interface LineaRecepcion {
   venceDeclarado: string | null;
   venceEn: string;
   motivo: string;
+  /** El código de barras de la línea, si lo trae. */
+  ean: string | null;
+  /** La presentación que corrigió el Operador; sin ella vale la del código. */
+  corregida: { id: string; nombre: string } | null;
+  /** El Operador confirmó el código propuesto con «Es correcto». */
+  codigoConfirmado: boolean;
 }
 
 export type Accion =
   | { tipo: 'sumar'; id: string; delta: 1 | -1 }
   | { tipo: 'escribir'; id: string; texto: string }
   | { tipo: 'vencer'; id: string; venceEn: string }
-  | { tipo: 'motivo'; id: string; motivo: string };
+  | { tipo: 'motivo'; id: string; motivo: string }
+  | { tipo: 'confirmarCodigo'; id: string }
+  | { tipo: 'corregir'; id: string; presentacion: Presentacion; perecedero: boolean };
 
 const aTexto = (n: number) => String(n).replace('.', ',');
 
@@ -39,6 +49,9 @@ export function iniciar(c: Comprobante): LineaRecepcion[] {
     venceDeclarado: l.venceEn,
     venceEn: '',
     motivo: '',
+    ean: l.ean,
+    corregida: null,
+    codigoConfirmado: false,
   }));
 }
 
@@ -53,7 +66,12 @@ export const faltaVencimiento = (l: LineaRecepcion) =>
 export const entradas = (lineas: LineaRecepcion[]) =>
   lineas.filter((l) => cantidadDe(l) > 0).length;
 
-export const listoParaRegistrar = (lineas: LineaRecepcion[]) => !lineas.some(faltaVencimiento);
+/** El tope de la línea va sobre el total en unidad base: 2000 × 7,2 L no cabe. */
+export const errorDeTope = (l: LineaRecepcion) =>
+  errorDeLinea(enBase(cantidadDe(l), l.contenido), l.unidad);
+
+export const listoParaRegistrar = (lineas: LineaRecepcion[]) =>
+  !lineas.some((l) => faltaVencimiento(l) || errorDeTope(l));
 
 export function recepcion(lineas: LineaRecepcion[], a: Accion): LineaRecepcion[] {
   return lineas.map((l) => {
@@ -70,6 +88,22 @@ export function recepcion(lineas: LineaRecepcion[], a: Accion): LineaRecepcion[]
         return { ...l, venceEn: a.venceEn };
       case 'motivo':
         return { ...l, motivo: a.motivo };
+      case 'confirmarCodigo':
+        return { ...l, codigoConfirmado: true };
+      case 'corregir':
+        // La cantidad sigue siendo un conteo, ahora de la presentación nueva: su categoría,
+        // su unidad y su tamaño reemplazan a los de la línea
+        return {
+          ...l,
+          categoriaId: a.presentacion.categoriaId,
+          categoria: a.presentacion.categoria,
+          unidad: a.presentacion.unidad,
+          contenido: a.presentacion.tamano,
+          perecedero: a.perecedero,
+          venceEn: '',
+          corregida: { id: a.presentacion.id, nombre: a.presentacion.nombre },
+          codigoConfirmado: true,
+        };
     }
   });
 }
@@ -83,6 +117,7 @@ export function cuerpoRecepcion(lineas: LineaRecepcion[], acopioId: string): Dat
       const motivo = l.motivo.trim();
       return {
         lineaId: l.id,
+        ...(l.corregida ? { presentacionId: l.corregida.id } : {}),
         cantidadConfirmada: cantidad,
         ...(cantidad > 0 && !l.venceDeclarado && l.venceEn ? { venceEn: l.venceEn } : {}),
         ...(cantidad < l.declarada && motivo ? { motivoDiferencia: motivo } : {}),
