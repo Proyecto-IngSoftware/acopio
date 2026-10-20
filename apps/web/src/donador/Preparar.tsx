@@ -26,7 +26,7 @@ import {
 /** Lo máximo de donaciones preparadas a la vez (RF-DON). */
 const LIMITE_PREPARADAS = 5;
 
-/** El Donador lee códigos de su propio endpoint: no aprende códigos nuevos. */
+/** El Donador lee códigos de su propio endpoint; uno desconocido lo propone en la hoja. */
 const resolverCodigo: ResolverCodigo = async (ean) => {
   const c = await consultarCodigoDonador(ean);
   if (!c) return null;
@@ -41,6 +41,7 @@ const resolverCodigo: ResolverCodigo = async (ean) => {
       puntaje: 1,
     },
     contenido,
+    sinConfirmar: c.estado === 'PROPUESTO',
   };
 };
 
@@ -78,12 +79,18 @@ function LineaDonacion({
           <Icono nombre="delete" className="shrink-0 text-[22px]" />
         </button>
       </div>
-      {(linea.ean || conPresentacion) && (
+      {(linea.ean || conPresentacion || linea.sinConfirmar) && (
         <p className="flex flex-wrap gap-x-space-xs text-body-sm text-on-surface-variant">
           {conPresentacion && (
             <span>Cada una trae {formatearCantidad(linea.contenido!, linea.unidad)}</span>
           )}
           {linea.ean && <code>{linea.ean}</code>}
+          {linea.sinConfirmar && (
+            <span className="flex items-center gap-space-xs font-bold">
+              <Icono nombre="info" className="shrink-0 text-[16px]" />
+              Sin confirmar
+            </span>
+          )}
         </p>
       )}
       {libre ? (

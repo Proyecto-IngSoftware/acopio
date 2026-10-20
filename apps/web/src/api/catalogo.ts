@@ -199,17 +199,63 @@ export async function consultarCodigo(ean: string) {
 
 export interface DatosAsociar {
   ean: string;
-  categoriaId: string;
-  contenido?: number;
+  presentacionId: string;
 }
 
-/** Escáner: asocia un código nuevo a una categoría; el de un Operador queda sin revisar (RF-CAT-004). */
+/** Escáner: asocia un código nuevo a una presentación; el de un Operador queda validado
+ *  (RF-CAT-004). */
 export function useAsociarCodigo() {
   const consultas = useQueryClient();
   return useMutation<CodigoBarras, ErrorApi, DatosAsociar>({
     mutationFn: async (datos) =>
       await desenvolver(api.POST('/api/codigos-barras', { body: datos })),
-    onSuccess: () => void consultas.invalidateQueries({ queryKey: ['codigos-barras'] }),
+    onSuccess: () => {
+      void consultas.invalidateQueries({ queryKey: ['codigos-barras'] });
+      void consultas.invalidateQueries({ queryKey: ['presentaciones'] });
+    },
+  });
+}
+
+/** Escáner: el Operador confirma un código propuesto, o lo corrige con otra presentación. */
+export function useValidarCodigo() {
+  const consultas = useQueryClient();
+  return useMutation<CodigoBarras, ErrorApi, DatosAsociar>({
+    mutationFn: async ({ ean, presentacionId }) =>
+      await desenvolver(
+        api.POST('/api/codigos-barras/{ean}/validar', {
+          params: { path: { ean } },
+          body: { presentacionId },
+        }),
+      ),
+    onSuccess: () => {
+      void consultas.invalidateQueries({ queryKey: ['codigos-barras'] });
+      void consultas.invalidateQueries({ queryKey: ['presentaciones'] });
+    },
+  });
+}
+
+export type Presentacion = S['PresentacionDto'];
+export type DatosPresentacion = S['CrearDto'];
+
+/** Las presentaciones de una categoría (sueltas y paquetes). Sin categoría no consulta. */
+export function usePresentaciones(categoriaId: string | undefined) {
+  return useQuery<Presentacion[], ErrorApi>({
+    queryKey: ['presentaciones', categoriaId],
+    enabled: Boolean(categoriaId),
+    queryFn: () =>
+      desenvolver(
+        api.GET('/api/presentaciones', { params: { query: { categoriaId: categoriaId! } } }),
+      ),
+  });
+}
+
+/** Una presentación nueva: suelta con `tamano`, o paquete con `contieneId` y `unidades`. */
+export function useCrearPresentacion() {
+  const consultas = useQueryClient();
+  return useMutation<Presentacion, ErrorApi, DatosPresentacion>({
+    mutationFn: async (datos) =>
+      await desenvolver(api.POST('/api/presentaciones', { body: datos })),
+    onSuccess: () => void consultas.invalidateQueries({ queryKey: ['presentaciones'] }),
   });
 }
 

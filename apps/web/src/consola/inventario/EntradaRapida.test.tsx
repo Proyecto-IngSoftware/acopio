@@ -2,7 +2,14 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes } from 'react-router';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
-import { clienteFalso, cuerpoDe, envolver, responderSegun } from '../../pruebas/utilidades';
+import {
+  clienteFalso,
+  conEstado,
+  cuerpoDe,
+  envolver,
+  peticiones,
+  responderSegun,
+} from '../../pruebas/utilidades';
 import { leerCategorias, leerNoRecibir, leerSaldos } from '../../sin-conexion/datos-locales';
 import { ACOPIO, SALDOS } from './datos-prueba';
 import { EntradaRapida } from './EntradaRapida';
@@ -321,5 +328,110 @@ describe('C4 Entrada rápida', () => {
     const { container } = pantalla();
     await elegir('panal', /Pañal adulto/);
     expect(await violacionesGraves(container)).toEqual([]);
+  });
+});
+
+describe('C4 con códigos de presentaciones', () => {
+  const EAN = '7702001045231';
+  const desconocido = conEstado(404, {
+    estado: 404,
+    codigo: 'EAN_DESCONOCIDO',
+    mensaje: 'Este código no está asociado a ninguna categoría',
+  });
+  const SUELTA = {
+    id: 'pa',
+    categoriaId: 'c2',
+    categoria: 'Arroz',
+    unidad: 'KILOGRAMO',
+    nombre: 'Bolsa de arroz 500 g',
+    clase: 'SUELTA',
+    tamano: 0.5,
+    contieneId: null,
+    unidades: null,
+    estado: 'VALIDADO',
+    codigos: 0,
+  };
+  const PROPUESTO = {
+    ...BOTELLA,
+    estado: 'PROPUESTO',
+    presentacion: { id: 'p1', nombre: 'Botella de agua 600 ml', tamano: 0.6 },
+  };
+  const elegirArrozEnHoja = async () => {
+    const hoja = await screen.findByRole('dialog', { name: 'Código nuevo' });
+    await userEvent.type(within(hoja).getByRole('searchbox', { name: 'Categoría' }), 'arroz');
+    await userEvent.click(await within(hoja).findByRole('button', { name: /Arroz/ }));
+    await userEvent.click(await within(hoja).findByRole('radio', { name: 'Bolsa de arroz 500 g' }));
+    return hoja;
+  };
+
+  it('«Solo guardar el código» asocia y vuelve a la búsqueda sin pedir cantidad', async () => {
+    pantalla({
+      [`GET /api/codigos-barras/${EAN}`]: desconocido,
+      'GET /api/presentaciones': [SUELTA],
+      'POST /api/codigos-barras': { ...BOTELLA, estado: 'VALIDADO' },
+    });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const hoja = await elegirArrozEnHoja();
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Solo guardar el código' }));
+    expect(await cuerpoDe('POST /api/codigos-barras')).toEqual({ ean: EAN, presentacionId: 'pa' });
+    expect(await screen.findByText(/Código guardado/)).toBeInTheDocument();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.queryByRole('region', { name: 'Categoría elegida' })).not.toBeInTheDocument();
+    expect(screen.getByRole('searchbox', { name: 'Categoría' })).toBeInTheDocument();
+  });
+
+  it('sin red no ofrece «Solo guardar el código»', async () => {
+    vi.spyOn(navigator, 'onLine', 'get').mockReturnValue(false);
+    pantalla({ [`GET /api/codigos-barras/${EAN}`]: desconocido });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Código nuevo' });
+    expect(within(hoja).getByRole('button', { name: 'Asociar y seguir' })).toBeInTheDocument();
+    expect(
+      within(hoja).queryByRole('button', { name: 'Solo guardar el código' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('un código propuesto se confirma antes de pedir la cantidad', async () => {
+    pantalla({
+      [`GET /api/codigos-barras/${EAN}`]: PROPUESTO,
+      [`POST /api/codigos-barras/${EAN}/validar`]: { ...PROPUESTO, estado: 'VALIDADO' },
+    });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Confirma el código' });
+    expect(hoja).toHaveTextContent('Agua potable');
+    expect(hoja).toHaveTextContent('Botella de agua 600 ml');
+    expect(screen.queryByRole('region', { name: 'Categoría elegida' })).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Cantidad')).toHaveValue('');
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Es correcto' }));
+    expect(await cuerpoDe(`POST /api/codigos-barras/${EAN}/validar`)).toEqual({
+      presentacionId: 'p1',
+    });
+    const elegida = await screen.findByRole('region', { name: 'Categoría elegida' });
+    expect(elegida).toHaveTextContent('Agua potable');
+  });
+
+  it('«Corregir» valida el código con la presentación que se elija', async () => {
+    pantalla({
+      [`GET /api/codigos-barras/${EAN}`]: PROPUESTO,
+      'GET /api/presentaciones': [SUELTA],
+      [`POST /api/codigos-barras/${EAN}/validar`]: { ...PROPUESTO, estado: 'VALIDADO' },
+    });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const confirma = await screen.findByRole('dialog', { name: 'Confirma el código' });
+    await userEvent.click(within(confirma).getByRole('button', { name: 'Corregir' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Corregir el código' });
+    expect(screen.queryByRole('region', { name: 'Categoría elegida' })).not.toBeInTheDocument();
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Cambiar' }));
+    await userEvent.type(within(hoja).getByRole('searchbox', { name: 'Categoría' }), 'arroz');
+    await userEvent.click(await within(hoja).findByRole('button', { name: /Arroz/ }));
+    await userEvent.click(await within(hoja).findByRole('radio', { name: 'Bolsa de arroz 500 g' }));
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Confirmar y seguir' }));
+    expect(await cuerpoDe(`POST /api/codigos-barras/${EAN}/validar`)).toEqual({
+      presentacionId: 'pa',
+    });
+    expect(peticiones().filter((p) => p === 'POST /api/codigos-barras')).toEqual([]);
+    expect(await screen.findByRole('region', { name: 'Categoría elegida' })).toHaveTextContent(
+      'Arroz',
+    );
   });
 });

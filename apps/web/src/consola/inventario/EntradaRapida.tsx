@@ -208,6 +208,8 @@ export function EntradaRapida() {
             onQ={fijarQ}
             onElegir={elegir}
             sinRed={sinRed}
+            soloGuardar
+            confirmarPropuestos
           />
         ) : (
           <TarjetaSaldo

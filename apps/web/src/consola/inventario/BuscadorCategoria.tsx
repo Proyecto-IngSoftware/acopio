@@ -10,12 +10,14 @@ import { ErrorApi } from '../../api/cliente';
 import { Icono } from '../../componentes/Icono';
 import { buscarEnCopia, useCategoriasLocales } from '../../sin-conexion/busqueda-local';
 import { buscarCodigoVisto } from '../../sin-conexion/datos-locales';
-import { HojaCodigoNuevo, VistaCamara } from './Escaner';
+import { HojaCodigoNuevo, HojaCodigoPropuesto, VistaCamara } from './Escaner';
 
 /** Lo que el escáner leyó: C4 cuenta presentaciones si trae contenido. */
 export interface Leido {
   ean: string;
   contenido: number | null;
+  /** Un Donador propuso el código y ningún Operador lo ha confirmado. */
+  sinConfirmar?: boolean;
 }
 
 const SIN_PERMISO = 'Sin permiso para usar la cámara. Busca la categoría por nombre.';
@@ -31,12 +33,20 @@ const categoriaDe = (c: CodigoBarras): ResultadoBusqueda => ({
 });
 
 /** Otra fuente de códigos para quien no es de la consola (el Donador): devuelve la categoría y
- *  lo que trae cada presentación, o null si no se conoce. */
-export type ResolverCodigo = (
-  ean: string,
-) => Promise<{ categoria: ResultadoBusqueda; contenido: number | null } | null>;
+ *  lo que trae cada presentación, o null si no se conoce. Con ella, un código desconocido se
+ *  propone en vez de asociarse. */
+export type ResolverCodigo = (ean: string) => Promise<{
+  categoria: ResultadoBusqueda;
+  contenido: number | null;
+  sinConfirmar?: boolean;
+} | null>;
 
-type Escaneo = { paso: 'nada' } | { paso: 'camara' } | { paso: 'nuevo'; ean: string };
+type Escaneo =
+  | { paso: 'nada' }
+  | { paso: 'camara' }
+  | { paso: 'nuevo'; ean: string }
+  | { paso: 'propuesto'; codigo: CodigoBarras }
+  | { paso: 'corregir'; codigo: CodigoBarras };
 
 /** Búsqueda de categoría de C4, C5 y C6, por nombre o con la cámara (RF-INV-002). */
 export function BuscadorCategoria({
@@ -46,7 +56,8 @@ export function BuscadorCategoria({
   onElegir,
   sinRed = false,
   resolverCodigo,
-  avisoCodigoDesconocido = 'No conocemos este código: búscalo por nombre.',
+  soloGuardar = false,
+  confirmarPropuestos = false,
   ref,
 }: {
   id: string;
@@ -55,10 +66,13 @@ export function BuscadorCategoria({
   onElegir: (c: ResultadoBusqueda, leido?: Leido) => void;
   /** C4 sin red busca en la copia del teléfono (O-06). */
   sinRed?: boolean;
-  /** Con esto el escáner usa esta consulta y un código desconocido solo avisa: no se asocia
-   *  ni se guarda (el Donador no aprende códigos). */
+  /** Con esto el escáner usa esta consulta (el Donador): un código desconocido se propone
+   *  escaneándolo, sin escribir el número, y queda sin confirmar. */
   resolverCodigo?: ResolverCodigo;
-  avisoCodigoDesconocido?: string;
+  /** Un código nuevo ofrece «Solo guardar el código» (con red): lo asocia y vuelve a buscar. */
+  soloGuardar?: boolean;
+  /** Un código propuesto se confirma o se corrige antes de elegir la categoría. */
+  confirmarPropuestos?: boolean;
   ref?: Ref<HTMLInputElement>;
 }) {
   const remotos = useBuscarCategorias(sinRed ? '' : q);
@@ -79,11 +93,8 @@ export function BuscadorCategoria({
     if (resolverCodigo) {
       try {
         const r = await resolverCodigo(ean);
-        if (r) onElegir(r.categoria, { ean, contenido: r.contenido });
-        else {
-          fijarAviso(avisoCodigoDesconocido);
-          setTimeout(() => propio.current?.focus(), 0);
-        }
+        if (r) onElegir(r.categoria, { ean, contenido: r.contenido, sinConfirmar: r.sinConfirmar });
+        else fijarEscaneo({ paso: 'nuevo', ean });
       } catch (e) {
         fijarAviso((e as Error).message);
       }
@@ -91,6 +102,9 @@ export function BuscadorCategoria({
     }
     try {
       const c = await consultarCodigo(ean);
+      if (confirmarPropuestos && c.estado === 'PROPUESTO') {
+        return fijarEscaneo({ paso: 'propuesto', codigo: c });
+      }
       onElegir(categoriaDe(c), { ean, contenido: c.contenido });
     } catch (e) {
       if (e instanceof ErrorApi && e.estado === 404) return fijarEscaneo({ paso: 'nuevo', ean });
@@ -186,9 +200,45 @@ export function BuscadorCategoria({
         <HojaCodigoNuevo
           ean={escaneo.ean}
           alCerrar={volverABuscar}
+          donador={Boolean(resolverCodigo)}
+          escribirNumero={!resolverCodigo}
+          soloGuardar={
+            soloGuardar && !sinRed && !resolverCodigo
+              ? () => {
+                  fijarEscaneo({ paso: 'nada' });
+                  fijarAviso('Código guardado. Busca la categoría o escanea otro.');
+                }
+              : undefined
+          }
+          alAsociar={(c, contenido, ean) => {
+            fijarEscaneo({ paso: 'nada' });
+            onElegir(c, { ean, contenido, ...(resolverCodigo ? { sinConfirmar: true } : {}) });
+          }}
+        />
+      )}
+      {escaneo.paso === 'propuesto' && (
+        <HojaCodigoPropuesto
+          codigo={escaneo.codigo}
+          alCerrar={volverABuscar}
+          alCorregir={() => fijarEscaneo({ paso: 'corregir', codigo: escaneo.codigo })}
+          alConfirmar={() => {
+            fijarEscaneo({ paso: 'nada' });
+            onElegir(categoriaDe(escaneo.codigo), {
+              ean: escaneo.codigo.ean,
+              contenido: escaneo.codigo.contenido,
+            });
+          }}
+        />
+      )}
+      {escaneo.paso === 'corregir' && (
+        <HojaCodigoNuevo
+          ean={escaneo.codigo.ean}
+          corregir={escaneo.codigo}
+          escribirNumero={false}
+          alCerrar={volverABuscar}
           alAsociar={(c, contenido) => {
             fijarEscaneo({ paso: 'nada' });
-            onElegir(c, { ean: escaneo.ean, contenido });
+            onElegir(c, { ean: escaneo.codigo.ean, contenido });
           }}
         />
       )}

@@ -9,6 +9,7 @@ export type DatosDonacion = S['CrearDonacionDto'];
 export type LineaSugerencia = S['SugerenciasDto']['lineas'][number];
 export type SugerenciaEntrega = S['SugerenciaEntregaDto'];
 export type CodigoDonador = S['CodigoDonadorDto'];
+export type DatosProponer = S['ProponerCodigoDto'];
 export type Seguimiento = S['SeguimientoDto'];
 
 export const ESTADOS_DONACION: Record<EstadoComprobante, string> = {
@@ -72,6 +73,16 @@ export async function consultarCodigoDonador(ean: string): Promise<CodigoDonador
     if (e instanceof ErrorApi && e.estado === 404) return null;
     throw e;
   }
+}
+
+/** El Donador propone un código desconocido: queda sin confirmar hasta que un Operador lo
+ *  valide. Si otro Donador ya lo propuso, devuelve ese. */
+export function useProponerCodigo() {
+  const consultas = useQueryClient();
+  return useMutation<CodigoDonador, ErrorApi, DatosProponer>({
+    mutationFn: (datos) => desenvolver(api.POST('/api/donaciones/codigos', { body: datos })),
+    onSuccess: () => void consultas.invalidateQueries({ queryKey: ['presentaciones'] }),
+  });
 }
 
 /** Sube la foto de la factura de una donación (multipart, campo `factura`). */

@@ -18,6 +18,8 @@ export interface Linea {
   ean: string | null;
   /** Lo que trae cada presentación en unidad base, si el código lo sabe. */
   contenido: number | null;
+  /** Un Donador propuso el código y ningún Operador lo ha confirmado. */
+  sinConfirmar: boolean;
   /** Presentaciones si hay `contenido`; si no, unidad base. */
   cantidad: number;
   /** Lo escrito en la línea libre (kg o L sin presentación), en la unidad que se eligió. */
@@ -39,7 +41,7 @@ export type Accion =
   | {
       tipo: 'agregar';
       categoria: CategoriaElegida;
-      leido?: { ean: string; contenido: number | null };
+      leido?: { ean: string; contenido: number | null; sinConfirmar?: boolean };
     }
   | { tipo: 'cantidad'; id: string; cantidad: number }
   | { tipo: 'escribir'; id: string; texto: string; factor: number }
@@ -82,7 +84,7 @@ const nuevoId = () => `linea-${++siguiente}`;
 export function agregarLinea(
   e: Preparacion,
   categoria: CategoriaElegida,
-  leido?: { ean: string; contenido: number | null },
+  leido?: { ean: string; contenido: number | null; sinConfirmar?: boolean },
 ): Preparacion {
   const ean = leido?.ean ?? null;
   // El mismo código, o la misma categoría buscada por nombre, suma a su línea
@@ -107,6 +109,7 @@ export function agregarLinea(
     perecedero: categoria.perecedero,
     ean,
     contenido: leido?.contenido ?? null,
+    sinConfirmar: leido?.sinConfirmar ?? false,
     cantidad: 1,
     texto: '1',
     factor: 1,

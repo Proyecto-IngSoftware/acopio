@@ -4,6 +4,7 @@ import { violacionesGraves } from '../pruebas/accesibilidad';
 import {
   clienteFalso,
   conEstado,
+  cuerpoDe,
   envolver,
   peticiones,
   responderSegun,
@@ -25,8 +26,37 @@ const AGUA = {
   unidad: 'LITRO',
   grupo: 'AGUA_Y_BEBIDAS',
   perecedero: false,
+  estado: 'VALIDADO',
+  presentacion: null,
   contenido: 0.6,
 };
+const NUEVO = '7702001234567';
+const AGUA_CAT = {
+  id: 'c1',
+  nombre: 'Agua potable',
+  grupo: 'AGUA_Y_BEBIDAS',
+  unidadBase: 'LITRO',
+  perecedero: false,
+  puntaje: 0.9,
+};
+const BOTELLA = {
+  id: 'p1',
+  categoriaId: 'c1',
+  categoria: 'Agua potable',
+  unidad: 'LITRO',
+  nombre: 'Botella de agua 600 ml',
+  clase: 'SUELTA',
+  tamano: 0.6,
+  contieneId: null,
+  unidades: null,
+  estado: 'VALIDADO',
+  codigos: 1,
+};
+const desconocido = conEstado(404, {
+  estado: 404,
+  codigo: 'EAN_DESCONOCIDO',
+  mensaje: 'Código desconocido',
+});
 const ARROZ = {
   id: 'c2',
   nombre: 'Arroz',
@@ -180,45 +210,98 @@ describe('P9, paso 1: qué llevas', () => {
     expect(screen.getAllByRole('listitem', { name: 'Agua potable' })).toHaveLength(1);
   });
 
-  it('un código desconocido avisa, deja buscar por nombre y no guarda el código', async () => {
-    leera('7702001234567');
+  it('un código propuesto por otro Donador se usa con la marca «sin confirmar»', async () => {
+    leera(EAN);
     pantalla({
-      'GET /api/donaciones/codigos/7702001234567': conEstado(404, {
-        estado: 404,
-        codigo: 'EAN_DESCONOCIDO',
-        mensaje: 'Código desconocido',
-      }),
+      [`GET /api/donaciones/codigos/${EAN}`]: {
+        ...AGUA,
+        estado: 'PROPUESTO',
+        presentacion: { id: 'p1', nombre: 'Botella de agua 600 ml', tamano: 0.6 },
+      },
     });
     await escanear();
-    expect(
-      await screen.findByText(/No conocemos este código: búscalo por nombre/),
-    ).toBeInTheDocument();
-    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-    await userEvent.type(screen.getByRole('searchbox', { name: 'Categoría' }), 'arroz');
-    await userEvent.click(await screen.findByRole('button', { name: /Arroz/ }));
-    const linea = screen.getByRole('listitem', { name: 'Arroz' });
-    expect(within(linea).queryByText('7702001234567')).not.toBeInTheDocument();
-    expect(peticiones().filter((p) => p.startsWith('POST'))).toEqual([]);
+    const linea = await screen.findByRole('listitem', { name: 'Agua potable' });
+    expect(within(linea).getByText('Sin confirmar')).toBeInTheDocument();
+    expect(within(linea).getByText('= 0,6 L')).toBeInTheDocument();
   });
 
-  it('un escaneo reconocido borra el aviso del código desconocido', async () => {
-    leera('7702001234567');
+  it('un código desconocido abre la hoja y lo propone, sin campo para escribir el número', async () => {
+    leera(NUEVO);
     pantalla({
-      'GET /api/donaciones/codigos/7702001234567': conEstado(404, {
-        estado: 404,
-        codigo: 'EAN_DESCONOCIDO',
-        mensaje: 'Código desconocido',
-      }),
-      [`GET /api/donaciones/codigos/${EAN}`]: AGUA,
+      [`GET /api/donaciones/codigos/${NUEVO}`]: desconocido,
+      'GET /api/categorias/buscar': [AGUA_CAT],
+      'GET /api/presentaciones': [BOTELLA],
+      'POST /api/donaciones/codigos': {
+        ...AGUA,
+        ean: NUEVO,
+        estado: 'PROPUESTO',
+        presentacion: { id: 'p1', nombre: 'Botella de agua 600 ml', tamano: 0.6 },
+      },
     });
     await escanear();
-    await screen.findByText(/No conocemos este código/);
+    const hoja = await screen.findByRole('dialog', { name: 'Código nuevo' });
+    expect(hoja).toHaveTextContent(NUEVO);
+    expect(within(hoja).queryByDisplayValue(NUEVO)).not.toBeInTheDocument();
+    expect(within(hoja).queryByRole('button', { name: 'Solo guardar el código' })).toBeNull();
+    await userEvent.type(within(hoja).getByRole('searchbox', { name: 'Categoría' }), 'agua');
+    await userEvent.click(await within(hoja).findByRole('button', { name: /Agua potable/ }));
+    await userEvent.click(
+      await within(hoja).findByRole('radio', { name: 'Botella de agua 600 ml' }),
+    );
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Asociar y seguir' }));
+    const linea = await screen.findByRole('listitem', { name: 'Agua potable' });
+    expect(within(linea).getByText('Sin confirmar')).toBeInTheDocument();
+    expect(await cuerpoDe('POST /api/donaciones/codigos')).toEqual({
+      ean: NUEVO,
+      presentacionId: 'p1',
+    });
+    expect(peticiones()).not.toContain('POST /api/presentaciones');
+  });
 
-    leera(EAN);
+  it('una presentación nueva se propone junto con el código, sin crearla aparte', async () => {
+    leera(NUEVO);
+    pantalla({
+      [`GET /api/donaciones/codigos/${NUEVO}`]: desconocido,
+      'GET /api/categorias/buscar': [AGUA_CAT],
+      'GET /api/presentaciones': [BOTELLA],
+      'POST /api/donaciones/codigos': {
+        ...AGUA,
+        ean: NUEVO,
+        estado: 'PROPUESTO',
+        presentacion: { id: 'p9', nombre: 'Bolsa 6 L', tamano: 6 },
+      },
+    });
     await escanear();
-
+    const hoja = await screen.findByRole('dialog', { name: 'Código nuevo' });
+    await userEvent.type(within(hoja).getByRole('searchbox', { name: 'Categoría' }), 'agua');
+    await userEvent.click(await within(hoja).findByRole('button', { name: /Agua potable/ }));
+    await within(hoja).findByRole('radio', { name: 'Botella de agua 600 ml' });
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Nueva presentación' }));
+    const nueva = await screen.findByRole('dialog', { name: 'Nueva presentación' });
+    await userEvent.type(within(nueva).getByLabelText('Nombre'), 'Bolsa 6 L');
+    await userEvent.type(within(nueva).getByLabelText('Tamaño'), '6');
+    await userEvent.click(within(nueva).getByRole('button', { name: 'Crear presentación' }));
+    await waitFor(() =>
+      expect(screen.queryByRole('dialog', { name: 'Nueva presentación' })).toBeNull(),
+    );
+    expect(within(hoja).getByRole('radio', { name: 'Bolsa 6 L' })).toBeChecked();
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Asociar y seguir' }));
     await screen.findByRole('listitem', { name: 'Agua potable' });
-    expect(screen.queryByText(/No conocemos este código/)).not.toBeInTheDocument();
+    expect(await cuerpoDe('POST /api/donaciones/codigos')).toEqual({
+      ean: NUEVO,
+      presentacionNueva: { categoriaId: 'c1', nombre: 'Bolsa 6 L', tamano: 6 },
+    });
+    expect(peticiones()).not.toContain('POST /api/presentaciones');
+  });
+
+  it('«Ahora no» cierra la hoja sin proponer nada', async () => {
+    leera(NUEVO);
+    pantalla({ [`GET /api/donaciones/codigos/${NUEVO}`]: desconocido });
+    await escanear();
+    const hoja = await screen.findByRole('dialog', { name: 'Código nuevo' });
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Ahora no' }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(peticiones().filter((p) => p.startsWith('POST'))).toEqual([]);
   });
 
   it('«Vence (opcional)» solo en las perecederas', async () => {
