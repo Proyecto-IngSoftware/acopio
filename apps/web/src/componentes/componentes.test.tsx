@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router';
 import { vi } from 'vitest';
 import { violacionesGraves } from '../pruebas/accesibilidad';
 import { Boton, EnlaceBoton } from './Boton';
+import { ChipsEstado } from './ChipsEstado';
 import { Esqueleto } from './Esqueleto';
 import { EstadoError } from './EstadoError';
 import { EstadoVacio } from './EstadoVacio';
@@ -65,5 +66,38 @@ describe('estados', () => {
       </MemoryRouter>,
     );
     expect(await violacionesGraves(container)).toEqual([]);
+  });
+});
+
+describe('ChipsEstado', () => {
+  const opciones = [
+    { valor: 'todos' as const, texto: 'Todos', cuenta: 3 },
+    { valor: 'falta' as const, texto: 'Falta', cuenta: 1, punto: 'bg-secondary-container' },
+    { valor: 'sobra' as const, texto: 'De sobra', cuenta: 0, punto: 'bg-tertiary-container' },
+  ];
+
+  it('no dibuja un chip con 0 y marca el elegido', async () => {
+    const alCambiar = vi.fn();
+    render(
+      <ChipsEstado etiqueta="Filtrar" valor="todos" alCambiar={alCambiar} opciones={opciones} />,
+    );
+    expect(screen.getByRole('button', { name: 'Todos 3' })).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByRole('button', { name: 'Falta 1' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
+    expect(screen.queryByRole('button', { name: /De sobra/ })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Falta 1' }));
+    expect(alCambiar).toHaveBeenCalledWith('falta');
+  });
+
+  it('el elegido se dibuja aunque cuente 0', () => {
+    render(
+      <ChipsEstado etiqueta="Filtrar" valor="sobra" alCambiar={vi.fn()} opciones={opciones} />,
+    );
+    expect(screen.getByRole('button', { name: 'De sobra 0' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
   });
 });

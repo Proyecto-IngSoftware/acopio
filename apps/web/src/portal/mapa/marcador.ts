@@ -57,28 +57,30 @@ export function htmlPunto(o: OpcionesPunto) {
   return `<div aria-hidden="true" class="flex flex-col items-center gap-1${o.apagado ? ' opacity-45' : ''}">${etiqueta}<div class="flex ${tamano} items-center justify-center rounded-[999px] border-2 border-surface-container-lowest shadow-md ${o.circulo} ${anillo(o.elegido)}">${icono(o.icono)}</div></div>`;
 }
 
-const ESTILO_ESTADO: Record<EstadoMapa, { clases: string; icono: string; circulo: string }> = {
-  falta: {
-    clases: 'bg-secondary-container text-on-secondary',
-    icono: 'priority_high',
-    circulo: 'bg-secondary-container text-on-secondary',
-  },
-  sobra: {
-    clases: 'bg-tertiary-container text-on-primary',
-    icono: 'inventory_2',
-    circulo: 'bg-tertiary-container text-on-primary',
-  },
-  aldia: {
-    clases: 'bg-primary-fixed text-primary',
-    icono: 'check',
-    circulo: 'bg-primary-container text-on-primary',
-  },
-  norecibe: {
-    clases: 'bg-surface-container-high text-on-surface-variant',
-    icono: 'block',
-    circulo: 'bg-on-surface-variant text-on-primary',
-  },
-};
+/** Clases e ícono de cada estado: la etiqueta, y el círculo del punto. */
+export const ESTILO_ESTADO: Record<EstadoMapa, { clases: string; icono: string; circulo: string }> =
+  {
+    falta: {
+      clases: 'bg-secondary-container text-on-secondary',
+      icono: 'priority_high',
+      circulo: 'bg-secondary-container text-on-secondary',
+    },
+    sobra: {
+      clases: 'bg-tertiary-container text-on-primary',
+      icono: 'inventory_2',
+      circulo: 'bg-tertiary-container text-on-primary',
+    },
+    aldia: {
+      clases: 'bg-primary-fixed text-primary',
+      icono: 'check',
+      circulo: 'bg-primary-container text-on-primary',
+    },
+    norecibe: {
+      clases: 'bg-surface-container-high text-on-surface-variant',
+      icono: 'block',
+      circulo: 'bg-on-surface-variant text-on-primary',
+    },
+  };
 
 /** Cada punto se distingue por forma e ícono, no solo por color (RNF-11): el acopio activo es un
  *  círculo `warehouse` con la etiqueta de su estado, el pausado gris con `pause` y el de

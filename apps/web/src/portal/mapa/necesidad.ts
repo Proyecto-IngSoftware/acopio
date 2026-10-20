@@ -22,7 +22,7 @@ const mayusculas = (t: string) => t.toLocaleUpperCase('es-CO');
 const cuenta = (): Record<EstadoMapa, number> => ({ falta: 0, sobra: 0, aldia: 0, norecibe: 0 });
 
 /** Solo los acopios operados y activos muestran etiqueta. */
-const muestraEtiqueta = (a: AcopioPublico) => a.estado === 'ACTIVO' && a.tipo === 'OPERADO';
+export const muestraEtiqueta = (a: AcopioPublico) => a.estado === 'ACTIVO' && a.tipo === 'OPERADO';
 
 /** Estado de una categoría en un acopio: «no recibe» gana sobre las demás listas. */
 export function estadoDeCategoria(
