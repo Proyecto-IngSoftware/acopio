@@ -17,7 +17,9 @@ en el mismo cambio. Quedó hecho, con los doce recorridos en verde en local.
 
 | PR o commit | Qué trae |
 |---|---|
-| Rama `entrada-unica` | `identidad` a DAO: cinco DAO nuevos, y el guard, los servicios y el proveedor local ya no inyectan Prisma ([ADR-0019](../../02-arquitectura/adr/ADR-0019-dao-sobre-prisma.md)). `POST /api/auth/sesion` acepta un correo o un nombre de usuario para cualquier cuenta y sale `POST /api/auth/donador/sesion`. C01 «Entrar a Acopio» para todos; P13 sin sesión solo crea la cuenta de donador. El correo «Ya tienes una cuenta» enlaza a `/entrar`. Contrato, tipos, recorridos, requisitos, guía de escenarios y los README de C01 y P13 |
+| [#156](https://github.com/Proyecto-IngSoftware/acopio/pull/156), rama `entrada-unica` | `identidad` a DAO: cinco DAO nuevos, y el guard, los servicios y el proveedor local ya no inyectan Prisma ([ADR-0019](../../02-arquitectura/adr/ADR-0019-dao-sobre-prisma.md)). `POST /api/auth/sesion` acepta un correo o un nombre de usuario para cualquier cuenta y sale `POST /api/auth/donador/sesion`. C01 «Entrar a Acopio» para todos; P13 sin sesión solo crea la cuenta de donador. El correo «Ya tienes una cuenta» enlaza a `/entrar`. Contrato, tipos, recorridos, requisitos, guía de escenarios y los README de C01 y P13 |
+| [#157](https://github.com/Proyecto-IngSoftware/acopio/pull/157), rama `revision-entrada-unica` | Arreglos de la revisión independiente: el mensaje de error de C01 según el estado y el aviso sin conexión, y `?volver=` sin caracteres de control. `/entrar` dentro del marco del portal, con la barra de secciones y el botón «Entrar». Nace P-080 |
+| [#158](https://github.com/Proyecto-IngSoftware/acopio/pull/158), rama `correo-credencial` | P-080: al cambiar el correo de una cuenta activa, también cambia el de su credencial (`cambiarCorreo` en los dos proveedores) |
 
 Fuera del repositorio: las maquetas de C01 y P13 se publicaron en sus páginas de siempre, y
 Joseph las aprobó el mismo día.
@@ -34,7 +36,13 @@ y el plan,
 - Web: 1029 de 1029.
 - Recorridos en local, con la API reconstruida: los doce en verde (detalle en
   [recorridos.md](../recorridos.md#últimos-resultados)).
-- Lint, tipos, depcruise y colores, antes del PR.
+- Lint, tipos, depcruise y colores, antes de cada PR.
+- #157: web 1033 de 1033 e integración 504 de 504. En el servidor, después del despliegue,
+  `/entrar` muestra la cabecera, el botón «Entrar» y la barra de secciones (captura con
+  Chromium a 360 × 640).
+- #158: integración 506 de 506, con las dos pruebas nuevas de `usuarios.int.test.ts`, que antes
+  del arreglo fallaban con un 401. El camino de Supabase no se probó en el servidor: habría que
+  crear una cuenta y cambiarle el correo en los datos de la demo.
 
 ## Decisiones
 
@@ -90,5 +98,10 @@ Nada de esta sesión. P-080 quedó resuelto.
 
 ## Depende de Joseph
 
-- Ensayar la presentación con la entrada nueva (fila 4 del
-  [plan de acción](../../05-planes/plan-de-accion.md)).
+Todo está en el [plan de acción](../../05-planes/plan-de-accion.md):
+
+- Fila 2: subir `docs/entregas/Acopio - Avances IS1.docx` a OneDrive antes del 22.
+- Fila 4: ensayar la presentación del 23 con la entrada nueva. Si el navegador todavía muestra
+  «Entrar a la consola», tocar «Actualizar».
+- Fila 5 ([#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58)): el 20, revisar el
+  escenario 15; el 24, los escenarios que gastan la demo (7, 8, 18 a 20, 22, 23 y 28 a 31).
