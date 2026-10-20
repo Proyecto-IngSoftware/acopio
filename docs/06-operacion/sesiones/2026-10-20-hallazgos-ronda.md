@@ -1,16 +1,18 @@
 ---
-title: "Sesión 2026-10-20 · Hallazgos de la ronda, escenario 15 y escáner"
+title: "Sesión 2026-10-20 · Hallazgos de la ronda, escáner y presentaciones"
 type: informe
 tags: [operacion, sesion]
 estado: vigente
 actualizado: 2026-10-20
 ---
 
-# Sesión 2026-10-20 · Hallazgos de la ronda, escenario 15 y escáner
+# Sesión 2026-10-20 · Hallazgos de la ronda, escáner y presentaciones
 
 Se confirmó el cierre de la sesión del 19, se revisó el escenario 15 en el servidor y se
 arreglaron dos hallazgos de la ronda por rol: #151 y #152 (PR #160). En una segunda parte se
-cerró la fila 2 del plan y se buscó por qué el escáner no lee en el teléfono (#40).
+cerró la fila 2 del plan y se buscó por qué el escáner no lee en el teléfono (#40). En la tercera
+se diseñaron, construyeron y fusionaron las presentaciones de códigos de barras y el selector de
+unidades (PR 164, PR 165 y PR 166).
 
 ## Qué cambió
 
@@ -76,14 +78,10 @@ todavía no se recibe. Se corrigieron la guía de escenarios y la fila 5 del pla
 - El 24, los escenarios que gastan la demo
   ([#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58)).
 
-- Presentaciones, códigos y unidades, después del 23
-  ([#163](https://github.com/Proyecto-IngSoftware/acopio/issues/163),
-  [plan](../../05-planes/2026-10-20-presentaciones.md)).
+- Presentaciones, códigos y unidades: ver la parte 3.
 
 ## Depende de Joseph
 
-- Aprobar en Stitch las maquetas de presentaciones, C18 y recepción (tarea 9 del
-  [plan](../../05-planes/2026-10-20-presentaciones.md)).
 
 - Autorizar, o no, la prueba del cambio de correo con Supabase en el servidor usando una cuenta
   desechable ([P-080](../../01-requerimientos/pendientes.md)).
@@ -136,22 +134,40 @@ la rama `presentaciones`, sin PR hasta después de la sustentación del 23
 
 - Los códigos de barras no se borran, se corrigen; sale la ruta `DELETE`.
 - El Operador es la fuente de verdad: corregir una línea a una presentación propuesta la valida.
-- El despliegue y el PR esperan a después del 23.
+- Fusionar el mismo 20, antes de la sustentación. Al principio se había acordado esperar al 23.
 
 Las decisiones de Claude y los cambios respecto del diseño están en «Cambios al construir» del
 [diseño](../../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
 
+### Cierre
+
+- La rama se fusionó en `main` con el PR 165, con el CI en verde, y el PR 166 dejó la fila 20 del
+  [plan de acción](../../05-planes/plan-de-accion.md) en curso. #163 sigue abierto, con un
+  comentario de lo que falta.
+- El servidor de pruebas se desplegó solo al fusionar. `GET /api/presentaciones` responde 401 (la
+  ruta existe), así que la migración corrió. No se revisaron los datos de la demo del servidor.
+
+### Errores y correcciones
+
+- Un implementador reportó un commit que un hook había rechazado. Se notó porque el diff de la
+  revisión salió vacío, y el commit se hizo después.
+- Otro corrió `prettier --write src` y reformateó `esquema.d.ts`, que es un archivo generado. Se
+  restauró la versión que genera el contrato.
+- La revisión final encontró dos fallas en la recepción: una línea sin corrección tomaba el
+  tamaño que el código tenía en ese momento, y una línea recibida en cero validaba el código. Las
+  dos quedaron arregladas con pruebas antes de fusionar.
+- El clasificador de permisos de Bash dejó de responder un rato y un agente se cortó por el
+  límite de uso; se retomó donde iba.
+
 ### Pendiente
 
-- Desplegar y migrar el servidor de pruebas y abrir el PR de la rama `presentaciones`, con
-  `Closes #163`, después del 23 (tarea 14, pasos 3 y 4 del
-  [plan](../../05-planes/2026-10-20-presentaciones.md), fila 20 del
-  [plan de acción](../../05-planes/plan-de-accion.md)).
-- Ajustar a mano la demo del servidor tras la migración:
-  [P-082](../../01-requerimientos/pendientes.md).
+- Antes de la sustentación del 23, revisar la demo del servidor tras la migración y ajustarla
+  a mano: [P-082](../../01-requerimientos/pendientes.md). Los nombres de las presentaciones que
+  creó la migración llevan punto decimal («Arroz 0.5 kg»).
 - Decidir el tope de 10.000 en el conteo físico:
   [P-083](../../01-requerimientos/pendientes.md).
-- Revisión de Joseph de las pantallas de la rama y repetir el escáner en el teléfono:
+- Revisar las pantallas en el servidor y repetir el escáner en el teléfono, ahora también con
+  «Escribir el número»:
   [#163](https://github.com/Proyecto-IngSoftware/acopio/issues/163) y
   [#40](https://github.com/Proyecto-IngSoftware/acopio/issues/40).
 - Los menores diferidos de cada tarea (carrera al confirmar el tamaño de un paquete, `LIMIT 500`
