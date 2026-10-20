@@ -6,8 +6,10 @@ import { useEffect } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import type { AcopioPublico, ZonaPublica } from '../../api/red';
 import { ATRIBUCION, CENTRO_INICIAL, MOSAICOS } from '../../componentes/mapa/MapaLeaflet';
+import type { EtiquetaMapa } from './necesidad';
 import { claveEncuadre, leerClave } from './encuadre';
 import {
+  altoPunto,
   etiquetaMarcador,
   htmlGrupo,
   htmlMarcador,
@@ -16,14 +18,27 @@ import {
   type TipoGrupo,
 } from './marcador';
 
-// La píldora mide hasta unos 140 px; el ancla es su punta de abajo, sobre el punto
-const marcador = (a: AcopioPublico, elegido: boolean) =>
-  L.divIcon({
+// La píldora mide hasta unos 140 px y el punto con etiqueta unos 200; el ancla es la base, sobre el punto
+const marcador = (
+  a: AcopioPublico,
+  elegido: boolean,
+  etiqueta: EtiquetaMapa | null,
+  apagado: boolean,
+) => {
+  const punto = a.tipo === 'OPERADO' && a.estado !== 'PAUSADO';
+  const alto = punto ? altoPunto(elegido, !!etiqueta && !apagado) : 36;
+  const ancho = punto ? 200 : 140;
+  return L.divIcon({
     className: '',
-    html: htmlMarcador(a, elegido),
-    iconSize: [140, 36],
-    iconAnchor: [70, 36],
+    html: htmlMarcador(a, elegido, etiqueta, apagado),
+    iconSize: [ancho, alto],
+    iconAnchor: [ancho / 2, alto],
   });
+};
+
+// «FALTA: Arroz» se lee «Falta: Arroz»: solo la palabra en mayúsculas del comienzo baja a minúsculas
+const capitalizar = (t: string) =>
+  t.replace(/^[A-ZÁÉÍÓÚÑ ]+/, (m) => m.charAt(0) + m.slice(1).toLowerCase());
 
 const grupo = (tipo: TipoGrupo) => (c: L.MarkerCluster) =>
   L.divIcon({ className: '', html: htmlGrupo(tipo, c.getChildCount()), iconSize: [40, 40] });
@@ -32,10 +47,14 @@ function Marcadores({
   acopios,
   elegido,
   alElegir,
+  etiquetas,
+  apagados,
 }: {
   acopios: AcopioPublico[];
   elegido: string | null;
   alElegir: (id: string) => void;
+  etiquetas: Map<string, EtiquetaMapa>;
+  apagados: Set<string>;
 }) {
   const mapa = useMap();
   useEffect(() => {
@@ -51,10 +70,14 @@ function Marcadores({
       }),
     };
     for (const a of acopios) {
+      const etiqueta = etiquetas.get(a.id) ?? null;
+      const titulo = etiqueta
+        ? `${etiquetaMarcador(a)}. ${capitalizar(etiqueta.texto)}`
+        : etiquetaMarcador(a);
       L.marker([a.lat, a.lng], {
-        icon: marcador(a, a.id === elegido),
-        title: etiquetaMarcador(a),
-        alt: etiquetaMarcador(a),
+        icon: marcador(a, a.id === elegido, etiqueta, apagados.has(a.id)),
+        title: titulo,
+        alt: titulo,
         keyboard: true,
       })
         .on('click', () => alElegir(a.id))
@@ -66,7 +89,7 @@ function Marcadores({
       mapa.removeLayer(capas.acopio);
       mapa.removeLayer(capas.referenciado);
     };
-  }, [mapa, acopios, elegido, alElegir]);
+  }, [mapa, acopios, elegido, alElegir, etiquetas, apagados]);
   return null;
 }
 
@@ -149,10 +172,14 @@ interface Props {
   zonas?: ZonaPublica[];
   zonaElegida?: string | null;
   alElegirZona?: (id: string) => void;
+  etiquetas?: Map<string, EtiquetaMapa>;
+  apagados?: Set<string>;
 }
 
 const SIN_ZONAS: ZonaPublica[] = [];
 const nada = () => {};
+const SIN_ETIQUETAS = new Map<string, EtiquetaMapa>();
+const SIN_APAGADOS = new Set<string>();
 
 /** Mapa público de acopios (P5), con marcadores agrupados (RF-RED-002) y las zonas con
  *  necesidad (HU-13.1). */
@@ -164,6 +191,8 @@ export default function MapaAcopios({
   zonas = SIN_ZONAS,
   zonaElegida = null,
   alElegirZona = nada,
+  etiquetas = SIN_ETIQUETAS,
+  apagados = SIN_APAGADOS,
 }: Props) {
   return (
     <MapContainer
@@ -175,7 +204,13 @@ export default function MapaAcopios({
       <TileLayer url={MOSAICOS} attribution={ATRIBUCION} />
       <Encuadre acopios={acopios} zonas={zonas} centro={cerca} />
       <Zonas zonas={zonas} elegida={zonaElegida} alElegir={alElegirZona} />
-      <Marcadores acopios={acopios} elegido={elegido} alElegir={alElegir} />
+      <Marcadores
+        acopios={acopios}
+        elegido={elegido}
+        alElegir={alElegir}
+        etiquetas={etiquetas}
+        apagados={apagados}
+      />
     </MapContainer>
   );
 }

@@ -1,4 +1,5 @@
 import type { AcopioPublico } from '../../api/red';
+import type { EstadoMapa, EtiquetaMapa } from './necesidad';
 
 /** Lo que anuncia el lector de pantalla al llegar a un marcador del mapa. */
 export const etiquetaMarcador = (a: AcopioPublico) =>
@@ -32,9 +33,62 @@ function pildora(clases: string, nombreIcono: string, texto: string, elegido: bo
   return `<div aria-hidden="true" class="flex flex-col items-center"><div class="flex items-center gap-1 whitespace-nowrap rounded-[999px] px-2.5 py-1 text-label-sm font-semibold shadow-md ${clases} ${anillo(elegido)}">${icono(nombreIcono)}${escapar(texto)}</div><div class="mt-0.5 h-1.5 w-4 rounded-[999px] bg-on-surface/25 blur-[1px]"></div></div>`;
 }
 
-/** Cada punto se distingue por forma e ícono, no solo por color (RNF-11): el acopio verde con
- *  `warehouse`, el pausado gris con `pause` y el de RedAcopio blanco con borde y `link`. */
-export function htmlMarcador(a: AcopioPublico, elegido: boolean) {
+export interface OpcionesPunto {
+  /** Clases del círculo: fondo y color del ícono. */
+  circulo: string;
+  icono: string;
+  etiqueta?: { clases: string; icono: string; texto: string } | null;
+  elegido: boolean;
+  apagado?: boolean;
+}
+
+/** Alto del punto en px, para que el ancla del marcador sea la base del círculo. */
+export const altoPunto = (elegido: boolean, conEtiqueta: boolean) =>
+  (elegido ? 40 : 32) + (conEtiqueta ? 32 : 0);
+
+/** Un círculo de 32 px (40 px con anillo si está elegido) con una etiqueta encima. Va con
+ *  aria-hidden: el lector de pantalla anuncia el title del marcador. */
+export function htmlPunto(o: OpcionesPunto) {
+  const etiqueta =
+    o.etiqueta && !o.apagado
+      ? `<div class="flex items-center gap-1 whitespace-nowrap rounded-[999px] border-2 border-surface-container-lowest px-2 py-1 text-label-sm font-bold shadow-md ${o.etiqueta.clases}">${icono(o.etiqueta.icono)}${escapar(o.etiqueta.texto)}</div>`
+      : '';
+  const tamano = o.elegido ? 'size-10' : 'size-8';
+  return `<div aria-hidden="true" class="flex flex-col items-center gap-1${o.apagado ? ' opacity-45' : ''}">${etiqueta}<div class="flex ${tamano} items-center justify-center rounded-[999px] border-2 border-surface-container-lowest shadow-md ${o.circulo} ${anillo(o.elegido)}">${icono(o.icono)}</div></div>`;
+}
+
+const ESTILO_ESTADO: Record<EstadoMapa, { clases: string; icono: string; circulo: string }> = {
+  falta: {
+    clases: 'bg-secondary-container text-on-secondary',
+    icono: 'priority_high',
+    circulo: 'bg-secondary-container text-on-secondary',
+  },
+  sobra: {
+    clases: 'bg-tertiary-container text-on-primary',
+    icono: 'inventory_2',
+    circulo: 'bg-tertiary-container text-on-primary',
+  },
+  aldia: {
+    clases: 'bg-primary-fixed text-primary',
+    icono: 'check',
+    circulo: 'bg-primary-container text-on-primary',
+  },
+  norecibe: {
+    clases: 'bg-surface-container-high text-on-surface-variant',
+    icono: 'block',
+    circulo: 'bg-on-surface-variant text-on-primary',
+  },
+};
+
+/** Cada punto se distingue por forma e ícono, no solo por color (RNF-11): el acopio activo es un
+ *  círculo `warehouse` con la etiqueta de su estado, el pausado gris con `pause` y el de
+ *  RedAcopio blanco con borde y `link`. */
+export function htmlMarcador(
+  a: AcopioPublico,
+  elegido: boolean,
+  etiqueta?: EtiquetaMapa | null,
+  apagado = false,
+) {
   const texto = nombreCorto(a.nombre);
   if (a.tipo === 'REFERENCIADO')
     return pildora(
@@ -50,12 +104,14 @@ export function htmlMarcador(a: AcopioPublico, elegido: boolean) {
       texto,
       elegido,
     );
-  return pildora(
-    'border-2 border-surface-container-lowest bg-primary-container text-on-primary',
-    'warehouse',
-    texto,
+  const e = etiqueta ? ESTILO_ESTADO[etiqueta.estado] : null;
+  return htmlPunto({
+    circulo: e?.circulo ?? 'bg-primary-container text-on-primary',
+    icono: 'warehouse',
+    etiqueta: etiqueta && e ? { clases: e.clases, icono: e.icono, texto: etiqueta.texto } : null,
     elegido,
-  );
+    apagado,
+  });
 }
 
 export type TipoGrupo = 'acopio' | 'referenciado';
