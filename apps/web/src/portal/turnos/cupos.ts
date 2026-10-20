@@ -42,7 +42,8 @@ export interface GrupoLugar {
   jornadas: JornadaPublica[];
 }
 
-/** Los colores de falta, al día y no recibe del mapa de acopios, con su ícono (RNF-11). */
+/** Los colores de falta, al día y no recibe del mapa de acopios, con su ícono (RNF-11), para que
+ *  los dos mapas se lean igual. La lista de jornadas conserva sus colores propios. */
 export const ESTILO_CUPOS: Record<EstadoCupos, { clases: string; icono: string; circulo: string }> =
   {
     faltan: { ...ESTILO_ESTADO.falta, icono: 'priority_high' },

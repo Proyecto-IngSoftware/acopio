@@ -288,3 +288,18 @@ it('una jornada sin coordenadas lo avisa bajo el mapa', async () => {
     await screen.findByText('1 jornada no tiene ubicación en el mapa; está en la lista.'),
   ).toBeInTheDocument();
 });
+
+it('«Quitar los filtros» conserva la vista', async () => {
+  responderSegun({ 'GET /api/turnos/jornadas': [] });
+  render(
+    envolver(
+      <>
+        <Jornadas />
+        <Ubicacion />
+      </>,
+      '/voluntariado?vista=lista&perfil=VETERINARIO',
+    ),
+  );
+  await userEvent.click(await screen.findByRole('button', { name: 'Quitar los filtros' }));
+  expect(screen.getByTestId('busqueda')).toHaveTextContent(/^\?vista=lista$/);
+});

@@ -1,4 +1,4 @@
-import { lazy, Suspense, useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { useAcopio } from '../../api/red';
 import {
@@ -16,11 +16,11 @@ import { Icono } from '../../componentes/Icono';
 import { Segmentado } from '../../componentes/Segmentado';
 import { diaBogota, diaSemana } from '../../formato';
 import { estadoCupos, porLugar, type EstadoCupos } from './cupos';
+// El mapa es la vista por defecto y esta pantalla ya se descarga al abrirla (rutas.tsx): Leaflet
+// viaja en su mismo fragmento y así se ahorra una ida y vuelta en 3G, como en P5 (I-02)
+import MapaJornadas from './MapaJornadas';
 import { NOMBRE_PERFIL } from './piezas';
 import { TarjetaJornada } from './TarjetaJornada';
-
-// Leaflet solo se descarga si alguien abre la vista de mapa
-const MapaJornadas = lazy(() => import('./MapaJornadas'));
 
 type Clave = 'lugar' | 'dia' | 'perfil';
 type Chip = 'todas' | Exclude<EstadoCupos, 'llena'>;
@@ -228,16 +228,17 @@ export function Jornadas() {
           alReintentar={() => void jornadas.refetch()}
         />
       ) : filtradas.length === 0 ? (
-        <SinJornadas hayFiltro={hayFiltro} alLimpiar={() => fijarParametros({})} />
+        <SinJornadas
+          hayFiltro={hayFiltro}
+          alLimpiar={() => fijarParametros(vista === 'lista' ? { vista } : {})}
+        />
       ) : vista === 'lista' ? (
         <Lista jornadas={filtradas} />
       ) : (
         <>
           {grupos.length > 0 ? (
             <div className="isolate h-[55vh] min-h-72 overflow-hidden rounded-xl border border-outline-variant">
-              <Suspense fallback={<Esqueleto etiqueta="Cargando el mapa" className="size-full" />}>
-                <MapaJornadas grupos={grupos} elegido={elegido} alElegir={elegir} />
-              </Suspense>
+              <MapaJornadas grupos={grupos} elegido={elegido} alElegir={elegir} />
             </div>
           ) : (
             <EstadoVacio titulo="Ninguna jornada en el mapa">

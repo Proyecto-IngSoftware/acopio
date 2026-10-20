@@ -58,8 +58,10 @@ el nombre va en el `title` del marcador y en el encabezado de sus jornadas.
 
 - Cabecera pública y barra inferior de los [componentes compartidos](../_compartidos/README.md).
   Stitch puso flecha de volver y avatar en una pantalla sin sesión.
-- Sin la pastilla «Disponible». Solo se marcan las llenas y las cerradas, en tono neutro, porque
-  el verde y el ámbar están reservados para el inventario.
+- Sin la pastilla «Disponible». En la lista solo se marcan las llenas y las cerradas, en tono
+  neutro. El mapa toma los colores de los estados del mapa de acopios: el rojo de falta para
+  «faltan», el verde de al día para «quedan cupos» y el gris de no recibe para «llena». Así los dos
+  mapas se leen igual (decisión del 2026-10-20).
 - La tarjeta llena no lleva el botón inactivo «Cupo completo»: la tarjeta entera abre la jornada.
 - El aviso de gente sin reserva suma la frase de RF-TUR-006 sobre reservas y personas presentes.
 - Armadas con los tokens, sin Stitch: la hoja de filtros, el error de cupo, la jornada cancelada
