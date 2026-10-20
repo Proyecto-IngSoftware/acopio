@@ -3,7 +3,7 @@ title: "Plan de acción del proyecto"
 type: plan
 tags: [plan, seguimiento, cronograma]
 estado: vigente
-actualizado: 2026-10-19
+actualizado: 2026-10-20
 ---
 
 # Plan de acción del proyecto
@@ -56,7 +56,7 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio. Generado y revisado renderizado. El 19 entraron las capturas nuevas de Causas y del mapa, con las plataformas y los puntos de RedAcopio, y el diagrama de paquetes con `importacion`. Ese mismo día entraron las capturas del tablero y del seguimiento, con el tablero al día. Falta subirlo a OneDrive | #47 | 2026-10-22 | 🟡 |
 | 3 | Lo que falta del Word de avances anteriores. Del Avance 4 ya está la captura del tablero; faltan el seguimiento del 9 de octubre con su captura, las filas de Brayan, Alejandra y Michael, la retrospectiva confirmada y regenerar el Word. Del Avance 2, la revisión de redacción ([P-012](../01-requerimientos/pendientes.md)) y la captura de la vista Board | #45, #23, #21 | 2026-10-22 | ⬜ |
 | 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes. La demo ya tiene el balance de la portada, los 85 puntos de RedAcopio en el mapa, las causas con su ilustración y los logos reales de sus fundaciones, y las otras plataformas con foto al final de Causas. El diagrama de paquetes tiene `importacion` desde el 19, medido con dependency-cruiser. Ese día, en el servidor, pasaron los recorridos públicos y entraron las cuatro cuentas de rol. También el 19 quedó una sola pantalla para entrar, `/entrar`, con la barra del portal. Falta que Joseph ensaye la presentación | #47 | 2026-10-23 | 🟡 |
-| 5 | Ronda de pruebas en el servidor, por rol, con los escenarios de `escenarios-por-rol.md`; cada hallazgo entra como issue `hallazgo`. El 19 se hicieron en el servidor los escenarios que no gastan la demo (#150 a #154). Quedan el 20 revisar el 15, y el 24 los que gastan datos: 7, 8, 18 a 20, 22, 23 y 28 a 31 | #58 | 2026-10-25 | 🟡 |
+| 5 | Ronda de pruebas en el servidor, por rol, con los escenarios de `escenarios-por-rol.md`; cada hallazgo entra como issue `hallazgo`. El 19 se hicieron en el servidor los escenarios que no gastan la demo (#150 a #154). Quedan el 21 revisar el 15 (el 20 Sal seguía en «no recibir», como debe: la fecha es el último día sin recibir), y el 24 los que gastan datos: 7, 8, 18 a 20, 22, 23 y 28 a 31 | #58 | 2026-10-25 | 🟡 |
 | 6 | Cierre del Sprint 2: Review historia por historia el 23, seguimiento de la semana 12 con captura y retrospectiva con una acción para el Sprint 3 | #47 | 2026-10-25 | ⬜ |
 
 ## Sprint 3: del 26 de octubre al 22 de noviembre
@@ -69,7 +69,7 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | 10 | Escáner probado con un teléfono y un código real contra el servidor | #40 | 2026-11-15 | ⬜ |
 | 11 | Review y retrospectiva del Sprint 3 | #51 | 2026-11-20 | ⬜ |
 | 12 | Bloque 6: bitácora enriquecida, transparencia y publicaciones. Es lo primero que se recorta | #37 | 2026-11-22 | ⬜ |
-| 13 | Deuda de las revisiones: menores de los bloques 1 a 3 (P-034, P-038 y los del Bloque 3) y la imagen que falta en Garage (P-058). Los del cierre del Bloque 5 (P-070, P-071, #129) quedaron hechos el 18 de octubre. De la ronda por rol del 19: los datos de inventario de más de 6 horas (#151), el «no recibir» de un acopio ajeno (#152) y la frase de la bitácora para un cambio de fecha (#153). De la revisión de la entrada única, el correo de una cuenta activa y su credencial (P-080) quedó hecho el 19 de octubre | #43, #151, #152, #153 | 2026-11-22 | 🟡 |
+| 13 | Deuda de las revisiones: menores de los bloques 1 a 3 (P-034, P-038 y los del Bloque 3) y la imagen que falta en Garage (P-058). Los del cierre del Bloque 5 (P-070, P-071, #129) quedaron hechos el 18 de octubre. De la ronda por rol del 19: los datos de inventario de más de 6 horas (#151), el «no recibir» de un acopio ajeno (#152), estos dos hechos el 20 de octubre, y la frase de la bitácora para un cambio de fecha (#153). De la revisión de la entrada única, el correo de una cuenta activa y su credencial (P-080) quedó hecho el 19 de octubre | #43, #153 | 2026-11-22 | 🟡 |
 | 14 | P5 de Stitch con el filtro viejo | #39 | 2026-11-22 | ⬜ |
 | 15 | Íconos que se ven como texto mientras baja su fuente | #41 | 2026-11-22 | ⬜ |
 
@@ -201,3 +201,7 @@ Sprint 3.
 - 2026-10-19: cierre de la sesión. `/entrar` va dentro del marco del portal y P-080
   quedó resuelto. La fila 4 nombra la entrada nueva. Para Joseph quedan las filas 2, 4 y
   5.
+- 2026-10-20: arreglados #151 y #152. El inventario atenúa la fila con más de 6 horas sin
+  movimientos y lo advierte, y «no recibir» niega desde que abre un acopio que no está asignado.
+  El escenario 15 se revisa el 21: la fecha de «no recibir hasta» es el último día sin recibir, y
+  el 20 Sal seguía marcada en Chapinero, como debía.
