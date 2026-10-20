@@ -15,14 +15,23 @@ export function aperturaPublica(a: Pick<AcopioPublico, 'estado' | 'abiertoAhora'
 
 export const km = (d: number) => `${d.toLocaleString('es-CO', { maximumFractionDigits: 1 })} km`;
 
-/** La etiqueta del mapa como píldora, en el color y con el ícono de su estado. */
-export function PildoraEstado({ etiqueta }: { etiqueta: EtiquetaMapa }) {
+/** La etiqueta del mapa como píldora, en el color y con el ícono de su estado. La `mini` es la
+ *  de la leyenda: unos 20 px de alto, con el ícono de 12 px. */
+export function PildoraEstado({
+  etiqueta,
+  mini = false,
+}: {
+  etiqueta: EtiquetaMapa;
+  mini?: boolean;
+}) {
   const e = ESTILO_ESTADO[etiqueta.estado];
+  // La hoja de Material Symbols fija 24 px y le gana a text-[12px]: por eso va con «!»
+  const tamano = mini
+    ? 'shrink-0 gap-0.5 px-1.5 py-0.5 text-label-caps'
+    : 'gap-1 px-2 py-0.5 text-label-sm font-bold';
   return (
-    <span
-      className={`inline-flex w-fit items-center gap-1 rounded-[999px] px-2 py-0.5 text-label-sm font-bold ${e.clases}`}
-    >
-      <Icono nombre={e.icono} className="text-[14px]" />
+    <span className={`inline-flex w-fit items-center rounded-[999px] ${tamano} ${e.clases}`}>
+      <Icono nombre={e.icono} className={mini ? 'text-[12px]!' : 'text-[14px]'} />
       {etiqueta.texto}
     </span>
   );

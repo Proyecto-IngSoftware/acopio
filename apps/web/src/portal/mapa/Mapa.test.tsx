@@ -275,6 +275,33 @@ it('la vista de mapa carga el mapa y deja pasar a la lista', async () => {
   expect(await screen.findByRole('link', { name: /Acopio Chapinero/ })).toBeInTheDocument();
 });
 
+it('la leyenda del mapa explica cada estado en su fila, con la píldora mini', async () => {
+  responderSegun(RESPUESTAS);
+  pantalla('/mapa');
+  await screen.findByText('mapa de acopios');
+  const leyenda = await screen.findByRole('list', { name: 'Estados del inventario' });
+  const filas = within(leyenda).getAllByRole('listitem');
+  expect(filas.map((f) => f.textContent)).toEqual([
+    'priority_highFALTA le falta al menos una categoría',
+    'inventory_2DE SOBRA tiene más de lo que necesita en alguna',
+    'checkAL DÍA todo está dentro de lo que necesita',
+    'blockNO RECIBE hay algo que hoy no está recibiendo',
+  ]);
+  const pildora = within(filas[0]!).getByText('FALTA');
+  expect(pildora).toHaveClass('text-label-caps', 'px-1.5', 'bg-secondary-container');
+});
+
+it('sin necesidades la leyenda no muestra los estados', async () => {
+  const { 'GET /api/publico/necesidades': _, ...sinNecesidades } = RESPUESTAS;
+  responderSegun(sinNecesidades);
+  pantalla('/mapa');
+  await screen.findByText('mapa de acopios');
+  await waitFor(() =>
+    expect(peticiones().some((u) => u.includes('/api/publico/necesidades'))).toBe(true),
+  );
+  expect(screen.queryByRole('list', { name: 'Estados del inventario' })).not.toBeInTheDocument();
+});
+
 it('no tiene violaciones graves de accesibilidad', async () => {
   responderSegun(RESPUESTAS);
   const { container } = pantalla();
@@ -392,7 +419,7 @@ describe('puntos de RedAcopio (pieza E)', () => {
     pantalla('/mapa');
     expect(await screen.findByRole('button', { name: 'acopio r1' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'acopio r2' })).not.toBeInTheDocument();
-    expect(screen.getByText('Acopio: inventario al día')).toBeInTheDocument();
+    expect(screen.getByText('Acopio sin etiqueta: no publica su inventario')).toBeInTheDocument();
     expect(screen.getByText('RedAcopio Bogotá: datos de su fuente')).toBeInTheDocument();
   });
 

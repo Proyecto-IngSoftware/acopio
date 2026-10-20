@@ -42,16 +42,56 @@ export interface OpcionesPunto {
   apagado?: boolean;
 }
 
+/** Largo máximo de la etiqueta del punto; el title del marcador lleva el texto completo. */
+export const LARGO_ETIQUETA = 24;
+
+// Lo que va al final y no se corta: el estado de «ARROZ DE SOBRA» y el «+2» de las demás
+const COLA = /(?: (?:DE SOBRA|AL DÍA))?(?: \+\d+)?$/;
+
+/** Acorta la etiqueta a `max` letras: corta la categoría con «…» y deja el final (el estado
+ *  que va después de la categoría y el «+N»). */
+export function etiquetaCorta(texto: string, max: number) {
+  if (texto.length <= max) return texto;
+  const cola = COLA.exec(texto)?.[0] ?? '';
+  const cabe = Math.max(max - cola.length - 1, 1);
+  return `${texto
+    .slice(0, texto.length - cola.length)
+    .slice(0, cabe)
+    .trimEnd()}…${cola}`;
+}
+
+// Los números salen de las clases de htmlPunto. El círculo es size-8 (32 px) o size-10 (40 px)
+// si está elegido; la etiqueta es h-9 (36 px) y va separada del círculo por gap-1 (4 px).
+// El anillo (ring-4) es una sombra: no cambia el alto.
+const CIRCULO = { normal: 32, elegido: 40 };
+const ALTO_ETIQUETA = 36;
+const GAP = 4;
+
 /** Alto del punto en px, para que el ancla del marcador sea la base del círculo. */
 export const altoPunto = (elegido: boolean, conEtiqueta: boolean) =>
-  (elegido ? 40 : 32) + (conEtiqueta ? 32 : 0);
+  (elegido ? CIRCULO.elegido : CIRCULO.normal) + (conEtiqueta ? GAP + ALTO_ETIQUETA : 0);
 
-/** Un círculo de 32 px (40 px con anillo si está elegido) con una etiqueta encima. Va con
+// La etiqueta mide su borde (2 × 2), el px-2 (2 × 8), el ícono (24: la hoja de Material Symbols
+// fija 24 px sobre el text-[16px]), el gap-1 y unos 8 px por letra en la letra de 12 px de Leaflet
+const FIJO_ETIQUETA = 4 + 16 + 24 + 4;
+const POR_LETRA = 8;
+
+/** Ancho del ícono del marcador: el círculo con su anillo (40 px, 48 elegido) sin etiqueta, y lo
+ *  que mida la etiqueta con ella. Sin etiqueta no queda una franja invisible que tape a otros. */
+export function anchoPunto(elegido: boolean, texto: string | null) {
+  const circulo = elegido ? 48 : 40;
+  if (!texto) return circulo;
+  const letras = etiquetaCorta(texto, LARGO_ETIQUETA).length;
+  return Math.max(circulo, FIJO_ETIQUETA + letras * POR_LETRA);
+}
+
+/** Un círculo de 32 px (40 px con anillo si está elegido) con una etiqueta encima, de alto fijo
+ *  para que altoPunto coincida. Va con
  *  aria-hidden: el lector de pantalla anuncia el title del marcador. */
 export function htmlPunto(o: OpcionesPunto) {
   const etiqueta =
     o.etiqueta && !o.apagado
-      ? `<div class="flex items-center gap-1 whitespace-nowrap rounded-[999px] border-2 border-surface-container-lowest px-2 py-1 text-label-sm font-bold shadow-md ${o.etiqueta.clases}">${icono(o.etiqueta.icono)}${escapar(o.etiqueta.texto)}</div>`
+      ? `<div class="flex h-9 items-center gap-1 whitespace-nowrap rounded-[999px] border-2 border-surface-container-lowest px-2 text-label-sm font-bold shadow-md ${o.etiqueta.clases}">${icono(o.etiqueta.icono)}${escapar(etiquetaCorta(o.etiqueta.texto, LARGO_ETIQUETA))}</div>`
       : '';
   const tamano = o.elegido ? 'size-10' : 'size-8';
   return `<div aria-hidden="true" class="flex flex-col items-center gap-1${o.apagado ? ' opacity-45' : ''}">${etiqueta}<div class="flex ${tamano} items-center justify-center rounded-[999px] border-2 border-surface-container-lowest shadow-md ${o.circulo} ${anillo(o.elegido)}">${icono(o.icono)}</div></div>`;

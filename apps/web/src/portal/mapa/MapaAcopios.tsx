@@ -10,6 +10,7 @@ import type { EtiquetaMapa } from './necesidad';
 import { claveEncuadre, leerClave } from './encuadre';
 import {
   altoPunto,
+  anchoPunto,
   etiquetaMarcador,
   htmlGrupo,
   htmlMarcador,
@@ -18,7 +19,8 @@ import {
   type TipoGrupo,
 } from './marcador';
 
-// La píldora mide hasta unos 140 px y el punto con etiqueta unos 200; el ancla es la base, sobre el punto
+// La píldora mide hasta unos 140 px; el punto, lo que mida su etiqueta o su círculo (anchoPunto).
+// El ancla es la base, sobre el punto
 const marcador = (
   a: AcopioPublico,
   elegido: boolean,
@@ -26,8 +28,9 @@ const marcador = (
   apagado: boolean,
 ) => {
   const punto = a.tipo === 'OPERADO' && a.estado !== 'PAUSADO';
-  const alto = punto ? altoPunto(elegido, !!etiqueta && !apagado) : 36;
-  const ancho = punto ? 200 : 140;
+  const texto = etiqueta && !apagado ? etiqueta.texto : null;
+  const alto = punto ? altoPunto(elegido, !!texto) : 36;
+  const ancho = punto ? anchoPunto(elegido, texto) : 140;
   return L.divIcon({
     className: '',
     html: htmlMarcador(a, elegido, etiqueta, apagado),

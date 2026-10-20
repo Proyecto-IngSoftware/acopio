@@ -2,6 +2,9 @@ import { screen } from '@testing-library/react';
 
 import { acopioDePrueba, referenciadoDePrueba } from '../../pruebas/datos-red';
 import {
+  altoPunto,
+  anchoPunto,
+  etiquetaCorta,
   etiquetaMarcador,
   htmlGrupo,
   htmlMarcador,
@@ -122,4 +125,62 @@ describe('el punto del acopio activo con la etiqueta de su estado', () => {
       '&lt;b&gt;',
     );
   });
+});
+
+describe('etiquetaCorta', () => {
+  it('deja igual lo que cabe', () => {
+    expect(etiquetaCorta('FALTA: Arroz +2', 24)).toBe('FALTA: Arroz +2');
+    expect(etiquetaCorta('X'.repeat(24), 24)).toBe('X'.repeat(24));
+  });
+  it('acorta la categoría con «…» antes del +N', () => {
+    expect(etiquetaCorta('FALTA: Alimento para animales +2', 24)).toBe('FALTA: Alimento para… +2');
+    expect(etiquetaCorta('FALTA: Alimento para animales +2', 24)).toHaveLength(24);
+  });
+  it('sin +N acorta el final', () => {
+    expect(etiquetaCorta('NO RECIBE: Alimento para animales', 24)).toBe('NO RECIBE: Alimento par…');
+  });
+  it('con la categoría delante conserva el estado del final', () => {
+    expect(etiquetaCorta('ALIMENTO PARA ANIMALES DE SOBRA', 24)).toBe('ALIMENTO PARA… DE SOBRA');
+    expect(etiquetaCorta('ALIMENTO PARA ANIMALES AL DÍA', 24)).toBe('ALIMENTO PARA AN… AL DÍA');
+  });
+  it('no deja un espacio antes de «…»', () => {
+    expect(etiquetaCorta('FALTA: Agua potable embotellada', 21)).toBe('FALTA: Agua potable…');
+  });
+});
+
+it('el marcador dibuja la etiqueta corta; el title lleva la completa', () => {
+  const html = htmlMarcador(acopioDePrueba(), false, {
+    estado: 'falta',
+    texto: 'FALTA: Alimento para animales +2',
+  });
+  expect(html).toContain('FALTA: Alimento para… +2');
+  expect(html).not.toContain('animales');
+});
+
+// El alto sale de las clases de htmlPunto: size-8 o size-10, gap-1 y h-9 en la etiqueta
+it('altoPunto mide lo dibujado, con y sin etiqueta, elegido o no', () => {
+  expect(altoPunto(false, false)).toBe(32);
+  expect(altoPunto(true, false)).toBe(40);
+  expect(altoPunto(false, true)).toBe(32 + 4 + 36);
+  expect(altoPunto(true, true)).toBe(40 + 4 + 36);
+  const html = htmlPunto({
+    circulo: 'y',
+    icono: 'check',
+    etiqueta: { clases: 'x', icono: 'check', texto: 'AL DÍA' },
+    elegido: false,
+  });
+  expect(html).toContain('gap-1');
+  expect(html).toContain('h-9');
+  expect(html).toContain('size-8');
+});
+
+it('anchoPunto: el círculo sin etiqueta y lo que mida la etiqueta con ella', () => {
+  expect(anchoPunto(false, null)).toBe(40);
+  expect(anchoPunto(true, null)).toBe(48);
+  expect(anchoPunto(false, 'AL DÍA')).toBeGreaterThan(48);
+  // la etiqueta crece con el texto hasta 24 letras y no más
+  expect(anchoPunto(false, 'FALTA: Aceite')).toBeGreaterThan(anchoPunto(false, 'AL DÍA'));
+  expect(anchoPunto(false, 'FALTA: Alimento para animales +2')).toBe(
+    anchoPunto(false, 'X'.repeat(24)),
+  );
 });

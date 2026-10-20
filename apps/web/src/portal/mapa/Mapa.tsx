@@ -43,11 +43,11 @@ type Chip = 'todos' | Exclude<EstadoMapa, 'aldia'>;
 const CHIPS: readonly Chip[] = ['falta', 'sobra', 'norecibe'];
 const leerChip = (v: string | null): Chip => (CHIPS.includes(v as Chip) ? (v as Chip) : 'todos');
 
-const LEYENDA: EtiquetaMapa[] = [
-  { estado: 'falta', texto: 'FALTA' },
-  { estado: 'sobra', texto: 'DE SOBRA' },
-  { estado: 'aldia', texto: 'AL DÍA' },
-  { estado: 'norecibe', texto: 'NO RECIBE' },
+const LEYENDA: (EtiquetaMapa & { frase: string })[] = [
+  { estado: 'falta', texto: 'FALTA', frase: 'le falta al menos una categoría' },
+  { estado: 'sobra', texto: 'DE SOBRA', frase: 'tiene más de lo que necesita en alguna' },
+  { estado: 'aldia', texto: 'AL DÍA', frase: 'todo está dentro de lo que necesita' },
+  { estado: 'norecibe', texto: 'NO RECIBE', frase: 'hay algo que hoy no está recibiendo' },
 ];
 
 /** P5 Mapa de acopios (RF-RED-002). Los filtros viven en la URL, así «Volver al mapa»
@@ -294,10 +294,13 @@ export function Mapa() {
             />
           </div>
           {necesidades && (
-            <ul aria-label="Estados del inventario" className="flex flex-wrap gap-space-xs">
+            <ul aria-label="Estados del inventario" className="flex flex-col gap-space-xs">
               {LEYENDA.map((e) => (
-                <li key={e.estado}>
-                  <PildoraEstado etiqueta={e} />
+                <li
+                  key={e.estado}
+                  className="flex items-center gap-space-xs text-body-sm text-on-surface-variant"
+                >
+                  <PildoraEstado etiqueta={e} mini /> {e.frase}
                 </li>
               ))}
             </ul>
@@ -307,7 +310,7 @@ export function Mapa() {
               <p className="flex flex-wrap gap-x-space-md gap-y-space-xs text-body-sm text-on-surface-variant">
                 <span className="inline-flex items-center gap-space-xs">
                   <span className="size-4 rounded-full border-2 border-surface-container-lowest bg-primary-container shadow-sm" />
-                  {refsEnMapa > 0 ? 'Acopio: inventario al día' : 'Acopio'}
+                  {refsEnMapa > 0 ? 'Acopio sin etiqueta: no publica su inventario' : 'Acopio'}
                 </span>
                 {refsEnMapa > 0 && fuente && (
                   <span className="inline-flex items-center gap-space-xs">
