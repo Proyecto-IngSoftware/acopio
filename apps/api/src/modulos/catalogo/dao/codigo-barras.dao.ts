@@ -43,7 +43,7 @@ export class CodigoBarrasDao {
     const q = filtro.q?.trim() ? filtro.q.trim().replace(/[\\%_]/g, (c) => `\\${c}`) : null;
     const estado = filtro.estado ?? null;
     const categoriaId = filtro.categoriaId ?? null;
-    const ids = await this.prisma.$queryRaw<{ ean: string }[]>`
+    const ids = await bd.$queryRaw<{ ean: string }[]>`
       SELECT c.ean
       FROM codigo_barras c
       JOIN categoria cat ON cat.id = c.categoria_id
@@ -70,10 +70,6 @@ export class CodigoBarrasDao {
 
   actualizar(ean: string, datos: Prisma.CodigoBarrasUncheckedUpdateInput, bd: ClienteBd) {
     return bd.codigoBarras.update({ where: { ean }, data: datos, include: completa });
-  }
-
-  eliminar(ean: string, bd: ClienteBd) {
-    return bd.codigoBarras.delete({ where: { ean } });
   }
 
   /** El nombre de quien asoció cada código, en una sola consulta (C18). */

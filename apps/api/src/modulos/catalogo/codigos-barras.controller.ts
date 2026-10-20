@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
@@ -76,12 +76,5 @@ export class CodigosBarrasController {
     @Body() cambios: EditarDto,
   ) {
     return this.codigos.editar(usuario, p.ean, cambios);
-  }
-
-  @Roles('ADMIN')
-  @Delete(':ean')
-  @ApiOkResponse({ type: CodigoBarrasDto })
-  borrar(@UsuarioActual() usuario: UsuarioAutenticado, @Param() p: EanDto) {
-    return this.codigos.borrar(usuario, p.ean);
   }
 }

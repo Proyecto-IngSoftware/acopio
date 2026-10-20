@@ -263,14 +263,7 @@ export class CodigosBarrasService {
       let validaPresentacion: { id: string; estado: EstadoCatalogo } | undefined;
       if (cambios.presentacionId !== undefined) {
         const p = await this.presentacionActiva(tx, cambios.presentacionId);
-        // Un código con presentación no cambia de categoría por un PATCH; la corrección de
-        // un PROPUESTO pasa por `validar`. Sin presentación (legado), la categoría la sigue.
-        if (antes.presentacion_id !== null && p.categoria_id !== antes.categoria_id)
-          throw new ErrorDominio(
-            'PRESENTACION_DE_OTRA_CATEGORIA',
-            'La presentación es de otra categoría que la del código',
-            422,
-          );
+        // Sin borrado, el Administrador corrige moviendo el código; la categoría sigue a la presentación.
         datos.presentacion_id = p.id;
         datos.categoria_id = p.categoria_id;
         validaPresentacion = p;
@@ -283,6 +276,11 @@ export class CodigosBarrasService {
       }
       if (cambios.porRevisar === false) datos.por_revisar = false;
       if (validaPresentacion) await this.validarPresentacion(tx, usuario, validaPresentacion);
+      const sinCambio =
+        (datos.presentacion_id === undefined || datos.presentacion_id === antes.presentacion_id) &&
+        (datos.estado === undefined || datos.estado === antes.estado) &&
+        (datos.por_revisar === undefined || datos.por_revisar === antes.por_revisar);
+      if (sinCambio) return this.conAutor(antes, tx);
       const f = await this.dao.actualizar(ean, datos, tx);
       await this.bitacora.registrar(tx, {
         usuarioId: usuario.id,
@@ -293,23 +291,6 @@ export class CodigosBarrasService {
         despues: vista(f),
       });
       return this.conAutor(f, tx);
-    });
-  }
-
-  async borrar(usuario: UsuarioAutenticado, ean: string) {
-    return this.transacciones.ejecutar(async (tx) => {
-      const antes = await this.dao.conCategoria(ean, tx);
-      if (!antes) throw desconocido();
-      const respuesta = await this.conAutor(antes, tx);
-      await this.dao.eliminar(ean, tx);
-      await this.bitacora.registrar(tx, {
-        usuarioId: usuario.id,
-        accion: 'codigo_barras.borrado',
-        entidad: 'codigo_barras',
-        entidadId: ean,
-        antes: vista(antes),
-      });
-      return respuesta;
     });
   }
 }

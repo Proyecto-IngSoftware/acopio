@@ -265,7 +265,7 @@ describe('códigos de barras', () => {
     expect(r.body.codigo).toBe('EAN_DESCONOCIDO');
   });
 
-  it('el PATCH a una presentación de otra categoría: 422 PRESENTACION_DE_OTRA_CATEGORIA', async () => {
+  it('el PATCH mueve un VALIDADO a una presentación de otra categoría: la categoría la sigue', async () => {
     const e = nuevoEan();
     await sembrar(e);
     const r = await a
@@ -273,10 +273,33 @@ describe('códigos de barras', () => {
       .patch(`/api/codigos-barras/${e}`)
       .set(como(tokenAdmin))
       .send({ presentacionId: botellaOtra })
-      .expect(422);
-    expect(r.body.codigo).toBe('PRESENTACION_DE_OTRA_CATEGORIA');
-    const g = await a.http().get(`/api/codigos-barras/${e}`).set(como(op.token)).expect(200);
-    expect(g.body.categoriaId).toBe(agua);
+      .expect(200);
+    expect(r.body).toMatchObject({ categoriaId: otra, estado: 'VALIDADO' });
+    expect(r.body.presentacion.id).toBe(botellaOtra);
+    expect(
+      (await a.prisma.codigoBarras.findUniqueOrThrow({ where: { ean: e } })).categoria_id,
+    ).toBe(otra);
+    const fila = await a.prisma.bitacora.findFirst({
+      where: { accion: 'codigo_barras.editado', entidad_id: e },
+    });
+    expect(fila!.datos_antes).toMatchObject({ categoriaId: agua });
+    expect(fila!.datos_despues).toMatchObject({ categoriaId: otra });
+  });
+
+  it('un PATCH que no cambia nada no escribe bitácora', async () => {
+    const e = nuevoEan();
+    await sembrar(e);
+    await a
+      .http()
+      .patch(`/api/codigos-barras/${e}`)
+      .set(como(tokenAdmin))
+      .send({ presentacionId: botella, porRevisar: false })
+      .expect(200);
+    expect(
+      await a.prisma.bitacora.findFirst({
+        where: { accion: 'codigo_barras.editado', entidad_id: e },
+      }),
+    ).toBeNull();
   });
 
   it('el PATCH cambia de presentación en la misma categoría y quita porRevisar', async () => {
@@ -323,20 +346,7 @@ describe('códigos de barras', () => {
     expect(r.body).toMatchObject({ unidad: 'UNIDAD', contenido: 12 });
   });
 
-  it('DELETE borra el código y deja codigo_barras.borrado con el antes', async () => {
-    const e = nuevoEan();
-    await sembrar(e);
-    await a.http().delete(`/api/codigos-barras/${e}`).set(como(tokenAdmin)).expect(200);
-    await a.http().get(`/api/codigos-barras/${e}`).set(como(op.token)).expect(404);
-    const fila = await a.prisma.bitacora.findFirst({
-      where: { accion: 'codigo_barras.borrado', entidad_id: e },
-    });
-    expect(fila).not.toBeNull();
-    expect(fila!.datos_antes).toMatchObject({ ean: e, categoriaId: agua });
-    await a.http().delete(`/api/codigos-barras/${e}`).set(como(tokenAdmin)).expect(404);
-  });
-
-  it('el Operador no lista, no edita ni borra', async () => {
+  it('el Operador no lista ni edita', async () => {
     const e = nuevoEan();
     await sembrar(e);
     await a.http().get('/api/codigos-barras').set(como(op.token)).expect(403);
@@ -346,7 +356,6 @@ describe('códigos de barras', () => {
       .set(como(op.token))
       .send({ porRevisar: false })
       .expect(403);
-    await a.http().delete(`/api/codigos-barras/${e}`).set(como(op.token)).expect(403);
   });
 
   it('el Auditor recibe 403 en todas las rutas', async () => {
@@ -368,7 +377,6 @@ describe('códigos de barras', () => {
       .send({ presentacionId: botella })
       .expect(403);
     await a.http().patch(`/api/codigos-barras/${e}`).set(t).send({ porRevisar: false }).expect(403);
-    await a.http().delete(`/api/codigos-barras/${e}`).set(t).expect(403);
   });
 
   it('para otros módulos: proponer, marcar para revisar y validar en la transacción de quien llama', async () => {
