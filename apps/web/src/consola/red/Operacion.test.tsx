@@ -152,6 +152,14 @@ describe('C7 No recibir', () => {
     expect(await cuerpoDe('PUT /api/acopios/x1/no-recibir/c2')).toEqual({ hasta: '2026-10-20' });
   });
 
+  it('un acopio que no tiene asignado lo niega al abrir, sin interruptores', async () => {
+    responderSegun(RESPUESTAS);
+    app('/consola/acopios/otro/no-recibir');
+    expect(await screen.findByRole('alert')).toHaveTextContent('No tienes asignado este acopio.');
+    expect(screen.queryByRole('switch')).not.toBeInTheDocument();
+    expect(screen.queryByRole('region', { name: 'No traigan' })).not.toBeInTheDocument();
+  });
+
   it('el buscador filtra categorías', async () => {
     responderSegun(RESPUESTAS);
     app('/consola/acopios/x1/no-recibir');

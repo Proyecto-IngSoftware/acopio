@@ -5,7 +5,7 @@ import { PrismaService } from '../../../comun/prisma/prisma.service';
 const clave = (acopioId: string, categoriaId: string) => ({
   acopio_id_categoria_id: { acopio_id: acopioId, categoria_id: categoriaId },
 });
-/** Vigente: sin fecha de reapertura, o con una que no ha pasado. */
+/** Vigente: sin fecha, o hasta un día que no ha pasado (ese día todavía no recibe). */
 const vigente = (hoy: Date) => ({ OR: [{ hasta: null }, { hasta: { gte: hoy } }] });
 
 /** Marcas de «no recibir» por acopio y categoría. */

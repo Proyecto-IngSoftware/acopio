@@ -38,7 +38,7 @@ export function NoRecibir() {
   const { usuario } = useSesion();
   const acopioId = id!;
   const [q, fijarQ] = useState('');
-  const { data: acopios } = useAcopiosGestion();
+  const { data: acopios, refetch: recargarAcopios } = useAcopiosGestion();
   const categorias = useCategorias({ archivadas: false, q: '' });
   const marcas = useNoRecibir(acopioId);
   const marcar = useMarcarNoRecibir(acopioId);
@@ -66,6 +66,18 @@ export function NoRecibir() {
       : `/consola/acopios/${acopioId}/operacion`;
   const error = categorias.error ?? marcas.error;
 
+  // La API rechazaría cualquier cambio en un acopio ajeno: se niega desde que abre (HU-06.3)
+  if (acopios && !acopio) {
+    return (
+      <div className="flex flex-col gap-space-md">
+        <Encabezado titulo="Umbrales y no recibir" />
+        <EstadoError
+          mensaje="No tienes asignado este acopio."
+          alReintentar={() => void recargarAcopios()}
+        />
+      </div>
+    );
+  }
   // Sin red, o si la API no responde, esto no se registra (O-09)
   const sinRed = !enLinea || saldos.error?.estado === 0;
   if (sinRed) {
