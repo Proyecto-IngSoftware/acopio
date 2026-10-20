@@ -134,3 +134,13 @@ export function useQuitarUmbral(acopioId: string) {
     onSuccess: () => void consultas.invalidateQueries({ queryKey: ['saldos', acopioId] }),
   });
 }
+
+export type NecesidadAcopio = S['NecesidadAcopioDto'];
+
+/** Mapa de necesidades: qué categorías faltan, sobran, están al día o no se reciben en cada acopio. No exige sesión. */
+export function useNecesidades() {
+  return useQuery<NecesidadAcopio[], ErrorApi>({
+    queryKey: ['inventario', 'necesidades'],
+    queryFn: () => desenvolver(api.GET('/api/publico/necesidades')),
+  });
+}
