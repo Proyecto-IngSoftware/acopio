@@ -922,6 +922,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/publico/necesidades": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Qué falta, qué sobra, qué está al día y qué no recibe cada acopio, solo por categoría. No exige sesión */
+        get: operations["BalanceController_necesidades"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/publico/acopios/{id}/urgente": {
         parameters: {
             query?: never;
@@ -2968,6 +2985,30 @@ export interface components {
                 categoria: string;
                 /** @description Cuántos acopios abiertos están en ese caso */
                 acopios: number;
+            }[];
+        };
+        NecesidadAcopioDto: {
+            /** Format: uuid */
+            acopioId: string;
+            faltan: {
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
+            }[];
+            sobran: {
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
+            }[];
+            alDia: {
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
+            }[];
+            noRecibe: {
+                /** Format: uuid */
+                categoriaId: string;
+                categoria: string;
             }[];
         };
         UrgenteDto: {
@@ -6310,6 +6351,25 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["BalanceDto"];
+                };
+            };
+        };
+    };
+    BalanceController_necesidades: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["NecesidadAcopioDto"][];
                 };
             };
         };

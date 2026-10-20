@@ -235,20 +235,6 @@ export function useNoRecibir(acopioId: string) {
   });
 }
 
-/** Acopios que no reciben esa categoría, para el filtro del mapa. */
-export function useAcopiosQueNoReciben(categoriaId: string | null) {
-  return useQuery<Set<string>, ErrorApi>({
-    queryKey: ['no-recibir', 'categoria', categoriaId],
-    enabled: categoriaId !== null,
-    queryFn: async () => {
-      const filas = await desenvolver(
-        api.GET('/api/no-recibir', { params: { query: { categoria: categoriaId! } as never } }),
-      );
-      return new Set(filas.map((f) => f.acopioId));
-    },
-  });
-}
-
 const rutaNoRecibir = (id: string, categoriaId: string) => ({
   params: { path: { id, categoriaId } },
 });

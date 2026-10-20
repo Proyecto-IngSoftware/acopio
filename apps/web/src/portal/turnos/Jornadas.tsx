@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { useAcopio } from '../../api/red';
 import {
@@ -7,16 +7,24 @@ import {
   type JornadaPublica,
   type Perfil,
 } from '../../api/turnos';
+import { ChipsEstado } from '../../componentes/ChipsEstado';
 import { EstadoError } from '../../componentes/EstadoError';
 import { EstadoVacio } from '../../componentes/EstadoVacio';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
+import { Segmentado } from '../../componentes/Segmentado';
 import { diaBogota, diaSemana } from '../../formato';
+import { estadoCupos, porLugar, type EstadoCupos } from './cupos';
+// El mapa es la vista por defecto y esta pantalla ya se descarga al abrirla (rutas.tsx): Leaflet
+// viaja en su mismo fragmento y así se ahorra una ida y vuelta en 3G, como en P5 (I-02)
+import MapaJornadas from './MapaJornadas';
 import { NOMBRE_PERFIL } from './piezas';
 import { TarjetaJornada } from './TarjetaJornada';
 
 type Clave = 'lugar' | 'dia' | 'perfil';
+type Chip = 'todas' | Exclude<EstadoCupos, 'llena'>;
+const leerChip = (v: string | null): Chip => (v === 'faltan' || v === 'cupos' ? v : 'todas');
 // El mismo patrón que `z.uuid()` de la API: con el dígito de versión y la variante
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 const DIA = /^\d{4}-\d{2}-\d{2}$/;
@@ -54,6 +62,12 @@ export function Jornadas() {
   // Las opciones de lugar y día salen de todas las jornadas, sin filtrar
   const todas = useJornadas();
   const [abierta, abrir] = useState<Clave | null>(null);
+  // Abre en el mapa, como P5; la lista va en `vista=lista`
+  const vista = parametros.get('vista') === 'lista' ? 'lista' : 'mapa';
+  const chip = leerChip(parametros.get('estado'));
+  const [elegido, fijarElegido] = useState<string | null>(null);
+  const elegir = useCallback((id: string) => fijarElegido(id), []);
+  const jornadas = useJornadas(filtro);
 
   const lugares = unicos(
     (todas.data ?? []).map((j) => ({
@@ -90,7 +104,14 @@ export function Jornadas() {
     perfil: 'Perfil que pide la jornada',
   };
 
-  function elegir(clave: Clave, valor: string | null) {
+  function cambiar(clave: string, valor: string | null) {
+    const p = new URLSearchParams(parametros);
+    if (valor === null) p.delete(clave);
+    else p.set(clave, valor);
+    fijarParametros(p, { replace: true });
+  }
+
+  function elegirFiltro(clave: Clave, valor: string | null) {
     const p = new URLSearchParams(parametros);
     if (clave === 'lugar') {
       p.delete('acopio');
@@ -105,7 +126,30 @@ export function Jornadas() {
     abrir(null);
   }
 
-  const hayFiltro = Object.values(actual).some(Boolean);
+  const hayFiltro = Object.values(actual).some(Boolean) || chip !== 'todas';
+
+  // Los chips cuentan jornadas, no lugares, y son excluyentes según la etiqueta
+  const datos = jornadas.data;
+  const cuentas = useMemo(() => {
+    const c = { todas: datos?.length ?? 0, faltan: 0, cupos: 0 };
+    for (const j of datos ?? []) {
+      const e = estadoCupos(j)?.estado;
+      if (e === 'faltan' || e === 'cupos') c[e]++;
+    }
+    return c;
+  }, [datos]);
+  const filtradas = useMemo(
+    () =>
+      chip === 'todas'
+        ? (datos ?? [])
+        : (datos ?? []).filter((j) => estadoCupos(j)?.estado === chip),
+    [datos, chip],
+  );
+  // En el mapa solo entran las que aceptan reservas o están llenas
+  const enMapa = useMemo(() => filtradas.filter((j) => estadoCupos(j)), [filtradas]);
+  const grupos = useMemo(() => porLugar(enMapa), [enMapa]);
+  const sinUbicacion = enMapa.filter((j) => j.lugar.lat === null || j.lugar.lng === null).length;
+  const seleccionado = grupos.find((g) => g.lugar.id === elegido);
 
   return (
     <div className="flex flex-col gap-space-md px-margin py-space-lg">
@@ -143,7 +187,88 @@ export function Jornadas() {
         })}
       </div>
 
-      <Lista filtro={filtro} hayFiltro={hayFiltro} alLimpiar={() => fijarParametros({})} />
+      <Segmentado
+        etiqueta="Ver como"
+        valor={vista}
+        alCambiar={(v) => cambiar('vista', v === 'lista' ? 'lista' : null)}
+        opciones={[
+          { valor: 'mapa', texto: 'Mapa', icono: 'map' },
+          { valor: 'lista', texto: 'Lista', icono: 'list' },
+        ]}
+      />
+
+      {cuentas.todas > 0 && (
+        <ChipsEstado
+          etiqueta="Ver por cupos"
+          valor={chip}
+          alCambiar={(v) => cambiar('estado', v === 'todas' ? null : v)}
+          opciones={[
+            { valor: 'todas', texto: 'Todas', cuenta: cuentas.todas },
+            {
+              valor: 'faltan',
+              texto: 'Falta gente',
+              cuenta: cuentas.faltan,
+              punto: 'bg-secondary-container',
+            },
+            {
+              valor: 'cupos',
+              texto: 'Con cupos',
+              cuenta: cuentas.cupos,
+              punto: 'bg-primary-container',
+            },
+          ]}
+        />
+      )}
+
+      {jornadas.isPending ? (
+        <Esqueleto etiqueta="Cargando las jornadas" className="h-64" />
+      ) : jornadas.error ? (
+        <EstadoError
+          mensaje="No se pudieron cargar las jornadas."
+          alReintentar={() => void jornadas.refetch()}
+        />
+      ) : filtradas.length === 0 ? (
+        <SinJornadas
+          hayFiltro={hayFiltro}
+          alLimpiar={() => fijarParametros(vista === 'lista' ? { vista } : {})}
+        />
+      ) : vista === 'lista' ? (
+        <Lista jornadas={filtradas} />
+      ) : (
+        <>
+          {grupos.length > 0 ? (
+            <div className="isolate h-[55vh] min-h-72 overflow-hidden rounded-xl border border-outline-variant">
+              <MapaJornadas grupos={grupos} elegido={elegido} alElegir={elegir} />
+            </div>
+          ) : (
+            <EstadoVacio titulo="Ninguna jornada en el mapa">
+              Las jornadas que se ven aquí no tienen ubicación o ya no reciben reservas. Míralas en
+              la lista.
+            </EstadoVacio>
+          )}
+          {sinUbicacion > 0 && (
+            <p className="flex items-start gap-space-xs text-body-sm text-on-surface-variant">
+              <Icono nombre="location_off" className="text-[18px]" />
+              {sinUbicacion === 1
+                ? '1 jornada no tiene ubicación en el mapa; está en la lista.'
+                : `${sinUbicacion} jornadas no tienen ubicación en el mapa; están en la lista.`}
+            </p>
+          )}
+          {grupos.length > 0 && !seleccionado && (
+            <p className="text-body-sm text-on-surface-variant">
+              Toca un lugar para ver sus jornadas.
+            </p>
+          )}
+          {seleccionado && (
+            <section aria-label={seleccionado.lugar.nombre} className="flex flex-col gap-space-sm">
+              <h2 className="text-label-md text-on-surface">{seleccionado.lugar.nombre}</h2>
+              {seleccionado.jornadas.map((j) => (
+                <TarjetaJornada key={j.id} jornada={j} />
+              ))}
+            </section>
+          )}
+        </>
+      )}
 
       {abierta && (
         <Hoja titulo={titulos[abierta]} alCerrar={() => abrir(null)}>
@@ -157,7 +282,7 @@ export function Jornadas() {
                     key={o.valor || 'todas'}
                     type="button"
                     aria-pressed={elegida}
-                    onClick={() => elegir(abierta, o.valor || null)}
+                    onClick={() => elegirFiltro(abierta, o.valor || null)}
                     className={`flex min-h-[48px] items-center gap-space-sm rounded-xl border px-space-md text-left text-body-md ${
                       elegida
                         ? 'border-primary-container text-primary-container'
@@ -176,55 +301,39 @@ export function Jornadas() {
   );
 }
 
-function Lista({
-  filtro,
-  hayFiltro,
-  alLimpiar,
-}: {
-  filtro: FiltroJornadas;
-  hayFiltro: boolean;
-  alLimpiar: () => void;
-}) {
-  const { data, isPending, error, refetch } = useJornadas(filtro);
-  if (isPending) return <Esqueleto etiqueta="Cargando las jornadas" className="h-64" />;
-  if (error)
-    return (
-      <EstadoError
-        mensaje="No se pudieron cargar las jornadas."
-        alReintentar={() => void refetch()}
-      />
-    );
-  if (data.length === 0)
-    return (
-      <>
-        <EstadoVacio titulo="Por ahora no hay jornadas abiertas">
-          {hayFiltro
-            ? 'Ninguna jornada coincide con los filtros.'
-            : 'Los acopios y las entidades publican aquí sus jornadas cuando necesitan manos.'}
-        </EstadoVacio>
-        {hayFiltro && (
-          <button
-            type="button"
-            onClick={alLimpiar}
-            className="min-h-[48px] self-start rounded-xl border border-outline-variant bg-surface-container-lowest px-space-md text-label-md text-primary"
-          >
-            Quitar los filtros
-          </button>
-        )}
-      </>
-    );
+function SinJornadas({ hayFiltro, alLimpiar }: { hayFiltro: boolean; alLimpiar: () => void }) {
+  return (
+    <>
+      <EstadoVacio titulo="Por ahora no hay jornadas abiertas">
+        {hayFiltro
+          ? 'Ninguna jornada coincide con los filtros.'
+          : 'Los acopios y las entidades publican aquí sus jornadas cuando necesitan manos.'}
+      </EstadoVacio>
+      {hayFiltro && (
+        <button
+          type="button"
+          onClick={alLimpiar}
+          className="min-h-[48px] self-start rounded-xl border border-outline-variant bg-surface-container-lowest px-space-md text-label-md text-primary"
+        >
+          Quitar los filtros
+        </button>
+      )}
+    </>
+  );
+}
 
+function Lista({ jornadas }: { jornadas: JornadaPublica[] }) {
   const hoy = diaBogota(new Date());
   return (
     <>
-      {porDia(data).map(([dia, jornadas]) => {
-        const nombre = diaSemana(jornadas[0]!.inicio);
+      {porDia(jornadas).map(([dia, delDia]) => {
+        const nombre = diaSemana(delDia[0]!.inicio);
         const titulo =
           dia === hoy ? `Hoy, ${nombre.charAt(0).toLowerCase()}${nombre.slice(1)}` : nombre;
         return (
           <section key={dia} aria-label={titulo} className="flex flex-col gap-space-sm">
             <h2 className="text-label-md text-on-surface">{titulo}</h2>
-            {jornadas.map((j) => (
+            {delDia.map((j) => (
               <TarjetaJornada key={j.id} jornada={j} />
             ))}
           </section>

@@ -1,5 +1,6 @@
 import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useLocation } from 'react-router';
 import { vi } from 'vitest';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
 import { acopioDePrueba, referenciadoDePrueba } from '../../pruebas/datos-red';
@@ -58,6 +59,8 @@ const ZONA_SIN_NECESIDAD = {
 
 const ACOPIOS = [
   acopioDePrueba({ id: 'x1', nombre: 'Acopio Chapinero' }),
+  // Kennedy va antes en la respuesta: con «Ropa usada» tiene que bajar al final
+  acopioDePrueba({ id: 'x4', nombre: 'Acopio Kennedy' }),
   acopioDePrueba({
     id: 'x2',
     nombre: 'Acopio Suba',
@@ -65,6 +68,16 @@ const ACOPIOS = [
     abiertoAhora: false,
     entidad: { id: 'e2', nombre: 'Parroquia San José' },
   }),
+  acopioDePrueba({ id: 'x3', nombre: 'Acopio Usaquén' }),
+];
+const AGUA = { categoriaId: 'c1', categoria: 'Agua potable' };
+const ROPA = { categoriaId: 'c2', categoria: 'Ropa usada' };
+const vacia = { faltan: [], sobran: [], alDia: [], noRecibe: [] };
+const NECESIDADES = [
+  { ...vacia, acopioId: 'x1', faltan: [AGUA], sobran: [ROPA] },
+  { ...vacia, acopioId: 'x2', noRecibe: [ROPA] },
+  { ...vacia, acopioId: 'x3', alDia: [ROPA] },
+  { ...vacia, acopioId: 'x4', noRecibe: [ROPA] },
 ];
 const RESPUESTAS = {
   'GET /api/acopios': ACOPIOS,
@@ -79,7 +92,7 @@ const RESPUESTAS = {
       archivada: false,
     },
   ],
-  'GET /api/no-recibir': [{ acopioId: 'x2', hasta: null }],
+  'GET /api/publico/necesidades': NECESIDADES,
   'GET /api/geocodificar': [{ etiqueta: 'Calle 72, Bogotá', lat: 4.658, lng: -74.06 }],
 };
 const pantalla = (ruta = '/mapa?vista=lista') => render(envolver(<Mapa />, ruta));
@@ -103,16 +116,145 @@ it('«Abierto ahora» filtra en la API y queda en la URL', async () => {
   );
 });
 
-it('lo que vas a llevar oculta los acopios que no lo reciben y lo dice', async () => {
+it('lo que vas a llevar apaga los que no lo reciben y resume la categoría', async () => {
   responderSegun(RESPUESTAS);
   pantalla();
   await screen.findByRole('option', { name: 'Ropa usada' });
   await userEvent.selectOptions(screen.getByLabelText('¿Qué vas a llevar?'), 'Ropa usada');
   expect(
-    await screen.findByText('Ocultamos 1 acopio que hoy no recibe ropa usada.'),
+    await screen.findByText('Ropa usada: está al día en 1 acopio y sobra en 1.'),
   ).toBeInTheDocument();
-  expect(screen.queryByRole('link', { name: /Acopio Suba/ })).not.toBeInTheDocument();
-  expect(screen.getByRole('link', { name: /Acopio Chapinero/ })).toBeInTheDocument();
+  const enlaces = screen.getAllByRole('link');
+  const kennedy = screen.getByRole('link', { name: /Acopio Kennedy/ });
+  expect(enlaces[enlaces.length - 1]).toBe(kennedy);
+  expect(kennedy).toHaveTextContent('No recibe ropa usada');
+  expect(kennedy).toHaveClass('opacity-60');
+  const suba = screen.getByRole('link', { name: /Acopio Suba/ });
+  expect(suba).not.toHaveTextContent('No recibe');
+  expect(suba).not.toHaveClass('opacity-60');
+  expect(screen.getByRole('link', { name: /Acopio Chapinero/ })).toHaveTextContent(
+    'ROPA USADA DE SOBRA',
+  );
+  expect(screen.queryByText(/Ocultamos/)).not.toBeInTheDocument();
+  // Con categoría, «No recibe» no es chip: esos acopios ya se ven apagados
+  expect(screen.getByRole('button', { name: 'Todos 3' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'De sobra 1' })).toBeInTheDocument();
+  expect(screen.queryByRole('button', { name: /No recibe/ })).not.toBeInTheDocument();
+});
+
+it('la lista lleva la etiqueta de cada acopio', async () => {
+  responderSegun(RESPUESTAS);
+  pantalla();
+  expect(await screen.findByRole('link', { name: /Acopio Chapinero/ })).toHaveTextContent(
+    'FALTA: Agua potable',
+  );
+  await waitFor(() =>
+    expect(screen.getByRole('link', { name: /Acopio Usaquén/ })).toHaveTextContent('AL DÍA'),
+  );
+  const suba = screen.getByRole('link', { name: /Acopio Suba/ });
+  expect(suba).not.toHaveTextContent('NO RECIBE');
+  expect(suba).not.toHaveTextContent('Ropa usada');
+});
+
+it('los chips cuentan y filtran por estado, y quedan en la URL', async () => {
+  responderSegun(RESPUESTAS);
+  function Ubicacion() {
+    return <p data-testid="busqueda">{useLocation().search}</p>;
+  }
+  render(
+    envolver(
+      <>
+        <Mapa />
+        <Ubicacion />
+      </>,
+      '/mapa?vista=lista',
+    ),
+  );
+  expect(await screen.findByRole('button', { name: 'Todos 3' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  expect(screen.getByRole('button', { name: 'Falta 1' })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: 'No recibe 1' })).toBeInTheDocument();
+  await userEvent.click(screen.getByRole('button', { name: 'De sobra 1' }));
+  expect(screen.getByTestId('busqueda')).toHaveTextContent('estado=sobra');
+  expect(screen.getByRole('button', { name: 'De sobra 1' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  const chapinero = screen.getByRole('link', { name: /Acopio Chapinero/ });
+  expect(chapinero).toHaveTextContent('DE SOBRA: Ropa usada');
+  expect(screen.getAllByRole('link')).toEqual([chapinero]);
+});
+
+it('un ?estado= sin acopios activos deja su chip visible para quitarlo', async () => {
+  responderSegun({
+    ...RESPUESTAS,
+    'GET /api/acopios': [acopioDePrueba({ id: 'x2', nombre: 'Acopio Suba', estado: 'PAUSADO' })],
+    'GET /api/publico/necesidades': [{ ...vacia, acopioId: 'x2', faltan: [AGUA] }],
+  });
+  function Ubicacion() {
+    return <p data-testid="busqueda">{useLocation().search}</p>;
+  }
+  render(
+    envolver(
+      <>
+        <Mapa />
+        <Ubicacion />
+      </>,
+      '/mapa?vista=lista&estado=falta',
+    ),
+  );
+  const falta = await screen.findByRole('button', { name: 'Falta 0' });
+  expect(falta).toHaveAttribute('aria-pressed', 'true');
+  await userEvent.click(screen.getByRole('button', { name: 'Todos 0' }));
+  expect(screen.getByTestId('busqueda')).not.toHaveTextContent('estado=');
+  expect(screen.getByTestId('busqueda')).toHaveTextContent('vista=lista');
+});
+
+it('la tarjeta del acopio elegido dice qué falta y qué sobra', async () => {
+  responderSegun(RESPUESTAS);
+  pantalla('/mapa');
+  await screen.findByRole('button', { name: 'Todos 3' });
+  await userEvent.click(screen.getByRole('button', { name: 'acopio x1' }));
+  const hoja = await screen.findByRole('region', { name: /Acopio elegido/ });
+  const falta = within(hoja).getByRole('region', { name: 'Qué falta hoy' });
+  expect(falta).toHaveTextContent('Agua potable');
+  const sobra = within(hoja).getByRole('region', { name: 'Ya tienen de sobra' });
+  expect(sobra).toHaveTextContent('Ropa usada');
+  expect(sobra).toHaveTextContent('Mejor llévalo a otro acopio.');
+});
+
+it('con una categoría elegida, la tarjeta se titula con su estado y nombra las demás faltas', async () => {
+  responderSegun({
+    ...RESPUESTAS,
+    'GET /api/publico/necesidades': [
+      {
+        ...vacia,
+        acopioId: 'x1',
+        faltan: [AGUA, ROPA, { categoriaId: 'c3', categoria: 'Arroz' }],
+      },
+    ],
+  });
+  pantalla('/mapa?lleva=c2');
+  await screen.findByText('Ropa usada: falta en 1 acopio.');
+  await userEvent.click(screen.getByRole('button', { name: 'acopio x1' }));
+  const hoja = await screen.findByRole('region', { name: /Acopio elegido/ });
+  const bloque = within(hoja).getByRole('region', { name: 'Falta ropa usada' });
+  expect(bloque).toHaveTextContent('También les falta: Agua potable, Arroz');
+});
+
+it('si las necesidades fallan, el mapa sigue sin chips ni etiquetas', async () => {
+  const { 'GET /api/publico/necesidades': _, ...sinNecesidades } = RESPUESTAS;
+  responderSegun(sinNecesidades);
+  pantalla();
+  const chapinero = await screen.findByRole('link', { name: /Acopio Chapinero/ });
+  await waitFor(() =>
+    expect(peticiones().some((u) => u.includes('/api/publico/necesidades'))).toBe(true),
+  );
+  expect(chapinero).not.toHaveTextContent('FALTA');
+  expect(screen.queryByRole('button', { name: /Todos/ })).not.toBeInTheDocument();
+  expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 });
 
 it('«Cerca de mí» ordena por distancia y la ficha recibe el punto', async () => {
@@ -156,6 +298,33 @@ it('la vista de mapa carga el mapa y deja pasar a la lista', async () => {
   expect(await screen.findByText('mapa de acopios')).toBeInTheDocument();
   await userEvent.click(screen.getByRole('radio', { name: 'Lista' }));
   expect(await screen.findByRole('link', { name: /Acopio Chapinero/ })).toBeInTheDocument();
+});
+
+it('la leyenda del mapa explica cada estado en su fila, con la píldora mini', async () => {
+  responderSegun(RESPUESTAS);
+  pantalla('/mapa');
+  await screen.findByText('mapa de acopios');
+  const leyenda = await screen.findByRole('list', { name: 'Estados del inventario' });
+  const filas = within(leyenda).getAllByRole('listitem');
+  expect(filas.map((f) => f.textContent)).toEqual([
+    'priority_highFALTA le falta al menos una categoría',
+    'inventory_2DE SOBRA tiene más de lo que necesita en alguna',
+    'checkAL DÍA todo está dentro de lo que necesita',
+    'blockNO RECIBE hay algo que hoy no está recibiendo',
+  ]);
+  const pildora = within(filas[0]!).getByText('FALTA');
+  expect(pildora).toHaveClass('text-label-caps', 'px-1.5', 'bg-secondary-container');
+});
+
+it('sin necesidades la leyenda no muestra los estados', async () => {
+  const { 'GET /api/publico/necesidades': _, ...sinNecesidades } = RESPUESTAS;
+  responderSegun(sinNecesidades);
+  pantalla('/mapa');
+  await screen.findByText('mapa de acopios');
+  await waitFor(() =>
+    expect(peticiones().some((u) => u.includes('/api/publico/necesidades'))).toBe(true),
+  );
+  expect(screen.queryByRole('list', { name: 'Estados del inventario' })).not.toBeInTheDocument();
 });
 
 it('no tiene violaciones graves de accesibilidad', async () => {
@@ -275,7 +444,7 @@ describe('puntos de RedAcopio (pieza E)', () => {
     pantalla('/mapa');
     expect(await screen.findByRole('button', { name: 'acopio r1' })).toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'acopio r2' })).not.toBeInTheDocument();
-    expect(screen.getByText('Acopio: inventario al día')).toBeInTheDocument();
+    expect(screen.getByText('Acopio sin etiqueta: no publica su inventario')).toBeInTheDocument();
     expect(screen.getByText('RedAcopio Bogotá: datos de su fuente')).toBeInTheDocument();
   });
 
@@ -311,8 +480,20 @@ describe('puntos de RedAcopio (pieza E)', () => {
     pantalla();
     await screen.findByRole('option', { name: 'Ropa usada' });
     await userEvent.selectOptions(screen.getByLabelText('¿Qué vas a llevar?'), 'Ropa usada');
-    await screen.findByText('Ocultamos 1 acopio que hoy no recibe ropa usada.');
+    await screen.findByText('Ropa usada: está al día en 1 acopio y sobra en 1.');
     expect(screen.getByRole('link', { name: /Sugoi Taller Creativo/ })).toBeInTheDocument();
+  });
+
+  it('con un chip de estado elegido no se dibujan los referenciados', async () => {
+    conRef();
+    pantalla('/mapa?estado=falta');
+    expect(await screen.findByRole('button', { name: 'Falta 1' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    expect(screen.getByRole('button', { name: 'acopio x1' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'acopio r1' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'acopio x3' })).not.toBeInTheDocument();
   });
 
   it('al tocar un referenciado, su tarjeta dice la fuente y no ofrece jornadas', async () => {

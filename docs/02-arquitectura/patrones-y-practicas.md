@@ -137,6 +137,7 @@ Servicios de otros módulos que se usan desde cualquier parte: `BitacoraService.
 |---|---|
 | `componentes/Boton.tsx` | `Boton`, `EnlaceBoton` |
 | `componentes/Campo.tsx` | `Campo`, `Selector` |
+| `componentes/ChipsEstado.tsx` | `ChipsEstado`: fila de chips que filtran por estado, cada uno con su cuenta y un puntito de color opcional; un chip con 0 no se dibuja, salvo el elegido (P5, voluntariado) |
 | `componentes/EditorHorario.tsx` | `EditorHorario` |
 | `componentes/Esqueleto.tsx` | `Esqueleto` mientras carga |
 | `componentes/EstadoError.tsx`, `componentes/EstadoVacio.tsx` | `EstadoError`, `EstadoVacio` |

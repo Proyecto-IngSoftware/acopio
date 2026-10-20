@@ -2,18 +2,17 @@ import { useCallback, useMemo, useState } from 'react';
 import type { FormEvent } from 'react';
 import { useSearchParams } from 'react-router';
 import { useCategoriasVigentes } from '../../api/catalogo';
+import { useNecesidades, type NecesidadAcopio } from '../../api/inventario';
 import {
   useAcopiosPublicos,
-  useAcopiosQueNoReciben,
   useGeocodificar,
-  useNoRecibir,
   useZonasConNecesidad,
-  type AcopioPublico,
   type Punto,
   type ZonaPublica,
 } from '../../api/red';
-import { Boton, EnlaceBoton } from '../../componentes/Boton';
+import { Boton } from '../../componentes/Boton';
 import { Campo, Selector } from '../../componentes/Campo';
+import { ChipsEstado } from '../../componentes/ChipsEstado';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
 import { EstadoVacio } from '../../componentes/EstadoVacio';
@@ -22,13 +21,34 @@ import { Segmentado } from '../../componentes/Segmentado';
 // Esta pantalla ya se descarga al abrirla (rutas.tsx); Leaflet viaja en su mismo fragmento
 // y así se ahorra una ida y vuelta en 3G (I-02)
 import MapaAcopios from './MapaAcopios';
+import { Elegido } from './Elegido';
 import { filtroDelMapa } from './filtro';
-import { TarjetaAcopio, aperturaPublica, km } from './TarjetaAcopio';
+import {
+  contarEstados,
+  estadoDeCategoria,
+  etiquetaAcopio,
+  fraseCategoria,
+  muestraEtiqueta,
+  tieneEstado,
+  type EstadoMapa,
+  type EtiquetaMapa,
+} from './necesidad';
+import { PildoraEstado, TarjetaAcopio } from './TarjetaAcopio';
 import { TarjetaZona } from './TarjetaZona';
-import { useLlevarALaVista } from './llevarALaVista';
 import { ElegidoReferenciado, TarjetaReferenciado, esReferenciado } from './referenciado';
 
 const SIN_ZONAS: ZonaPublica[] = [];
+
+type Chip = 'todos' | Exclude<EstadoMapa, 'aldia'>;
+const CHIPS: readonly Chip[] = ['falta', 'sobra', 'norecibe'];
+const leerChip = (v: string | null): Chip => (CHIPS.includes(v as Chip) ? (v as Chip) : 'todos');
+
+const LEYENDA: (EtiquetaMapa & { frase: string })[] = [
+  { estado: 'falta', texto: 'FALTA', frase: 'le falta al menos una categoría' },
+  { estado: 'sobra', texto: 'DE SOBRA', frase: 'tiene más de lo que necesita en alguna' },
+  { estado: 'aldia', texto: 'AL DÍA', frase: 'todo está dentro de lo que necesita' },
+  { estado: 'norecibe', texto: 'NO RECIBE', frase: 'hay algo que hoy no está recibiendo' },
+];
 
 /** P5 Mapa de acopios (RF-RED-002). Los filtros viven en la URL, así «Volver al mapa»
  *  los conserva. */
@@ -37,6 +57,7 @@ export function Mapa() {
   const vista = parametros.get('vista') === 'lista' ? 'lista' : 'mapa';
   const { abiertoAhora: abierto, cerca } = filtroDelMapa(parametros);
   const lleva = parametros.get('lleva');
+  const chipUrl = leerChip(parametros.get('estado'));
   const conReferenciados = parametros.get('redacopio') !== '0';
   const [elegido, fijarElegido] = useState<string | null>(null);
   const [zonaElegida, fijarZonaElegida] = useState<string | null>(null);
@@ -63,18 +84,69 @@ export function Mapa() {
 
   const acopios = useAcopiosPublicos({ abiertoAhora: abierto, cerca });
   const categorias = useCategoriasVigentes();
-  const noReciben = useAcopiosQueNoReciben(lleva);
   const categoria = categorias.data?.find((c) => c.id === lleva);
-  const ocultos = (acopios.data ?? []).filter((a) => noReciben.data?.has(a.id)).length;
-  // Memorizado: un arreglo nuevo en cada render volvería a encuadrar el mapa al elegir algo.
-  // «¿Qué vas a llevar?» solo filtra los acopios: un punto de RedAcopio no dice qué recibe
-  const visibles = useMemo(
-    () => (acopios.data ?? []).filter((a) => !esReferenciado(a) && !noReciben.data?.has(a.id)),
-    [acopios.data, noReciben.data],
+  // Las etiquetas y los chips son un extra: si la consulta falla, el mapa sigue como antes
+  const necesidades = useNecesidades().data;
+  const porId = useMemo(
+    () => new Map<string, NecesidadAcopio>((necesidades ?? []).map((n) => [n.acopioId, n])),
+    [necesidades],
   );
+  // Con categoría, «No recibe» no es chip: esos acopios ya se ven apagados
+  const chip = !necesidades || (categoria && chipUrl === 'norecibe') ? 'todos' : chipUrl;
+  const operados = useMemo(
+    () => (acopios.data ?? []).filter((a) => !esReferenciado(a)),
+    [acopios.data],
+  );
+  const cuentas = useMemo(
+    () => contarEstados(operados, porId, categoria?.id),
+    [operados, porId, categoria?.id],
+  );
+  const noLaReciben = useMemo(
+    () =>
+      new Set(
+        categoria
+          ? operados
+              .filter(
+                (a) =>
+                  muestraEtiqueta(a) &&
+                  estadoDeCategoria(porId.get(a.id), categoria.id) === 'norecibe',
+              )
+              .map((a) => a.id)
+          : [],
+      ),
+    [operados, porId, categoria],
+  );
+  // Memorizado: un arreglo nuevo en cada render volvería a encuadrar el mapa al elegir algo.
+  // Los que no reciben la categoría van al final, apagados
+  const visibles = useMemo(() => {
+    const conChip =
+      chip === 'todos'
+        ? operados
+        : operados.filter((a) => {
+            if (!muestraEtiqueta(a)) return false;
+            const n = porId.get(a.id);
+            return categoria ? estadoDeCategoria(n, categoria.id) === chip : tieneEstado(n, chip);
+          });
+    return [
+      ...conChip.filter((a) => !noLaReciben.has(a.id)),
+      ...conChip.filter((a) => noLaReciben.has(a.id)),
+    ];
+  }, [operados, porId, categoria, chip, noLaReciben]);
+  const etiquetas = useMemo(() => {
+    const mapa = new Map<string, EtiquetaMapa>();
+    for (const a of visibles) {
+      const e = etiquetaAcopio(a, porId.get(a.id), {
+        categoria,
+        estado: chip === 'todos' ? undefined : chip,
+      });
+      if (e) mapa.set(a.id, e);
+    }
+    return mapa;
+  }, [visibles, porId, categoria, chip]);
+  // Un punto de RedAcopio no dice qué recibe ni qué le falta: con un chip elegido no se dibuja
   const referenciados = useMemo(
-    () => (conReferenciados ? (acopios.data ?? []).filter(esReferenciado) : []),
-    [acopios.data, conReferenciados],
+    () => (conReferenciados && chip === 'todos' ? (acopios.data ?? []).filter(esReferenciado) : []),
+    [acopios.data, conReferenciados, chip],
   );
   const fuente = (acopios.data ?? []).find(esReferenciado)?.fuente;
   // En el mapa no se dibuja un punto cerrado; en la lista sí sale, con su estado
@@ -94,7 +166,7 @@ export function Mapa() {
       <div className="flex flex-col gap-space-xs">
         <h1 className="text-headline-lg-mobile tracking-tight text-on-surface">Mapa de acopios</h1>
         <p className="text-body-md text-on-surface-variant">
-          Antes de salir, revisa qué no reciben.
+          Antes de salir, revisa qué falta y qué no reciben.
         </p>
       </div>
 
@@ -123,13 +195,49 @@ export function Mapa() {
             </option>
           ))}
         </Selector>
-        {categoria && noReciben.data && ocultos > 0 && (
+        {categoria && necesidades && (
+          <p className="text-body-md text-on-surface">
+            {fraseCategoria(categoria.nombre, cuentas)}
+          </p>
+        )}
+        {categoria && noLaReciben.size > 0 && (
           <p className="flex items-start gap-space-xs text-body-sm text-on-surface-variant">
             <Icono nombre="block" className="text-[18px]" />
-            Ocultamos {ocultos}{' '}
-            {ocultos === 1 ? 'acopio que hoy no recibe' : 'acopios que hoy no reciben'}{' '}
+            {noLaReciben.size} {noLaReciben.size === 1 ? 'acopio no recibe' : 'acopios no reciben'}{' '}
             {categoria.nombre.toLocaleLowerCase('es-CO')}.
           </p>
+        )}
+        {necesidades && (cuentas.todos > 0 || chip !== 'todos') && (
+          <ChipsEstado
+            etiqueta="Ver por estado"
+            valor={chip}
+            alCambiar={(v) => cambiar('estado', v === 'todos' ? null : v)}
+            opciones={[
+              { valor: 'todos', texto: 'Todos', cuenta: cuentas.todos },
+              {
+                valor: 'falta',
+                texto: 'Falta',
+                cuenta: cuentas.falta,
+                punto: 'bg-secondary-container',
+              },
+              {
+                valor: 'sobra',
+                texto: 'De sobra',
+                cuenta: cuentas.sobra,
+                punto: 'bg-tertiary-container',
+              },
+              ...(categoria
+                ? []
+                : [
+                    {
+                      valor: 'norecibe' as const,
+                      texto: 'No recibe',
+                      cuenta: cuentas.norecibe,
+                      punto: 'bg-on-surface-variant',
+                    },
+                  ]),
+            ]}
+          />
         )}
         {fuente && (
           <label className="flex min-h-[48px] w-fit items-center gap-space-sm text-body-md text-on-surface">
@@ -181,14 +289,28 @@ export function Mapa() {
               zonas={zonas}
               zonaElegida={zonaElegida}
               alElegirZona={elegirZona}
+              etiquetas={etiquetas}
+              apagados={noLaReciben}
             />
           </div>
+          {necesidades && (
+            <ul aria-label="Estados del inventario" className="flex flex-col gap-space-xs">
+              {LEYENDA.map((e) => (
+                <li
+                  key={e.estado}
+                  className="flex items-center gap-space-xs text-body-sm text-on-surface-variant"
+                >
+                  <PildoraEstado etiqueta={e} mini /> {e.frase}
+                </li>
+              ))}
+            </ul>
+          )}
           {(zonas.length > 0 || refsEnMapa > 0) && (
             <div className="flex flex-col gap-space-xs">
               <p className="flex flex-wrap gap-x-space-md gap-y-space-xs text-body-sm text-on-surface-variant">
                 <span className="inline-flex items-center gap-space-xs">
                   <span className="size-4 rounded-full border-2 border-surface-container-lowest bg-primary-container shadow-sm" />
-                  {refsEnMapa > 0 ? 'Acopio: inventario al día' : 'Acopio'}
+                  {refsEnMapa > 0 ? 'Acopio sin etiqueta: no publica su inventario' : 'Acopio'}
                 </span>
                 {refsEnMapa > 0 && fuente && (
                   <span className="inline-flex items-center gap-space-xs">
@@ -217,7 +339,12 @@ export function Mapa() {
                 enlace={`/acopios/${seleccionado.id}${sufijo}`}
               />
             ) : (
-              <Elegido acopio={seleccionado} enlace={`/acopios/${seleccionado.id}${sufijo}`} />
+              <Elegido
+                acopio={seleccionado}
+                enlace={`/acopios/${seleccionado.id}${sufijo}`}
+                necesidad={porId.get(seleccionado.id)}
+                categoria={categoria}
+              />
             ))}
           {zona && (
             <TarjetaZona
@@ -257,7 +384,12 @@ export function Mapa() {
           <ul className="flex flex-col gap-space-sm">
             {visibles.map((a) => (
               <li key={a.id}>
-                <TarjetaAcopio acopio={a} enlace={`/acopios/${a.id}${sufijo}`} />
+                <TarjetaAcopio
+                  acopio={a}
+                  enlace={`/acopios/${a.id}${sufijo}`}
+                  etiqueta={noLaReciben.has(a.id) ? null : etiquetas.get(a.id)}
+                  noRecibe={noLaReciben.has(a.id) ? categoria?.nombre : undefined}
+                />
               </li>
             ))}
           </ul>
@@ -298,53 +430,6 @@ export function Mapa() {
         </section>
       )}
     </div>
-  );
-}
-
-/** Tarjeta del acopio tocado en el mapa, con lo que no reciben y el paso a la ficha. */
-function Elegido({ acopio, enlace }: { acopio: AcopioPublico; enlace: string }) {
-  const { data: marcas } = useNoRecibir(acopio.id);
-  const ref = useLlevarALaVista<HTMLElement>(acopio.id);
-  return (
-    <section
-      ref={ref}
-      tabIndex={-1}
-      aria-label={`Acopio elegido: ${acopio.nombre}`}
-      className="flex scroll-mt-24 flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md shadow-md outline-none"
-    >
-      <div className="flex items-start justify-between gap-space-sm">
-        <p className="text-body-sm text-on-surface">{aperturaPublica(acopio)}</p>
-        {acopio.distanciaKm !== undefined && (
-          <span className="text-label-md text-primary-container tabular-nums">
-            {km(acopio.distanciaKm)}
-          </span>
-        )}
-      </div>
-      <div>
-        <p className="text-body-lg font-semibold text-on-surface">{acopio.nombre}</p>
-        <p className="text-body-md text-on-surface-variant">{acopio.entidad?.nombre}</p>
-      </div>
-      <p className="flex items-center gap-1 text-body-sm text-on-surface-variant">
-        <Icono nombre="location_on" className="text-[18px]" />
-        {acopio.direccion} · {acopio.municipio}
-      </p>
-      {marcas && marcas.length > 0 && (
-        <p className="flex items-start gap-space-xs rounded-lg border-l-4 border-secondary-container bg-error-container/40 p-space-sm text-body-sm text-on-surface">
-          <Icono nombre="block" className="text-[18px] text-on-error-container" />
-          No traigan: {marcas.map((m) => m.categoria.toLocaleLowerCase('es-CO')).join(', ')}
-        </p>
-      )}
-      <EnlaceBoton a={enlace} className="w-full">
-        Ver ficha
-      </EnlaceBoton>
-      <EnlaceBoton
-        a={`/voluntariado?acopio=${encodeURIComponent(acopio.id)}`}
-        variante="secundario"
-        className="w-full"
-      >
-        Ver jornadas
-      </EnlaceBoton>
-    </section>
   );
 }
 

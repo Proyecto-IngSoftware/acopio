@@ -1,6 +1,7 @@
 // Recorrido público de la pieza E: los puntos de RedAcopio en el mapa (P5), la ficha de uno
-// (P6) y las otras plataformas al final de Causas (P3), a 360 × 640, contra la API del Compose con el seed:demo,
-// que importa la copia guardada de RedAcopio. No inicia sesión.
+// (P6), la etiqueta de inventario de un acopio con el chip «Falta» y las otras plataformas al
+// final de Causas (P3), a 360 × 640, contra la API del Compose con el seed:demo, que importa la
+// copia guardada de RedAcopio. No inicia sesión.
 //
 //   bun run --filter @acopio/web build && (cd apps/web && bunx vite preview)
 //   node apps/web/recorridos/referenciados.mjs
@@ -103,6 +104,25 @@ await paso('P6 de Sugoi Taller Creativo muestra la fuente y no ofrece donar', as
   }
   await revisar(p, 'P6 referenciado', 'P06-ficha-referenciado/construida.png');
 });
+
+await paso(
+  'P5 marca con «FALTA: Aceite» a Acopio Chapinero y el chip «Falta» lo deja solo',
+  async () => {
+    await p.goto(`${WEB}/mapa`);
+    const chips = p.getByRole('group', { name: 'Ver por estado' });
+    const falta = chips.getByRole('button', { name: /^Falta \d+$/ });
+    await falta.click();
+    await chips.getByRole('button', { name: /^Falta \d+$/, pressed: true }).waitFor();
+    if (new URL(p.url()).searchParams.get('estado') !== 'falta') throw new Error(`url ${p.url()}`);
+    // La etiqueta va con aria-hidden; el nombre del marcador la repite para el lector de pantalla
+    const punto = p.getByRole('button', { name: /^Acopio Chapinero \(prueba\)\. Falta: Aceite$/ });
+    await punto.waitFor();
+    await p.locator('.leaflet-marker-icon', { hasText: 'FALTA: Aceite' }).waitFor();
+    await punto.click();
+    await p.getByText('Qué falta hoy').waitFor();
+    await revisar(p, 'P5 con necesidades', 'P05-mapa/construida-necesidades.png');
+  },
+);
 
 await paso('Causas lista las otras plataformas al final, con sus fotos', async () => {
   await p.goto(`${WEB}/causas`);

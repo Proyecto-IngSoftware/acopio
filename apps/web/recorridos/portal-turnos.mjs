@@ -1,7 +1,7 @@
-// Recorrido público de turnos (Bloque 5, HU-03): P7 con la jornada llena marcada, reservar en
-// «Armar mercados (demo)» con un correo único, P8 con su código, el .ics, cancelar y comprobar en
-// la API que el cupo volvió. A 360 × 640, contra la API del Compose con el seed:demo. No inicia
-// sesión y deja la demo como estaba.
+// Recorrido público de turnos (Bloque 5, HU-03): P7 con la jornada llena marcada, su vista de mapa
+// con la etiqueta de cupos, reservar en «Armar mercados (demo)» con un correo único, P8 con su
+// código, el .ics, cancelar y comprobar en la API que el cupo volvió. A 360 × 640, contra la API
+// del Compose con el seed:demo. No inicia sesión y deja la demo como estaba.
 //
 //   bun run --filter @acopio/web build && (cd apps/web && bunx vite preview)
 //   node apps/web/recorridos/portal-turnos.mjs
@@ -79,13 +79,29 @@ await paso('P7 lista las jornadas y marca la llena', async () => {
   const armar = await jornada('Armar mercados (demo)');
   antes = armar.ocupados;
   jornadaId = armar.id;
-  await p.goto(`${WEB}/voluntariado`);
+  await p.goto(`${WEB}/voluntariado?vista=lista`);
   await p.getByRole('heading', { level: 1, name: 'Voluntariado' }).waitFor();
   const llena = p.getByRole('link', { name: /Clasificar ropa donada \(demo\)/ });
   // Sembrada hace días, la llena puede quedar a menos de 12 horas: «Reservas cerradas» le gana a «Llena»
   await llena.getByText(/^(Llena|Reservas cerradas)$/).waitFor();
   if (await p.getByText(/personas presentes/i).count()) throw new Error('dice personas presentes');
   await revisar(p, 'P7', 'P07-voluntariado/construida.png');
+});
+
+await paso('P7 en «Mapa» pone la etiqueta de cupos sobre Acopio Chapinero', async () => {
+  await p.locator('label', { hasText: 'Mapa' }).click();
+  // El mapa es la vista por defecto: elegirlo quita `vista` de la URL
+  if (new URL(p.url()).searchParams.has('vista')) throw new Error(`url ${p.url()}`);
+  // Chapinero tiene «Clasificar ropa donada (demo)» llena y, si sigue en plazo, «Armar mercados»
+  const etiqueta = /(FALTAN? \d+ PERSONAS?|QUEDAN? \d+ CUPOS?|LLENA)( \+\d+)?/;
+  const punto = p.locator('.leaflet-marker-icon', { hasText: etiqueta });
+  await punto.first().waitFor();
+  const titulo = await punto.first().getAttribute('title');
+  if (!titulo?.startsWith('Acopio Chapinero')) throw new Error(`el punto es «${titulo}»`);
+  await punto.first().click();
+  await p.getByRole('link', { name: /Clasificar ropa donada \(demo\)/ }).waitFor();
+  await revisar(p, 'P7 mapa', 'P07-voluntariado/construida-mapa.png');
+  await p.locator('label', { hasText: 'Lista' }).click();
 });
 
 await paso('reserva en «Armar mercados (demo)» con un correo nuevo', async () => {
