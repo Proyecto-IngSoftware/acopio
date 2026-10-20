@@ -45,7 +45,7 @@ Tailwind 4 con `packages/ui-tokens`, Vitest con `responderSegun`, Playwright par
 | 11 Código nuevo y presentaciones en la web | ✅ | |
 | 12 C18 Códigos | ✅ | |
 | 13 Recepción en la web | ✅ | |
-| 14 Recorridos, despliegue y cierre | 🟡 | Falta: desplegar y migrar el servidor, y el PR, después del 23 |
+| 14 Recorridos, despliegue y cierre | 🟡 | Fusionado con el PR 165 el 20 de octubre. Falta comprobar el despliegue en el servidor y ajustar su demo (P-082) |
 
 Las tareas 5 y siguientes no borran códigos ni dan el 422 `PRESENTACION_DE_OTRA_CATEGORIA`; el texto de las tareas conserva esas líneas y vale lo de «Cambios al construir» del [diseño](../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
 
