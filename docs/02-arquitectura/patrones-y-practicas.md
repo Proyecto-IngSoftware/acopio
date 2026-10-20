@@ -65,6 +65,7 @@ En la API:
 - Una regla de negocio incumplida lanza `ErrorDominio(codigo, mensaje, estado?)`. `FiltroErrores` la convierte en `{ estado, codigo, mensaje }`, el único formato de error.
 - Las funciones que escriben reciben un `ClienteBd` (la conexión o una transacción abierta) para poder componerse dentro de otra transacción.
 - Antes de una salida, un ajuste o cualquier operación que no deba correr dos veces en paralelo, se toma `pg_advisory_xact_lock(hashtextextended(…, 0))` con una clave que diga qué se protege (acopio y categoría, usuario, motor). `SELECT … FOR UPDATE` no sirve porque `acopio_app` no tiene `UPDATE` sobre `saldo`.
+- Una operación que toma varios candados los toma siempre en el mismo orden: presentación, código y candado consultivo. La recepción resuelve cada EAN una vez, en orden de EAN, y valida las presentaciones de destino en orden de id. Con otro orden, dos recepciones simultáneas pueden bloquearse entre sí.
 - Las cantidades se validan con `cantidadPositiva` o `cantidadNoNegativa`: tres decimales, como `numeric(12,3)`.
 - Las respuestas se describen en `comun/respuestas.ts` para el contrato OpenAPI. Una respuesta nueva se agrega ahí.
 - Las fórmulas puras (motor, horario, semáforo, distancias) van a `packages/shared` para que la web y la API calculen igual.

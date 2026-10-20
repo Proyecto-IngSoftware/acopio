@@ -65,3 +65,13 @@ Pendiente de revisión por Joseph. Parte de la [maqueta de la idea](../../superp
 ### Ajustes de la segunda ronda (2026-10-20)
 
 - El selector «kg | g» tiene botones de 48 px de alto. El aviso sube a 14 px y añade «tope 10.000 por línea».
+
+### Diferencias al construir (2026-10-20)
+
+- El placeholder del buscador de categoría pasó a «Busca: arroz…» para que quepa a 360 px junto
+  a «Escanear».
+- Al escanear, el Operador y el Administrador pueden elegir «Escribir el número» cuando la cámara
+  no lee. Esa acción no está en la maqueta aprobada.
+- Un código propuesto por un Donador se confirma con «Es correcto» o se corrige antes de pedir la
+  cantidad.
+

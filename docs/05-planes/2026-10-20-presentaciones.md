@@ -32,22 +32,24 @@ Tailwind 4 con `packages/ui-tokens`, Vitest con `responderSegun`, Playwright par
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 Esquema, migración, ADR y pendiente | ⬜ | |
-| 2 Reglas puras en `shared` | ⬜ | |
-| 3 Topes en la API | ⬜ | |
-| 4 API de presentaciones | ⬜ | |
-| 5 API de códigos | ⬜ | |
-| 6 El Donador propone | ⬜ | |
-| 7 La recepción valida o marca | ⬜ | |
-| 8 Contrato, tipos y demo | ⬜ | |
-| 9 Maquetas en Stitch | ⬜ | Aprobación de Joseph |
-| 10 Selector de unidades en la web | ⬜ | Depende de la 9 |
-| 11 Código nuevo y presentaciones en la web | ⬜ | Depende de la 9 |
-| 12 C18 Códigos | ⬜ | Depende de la 9 |
-| 13 Recepción en la web | ⬜ | Depende de la 9 |
-| 14 Recorridos, despliegue y cierre | ⬜ | |
+| 1 Esquema, migración, ADR y pendiente | ✅ | |
+| 2 Reglas puras en `shared` | ✅ | |
+| 3 Topes en la API | ✅ | |
+| 4 API de presentaciones | ✅ | |
+| 5 API de códigos | ✅ | |
+| 6 El Donador propone | ✅ | |
+| 7 La recepción valida o marca | ✅ | |
+| 8 Contrato, tipos y demo | ✅ | |
+| 9 Maquetas en Stitch | ✅ | |
+| 10 Selector de unidades en la web | ✅ | |
+| 11 Código nuevo y presentaciones en la web | ✅ | |
+| 12 C18 Códigos | ✅ | |
+| 13 Recepción en la web | ✅ | |
+| 14 Recorridos, despliegue y cierre | 🟡 | Falta: desplegar y migrar el servidor, y el PR, después del 23 |
 
-Empieza después de la sustentación del 23 de octubre, para no mover la demo antes.
+Las tareas 5 y siguientes no borran códigos ni dan el 422 `PRESENTACION_DE_OTRA_CATEGORIA`; el texto de las tareas conserva esas líneas y vale lo de «Cambios al construir» del [diseño](../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
+
+Joseph pidió ejecutarla antes de la sustentación del 23, en la rama `presentaciones` y sin PR. El despliegue y el PR esperan hasta después del 23, para no mover la demo antes.
 
 ## Global Constraints
 

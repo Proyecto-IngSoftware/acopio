@@ -1097,6 +1097,25 @@ gramos se escriben mal.
 plan en [2026-10-20-presentaciones.md](../05-planes/2026-10-20-presentaciones.md) e issue #163.
 Arranca después de la sustentación del 23.
 
+### P-082 · Ajustar la demo del servidor de pruebas tras la migración de presentaciones
+**Fecha:** 2026-10-20 · **Propuesto por:** Claude, al cerrar la fase de presentaciones
+**Qué:** el seed de la demo no reescribe filas que ya existen. Al migrar el servidor, el código
+`7501031311309` seguirá `VALIDADO` y `4006381333931` conservará la suelta que creó la migración,
+aunque la demo nueva los define de otra manera. Hace falta un ajuste manual con SQL después de
+desplegar, sin tocar el resto de la demo.
+**Por qué:** la ronda de pruebas y la sustentación usan esos dos códigos como ejemplo de un código
+propuesto y de uno sin presentación.
+**Estado:** ABIERTO → se hace al desplegar la fase, después del 23
+([plan](../05-planes/2026-10-20-presentaciones.md), tarea 14, paso 3).
+
+### P-083 · Tope de 10.000 en el conteo físico
+**Fecha:** 2026-10-20 · **Propuesto por:** Claude, al construir la tarea 10
+**Qué:** el tope de 10.000 por línea también limita el conteo físico total de una categoría. Un
+acopio con más de 10 t (o 10.000 L, o 10.000 unidades) de algo no puede registrar su conteo.
+**Por qué:** el diseño incluyó el conteo entre las líneas con tope sin pensar en que registra el
+total y no un movimiento.
+**Estado:** ABIERTO → decide Joseph: subir el tope solo para el conteo, o dejarlo.
+
 ---
 
 ## Resueltos

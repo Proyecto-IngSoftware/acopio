@@ -51,3 +51,15 @@ Pendiente de revisión por Joseph. Las dos hojas parten de la [maqueta de la ide
   - Suelta, agua (ml o L, tope 50 L): [pantalla-nueva-presentacion-suelta-agua.html](pantalla-nueva-presentacion-suelta-agua.html) · [render](render-nueva-presentacion-suelta-agua.png)
   - Suelta, arroz (g o kg, tope 50 kg): [pantalla-nueva-presentacion-suelta-arroz.html](pantalla-nueva-presentacion-suelta-arroz.html) · [render](render-nueva-presentacion-suelta-arroz.png)
 - El selector «Suelta | Paquete» y el selector de unidad tienen 48 px de alto. Se quitaron «unidades» y «Elemento base seleccionado» que Stitch había añadido, y el verde propio de Stitch: el botón usa el teal de los tokens.
+
+### Diferencias al construir (2026-10-20)
+
+- El buscador de categoría dice «Busca: arroz…» y no el texto largo de la maqueta, para caber
+  entero a 360 px junto a «Escanear». En la hoja «Código nuevo» el campo conserva «Busca: arroz,
+  pañal, agua…».
+- La vista de la cámara tiene una acción más, «Escribir el número», para el Operador y el
+  Administrador. No está en la maqueta aprobada. El Donador no la ve.
+- «Código nuevo» no preselecciona ninguna presentación; la maqueta marcaba la primera.
+- «Corregir el código» reutiliza «Código nuevo» y se abre sobre la categoría y la presentación
+  del código propuesto.
+

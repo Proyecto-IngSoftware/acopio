@@ -234,3 +234,42 @@ Joseph decidió todo lo anterior salvo estos puntos, que tomó Claude a partir d
 - Cómo se juntan presentaciones repetidas desde «Códigos».
 - La redacción de mensajes y avisos.
 - Cómo se reparte en ciclos y PR.
+
+## Cambios al construir
+
+Lo que cambió respecto del diseño al construirlo (2026-10-20):
+
+- **Los códigos no se borran.** Joseph decidió mantener la regla del Bloque 2: un código mal
+  puesto se corrige, no se elimina. Salieron la ruta `DELETE /api/codigos-barras/:ean`, el permiso
+  de borrado de `acopio_app`, la migración `20261024110000_codigos_borrado` y la acción de
+  bitácora `codigo_barras.borrado`. Donde este diseño y el plan dicen «se borran», vale esto.
+- **El Administrador puede mover un código de categoría.** Su `PATCH` acepta una presentación de
+  cualquier categoría y `categoria_id` la sigue. No existe el 422 `PRESENTACION_DE_OTRA_CATEGORIA`.
+  Sin borrar, es la única forma de arreglar un código mal clasificado, y el cambio queda en la
+  bitácora con lo de antes y lo de después.
+- **«Escribir el número».** El Operador y el Administrador pueden teclear el código desde la vista
+  de la cámara, útil cuando no lee (#40). El Donador solo escanea.
+- **«Código nuevo» no preselecciona ninguna presentación.** La maqueta marcaba la primera; se
+  quitó para que nadie asocie la equivocada por descuido.
+- **Orden de candados en la recepción.** Cada EAN se resuelve una sola vez por comprobante, en
+  orden de EAN, y las líneas con el mismo EAN toman el resultado de la primera. Las presentaciones
+  de destino se validan en orden de id. El orden de candados es presentación, código y candado
+  consultivo. Así dos recepciones simultáneas no se bloquean entre sí.
+- **Corregir a una presentación `PROPUESTO` la valida.** Si el Operador corrige una línea a una
+  presentación propuesta por un Donador, esa presentación queda `VALIDADO`: el Operador es la
+  fuente de verdad (decisión de Joseph).
+- **«Corregir» en la recepción** abre con la categoría de la línea y llega a las demás buscando.
+  No lista todas de entrada, porque pediría una consulta por categoría.
+- **Preparar usa un campo de texto con selector** en las líneas de kg o L sin presentación, en
+  lugar del contador con + y −. Es la única forma de escribir 600 ml.
+- **Buscadores más cortos.** Los placeholders pasaron a «Busca: arroz…» (buscador de categoría),
+  «Número o nombre» (C18) y «Buscar categoría», para que quepan enteros a 360 px junto a
+  «Escanear». Las diferencias con la maqueta están en las notas de
+  [C04 Escáner](../../03-diseno/stitch/C04-escaner/README.md) y
+  [C04 Entrada rápida](../../03-diseno/stitch/C04-entrada-rapida/README.md).
+- **El tope de 10.000 también limita el conteo físico.** Las líneas de cantidad incluyen el
+  conteo, así que un acopio con más de 10 t de una categoría no puede registrar su conteo. Queda
+  como [P-083](../../01-requerimientos/pendientes.md) para que Joseph decida.
+- **La demo no reescribe filas ya migradas.** En el servidor de pruebas, `7501031311309` seguirá
+  `VALIDADO` y `4006381333931` conservará la suelta que creó la migración. Se ajusta a mano tras
+  el despliegue ([P-082](../../01-requerimientos/pendientes.md)).

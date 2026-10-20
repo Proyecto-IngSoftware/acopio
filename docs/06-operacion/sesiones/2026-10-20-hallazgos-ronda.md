@@ -92,3 +92,67 @@ todavía no se recibe. Se corrigieron la guía de escenarios y la fila 5 del pla
 - Repetir el escáner en el teléfono cuando se despliegue el cambio, con un EAN a la distancia de
   una caja y con poca luz ([#40](https://github.com/Proyecto-IngSoftware/acopio/issues/40),
   [P-037](../../01-requerimientos/pendientes.md)).
+
+## Parte 3 · Implementación de presentaciones, códigos de barras y unidades
+
+Joseph pidió ejecutar el [plan](../../05-planes/2026-10-20-presentaciones.md) ese mismo día, en
+la rama `presentaciones`, sin PR hasta después de la sustentación del 23
+([P-081](../../01-requerimientos/pendientes.md), #163).
+
+### Qué se construyó
+
+- Esquema y migración de `presentacion` y del estado del código, con el ADR y las reglas puras en
+  `packages/shared`.
+- API de presentaciones y de códigos, topes de 50 por presentación y 10.000 por línea, y la
+  propuesta del Donador.
+- Recepción que valida o marca códigos, con el orden de candados presentación, código y candado
+  consultivo.
+- Contrato, tipos de la web y demo con presentaciones.
+- Web: selector de unidades, «Código nuevo» y «Nueva presentación», C18 «Códigos» y la
+  recepción con «Es correcto» y «Corregir».
+- Recorrido `presentaciones.mjs`, documentado en [recorridos](../recorridos.md).
+
+### Pruebas
+
+- Verificación completa, encadenada con `&&`, salida 0 a la primera: lint, typecheck, depcruise
+  (241 módulos, sin violaciones), unitarias (shared 116, API 100, web 1.089 en 109 archivos),
+  integración contra el PostgreSQL aparte del 5439 (47 suites, 539 pruebas) y
+  `revisar-colores.sh`. Las pruebas de la web que fallan bajo carga
+  ([P-059](../../01-requerimientos/pendientes.md)) no fallaron en esta corrida.
+- Recorrido `presentaciones.mjs` en local, con la API del Compose reconstruida: 9 de 9 y 0
+  errores de página. Con la cámara falsa de Chromium leyó un EAN-13 dibujado, el Donador lo
+  propuso con una presentación nueva, `operador1` lo confirmó con «Es correcto» y el
+  Administrador lo vio «Validado» en C18. La API confirmó el paso de `PROPUESTO` a `VALIDADO` y
+  la línea recibida con su EAN. Tres corridas fallaron antes: una por el límite de 5 inicios de
+  sesión por minuto, una por buscar la ficha sin abrir antes su presentación en C18 y otra por
+  un selector de la casilla «Todos».
+
+### Decisiones de Joseph
+
+- Los códigos de barras no se borran, se corrigen; sale la ruta `DELETE`.
+- El Operador es la fuente de verdad: corregir una línea a una presentación propuesta la valida.
+- El despliegue y el PR esperan a después del 23.
+
+Las decisiones de Claude y los cambios respecto del diseño están en «Cambios al construir» del
+[diseño](../../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
+
+### Pendiente
+
+- Desplegar y migrar el servidor de pruebas y abrir el PR de la rama `presentaciones`, con
+  `Closes #163`, después del 23 (tarea 14, pasos 3 y 4 del
+  [plan](../../05-planes/2026-10-20-presentaciones.md), fila 20 del
+  [plan de acción](../../05-planes/plan-de-accion.md)).
+- Ajustar a mano la demo del servidor tras la migración:
+  [P-082](../../01-requerimientos/pendientes.md).
+- Decidir el tope de 10.000 en el conteo físico:
+  [P-083](../../01-requerimientos/pendientes.md).
+- Revisión de Joseph de las pantallas de la rama y repetir el escáner en el teléfono:
+  [#163](https://github.com/Proyecto-IngSoftware/acopio/issues/163) y
+  [#40](https://github.com/Proyecto-IngSoftware/acopio/issues/40).
+- Los menores diferidos de cada tarea (carrera al confirmar el tamaño de un paquete, `LIMIT 500`
+  de la búsqueda sin aviso, `keepPreviousData` en C18 y otros) están en el registro de la
+  ejecución, `.superpowers/sdd/2026-10-20-presentaciones/progress.md`, y se pasan a issues `deuda`
+  al abrir el PR ([#163](https://github.com/Proyecto-IngSoftware/acopio/issues/163)).
+- El texto de las tareas 5 y siguientes del plan todavía menciona `DELETE` y el 422; vale
+  «Cambios al construir» del
+  [diseño](../../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
