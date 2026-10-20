@@ -1,6 +1,7 @@
 import { formatearCantidad } from '@acopio/shared';
 import { useEffect, useReducer, useRef, useState, type FormEvent } from 'react';
 import { useParams } from 'react-router';
+import { useCodigosDeLineas, type CodigoBarras } from '../../api/catalogo';
 import { ErrorApi } from '../../api/cliente';
 import { enBase, useComprobante, useRecibir, type Comprobante } from '../../api/comprobantes';
 import { ESTADOS_DONACION } from '../../api/donaciones';
@@ -12,6 +13,7 @@ import { Icono } from '../../componentes/Icono';
 import { haceCuanto } from '../../formato';
 import { useEnLinea } from '../../sin-conexion/en-linea';
 import { Encabezado } from '../Encabezado';
+import { HojaCorregirPresentacion } from './HojaCorregirPresentacion';
 import { VistaCamara } from '../inventario/Escaner';
 import { NecesitaRed } from '../inventario/NecesitaRed';
 import {
@@ -256,6 +258,7 @@ function Confirmar({
   const [lineas, despachar] = useReducer(recepcion, comprobante, iniciar);
   const { data: noRecibe } = useNoRecibir(acopioId);
   const recibir = useRecibir(comprobante.folio);
+  const codigos = useCodigosDeLineas(lineas.flatMap((l) => (l.ean ? [l.ean] : [])));
   const bloqueadas = new Set(noRecibe?.map((n) => n.categoriaId));
   const n = entradas(lineas);
   const error = recibir.error;
@@ -301,6 +304,7 @@ function Confirmar({
             key={l.id}
             linea={l}
             noRecibe={bloqueadas.has(l.categoriaId)}
+            codigo={l.ean ? (codigos.get(l.ean) ?? null) : null}
             despachar={despachar}
           />
         ))}
@@ -346,22 +350,57 @@ function Confirmar({
 function LineaFolio({
   linea: l,
   noRecibe,
+  codigo,
   despachar,
 }: {
   linea: LineaRecepcion;
   noRecibe: boolean;
+  codigo: CodigoBarras | null;
   despachar: (a: Parameters<typeof recepcion>[1]) => void;
 }) {
   const cantidad = cantidadDe(l);
+  const [corrigiendo, fijarCorrigiendo] = useState(false);
+  const presentacion = l.corregida ?? codigo?.presentacion ?? null;
+  const propuesto = codigo?.estado === 'PROPUESTO' && !l.codigoConfirmado;
   return (
     <li
       aria-label={l.categoria}
       className="flex flex-col gap-space-xs rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md"
     >
-      <span className="text-body-lg font-bold text-on-surface">{l.categoria}</span>
+      <div className="flex flex-wrap items-start justify-between gap-x-space-sm gap-y-space-xs">
+        <span className="min-w-0 flex-1 basis-40 text-body-lg font-bold break-words text-on-surface">
+          {l.categoria}
+          {presentacion && ` · ${presentacion.nombre}`}
+        </span>
+        {codigo && (
+          <span className="flex shrink-0 items-center gap-space-xs rounded-full bg-surface-container px-space-sm py-1 text-label-md text-on-surface-variant">
+            <Icono nombre={propuesto ? 'lightbulb' : 'verified'} className="shrink-0 text-[16px]" />
+            {propuesto ? 'Código propuesto' : 'Validado'}
+          </span>
+        )}
+      </div>
       <span className="text-body-sm text-on-surface-variant">
         Declaró {formatearCantidad(enBase(l.declarada, l.contenido), l.unidad)}
       </span>
+      {codigo && (
+        <div className="flex flex-wrap justify-end gap-space-sm">
+          <Boton
+            variante="secundario"
+            className="min-h-[48px]"
+            onClick={() => fijarCorrigiendo(true)}
+          >
+            Corregir
+          </Boton>
+          {propuesto && codigo.presentacion && !l.corregida && (
+            <Boton
+              className="min-h-[48px]"
+              onClick={() => despachar({ tipo: 'confirmarCodigo', id: l.id })}
+            >
+              Es correcto
+            </Boton>
+          )}
+        </div>
+      )}
       <div className="flex items-center gap-space-sm">
         <span className="text-body-md text-on-surface-variant">Llegó</span>
         <div className="ml-auto flex items-center rounded-xl border-[1.5px] border-outline">
@@ -427,6 +466,23 @@ function LineaFolio({
           <Icono nombre="block" className="text-[22px] text-on-surface-variant" />
           Este acopio no está recibiendo {l.categoria}. Puedes recibirla igual.
         </p>
+      )}
+      {corrigiendo && codigo && (
+        <HojaCorregirPresentacion
+          descripcion={`${l.categoria}, código ${codigo.ean}`}
+          categoria={{ id: l.categoriaId, nombre: l.categoria }}
+          actual={presentacion?.id ?? null}
+          alElegir={(p) => {
+            // Elegir la que ya tiene el código es confirmarlo
+            despachar(
+              p.id === codigo.presentacion?.id
+                ? { tipo: 'confirmarCodigo', id: l.id }
+                : { tipo: 'corregir', id: l.id, presentacion: p },
+            );
+            fijarCorrigiendo(false);
+          }}
+          alCerrar={() => fijarCorrigiendo(false)}
+        />
       )}
     </li>
   );

@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueries, useQuery, useQueryClient } from '@tanstack/react-query';
 import { guardarCodigoVisto } from '../sin-conexion/datos-locales';
 import { api, desenvolver, type ErrorApi } from './cliente';
 import type { components } from './esquema';
@@ -195,6 +195,28 @@ export async function consultarCodigo(ean: string) {
   // Sin red, el escáner reconoce los códigos que ya vio este teléfono (O-08)
   await guardarCodigoVisto(codigo);
   return codigo;
+}
+
+/** Recepción: el estado de los códigos de las líneas de un folio, una consulta por número. Un
+ *  código que la API no devuelve queda en `null`: la línea sigue sin marca. */
+export function useCodigosDeLineas(eans: string[]) {
+  const unicos = [...new Set(eans)];
+  const consultas = useQueries({
+    queries: unicos.map((ean) => ({
+      queryKey: ['codigos-barras', 'ean', ean],
+      retry: false,
+      queryFn: async (): Promise<CodigoBarras | null> => {
+        try {
+          return await desenvolver(
+            api.GET('/api/codigos-barras/{ean}', { params: { path: { ean } } }),
+          );
+        } catch {
+          return null;
+        }
+      },
+    })),
+  });
+  return new Map(unicos.map((ean, i) => [ean, consultas[i]?.data ?? null]));
 }
 
 export interface DatosAsociar {

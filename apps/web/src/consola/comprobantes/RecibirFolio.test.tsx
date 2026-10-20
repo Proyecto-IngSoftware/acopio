@@ -243,3 +243,122 @@ it('axe: sin violaciones graves al buscar y al confirmar', async () => {
   await screen.findByRole('heading', { name: 'Lo que trae' });
   expect(await violacionesGraves(container)).toEqual([]);
 });
+
+describe('códigos de barras en la recepción', () => {
+  const EAN_A = '7702000000455';
+  const EAN_B = '7702000000622';
+  const PRES_AGUA = { id: 'p-agua600', nombre: 'Botella de agua 600 ml', tamano: 0.6 };
+  const PRES_ARROZ = { id: 'p-arroz500', nombre: 'Bolsa de arroz 500 g', tamano: 0.5 };
+  const codigo = (ean: string, estado: 'PROPUESTO' | 'VALIDADO', presentacion = PRES_AGUA) => ({
+    ean,
+    categoriaId: 'c-agua',
+    categoria: 'Agua potable',
+    unidad: 'LITRO',
+    presentacion,
+    contenido: presentacion.tamano,
+    estado,
+    porRevisar: false,
+    grupo: 'AGUA_Y_BEBIDAS',
+    perecedero: false,
+    creadoPor: null,
+    creadoEn: '2026-10-01T00:00:00Z',
+  });
+  const CON_CODIGOS = {
+    ...COMPROBANTE,
+    lineas: [
+      linea('l1', 'Agua potable', {
+        categoriaId: 'c-agua',
+        unidad: 'LITRO',
+        ean: EAN_A,
+        contenidoUnitario: 0.6,
+        cantidadDeclarada: 24,
+      }),
+      linea('l2', 'Arroz', { categoriaId: 'c-arroz', ean: EAN_B, contenidoUnitario: 0.5 }),
+      linea('l3', 'Lentejas'),
+    ],
+  };
+  const OTRA = {
+    id: 'p-arroz500',
+    categoriaId: 'c-arroz',
+    categoria: 'Arroz',
+    unidad: 'KILOGRAMO',
+    nombre: 'Bolsa de arroz 500 g',
+    clase: 'SUELTA',
+    tamano: 0.5,
+    contieneId: null,
+    unidades: null,
+    estado: 'VALIDADO',
+    codigos: 1,
+  };
+  const extra = {
+    'GET /api/comprobantes/*': CON_CODIGOS,
+    [`GET /api/codigos-barras/${EAN_A}`]: codigo(EAN_A, 'PROPUESTO'),
+    [`GET /api/codigos-barras/${EAN_B}`]: codigo(EAN_B, 'VALIDADO', PRES_ARROZ),
+    'GET /api/categorias/buscar': [
+      {
+        id: 'c-arroz',
+        nombre: 'Arroz',
+        grupo: 'ALIMENTOS',
+        unidadBase: 'KILOGRAMO',
+        perecedero: false,
+        puntaje: 1,
+      },
+    ],
+    'GET /api/presentaciones': [OTRA],
+  };
+
+  it('un código propuesto se marca y ofrece «Es correcto» y «Corregir»; el validado solo «Corregir»', async () => {
+    pantalla(extra);
+    await buscar();
+    const agua = await screen.findByRole('listitem', { name: 'Agua potable' });
+    expect(await within(agua).findByText('Código propuesto')).toBeInTheDocument();
+    expect(within(agua).getByText(/Botella de agua 600 ml/)).toBeInTheDocument();
+    expect(within(agua).getByRole('button', { name: 'Es correcto' })).toBeInTheDocument();
+    expect(within(agua).getByRole('button', { name: 'Corregir' })).toBeInTheDocument();
+    const arroz = screen.getByRole('listitem', { name: 'Arroz' });
+    expect(await within(arroz).findByText('Validado')).toBeInTheDocument();
+    expect(within(arroz).queryByText('Código propuesto')).toBeNull();
+    expect(within(arroz).queryByRole('button', { name: 'Es correcto' })).toBeNull();
+    expect(within(arroz).getByRole('button', { name: 'Corregir' })).toBeInTheDocument();
+    const lentejas = screen.getByRole('listitem', { name: 'Lentejas' });
+    expect(within(lentejas).queryByRole('button', { name: 'Corregir' })).toBeNull();
+  });
+
+  it('«Es correcto» no manda presentacionId', async () => {
+    pantalla(extra);
+    await buscar();
+    const agua = await screen.findByRole('listitem', { name: 'Agua potable' });
+    await userEvent.click(await within(agua).findByRole('button', { name: 'Es correcto' }));
+    expect(within(agua).queryByRole('button', { name: 'Es correcto' })).toBeNull();
+    await userEvent.click(screen.getByRole('button', { name: /Registrar recepción/ }));
+    await screen.findByRole('heading', { name: 'Recibido' });
+    const cuerpo = (await cuerpoDe(`POST /api/comprobantes/${FOLIO}/recepcion`)) as {
+      lineas: object[];
+    };
+    expect(cuerpo.lineas.some((l) => 'presentacionId' in l)).toBe(false);
+  });
+
+  it('«Corregir» abre las presentaciones de cualquier categoría y la elegida va en el cuerpo', async () => {
+    pantalla(extra);
+    await buscar();
+    const agua = await screen.findByRole('listitem', { name: 'Agua potable' });
+    await userEvent.click(await within(agua).findByRole('button', { name: 'Corregir' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Corregir presentación' });
+    await userEvent.type(within(hoja).getByRole('searchbox'), 'arroz');
+    await userEvent.click(await within(hoja).findByRole('radio', { name: /Bolsa de arroz 500 g/ }));
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Guardar corrección' }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+    // La línea muestra ya la presentación corregida
+    expect(within(agua).getByText(/Bolsa de arroz 500 g/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /Registrar recepción/ }));
+    await screen.findByRole('heading', { name: 'Recibido' });
+    expect(await cuerpoDe(`POST /api/comprobantes/${FOLIO}/recepcion`)).toEqual({
+      acopioId: 'x1',
+      lineas: [
+        { lineaId: 'l1', presentacionId: 'p-arroz500', cantidadConfirmada: 24 },
+        { lineaId: 'l2', cantidadConfirmada: 5 },
+        { lineaId: 'l3', cantidadConfirmada: 5 },
+      ],
+    });
+  });
+});
