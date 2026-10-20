@@ -241,6 +241,36 @@ describe('usuarios y accesos', () => {
     });
   });
 
+  describe('cambiar el correo de una cuenta activa (P-080)', () => {
+    const entrar = (usuario: string, contrasena: string) =>
+      a.http().post('/api/auth/sesion').send({ usuario, contrasena });
+
+    it('la persona sigue entrando con su usuario y con el correo nuevo, no con el anterior', async () => {
+      const op = await crearUsuarioActivo(a, tokenAdmin, { rol: 'OPERADOR' });
+      const nuevo = `${unico('nuevo')}@acopio.test`;
+      await a
+        .http()
+        .patch(`/api/usuarios/${op.id}`)
+        .set(comoAdmin())
+        .send({ correo: nuevo })
+        .expect(200);
+      await entrar(op.username, op.contrasena).expect(200);
+      await entrar(nuevo, op.contrasena).expect(200);
+      await entrar(`${op.username}@acopio.test`, op.contrasena).expect(401);
+    });
+
+    it('al quitarle el correo sigue entrando con su usuario', async () => {
+      const op = await crearUsuarioActivo(a, tokenAdmin, { rol: 'OPERADOR' });
+      await a
+        .http()
+        .patch(`/api/usuarios/${op.id}`)
+        .set(comoAdmin())
+        .send({ correo: null })
+        .expect(200);
+      await entrar(op.username, op.contrasena).expect(200);
+    });
+  });
+
   describe('bitácora (RF-IDE-012)', () => {
     it('restablecer acceso y cambiar el rol quedan destacados; se avisa a los administradores', async () => {
       const op = await crearUsuarioActivo(a, tokenAdmin, { rol: 'OPERADOR' });

@@ -69,7 +69,7 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | 10 | Escáner probado con un teléfono y un código real contra el servidor | #40 | 2026-11-15 | ⬜ |
 | 11 | Review y retrospectiva del Sprint 3 | #51 | 2026-11-20 | ⬜ |
 | 12 | Bloque 6: bitácora enriquecida, transparencia y publicaciones. Es lo primero que se recorta | #37 | 2026-11-22 | ⬜ |
-| 13 | Deuda de las revisiones: menores de los bloques 1 a 3 (P-034, P-038 y los del Bloque 3) y la imagen que falta en Garage (P-058). Los del cierre del Bloque 5 (P-070, P-071, #129) quedaron hechos el 18 de octubre. De la ronda por rol del 19: los datos de inventario de más de 6 horas (#151), el «no recibir» de un acopio ajeno (#152) y la frase de la bitácora para un cambio de fecha (#153). De la revisión de la entrada única: el correo de una cuenta activa y su credencial (P-080) | #43, #151, #152, #153 | 2026-11-22 | 🟡 |
+| 13 | Deuda de las revisiones: menores de los bloques 1 a 3 (P-034, P-038 y los del Bloque 3) y la imagen que falta en Garage (P-058). Los del cierre del Bloque 5 (P-070, P-071, #129) quedaron hechos el 18 de octubre. De la ronda por rol del 19: los datos de inventario de más de 6 horas (#151), el «no recibir» de un acopio ajeno (#152) y la frase de la bitácora para un cambio de fecha (#153). De la revisión de la entrada única, el correo de una cuenta activa y su credencial (P-080) quedó hecho el 19 de octubre | #43, #151, #152, #153 | 2026-11-22 | 🟡 |
 | 14 | P5 de Stitch con el filtro viejo | #39 | 2026-11-22 | ⬜ |
 | 15 | Íconos que se ven como texto mientras baja su fuente | #41 | 2026-11-22 | ⬜ |
 
@@ -196,3 +196,5 @@ Sprint 3.
   arregladas (el mensaje de C01 sin red y `?volver=` con un tabulador) y un problema anterior quedó
   en [P-080](../01-requerimientos/pendientes.md). En el servidor ya entran todas las cuentas por
   `/entrar`.
+- 2026-10-19: P-080 queda resuelto. Al cambiar el correo de una cuenta activa, la API cambia
+  también el de su credencial, y la persona sigue entrando con su usuario y con el correo nuevo.

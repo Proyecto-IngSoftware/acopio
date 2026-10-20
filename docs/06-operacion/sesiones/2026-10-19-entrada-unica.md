@@ -79,9 +79,14 @@ una prueba de `rutas.test.tsx` lo revisa.
 En el servidor, después del despliegue, entraron por `/api/auth/sesion` `admin`, `operador1`,
 `donador1@demo.acopio.local` y el administrador con su correo en mayúsculas.
 
+Joseph pidió corregirlo el mismo día y quedó resuelto en la rama `correo-credencial`. Cuando el
+Administrador cambia el correo de una cuenta con credencial, la API también cambia el correo de
+la credencial en el proveedor, local o Supabase. Dos pruebas de integración lo revisan, y la
+integración completa dio 506 de 506.
+
 ## Pendiente
 
-- [P-080](../../01-requerimientos/pendientes.md): el correo de una cuenta activa y su credencial.
+Nada de esta sesión. P-080 quedó resuelto.
 
 ## Depende de Joseph
 
