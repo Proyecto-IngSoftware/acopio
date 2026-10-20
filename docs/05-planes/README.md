@@ -3,7 +3,7 @@ title: "Planes de implementación"
 type: moc
 tags: [moc, planes]
 estado: vigente
-actualizado: 2026-10-18
+actualizado: 2026-10-20
 ---
 
 # Planes de implementación
@@ -49,6 +49,7 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 | 4 · Motor | [aprobada](../superpowers/specs/2026-10-06-bloque-4-motor-design.md) | [API, etapa 1](2026-10-06-bloque-4-api-etapa-1.md) · [API, etapa 2](2026-10-09-bloque-4-api-etapa-2.md) · [interfaz, ciclo 1](2026-10-14-bloque-4-interfaz-ciclo-1.md) | ✅ Cerrado el 2026-10-18: API (etapas 1 y 2) y los tres ciclos de interfaz, con sus recorridos. [#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35) |
 | 1 · Piezas C, D y E | C: [plan](2026-10-17-pieza-c-causas.md); D y E: sin especificación | C cerrada, D y E pendientes | 🟨 C cerrada el 2026-10-18 con HU-02 y HU-15 revisadas en el servidor ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)). D ([#50](https://github.com/Proyecto-IngSoftware/acopio/issues/50)) y E ([#49](https://github.com/Proyecto-IngSoftware/acopio/issues/49)) hasta el 15 nov |
 | 5 · Turnos | [aprobada](../superpowers/specs/2026-10-17-bloque-5-turnos-design.md) | [API](2026-10-17-bloque-5-api.md) · [interfaz](2026-10-17-bloque-5-interfaz.md) · [cierre](2026-10-18-cierre-bloque-5.md) | ✅ Cerrado el 2026-10-18: API, interfaz y cierre, con HU-03 revisada en el servidor. [#36](https://github.com/Proyecto-IngSoftware/acopio/issues/36) |
+| Presentaciones y códigos | [aprobada](../superpowers/specs/2026-10-20-presentaciones-codigos-design.md) | [plan](2026-10-20-presentaciones.md) | ⬜ Después del 23; las pantallas esperan Stitch. [#163](https://github.com/Proyecto-IngSoftware/acopio/issues/163) |
 | 6 · Extras | pendiente | pendiente | ⬜ [#37](https://github.com/Proyecto-IngSoftware/acopio/issues/37) |
 | Servidor de pruebas | [despliegue.md](../06-operacion/despliegue.md) | [plan de trabajo](2026-10-16-servidor-de-pruebas.md) · [factura y demo](2026-10-16-servidor-de-pruebas-factura-y-demo.md) | 🟡 Arriba desde el 2026-10-16 (#91, #92, #93). Factura por la API y demo con `DEMO_CONTRASENA` hechas en local; faltan desplegarlas, sembrar la demo y los recorridos contra el servidor. [#53](https://github.com/Proyecto-IngSoftware/acopio/issues/53), [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26) |
 

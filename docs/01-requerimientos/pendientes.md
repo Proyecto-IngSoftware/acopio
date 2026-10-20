@@ -1084,6 +1084,19 @@ correo, y no con el anterior; sin correo, entra con su usuario. Falta verlo en e
 usa Supabase: se puede con una cuenta creada solo para eso y borrada al final, sin tocar las de la
 demo, si Joseph lo autoriza (nota del 2026-10-20).
 
+### P-081 · Presentaciones, códigos de barras y unidades
+**Fecha:** 2026-10-20 · **Propuesto por:** Joseph, al probar el escáner
+**Qué:** la pestaña «Códigos» no tiene buscador ni deja agregar códigos, cada código guarda su
+propio tamaño y una bolsa de 500 g se escribe «0,5» en kg. Se acordó que cada código apunte a una
+presentación genérica de su categoría (suelta o paquete), que los Donadores propongan y los
+Operadores validen, y que todo campo de cantidad admita g o ml sin cambiar la unidad base.
+**Por qué:** con cientos de códigos la lista no se puede validar ni corregir, y las cantidades en
+gramos se escriben mal.
+**Estado:** ABIERTO → diseño en
+[2026-10-20-presentaciones-codigos-design.md](../superpowers/specs/2026-10-20-presentaciones-codigos-design.md),
+plan en [2026-10-20-presentaciones.md](../05-planes/2026-10-20-presentaciones.md) e issue #163.
+Arranca después de la sustentación del 23.
+
 ---
 
 ## Resueltos

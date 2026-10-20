@@ -52,6 +52,14 @@ pública.
   construir»).
 - Para el acopio ajeno se usa el mismo mensaje de «Mi acopio» («No tienes asignado este acopio.»).
 
+- Presentaciones, códigos de barras y unidades: Joseph aprobó el diseño
+  ([spec](../../superpowers/specs/2026-10-20-presentaciones-codigos-design.md)) a partir de una
+  maqueta de cinco pantallas. Cada código apunta a una presentación genérica, suelta o paquete;
+  los Donadores proponen y los Operadores validan; los campos de cantidad admiten g o ml, y hay
+  topes de 50 por presentación y 10.000 por línea. El plan quedó en
+  [2026-10-20-presentaciones.md](../../05-planes/2026-10-20-presentaciones.md)
+  ([P-081](../../01-requerimientos/pendientes.md), #163).
+
 ## Errores y correcciones
 
 El informe y el plan del 19 decían que el escenario 15 se revisaba el 20. Con «hasta el 20», el 20
@@ -68,7 +76,14 @@ todavía no se recibe. Se corrigieron la guía de escenarios y la fila 5 del pla
 - El 24, los escenarios que gastan la demo
   ([#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58)).
 
+- Presentaciones, códigos y unidades, después del 23
+  ([#163](https://github.com/Proyecto-IngSoftware/acopio/issues/163),
+  [plan](../../05-planes/2026-10-20-presentaciones.md)).
+
 ## Depende de Joseph
+
+- Aprobar en Stitch las maquetas de presentaciones, C18 y recepción (tarea 9 del
+  [plan](../../05-planes/2026-10-20-presentaciones.md)).
 
 - Autorizar, o no, la prueba del cambio de correo con Supabase en el servidor usando una cuenta
   desechable ([P-080](../../01-requerimientos/pendientes.md)).
