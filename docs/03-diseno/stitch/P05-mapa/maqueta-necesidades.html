@@ -1,0 +1,267 @@
+<title>Mapa de necesidades</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&display=swap">
+<style>
+/* Tema «Acopio Field Command», el de packages/ui-tokens. Teléfonos a 360 px sobre el lienzo; un solo tema, claro, como la app. */
+:root {
+  --surface: #fafaf9; --lowest: #ffffff; --container: #f5f5f4; --high: #e7e5e4;
+  --on-surface: #131b2e; --variant: #3f4946; --outline-variant: #e7e5e4;
+  --primary: #003730; --primary-container: #085046; --primary-fixed: #b0efe1; --on-primary: #ffffff;
+  /* Estados del inventario: falta = secondary, de sobra = tertiary, al día = primary, no recibe = neutro */
+  --falta: #d9381e; --falta-claro: #ffdad3; --falta-texto: #8f1100;
+  --sobra: #6e3900; --sobra-claro: #ffdcc3;
+  --nore: #3f4946; --nore-claro: #e7e5e4;
+  --calle: #f6f2e8; --manzana: #e9e4d6; --via: #f3d58a; --rio: #b9d6ea;
+  --lienzo: #e7e5e4;
+  --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  color-scheme: light;
+}
+body { background: var(--lienzo); color: var(--on-surface); font-family: var(--sans); font-size: 16px; }
+.pagina { padding-block: 24px 48px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); display: flex; flex-direction: column; gap: 32px; max-width: 1200px; margin: 0 auto; }
+.intro { max-width: 68ch; display: flex; flex-direction: column; gap: 8px; }
+.intro h1 { font-size: 1.625rem; line-height: 2.125rem; margin: 0; text-wrap: balance; }
+.intro p { margin: 0; color: var(--variant); line-height: 1.5; }
+.ms { font-family: 'Material Symbols Outlined', sans-serif; font-size: 22px; line-height: 1; font-weight: normal; display: inline-block; vertical-align: middle; width: 1em; overflow: hidden; }
+.telefonos { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+.caso { display: flex; flex-direction: column; gap: 8px; width: 360px; max-width: 100%; min-width: 0; }
+.caso > h2 { font-size: .9375rem; font-weight: 700; margin: 0; }
+.caso > p { margin: 0; font-size: .875rem; color: var(--variant); line-height: 1.4; }
+.tel { background: var(--surface); border: 1px solid var(--outline-variant); border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; }
+.cabecera { display: flex; align-items: center; gap: 8px; padding: 10px 16px; background: var(--lowest); border-bottom: 1px solid var(--outline-variant); min-height: 60px; box-sizing: border-box; }
+.logo { width: 36px; height: 36px; border-radius: 9px; background: var(--primary-container); color: var(--on-primary); display: grid; place-items: center; flex: none; }
+.marca { font-weight: 700; font-size: 1.125rem; }
+.co { font-size: .6875rem; font-weight: 700; background: var(--primary-fixed); color: var(--primary); padding: 2px 5px; border-radius: 4px; }
+.entrar { margin-left: auto; background: var(--container); color: var(--primary-container); font-weight: 600; padding: 10px 14px; border-radius: 10px; font-size: .9375rem; }
+.cuerpo { padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.cuerpo h3 { margin: 0; font-size: 1.5rem; line-height: 1.2; }
+.ayuda { font-size: .875rem; color: var(--variant); line-height: 1.4; margin: 0; }
+.campo { display: flex; flex-direction: column; gap: 6px; font-size: .875rem; font-weight: 600; }
+.select { min-height: 44px; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 8px; font-weight: 400; font-size: .9375rem; }
+.select.on { border: 2px solid var(--primary-container); font-weight: 600; }
+
+/* Fila de filtros por estado, como los chips de Stitch («Todos (4)», «Urgente / Falta 1») */
+.chips { display: flex; gap: 8px; overflow: hidden; }
+.chips span { flex: none; min-height: 40px; padding: 0 12px; display: flex; align-items: center; gap: 6px; border-radius: 999px; border: 1px solid var(--outline-variant); background: var(--lowest); font-weight: 600; font-size: .875rem; }
+.chips .on { background: var(--primary-container); color: var(--on-primary); border-color: var(--primary-container); }
+.chips i { width: 8px; height: 8px; border-radius: 999px; }
+.chips b { font-variant-numeric: tabular-nums; }
+.pestanas { display: grid; grid-template-columns: 1fr 1fr; background: var(--container); border-radius: 10px; padding: 4px; border: 1px solid var(--outline-variant); }
+.pestanas span { min-height: 40px; display: flex; align-items: center; justify-content: center; gap: 6px; border-radius: 8px; font-weight: 600; color: var(--variant); }
+.pestanas .on { background: var(--primary-container); color: var(--on-primary); }
+
+/* Mapa simulado: calles, una vía principal y el río */
+.mapa { position: relative; height: 330px; border: 1px solid var(--outline-variant); border-radius: 12px; overflow: hidden;
+  background:
+    linear-gradient(118deg, transparent 47%, var(--rio) 47%, var(--rio) 51%, transparent 51%),
+    linear-gradient(28deg, transparent 58%, var(--via) 58%, var(--via) 60.5%, transparent 60.5%),
+    repeating-linear-gradient(0deg, var(--calle) 0 6px, transparent 6px 34px),
+    repeating-linear-gradient(90deg, var(--calle) 0 6px, transparent 6px 40px),
+    var(--manzana); }
+.zoom { position: absolute; top: 10px; right: 10px; display: flex; flex-direction: column; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 6px; }
+.zoom span { width: 32px; height: 32px; display: grid; place-items: center; font-weight: 700; font-size: 1.125rem; }
+.zoom span + span { border-top: 1px solid var(--outline-variant); }
+
+/* Punto con su etiqueta encima: la etiqueta dice el estado y la categoría */
+.punto { position: absolute; transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.et { display: inline-flex; align-items: center; gap: 4px; padding: 4px 8px; border-radius: 999px; font-size: .6875rem; font-weight: 700; white-space: nowrap; box-shadow: 0 1px 3px rgb(0 0 0 / .25); border: 2px solid var(--lowest); }
+.et .ms { font-size: 14px; }
+.et em { font-style: normal; font-weight: 600; opacity: .9; }
+.pin { width: 32px; height: 32px; border-radius: 999px; display: grid; place-items: center; border: 2px solid var(--lowest); box-shadow: 0 1px 3px rgb(0 0 0 / .3); }
+.pin .ms { font-size: 18px; }
+.falta .et, .falta .pin { background: var(--falta); color: var(--on-primary); }
+.sobra .et, .sobra .pin { background: var(--sobra); color: var(--on-primary); }
+.aldia .et { background: var(--primary-fixed); color: var(--primary); }
+.aldia .pin { background: var(--primary-container); color: var(--on-primary); }
+.nore .et { background: var(--nore-claro); color: var(--nore); }
+.nore .pin { background: var(--nore); color: var(--on-primary); }
+.apagado { opacity: .45; }
+.sel .pin { width: 40px; height: 40px; border-width: 3px; }
+.ref { position: absolute; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 999px; background: var(--lowest); color: var(--primary-container); border: 2px solid var(--primary-container); display: grid; place-items: center; }
+.ref .ms { font-size: 16px; }
+.zona { position: absolute; border-radius: 999px; background: color-mix(in srgb, var(--primary-fixed) 45%, transparent); border: 2px dashed var(--primary-container); transform: translate(-50%, -50%); }
+.resumen { position: absolute; left: 10px; bottom: 10px; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 8px; padding: 6px 10px; font-size: .75rem; color: var(--variant); }
+
+/* Tarjeta del acopio elegido */
+.tarjeta { padding: 14px; background: var(--lowest); border: 1px solid var(--outline-variant); border-radius: 12px; display: flex; flex-direction: column; gap: 10px; }
+.cab { display: flex; align-items: flex-start; gap: 10px; }
+.cab .t { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+.cab b { font-size: 1.0625rem; }
+.cab small { color: var(--variant); font-size: .8125rem; }
+.estado { font-size: .75rem; font-weight: 600; color: var(--primary-container); display: inline-flex; align-items: center; gap: 6px; }
+.estado i { width: 8px; height: 8px; border-radius: 999px; background: var(--primary-container); }
+.seccion { display: flex; flex-direction: column; gap: 6px; padding-top: 10px; border-top: 1px solid var(--outline-variant); }
+.seccion h4 { margin: 0; font-size: .75rem; letter-spacing: .06em; text-transform: uppercase; display: flex; align-items: center; gap: 6px; }
+.seccion h4 .ms { font-size: 16px; }
+.seccion.f h4 { color: var(--falta-texto); }
+.seccion.s h4 { color: var(--sobra); }
+.cats { display: flex; flex-wrap: wrap; gap: 6px; }
+.cats span { font-size: .875rem; font-weight: 600; padding: 6px 10px; border-radius: 8px; }
+.seccion.f .cats span { background: var(--falta-claro); color: var(--falta-texto); }
+.seccion.s .cats span { background: var(--sobra-claro); color: var(--sobra); }
+.seccion small { font-size: .8125rem; color: var(--variant); }
+.boton { min-height: 48px; border-radius: 10px; background: var(--primary-container); color: var(--on-primary); display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 600; }
+.frase { font-size: .9375rem; line-height: 1.4; margin: 0; }
+.frase b.f { color: var(--falta-texto); }
+.frase b.s { color: var(--sobra); }
+.barra { display: grid; grid-template-columns: repeat(5, 1fr); background: var(--lowest); border-top: 1px solid var(--outline-variant); padding: 6px 0; }
+.barra div { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .6875rem; color: var(--variant); }
+.barra .on { color: var(--primary-container); font-weight: 700; }
+.cupos { display: flex; flex-direction: column; gap: 4px; font-size: .8125rem; }
+.cupos .linea { height: 6px; border-radius: 999px; background: var(--high); overflow: hidden; }
+.cupos .linea i { display: block; height: 100%; width: 30%; background: var(--falta); }
+
+.notas { max-width: 76ch; display: flex; flex-direction: column; gap: 8px; }
+.notas h2 { font-size: 1.25rem; margin: 8px 0 0; }
+.notas ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; line-height: 1.5; color: var(--variant); }
+.notas li b { color: var(--on-surface); }
+.leyenda { display: flex; flex-wrap: wrap; gap: 8px; }
+</style>
+
+<div class="pagina">
+  <div class="intro">
+    <h1>Mapa de acopios con lo que falta y lo que sobra</h1>
+    <p>Cada acopio lleva encima una etiqueta con su estado, como en «Mapa de Acopios y Necesidades» de Stitch. El estado sale del inventario del acopio comparado con su mínimo y su máximo por categoría. Al elegir lo que vas a llevar, las etiquetas cambian a esa categoría.</p>
+    <div class="leyenda">
+      <span class="punto falta" style="position:static;transform:none"><span class="et"><span class="ms">priority_high</span>FALTA</span></span>
+      <span class="punto sobra" style="position:static;transform:none"><span class="et"><span class="ms">inventory_2</span>DE SOBRA</span></span>
+      <span class="punto aldia" style="position:static;transform:none"><span class="et"><span class="ms">check</span>AL DÍA</span></span>
+      <span class="punto nore" style="position:static;transform:none"><span class="et"><span class="ms">block</span>NO RECIBE</span></span>
+    </div>
+  </div>
+
+  <div class="telefonos">
+    <!-- 1. Vista general -->
+    <section class="caso">
+      <h2>1 · Todos los acopios</h2>
+      <p>Cada etiqueta muestra lo más urgente del acopio. Los chips de arriba filtran por estado.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span><span class="co">CO</span><span class="entrar">Entrar</span></div>
+        <div class="cuerpo">
+          <h3>Mapa de acopios</h3>
+          <p class="ayuda">Antes de salir, revisa qué falta y qué no reciben.</p>
+          <div class="campo">¿Qué vas a llevar?<span class="select">Cualquier cosa <span class="ms">expand_more</span></span></div>
+          <div class="chips">
+            <span class="on">Todos <b>6</b></span>
+            <span><i style="background:var(--falta)"></i>Falta <b>2</b></span>
+            <span><i style="background:var(--sobra)"></i>De sobra <b>1</b></span>
+            <span><i style="background:var(--nore)"></i>No recibe <b>1</b></span>
+          </div>
+          <div class="pestanas"><span class="on"><span class="ms">map</span>Mapa</span><span><span class="ms">list</span>Lista</span></div>
+          <div class="mapa">
+            <div class="zoom"><span>+</span><span>−</span></div>
+            <div class="zona" style="left:30%;top:72%;width:110px;height:110px"></div>
+            <div class="punto falta sel" style="left:52%;top:46%"><span class="et"><span class="ms">priority_high</span>FALTA: Agua potable <em>+2</em></span><span class="pin"><span class="ms">warehouse</span></span></div>
+            <div class="punto falta" style="left:24%;top:30%"><span class="et"><span class="ms">priority_high</span>FALTA: Arroz</span><span class="pin"><span class="ms">warehouse</span></span></div>
+            <div class="punto sobra" style="left:74%;top:24%"><span class="et"><span class="ms">inventory_2</span>DE SOBRA: Ropa</span><span class="pin"><span class="ms">warehouse</span></span></div>
+            <div class="punto nore" style="left:72%;top:72%"><span class="et"><span class="ms">block</span>NO RECIBE: Colchones</span><span class="pin"><span class="ms">warehouse</span></span></div>
+            <div class="punto aldia" style="left:35%;top:92%"><span class="et"><span class="ms">check</span>AL DÍA</span><span class="pin"><span class="ms">warehouse</span></span></div>
+            <div class="ref" style="left:88%;top:50%"><span class="ms">link</span></div>
+          </div>
+          <div class="tarjeta">
+            <div class="cab"><div class="t"><span class="estado"><i></i>Abierto ahora · cierra 5:00 p. m.</span><b>Acopio Chapinero</b><small>Fundación Manos Unidas · Cra. 7 # 63-40</small></div></div>
+            <div class="seccion f">
+              <h4><span class="ms">priority_high</span>Qué falta hoy</h4>
+              <div class="cats"><span>Agua potable</span><span>Pañales</span><span>Leche en polvo</span></div>
+            </div>
+            <div class="seccion s">
+              <h4><span class="ms">inventory_2</span>Ya tienen de sobra</h4>
+              <div class="cats"><span>Ropa</span><span>Cobijas</span></div>
+              <small>Mejor llévalo a otro acopio.</small>
+            </div>
+            <span class="boton">Ver ficha <span class="ms">arrow_forward</span></span>
+          </div>
+        </div>
+        <div class="barra"><div><span class="ms">home</span>Inicio</div><div class="on"><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div><span class="ms">groups</span>Voluntariado</div><div><span class="ms">more_horiz</span>Más</div></div>
+      </div>
+    </section>
+
+    <!-- 2. Filtrado por una categoría -->
+    <section class="caso">
+      <h2>2 · Elegiste «Arroz»</h2>
+      <p>Las etiquetas hablan solo de arroz: dónde falta, dónde está al día y dónde sobra. Los que no lo reciben se apagan.</p>
+      <div class="tel">
+        <div class="cabecera"><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span><span class="co">CO</span><span class="entrar">Entrar</span></div>
+        <div class="cuerpo">
+          <h3>Mapa de acopios</h3>
+          <div class="campo">¿Qué vas a llevar?<span class="select on">Arroz <span class="ms">close</span></span></div>
+          <p class="frase">El arroz <b class="f">falta en 2 acopios</b>, está al día en 2 y <b class="s">sobra en 1</b>.</p>
+          <div class="chips">
+            <span class="on">Todos <b>5</b></span>
+            <span><i style="background:var(--falta)"></i>Falta <b>2</b></span>
+            <span><i style="background:var(--sobra)"></i>De sobra <b>1</b></span>
+          </div>
+          <div class="mapa">
+            <div class="zoom"><span>+</span><span>−</span></div>
+            <div class="punto falta sel" style="left:24%;top:30%"><span class="et"><span class="ms">priority_high</span>FALTA ARROZ</span><span class="pin"><span class="ms">warehouse</span></span></div>
+            <div class="punto falta" style="left:56%;top:52%"><span class="et"><span class="ms">priority_high</span>FALTA ARROZ</span><span class="pin"><span class="ms">warehouse</span></span></div>
+            <div class="punto sobra" style="left:74%;top:24%"><span class="et"><span class="ms">inventory_2</span>ARROZ DE SOBRA</span><span class="pin"><span class="ms">warehouse</span></span></div>
+            <div class="punto aldia" style="left:35%;top:90%"><span class="et"><span class="ms">check</span>ARROZ AL DÍA</span><span class="pin"><span class="ms">warehouse</span></span></div>
+            <div class="punto aldia" style="left:80%;top:84%"><span class="et"><span class="ms">check</span>ARROZ AL DÍA</span><span class="pin"><span class="ms">warehouse</span></span></div>
+            <div class="punto nore apagado" style="left:50%;top:76%"><span class="pin"><span class="ms">block</span></span></div>
+            <div class="resumen">1 acopio no recibe arroz</div>
+          </div>
+          <div class="tarjeta">
+            <div class="cab"><div class="t"><span class="estado"><i></i>Abierto ahora · cierra 6:00 p. m.</span><b>Acopio Teusaquillo</b><small>Cruz Roja · Cl. 39 # 17-20 · a 1,2 km</small></div></div>
+            <div class="seccion f">
+              <h4><span class="ms">priority_high</span>Falta arroz</h4>
+              <small>También les falta: Aceite, Atún</small>
+            </div>
+            <span class="boton">Cómo llegar <span class="ms">directions</span></span>
+          </div>
+        </div>
+        <div class="barra"><div><span class="ms">home</span>Inicio</div><div class="on"><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div><span class="ms">groups</span>Voluntariado</div><div><span class="ms">more_horiz</span>Más</div></div>
+      </div>
+    </section>
+
+    <!-- 3. Voluntariado con la misma idea -->
+    <section class="caso">
+      <h2>3 · Voluntariado, la misma idea con cupos</h2>
+      <p>Opcional. Las jornadas en un mapa, con «Faltan N personas», «Quedan N cupos» o «Llena» encima, como en «Voluntariado - Mapa de Jornadas y Reserva de Cupos».</p>
+      <div class="tel">
+        <div class="cabecera"><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span><span class="co">CO</span><span class="entrar">Entrar</span></div>
+        <div class="cuerpo">
+          <h3>Voluntariado</h3>
+          <div class="chips">
+            <span class="on">Todas <b>4</b></span>
+            <span><i style="background:var(--falta)"></i>Falta gente <b>1</b></span>
+            <span><i style="background:var(--primary-container)"></i>Con cupos <b>2</b></span>
+          </div>
+          <div class="pestanas"><span><span class="ms">list</span>Lista</span><span class="on"><span class="ms">map</span>Mapa</span></div>
+          <div class="mapa">
+            <div class="zoom"><span>+</span><span>−</span></div>
+            <div class="punto falta sel" style="left:40%;top:36%"><span class="et"><span class="ms">priority_high</span>FALTAN 7 PERSONAS</span><span class="pin"><span class="ms">forklift</span></span></div>
+            <div class="punto aldia" style="left:74%;top:60%"><span class="et"><span class="ms">event_available</span>QUEDAN 3 CUPOS</span><span class="pin"><span class="ms">inventory</span></span></div>
+            <div class="punto aldia" style="left:22%;top:82%"><span class="et"><span class="ms">event_available</span>QUEDAN 12 CUPOS</span><span class="pin"><span class="ms">soup_kitchen</span></span></div>
+            <div class="punto nore" style="left:78%;top:22%"><span class="et"><span class="ms">block</span>LLENA</span><span class="pin"><span class="ms">event_busy</span></span></div>
+          </div>
+          <div class="tarjeta">
+            <div class="cab"><div class="t"><span class="estado"><i></i>Miércoles 21 · 8:00 a. m. – 12:00 p. m.</span><b>Carga y clasificación en estibas</b><small>Acopio Chapinero</small></div></div>
+            <div class="cupos"><span><b style="color:var(--falta-texto)">Faltan 7 personas</b> · 3 de 10 cupos reservados</span><span class="linea"><i></i></span></div>
+            <span class="boton">Reservar cupo</span>
+          </div>
+        </div>
+        <div class="barra"><div><span class="ms">home</span>Inicio</div><div><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div class="on"><span class="ms">groups</span>Voluntariado</div><div><span class="ms">more_horiz</span>Más</div></div>
+      </div>
+    </section>
+  </div>
+
+  <div class="notas">
+    <h2>De dónde sale cada etiqueta</h2>
+    <ul>
+      <li><b>Falta:</b> el saldo de la categoría está bajo el mínimo del acopio. Es lo mismo que hoy muestra «Lo que urge» en la ficha.</li>
+      <li><b>De sobra:</b> el saldo pasa del máximo. La tarjeta lo dice como «Ya tienen de sobra» y sugiere llevarlo a otro acopio.</li>
+      <li><b>Al día:</b> todas las categorías con umbral están entre el mínimo y el máximo.</li>
+      <li><b>No recibe:</b> el acopio marcó «no recibir» esa categoría. Ya existe.</li>
+      <li>Si un acopio tiene varias cosas, la etiqueta muestra la más urgente en este orden: falta, no recibe, de sobra, al día. Si falta más de una categoría, dice la primera y «+N».</li>
+      <li>No se publican cantidades, igual que en la ficha. Los puntos de RedAcopio no llevan etiqueta porque de ellos no hay inventario.</li>
+      <li>El círculo de la zona con necesidad (lo que reporta el Receptor) se queda como está.</li>
+    </ul>
+    <h2>Por decidir</h2>
+    <ul>
+      <li><b>«Poco»:</b> Stitch tiene un estado naranja entre la falta y el óptimo. Podría ser «a menos de un 25 % del mínimo». En la maqueta no lo puse.</li>
+      <li><b>Categoría o producto:</b> los umbrales son por categoría (Arroz, Agua potable), no por presentación («Agua 5 L»). La maqueta usa categorías.</li>
+      <li><b>Voluntariado en mapa:</b> hoy es una lista. El teléfono 3 muestra cómo se vería si también tuviera mapa.</li>
+    </ul>
+  </div>
+</div>
