@@ -51,7 +51,7 @@ const TRES = [
 
 it('agrupa las jornadas por día y marca las llenas y las cerradas', async () => {
   responderSegun({ 'GET /api/turnos/jornadas': TRES });
-  const { container } = render(envolver(<Jornadas />, '/voluntariado'));
+  const { container } = render(envolver(<Jornadas />, '/voluntariado?vista=lista'));
   const dia21 = await screen.findByRole('region', { name: 'Miércoles 21 de octubre' });
   const dia22 = screen.getByRole('region', { name: 'Jueves 22 de octubre' });
   expect(within(dia21).getAllByRole('link')).toHaveLength(2);
@@ -77,13 +77,13 @@ it('muestra hace cuánto se ajustaron los cupos a mano', async () => {
   responderSegun({
     'GET /api/turnos/jornadas': [jornadaDe({ ajuste: 2, ajusteActualizadoEn: haceDosHoras })],
   });
-  render(envolver(<Jornadas />, '/voluntariado'));
+  render(envolver(<Jornadas />, '/voluntariado?vista=lista'));
   expect(await screen.findByText('Ajustado hace 2 h')).toBeInTheDocument();
 });
 
 it('el filtro de perfil pide las jornadas de ese perfil', async () => {
   responderSegun({ 'GET /api/turnos/jornadas': TRES });
-  render(envolver(<Jornadas />, '/voluntariado'));
+  render(envolver(<Jornadas />, '/voluntariado?vista=lista'));
   await screen.findByText('Armar mercados');
   await userEvent.click(screen.getByRole('button', { name: /Perfil/ }));
   await userEvent.click(
@@ -103,7 +103,7 @@ it('muestra la hora de Bogotá aunque el navegador esté en otra zona', async ()
   process.env.TZ = 'America/New_York';
   try {
     responderSegun({ 'GET /api/turnos/jornadas': [jornadaDe()] });
-    render(envolver(<Jornadas />, '/voluntariado'));
+    render(envolver(<Jornadas />, '/voluntariado?vista=lista'));
     expect(await screen.findByText('8:00 a. m. – 12:00 p. m.')).toBeInTheDocument();
   } finally {
     process.env.TZ = zona;
@@ -112,7 +112,7 @@ it('muestra la hora de Bogotá aunque el navegador esté en otra zona', async ()
 
 it('sin jornadas lo dice', async () => {
   responderSegun({ 'GET /api/turnos/jornadas': [] });
-  render(envolver(<Jornadas />, '/voluntariado'));
+  render(envolver(<Jornadas />, '/voluntariado?vista=lista'));
   expect(await screen.findByText('Por ahora no hay jornadas abiertas')).toBeInTheDocument();
 });
 
@@ -122,7 +122,7 @@ it('abierta con ?acopio= filtra por ese acopio', async () => {
   responderSegun({
     'GET /api/turnos/jornadas': [jornadaDe({ lugar: { ...jornadaDe().lugar, id: UUID } })],
   });
-  render(envolver(<Jornadas />, `/voluntariado?acopio=${UUID}`));
+  render(envolver(<Jornadas />, `/voluntariado?vista=lista&acopio=${UUID}`));
   await waitFor(() => expect(peticiones()).toContain(`GET /api/turnos/jornadas?acopio=${UUID}`));
   expect(await screen.findByRole('button', { name: /Acopio Chapinero/ })).toHaveAttribute(
     'aria-pressed',
@@ -141,13 +141,13 @@ it('con ajuste manual, los cupos dicen cuántos llegaron sin reserva', async () 
       }),
     ],
   });
-  render(envolver(<Jornadas />, '/voluntariado'));
+  render(envolver(<Jornadas />, '/voluntariado?vista=lista'));
   expect(await screen.findByText('3 de 10 cupos reservados · 2 sin reserva')).toBeInTheDocument();
 });
 
 it('ignora un día o un acopio mal escritos en la URL', async () => {
   responderSegun({ 'GET /api/turnos/jornadas': [jornadaDe()] });
-  render(envolver(<Jornadas />, '/voluntariado?dia=mañana&acopio=no-es-uuid'));
+  render(envolver(<Jornadas />, '/voluntariado?vista=lista&dia=mañana&acopio=no-es-uuid'));
   expect(await screen.findByText('Armar mercados')).toBeInTheDocument();
   expect(peticiones().filter((p) => p.startsWith('GET /api/turnos/jornadas'))).toEqual([
     'GET /api/turnos/jornadas',
@@ -160,7 +160,7 @@ it('ignora un día que no existe y un UUID sin versión, como la API (P-071)', a
   render(
     envolver(
       <Jornadas />,
-      '/voluntariado?dia=2026-02-30&acopio=11111111-1111-1111-1111-111111111111',
+      '/voluntariado?vista=lista&dia=2026-02-30&acopio=11111111-1111-1111-1111-111111111111',
     ),
   );
   expect(await screen.findByText('Armar mercados')).toBeInTheDocument();
@@ -174,7 +174,7 @@ it('un acopio en mayúsculas en la URL coincide con su opción (P-071)', async (
   responderSegun({
     'GET /api/turnos/jornadas': [jornadaDe({ lugar: { ...jornadaDe().lugar, id } })],
   });
-  render(envolver(<Jornadas />, `/voluntariado?acopio=${id.toUpperCase()}`));
+  render(envolver(<Jornadas />, `/voluntariado?vista=lista&acopio=${id.toUpperCase()}`));
   await waitFor(() => expect(peticiones()).toContain(`GET /api/turnos/jornadas?acopio=${id}`));
   expect(await screen.findByRole('button', { name: /Acopio Chapinero/ })).toHaveAttribute(
     'aria-pressed',
@@ -187,7 +187,7 @@ it('el filtro de lugar dice el nombre del acopio aunque no tenga jornadas', asyn
     'GET /api/turnos/jornadas': [],
     [`GET /api/acopios/${UUID}`]: acopioDePrueba({ nombre: 'Acopio Suba' }),
   });
-  render(envolver(<Jornadas />, `/voluntariado?acopio=${UUID}`));
+  render(envolver(<Jornadas />, `/voluntariado?vista=lista&acopio=${UUID}`));
   expect(await screen.findByRole('button', { name: /Acopio Suba/ })).toHaveAttribute(
     'aria-pressed',
     'true',
@@ -196,7 +196,7 @@ it('el filtro de lugar dice el nombre del acopio aunque no tenga jornadas', asyn
 
 it('los filtros avisan que abren un diálogo', async () => {
   responderSegun({ 'GET /api/turnos/jornadas': [jornadaDe()] });
-  render(envolver(<Jornadas />, '/voluntariado'));
+  render(envolver(<Jornadas />, '/voluntariado?vista=lista'));
   await screen.findByText('Armar mercados');
   for (const nombre of [/Lugar/, /Día/, /Perfil/]) {
     expect(screen.getByRole('button', { name: nombre })).toHaveAttribute('aria-haspopup', 'dialog');
@@ -209,7 +209,7 @@ it('con el ajuste en 0 no dice «Ajustado»', async () => {
       jornadaDe({ ajuste: 0, ajusteActualizadoEn: new Date().toISOString() }),
     ],
   });
-  render(envolver(<Jornadas />, '/voluntariado'));
+  render(envolver(<Jornadas />, '/voluntariado?vista=lista'));
   await screen.findByText('Armar mercados');
   expect(screen.queryByText(/Ajustado/)).not.toBeInTheDocument();
 });
@@ -227,7 +227,15 @@ const CON_CUPOS = jornadaDe({
   lugar: { ...jornadaDe().lugar, id: 'a2', nombre: 'Acopio Suba', lat: 4.74, lng: -74.08 },
 });
 
-it('la vista de mapa queda en la URL y los chips filtran', async () => {
+it('sin parámetro abre en «Mapa», como el mapa de acopios', async () => {
+  responderSegun({ 'GET /api/turnos/jornadas': TRES });
+  render(envolver(<Jornadas />, '/voluntariado'));
+  expect(await screen.findByText('mapa de jornadas')).toBeInTheDocument();
+  expect(screen.getByRole('radio', { name: 'Mapa' })).toBeChecked();
+  expect(screen.getByRole('radio', { name: 'Lista' })).not.toBeChecked();
+});
+
+it('la lista queda en la URL y los chips filtran en el mapa', async () => {
   responderSegun({ 'GET /api/turnos/jornadas': [...TRES, CON_CUPOS] });
   render(
     envolver(
@@ -235,7 +243,7 @@ it('la vista de mapa queda en la URL y los chips filtran', async () => {
         <Jornadas />
         <Ubicacion />
       </>,
-      '/voluntariado',
+      '/voluntariado?vista=lista',
     ),
   );
   await screen.findByText('Armar mercados');
@@ -244,7 +252,7 @@ it('la vista de mapa queda en la URL y los chips filtran', async () => {
   expect(screen.getByRole('button', { name: 'Con cupos 1' })).toBeInTheDocument();
 
   await userEvent.click(screen.getByRole('radio', { name: 'Mapa' }));
-  expect(screen.getByTestId('busqueda')).toHaveTextContent('vista=mapa');
+  expect(screen.getByTestId('busqueda')).not.toHaveTextContent('vista');
   // En el mapa entran la que falta gente, la de cupos y la llena; la fuera de plazo no
   expect(await screen.findByText('mapa de jornadas')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'lugar a1 con 2' })).toBeInTheDocument();
@@ -262,7 +270,7 @@ it('la vista de mapa queda en la URL y los chips filtran', async () => {
   expect(screen.queryByRole('link', { name: /Clasificar ropa donada/ })).not.toBeInTheDocument();
 
   await userEvent.click(screen.getByRole('radio', { name: 'Lista' }));
-  expect(screen.getByTestId('busqueda')).not.toHaveTextContent('vista=mapa');
+  expect(screen.getByTestId('busqueda')).toHaveTextContent('vista=lista');
   expect(screen.getAllByRole('link')).toHaveLength(1);
   expect(screen.getByRole('link', { name: /Armar mercados/ })).toBeInTheDocument();
 });
@@ -275,7 +283,7 @@ it('una jornada sin coordenadas lo avisa bajo el mapa', async () => {
       jornadaDe({ id: 'j5', lugar: { ...jornadaDe().lugar, id: 'e1', lat: null, lng: null } }),
     ],
   });
-  render(envolver(<Jornadas />, '/voluntariado?vista=mapa'));
+  render(envolver(<Jornadas />, '/voluntariado'));
   expect(
     await screen.findByText('1 jornada no tiene ubicación en el mapa; está en la lista.'),
   ).toBeInTheDocument();

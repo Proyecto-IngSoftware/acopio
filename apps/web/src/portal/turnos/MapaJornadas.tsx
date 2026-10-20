@@ -3,10 +3,8 @@ import 'leaflet/dist/leaflet.css';
 import { useEffect } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import { ATRIBUCION, CENTRO_INICIAL, MOSAICOS } from '../../componentes/mapa/MapaLeaflet';
-import { altoPunto, htmlPunto } from '../mapa/marcador';
+import { altoPunto, anchoPunto, htmlPunto } from '../mapa/marcador';
 import { ESTILO_CUPOS, estadoCupos, textoPunto, type GrupoLugar } from './cupos';
-
-const ANCHO = 220;
 
 function Puntos({
   grupos,
@@ -25,6 +23,7 @@ function Puntos({
       const estilo = ESTILO_CUPOS[estado];
       const sel = g.lugar.id === elegido;
       const alto = altoPunto(sel, true);
+      const ancho = anchoPunto(sel, texto);
       const mas = g.jornadas.length - 1;
       const titulo = `${g.lugar.nombre}. ${estadoCupos(g.jornadas[0]!)!.texto.toLocaleLowerCase('es-CO')}${
         mas > 0 ? ` y ${mas} ${mas === 1 ? 'jornada más' : 'jornadas más'}` : ''
@@ -38,8 +37,8 @@ function Puntos({
             etiqueta: { clases: estilo.clases, icono: estilo.icono, texto },
             elegido: sel,
           }),
-          iconSize: [ANCHO, alto],
-          iconAnchor: [ANCHO / 2, alto],
+          iconSize: [ancho, alto],
+          iconAnchor: [ancho / 2, alto],
         }),
         title: titulo,
         alt: titulo,

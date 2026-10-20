@@ -39,8 +39,8 @@ Especificación: [mapa de necesidades](../../../superpowers/specs/2026-10-20-map
 sección «Voluntariado en mapa». Sale de la pantalla de Stitch «Voluntariado - Mapa de Jornadas
 y Reserva de Cupos».
 
-- P7 tiene las pestañas «Lista» y «Mapa», como P5. La lista sigue siendo la vista por defecto
-  y los filtros de lugar, día y perfil aplican a las dos.
+- P7 tiene las pestañas «Mapa» y «Lista», como P5, y abre en el mapa. La lista queda en
+  `?vista=lista`. Los filtros de lugar, día y perfil aplican a las dos.
 - Cada lugar con coordenadas es un círculo con `groups` y, encima, la etiqueta de su jornada
   más urgente: «FALTAN N PERSONAS» si está ocupado menos de la mitad del cupo, «QUEDAN N
   CUPOS» si no, o «LLENA». Con varias jornadas suma «+N». Al tocarlo salen debajo sus

@@ -162,8 +162,9 @@ que el cálculo sale de ahí con los DAO que ya existen.
 
 ## Voluntariado en mapa
 
-P7 (`/voluntariado`) gana las pestañas «Lista» y «Mapa», como P5. La lista sigue siendo la
-vista por defecto. Los filtros que ya tiene (lugar, día, perfil) aplican a las dos.
+P7 (`/voluntariado`) gana las pestañas «Mapa» y «Lista», como P5. Abre en el mapa, igual que
+P5, y la lista queda en `?vista=lista`. Los filtros que ya tiene (lugar, día, perfil) aplican a
+las dos.
 
 - Un punto por lugar (`lugar.id`) con coordenadas. Las jornadas cuyo lugar no tiene `lat` y
   `lng` solo salen en la lista, y un aviso bajo el mapa dice cuántas son.
@@ -194,6 +195,7 @@ ajuste y libres.
 - Los colores del punto como en la maqueta (2026-10-20). Leí «colores como en la maqueta» como
   el punto completo de la maqueta, un círculo sin nombre; si quería la píldora con nombre en el
   color del estado, se cambia en el plan.
+- Que voluntariado abra en el mapa, como el mapa de acopios (2026-10-20).
 
 ## Lo que decidí yo al cerrar el diseño
 

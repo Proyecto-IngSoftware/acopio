@@ -79,7 +79,7 @@ await paso('P7 lista las jornadas y marca la llena', async () => {
   const armar = await jornada('Armar mercados (demo)');
   antes = armar.ocupados;
   jornadaId = armar.id;
-  await p.goto(`${WEB}/voluntariado`);
+  await p.goto(`${WEB}/voluntariado?vista=lista`);
   await p.getByRole('heading', { level: 1, name: 'Voluntariado' }).waitFor();
   const llena = p.getByRole('link', { name: /Clasificar ropa donada \(demo\)/ });
   // Sembrada hace días, la llena puede quedar a menos de 12 horas: «Reservas cerradas» le gana a «Llena»
@@ -90,7 +90,8 @@ await paso('P7 lista las jornadas y marca la llena', async () => {
 
 await paso('P7 en «Mapa» pone la etiqueta de cupos sobre Acopio Chapinero', async () => {
   await p.locator('label', { hasText: 'Mapa' }).click();
-  if (new URL(p.url()).searchParams.get('vista') !== 'mapa') throw new Error(`url ${p.url()}`);
+  // El mapa es la vista por defecto: elegirlo quita `vista` de la URL
+  if (new URL(p.url()).searchParams.has('vista')) throw new Error(`url ${p.url()}`);
   // Chapinero tiene «Clasificar ropa donada (demo)» llena y, si sigue en plazo, «Armar mercados»
   const etiqueta = /(FALTAN? \d+ PERSONAS?|QUEDAN? \d+ CUPOS?|LLENA)( \+\d+)?/;
   const punto = p.locator('.leaflet-marker-icon', { hasText: etiqueta });

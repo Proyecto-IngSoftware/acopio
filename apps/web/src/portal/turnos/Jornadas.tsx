@@ -62,7 +62,8 @@ export function Jornadas() {
   // Las opciones de lugar y día salen de todas las jornadas, sin filtrar
   const todas = useJornadas();
   const [abierta, abrir] = useState<Clave | null>(null);
-  const vista = parametros.get('vista') === 'mapa' ? 'mapa' : 'lista';
+  // Abre en el mapa, como P5; la lista va en `vista=lista`
+  const vista = parametros.get('vista') === 'lista' ? 'lista' : 'mapa';
   const chip = leerChip(parametros.get('estado'));
   const [elegido, fijarElegido] = useState<string | null>(null);
   const elegir = useCallback((id: string) => fijarElegido(id), []);
@@ -189,10 +190,10 @@ export function Jornadas() {
       <Segmentado
         etiqueta="Ver como"
         valor={vista}
-        alCambiar={(v) => cambiar('vista', v === 'mapa' ? 'mapa' : null)}
+        alCambiar={(v) => cambiar('vista', v === 'lista' ? 'lista' : null)}
         opciones={[
-          { valor: 'lista', texto: 'Lista', icono: 'list' },
           { valor: 'mapa', texto: 'Mapa', icono: 'map' },
+          { valor: 'lista', texto: 'Lista', icono: 'list' },
         ]}
       />
 
