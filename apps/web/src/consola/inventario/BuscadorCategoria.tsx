@@ -10,7 +10,7 @@ import { ErrorApi } from '../../api/cliente';
 import { Icono } from '../../componentes/Icono';
 import { buscarEnCopia, useCategoriasLocales } from '../../sin-conexion/busqueda-local';
 import { buscarCodigoVisto } from '../../sin-conexion/datos-locales';
-import { HojaCodigoNuevo, HojaCodigoPropuesto, VistaCamara } from './Escaner';
+import { HojaCodigoNuevo, HojaCodigoPropuesto, HojaNumeroCodigo, VistaCamara } from './Escaner';
 
 /** Lo que el escáner leyó: C4 cuenta presentaciones si trae contenido. */
 export interface Leido {
@@ -18,10 +18,14 @@ export interface Leido {
   contenido: number | null;
   /** Un Donador propuso el código y ningún Operador lo ha confirmado. */
   sinConfirmar?: boolean;
+  /** Aviso corto que la pantalla muestra junto al código leído. */
+  nota?: string;
 }
 
 const SIN_PERMISO = 'Sin permiso para usar la cámara. Busca la categoría por nombre.';
 const SIN_RED = 'Sin conexión, Acopio no aprende códigos nuevos. Busca por nombre.';
+
+const SIN_CONFIRMAR = 'Sin conexión: este código todavía no está confirmado. Busca por nombre.';
 
 const categoriaDe = (c: CodigoBarras): ResultadoBusqueda => ({
   id: c.categoriaId,
@@ -46,7 +50,8 @@ type Escaneo =
   | { paso: 'camara' }
   | { paso: 'nuevo'; ean: string }
   | { paso: 'propuesto'; codigo: CodigoBarras }
-  | { paso: 'corregir'; codigo: CodigoBarras };
+  | { paso: 'corregir'; codigo: CodigoBarras }
+  | { paso: 'escribir' };
 
 /** Búsqueda de categoría de C4, C5 y C6, por nombre o con la cámara (RF-INV-002). */
 export function BuscadorCategoria({
@@ -111,7 +116,8 @@ export function BuscadorCategoria({
       if (!(e instanceof ErrorApi && e.estado === 0)) return fijarAviso((e as Error).message);
       // Sin red reconoce los códigos que ya vio este teléfono y no aprende nuevos (O-08)
       const visto = await buscarCodigoVisto(ean);
-      if (visto) onElegir(categoriaDe(visto), { ean, contenido: visto.contenido });
+      if (visto && confirmarPropuestos && visto.estado === 'PROPUESTO') fijarAviso(SIN_CONFIRMAR);
+      else if (visto) onElegir(categoriaDe(visto), { ean, contenido: visto.contenido });
       else fijarAviso(SIN_RED);
     }
   };
@@ -194,7 +200,12 @@ export function BuscadorCategoria({
       )}
 
       {escaneo.paso === 'camara' && (
-        <VistaCamara alLeer={(ean) => void leer(ean)} alCerrar={volverABuscar} alFallar={fallar} />
+        <VistaCamara
+          alLeer={(ean) => void leer(ean)}
+          alCerrar={volverABuscar}
+          alFallar={fallar}
+          alEscribir={resolverCodigo ? undefined : () => fijarEscaneo({ paso: 'escribir' })}
+        />
       )}
       {escaneo.paso === 'nuevo' && (
         <HojaCodigoNuevo
@@ -221,12 +232,10 @@ export function BuscadorCategoria({
           codigo={escaneo.codigo}
           alCerrar={volverABuscar}
           alCorregir={() => fijarEscaneo({ paso: 'corregir', codigo: escaneo.codigo })}
-          alConfirmar={() => {
+          alConfirmar={(otro, nota) => {
+            const c = otro ?? escaneo.codigo;
             fijarEscaneo({ paso: 'nada' });
-            onElegir(categoriaDe(escaneo.codigo), {
-              ean: escaneo.codigo.ean,
-              contenido: escaneo.codigo.contenido,
-            });
+            onElegir(categoriaDe(c), { ean: c.ean, contenido: c.contenido, nota });
           }}
         />
       )}
@@ -236,11 +245,14 @@ export function BuscadorCategoria({
           corregir={escaneo.codigo}
           escribirNumero={false}
           alCerrar={volverABuscar}
-          alAsociar={(c, contenido) => {
+          alAsociar={(c, contenido, ean, nota) => {
             fijarEscaneo({ paso: 'nada' });
-            onElegir(c, { ean: escaneo.codigo.ean, contenido });
+            onElegir(c, { ean, contenido, nota });
           }}
         />
+      )}
+      {escaneo.paso === 'escribir' && (
+        <HojaNumeroCodigo alCerrar={volverABuscar} alBuscar={(ean) => void leer(ean)} />
       )}
     </div>
   );

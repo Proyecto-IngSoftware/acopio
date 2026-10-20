@@ -238,6 +238,7 @@ export function EntradaRapida() {
                 Leído: {leido.ean}
                 {leido.contenido !== null &&
                   ` · cada una trae ${formatearCantidad(leido.contenido, categoria.unidadBase)}`}
+                {leido.nota && ` · ${leido.nota}`}
               </span>
             )}
           </TarjetaSaldo>

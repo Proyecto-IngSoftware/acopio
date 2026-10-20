@@ -279,6 +279,100 @@ describe('Escáner', () => {
     expect(peticiones().some((p) => p.startsWith('POST'))).toBe(false);
   });
 
+  it('«Escribir el número» busca el código tecleado como si lo escaneara', async () => {
+    const { elegida } = pantalla({ [`GET /api/codigos-barras/${EAN}`]: AGUA });
+    await escanear();
+    const vista = screen.getByRole('dialog', { name: 'Escáner' });
+    await userEvent.click(within(vista).getByRole('button', { name: 'Escribir el número' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Escribir el número' });
+    const buscar = within(hoja).getByRole('button', { name: 'Buscar código' });
+    await userEvent.type(within(hoja).getByLabelText('Número del código'), '12345');
+    expect(buscar).toBeDisabled();
+    await userEvent.clear(within(hoja).getByLabelText('Número del código'));
+    await userEvent.type(within(hoja).getByLabelText('Número del código'), EAN);
+    await userEvent.click(buscar);
+    await waitFor(() =>
+      expect(elegida).toHaveBeenCalledWith(expect.objectContaining({ id: 'c1' }), {
+        ean: EAN,
+        contenido: 0.6,
+      }),
+    );
+  });
+
+  it('un número escrito que no se conoce abre «Código nuevo»', async () => {
+    pantalla(codigoNuevo());
+    await escanear();
+    await userEvent.click(screen.getByRole('button', { name: 'Escribir el número' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Escribir el número' });
+    await userEvent.type(within(hoja).getByLabelText('Número del código'), NUEVO);
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Buscar código' }));
+    const nuevo = await abrirHoja();
+    expect(within(nuevo).getByLabelText('Número del código')).toHaveValue(NUEVO);
+  });
+
+  it('un error de un intento anterior desaparece al elegir otra presentación', async () => {
+    leera(NUEVO);
+    pantalla(
+      codigoNuevo({
+        'POST /api/codigos-barras': conEstado(409, {
+          estado: 409,
+          codigo: 'CODIGO_DUPLICADO',
+          mensaje: 'El código ya existe',
+        }),
+      }),
+    );
+    await escanear();
+    const hoja = await abrirHoja();
+    await elegirAgua(hoja);
+    await userEvent.click(
+      await within(hoja).findByRole('radio', { name: 'Botella de agua 600 ml' }),
+    );
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Asociar y seguir' }));
+    expect(await within(hoja).findByText('El código ya existe')).toBeInTheDocument();
+    await userEvent.click(within(hoja).getByRole('radio', { name: 'Bolsa de agua 6 L' }));
+    expect(within(hoja).queryByText('El código ya existe')).not.toBeInTheDocument();
+  });
+
+  it('un nombre repetido se avisa sin llamar a la API, sin importar mayúsculas', async () => {
+    leera(NUEVO);
+    pantalla(codigoNuevo());
+    await escanear();
+    const hoja = await abrirHoja();
+    await elegirAgua(hoja);
+    await within(hoja).findByRole('radio', { name: 'Bolsa de agua 6 L' });
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Nueva presentación' }));
+    const nueva = await screen.findByRole('dialog', { name: 'Nueva presentación' });
+    await userEvent.type(within(nueva).getByLabelText('Nombre'), 'bolsa DE agua 6 l');
+    await userEvent.type(within(nueva).getByLabelText('Tamaño'), '7');
+    expect(within(nueva).getByRole('alert')).toHaveTextContent(
+      'Ya hay una presentación con ese nombre en la categoría',
+    );
+    expect(within(nueva).getByRole('button', { name: 'Crear presentación' })).toBeDisabled();
+  });
+
+  it('un tamaño que la API rechaza se muestra en la hoja', async () => {
+    leera(NUEVO);
+    pantalla(
+      codigoNuevo({
+        'POST /api/presentaciones': conEstado(422, {
+          estado: 422,
+          codigo: 'TAMANO_FUERA_DE_TOPE',
+          mensaje: 'Una presentación llega hasta 50 L',
+        }),
+      }),
+    );
+    await escanear();
+    const hoja = await abrirHoja();
+    await elegirAgua(hoja);
+    await within(hoja).findByRole('radio', { name: 'Bolsa de agua 6 L' });
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Nueva presentación' }));
+    const nueva = await screen.findByRole('dialog', { name: 'Nueva presentación' });
+    await userEvent.type(within(nueva).getByLabelText('Nombre'), 'Tanque');
+    await userEvent.type(within(nueva).getByLabelText('Tamaño'), '40');
+    await userEvent.click(within(nueva).getByRole('button', { name: 'Crear presentación' }));
+    expect(await within(nueva).findByText('Una presentación llega hasta 50 L')).toBeInTheDocument();
+  });
+
   it('sin permiso de cámara avisa y la búsqueda sigue igual', async () => {
     camara.abrir = () => Promise.reject(new DOMException('denegado', 'NotAllowedError'));
     pantalla({});

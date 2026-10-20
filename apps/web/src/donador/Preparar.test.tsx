@@ -294,6 +294,13 @@ describe('P9, paso 1: qué llevas', () => {
     expect(peticiones()).not.toContain('POST /api/presentaciones');
   });
 
+  it('el Donador no puede escribir el número del código', async () => {
+    pantalla();
+    await escanear();
+    expect(screen.getByRole('dialog', { name: 'Escáner' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Escribir el número' })).not.toBeInTheDocument();
+  });
+
   it('«Ahora no» cierra la hoja sin proponer nada', async () => {
     leera(NUEVO);
     pantalla({ [`GET /api/donaciones/codigos/${NUEVO}`]: desconocido });

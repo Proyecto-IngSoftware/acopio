@@ -5,6 +5,7 @@ import {
   useAsociarCodigo,
   useBuscarCategorias,
   usePresentaciones,
+  consultarCodigo,
   useValidarCodigo,
   type CodigoBarras,
   type Presentacion,
@@ -28,12 +29,15 @@ export function VistaCamara({
   alFallar,
   indicacion = 'Apunta al código de barras del producto',
   textoSalir = 'Buscar por nombre',
+  alEscribir,
 }: {
   alLeer: (codigo: string) => void;
   alCerrar: () => void;
   alFallar: (error: unknown) => void;
   indicacion?: string;
   textoSalir?: string;
+  /** Con esto aparece «Escribir el número»: el Operador teclea el código en vez de escanearlo. */
+  alEscribir?: () => void;
 }) {
   const video = useRef<HTMLVideoElement>(null);
   const cerrar = useRef<HTMLButtonElement>(null);
@@ -98,13 +102,25 @@ export function VistaCamara({
         className="relative mx-auto mt-[25vh] h-32 w-64 max-w-full rounded-xl border-[3px] border-inverse-on-surface"
       />
       <p className="relative mt-space-md text-center text-body-lg font-bold">{indicacion}</p>
-      <button
-        type="button"
-        onClick={alCerrar}
-        className="relative mt-auto min-h-[48px] rounded-xl border-[1.5px] border-inverse-on-surface font-bold"
-      >
-        {textoSalir}
-      </button>
+      <div className="relative mt-auto flex flex-col gap-space-sm">
+        {alEscribir && (
+          <button
+            type="button"
+            onClick={alEscribir}
+            className="flex min-h-[48px] items-center justify-center gap-space-xs rounded-xl border-[1.5px] border-inverse-on-surface font-bold"
+          >
+            <Icono nombre="edit" className="shrink-0 text-[20px]" />
+            Escribir el número
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={alCerrar}
+          className="min-h-[48px] rounded-xl border-[1.5px] border-inverse-on-surface font-bold"
+        >
+          {textoSalir}
+        </button>
+      </div>
     </div>,
     document.body,
   );
@@ -114,7 +130,7 @@ export function VistaCamara({
 interface PropsHojaCodigo {
   ean: string;
   /** El código quedó guardado con esa categoría; `contenido` es el tamaño de la presentación. */
-  alAsociar: (c: ResultadoBusqueda, contenido: number | null, ean: string) => void;
+  alAsociar: (c: ResultadoBusqueda, contenido: number | null, ean: string, nota?: string) => void;
   alCerrar: () => void;
   /** Con esto aparece «Solo guardar el código»: asocia y vuelve a buscar sin pedir cantidad
    *  (el pase por la bodega, C4 con red). */
@@ -160,6 +176,7 @@ export function HojaCodigoNuevo({
     tamano: number;
   } | null>(null);
   const [creando, fijarCreando] = useState(false);
+  const [falloRefresco, fijarFalloRefresco] = useState('');
   const resultados = useBuscarCategorias(categoria ? '' : q);
   const presentaciones = usePresentaciones(categoria?.id);
   const asociar = useAsociarCodigo();
@@ -174,10 +191,23 @@ export function HojaCodigoNuevo({
   const usaBorrador = eleccion === BORRADOR && borrador !== null;
   const hayEleccion = elegida !== null || usaBorrador;
   const pendiente = asociar.isPending || validar.isPending || proponer.isPending;
-  const error = (asociar.error ?? validar.error ?? proponer.error)?.message;
+  const error = falloRefresco || (asociar.error ?? validar.error ?? proponer.error)?.message;
   const eanValido = ean.trim().length > 0;
 
+  // Un error de un intento anterior no sigue a la elección nueva
+  const limpiarErrores = () => {
+    asociar.reset();
+    validar.reset();
+    proponer.reset();
+    fijarFalloRefresco('');
+  };
+  const elegirPresentacion = (id: string) => {
+    limpiarErrores();
+    fijarEleccion(id);
+  };
+
   const elegirCategoria = (c: ResultadoBusqueda | null) => {
+    limpiarErrores();
     fijarCategoria(c);
     fijarEleccion(null);
     fijarCreada(null);
@@ -193,7 +223,17 @@ export function HojaCodigoNuevo({
     if (corregir) {
       validar.mutate(
         { ean: corregir.ean, presentacionId: elegida!.id },
-        { onSuccess: alTerminar(null) },
+        {
+          onSuccess: alTerminar(null),
+          // Otro Operador lo confirmó antes: se sigue con lo que quedó guardado
+          onError: (e) => {
+            if (e.codigo !== 'CODIGO_YA_VALIDADO') return;
+            consultarCodigo(corregir.ean).then(
+              (r) => despues(categoriaDeCodigo(r), r.contenido, r.ean, YA_CONFIRMADO),
+              (f: Error) => fijarFalloRefresco(f.message),
+            );
+          },
+        },
       );
     } else if (donador) {
       proponer.mutate(
@@ -301,7 +341,7 @@ export function HojaCodigoNuevo({
                       type="radio"
                       name="codigo-presentacion"
                       checked={eleccion === o.id}
-                      onChange={() => fijarEleccion(o.id)}
+                      onChange={() => elegirPresentacion(o.id)}
                       className="size-5 shrink-0 accent-primary-container"
                     />
                     <span className="min-w-0 font-bold text-on-surface">{o.nombre}</span>
@@ -356,9 +396,11 @@ export function HojaCodigoNuevo({
             if ('presentacion' in nueva) {
               if (!lista.some((p) => p.id === nueva.presentacion.id))
                 fijarCreada(nueva.presentacion);
+              limpiarErrores();
               fijarEleccion(nueva.presentacion.id);
             } else {
               fijarBorrador({ datos: nueva.borrador, tamano: nueva.tamano });
+              limpiarErrores();
               fijarEleccion(BORRADOR);
             }
           }}
@@ -369,6 +411,7 @@ export function HojaCodigoNuevo({
 }
 
 const BORRADOR = 'borrador';
+const YA_CONFIRMADO = 'Otro operador ya lo había confirmado';
 
 /** Un código que un Donador propuso y nadie confirmó: el Operador lo confirma o lo corrige
  *  antes de pedir la cantidad (RF-CAT-004). */
@@ -379,11 +422,13 @@ export function HojaCodigoPropuesto({
   alCerrar,
 }: {
   codigo: CodigoBarras;
-  alConfirmar: () => void;
+  /** Con `codigo` el que quedó guardado, si otro Operador lo confirmó antes con otra cosa. */
+  alConfirmar: (codigo?: CodigoBarras, nota?: string) => void;
   alCorregir: () => void;
   alCerrar: () => void;
 }) {
   const validar = useValidarCodigo();
+  const [fallo, fijarFallo] = useState('');
   const presentacion = codigo.presentacion;
   return (
     <Hoja titulo="Confirma el código" alCerrar={alCerrar}>
@@ -405,7 +450,7 @@ export function HojaCodigoPropuesto({
             : 'Sin presentación'}
         </span>
       </div>
-      <FormularioError mensaje={validar.error?.message} />
+      <FormularioError mensaje={fallo || validar.error?.message} />
       <Boton
         className="min-h-[56px] w-full"
         disabled={!presentacion || validar.isPending}
@@ -413,9 +458,15 @@ export function HojaCodigoPropuesto({
           validar.mutate(
             { ean: codigo.ean, presentacionId: presentacion!.id },
             {
-              onSuccess: alConfirmar,
-              // Otro Operador ya lo confirmó: se puede seguir
-              onError: (e) => e.codigo === 'CODIGO_YA_VALIDADO' && alConfirmar(),
+              onSuccess: () => alConfirmar(),
+              // Otro Operador ya lo confirmó, quizá con otra presentación: se vuelve a leer
+              onError: (e) => {
+                if (e.codigo !== 'CODIGO_YA_VALIDADO') return;
+                consultarCodigo(codigo.ean).then(
+                  (r) => alConfirmar(r, YA_CONFIRMADO),
+                  (f: Error) => fijarFallo(f.message),
+                );
+              },
             },
           )
         }
@@ -427,6 +478,55 @@ export function HojaCodigoPropuesto({
         <Icono nombre="edit" className="shrink-0 text-[22px]" />
         Corregir
       </Boton>
+    </Hoja>
+  );
+}
+
+/** El Operador escribe el número del código cuando la cámara no lo lee (8, 12, 13 o 14 dígitos,
+ *  como pide la API). Se resuelve igual que un escaneo. */
+export function HojaNumeroCodigo({
+  alBuscar,
+  alCerrar,
+}: {
+  alBuscar: (ean: string) => void;
+  alCerrar: () => void;
+}) {
+  const [numero, fijarNumero] = useState('');
+  const valido = /^(\d{8}|\d{12,14})$/.test(numero);
+  return (
+    <Hoja titulo="Escribir el número" alCerrar={alCerrar}>
+      <form
+        className="flex flex-col gap-space-md"
+        onSubmit={(e) => {
+          e.preventDefault();
+          if (valido) alBuscar(numero);
+        }}
+      >
+        <div className="flex flex-col gap-space-xs">
+          <label htmlFor="codigo-numero" className="text-label-md font-bold text-on-surface">
+            Número del código
+          </label>
+          <div className="flex min-h-[56px] items-center gap-space-sm rounded-xl border-[1.5px] border-outline bg-surface-container-lowest px-space-md">
+            <Icono nombre="barcode" className="shrink-0 text-[28px] text-primary-container" />
+            <input
+              id="codigo-numero"
+              inputMode="numeric"
+              autoComplete="off"
+              autoFocus
+              value={numero}
+              onChange={(e) => fijarNumero(e.target.value.replace(/\D/g, '').slice(0, 14))}
+              className="min-h-[48px] w-full min-w-0 bg-transparent text-headline-sm font-bold tracking-wide text-on-surface tabular-nums"
+            />
+          </div>
+          <span className="text-body-sm text-on-surface-variant">
+            Lleva 8, 12, 13 o 14 dígitos.
+          </span>
+        </div>
+        <Boton type="submit" className="min-h-[56px] w-full" disabled={!valido}>
+          <Icono nombre="search" className="shrink-0 text-[22px]" />
+          Buscar código
+        </Boton>
+      </form>
     </Hoja>
   );
 }

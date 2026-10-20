@@ -434,4 +434,68 @@ describe('C4 con códigos de presentaciones', () => {
       'Arroz',
     );
   });
+
+  /** El primer GET del código responde lo de la hoja; los siguientes, lo ya confirmado. */
+  const luegoConfirmado = (refrescado: unknown) => {
+    const base = vi.mocked(globalThis.fetch).getMockImplementation()!;
+    let lecturas = 0;
+    vi.mocked(globalThis.fetch).mockImplementation((entrada, init) => {
+      const p = entrada as Request;
+      if (p.method === 'GET' && p.url.endsWith(`/api/codigos-barras/${EAN}`) && ++lecturas > 1)
+        return Promise.resolve(
+          new Response(JSON.stringify(refrescado), {
+            status: 200,
+            headers: { 'content-type': 'application/json' },
+          }),
+        );
+      return base(entrada, init);
+    });
+  };
+  const YA_VALIDADO = conEstado(409, {
+    estado: 409,
+    codigo: 'CODIGO_YA_VALIDADO',
+    mensaje: 'El código ya está validado',
+  });
+  const ARROZ_VALIDADO = {
+    ...BOTELLA,
+    categoriaId: 'c2',
+    categoria: 'Arroz',
+    unidad: 'KILOGRAMO',
+    contenido: 0.5,
+    estado: 'VALIDADO',
+    presentacion: { id: 'pa', nombre: 'Bolsa de arroz 500 g', tamano: 0.5 },
+  };
+
+  it('«Es correcto» con el código ya confirmado por otro sigue con lo que quedó guardado', async () => {
+    pantalla({
+      [`GET /api/codigos-barras/${EAN}`]: PROPUESTO,
+      [`POST /api/codigos-barras/${EAN}/validar`]: YA_VALIDADO,
+    });
+    luegoConfirmado(ARROZ_VALIDADO);
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Confirma el código' });
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Es correcto' }));
+    const elegida = await screen.findByRole('region', { name: 'Categoría elegida' });
+    expect(elegida).toHaveTextContent('Arroz');
+    expect(elegida).toHaveTextContent('cada una trae 0,5 kg');
+    expect(elegida).toHaveTextContent('Otro operador ya lo había confirmado');
+  });
+
+  it('«Corregir» con el código ya confirmado por otro sigue con lo que quedó guardado', async () => {
+    pantalla({
+      [`GET /api/codigos-barras/${EAN}`]: PROPUESTO,
+      'GET /api/presentaciones': [SUELTA],
+      [`POST /api/codigos-barras/${EAN}/validar`]: YA_VALIDADO,
+    });
+    luegoConfirmado(ARROZ_VALIDADO);
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const confirma = await screen.findByRole('dialog', { name: 'Confirma el código' });
+    await userEvent.click(within(confirma).getByRole('button', { name: 'Corregir' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Corregir el código' });
+    await userEvent.click(await within(hoja).findByRole('radio', { name: 'Bolsa de arroz 500 g' }));
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Confirmar y seguir' }));
+    const elegida = await screen.findByRole('region', { name: 'Categoría elegida' });
+    expect(elegida).toHaveTextContent('Arroz');
+    expect(elegida).toHaveTextContent('Otro operador ya lo había confirmado');
+  });
 });

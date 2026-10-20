@@ -101,8 +101,12 @@ export function HojaNuevaPresentacion({
       ? `Paquete x${unidades} · ${dentro.nombre}`
       : '';
   const nombreVisible = nombre ?? sugerido;
+  const nombreRepetido = presentaciones.some(
+    (p) => p.nombre.trim().toLowerCase() === nombreVisible.trim().toLowerCase(),
+  );
   const listo =
     nombreVisible.trim() !== '' &&
+    !nombreRepetido &&
     (clase === 'SUELTA' ? base > 0 && !errorSuelta : Boolean(dentro) && total > 0 && !errorPaquete);
 
   const guardar = () => {
@@ -227,6 +231,11 @@ export function HojaNuevaPresentacion({
           onChange={(e) => fijarNombre(e.target.value)}
           className={CAMPO}
         />
+        {nombreRepetido && nombreVisible.trim() !== '' && (
+          <p role="alert" className="text-body-sm text-error">
+            Ya hay una presentación con ese nombre en la categoría
+          </p>
+        )}
       </div>
 
       {clase === 'SUELTA' && (
