@@ -45,7 +45,7 @@ export function alPerderSesion(fn: () => void): () => void {
 api.use({
   onResponse({ request, response }) {
     const ruta = new URL(request.url).pathname;
-    const esInicio = ruta.endsWith('/api/auth/sesion') || ruta.endsWith('/api/auth/donador/sesion');
+    const esInicio = ruta.endsWith('/api/auth/sesion');
     if (response.status === 401 && !esInicio) {
       for (const fn of suscriptores) fn();
     }

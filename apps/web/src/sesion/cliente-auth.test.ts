@@ -105,21 +105,21 @@ describe('registro y sesión del Donador', () => {
     expect(await p.json()).toEqual({ token: 'tok', contrasena: 'una frase larga', nombre: 'Ana' });
   });
 
-  it('iniciarSesionDonador envía correo y contraseña', async () => {
+  it('iniciarSesion manda el correo del Donador a la única ruta de entrada', async () => {
     responderJson({ expiraEn: '2026-10-01T00:00:00.000Z', usuario: DONADOR });
     await expect(
-      clienteAuthLocal.iniciarSesionDonador('ana@correo.co', 'una frase larga'),
+      clienteAuthLocal.iniciarSesion('ana@correo.co', 'una frase larga'),
     ).resolves.toEqual(DONADOR);
     const p = peticion();
-    expect(p.url).toMatch(/\/api\/auth\/donador\/sesion$/);
-    expect(await p.json()).toEqual({ correo: 'ana@correo.co', contrasena: 'una frase larga' });
+    expect(p.url).toMatch(/\/api\/auth\/sesion$/);
+    expect(await p.json()).toEqual({ usuario: 'ana@correo.co', contrasena: 'una frase larga' });
   });
 
-  it('un 401 al iniciar sesión de Donador no cuenta como sesión perdida', async () => {
+  it('un 401 al iniciar sesión no cuenta como sesión perdida', async () => {
     const aviso = vi.fn();
     const quitar = alPerderSesion(aviso);
     responderJson({ estado: 401, codigo: 'NO_AUTENTICADO', mensaje: 'No' }, 401);
-    await clienteAuthLocal.iniciarSesionDonador('a@b.co', 'x').catch(() => {});
+    await clienteAuthLocal.iniciarSesion('a@b.co', 'x').catch(() => {});
     expect(aviso).not.toHaveBeenCalled();
     quitar();
   });

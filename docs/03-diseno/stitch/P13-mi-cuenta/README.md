@@ -3,7 +3,7 @@ title: "P13 · Mi cuenta de Donador · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portal, donador]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-19
 ---
 
 # P13 · Mi cuenta de Donador · diseño en Stitch
@@ -43,3 +43,11 @@ Aplicadas en la maqueta y aprobadas con ella. Valen para todas las pantallas del
 - La barra inferior es la del portal, con cinco destinos. Stitch dibujó tres.
 - «Cancelar donación» va aparte, en rojo, y pide confirmación.
 - La pestaña «Entrar» no salió de Stitch: se armó con los tokens.
+
+## Solo crear la cuenta (2026-10-19)
+
+Desde el 2026-10-19, P13 sin sesión solo crea la cuenta de donador: sin las pestañas «Crear
+cuenta» y «Entrar», con el título «Crea tu cuenta de donador» y el enlace «¿Ya tienes cuenta?
+Entrar» a C01. Después de pedir la cuenta queda el aviso de revisar el correo y un botón
+«Entrar». Joseph aprobó la maqueta ajustada el 2026-10-19
+([especificación](../../../superpowers/specs/2026-10-19-entrada-unica-design.md)).

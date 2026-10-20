@@ -18,8 +18,8 @@ interface EstadoSesion {
   usuario: UsuarioSesion | null;
   /** Verdadero mientras se pregunta a la API si hay sesión. */
   cargando: boolean;
+  /** Inicia sesión con correo o nombre de usuario, para cualquier cuenta. */
   entrar(usuario: string, contrasena: string): Promise<void>;
-  entrarDonador(correo: string, contrasena: string): Promise<void>;
   /** Pide el correo de confirmación del registro del Donador; no abre sesión. */
   registrarDonador(nombre: string, correo: string): Promise<void>;
   /** Pregunta si el enlace del correo sirve; `null` si no existe, venció o ya se usó. */
@@ -87,8 +87,8 @@ export function SesionProveedor({
         if (!perdido) return;
         olvidarUsuario();
         cambiarUsuario(null);
-        // Un Donador vuelve a su cuenta; la consola tiene su propia pantalla de entrada
-        navegar(perdido.rol === 'DONADOR' ? '/donador' : '/entrar');
+        // Todas las cuentas entran por la misma pantalla
+        navegar('/entrar');
       }),
     [navegar, cambiarUsuario],
   );
@@ -96,15 +96,6 @@ export function SesionProveedor({
   const entrar = useCallback(
     async (nombre: string, contrasena: string) => {
       const u = await cliente.iniciarSesion(nombre, contrasena);
-      recordarUsuario(u);
-      cambiarUsuario(u);
-    },
-    [cliente, cambiarUsuario],
-  );
-
-  const entrarDonador = useCallback(
-    async (correo: string, contrasena: string) => {
-      const u = await cliente.iniciarSesionDonador(correo, contrasena);
       recordarUsuario(u);
       cambiarUsuario(u);
     },
@@ -138,13 +129,12 @@ export function SesionProveedor({
       usuario,
       cargando,
       entrar,
-      entrarDonador,
       registrarDonador,
       validarEnlace,
       confirmar,
       salir,
     }),
-    [usuario, cargando, entrar, entrarDonador, registrarDonador, validarEnlace, confirmar, salir],
+    [usuario, cargando, entrar, registrarDonador, validarEnlace, confirmar, salir],
   );
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>;
 }

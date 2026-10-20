@@ -70,7 +70,7 @@ export class DonadorService {
           await this.correo.encolar(
             tx,
             correo,
-            plantillas.cuentaExistente({ enlaceEntrar: `${this.entorno.APP_URL}/donador` }),
+            plantillas.cuentaExistente({ enlaceEntrar: `${this.entorno.APP_URL}/entrar` }),
           );
         }
       });

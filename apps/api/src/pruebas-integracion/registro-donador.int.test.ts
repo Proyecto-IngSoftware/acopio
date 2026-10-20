@@ -91,6 +91,12 @@ describe('registro del Donador (RF-IDE-013, P-040)', () => {
     const r = await registrar(ADMIN.correo).expect(202);
     expect(r.body.mensaje).toBe('Te enviamos un correo para confirmar tu cuenta');
     expect((await enlaceDe(ADMIN.correo)).asunto).toBe('Ya tienes una cuenta en Acopio');
+    const aviso = await a.prisma.correoSaliente.findFirstOrThrow({
+      where: { destinatario: ADMIN.correo },
+      orderBy: { creado_en: 'desc' },
+    });
+    // El enlace lleva a la única pantalla de entrada
+    expect(aviso.cuerpo_texto).toMatch(/\/entrar\s*$/m);
   });
 
   it('dos registros simultáneos del mismo correo responden 202 los dos', async () => {

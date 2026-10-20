@@ -1,8 +1,8 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import userEvent from '@testing-library/user-event';
-import { ErrorApi } from '../api/cliente';
-import { clienteFalso, envolver } from '../pruebas/utilidades';
+import { api, desenvolver, ErrorApi } from '../api/cliente';
+import { clienteFalso, envolver, responderJson } from '../pruebas/utilidades';
 import { leerRecordado, recordarUsuario } from './recordada';
 import { Route, Routes } from 'react-router';
 import { RequiereRol } from '../consola/RequiereRol';
@@ -104,11 +104,11 @@ describe('sesión del Donador', () => {
   const donador = { id: 'u9', username: null, nombre: 'Ana Pérez', rol: 'DONADOR' as const };
 
   function Botones() {
-    const { usuario, entrarDonador, confirmar } = useSesion();
+    const { usuario, entrar, confirmar } = useSesion();
     return (
       <>
         <p>{usuario ? `Sesión de ${usuario.nombre}` : 'Sin sesión'}</p>
-        <button onClick={() => void entrarDonador('ana@correo.co', 'una frase larga')}>
+        <button onClick={() => void entrar('ana@correo.co', 'una frase larga')}>
           Entrar donador
         </button>
         <button onClick={() => void confirmar('tok', 'una frase larga', 'Ana')}>Confirmar</button>
@@ -116,16 +116,16 @@ describe('sesión del Donador', () => {
     );
   }
 
-  it('entrarDonador deja al usuario en la sesión y lo recuerda', async () => {
+  it('un Donador entra con su correo y queda recordado', async () => {
     const cliente = clienteFalso();
-    cliente.iniciarSesionDonador.mockResolvedValue(donador);
+    cliente.iniciarSesion.mockResolvedValue(donador);
     render(envolver(<Botones />, '/', cliente));
     await screen.findByText('Sin sesión');
 
     await userEvent.click(screen.getByRole('button', { name: 'Entrar donador' }));
 
     await screen.findByText('Sesión de Ana Pérez');
-    expect(cliente.iniciarSesionDonador).toHaveBeenCalledWith('ana@correo.co', 'una frase larga');
+    expect(cliente.iniciarSesion).toHaveBeenCalledWith('ana@correo.co', 'una frase larga');
     expect(leerRecordado()).toEqual(donador);
   });
 
@@ -153,7 +153,7 @@ describe('las consultas no pasan de una cuenta a otra', () => {
       queryFn: () => Promise.resolve(null),
       enabled: false,
     });
-    const { usuario, entrarDonador, salir } = useSesion();
+    const { usuario, entrar, salir } = useSesion();
     return (
       <>
         <p>{usuario ? `Sesión de ${usuario.nombre}` : 'Sin sesión'}</p>
@@ -161,7 +161,7 @@ describe('las consultas no pasan de una cuenta a otra', () => {
         <button onClick={() => consultas.setQueryData(['misDonaciones'], ['ACO-2026-7KQ4M'])}>
           Guardar
         </button>
-        <button onClick={() => void entrarDonador('luis@correo.co', 'otra frase larga')}>
+        <button onClick={() => void entrar('luis@correo.co', 'otra frase larga')}>
           Entrar otro
         </button>
         <button onClick={() => void salir()}>Salir</button>
@@ -183,7 +183,7 @@ describe('las consultas no pasan de una cuenta a otra', () => {
 
   it('entrar con otra cuenta borra lo que vio la anterior', async () => {
     const cliente = clienteFalso(donador);
-    cliente.iniciarSesionDonador.mockResolvedValue(otro);
+    cliente.iniciarSesion.mockResolvedValue(otro);
     render(envolver(<Cache />, '/', cliente));
     await screen.findByText('Sesión de Ana Pérez');
     await userEvent.click(screen.getByRole('button', { name: 'Guardar' }));
@@ -192,5 +192,34 @@ describe('las consultas no pasan de una cuenta a otra', () => {
 
     await screen.findByText('Sesión de Luis Gómez');
     expect(screen.getByText('Sin datos')).toBeInTheDocument();
+  });
+});
+
+describe('cuando se pierde la sesión', () => {
+  const donador = { id: 'd1', username: null, nombre: 'Ana Pérez', rol: 'DONADOR' as const };
+
+  function Pedir() {
+    return (
+      <button onClick={() => void desenvolver(api.GET('/api/auth/yo')).catch(() => {})}>
+        Pedir
+      </button>
+    );
+  }
+
+  it('un Donador vuelve a la única pantalla de entrada', async () => {
+    render(
+      envolver(
+        <Routes>
+          <Route path="/donador" element={<Pedir />} />
+          <Route path="/entrar" element={<p>Pantalla de Entrar</p>} />
+        </Routes>,
+        '/donador',
+        clienteFalso(donador),
+      ),
+    );
+    await screen.findByRole('button', { name: 'Pedir' });
+    responderJson({ estado: 401, codigo: 'NO_AUTENTICADO', mensaje: 'No' }, 401);
+    await userEvent.click(screen.getByRole('button', { name: 'Pedir' }));
+    expect(await screen.findByText('Pantalla de Entrar')).toBeInTheDocument();
   });
 });

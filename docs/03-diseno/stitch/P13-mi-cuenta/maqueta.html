@@ -121,24 +121,24 @@ body { background: var(--lienzo); color: var(--on-surface); font-family: var(--s
 <div class="pagina">
   <header class="intro">
     <h1>Bloque 3 · interfaz, ciclo 1: el Donador</h1>
-    <p>Siete vistas salen de las pantallas que generó Stitch, con las diferencias de abajo aplicadas y llevadas a los tokens de la app. «Entrar» y «Tu folio» se armaron con los mismos tokens porque Stitch se cortó por tiempo al generar el folio y la pestaña «Entrar» es el mismo formulario. Los nombres, folios y cifras son de ejemplo.</p>
+    <p>Siete vistas salen de las pantallas que generó Stitch, con las diferencias de abajo aplicadas y llevadas a los tokens de la app. «Tu folio» se armó con los mismos tokens porque Stitch se cortó por tiempo. Desde el 2026-10-19 P13 solo crea la cuenta de donador; para entrar, todas las cuentas usan C01. Los nombres, folios y cifras son de ejemplo.</p>
   </header>
 
   <div class="telefonos">
     <!-- P13 crear cuenta -->
     <section class="caso">
-      <h2>P13 · Crear cuenta</h2>
-      <p>Sin sesión. Solo nombre y correo: la contraseña se elige al confirmar (P-040).</p>
+      <h2>P13 · Crear cuenta de donador</h2>
+      <p>Sin sesión. Solo nombre y correo: la contraseña se elige al confirmar (P-040). Para entrar hay una sola pantalla para todas las cuentas (C01).</p>
       <div class="tel">
         <div class="cabecera"><span class="atras"><span class="ms">arrow_back</span></span><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span></div>
         <div class="cuerpo">
-          <div class="titulo"><h3>Tu cuenta de Donador</h3><p>Prepara tu donación antes de llevarla y síguela con su folio.</p></div>
-          <div class="pestanas"><span class="on">Crear cuenta</span><span>Entrar</span></div>
+          <div class="titulo"><h3>Crea tu cuenta de donador</h3><p>Prepara tu donación antes de llevarla y síguela con su folio.</p></div>
           <label class="campo-r"><span class="r">Nombre</span><span class="input ph">Ej. Camila Morales</span></label>
           <label class="campo-r"><span class="r">Correo</span><span class="input ph">nombre@correo.co</span></label>
           <div class="aviso"><span class="ms">mark_email_unread</span><span>Te enviamos un enlace para confirmar el correo. Ahí eliges tu contraseña.</span></div>
           <span class="enlace"><span class="ms">shield</span>Cómo usamos tus datos</span>
-          <button class="fab">Crear cuenta</button>
+          <button class="fab">Crear cuenta de donador</button>
+          <p class="ayuda">¿Ya tienes cuenta? <span class="enlace" style="display:inline-flex">Entrar</span></p>
         </div>
         <div class="barra"><div><span class="ms">home</span>Inicio</div><div><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div><span class="ms">groups</span>Voluntariado</div><div class="on"><span class="ms">more_horiz</span>Más</div></div>
       </div>
@@ -146,17 +146,14 @@ body { background: var(--lienzo); color: var(--on-surface); font-family: var(--s
 
     <!-- P13 registro enviado + entrar -->
     <section class="caso">
-      <h2>P13 · Entrar</h2>
-      <p>Misma pantalla, pestaña «Entrar». Arriba, el mensaje que queda tras crear la cuenta; es igual exista o no el correo.</p>
+      <h2>P13 · Cuenta pedida</h2>
+      <p>El mensaje que queda tras crear la cuenta; es igual exista o no el correo. «Entrar» lleva a C01.</p>
       <div class="tel">
         <div class="cabecera"><span class="atras"><span class="ms">arrow_back</span></span><span class="logo"><span class="ms">inventory_2</span></span><span class="marca">Acopio</span></div>
         <div class="cuerpo">
           <div class="aviso"><span class="ms">mail</span><span>Te enviamos un correo para confirmar tu cuenta. Revisa también la carpeta de spam.</span></div>
-          <div class="pestanas"><span>Crear cuenta</span><span class="on">Entrar</span></div>
-          <label class="campo-r"><span class="r">Correo</span><span class="input">ana@correo.co</span></label>
-          <label class="campo-r"><span class="r">Contraseña</span><span class="input ph">••••••••••••<span class="ms">visibility</span></span></label>
-          <button class="fab">Entrar</button>
-          <p class="ayuda">Si acabas de crear la cuenta, primero abre el enlace del correo y elige tu contraseña.</p>
+          <p class="ayuda">Cuando confirmes el correo y elijas tu contraseña, entras desde «Entrar», con tu correo.</p>
+          <button class="btn2">Entrar</button>
         </div>
         <div class="barra"><div><span class="ms">home</span>Inicio</div><div><span class="ms">map</span>Mapa</div><div><span class="ms">volunteer_activism</span>Causas</div><div><span class="ms">groups</span>Voluntariado</div><div class="on"><span class="ms">more_horiz</span>Más</div></div>
       </div>

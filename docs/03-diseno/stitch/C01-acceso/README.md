@@ -3,7 +3,7 @@ title: "C01 · Acceso · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, acceso]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-19
 ---
 
 # C01 · Acceso · diseño en Stitch
@@ -33,3 +33,11 @@ Al construir:
   límite de intentos (429), siempre con el mismo texto.
 - La pantalla de Stitch usa algunos colores genéricos de Tailwind (`stone`, `emerald`) y
   dos hexadecimales sueltos. En `apps/web` se pasan a los tokens de `packages/ui-tokens`.
+
+## Entrada única (2026-10-19)
+
+Desde el 2026-10-19, C01 es la única pantalla para entrar, para el Donador y para el equipo.
+Se titula «Entrar a Acopio» y el campo es «Correo o nombre de usuario». Debajo del formulario
+va «¿Vas a donar y no tienes cuenta? Crea tu cuenta de donador», que lleva a `/donador`.
+Joseph aprobó la maqueta ajustada el 2026-10-19
+([especificación](../../../superpowers/specs/2026-10-19-entrada-unica-design.md)).

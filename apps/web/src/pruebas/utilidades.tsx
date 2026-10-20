@@ -98,7 +98,6 @@ export function clienteFalso(usuario: UsuarioSesion | null = null): ClienteAuth 
   registrarDonador: ReturnType<typeof vi.fn>;
   validarEnlace: ReturnType<typeof vi.fn>;
   confirmarCorreo: ReturnType<typeof vi.fn>;
-  iniciarSesionDonador: ReturnType<typeof vi.fn>;
 } {
   return {
     usuarioActual: vi.fn(() => Promise.resolve(usuario)),
@@ -107,7 +106,6 @@ export function clienteFalso(usuario: UsuarioSesion | null = null): ClienteAuth 
     registrarDonador: vi.fn(() => Promise.resolve()),
     validarEnlace: vi.fn(() => Promise.resolve(null)),
     confirmarCorreo: vi.fn(() => Promise.resolve(usuario!)),
-    iniciarSesionDonador: vi.fn(() => Promise.resolve(usuario!)),
   };
 }
 
