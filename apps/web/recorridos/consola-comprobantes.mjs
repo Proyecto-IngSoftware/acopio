@@ -110,7 +110,7 @@ async function categoria(q, nombre, cookie) {
 
 async function entrar(p, usuario) {
   await p.goto(`${WEB}/entrar`);
-  await p.getByLabel('Nombre de usuario').fill(usuario);
+  await p.getByLabel('Correo o nombre de usuario').fill(usuario);
   await p.getByLabel('Contraseña', { exact: true }).fill(CONTRASENA_DEMO);
   await p.getByRole('button', { name: 'Entrar' }).click();
   await p.waitForURL(`${WEB}/`);
@@ -165,8 +165,8 @@ let donador = '';
 const folios = [];
 await paso('un Donador prepara dos donaciones para Acopio Chapinero', async () => {
   if (SIN_CORREO) {
-    ({ cookie: donador } = await api('POST', '/api/auth/donador/sesion', {
-      correo: CORREO,
+    ({ cookie: donador } = await api('POST', '/api/auth/sesion', {
+      usuario: CORREO,
       contrasena: CONTRASENA_DEMO,
     }));
   } else {

@@ -215,6 +215,16 @@ de Bogotá para que se vean los dos tipos de punto.
 
 ## Últimos resultados
 
+**2026-10-19, en local, con la entrada única** (rama `entrada-unica`, API reconstruida con
+`servicios:todo`, `CAPTURAS=no`): `donador.mjs` 8 de 8, `validacion-general.mjs` 60 de 60,
+`consola-comprobantes.mjs` 10 de 10, `consola-motor.mjs` 9 de 9, `consola-remisiones.mjs` 7 de
+7, `consola-recepciones.mjs` 7 de 7, `sin-conexion.mjs` 12 de 12, `portal-causas.mjs` 4 de 4,
+`consola-causas.mjs` 6 de 6, `portal-turnos.mjs` 6 de 6, `consola-turnos.mjs` 7 de 7 y
+`referenciados.mjs` 6 de 6. Todos entran por `/entrar` con «Correo o nombre de usuario»; el
+Donador, con su correo. La primera corrida de `validacion-general.mjs` dio 56 de 60 porque el
+recorrido buscaba la etiqueta nueva también en el formulario de invitar, que sigue diciendo
+«Nombre de usuario».
+
 **2026-10-19, en local, capturas del Avance 5** (`CAPTURAS=no`, `CAPTURAS_WORD` activo, web
 reconstruida): `portal-causas.mjs` 4 de 4, `referenciados.mjs` 6 de 6, `consola-causas.mjs` 6
 de 6 y `consola-recepciones.mjs` 7 de 7. Hubo tres fallas antes:

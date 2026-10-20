@@ -2,7 +2,7 @@
 title: "Entrada única para todas las cuentas · diseño"
 type: especificacion
 tags: [identidad, acceso, diseno]
-estado: borrador
+estado: vigente
 actualizado: 2026-10-19
 ---
 
@@ -120,4 +120,8 @@ son la red, y se corren antes y después.
 
 ## Cambios al construir
 
-(vacío)
+- Un Donador con sesión que abre `/entrar` va a su destino, igual que ya hacía C01 con
+  cualquier cuenta. El plan decía que vería el formulario; no se cambió esa conducta.
+- El correo «Ya tienes una cuenta en Acopio» enlazaba a `/donador`; ahora enlaza a `/entrar`.
+- La migración de `identidad` tocó también el seed: `proveedorDelSeed` arma el proveedor local
+  con `IdentidadLocalDao`.

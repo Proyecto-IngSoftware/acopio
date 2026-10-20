@@ -58,7 +58,7 @@ p.on('pageerror', (e) => errores.push(e.message));
 
 await paso('operador1 entra con red', async () => {
   await p.goto(`${WEB}/entrar`);
-  await p.getByLabel('Nombre de usuario').fill('operador1');
+  await p.getByLabel('Correo o nombre de usuario').fill('operador1');
   await p.getByLabel('Contraseña', { exact: true }).fill(DEMO);
   await p.getByRole('button', { name: 'Entrar' }).click();
   await p.waitForURL(`${WEB}/`);
