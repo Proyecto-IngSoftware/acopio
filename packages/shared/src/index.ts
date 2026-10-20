@@ -7,3 +7,4 @@ export * from './motor/index.js';
 export * from './causas.js';
 export * from './turnos.js';
 export * from './fuentes.js';
+export * from './presentaciones.js';
