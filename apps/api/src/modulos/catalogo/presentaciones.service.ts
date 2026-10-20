@@ -77,6 +77,12 @@ export class PresentacionesService {
     return (await this.dao.listarDeCategoria(categoriaId, propuestas)).map(vista);
   }
 
+  /** Una presentación con su categoría y su tamaño calculado; `null` si no existe. */
+  async buscarEnTransaccion(tx: ClienteBd, id: string) {
+    const f = await this.dao.buscar(id, tx);
+    return f ? { ...vista(f), categoriaArchivada: f.categoria.archivada } : null;
+  }
+
   async crear(usuario: UsuarioAutenticado, datos: DatosPresentacion) {
     try {
       return await this.transacciones.ejecutar((tx) =>

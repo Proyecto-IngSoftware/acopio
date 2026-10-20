@@ -287,4 +287,163 @@ describe('recibir una donación preparada (RF-CMP-001C)', () => {
       expect([rx.status, ry.status]).toEqual([200, 200]);
     }
   });
+
+  describe('códigos y presentaciones en la recepción', () => {
+    const sufijo = () => Math.random().toString(36).slice(2, 8);
+    const eanNuevo = () =>
+      `77${String(Date.now()).slice(-8)}${Math.floor(Math.random() * 1000)
+        .toString()
+        .padStart(3, '0')}`;
+    const categoriaNueva = (unidad: 'LITRO' | 'UNIDAD' = 'LITRO') =>
+      a.prisma.categoria.create({
+        data: { nombre: `Rec ${sufijo()}`, grupo: 'ALIMENTOS', unidad_base: unidad },
+      });
+    const presentacion = (
+      categoriaId: string,
+      tamano: number,
+      estado: 'VALIDADO' | 'PROPUESTO' = 'VALIDADO',
+    ) =>
+      a.prisma.presentacion.create({
+        data: {
+          categoria_id: categoriaId,
+          nombre: `P ${sufijo()}`,
+          tamano,
+          estado,
+          creado_por: opA.id,
+        },
+      });
+    const codigo = (
+      ean: string,
+      categoriaId: string,
+      presentacionId: string,
+      estado: 'VALIDADO' | 'PROPUESTO',
+    ) =>
+      a.prisma.codigoBarras.create({
+        data: {
+          ean,
+          categoria_id: categoriaId,
+          presentacion_id: presentacionId,
+          estado,
+          creado_por: opA.id,
+        },
+      });
+    const donacion = async (categoriaId: string, ean: string | undefined, cantidad: number) => {
+      const donador = await crearDonador(a);
+      const r = await a
+        .http()
+        .post('/api/donaciones')
+        .set('authorization', `Bearer ${donador.token}`)
+        .send({ acopioId: ACOPIO_A, lineas: [{ categoriaId, ean, cantidad }] })
+        .expect(201);
+      return r.body as { folio: string; lineas: { id: string }[] };
+    };
+    const saldo = async (categoriaId: string) =>
+      Number(
+        (
+          await a.prisma.saldo.findFirst({
+            where: { categoria_id: categoriaId, acopio_id: ACOPIO_A },
+          })
+        )?.cantidad ?? 0,
+      );
+
+    it('un código PROPUESTO sin presentacionId queda VALIDADO', async () => {
+      const cat = await categoriaNueva();
+      const p = await presentacion(cat.id, 1, 'PROPUESTO');
+      const ean = eanNuevo();
+      await codigo(ean, cat.id, p.id, 'PROPUESTO');
+      const d = await donacion(cat.id, ean, 2);
+      await recibir(opA.token, d.folio, {
+        acopioId: ACOPIO_A,
+        lineas: [{ lineaId: d.lineas[0]!.id, cantidadConfirmada: 2 }],
+      }).expect(200);
+      const c = await a.prisma.codigoBarras.findUniqueOrThrow({ where: { ean } });
+      expect(c).toMatchObject({ estado: 'VALIDADO', por_revisar: false });
+      expect((await a.prisma.presentacion.findUniqueOrThrow({ where: { id: p.id } })).estado).toBe(
+        'VALIDADO',
+      );
+    });
+
+    it('un PROPUESTO corregido a la bolsa de 6 L queda VALIDADO con esa presentación y suma 12 L', async () => {
+      const cat = await categoriaNueva();
+      const botella = await presentacion(cat.id, 1, 'PROPUESTO');
+      const bolsa = await presentacion(cat.id, 6);
+      const ean = eanNuevo();
+      await codigo(ean, cat.id, botella.id, 'PROPUESTO');
+      const d = await donacion(cat.id, ean, 2);
+      await recibir(opA.token, d.folio, {
+        acopioId: ACOPIO_A,
+        lineas: [{ lineaId: d.lineas[0]!.id, cantidadConfirmada: 2, presentacionId: bolsa.id }],
+      }).expect(200);
+      const c = await a.prisma.codigoBarras.findUniqueOrThrow({ where: { ean } });
+      expect(c).toMatchObject({ estado: 'VALIDADO', presentacion_id: bolsa.id });
+      const l = await a.prisma.lineaComprobante.findUniqueOrThrow({
+        where: { id: d.lineas[0]!.id },
+      });
+      expect(Number(l.contenido_unitario)).toBe(6);
+      expect(await saldo(cat.id)).toBe(12);
+    });
+
+    it('un VALIDADO corregido a otra categoría cambia solo la línea y marca el código', async () => {
+      const agua2 = await categoriaNueva();
+      const jugo = await categoriaNueva();
+      const pAgua = await presentacion(agua2.id, 1);
+      const pJugo = await presentacion(jugo.id, 0.5);
+      const ean = eanNuevo();
+      await codigo(ean, agua2.id, pAgua.id, 'VALIDADO');
+      const d = await donacion(agua2.id, ean, 4);
+      await recibir(opA.token, d.folio, {
+        acopioId: ACOPIO_A,
+        lineas: [{ lineaId: d.lineas[0]!.id, cantidadConfirmada: 4, presentacionId: pJugo.id }],
+      }).expect(200);
+      const c = await a.prisma.codigoBarras.findUniqueOrThrow({ where: { ean } });
+      expect(c).toMatchObject({
+        categoria_id: agua2.id,
+        presentacion_id: pAgua.id,
+        por_revisar: true,
+      });
+      const l = await a.prisma.lineaComprobante.findUniqueOrThrow({
+        where: { id: d.lineas[0]!.id },
+      });
+      expect(l.categoria_id).toBe(jugo.id);
+      expect(Number(l.contenido_unitario)).toBe(0.5);
+      expect(await saldo(jugo.id)).toBe(2);
+      expect(await saldo(agua2.id)).toBe(0);
+      const comprobante = await a.prisma.comprobante.findUniqueOrThrow({
+        where: { folio: d.folio },
+      });
+      const evento = await a.prisma.bitacora.findFirstOrThrow({
+        where: { accion: 'comprobante.linea_corregida', entidad_id: comprobante.id },
+      });
+      expect(evento.datos_antes).toMatchObject({ categoriaId: agua2.id, contenidoUnitario: 1 });
+      expect(evento.datos_despues).toMatchObject({ categoriaId: jugo.id, contenidoUnitario: 0.5 });
+    });
+
+    it('una línea sin código con presentacionId da 422 LINEA_SIN_CODIGO y sigue PREPARADO', async () => {
+      const cat = await categoriaNueva();
+      const p = await presentacion(cat.id, 1);
+      const d = await donacion(cat.id, undefined, 2);
+      const r = await recibir(opA.token, d.folio, {
+        acopioId: ACOPIO_A,
+        lineas: [{ lineaId: d.lineas[0]!.id, cantidadConfirmada: 2, presentacionId: p.id }],
+      }).expect(422);
+      expect(r.body.codigo).toBe('LINEA_SIN_CODIGO');
+      expect(
+        (await a.prisma.comprobante.findUniqueOrThrow({ where: { folio: d.folio } })).estado,
+      ).toBe('PREPARADO');
+    });
+
+    it('una corrección que pasa el tope de línea da 422 CANTIDAD_FUERA_DE_TOPE', async () => {
+      const cat = await categoriaNueva();
+      const chica = await presentacion(cat.id, 1);
+      const grande = await presentacion(cat.id, 5000);
+      const ean = eanNuevo();
+      await codigo(ean, cat.id, chica.id, 'VALIDADO');
+      const d = await donacion(cat.id, ean, 2);
+      const r = await recibir(opA.token, d.folio, {
+        acopioId: ACOPIO_A,
+        lineas: [{ lineaId: d.lineas[0]!.id, cantidadConfirmada: 2000, presentacionId: grande.id }],
+      }).expect(422);
+      expect(r.body.codigo).toBe('CANTIDAD_FUERA_DE_TOPE');
+    });
+  });
 });

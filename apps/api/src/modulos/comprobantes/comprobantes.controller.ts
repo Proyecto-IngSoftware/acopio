@@ -25,6 +25,7 @@ class RecibirDto extends crearDto(
       .array(
         z.object({
           lineaId: z.uuid(),
+          presentacionId: z.uuid().optional(),
           cantidadConfirmada: cantidadNoNegativa,
           venceEn: dia.optional(),
           motivoDiferencia: z.string().max(280).optional(),

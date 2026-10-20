@@ -3353,6 +3353,8 @@ export interface components {
             lineas: {
                 /** Format: uuid */
                 lineaId: string;
+                /** Format: uuid */
+                presentacionId?: string;
                 cantidadConfirmada: number;
                 /** Format: date */
                 venceEn?: string;
