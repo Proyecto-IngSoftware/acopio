@@ -224,3 +224,28 @@ Salieron de la revisión del documento y Joseph puede cambiarlas:
   diferencias con Stitch.
 - El contrato OpenAPI y los tipos de la web, por el endpoint nuevo.
 - Los recorridos que pasan por P5 y P7 (`docs/06-operacion/recorridos.md`).
+
+## Cambios al construir
+
+- Una categoría con umbral y con marca vigente de «no recibir» sale solo en `noRecibe`. La API la
+  saca de `faltan`, `sobran` y `alDia`, para que el mapa nunca diga «FALTA» de algo que el acopio
+  no recibe. Lo encontró la revisión final.
+- La API devuelve también los acopios pausados (filtra los cerrados, como `/publico/balance`). La
+  web los deja sin etiqueta y fuera de los chips.
+- La etiqueta del punto se acorta a 24 caracteres con «…» antes del «+N»
+  («FALTA: Alimento para… +2»); el texto completo queda en el `title` del marcador.
+- En voluntariado, un lugar con varias jornadas suma «+N» a la etiqueta, sin la palabra
+  «jornadas», y el texto tiene singular: «FALTA 1 PERSONA», «QUEDA 1 CUPO».
+- Los puntos de voluntariado usan los colores de los estados del mapa de acopios: rojo para
+  «faltan», verde para «quedan cupos» y gris para «llena».
+- En la lista de P5, la etiqueta va en la línea de debajo del nombre y no al lado.
+- La leyenda bajo el mapa lleva una fila por estado, con la píldora en tamaño pequeño y una frase
+  corta. La fila del círculo verde dice «Acopio sin etiqueta: no publica su inventario». Lo pidió
+  Joseph el 2026-10-20 al ver las píldoras grandes.
+- Voluntariado abre en el mapa, con la lista en `?vista=lista` y «Mapa» primero en el selector,
+  como en P5. Lo pidió Joseph el 2026-10-20.
+- Si la URL trae un chip (`?estado=`), el chip se ve aunque no quede ningún acopio con los demás
+  filtros, para poder quitarlo.
+- Quedan para después, en [P-086](../../01-requerimientos/pendientes.md) y
+  [P-087](../../01-requerimientos/pendientes.md): el tamaño de los íconos de Material Symbols, la
+  clase `text-label-sm` que no existe en los tokens y los menores de las revisiones.

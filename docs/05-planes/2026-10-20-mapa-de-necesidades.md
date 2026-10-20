@@ -34,14 +34,14 @@ cupos van en `portal/turnos/cupos.ts` y el mapa en `portal/turnos/MapaJornadas.t
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 API de necesidades | ⬜ | |
-| 2 Reglas de las etiquetas en la web | ⬜ | |
-| 3 Marcador con etiqueta y color | ⬜ | |
-| 4 Chips, categoría y tarjeta en P5 | ⬜ | |
-| 5 Voluntariado en mapa | ⬜ | |
-| 6 Documentos, recorridos y cierre | ⬜ | |
+| 1 API de necesidades | ✅ | |
+| 2 Reglas de las etiquetas en la web | ✅ | |
+| 3 Marcador con etiqueta y color | ✅ | |
+| 4 Chips, categoría y tarjeta en P5 | ✅ | |
+| 5 Voluntariado en mapa | ✅ | |
+| 6 Documentos, recorridos y cierre | ✅ | |
 
-Rama `mapa-necesidades`, un solo PR al final (tarea 6).
+Rama `mapa-necesidades`, un solo PR al final (tarea 6). Ejecutado con subagentes el 2026-10-20: cada tarea con su revisión y una revisión final de la rama. Después de la tarea 6, Joseph pidió que voluntariado abra en el mapa y una leyenda más pequeña; lo que cambió respecto del diseño está en su sección «Cambios al construir».
 
 ## Global Constraints
 

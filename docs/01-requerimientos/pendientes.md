@@ -1198,6 +1198,43 @@ apruebe la maqueta antes de escribir el código.
 proponer presentaciones repetidas. Mientras no exista, se corrige con SQL si urge.
 **Estado:** ABIERTO → decide Joseph si entra en la próxima fase.
 
+### P-086 · Íconos de 24 px y la clase `text-label-sm`
+**Fecha:** 2026-10-20 · **Propuesto por:** Claude, al construir el mapa de necesidades
+**Qué:** la hoja de Material Symbols que baja `index.html` fija los íconos en 24 px y le gana a
+las clases `text-[18px]` y similares en toda la web, así que casi ningún ícono tiene el tamaño
+que el código le pide. La leyenda del mapa tuvo que forzar 12 px con `text-[12px]!`. Además, la
+clase `text-label-sm` se usa en al menos siete archivos, pero `packages/ui-tokens` no la define
+(solo `label-md` y `label-caps`), así que ese texto sale con el tamaño heredado.
+**Por qué:** los tamaños de íconos y etiquetas no coinciden con Stitch, y el ancho calculado de
+las etiquetas del mapa (`anchoPunto`) depende de ese tamaño heredado.
+**Estado:** ABIERTO → poner la hoja de íconos en una capa de Tailwind o bajar su especificidad,
+definir `label-sm` en los tokens según Stitch y revisar `anchoPunto` después.
+
+
+### P-087 · Menores que quedaron del mapa de necesidades
+**Fecha:** 2026-10-20 · **Propuesto por:** Claude, en la revisión final de la fase
+**Qué:** detalles que las revisiones dejaron para después. Ninguno bloquea la sustentación.
+
+Pruebas:
+- `necesidades-publico.int.test.ts` deja un umbral de una categoría propia en `ACOPIO_B`; falta
+  limpiarlo en `afterAll`. Tampoco afirma que `ACOPIO_B` aparece mientras está activo, ni el orden
+  alfabético de las listas.
+- Faltan pruebas de un chip combinado con una categoría, de la leyenda y el subtítulo, de los
+  acopios apagados en la vista de mapa y del `title` con la etiqueta en P5.
+- `portal-turnos.mjs` no ejercita los chips de P7, y `recorridos.md` cita una etiqueta de la demo
+  que cambia con la hora.
+
+Pantalla:
+- El aviso «N acopios no reciben…» cuenta también los que un chip ya ocultó.
+- El aviso y los chips van en otro orden que en la maqueta.
+- En P7, un `?estado=faltan` de una URL compartida sin jornadas contadas oculta toda la fila de
+  chips en la vista de mapa; en la lista, «Quitar los filtros» sí lo quita. P5 ya lo resuelve.
+- A 360 px, la frase de la leyenda puede envolver bajo la píldora; revisar con P-086.
+- La captura de página completa de P5 deja la fila «NO RECIBE» bajo la cabecera fija; tomar la
+  leyenda como elemento.
+- `anchoPunto` calcula 8 px por letra; revisar con P-086.
+**Estado:** ABIERTO → se toman en el Sprint 3 o cuando se toque P5.
+
 ---
 
 ## Resueltos
