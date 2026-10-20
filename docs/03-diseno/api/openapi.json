@@ -1667,15 +1667,35 @@
         "operationId": "CodigosBarrasController_listar",
         "parameters": [
           {
-            "name": "revisado",
+            "name": "q",
+            "required": false,
+            "in": "query",
+            "description": "EAN (prefijo), categoría o presentación",
+            "schema": {
+              "maxLength": 120,
+              "type": "string"
+            }
+          },
+          {
+            "name": "estado",
             "required": false,
             "in": "query",
             "schema": {
               "type": "string",
               "enum": [
-                "true",
-                "false"
+                "PROPUESTO",
+                "VALIDADO"
               ]
+            }
+          },
+          {
+            "name": "categoriaId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
             }
           }
         ],
@@ -1803,6 +1823,173 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CodigoBarrasDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "catalogo"
+        ]
+      }
+    },
+    "/api/codigos-barras/{ean}/validar": {
+      "post": {
+        "operationId": "CodigosBarrasController_validar",
+        "parameters": [
+          {
+            "name": "ean",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "pattern": "^(\\d{8}|\\d{12,14})$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidarDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodigoBarrasDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "catalogo"
+        ]
+      }
+    },
+    "/api/presentaciones": {
+      "get": {
+        "operationId": "PresentacionesController_listar",
+        "parameters": [
+          {
+            "name": "categoriaId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PresentacionDto"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "catalogo"
+        ]
+      },
+      "post": {
+        "operationId": "PresentacionesController_crear",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CrearDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresentacionDto"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "catalogo"
+        ]
+      }
+    },
+    "/api/presentaciones/{id}": {
+      "patch": {
+        "operationId": "PresentacionesController_editar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EditarDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PresentacionDto"
                 }
               }
             }
@@ -4033,6 +4220,52 @@
                   "items": {
                     "$ref": "#/components/schemas/SugerenciaEntregaDto"
                   }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "donaciones"
+        ]
+      }
+    },
+    "/api/donaciones/codigos": {
+      "post": {
+        "operationId": "DonacionesController_proponer",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProponerCodigoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CodigoDonadorDto"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
                 }
               }
             }
@@ -8216,17 +8449,44 @@
               "UNIDAD"
             ]
           },
+          "presentacion": {
+            "description": "Presentación a la que apunta; tamano en unidad base",
+            "type": "object",
+            "required": [
+              "id",
+              "nombre",
+              "tamano"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "nombre": {
+                "type": "string"
+              },
+              "tamano": {
+                "type": "number"
+              }
+            },
+            "nullable": true
+          },
           "contenido": {
-            "description": "Unidad base que trae una presentación",
+            "description": "Tamaño de la presentación, en unidad base",
             "type": "number",
             "nullable": true
           },
-          "descripcion": {
+          "estado": {
             "type": "string",
-            "nullable": true
+            "enum": [
+              "PROPUESTO",
+              "VALIDADO"
+            ]
           },
-          "revisado": {
-            "type": "boolean"
+          "porRevisar": {
+            "type": "boolean",
+            "description": "Una recepción vio algo que no cuadra con la presentación"
           },
           "grupo": {
             "type": "string",
@@ -8262,9 +8522,10 @@
           "categoriaId",
           "categoria",
           "unidad",
+          "presentacion",
           "contenido",
-          "descripcion",
-          "revisado",
+          "estado",
+          "porRevisar",
           "grupo",
           "perecedero",
           "creadoPor",
@@ -8278,29 +8539,140 @@
             "type": "string",
             "pattern": "^(\\d{8}|\\d{12,14})$"
           },
+          "presentacionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "ean",
+          "presentacionId"
+        ]
+      },
+      "ValidarDto": {
+        "type": "object",
+        "properties": {
+          "presentacionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "presentacionId"
+        ]
+      },
+      "EditarDto": {
+        "type": "object",
+        "properties": {
+          "nombre": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "tamano": {
+            "type": "number",
+            "exclusiveMaximum": true,
+            "maximum": 1000000000
+          },
+          "contieneId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "unidades": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 1000
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "VALIDADO"
+            ]
+          }
+        }
+      },
+      "PresentacionDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
           "categoriaId": {
             "type": "string",
             "format": "uuid",
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
           },
-          "contenido": {
-            "type": "number",
-            "exclusiveMaximum": true,
-            "nullable": true,
-            "maximum": 1000000000
+          "categoria": {
+            "type": "string"
           },
-          "descripcion": {
+          "unidad": {
             "type": "string",
-            "maxLength": 120,
+            "enum": [
+              "LITRO",
+              "KILOGRAMO",
+              "UNIDAD"
+            ]
+          },
+          "nombre": {
+            "type": "string"
+          },
+          "clase": {
+            "type": "string",
+            "enum": [
+              "SUELTA",
+              "PAQUETE"
+            ]
+          },
+          "tamano": {
+            "type": "number",
+            "description": "En unidad base; en un paquete, el calculado"
+          },
+          "contieneId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
             "nullable": true
+          },
+          "unidades": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "nullable": true
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "PROPUESTO",
+              "VALIDADO"
+            ]
+          },
+          "codigos": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991,
+            "description": "Códigos de barras asociados"
           }
         },
         "required": [
-          "ean",
-          "categoriaId"
+          "id",
+          "categoriaId",
+          "categoria",
+          "unidad",
+          "nombre",
+          "clase",
+          "tamano",
+          "contieneId",
+          "unidades",
+          "estado",
+          "codigos"
         ]
       },
-      "EditarDto": {
+      "CrearDto": {
         "type": "object",
         "properties": {
           "categoriaId": {
@@ -8308,21 +8680,31 @@
             "format": "uuid",
             "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
           },
-          "contenido": {
+          "nombre": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 80
+          },
+          "tamano": {
             "type": "number",
             "exclusiveMaximum": true,
-            "nullable": true,
             "maximum": 1000000000
           },
-          "descripcion": {
+          "contieneId": {
             "type": "string",
-            "maxLength": 120,
-            "nullable": true
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
           },
-          "revisado": {
-            "type": "boolean"
+          "unidades": {
+            "type": "integer",
+            "minimum": 2,
+            "maximum": 1000
           }
-        }
+        },
+        "required": [
+          "categoriaId",
+          "nombre"
+        ]
       },
       "EntidadDto": {
         "type": "object",
@@ -11234,6 +11616,83 @@
           "lineasAceptadas"
         ]
       },
+      "ProponerCodigoDto": {
+        "type": "object",
+        "properties": {
+          "ean": {
+            "type": "string",
+            "pattern": "^\\d{8}$|^\\d{12,14}$"
+          },
+          "presentacionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "presentacionNueva": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "categoriaId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "nombre": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "tamano": {
+                    "type": "number",
+                    "exclusiveMaximum": true,
+                    "maximum": 1000000000
+                  }
+                },
+                "required": [
+                  "categoriaId",
+                  "nombre",
+                  "tamano"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "categoriaId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "nombre": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 80
+                  },
+                  "contieneId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  },
+                  "unidades": {
+                    "type": "integer",
+                    "minimum": 2,
+                    "maximum": 1000
+                  }
+                },
+                "required": [
+                  "categoriaId",
+                  "nombre",
+                  "contieneId",
+                  "unidades"
+                ]
+              }
+            ]
+          }
+        },
+        "required": [
+          "ean"
+        ]
+      },
       "CodigoDonadorDto": {
         "type": "object",
         "properties": {
@@ -11274,6 +11733,35 @@
           "perecedero": {
             "type": "boolean"
           },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "PROPUESTO",
+              "VALIDADO"
+            ]
+          },
+          "presentacion": {
+            "type": "object",
+            "required": [
+              "id",
+              "nombre",
+              "tamano"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              },
+              "nombre": {
+                "type": "string"
+              },
+              "tamano": {
+                "type": "number"
+              }
+            },
+            "nullable": true
+          },
           "contenido": {
             "type": "number",
             "nullable": true
@@ -11286,6 +11774,8 @@
           "unidad",
           "grupo",
           "perecedero",
+          "estado",
+          "presentacion",
           "contenido"
         ]
       },

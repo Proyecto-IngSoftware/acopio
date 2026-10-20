@@ -572,6 +572,8 @@ export class CodigoDonadorDto extends crearDto(
     unidad: z.enum(['LITRO', 'KILOGRAMO', 'UNIDAD']),
     grupo,
     perecedero: z.boolean(),
+    estado: z.enum(['PROPUESTO', 'VALIDADO']),
+    presentacion: z.object({ id: z.uuid(), nombre: z.string(), tamano: z.number() }).nullable(),
     contenido: z.number().nullable(),
   }),
 ) {}

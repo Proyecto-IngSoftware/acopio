@@ -39,10 +39,29 @@ describe('recibir una donación preparada (RF-CMP-001C)', () => {
     unidades = (await cat({ perecedero: false, unidad_base: 'UNIDAD' })).id;
     perecedera = (await cat({ perecedero: true })).id;
     agua = (await cat({ perecedero: false, unidad_base: 'LITRO' })).id;
+    const botella =
+      (await a.prisma.presentacion.findFirst({
+        where: { categoria_id: agua, nombre: 'Botella 0,6 L recepción' },
+      })) ??
+      (await a.prisma.presentacion.create({
+        data: {
+          categoria_id: agua,
+          nombre: 'Botella 0,6 L recepción',
+          tamano: 0.6,
+          estado: 'VALIDADO',
+          creado_por: opA.id,
+        },
+      }));
     await a.prisma.codigoBarras.upsert({
       where: { ean: '7702001045231' },
-      update: { categoria_id: agua, contenido: 0.6 },
-      create: { ean: '7702001045231', categoria_id: agua, contenido: 0.6, creado_por: opA.id },
+      update: { categoria_id: agua, presentacion_id: botella.id },
+      create: {
+        ean: '7702001045231',
+        categoria_id: agua,
+        presentacion_id: botella.id,
+        estado: 'VALIDADO',
+        creado_por: opA.id,
+      },
     });
   });
   afterAll(() => a.cerrar());

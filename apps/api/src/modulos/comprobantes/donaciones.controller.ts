@@ -45,6 +45,35 @@ class CrearDonacionDto extends crearDto(
   }),
 ) {}
 
+const nombrePresentacion = z.string().trim().min(1).max(80);
+
+class ProponerCodigoDto extends crearDto(
+  z
+    .object({
+      ean,
+      presentacionId: z.uuid().optional(),
+      presentacionNueva: z
+        .union([
+          z.object({
+            categoriaId: z.uuid(),
+            nombre: nombrePresentacion,
+            tamano: cantidadPositiva,
+          }),
+          z.object({
+            categoriaId: z.uuid(),
+            nombre: nombrePresentacion,
+            contieneId: z.uuid(),
+            unidades: z.number().int().min(2).max(1000),
+          }),
+        ])
+        .optional(),
+    })
+    .refine(
+      (d) => (d.presentacionId === undefined) !== (d.presentacionNueva === undefined),
+      'Indica presentacionId o presentacionNueva, no ambas',
+    ),
+) {}
+
 class SugerenciasDto extends crearDto(
   z.object({
     lineas: z
@@ -105,6 +134,13 @@ export class DonacionesController {
       datos.lineas.map((l) => l.categoriaId),
       ubicacion,
     );
+  }
+
+  @Post('codigos')
+  @ApiCreatedResponse({ type: CodigoDonadorDto })
+  @ApiResponse(errores)
+  proponer(@UsuarioActual() u: UsuarioAutenticado, @Body() datos: ProponerCodigoDto) {
+    return this.donaciones.proponer(u, datos);
   }
 
   @Get('codigos/:ean')

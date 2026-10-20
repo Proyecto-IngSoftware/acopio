@@ -1,5 +1,12 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { abiertoAhora, distanciaKm, type Horario } from '@acopio/shared';
+import {
+  abiertoAhora,
+  distanciaKm,
+  errorDeLinea,
+  tamanoDePresentacion,
+  type Horario,
+  type UnidadBase,
+} from '@acopio/shared';
 import type { EstadoComprobante } from '../../generado/prisma/client';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
@@ -11,12 +18,58 @@ import { AcopiosService } from '../acopios/acopios.service';
 import { BitacoraService } from '../auditoria/bitacora.service';
 import { CategoriaDao } from '../catalogo/dao/categoria.dao';
 import { CodigoBarrasDao } from '../catalogo/dao/codigo-barras.dao';
+import {
+  CodigosBarrasService,
+  eanYaAsociadoComoErrorDominio,
+} from '../catalogo/codigos-barras.service';
+import {
+  duplicadaComoErrorDominio,
+  PresentacionesService,
+  type DatosPresentacion,
+} from '../catalogo/presentaciones.service';
 import { exigirCantidad } from '../inventario/cantidades';
 import { NoRecibirDao } from '../inventario/dao/no-recibir.dao';
 import { ComprobanteDao } from './dao/comprobante.dao';
 import { generarFolio } from './folio';
 import { ordenarSugerencias } from './sugerencias';
 import { aComprobanteVista, buscarPorFolio, estadoInvalido } from './vistas';
+
+export interface PropuestaCodigo {
+  ean: string;
+  presentacionId?: string;
+  presentacionNueva?: DatosPresentacion;
+}
+
+type FilaCodigo = NonNullable<Awaited<ReturnType<CodigoBarrasDao['conCategoria']>>>;
+type FilaPresentacion = {
+  tamano: { toString(): string } | null;
+  unidades: number | null;
+  contiene: { tamano: { toString(): string } | null } | null;
+};
+
+const tamanoDe = (p: FilaPresentacion) =>
+  tamanoDePresentacion({
+    tamano: p.tamano === null ? null : Number(p.tamano),
+    unidades: p.unidades,
+    contiene: p.contiene ? { tamano: Number(p.contiene.tamano) } : null,
+  });
+
+const vistaDonador = (c: FilaCodigo) => {
+  const presentacion = c.presentacion
+    ? { id: c.presentacion.id, nombre: c.presentacion.nombre, tamano: tamanoDe(c.presentacion) }
+    : null;
+  return {
+    ean: c.ean,
+    categoriaId: c.categoria_id,
+    categoria: c.categoria.nombre,
+    unidad: c.categoria.unidad_base,
+    grupo: c.categoria.grupo,
+    perecedero: c.categoria.perecedero,
+    estado: c.estado,
+    presentacion,
+    contenido: presentacion ? presentacion.tamano : null,
+  };
+};
 
 export interface LineaPreparada {
   categoriaId: string;
@@ -33,6 +86,8 @@ export class DonacionesService {
     private readonly comprobantes: ComprobanteDao,
     private readonly categorias: CategoriaDao,
     private readonly codigos: CodigoBarrasDao,
+    private readonly codigosCatalogo: CodigosBarrasService,
+    private readonly presentaciones: PresentacionesService,
     private readonly acopiosDao: AcopioDao,
     private readonly noRecibir: NoRecibirDao,
     private readonly bitacora: BitacoraService,
@@ -90,13 +145,16 @@ export class DonacionesService {
         'Una de las categorías ya no está disponible',
       );
     }
-    const codigo = l.ean ? await this.codigos.buscar(l.ean) : null;
+    const codigo = l.ean ? await this.codigos.conCategoria(l.ean) : null;
     if (codigo && codigo.categoria_id !== l.categoriaId) {
       throw new ErrorDominio('CODIGO_NO_COINCIDE', 'El código escaneado es de otra categoría');
     }
-    const contenido = codigo?.contenido ? Number(codigo.contenido) : 1;
-    // Sin contenido, la cantidad va en la unidad base: en UNIDAD, entera
-    if (contenido === 1) exigirCantidad(l.cantidad, cat.unidad_base);
+    const presentacion = codigo?.presentacion ?? null;
+    const contenido = presentacion ? tamanoDe(presentacion) : 1;
+    // Sin presentación, la cantidad va en la unidad base: en UNIDAD, entera
+    if (!presentacion) exigirCantidad(l.cantidad, cat.unidad_base);
+    const tope = errorDeLinea(l.cantidad * contenido, cat.unidad_base as UnidadBase);
+    if (tope) throw new ErrorDominio('CANTIDAD_FUERA_DE_TOPE', tope, 422);
     // Con un código conocido la cantidad cuenta presentaciones: enteras
     if (codigo && !Number.isInteger(l.cantidad)) {
       throw new ErrorDominio('CANTIDAD_ENTERA', 'Las presentaciones se cuentan enteras');
@@ -162,7 +220,7 @@ export class DonacionesService {
     );
   }
 
-  /** Para el escáner del Donador: sin quién asoció el código (P-038). */
+  /** Para el escáner del Donador: sin quién asoció el código (P-038). Incluye los `PROPUESTO`. */
   async codigo(ean: string) {
     const c = await this.codigos.conCategoria(ean);
     if (!c || c.categoria.archivada) {
@@ -172,14 +230,39 @@ export class DonacionesService {
         404,
       );
     }
-    return {
-      ean: c.ean,
-      categoriaId: c.categoria_id,
-      categoria: c.categoria.nombre,
-      unidad: c.categoria.unidad_base,
-      grupo: c.categoria.grupo,
-      perecedero: c.categoria.perecedero,
-      contenido: c.contenido === null ? null : Number(c.contenido),
-    };
+    return vistaDonador(c);
+  }
+
+  /**
+   * El Donador propone un código con una presentación existente o nueva. Si el EAN ya existe
+   * responde lo que hay, para que el segundo Donador use la propuesta del primero.
+   */
+  async proponer(usuario: UsuarioAutenticado, datos: PropuestaCodigo) {
+    const existente = await this.codigos.conCategoria(datos.ean);
+    if (existente) return vistaDonador(existente);
+    try {
+      await this.transacciones.ejecutar(async (tx) => {
+        const presentacionId = datos.presentacionNueva
+          ? (
+              await this.presentaciones.crearEnTransaccion(
+                tx,
+                usuario,
+                datos.presentacionNueva,
+                'PROPUESTO',
+              )
+            ).id
+          : datos.presentacionId!;
+        await this.codigosCatalogo.proponerEnTransaccion(tx, usuario, datos.ean, presentacionId);
+      });
+    } catch (e) {
+      // Dos pedidos a la vez: si el EAN ya quedó, se responde lo que hay
+      if (esLlaveDuplicada(e)) {
+        const ya = await this.codigos.conCategoria(datos.ean);
+        if (ya) return vistaDonador(ya);
+        return duplicadaComoErrorDominio(e);
+      }
+      return eanYaAsociadoComoErrorDominio(e);
+    }
+    return vistaDonador((await this.codigos.conCategoria(datos.ean))!);
   }
 }

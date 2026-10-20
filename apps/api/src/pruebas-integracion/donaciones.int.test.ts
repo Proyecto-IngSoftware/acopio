@@ -20,14 +20,29 @@ describe('preparar una donación (RF-CMP-001B)', () => {
     donador = await crearDonador(a);
     arroz = (await a.prisma.categoria.findFirstOrThrow({ where: { nombre: 'Arroz' } })).id;
     agua = (await a.prisma.categoria.findFirstOrThrow({ where: { nombre: 'Agua potable' } })).id;
+    const admin = await a.prisma.usuario.findFirstOrThrow({ where: { rol: 'ADMIN' } });
+    const botella =
+      (await a.prisma.presentacion.findFirst({
+        where: { categoria_id: agua, nombre: 'Botella 0,6 L donaciones' },
+      })) ??
+      (await a.prisma.presentacion.create({
+        data: {
+          categoria_id: agua,
+          nombre: 'Botella 0,6 L donaciones',
+          tamano: 0.6,
+          estado: 'VALIDADO',
+          creado_por: admin.id,
+        },
+      }));
     await a.prisma.codigoBarras.upsert({
       where: { ean: '7702001045231' },
       update: {},
       create: {
         ean: '7702001045231',
         categoria_id: agua,
-        contenido: 0.6,
-        creado_por: (await a.prisma.usuario.findFirstOrThrow({ where: { rol: 'ADMIN' } })).id,
+        presentacion_id: botella.id,
+        estado: 'VALIDADO',
+        creado_por: admin.id,
       },
     });
   });
@@ -196,6 +211,90 @@ describe('preparar una donación (RF-CMP-001B)', () => {
     expect(r.body).toMatchObject({ categoria: 'Agua potable', contenido: 0.6 });
     expect(r.body.creadoPor).toBeUndefined();
     await como(donador.token).get('/api/donaciones/codigos/0000000000000').expect(404);
+  });
+
+  describe('el Donador propone (ADR-0021)', () => {
+    const ean = `77${Date.now().toString().slice(-11)}`;
+    let presentacionId: string;
+
+    it('propone un EAN con una presentación nueva y la donación usa su tamaño', async () => {
+      const r = await como(donador.token)
+        .post('/api/donaciones/codigos', {
+          ean,
+          presentacionNueva: {
+            categoriaId: agua,
+            nombre: `Botella 0,6 L propuesta ${ean}`,
+            tamano: 0.6,
+          },
+        })
+        .expect(201);
+      expect(r.body).toMatchObject({
+        ean,
+        categoriaId: agua,
+        estado: 'PROPUESTO',
+        contenido: 0.6,
+        presentacion: { tamano: 0.6 },
+      });
+      expect(r.body.creadoPor).toBeUndefined();
+      presentacionId = r.body.presentacion.id as string;
+      const p = await a.prisma.presentacion.findUniqueOrThrow({ where: { id: presentacionId } });
+      expect(p.estado).toBe('PROPUESTO');
+      const d = await como(donador.token)
+        .post('/api/donaciones', {
+          acopioId: ACOPIO_A,
+          lineas: [{ categoriaId: agua, ean, cantidad: 24 }],
+        })
+        .expect(201);
+      expect(d.body.lineas[0]).toMatchObject({ contenidoUnitario: 0.6, cantidadDeclarada: 24 });
+      const g = await como(donador.token).get(`/api/donaciones/codigos/${ean}`).expect(200);
+      expect(g.body).toMatchObject({ estado: 'PROPUESTO', presentacion: { id: presentacionId } });
+    });
+
+    it('un segundo Donador propone el mismo EAN y recibe el código del primero', async () => {
+      const otro = await crearDonador(a);
+      const r = await como(otro.token)
+        .post('/api/donaciones/codigos', { ean, presentacionId })
+        .expect(201);
+      expect(r.body).toMatchObject({
+        ean,
+        estado: 'PROPUESTO',
+        presentacion: { id: presentacionId },
+      });
+      const g = await como(otro.token).get(`/api/donaciones/codigos/${ean}`).expect(200);
+      expect(g.body.estado).toBe('PROPUESTO');
+    });
+
+    it('el Operador lo ve PROPUESTO', async () => {
+      const admin = await iniciarSesion(a, ADMIN.username, ADMIN.contrasena);
+      const r = await a
+        .http()
+        .get(`/api/codigos-barras/${ean}`)
+        .set('authorization', `Bearer ${admin}`)
+        .expect(200);
+      expect(r.body.estado).toBe('PROPUESTO');
+    });
+
+    it('una línea de más de 10.000 L responde 422 CANTIDAD_FUERA_DE_TOPE', async () => {
+      const suelta = await como(donador.token)
+        .post('/api/donaciones/codigos', {
+          ean: `78${Date.now().toString().slice(-11)}`,
+          presentacionNueva: {
+            categoriaId: agua,
+            nombre: `Paca x12 ${ean}`,
+            contieneId: presentacionId,
+            unidades: 12,
+          },
+        })
+        .expect(201);
+      const r = await como(donador.token)
+        .post('/api/donaciones', {
+          acopioId: ACOPIO_A,
+          lineas: [{ categoriaId: agua, ean: suelta.body.ean, cantidad: 20_000 }],
+        })
+        .expect(422);
+      expect(r.body.codigo).toBe('CANTIDAD_FUERA_DE_TOPE');
+      expect(r.body.mensaje).toContain('10.000');
+    });
   });
 
   it('un Operador no prepara donaciones', async () => {

@@ -502,6 +502,54 @@ export interface paths {
         patch: operations["CodigosBarrasController_editar"];
         trace?: never;
     };
+    "/api/codigos-barras/{ean}/validar": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["CodigosBarrasController_validar"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/presentaciones": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PresentacionesController_listar"];
+        put?: never;
+        post: operations["PresentacionesController_crear"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/presentaciones/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["PresentacionesController_editar"];
+        trace?: never;
+    };
     "/api/entidades": {
         parameters: {
             query?: never;
@@ -1079,6 +1127,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["DonacionesController_sugerir"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/donaciones/codigos": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["DonacionesController_proponer"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2333,10 +2397,19 @@ export interface components {
             categoria: string;
             /** @enum {string} */
             unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
-            /** @description Unidad base que trae una presentación */
+            /** @description Presentación a la que apunta; tamano en unidad base */
+            presentacion: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+                tamano: number;
+            } | null;
+            /** @description Tamaño de la presentación, en unidad base */
             contenido: number | null;
-            descripcion: string | null;
-            revisado: boolean;
+            /** @enum {string} */
+            estado: "PROPUESTO" | "VALIDADO";
+            /** @description Una recepción vio algo que no cuadra con la presentación */
+            porRevisar: boolean;
             /** @enum {string} */
             grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
             perecedero: boolean;
@@ -2348,16 +2421,50 @@ export interface components {
         AsociarDto: {
             ean: string;
             /** Format: uuid */
-            categoriaId: string;
-            contenido?: number | null;
-            descripcion?: string | null;
+            presentacionId: string;
+        };
+        ValidarDto: {
+            /** Format: uuid */
+            presentacionId: string;
         };
         EditarDto: {
+            nombre?: string;
+            tamano?: number;
             /** Format: uuid */
-            categoriaId?: string;
-            contenido?: number | null;
-            descripcion?: string | null;
-            revisado?: boolean;
+            contieneId?: string;
+            unidades?: number;
+            /** @enum {string} */
+            estado?: "VALIDADO";
+        };
+        PresentacionDto: {
+            /** Format: uuid */
+            id: string;
+            /** Format: uuid */
+            categoriaId: string;
+            categoria: string;
+            /** @enum {string} */
+            unidad: "LITRO" | "KILOGRAMO" | "UNIDAD";
+            nombre: string;
+            /** @enum {string} */
+            clase: "SUELTA" | "PAQUETE";
+            /** @description En unidad base; en un paquete, el calculado */
+            tamano: number;
+            /** Format: uuid */
+            contieneId: string | null;
+            unidades: number | null;
+            /** @enum {string} */
+            estado: "PROPUESTO" | "VALIDADO";
+            /** @description Códigos de barras asociados */
+            codigos: number;
+        };
+        CrearDto: {
+            /** Format: uuid */
+            categoriaId: string;
+            nombre: string;
+            tamano?: number;
+            /** Format: uuid */
+            contieneId?: string;
+            unidades?: number;
         };
         EntidadDto: {
             /** Format: uuid */
@@ -3070,6 +3177,24 @@ export interface components {
             noRecibe: string[];
             lineasAceptadas: number;
         };
+        ProponerCodigoDto: {
+            ean: string;
+            /** Format: uuid */
+            presentacionId?: string;
+            presentacionNueva?: {
+                /** Format: uuid */
+                categoriaId: string;
+                nombre: string;
+                tamano: number;
+            } | {
+                /** Format: uuid */
+                categoriaId: string;
+                nombre: string;
+                /** Format: uuid */
+                contieneId: string;
+                unidades: number;
+            };
+        };
         CodigoDonadorDto: {
             ean: string;
             /** Format: uuid */
@@ -3080,6 +3205,14 @@ export interface components {
             /** @enum {string} */
             grupo: "ALIMENTOS" | "AGUA_Y_BEBIDAS" | "ASEO_PERSONAL" | "ASEO_DEL_HOGAR" | "SALUD" | "ROPA_Y_ABRIGO" | "BEBE" | "ADULTO_MAYOR" | "ANIMALES" | "HERRAMIENTAS";
             perecedero: boolean;
+            /** @enum {string} */
+            estado: "PROPUESTO" | "VALIDADO";
+            presentacion: {
+                /** Format: uuid */
+                id: string;
+                nombre: string;
+                tamano: number;
+            } | null;
             contenido: number | null;
         };
         BandejaRespuestaDto: {
@@ -5067,7 +5200,10 @@ export interface operations {
     CodigosBarrasController_listar: {
         parameters: {
             query?: {
-                revisado?: "true" | "false";
+                /** @description EAN (prefijo), categoría o presentación */
+                q?: string;
+                estado?: "PROPUESTO" | "VALIDADO";
+                categoriaId?: string;
             };
             header?: never;
             path?: never;
@@ -5150,6 +5286,100 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["CodigoBarrasDto"];
+                };
+            };
+        };
+    };
+    CodigosBarrasController_validar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                ean: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ValidarDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CodigoBarrasDto"];
+                };
+            };
+        };
+    };
+    PresentacionesController_listar: {
+        parameters: {
+            query: {
+                categoriaId: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PresentacionDto"][];
+                };
+            };
+        };
+    };
+    PresentacionesController_crear: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CrearDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PresentacionDto"];
+                };
+            };
+        };
+    };
+    PresentacionesController_editar: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["EditarDto"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["PresentacionDto"];
                 };
             };
         };
@@ -6543,6 +6773,38 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["SugerenciaEntregaDto"][];
+                };
+            };
+        };
+    };
+    DonacionesController_proponer: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProponerCodigoDto"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["CodigoDonadorDto"];
+                };
+            };
+            /** @description Error */
+            default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ErrorDto"];
                 };
             };
         };
