@@ -15,8 +15,11 @@ export function RequiereDonador({ children }: { children: ReactNode }) {
       </div>
     );
   }
-  if (usuario?.rol !== 'DONADOR') {
+  // Sin sesión, a entrar y de vuelta aquí. Con otra cuenta, a /donador: volver aquí
+  // después de entrar sería un bucle
+  if (!usuario) {
     return <Navigate to={`/entrar?volver=${encodeURIComponent(pathname + search)}`} replace />;
   }
+  if (usuario.rol !== 'DONADOR') return <Navigate to="/donador" replace />;
   return <>{children}</>;
 }

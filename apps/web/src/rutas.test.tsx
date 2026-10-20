@@ -123,6 +123,14 @@ describe('rutas del Donador', () => {
     ).toBeInTheDocument();
   });
 
+  it('/donar con una cuenta del equipo no cae en un bucle: va a /donador', async () => {
+    const operadora = { id: 'o1', username: 'op', nombre: 'Daniela', rol: 'OPERADOR' as const };
+    render(envolver(<Rutas />, '/donar', clienteFalso(operadora)));
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Crea tu cuenta de donador' }),
+    ).toBeInTheDocument();
+  });
+
   it('/donar sin sesión lleva a la única pantalla de entrada', async () => {
     render(envolver(<Rutas />, '/donar'));
     expect(

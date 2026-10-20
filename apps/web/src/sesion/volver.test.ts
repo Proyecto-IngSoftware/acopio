@@ -7,6 +7,8 @@ it('acepta una ruta interna', () => {
 
 it('rechaza lo que saldría del sitio o no es una ruta', () => {
   expect(rutaDeVuelta('//x.com')).toBeNull();
+  // El navegador lee «/\\» como «//»
+  expect(rutaDeVuelta('/\\x.com')).toBeNull();
   expect(rutaDeVuelta('https://x.com')).toBeNull();
   expect(rutaDeVuelta('donar')).toBeNull();
   expect(rutaDeVuelta(null)).toBeNull();
