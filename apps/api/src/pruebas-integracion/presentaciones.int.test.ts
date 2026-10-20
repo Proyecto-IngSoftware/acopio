@@ -2,6 +2,7 @@ import {
   ACOPIO_A,
   ADMIN,
   crearAppPrueba,
+  crearDonador,
   crearUsuarioActivo,
   iniciarSesion,
   unico,
@@ -152,5 +153,35 @@ describe('presentaciones', () => {
       .send({ nombre: 'x' })
       .expect(404);
     expect(r.body.codigo).toBe('PRESENTACION_NO_ENCONTRADA');
+  });
+
+  it('el Donador ve las validadas y sus propuestas; el Operador ve todas', async () => {
+    const [d1, d2] = [await crearDonador(a), await crearDonador(a)];
+    const propuesta = await a.prisma.presentacion.create({
+      data: {
+        categoria_id: aguaId,
+        nombre: unico('Propuesta '),
+        tamano: 2,
+        estado: 'PROPUESTO',
+        creado_por: d1.id,
+      },
+    });
+    const ids = async (token: string) =>
+      (
+        (
+          await a
+            .http()
+            .get(`/api/presentaciones?categoriaId=${aguaId}`)
+            .set(como(token))
+            .expect(200)
+        ).body as { id: string }[]
+      ).map((x) => x.id);
+    const vistoPorD1 = await ids(d1.token);
+    expect(vistoPorD1).toContain(propuesta.id);
+    expect(vistoPorD1).toContain(suelta);
+    const vistoPorD2 = await ids(d2.token);
+    expect(vistoPorD2).not.toContain(propuesta.id);
+    expect(vistoPorD2).toContain(suelta);
+    expect(await ids(op.token)).toContain(propuesta.id);
   });
 });

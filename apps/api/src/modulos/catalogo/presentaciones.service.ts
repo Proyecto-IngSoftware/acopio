@@ -50,6 +50,16 @@ const duplicada = () =>
     409,
   );
 
+/**
+ * Para el `catch` de quien llama a `crearEnTransaccion`: dos pedidos a la vez pueden pasar la
+ * revisión de nombre y chocar en la llave única, lo que aborta la transacción. Se atrapa fuera
+ * de `Transacciones.ejecutar`; esto lo vuelve `PRESENTACION_DUPLICADA` (409) y relanza lo demás.
+ */
+export function duplicadaComoErrorDominio(e: unknown): never {
+  if (esLlaveDuplicada(e)) throw duplicada();
+  throw e;
+}
+
 const fueraDeTope = (mensaje: string) => new ErrorDominio('TAMANO_FUERA_DE_TOPE', mensaje, 422);
 
 /** Presentaciones sueltas y paquetes de una categoría (ADR-0021). */
@@ -73,12 +83,15 @@ export class PresentacionesService {
         this.crearEnTransaccion(tx, usuario, datos, 'VALIDADO'),
       );
     } catch (e) {
-      if (esLlaveDuplicada(e)) throw duplicada();
-      throw e;
+      return duplicadaComoErrorDominio(e);
     }
   }
 
-  /** Para quien ya abrió una transacción (códigos de barras, donaciones). */
+  /**
+   * Para quien ya abrió una transacción (códigos de barras, donaciones). Quien llama debe
+   * atrapar `esLlaveDuplicada` fuera de `Transacciones.ejecutar` y convertirlo con
+   * `duplicadaComoErrorDominio` (409 `PRESENTACION_DUPLICADA`).
+   */
   async crearEnTransaccion(
     tx: ClienteBd,
     usuario: UsuarioAutenticado,
@@ -212,8 +225,7 @@ export class PresentacionesService {
         return vista(f);
       });
     } catch (e) {
-      if (esLlaveDuplicada(e)) throw duplicada();
-      throw e;
+      return duplicadaComoErrorDominio(e);
     }
   }
 
