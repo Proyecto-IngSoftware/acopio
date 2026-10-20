@@ -17,6 +17,11 @@ export function haceCuanto(fecha: string, ahora = new Date()): string {
   return dias === 1 ? 'hace 1 día' : `hace ${dias} días`;
 }
 
+/** Un dato operativo con más de 6 horas se atenúa y lleva advertencia (RNF-04). */
+export function esViejo(fecha: string, ahora = new Date()): boolean {
+  return ahora.getTime() - new Date(fecha).getTime() > 6 * 3600_000;
+}
+
 /** «3 oct, 9:12 a. m.», en hora de Colombia sin importar la zona del navegador. */
 export function fechaHora(fecha: string): string {
   const texto = new Date(fecha).toLocaleString('es-CO', {

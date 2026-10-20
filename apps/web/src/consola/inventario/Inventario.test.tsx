@@ -80,6 +80,16 @@ describe('C3 Inventario', () => {
     expect(arroz).toHaveTextContent('Vence primero: 40 kg el 12 de octubre');
   });
 
+  it('un dato de más de 6 horas se atenúa y advierte; uno reciente no', async () => {
+    pantalla();
+    const panal = (await screen.findByText('Pañal adulto')).closest('a')!;
+    expect(panal).toHaveTextContent('Más de 6 horas sin movimientos: puede no estar al día');
+    expect(panal).toHaveAttribute('data-viejo');
+    const arroz = screen.getByText('Arroz').closest('a')!;
+    expect(arroz).not.toHaveTextContent('Más de 6 horas');
+    expect(arroz).not.toHaveAttribute('data-viejo');
+  });
+
   it('el Operador tiene el botón a la entrada rápida; el Auditor no', async () => {
     const { unmount } = pantalla('OPERADOR');
     expect(await screen.findByRole('link', { name: /Entrada rápida/ })).toHaveAttribute(

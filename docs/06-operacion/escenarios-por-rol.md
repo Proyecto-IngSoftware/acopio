@@ -3,7 +3,7 @@ title: "Escenarios de prueba por rol"
 type: guia
 tags: [pruebas, operacion, servidor]
 estado: vigente
-actualizado: 2026-10-19
+actualizado: 2026-10-20
 ---
 
 # Escenarios de prueba por rol
@@ -90,8 +90,8 @@ practicar la recepción.
     servidor, así que esto se ve 6 horas después del despliegue en lo que nadie haya tocado.
 14. HU-06.1. Marco el agua como «no recibir» en mi acopio. En otra ventana, sin sesión,
     el mapa filtrado por «qué no recibe: agua» debería mostrar Chapinero enseguida.
-15. HU-06.2. Programo una fecha de reapertura para mañana. Al día siguiente la categoría
-    debería volver a recibirse sola. Se revisa un día después.
+15. HU-06.2. Marco «no recibir hasta» mañana. Ese día la categoría sigue sin recibirse y al
+    siguiente debería volver a recibirse sola. Se revisa dos días después.
 16. HU-06.3. Entro como `brayan@acopio.co` y abro la dirección de «no recibir» de
     Chapinero copiada de la sesión de Joseph. Debería rechazarme.
 

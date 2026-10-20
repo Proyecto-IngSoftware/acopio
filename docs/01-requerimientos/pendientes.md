@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-19
+actualizado: 2026-10-20
 ---
 
 # Pendientes — bandeja de entrada
@@ -1074,7 +1074,9 @@ saber que lo deja afuera.
 `UsuariosService.actualizar` llama a `cambiarCorreo` del proveedor (local o Supabase) antes de
 cerrar la transacción. Si el proveedor falla, el cambio se deshace. Dos pruebas de
 `usuarios.int.test.ts` lo revisan: con un correo nuevo la persona entra con su usuario y con ese
-correo, y no con el anterior; sin correo, entra con su usuario.
+correo, y no con el anterior; sin correo, entra con su usuario. Falta verlo en el servidor, que
+usa Supabase: se puede con una cuenta creada solo para eso y borrada al final, sin tocar las de la
+demo, si Joseph lo autoriza (nota del 2026-10-20).
 
 ---
 

@@ -3,7 +3,7 @@ import { Icono } from './Icono';
 
 export interface ItemNoTraigan {
   categoria: string;
-  /** Fecha de reapertura (`2026-10-15`); sin ella, hasta que se desmarque. */
+  /** Último día sin recibir (`2026-10-15`); sin ella, hasta que se desmarque. */
   hasta: string | null;
 }
 

@@ -16,7 +16,7 @@ import {
 import { Icono } from '../../componentes/Icono';
 import { IconoGrupo } from '../../componentes/IconoGrupo';
 import { Segmentado } from '../../componentes/Segmentado';
-import { diaLargo, haceCuanto } from '../../formato';
+import { diaLargo, esViejo, haceCuanto } from '../../formato';
 import { useSesion } from '../../sesion/Sesion';
 import { Encabezado } from '../Encabezado';
 
@@ -41,11 +41,14 @@ const RESUMEN: { estado: EstadoSemaforo; texto: (n: number) => string }[] = [
 
 function Fila({ s, acopioId }: { s: Saldo; acopioId: string }) {
   const primero = s.vencimientos[0];
+  const viejo = s.ultimoMovimiento !== null && esViejo(s.ultimoMovimiento);
+  // Atenuada con el fondo, no con opacidad: el texto conserva su contraste
   return (
     <li>
       <Link
         to={`/consola/acopios/${acopioId}/inventario/${s.categoriaId}`}
-        className="flex items-center gap-space-sm rounded-xl bg-surface-container-lowest p-space-md shadow-sm active:bg-surface-container"
+        data-viejo={viejo || undefined}
+        className={`flex items-center gap-space-sm rounded-xl p-space-md active:bg-surface-container ${viejo ? 'bg-surface-container' : 'bg-surface-container-lowest shadow-sm'}`}
       >
         <IconoGrupo grupo={s.grupo} />
         <span className="flex min-w-0 flex-1 flex-col gap-1">
@@ -60,6 +63,12 @@ function Fila({ s, acopioId }: { s: Saldo; acopioId: string }) {
             {primero?.venceEn &&
               ` · Vence primero: ${formatearCantidad(primero.cantidad, s.unidad)} el ${diaLargo(primero.venceEn)}`}
           </span>
+          {viejo && (
+            <span className="flex items-center gap-1 text-body-sm text-on-surface-variant">
+              <Icono nombre="history" className="text-[16px]" />
+              Más de 6 horas sin movimientos: puede no estar al día
+            </span>
+          )}
         </span>
         <span className="shrink-0 text-right text-headline-sm font-bold text-on-surface tabular-nums">
           {formatearCantidad(s.cantidad, s.unidad)}
