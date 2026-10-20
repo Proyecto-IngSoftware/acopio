@@ -433,9 +433,13 @@ export class CodigoBarrasDto extends crearDto(
     categoriaId: z.uuid(),
     categoria: z.string(),
     unidad: z.enum(['LITRO', 'KILOGRAMO', 'UNIDAD']),
-    contenido: z.number().nullable().describe('Unidad base que trae una presentación'),
-    descripcion: z.string().nullable(),
-    revisado: z.boolean(),
+    presentacion: z
+      .object({ id: z.uuid(), nombre: z.string(), tamano: z.number() })
+      .nullable()
+      .describe('Presentación a la que apunta; tamano en unidad base'),
+    contenido: z.number().nullable().describe('Tamaño de la presentación, en unidad base'),
+    estado: z.enum(['PROPUESTO', 'VALIDADO']),
+    porRevisar: z.boolean().describe('Una recepción vio algo que no cuadra con la presentación'),
     grupo,
     perecedero: z.boolean(),
     creadoPor: z.string().nullable().describe('Nombre de quien lo asoció'),

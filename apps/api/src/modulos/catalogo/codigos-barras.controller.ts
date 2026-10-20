@@ -1,39 +1,29 @@
-import { Body, Controller, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { crearDto } from '../../comun/dto';
 import { z } from 'zod';
 import { Roles, UsuarioActual } from '../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
+import { crearDto } from '../../comun/dto';
 import { CodigoBarrasDto } from '../../comun/respuestas';
-import { cantidadPositiva } from '../../comun/validacion/cantidades';
 import { CodigosBarrasService } from './codigos-barras.service';
 
 // EAN-8, UPC-A (12), EAN-13 y GTIN-14
 const ean = z.string().regex(/^(\d{8}|\d{12,14})$/, 'El código debe tener 8, 12, 13 o 14 dígitos');
-const contenido = cantidadPositiva.nullable().optional();
 
-class AsociarDto extends crearDto(
-  z.object({
-    ean,
-    categoriaId: z.uuid(),
-    contenido,
-    descripcion: z.string().trim().max(120).nullable().optional(),
-  }),
-) {}
+class AsociarDto extends crearDto(z.object({ ean, presentacionId: z.uuid() })) {}
+class ValidarDto extends crearDto(z.object({ presentacionId: z.uuid() })) {}
 class EditarDto extends crearDto(
   z.object({
-    categoriaId: z.uuid().optional(),
-    contenido,
-    descripcion: z.string().trim().max(120).nullable().optional(),
-    revisado: z.boolean().optional(),
+    presentacionId: z.uuid().optional(),
+    estado: z.literal('VALIDADO').optional(),
+    porRevisar: z.literal(false).optional(),
   }),
 ) {}
 class FiltroDto extends crearDto(
   z.object({
-    revisado: z
-      .enum(['true', 'false'])
-      .transform((v) => v === 'true')
-      .optional(),
+    q: z.string().trim().max(120).optional().describe('EAN (prefijo), categoría o presentación'),
+    estado: z.enum(['PROPUESTO', 'VALIDADO']).optional(),
+    categoriaId: z.uuid().optional(),
   }),
 ) {}
 class EanDto extends crearDto(z.object({ ean })) {}
@@ -63,12 +53,18 @@ export class CodigosBarrasController {
   @Post()
   @ApiCreatedResponse({ type: CodigoBarrasDto })
   asociar(@UsuarioActual() usuario: UsuarioAutenticado, @Body() datos: AsociarDto) {
-    return this.codigos.asociar(usuario, {
-      ean: datos.ean,
-      categoriaId: datos.categoriaId,
-      contenido: datos.contenido ?? null,
-      descripcion: datos.descripcion ?? null,
-    });
+    return this.codigos.asociar(usuario, datos.ean, datos.presentacionId);
+  }
+
+  @Roles('ADMIN', 'OPERADOR')
+  @Post(':ean/validar')
+  @ApiCreatedResponse({ type: CodigoBarrasDto })
+  validar(
+    @UsuarioActual() usuario: UsuarioAutenticado,
+    @Param() p: EanDto,
+    @Body() datos: ValidarDto,
+  ) {
+    return this.codigos.validar(usuario, p.ean, datos.presentacionId);
   }
 
   @Roles('ADMIN')
@@ -80,5 +76,12 @@ export class CodigosBarrasController {
     @Body() cambios: EditarDto,
   ) {
     return this.codigos.editar(usuario, p.ean, cambios);
+  }
+
+  @Roles('ADMIN')
+  @Delete(':ean')
+  @ApiOkResponse({ type: CodigoBarrasDto })
+  borrar(@UsuarioActual() usuario: UsuarioAutenticado, @Param() p: EanDto) {
+    return this.codigos.borrar(usuario, p.ean);
   }
 }

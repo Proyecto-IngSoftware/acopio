@@ -33,6 +33,7 @@ import { EmergenciasService } from './emergencias.service';
     CategoriasService,
     CanastaService,
     PresentacionesService,
+    CodigosBarrasService,
   ],
 })
 export class CatalogoModule {}
