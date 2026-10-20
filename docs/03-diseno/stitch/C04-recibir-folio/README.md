@@ -53,7 +53,11 @@ Pendiente de revisión por Joseph. Parte de la [maqueta de la idea](../../superp
 
 - La captura de Stitch salió en baja resolución (487 px) y puede estar desactualizada; el render del HTML es la referencia.
 - La línea «Agua potable» trae el chip «Código propuesto», lo que dijo el donador, «Declaradas: 24 · Recibidas: 24» y los botones «Corregir» y «Es correcto». «Arroz · Bolsa 500 g» lleva el chip «Validado».
-- Stitch dejó el botón final como «Registrar recepción (2 entradas)»; la idea decía «Terminar recepción».
-- «Declaradas» y «Recibidas» van como texto de 12 px. La idea los trae en el tamaño del cuerpo.
-- El chip «Código propuesto» usa ámbar (`#D97706`), reservado al estado del inventario. «Es correcto» y «Corregir» quedan a 36 px de alto, menos que los 48 px que pide el diseño.
-- La pantalla de corrección (elegir otra presentación) no tiene maqueta.
+
+### Ajustes de la segunda ronda (2026-10-20)
+
+- El botón final dice «Registrar recepción (2 entradas)», igual que el real en `RecibirFolio.tsx` (`Registrar recepción (N entradas)`). La idea decía «Terminar recepción»; se queda el texto de la app.
+- Los chips «Código propuesto» y «Validado» van en neutro con ícono, sin ámbar, como «Sin revisar» y «Revisado» en `PestanaCodigos.tsx`.
+- «Corregir» y «Es correcto» tienen 48 px de alto como mínimo. «Declaradas» y «Recibidas» suben a 14 px.
+- Se quitó una tarjeta duplicada que Stitch había dejado arriba y se puso una de folio simple.
+- Vista «Corregir», hecha a mano como hoja inferior: [pantalla-corregir.html](pantalla-corregir.html) · [render-corregir.png](render-corregir.png). Trae buscador arriba y las presentaciones agrupadas por categoría, con una elegida. Se guarda con «Guardar corrección».

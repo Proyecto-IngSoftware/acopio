@@ -60,6 +60,8 @@ Pendiente de revisión por Joseph. Parte de la [maqueta de la idea](../../superp
 
 - No hay captura de Stitch: la exportada seguía mostrando la versión anterior («25 kg»). El HTML exportado tampoco traía la edición, así que se aplicó a mano lo que Stitch devolvió: «500» con el selector «kg | g» (g activo) al lado, el aviso «Se registran 0,5 kg» y el botón «Registrar 0,5 kg».
 - Se quitó del script de ejemplo la línea que reescribía el botón al teclear, para que el render conserve el texto.
-- El selector es pequeño (texto de 12 px, botones de unos 28 px). El diseño pide 48 px tocables; hay que agrandarlo al construir.
-- El aviso «Se registran 0,5 kg» va en 12 px, menos que los 14 px mínimos. Falta el tope de 10.000 por línea.
 - Se mantiene el resto de la pantalla aprobada: «Unidad: kg» en la tarjeta de categoría, teclado y fecha de vencimiento.
+
+### Ajustes de la segunda ronda (2026-10-20)
+
+- El selector «kg | g» tiene botones de 48 px de alto. El aviso sube a 14 px y añade «tope 10.000 por línea».

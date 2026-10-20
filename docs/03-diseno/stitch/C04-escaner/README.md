@@ -43,5 +43,11 @@ Pendiente de revisión por Joseph. Las dos hojas parten de la [maqueta de la ide
 
 - Código nuevo: la edición de Stitch no llegó al HTML ni a la captura exportados (siguen mostrando la hoja vieja con «Cada paquete trae»). Se aplicó a mano en el HTML lo que Stitch devolvió, y el render sale de ese HTML. La lista de presentaciones es de radios, con «Nueva presentación» como botón secundario y «Asociar y seguir» como primario.
 - Código nuevo: el HTML a mano no repite la etiqueta «Predeterminado» ni la nota del administrador que Stitch había añadido.
-- Nueva presentación: salió como pantalla completa con flecha de regreso y barra inferior, no como hoja. Falta la variante «Suelta» (tamaño y unidad ml, L, g o kg) y el tope de 50 L o 50 kg.
-- Nueva presentación: Stitch añadió «unidades» en el campo de cantidad y «Elemento base seleccionado» bajo la presentación; la maqueta de la idea no los traía. El verde del botón es el de Stitch (`#085046`) y no el teal de los tokens; en el código mandan los tokens.
+
+### Ajustes de la segunda ronda (2026-10-20)
+
+- «Nueva presentación» pasa a ser una hoja inferior sobre el flujo del escáner, como «Código nuevo». Stitch la había dado como pantalla completa ([pantalla-nueva-presentacion.html](pantalla-nueva-presentacion.html), se conserva como salida original). Las hojas se armaron a mano sobre el HTML de «Código nuevo», con clases de token:
+  - Paquete: [pantalla-nueva-presentacion-paquete.html](pantalla-nueva-presentacion-paquete.html) · [render](render-nueva-presentacion-paquete.png)
+  - Suelta, agua (ml o L, tope 50 L): [pantalla-nueva-presentacion-suelta-agua.html](pantalla-nueva-presentacion-suelta-agua.html) · [render](render-nueva-presentacion-suelta-agua.png)
+  - Suelta, arroz (g o kg, tope 50 kg): [pantalla-nueva-presentacion-suelta-arroz.html](pantalla-nueva-presentacion-suelta-arroz.html) · [render](render-nueva-presentacion-suelta-arroz.png)
+- El selector «Suelta | Paquete» y el selector de unidad tienen 48 px de alto. Se quitaron «unidades» y «Elemento base seleccionado» que Stitch había añadido, y el verde propio de Stitch: el botón usa el teal de los tokens.
