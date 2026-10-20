@@ -54,11 +54,34 @@ y el plan,
   se arreglaron con prueba: una cuenta del equipo que abría `/donar` quedaba en un bucle entre
   `/donar` y `/entrar`, y `?volver=` aceptaba una ruta que empieza con barra invertida.
 
+## Revisión independiente
+
+Después de fusionar #156, Joseph pidió pasar un revisor por la rama. No encontró nada crítico y
+la migración a DAO conserva la conducta, consulta por consulta. Encontró dos fallas en la web,
+que se arreglaron con prueba en el PR siguiente:
+
+- C01 decía «Usuario o contraseña incorrectos.» también sin red o con un error 500, y no avisaba
+  cuando no había conexión. Ahora ese mensaje sale solo con un 401; lo demás muestra el texto de
+  la API, y sin conexión aparece el aviso y el botón queda inactivo, como ya hacía la pantalla
+  del Donador.
+- `?volver=` con un tabulador o un salto de línea (`/%09/x.com`) dejaba la pantalla en blanco
+  después de entrar, porque el navegador lo lee como `//x.com`. Ahora se rechaza cualquier
+  carácter de control.
+
+También señaló un problema anterior a esta rama, que quedó en
+[P-080](../../01-requerimientos/pendientes.md): cambiar el correo de una cuenta activa no cambia su
+credencial.
+
+En el mismo PR, a pedido de Joseph, `/entrar` pasó al marco del portal: al abrirla
+desaparecían la barra de secciones y el botón «Entrar» de la cabecera. Ahora los conserva, y
+una prueba de `rutas.test.tsx` lo revisa.
+
+En el servidor, después del despliegue, entraron por `/api/auth/sesion` `admin`, `operador1`,
+`donador1@demo.acopio.local` y el administrador con su correo en mayúsculas.
+
 ## Pendiente
 
-- Comprobar en el servidor, cuando se despliegue, que `admin`, `operador1` y
-  `donador1@demo.acopio.local` entran por `/entrar` (fila 4 del
-  [plan de acción](../../05-planes/plan-de-accion.md)).
+- [P-080](../../01-requerimientos/pendientes.md): el correo de una cuenta activa y su credencial.
 
 ## Depende de Joseph
 

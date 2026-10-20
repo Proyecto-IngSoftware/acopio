@@ -4,12 +4,14 @@ import { Link, Navigate, useSearchParams } from 'react-router';
 import { ErrorApi } from '../api/cliente';
 import { Boton } from '../componentes/Boton';
 import { Icono } from '../componentes/Icono';
+import { useEnLinea } from '../sin-conexion/en-linea';
 import { useSesion } from '../sesion/Sesion';
 import { rutaDeVuelta } from '../sesion/volver';
 import { AlertaError } from './AlertaError';
 import { CampoContrasena } from './CampoContrasena';
 
 const CREDENCIALES = 'Usuario o contraseña incorrectos.';
+const SIN_RED = 'Sin conexión. Conéctate para continuar.';
 
 /** C01 Entrar, la única pantalla de entrada para todas las cuentas.
  *  Diseño: docs/03-diseno/stitch/C01-acceso. */
@@ -20,6 +22,7 @@ export function Entrar() {
   const [contrasena, fijarContrasena] = useState('');
   const [error, fijarError] = useState<string | null>(null);
   const [enviando, fijarEnviando] = useState(false);
+  const enLinea = useEnLinea();
 
   if (!cargando && usuario) {
     // Con sesión, cada cuenta va a lo suyo, o vuelve a la página que pidió entrar
@@ -37,9 +40,9 @@ export function Entrar() {
       // Al quedar la sesión abierta, la pantalla redirige sola (arriba)
       await entrar(nombre.trim(), contrasena);
     } catch (err) {
-      // RF-IDE-004: el mismo mensaje para cualquier credencial mala; el límite de
-      // intentos sí se explica, con el texto de la API
-      fijarError(err instanceof ErrorApi && err.estado === 429 ? err.message : CREDENCIALES);
+      // RF-IDE-004: el mismo mensaje para cualquier credencial mala (401). Lo demás, como
+      // el límite de intentos o una falla de red, se explica con el texto de la API
+      fijarError(err instanceof ErrorApi && err.estado !== 401 ? err.message : CREDENCIALES);
       fijarEnviando(false);
     }
   }
@@ -84,7 +87,8 @@ export function Entrar() {
             alCambiar={fijarContrasena}
             autoComplete="current-password"
           />
-          <Boton type="submit" disabled={enviando} className="min-h-[56px] w-full">
+          {!enLinea && <p className="text-body-sm text-on-surface-variant">{SIN_RED}</p>}
+          <Boton type="submit" disabled={enviando || !enLinea} className="min-h-[56px] w-full">
             {enviando ? 'Entrando…' : 'Entrar'}
           </Boton>
           {error && <AlertaError mensaje={error} />}

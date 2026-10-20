@@ -29,8 +29,9 @@ Ya aplicadas en la maqueta, a pedido de Joseph el 2026-09-30:
 
 Al construir:
 
-- El mensaje de error solo aparece cuando el inicio de sesión falla o se supera el
-  límite de intentos (429), siempre con el mismo texto.
+- El mensaje de error solo aparece cuando el inicio de sesión falla. Con un 401 dice «Usuario o
+  contraseña incorrectos.»; con otro error, incluido el límite de intentos (429), muestra el
+  texto de la API. Sin conexión aparece un aviso y el botón queda inactivo.
 - La pantalla de Stitch usa algunos colores genéricos de Tailwind (`stone`, `emerald`) y
   dos hexadecimales sueltos. En `apps/web` se pasan a los tokens de `packages/ui-tokens`.
 
@@ -41,3 +42,8 @@ Se titula «Entrar a Acopio» y el campo es «Correo o nombre de usuario». Deba
 va «¿Vas a donar y no tienes cuenta? Crea tu cuenta de donador», que lleva a `/donador`.
 Joseph aprobó la maqueta ajustada el 2026-10-19
 ([especificación](../../../superpowers/specs/2026-10-19-entrada-unica-design.md)).
+
+Desde el mismo día, a pedido de Joseph, `/entrar` va dentro del marco del portal, con su
+cabecera, el botón «Entrar» y la barra de secciones; antes, al abrir la pantalla, desaparecían
+la barra y el botón. La maqueta no muestra ese marco, pero el formulario y los textos son los
+mismos.
