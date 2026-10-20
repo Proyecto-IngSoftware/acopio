@@ -39,6 +39,14 @@ export class ProveedorSupabase implements ProveedorIdentidad {
     if (error) throw error;
   }
 
+  async cambiarCorreo(uid: string, correo: string): Promise<void> {
+    const { error } = await this.admin.auth.admin.updateUserById(uid, {
+      email: correo,
+      email_confirm: true,
+    });
+    if (error) throw error;
+  }
+
   async eliminarUsuario(uid: string): Promise<void> {
     const { error } = await this.admin.auth.admin.deleteUser(uid);
     if (error) throw error;

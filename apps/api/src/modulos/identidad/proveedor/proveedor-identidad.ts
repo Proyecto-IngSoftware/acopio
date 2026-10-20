@@ -12,6 +12,8 @@ export interface ProveedorIdentidad {
    */
   crearUsuario(correo: string, contrasena: string): Promise<{ uid: string }>;
   cambiarContrasena(uid: string, contrasena: string): Promise<void>;
+  /** Cambia el correo de la credencial, que nace confirmado como en `crearUsuario`. */
+  cambiarCorreo(uid: string, correo: string): Promise<void>;
   /** Borra la credencial: compensa un alta cuyo resto no se pudo guardar. */
   eliminarUsuario(uid: string): Promise<void>;
   /** Devuelve null si el correo o la contraseña no coinciden. */

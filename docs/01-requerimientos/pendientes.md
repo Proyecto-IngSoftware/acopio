@@ -1070,8 +1070,11 @@ proveedor el correo de `usuario`, la persona deja de poder entrar hasta que se l
 acceso. Ya pasaba antes de la entrada única.
 **Por qué:** El Administrador puede corregir el correo de alguien del equipo desde la consola sin
 saber que lo deja afuera.
-**Estado:** ABIERTO. Opciones: actualizar el correo en el proveedor dentro del mismo cambio, o no
-dejar cambiar el correo de una cuenta activa sin restablecer su acceso.
+**Estado:** RESUELTO el 2026-10-19 → cuando el correo de una cuenta con credencial cambia,
+`UsuariosService.actualizar` llama a `cambiarCorreo` del proveedor (local o Supabase) antes de
+cerrar la transacción. Si el proveedor falla, el cambio se deshace. Dos pruebas de
+`usuarios.int.test.ts` lo revisan: con un correo nuevo la persona entra con su usuario y con ese
+correo, y no con el anterior; sin correo, entra con su usuario.
 
 ---
 

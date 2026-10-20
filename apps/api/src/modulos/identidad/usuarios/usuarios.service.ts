@@ -15,6 +15,7 @@ import {
   type VerificadorUbicaciones,
 } from '../../../comun/ubicaciones/verificador-ubicaciones';
 import { InvitacionesService, type InvitacionEmitida } from '../invitaciones/invitaciones.service';
+import { PROVEEDOR_IDENTIDAD, type ProveedorIdentidad } from '../proveedor/proveedor-identidad';
 
 /** Dominio de los correos que se generan para quien no tiene uno (RF-IDE-001). */
 export const DOMINIO_SINTETICO = 'usuarios.acopio.local';
@@ -71,6 +72,7 @@ export class UsuariosService {
     private readonly notificaciones: NotificacionService,
     private readonly invitaciones: InvitacionesService,
     @Inject(VERIFICADOR_UBICACIONES) private readonly ubicaciones: VerificadorUbicaciones,
+    @Inject(PROVEEDOR_IDENTIDAD) private readonly proveedor: ProveedorIdentidad,
   ) {}
 
   /** 422 si alguna ubicación no existe (B-05). Devuelve los nombres para los correos. */
@@ -215,6 +217,11 @@ export class UsuariosService {
         despues: { nombre: despues.nombre, rol: despues.rol, correo: despues.correo },
         destacado: cambiaRol,
       });
+      // El inicio de sesión le pasa al proveedor el correo de `usuario`, así que la
+      // credencial cambia con él (P-080). Va al final: si falla, la transacción se deshace
+      if (antes.supabase_uid && despues.correo && despues.correo !== antes.correo) {
+        await this.proveedor.cambiarCorreo(antes.supabase_uid, despues.correo);
+      }
       return presentarUsuario(despues);
     });
   }

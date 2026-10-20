@@ -24,6 +24,10 @@ export class IdentidadLocalDao {
     });
   }
 
+  cambiarCorreo(id: string, correo: string) {
+    return this.prisma.identidadLocal.update({ where: { id }, data: { correo } });
+  }
+
   borrar(id: string) {
     return this.prisma.identidadLocal.deleteMany({ where: { id } });
   }

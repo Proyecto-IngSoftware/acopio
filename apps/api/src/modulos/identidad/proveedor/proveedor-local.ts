@@ -42,6 +42,10 @@ export class ProveedorLocal implements ProveedorIdentidad {
     await this.identidades.cambiarHash(uid, await bcrypt.hash(contrasena, COSTO_BCRYPT));
   }
 
+  async cambiarCorreo(uid: string, correo: string): Promise<void> {
+    await this.identidades.cambiarCorreo(uid, correo);
+  }
+
   async eliminarUsuario(uid: string): Promise<void> {
     await this.identidades.borrar(uid);
   }
