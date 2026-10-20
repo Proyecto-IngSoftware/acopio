@@ -679,8 +679,14 @@ RF-INV-010 sigue abierto para un bloque posterior.
 abre y se cierra bien, pero ninguna prueba leyó un código de verdad. Falta ver cuánto tarda
 `@zxing/browser` en reconocerlo, si enfoca a la distancia de una caja y cómo se porta con
 poca luz.
-**Estado:** ABIERTO. Se hace cuando la web se pueda abrir desde un teléfono (HTTPS o la red
-local con permiso de cámara).
+**Estado:** ABIERTO. El 2026-10-20 Joseph lo probó en el servidor con Android y Chrome: la
+cámara abre y no lee nada. La causa era la resolución. Sin tamaño, Chrome entrega 640 × 480, y un
+EAN visto a la distancia de una caja queda con menos de un píxel por barra. Para comprobarlo se
+le pasó un EAN-13 dibujado en un canvas, como si fuera la cámara, al `camara.ts` de la app en
+Chromium. Con 640 de ancho no lo leyó; con 1920 lo leyó en unos 100 ms. Un desenfoque leve lo
+impide en los dos casos, y `TRY_HARDER` con los formatos limitados no lo mejoró. Desde ese día
+`camara.ts` pide 1920 × 1080 y enfoque continuo. Falta repetir la prueba en el teléfono, medir el
+tiempo y ver cómo se porta con poca luz.
 
 ### P-038 · Menores de la revisión final del ciclo 2 del Bloque 2
 **Fecha:** 2026-10-02 · **Propuesto por:** Joseph

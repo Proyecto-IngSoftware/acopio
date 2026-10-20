@@ -19,7 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
-| 2026-10-20 | [2026-10-20-hallazgos-ronda](2026-10-20-hallazgos-ronda.md) | Inventario viejo atenuado, «no recibir» ajeno negado y escenario 15 |
+| 2026-10-20 | [2026-10-20-hallazgos-ronda](2026-10-20-hallazgos-ronda.md) | Inventario viejo atenuado, «no recibir» ajeno negado, escenario 15 y escáner |
 | 2026-10-19 | [2026-10-19-entrada-unica](2026-10-19-entrada-unica.md) | Una sola pantalla para entrar e identidad migrado a DAO |
 | 2026-10-19 | [2026-10-19-ronda-por-rol](2026-10-19-ronda-por-rol.md) | Ronda de pruebas por rol en el servidor y sus hallazgos |
 | 2026-10-19 | [2026-10-19-capturas-avance-5](2026-10-19-capturas-avance-5.md) | Capturas nuevas del Avance 5 y nombre accesible de los pines del mapa |
