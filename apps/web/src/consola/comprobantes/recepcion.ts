@@ -31,7 +31,7 @@ export type Accion =
   | { tipo: 'vencer'; id: string; venceEn: string }
   | { tipo: 'motivo'; id: string; motivo: string }
   | { tipo: 'confirmarCodigo'; id: string }
-  | { tipo: 'corregir'; id: string; presentacion: Presentacion };
+  | { tipo: 'corregir'; id: string; presentacion: Presentacion; perecedero: boolean };
 
 const aTexto = (n: number) => String(n).replace('.', ',');
 
@@ -93,6 +93,8 @@ export function recepcion(lineas: LineaRecepcion[], a: Accion): LineaRecepcion[]
           categoria: a.presentacion.categoria,
           unidad: a.presentacion.unidad,
           contenido: a.presentacion.tamano,
+          perecedero: a.perecedero,
+          venceEn: '',
           corregida: { id: a.presentacion.id, nombre: a.presentacion.nombre },
           codigoConfirmado: true,
         };

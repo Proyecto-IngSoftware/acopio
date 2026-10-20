@@ -470,14 +470,14 @@ function LineaFolio({
       {corrigiendo && codigo && (
         <HojaCorregirPresentacion
           descripcion={`${l.categoria}, código ${codigo.ean}`}
-          categoria={{ id: l.categoriaId, nombre: l.categoria }}
+          categoria={{ id: l.categoriaId, nombre: l.categoria, perecedero: l.perecedero }}
           actual={presentacion?.id ?? null}
-          alElegir={(p) => {
+          alElegir={(p, perecedero) => {
             // Elegir la que ya tiene el código es confirmarlo
             despachar(
               p.id === codigo.presentacion?.id
                 ? { tipo: 'confirmarCodigo', id: l.id }
-                : { tipo: 'corregir', id: l.id, presentacion: p },
+                : { tipo: 'corregir', id: l.id, presentacion: p, perecedero },
             );
             fijarCorrigiendo(false);
           }}

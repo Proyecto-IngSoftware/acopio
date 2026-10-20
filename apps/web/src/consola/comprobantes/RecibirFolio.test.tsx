@@ -361,4 +361,53 @@ describe('códigos de barras en la recepción', () => {
       ],
     });
   });
+
+  const corregirA = async (linea: HTMLElement, buscarTexto: string, nombre: RegExp) => {
+    await userEvent.click(await within(linea).findByRole('button', { name: 'Corregir' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Corregir presentación' });
+    await userEvent.type(within(hoja).getByRole('searchbox'), buscarTexto);
+    await userEvent.click(await within(hoja).findByRole('radio', { name: nombre }));
+    await userEvent.click(within(hoja).getByRole('button', { name: 'Guardar corrección' }));
+  };
+  const categoria = (perecedero: boolean) => ({
+    id: 'c-otra',
+    nombre: 'Leche',
+    grupo: 'ALIMENTOS',
+    unidadBase: 'LITRO',
+    perecedero,
+    puntaje: 1,
+  });
+
+  it('corregir a una categoría perecedera pide el vencimiento antes de registrar', async () => {
+    pantalla({
+      ...extra,
+      'GET /api/categorias/buscar': [categoria(true)],
+      'GET /api/presentaciones': [{ ...OTRA, id: 'p-leche', nombre: 'Caja de leche 1 L' }],
+    });
+    await buscar();
+    const agua = await screen.findByRole('listitem', { name: 'Agua potable' });
+    await corregirA(agua, 'leche', /Caja de leche/);
+    const registrar = screen.getByRole('button', { name: /Registrar recepción/ });
+    expect(registrar).toBeDisabled();
+    await userEvent.type(within(agua).getByLabelText('Vence'), '2026-12-01');
+    expect(registrar).toBeEnabled();
+  });
+
+  it('corregir de perecedera a no perecedera quita el requisito', async () => {
+    pantalla({
+      ...extra,
+      'GET /api/comprobantes/*': {
+        ...CON_CODIGOS,
+        lineas: [{ ...CON_CODIGOS.lineas[0]!, perecedero: true }, ...CON_CODIGOS.lineas.slice(1)],
+      },
+      'GET /api/categorias/buscar': [categoria(false)],
+      'GET /api/presentaciones': [{ ...OTRA, id: 'p-sal', nombre: 'Bolsa de sal 1 kg' }],
+    });
+    await buscar();
+    const agua = await screen.findByRole('listitem', { name: 'Agua potable' });
+    expect(screen.getByRole('button', { name: /Registrar recepción/ })).toBeDisabled();
+    await corregirA(agua, 'leche', /Bolsa de sal/);
+    expect(within(agua).queryByLabelText('Vence')).toBeNull();
+    expect(screen.getByRole('button', { name: /Registrar recepción/ })).toBeEnabled();
+  });
 });

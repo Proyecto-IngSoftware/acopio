@@ -9,9 +9,9 @@ interface Props {
   /** Lo que se sabe de la línea: arriba de la hoja, para que el Operador la reconozca. */
   descripcion: string;
   /** La categoría de la línea: sus presentaciones salen primero, sin buscar. */
-  categoria: { id: string; nombre: string };
+  categoria: { id: string; nombre: string; perecedero: boolean };
   actual: string | null;
-  alElegir: (presentacion: Presentacion) => void;
+  alElegir: (presentacion: Presentacion, perecedero: boolean) => void;
   alCerrar: () => void;
 }
 
@@ -24,11 +24,14 @@ export function HojaCorregirPresentacion({
   alCerrar,
 }: Props) {
   const [q, fijarQ] = useState('');
-  const [eleccion, fijarEleccion] = useState<Presentacion | null>(null);
+  const [eleccion, fijarEleccion] = useState<{
+    presentacion: Presentacion;
+    perecedero: boolean;
+  } | null>(null);
   const texto = q.trim();
   const resultados = useBuscarCategorias(texto);
   const grupos = texto
-    ? (resultados.data ?? []).map((c) => ({ id: c.id, nombre: c.nombre }))
+    ? (resultados.data ?? []).map((c) => ({ id: c.id, nombre: c.nombre, perecedero: c.perecedero }))
     : [categoria];
 
   return (
@@ -57,7 +60,7 @@ export function HojaCorregirPresentacion({
               key={g.id}
               categoria={g}
               actual={actual}
-              eleccion={eleccion?.id ?? null}
+              eleccion={eleccion?.presentacion.id ?? null}
               alElegir={fijarEleccion}
             />
           ))
@@ -77,7 +80,7 @@ export function HojaCorregirPresentacion({
       <Boton
         className="min-h-[56px] w-full"
         disabled={!eleccion}
-        onClick={() => alElegir(eleccion!)}
+        onClick={() => alElegir(eleccion!.presentacion, eleccion!.perecedero)}
       >
         Guardar corrección
       </Boton>
@@ -91,10 +94,10 @@ function Grupo({
   eleccion,
   alElegir,
 }: {
-  categoria: { id: string; nombre: string };
+  categoria: { id: string; nombre: string; perecedero: boolean };
   actual: string | null;
   eleccion: string | null;
-  alElegir: (p: Presentacion) => void;
+  alElegir: (e: { presentacion: Presentacion; perecedero: boolean }) => void;
 }) {
   const presentaciones = usePresentaciones(categoria.id);
   return (
@@ -113,7 +116,7 @@ function Grupo({
               type="button"
               role="radio"
               aria-checked={marcada}
-              onClick={() => alElegir(p)}
+              onClick={() => alElegir({ presentacion: p, perecedero: categoria.perecedero })}
               className={`flex min-h-[48px] w-full items-center gap-space-sm rounded-xl border px-space-md text-left ${
                 marcada
                   ? 'border-[1.5px] border-primary-container bg-primary-fixed'
