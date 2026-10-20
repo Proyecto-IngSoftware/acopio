@@ -119,13 +119,18 @@ la rama `presentaciones`, sin PR hasta después de la sustentación del 23
   integración contra el PostgreSQL aparte del 5439 (47 suites, 539 pruebas) y
   `revisar-colores.sh`. Las pruebas de la web que fallan bajo carga
   ([P-059](../../01-requerimientos/pendientes.md)) no fallaron en esta corrida.
+- Tras los arreglos de la revisión final, la misma verificación salió en 0: unitarias (shared
+  116, API 100, web 1.094 en 109 archivos), integración (47 suites, 546 pruebas), depcruise
+  (241 módulos) y `revisar-colores.sh`. La demo se sembró dos veces sobre la base del Compose sin
+  errores.
 - Recorrido `presentaciones.mjs` en local, con la API del Compose reconstruida: 9 de 9 y 0
   errores de página. Con la cámara falsa de Chromium leyó un EAN-13 dibujado, el Donador lo
   propuso con una presentación nueva, `operador1` lo confirmó con «Es correcto» y el
   Administrador lo vio «Validado» en C18. La API confirmó el paso de `PROPUESTO` a `VALIDADO` y
   la línea recibida con su EAN. Tres corridas fallaron antes: una por el límite de 5 inicios de
   sesión por minuto, una por buscar la ficha sin abrir antes su presentación en C18 y otra por
-  un selector de la casilla «Todos».
+  un selector de la casilla «Todos». Tras los arreglos de la revisión final se repitió: 9 de 9 a
+  la primera.
 
 ### Decisiones de Joseph
 
@@ -150,9 +155,10 @@ Las decisiones de Claude y los cambios respecto del diseño están en «Cambios 
   [#163](https://github.com/Proyecto-IngSoftware/acopio/issues/163) y
   [#40](https://github.com/Proyecto-IngSoftware/acopio/issues/40).
 - Los menores diferidos de cada tarea (carrera al confirmar el tamaño de un paquete, `LIMIT 500`
-  de la búsqueda sin aviso, `keepPreviousData` en C18 y otros) están en el registro de la
-  ejecución, `.superpowers/sdd/2026-10-20-presentaciones/progress.md`, y se pasan a issues `deuda`
-  al abrir el PR ([#163](https://github.com/Proyecto-IngSoftware/acopio/issues/163)).
+  de la búsqueda sin aviso, `keepPreviousData` en C18 y otros) quedaron en
+  [P-084](../../01-requerimientos/pendientes.md).
+- La pantalla para renombrar, corregir y juntar presentaciones en C18 necesita maqueta y la
+  aprobación de Joseph: [P-085](../../01-requerimientos/pendientes.md).
 - El texto de las tareas 5 y siguientes del plan todavía menciona `DELETE` y el 422; vale
   «Cambios al construir» del
   [diseño](../../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).

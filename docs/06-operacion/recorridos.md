@@ -237,9 +237,12 @@ de Bogotá para que se vean los dos tipos de punto.
 ## Últimos resultados
 
 **2026-10-20, en local, fase de presentaciones** (rama `presentaciones`, API reconstruida con
-`servicios:todo`): `presentaciones.mjs` 9 de 9, sin errores de página. La primera corrida falló
-en el paso del Administrador por el límite de inicios de sesión; las siguientes, porque C18
-agrupa los códigos por presentación y hay que abrir la del recorrido antes de ver la ficha.
+`servicios:todo`): `presentaciones.mjs` 9 de 9, sin errores de página. Antes fallaron tres
+corridas: una por el límite de 5 inicios de sesión por minuto, otra porque C18 agrupa los
+códigos por presentación y hay que abrir la del recorrido antes de ver la ficha, y otra por el
+selector de la casilla «Todos». Se repitió tras los arreglos de la revisión final (recepción sin
+corrección, validar sin pisar, tope por línea), con la API reconstruida y la demo sembrada dos
+veces: 9 de 9 a la primera, sin errores de página.
 
 **2026-10-19, en local, con la entrada única** (rama `entrada-unica`, API reconstruida con
 `servicios:todo`, `CAPTURAS=no`): `donador.mjs` 8 de 8, `validacion-general.mjs` 60 de 60,

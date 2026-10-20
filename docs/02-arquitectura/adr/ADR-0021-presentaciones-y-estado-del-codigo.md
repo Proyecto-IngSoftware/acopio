@@ -31,7 +31,9 @@ distinguir un código que un Donador propuso de uno que un Operador tuvo en la m
    de adentro. Si el Administrador corrige la suelta, los paquetes cambian solos; las líneas de
    comprobante ya hechas conservan su `contenido_unitario`.
 4. El estado (`PROPUESTO` o `VALIDADO`) vive en el código y en la presentación. Un código de un
-   Donador queda propuesto y solo vale para su donación hasta que alguien lo valide.
+   Donador queda propuesto hasta que un Operador o el Administrador lo valide. Mientras tanto,
+   otro Donador que lea el mismo código lo usa en su donación con la marca «sin confirmar», y el
+   Operador lo confirma o lo corrige al recibir.
 5. `por_revisar` marca códigos que necesitan la mano del Administrador: los migrados sin
    contenido y los que un Operador corrigió en una línea sin cambiar el código para la red.
 6. La migración crea una suelta validada por cada par (categoría, contenido) existente y deja
