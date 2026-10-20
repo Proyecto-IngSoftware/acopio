@@ -259,21 +259,21 @@ export function useCrearPresentacion() {
   });
 }
 
-/** C18: todos los códigos aprendidos, del más nuevo al más viejo (RF-CAT-004). */
-export function useCodigos() {
+/** C18: los códigos aprendidos, los propuestos y por revisar primero (RF-CAT-004). `q` busca por
+ *  número, categoría o presentación. El filtro «Propuestos» se aplica en la pantalla: la API
+ *  no junta los `por_revisar` con los `PROPUESTO`. */
+export function useCodigos(q = '') {
   return useQuery<CodigoBarras[], ErrorApi>({
-    queryKey: ['codigos-barras'],
-    queryFn: async () => await desenvolver(api.GET('/api/codigos-barras', {})),
+    queryKey: ['codigos-barras', q],
+    queryFn: async () =>
+      await desenvolver(api.GET('/api/codigos-barras', { params: { query: q ? { q } : {} } })),
   });
 }
 
-export interface CambiosCodigo {
-  categoriaId?: string;
-  contenido?: number | null;
-  revisado?: boolean;
-}
+export type CambiosCodigo = S['EditarCodigoDto'];
 
-/** C18: el Administrador cambia la categoría o el contenido de un código, o lo marca revisado. */
+/** C18: el Administrador aprueba un código (`estado: 'VALIDADO', porRevisar: false`) o lo cambia
+ *  de presentación. Los códigos no se borran. */
 export function useEditarCodigo() {
   const consultas = useQueryClient();
   return useMutation<CodigoBarras, ErrorApi, { ean: string; cambios: CambiosCodigo }>({
@@ -281,6 +281,9 @@ export function useEditarCodigo() {
       await desenvolver(
         api.PATCH('/api/codigos-barras/{ean}', { params: { path: { ean } }, body: cambios }),
       ),
-    onSuccess: () => void consultas.invalidateQueries({ queryKey: ['codigos-barras'] }),
+    onSuccess: () => {
+      void consultas.invalidateQueries({ queryKey: ['codigos-barras'] });
+      void consultas.invalidateQueries({ queryKey: ['presentaciones'] });
+    },
   });
 }
