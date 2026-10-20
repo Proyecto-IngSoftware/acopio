@@ -2,7 +2,7 @@
 title: "Presentaciones, códigos de barras y unidades · diseño"
 type: spec
 tags: [spec, catalogo, inventario, comprobantes]
-estado: aprobada
+estado: vigente
 actualizado: 2026-10-20
 ---
 
