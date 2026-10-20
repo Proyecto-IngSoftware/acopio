@@ -55,7 +55,7 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | 1 | Fecha de la Review del Sprint 2: el viernes 23, según la guía ([P-072](../01-requerimientos/pendientes.md)) | P-072 | 2026-10-18 | ✅ |
 | 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio. Generado y revisado renderizado. El 19 entraron las capturas nuevas de Causas y del mapa, con las plataformas y los puntos de RedAcopio, y el diagrama de paquetes con `importacion`. Ese mismo día entraron las capturas del tablero y del seguimiento, con el tablero al día. Falta subirlo a OneDrive | #47 | 2026-10-22 | 🟡 |
 | 3 | Lo que falta del Word de avances anteriores. Del Avance 4 ya está la captura del tablero; faltan el seguimiento del 9 de octubre con su captura, las filas de Brayan, Alejandra y Michael, la retrospectiva confirmada y regenerar el Word. Del Avance 2, la revisión de redacción ([P-012](../01-requerimientos/pendientes.md)) y la captura de la vista Board | #45, #23, #21 | 2026-10-22 | ⬜ |
-| 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes. La demo ya tiene el balance de la portada, los 85 puntos de RedAcopio en el mapa, las causas con su ilustración y los logos reales de sus fundaciones, y las otras plataformas con foto al final de Causas. El diagrama de paquetes tiene `importacion` desde el 19, medido con dependency-cruiser. Ese día, en el servidor, pasaron los recorridos públicos y entraron las cuatro cuentas de rol. Falta que Joseph ensaye la presentación | #47 | 2026-10-23 | 🟡 |
+| 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes. La demo ya tiene el balance de la portada, los 85 puntos de RedAcopio en el mapa, las causas con su ilustración y los logos reales de sus fundaciones, y las otras plataformas con foto al final de Causas. El diagrama de paquetes tiene `importacion` desde el 19, medido con dependency-cruiser. Ese día, en el servidor, pasaron los recorridos públicos y entraron las cuatro cuentas de rol. También el 19 quedó una sola pantalla para entrar, `/entrar`, con la barra del portal. Falta que Joseph ensaye la presentación | #47 | 2026-10-23 | 🟡 |
 | 5 | Ronda de pruebas en el servidor, por rol, con los escenarios de `escenarios-por-rol.md`; cada hallazgo entra como issue `hallazgo`. El 19 se hicieron en el servidor los escenarios que no gastan la demo (#150 a #154). Quedan el 20 revisar el 15, y el 24 los que gastan datos: 7, 8, 18 a 20, 22, 23 y 28 a 31 | #58 | 2026-10-25 | 🟡 |
 | 6 | Cierre del Sprint 2: Review historia por historia el 23, seguimiento de la semana 12 con captura y retrospectiva con una acción para el Sprint 3 | #47 | 2026-10-25 | ⬜ |
 
@@ -198,3 +198,6 @@ Sprint 3.
   `/entrar`.
 - 2026-10-19: P-080 queda resuelto. Al cambiar el correo de una cuenta activa, la API cambia
   también el de su credencial, y la persona sigue entrando con su usuario y con el correo nuevo.
+- 2026-10-19: cierre de la sesión. `/entrar` va dentro del marco del portal y P-080
+  quedó resuelto. La fila 4 nombra la entrada nueva. Para Joseph quedan las filas 2, 4 y
+  5.
