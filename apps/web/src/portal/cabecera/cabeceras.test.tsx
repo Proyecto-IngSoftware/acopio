@@ -129,7 +129,7 @@ function SesionCargada() {
   return usuario ? <p>{`sesión de ${usuario.nombre}`}</p> : null;
 }
 
-it('un 401 con un Donador en sesión lo lleva a /donador y no a /entrar', async () => {
+it('un 401 con un Donador en sesión lo lleva a la única pantalla de entrada', async () => {
   render(
     envolver(
       <>
@@ -144,8 +144,8 @@ it('un 401 con un Donador en sesión lo lleva a /donador y no a /entrar', async 
   await screen.findByText('sesión de Ana Ruiz');
   responderJson({ estado: 401, codigo: 'NO_AUTENTICADO', mensaje: 'x' }, 401);
   await api.GET('/api/auth/yo');
-  expect(await screen.findByText('cuenta del donador', {}, { timeout: 5000 })).toBeInTheDocument();
-  expect(screen.queryByText('pantalla de entrar')).not.toBeInTheDocument();
+  expect(await screen.findByText('pantalla de entrar', {}, { timeout: 5000 })).toBeInTheDocument();
+  expect(screen.queryByText('cuenta del donador')).not.toBeInTheDocument();
   // La espera de arriba ya es de 5 s, el límite por defecto de una prueba: en un CI en frío
   // la prueba se cortaba antes de que la espera terminara
 }, 15_000);

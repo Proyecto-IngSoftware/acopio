@@ -109,10 +109,10 @@ p.on('pageerror', (e) => errores.push(e.message));
 if (SIN_CORREO) {
   console.log('omite  crear cuenta y confirmar el correo (SIN_CORREO=1)');
   await paso('entra con el Donador de la demo', async () => {
-    await p.goto(`${WEB}/donador`);
-    await p.getByRole('heading', { name: 'Tu cuenta de Donador' }).waitFor();
-    await p.getByRole('radiogroup', { name: 'Acceso' }).getByText('Entrar').click();
-    await p.getByLabel('Correo').fill(CORREO);
+    // Una sola pantalla de entrada para todas las cuentas
+    await p.goto(`${WEB}/entrar`);
+    await p.getByRole('heading', { name: 'Entrar a Acopio' }).waitFor();
+    await p.getByLabel('Correo o nombre de usuario').fill(CORREO);
     await p.getByLabel('Contraseña', { exact: true }).fill(CONTRASENA);
     await p.getByRole('button', { name: 'Entrar' }).click();
     await p.getByRole('heading', { name: 'Mis donaciones' }).waitFor();
@@ -120,11 +120,11 @@ if (SIN_CORREO) {
 } else {
   await paso('crear cuenta con un correo nuevo', async () => {
     await p.goto(`${WEB}/donador`);
-    await p.getByRole('heading', { name: 'Tu cuenta de Donador' }).waitFor();
+    await p.getByRole('heading', { name: 'Crea tu cuenta de donador' }).waitFor();
     await revisar(p, 'P13 sin sesión', 'P13-mi-cuenta/construida-sin-sesion.png');
     await p.getByLabel('Nombre').fill('Camila Recorrido');
     await p.getByLabel('Correo').fill(CORREO);
-    await p.getByRole('button', { name: 'Crear cuenta' }).click();
+    await p.getByRole('button', { name: 'Crear cuenta de donador' }).click();
     await p.getByText(/Te enviamos un correo para confirmar/).waitFor();
   });
 

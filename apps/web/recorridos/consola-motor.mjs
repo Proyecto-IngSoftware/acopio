@@ -90,7 +90,7 @@ const par = (s) => `${s.acopio.id}|${s.zona.id}|${s.categoria.id}`;
 
 await paso('el Administrador entra', async () => {
   await p.goto(`${WEB}/entrar`);
-  await p.getByLabel('Nombre de usuario').fill('admin');
+  await p.getByLabel('Correo o nombre de usuario').fill('admin');
   await p.getByLabel('Contraseña', { exact: true }).fill(ADMIN);
   await p.getByRole('button', { name: 'Entrar' }).click();
   await p.waitForURL(`${WEB}/`);

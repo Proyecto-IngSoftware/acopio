@@ -30,6 +30,7 @@ const MIGRADOS_A_DAO = [
   'turnos',
   'catalogo',
   'importacion',
+  'identidad',
 ];
 
 /** módulo → módulos que lo pueden importar */

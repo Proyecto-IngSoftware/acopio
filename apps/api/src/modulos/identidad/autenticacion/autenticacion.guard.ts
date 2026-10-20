@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import type { Request } from 'express';
-import { PrismaService } from '../../../comun/prisma/prisma.service';
+import { UsuarioDao } from '../dao/usuario.dao';
 import type { Rol } from '../../../generado/prisma/enums';
 import { CLAVE_DONADOR, CLAVE_PUBLICO, CLAVE_ROLES } from '../../../comun/autorizacion/decoradores';
 import type { UsuarioAutenticado } from '../../../comun/autorizacion/usuario-autenticado';
@@ -29,7 +29,7 @@ export class AutenticacionGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
     private readonly verificador: VerificadorToken,
-    private readonly prisma: PrismaService,
+    private readonly usuarios: UsuarioDao,
   ) {}
 
   async canActivate(ctx: ExecutionContext): Promise<boolean> {
@@ -43,17 +43,7 @@ export class AutenticacionGuard implements CanActivate {
     const verificado = await this.verificador.verificar(token);
     if (!verificado) throw new UnauthorizedException('La sesión no es válida o venció');
 
-    const usuario = await this.prisma.usuario.findUnique({
-      where: { supabase_uid: verificado.sub },
-      select: {
-        id: true,
-        username: true,
-        nombre: true,
-        rol: true,
-        estado: true,
-        tokens_validos_desde: true,
-      },
-    });
+    const usuario = await this.usuarios.paraGuard(verificado.sub);
     if (!usuario || usuario.estado !== 'ACTIVO') {
       throw new ForbiddenException('Tu acceso no está activo');
     }

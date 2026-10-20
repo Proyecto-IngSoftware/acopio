@@ -187,3 +187,8 @@ Sprint 3.
   mismo PR el aviso con el id de la categoría al donar (#150), la frase de la bitácora para una
   necesidad resuelta (#153) y la guía de escenarios (#154). Quedan abiertos #151 (datos de más de
   6 horas) y #152. Joseph decidió dejar para el sábado 24 los escenarios que gastan la demo.
+- 2026-10-19: en la ronda por rol Joseph se confundió entre las dos entradas y decidió una sola
+  ([P-079](../01-requerimientos/pendientes.md)). Todas las cuentas entran por C01 con «Correo o
+  nombre de usuario» y P13 solo crea la cuenta de donador. En el mismo cambio `identidad` pasó a
+  DAO. Los doce recorridos pasan en local. No cambia ninguna fila: entra antes de la
+  sustentación del 23 y la demo se ve igual salvo la pantalla de entrada.

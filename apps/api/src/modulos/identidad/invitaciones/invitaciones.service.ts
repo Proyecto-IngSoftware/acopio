@@ -1,7 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ErrorDominio } from '../../../comun/errores/error-dominio';
 import type { ClienteBd } from '../../../comun/prisma/cliente-bd';
-import { PrismaService } from '../../../comun/prisma/prisma.service';
+import { Transacciones } from '../../../comun/prisma/transacciones';
+import { InvitacionDao } from '../dao/invitacion.dao';
+import { UsuarioDao } from '../dao/usuario.dao';
 import { ENTORNO, type Entorno } from '../../../config/entorno';
 import { BitacoraService } from '../../auditoria/bitacora.service';
 import { PROVEEDOR_IDENTIDAD, type ProveedorIdentidad } from '../proveedor/proveedor-identidad';
@@ -25,7 +27,9 @@ export interface InvitacionEmitida {
 @Injectable()
 export class InvitacionesService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly transacciones: Transacciones,
+    private readonly invitaciones: InvitacionDao,
+    private readonly usuarios: UsuarioDao,
     private readonly bitacora: BitacoraService,
     @Inject(PROVEEDOR_IDENTIDAD) private readonly proveedor: ProveedorIdentidad,
     @Inject(ENTORNO) private readonly entorno: Entorno,
@@ -42,8 +46,8 @@ export class InvitacionesService {
     await this.revocarPendientes(tx, datos.usuarioId);
     const token = generarToken();
     const vence = venceEn();
-    await tx.invitacion.create({
-      data: {
+    await this.invitaciones.crear(
+      {
         usuario_id: datos.usuarioId,
         token_hash: hashToken(token),
         expira_en: vence,
@@ -51,16 +55,13 @@ export class InvitacionesService {
         es_restablecimiento: Boolean(datos.restablecimiento),
         motivo: datos.restablecimiento?.motivo ?? null,
       },
-    });
+      tx,
+    );
     return { token, enlace: `${this.entorno.APP_URL}/invitacion/${token}`, venceEn: vence };
   }
 
-  async revocarPendientes(tx: ClienteBd, usuarioId: string): Promise<number> {
-    const { count } = await tx.invitacion.updateMany({
-      where: { usuario_id: usuarioId, usada_en: null, revocada_en: null },
-      data: { revocada_en: new Date() },
-    });
-    return count;
+  revocarPendientes(tx: ClienteBd, usuarioId: string): Promise<number> {
+    return this.invitaciones.revocarPendientes(usuarioId, tx);
   }
 
   /** Lo que ve la persona al abrir el enlace (RF-IDE-003). Público. */
@@ -97,40 +98,25 @@ export class InvitacionesService {
     if (rechazo) throw new ErrorDominio('CONTRASENA_DEBIL', rechazo, 422);
 
     const hash = hashToken(token);
-    return this.prisma.$transaction(async (tx) => {
+    return this.transacciones.ejecutar(async (tx) => {
       const ahora = new Date();
-      const reclamada = await tx.invitacion.updateMany({
-        where: {
-          token_hash: hash,
-          usada_en: null,
-          revocada_en: null,
-          expira_en: { gt: ahora },
-          usuario: { estado: { not: 'SUSPENDIDO' } },
-        },
-        data: { usada_en: ahora },
-      });
-      if (reclamada.count !== 1) throw INVITACION_INVALIDA();
+      if (!(await this.invitaciones.reclamar(hash, ahora, tx))) throw INVITACION_INVALIDA();
 
-      const invitacion = await tx.invitacion.findUniqueOrThrow({
-        where: { token_hash: hash },
-        include: { usuario: true },
-      });
+      const invitacion = await this.invitaciones.conUsuario(hash, tx);
       const usuario = invitacion.usuario;
 
       if (usuario.supabase_uid) {
         // Restablecimiento: la cuenta ya existe; cambia la contraseña y caducan las
         // sesiones anteriores
         await this.proveedor.cambiarContrasena(usuario.supabase_uid, contrasena);
-        await tx.usuario.update({
-          where: { id: usuario.id },
-          data: { tokens_validos_desde: ahora },
-        });
+        await this.usuarios.marcar(usuario.id, { tokens_validos_desde: ahora }, tx);
       } else {
         const { uid } = await this.proveedor.crearUsuario(usuario.correo!, contrasena);
-        await tx.usuario.update({
-          where: { id: usuario.id },
-          data: { supabase_uid: uid, estado: 'ACTIVO', tokens_validos_desde: ahora },
-        });
+        await this.usuarios.marcar(
+          usuario.id,
+          { supabase_uid: uid, estado: 'ACTIVO', tokens_validos_desde: ahora },
+          tx,
+        );
       }
 
       await this.bitacora.registrar(tx, {
@@ -147,10 +133,7 @@ export class InvitacionesService {
   }
 
   private async buscarVigente(token: string) {
-    const invitacion = await this.prisma.invitacion.findUnique({
-      where: { token_hash: hashToken(token) },
-      include: { usuario: { include: { asignaciones: true } } },
-    });
+    const invitacion = await this.invitaciones.paraCanje(hashToken(token));
     if (
       !invitacion ||
       invitacion.usada_en ||

@@ -1066,6 +1066,18 @@ categoría.
 
 ## Resueltos
 
+### P-079 · Una sola pantalla para entrar
+**Fecha:** 2026-10-19 · **Propuesto por:** Joseph, en la ronda por rol
+**Qué:** Había dos entradas: «Entrar» de la cabecera (C01, por nombre de usuario) y la pestaña
+«Entrar» de `/donador` (P13, por correo). Joseph escribió `admin` en la del Donador y el navegador
+le pidió un «@». Decidió que todas las cuentas entren por C01 con «Correo o nombre de usuario» y
+que P13 sin sesión solo cree la cuenta de donador. Las cuentas del equipo siguen naciendo de una
+invitación.
+**Por qué:** Las dos pantallas se llamaban igual y confundían a cualquiera.
+**Estado:** RESUELTO el 2026-10-19 con la
+[especificación](../superpowers/specs/2026-10-19-entrada-unica-design.md). En el mismo cambio
+`identidad` pasó a DAO.
+
 ### P-074 · Bloques de la portada y la ficha sin conectar, y frases de la bitácora
 **Fecha:** 2026-10-18 · **Propuesto por:** Claude, en la auditoría visual de las 25 pantallas
 **Qué:** la portada decía «Todavía no hay jornadas publicadas» aunque Voluntariado mostraba

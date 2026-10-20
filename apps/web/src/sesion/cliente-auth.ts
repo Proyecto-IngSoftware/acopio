@@ -13,6 +13,7 @@ export interface UsuarioSesion {
 /** La única puerta de la web a la autenticación (D-06, ADR-0014). Cambiar de proveedor
  *  es cambiar esta implementación; las pantallas no llaman a /auth/* directamente. */
 export interface ClienteAuth {
+  /** Correo o nombre de usuario: la API decide cómo buscar la cuenta. */
   iniciarSesion(usuario: string, contrasena: string): Promise<UsuarioSesion>;
   cerrarSesion(): Promise<void>;
   /** El usuario de la cookie actual, o null si no hay sesión. */
@@ -23,7 +24,6 @@ export interface ClienteAuth {
   validarEnlace(token: string): Promise<{ nombre: string; correo: string } | null>;
   /** Confirma el correo, fija la contraseña y abre la sesión. */
   confirmarCorreo(token: string, contrasena: string, nombre?: string): Promise<UsuarioSesion>;
-  iniciarSesionDonador(correo: string, contrasena: string): Promise<UsuarioSesion>;
 }
 
 const soloUsuario = ({ id, username, nombre, rol }: UsuarioSesion): UsuarioSesion => ({
@@ -75,13 +75,6 @@ export const clienteAuthLocal: ClienteAuth = {
   async confirmarCorreo(token, contrasena, nombre) {
     const sesion = await desenvolver(
       api.POST('/api/auth/registro/confirmar', { body: { token, contrasena, nombre } }),
-    );
-    return soloUsuario(sesion.usuario);
-  },
-
-  async iniciarSesionDonador(correo, contrasena) {
-    const sesion = await desenvolver(
-      api.POST('/api/auth/donador/sesion', { body: { correo, contrasena } }),
     );
     return soloUsuario(sesion.usuario);
   },

@@ -2,6 +2,7 @@ import type { PrismaService } from '../comun/prisma/prisma.service';
 import type { Entorno } from '../config/entorno';
 import { fabricarProveedorIdentidad } from '../modulos/identidad/proveedor/fabrica-proveedor';
 import type { ProveedorIdentidad } from '../modulos/identidad/proveedor/proveedor-identidad';
+import { IdentidadLocalDao } from '../modulos/identidad/dao/identidad-local.dao';
 import { ProveedorLocal } from '../modulos/identidad/proveedor/proveedor-local';
 import { ProveedorSupabase } from '../modulos/identidad/proveedor/proveedor-supabase';
 
@@ -11,7 +12,7 @@ const CONTRASENA_DEMO_DESARROLLO = 'demo-acopio-2026';
 export function proveedorDelSeed(prisma: PrismaService, entorno: Entorno): ProveedorIdentidad {
   return fabricarProveedorIdentidad(
     entorno,
-    new ProveedorLocal(prisma, entorno),
+    new ProveedorLocal(new IdentidadLocalDao(prisma), entorno),
     new ProveedorSupabase(entorno),
   );
 }

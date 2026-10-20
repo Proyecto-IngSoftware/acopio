@@ -132,22 +132,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/auth/donador/sesion": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post: operations["DonadorController_iniciar"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/invitaciones/{token}": {
         parameters: {
             query?: never;
@@ -2036,7 +2020,7 @@ export interface components {
             }[];
         };
         IniciarSesionDto: {
-            /** @description Nombre de usuario, no correo */
+            /** @description Correo o nombre de usuario */
             usuario: string;
             contrasena: string;
         };
@@ -2098,10 +2082,6 @@ export interface components {
             token: string;
             contrasena: string;
             nombre?: string;
-        };
-        SesionDonadorDto: {
-            correo: string;
-            contrasena: string;
         };
         InvitacionPublicaDto: {
             username: string | null;
@@ -4268,38 +4248,6 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["ConfirmarDto"];
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["SesionDto"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["ErrorDto"];
-                };
-            };
-        };
-    };
-    DonadorController_iniciar: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["SesionDonadorDto"];
             };
         };
         responses: {

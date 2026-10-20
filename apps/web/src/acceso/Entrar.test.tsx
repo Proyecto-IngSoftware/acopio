@@ -19,6 +19,8 @@ const pantalla = (ruta = '/entrar', cliente = clienteFalso()) =>
       <Routes>
         <Route path="/entrar" element={<Entrar />} />
         <Route path="/" element={<p>inicio</p>} />
+        <Route path="/donador" element={<p>mis donaciones</p>} />
+        <Route path="/donar" element={<p>preparar donación</p>} />
       </Routes>,
       ruta,
       cliente,
@@ -26,7 +28,7 @@ const pantalla = (ruta = '/entrar', cliente = clienteFalso()) =>
   );
 
 const llenar = async (usuario: string, contrasena: string) => {
-  await userEvent.type(await screen.findByLabelText('Nombre de usuario'), usuario);
+  await userEvent.type(await screen.findByLabelText('Correo o nombre de usuario'), usuario);
   await userEvent.type(screen.getByLabelText('Contraseña'), contrasena);
 };
 
@@ -42,7 +44,7 @@ it('entra con usuario y contraseña y lleva al inicio', async () => {
 
 it('con ?usuario= el campo viene escrito', async () => {
   pantalla('/entrar?usuario=d.mendez');
-  expect(await screen.findByLabelText('Nombre de usuario')).toHaveValue('d.mendez');
+  expect(await screen.findByLabelText('Correo o nombre de usuario')).toHaveValue('d.mendez');
 });
 
 it('con credenciales malas muestra el mensaje único', async () => {
@@ -94,6 +96,55 @@ it('con sesión iniciada lleva al inicio', async () => {
 
 it('no tiene violaciones graves de accesibilidad', async () => {
   const { container } = pantalla();
-  await screen.findByLabelText('Nombre de usuario');
+  await screen.findByLabelText('Correo o nombre de usuario');
   expect(await violacionesGraves(container)).toEqual([]);
+});
+
+describe('una sola entrada para todas las cuentas', () => {
+  const ANA = { id: 'd1', username: null, nombre: 'Ana Pérez', rol: 'DONADOR' as const };
+
+  it('se titula «Entrar a Acopio» y el campo acepta un correo o un usuario', async () => {
+    pantalla();
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Entrar a Acopio' }),
+    ).toBeInTheDocument();
+    const campo = screen.getByLabelText('Correo o nombre de usuario');
+    expect(campo).not.toHaveAttribute('type', 'email');
+  });
+
+  it('un Donador que entra va a «Mis donaciones»', async () => {
+    const cliente = clienteFalso();
+    cliente.iniciarSesion.mockResolvedValue(ANA);
+    pantalla('/entrar', cliente);
+    await llenar('ana@correo.co', 'una frase larga');
+    await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
+    expect(await screen.findByText('mis donaciones')).toBeInTheDocument();
+    expect(cliente.iniciarSesion).toHaveBeenCalledWith('ana@correo.co', 'una frase larga');
+  });
+
+  it('con ?volver= vuelve a esa página después de entrar', async () => {
+    const cliente = clienteFalso();
+    cliente.iniciarSesion.mockResolvedValue(ANA);
+    pantalla('/entrar?volver=%2Fdonar', cliente);
+    await llenar('ana@correo.co', 'una frase larga');
+    await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
+    expect(await screen.findByText('preparar donación')).toBeInTheDocument();
+  });
+
+  it('un ?volver= que sale del sitio se ignora', async () => {
+    const cliente = clienteFalso();
+    cliente.iniciarSesion.mockResolvedValue(DANIELA);
+    pantalla('/entrar?volver=%2F%2Fx.com', cliente);
+    await llenar('d.mendez', 'una frase larga');
+    await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
+    expect(await screen.findByText('inicio')).toBeInTheDocument();
+  });
+
+  it('ofrece crear la cuenta de donador', async () => {
+    pantalla();
+    expect(await screen.findByRole('link', { name: 'Crea tu cuenta de donador' })).toHaveAttribute(
+      'href',
+      '/donador',
+    );
+  });
 });

@@ -119,7 +119,7 @@ const cookie = async () => {
 async function entrar(usuario, contrasena) {
   await ctx.clearCookies();
   await p.goto(`${WEB}/entrar`);
-  await p.getByLabel('Nombre de usuario').fill(usuario);
+  await p.getByLabel('Correo o nombre de usuario').fill(usuario);
   await p.getByLabel('Contraseña', { exact: true }).fill(contrasena);
   await p.getByRole('button', { name: 'Entrar' }).click();
   await p.waitForURL(`${WEB}/`);

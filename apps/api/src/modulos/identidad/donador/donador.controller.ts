@@ -27,10 +27,6 @@ class ConfirmarDto extends crearDto(
   }),
 ) {}
 class EnlaceDonadorDto extends crearDto(z.object({ nombre: z.string(), correo: z.string() })) {}
-class SesionDonadorDto extends crearDto(
-  z.object({ correo: z.string().trim().min(3).max(254), contrasena: z.string().min(1).max(256) }),
-) {}
-
 const errores = { status: 'default' as const, type: ErrorDto, description: 'Error' };
 
 @ApiTags('donador')
@@ -77,20 +73,9 @@ export class DonadorController {
     );
   }
 
-  /** Inicio de sesión del Donador, con correo (RF-IDE-013). Deja la cookie de siempre. */
-  @Publico()
-  @Throttle({ default: { limit: 5, ttl: 60_000 } })
-  @Post('donador/sesion')
-  @HttpCode(200)
-  @ApiOkResponse({ type: SesionDto })
-  @ApiResponse(errores)
-  async iniciar(@Body() datos: SesionDonadorDto, @Res({ passthrough: true }) res: Response) {
-    return this.abrirSesion(res, await this.donador.iniciarSesion(datos.correo, datos.contrasena));
-  }
-
   private abrirSesion(
     res: Response,
-    { accessToken, ...sesion }: Awaited<ReturnType<DonadorService['iniciarSesion']>>,
+    { accessToken, ...sesion }: Awaited<ReturnType<DonadorService['confirmar']>>,
   ) {
     res.cookie(COOKIE_SESION, accessToken, opcionesCookie(this.entorno, new Date(sesion.expiraEn)));
     return sesion;

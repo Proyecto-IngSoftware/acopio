@@ -5,7 +5,7 @@ tags: [requerimientos, rf]
 estado: vigente
 modulo: identidad
 bloque: 0
-actualizado: 2026-10-06
+actualizado: 2026-10-19
 ---
 
 # RF-IDE · Identidad y accesos
@@ -14,7 +14,8 @@ actualizado: 2026-10-06
 
 Principio: **Supabase autentica, nosotros autorizamos.** Nadie se auto-registra,
 salvo el Donador ([RF-IDE-013](#rf-ide-013--auto-registro-de-donador)), que no entra
-a la consola.
+a la consola. Desde el 2026-10-19 todas las cuentas entran por la misma pantalla
+([P-079](../pendientes.md)).
 
 ---
 
@@ -66,13 +67,15 @@ Auditor. El Administrador tiene alcance global y puede crearse sin ubicaciones
 - [ ] Un token vencido, ya usado o inexistente produce el mismo mensaje genérico
 - [ ] La `service_role` key no aparece en ningún artefacto del frontend
 
-### RF-IDE-004 · Iniciar sesión con nombre de usuario
-**Actor:** Usuario activo de un rol interno · **Prioridad:** DEBE
+### RF-IDE-004 · Iniciar sesión
+**Actor:** Cualquier cuenta activa, el Donador incluido · **Prioridad:** DEBE
 
-El Donador no pasa por aquí: entra con su correo ([RF-IDE-013](#rf-ide-013--auto-registro-de-donador)).
+**2026-10-19 · una sola entrada ([P-079](../pendientes.md)).** El Donador y el equipo
+entran por el mismo formulario y el mismo endpoint, `POST /api/auth/sesion`.
 
 **Criterios de aceptación:**
-- [ ] El formulario pide nombre de usuario, no correo
+- [ ] El formulario pide «Correo o nombre de usuario». Con «@» la API busca la cuenta
+      por correo; sin «@», por nombre de usuario, que nunca lleva «@»
 - [ ] ~~Un endpoint público resuelve el username a su correo asociado~~ La API recibe
       el nombre de usuario, lo resuelve a su correo y se lo pasa al proveedor. El
       correo nunca sale hacia el navegador ([P-028](../pendientes.md))
@@ -190,14 +193,14 @@ quien crea la suya.
 - [ ] El registro responde 202 con el mismo mensaje se haya creado la cuenta, ya
       existiera o la haya ganado otra petición en paralelo; a una cuenta existente le
       llega un correo que lo dice. Así nadie descubre qué correos están registrados
-- [ ] `POST /api/auth/donador/sesion` entra con correo y contraseña. Una cuenta sin
-      confirmar no tiene credencial y da el 401 genérico
+- [ ] Entra con correo y contraseña por `POST /api/auth/sesion`, el mismo de las
+      cuentas del equipo (RF-IDE-004). Una cuenta sin confirmar no tiene credencial y da
+      el 401 genérico
 - [ ] Nace `INVITADO` y pasa a `ACTIVO` al confirmar el correo
 - [ ] Un correo que ya usa una cuenta interna no puede registrarse como Donador
 - [ ] El Administrador puede suspender a un Donador (RF-IDE-007), igual que a
       cualquier otra cuenta
-- [ ] Inicia sesión con **correo**, no con `username` — a diferencia de los cuatro
-      roles internos
+- [ ] Inicia sesión con su **correo**: no tiene `username`
 - [ ] No se le pide ni se le asigna ninguna ubicación
 - [ ] Mismas reglas de contraseña que RF-IDE-003: 12 caracteres mínimo, contra
       lista de comunes

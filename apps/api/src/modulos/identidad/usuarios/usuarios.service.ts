@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ErrorDominio } from '../../../comun/errores/error-dominio';
 import type { ClienteBd } from '../../../comun/prisma/cliente-bd';
-import { PrismaService } from '../../../comun/prisma/prisma.service';
+import { Transacciones } from '../../../comun/prisma/transacciones';
+import { AsignacionDao } from '../dao/asignacion.dao';
+import { UsuarioDao, type FilaUsuario } from '../dao/usuario.dao';
 import { restriccionUnicaViolada } from '../../../comun/prisma/errores-prisma';
-import type { Prisma } from '../../../generado/prisma/client';
 import type { EstadoUsuario, Rol, TipoUbicacion } from '../../../generado/prisma/enums';
 import { BitacoraService } from '../../auditoria/bitacora.service';
 import { NotificacionService } from '../../notificaciones/notificacion.service';
@@ -34,28 +35,6 @@ export interface DatosNuevoUsuario {
   asignaciones: Asignacion[];
 }
 
-const detalleUsuario = {
-  id: true,
-  username: true,
-  nombre: true,
-  correo: true,
-  correo_sintetico: true,
-  rol: true,
-  estado: true,
-  creado_en: true,
-  asignaciones: {
-    select: { ubicacion_tipo: true, ubicacion_id: true, asignado_por: true, asignado_en: true },
-  },
-  invitaciones: {
-    where: { usada_en: null, revocada_en: null },
-    select: { es_restablecimiento: true, expira_en: true, creada_en: true },
-    orderBy: { creada_en: 'desc' },
-    take: 1,
-  },
-} satisfies Prisma.UsuarioSelect;
-
-type FilaUsuario = Prisma.UsuarioGetPayload<{ select: typeof detalleUsuario }>;
-
 /** Forma pública de un usuario en la API. */
 export function presentarUsuario(u: FilaUsuario) {
   const pendiente = u.invitaciones[0];
@@ -85,7 +64,9 @@ export function presentarUsuario(u: FilaUsuario) {
 @Injectable()
 export class UsuariosService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly transacciones: Transacciones,
+    private readonly usuarios: UsuarioDao,
+    private readonly asignacionesDao: AsignacionDao,
     private readonly bitacora: BitacoraService,
     private readonly notificaciones: NotificacionService,
     private readonly invitaciones: InvitacionesService,
@@ -119,10 +100,10 @@ export class UsuariosService {
     const correoReal = datos.correo?.trim() || null;
     const correo = correoReal ?? `${datos.username.toLowerCase()}@${DOMINIO_SINTETICO}`;
 
-    return this.prisma.$transaction(async (tx) => {
-      const usuario = await tx.usuario
-        .create({
-          data: {
+    return this.transacciones.ejecutar(async (tx) => {
+      const usuario = await this.usuarios
+        .crear(
+          {
             username: datos.username,
             nombre: datos.nombre,
             correo,
@@ -136,8 +117,8 @@ export class UsuariosService {
               })),
             },
           },
-          select: detalleUsuario,
-        })
+          tx,
+        )
         .catch(traducirDuplicado);
 
       const invitacion = await this.invitaciones.emitir(tx, {
@@ -166,27 +147,23 @@ export class UsuariosService {
   }
 
   async listar(filtro: { rol?: Rol; estado?: EstadoUsuario; q?: string }) {
-    const filas = await this.prisma.usuario.findMany({
-      where: {
-        rol: filtro.rol,
-        estado: filtro.estado,
-        ...(filtro.q
-          ? {
-              OR: [
-                { username: { contains: filtro.q, mode: 'insensitive' } },
-                { nombre: { contains: filtro.q, mode: 'insensitive' } },
-              ],
-            }
-          : {}),
-      },
-      orderBy: [{ estado: 'asc' }, { nombre: 'asc' }],
-      select: detalleUsuario,
+    const filas = await this.usuarios.listar({
+      rol: filtro.rol,
+      estado: filtro.estado,
+      ...(filtro.q
+        ? {
+            OR: [
+              { username: { contains: filtro.q, mode: 'insensitive' } },
+              { nombre: { contains: filtro.q, mode: 'insensitive' } },
+            ],
+          }
+        : {}),
     });
     return filas.map(presentarUsuario);
   }
 
   async obtener(id: string) {
-    const usuario = await this.prisma.usuario.findUnique({ where: { id }, select: detalleUsuario });
+    const usuario = await this.usuarios.detalle(id);
     if (!usuario) throw new ErrorDominio('USUARIO_NO_ENCONTRADO', 'El usuario no existe', 404);
     return presentarUsuario(usuario);
   }
@@ -197,7 +174,7 @@ export class UsuariosService {
     id: string,
     cambios: { nombre?: string; rol?: Exclude<Rol, 'DONADOR'>; correo?: string | null },
   ) {
-    return this.prisma.$transaction(async (tx) => {
+    return this.transacciones.ejecutar(async (tx) => {
       await this.bloquearAdmins(tx);
       const antes = await this.bloquearUsuario(tx, id);
       if (antes.rol === 'DONADOR') {
@@ -213,10 +190,10 @@ export class UsuariosService {
         }
       }
       const correoReal = cambios.correo === undefined ? undefined : cambios.correo?.trim() || null;
-      const despues = await tx.usuario
-        .update({
-          where: { id },
-          data: {
+      const despues = await this.usuarios
+        .actualizar(
+          id,
+          {
             nombre: cambios.nombre,
             rol: cambios.rol,
             ...(correoReal === undefined
@@ -225,8 +202,8 @@ export class UsuariosService {
                 ? { correo: correoReal, correo_sintetico: false }
                 : { correo: `${antes.username}@${DOMINIO_SINTETICO}`, correo_sintetico: true }),
           },
-          select: detalleUsuario,
-        })
+          tx,
+        )
         .catch(traducirDuplicado);
 
       await this.bitacora.registrar(tx, {
@@ -247,14 +224,14 @@ export class UsuariosService {
     if (id === admin.id) {
       throw new ErrorDominio('PROPIA_SUSPENSION', 'No puedes suspender tu propia cuenta', 403);
     }
-    return this.prisma.$transaction(async (tx) => {
+    return this.transacciones.ejecutar(async (tx) => {
       await this.bloquearAdmins(tx);
       const antes = await this.bloquearUsuario(tx, id);
       if (antes.estado === 'SUSPENDIDO') return this.obtenerCon(tx, id);
       if (antes.rol === 'ADMIN' && antes.estado === 'ACTIVO') {
         await this.exigirOtroAdmin(tx, id, 'suspender');
       }
-      await tx.usuario.update({ where: { id }, data: { estado: 'SUSPENDIDO' } });
+      await this.usuarios.marcar(id, { estado: 'SUSPENDIDO' }, tx);
       await this.invitaciones.revocarPendientes(tx, id);
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
@@ -270,11 +247,11 @@ export class UsuariosService {
 
   /** Reactiva sin repetir la invitación si ya tenía cuenta (RF-IDE-007). */
   async reactivar(admin: UsuarioAutenticado, id: string) {
-    return this.prisma.$transaction(async (tx) => {
+    return this.transacciones.ejecutar(async (tx) => {
       const antes = await this.bloquearUsuario(tx, id);
       if (antes.estado !== 'SUSPENDIDO') return this.obtenerCon(tx, id);
       const estado: EstadoUsuario = antes.supabase_uid ? 'ACTIVO' : 'INVITADO';
-      await tx.usuario.update({ where: { id }, data: { estado } });
+      await this.usuarios.marcar(id, { estado }, tx);
       await this.bitacora.registrar(tx, {
         usuarioId: admin.id,
         accion: 'usuario.reactivado',
@@ -289,7 +266,7 @@ export class UsuariosService {
 
   /** Vuelve a invitar a quien todavía no canjeó su invitación (RF-IDE-002). */
   async reinvitar(admin: UsuarioAutenticado, id: string) {
-    return this.prisma.$transaction(async (tx) => {
+    return this.transacciones.ejecutar(async (tx) => {
       const usuario = await this.bloquearUsuario(tx, id);
       if (usuario.estado !== 'INVITADO') {
         throw new ErrorDominio(
@@ -321,7 +298,7 @@ export class UsuariosService {
   }
 
   async revocarInvitacion(admin: UsuarioAutenticado, id: string) {
-    return this.prisma.$transaction(async (tx) => {
+    return this.transacciones.ejecutar(async (tx) => {
       const revocadas = await this.invitaciones.revocarPendientes(tx, id);
       if (revocadas > 0) {
         await this.bitacora.registrar(tx, {
@@ -340,7 +317,7 @@ export class UsuariosService {
    * la persona y a todos los administradores, y evento destacado en la bitácora.
    */
   async restablecer(admin: UsuarioAutenticado, id: string, motivo: string) {
-    return this.prisma.$transaction(async (tx) => {
+    return this.transacciones.ejecutar(async (tx) => {
       const usuario = await this.bloquearUsuario(tx, id);
       if (usuario.estado !== 'ACTIVO') {
         throw new ErrorDominio(
@@ -365,10 +342,7 @@ export class UsuariosService {
           }),
         );
       }
-      const admins = await tx.usuario.findMany({
-        where: { rol: 'ADMIN', estado: 'ACTIVO', correo_sintetico: false },
-        select: { nombre: true, correo: true },
-      });
+      const admins = await this.usuarios.adminsConCorreo(tx);
       for (const a of admins) {
         await this.notificaciones.encolar(
           tx,
@@ -396,20 +370,21 @@ export class UsuariosService {
   /** RF-IDE-006: agregar una ubicación. */
   async asignar(admin: UsuarioAutenticado, id: string, asignacion: Asignacion) {
     const [nombre] = await this.exigirUbicaciones([asignacion]);
-    return this.prisma.$transaction(async (tx) => {
+    return this.transacciones.ejecutar(async (tx) => {
       const usuario = await this.bloquearUsuario(tx, id);
       if (usuario.rol === 'DONADOR') {
         throw new ErrorDominio('ES_DONADOR', 'Un Donador no tiene ubicaciones asignadas');
       }
-      await tx.usuarioAsignacion
-        .create({
-          data: {
-            usuario_id: id,
-            ubicacion_tipo: asignacion.tipo,
-            ubicacion_id: asignacion.ubicacionId,
-            asignado_por: admin.id,
+      await this.asignacionesDao
+        .crear(
+          {
+            usuarioId: id,
+            tipo: asignacion.tipo,
+            ubicacionId: asignacion.ubicacionId,
+            asignadoPor: admin.id,
           },
-        })
+          tx,
+        )
         .catch(traducirDuplicado);
       if (!usuario.correo_sintetico && usuario.correo) {
         await this.notificaciones.encolar(
@@ -444,21 +419,14 @@ export class UsuariosService {
     confirmar: boolean,
   ) {
     const [nombre] = await this.ubicaciones.nombres([asignacion]);
-    return this.prisma.$transaction(async (tx) => {
+    return this.transacciones.ejecutar(async (tx) => {
       const usuario = await this.bloquearUsuario(tx, id);
-      const donde = {
-        ubicacion_tipo: asignacion.tipo,
-        ubicacion_id: asignacion.ubicacionId,
-      };
-      const existe = await tx.usuarioAsignacion.findUnique({
-        where: { usuario_id_ubicacion_tipo_ubicacion_id: { usuario_id: id, ...donde } },
-      });
+      const donde = { usuarioId: id, tipo: asignacion.tipo, ubicacionId: asignacion.ubicacionId };
+      const existe = await this.asignacionesDao.existe(donde, tx);
       if (!existe)
         throw new ErrorDominio('SIN_ASIGNACION', 'El usuario no tiene esa ubicación', 404);
 
-      const otrosResponsables = await tx.usuarioAsignacion.count({
-        where: { ...donde, usuario_id: { not: id }, usuario: { estado: 'ACTIVO' } },
-      });
+      const otrosResponsables = await this.asignacionesDao.otrosResponsablesActivos(donde, tx);
       if (otrosResponsables === 0 && !confirmar) {
         throw new ErrorDominio(
           'UBICACION_SIN_RESPONSABLE',
@@ -466,9 +434,7 @@ export class UsuariosService {
           409,
         );
       }
-      await tx.usuarioAsignacion.delete({
-        where: { usuario_id_ubicacion_tipo_ubicacion_id: { usuario_id: id, ...donde } },
-      });
+      await this.asignacionesDao.borrar(donde, tx);
       if (!usuario.correo_sintetico && usuario.correo) {
         await this.notificaciones.encolar(
           tx,
@@ -493,8 +459,7 @@ export class UsuariosService {
 
   /** Bloquea la fila del usuario para que dos cambios simultáneos no se pisen. */
   private async bloquearUsuario(tx: ClienteBd, id: string) {
-    await tx.$queryRaw`SELECT id FROM usuario WHERE id = ${id}::uuid FOR UPDATE`;
-    const usuario = await tx.usuario.findUnique({ where: { id } });
+    const usuario = await this.usuarios.bloquear(id, tx);
     if (!usuario) throw new ErrorDominio('USUARIO_NO_ENCONTRADO', 'El usuario no existe', 404);
     return usuario;
   }
@@ -506,15 +471,12 @@ export class UsuariosService {
    * sería el último.
    */
   private async bloquearAdmins(tx: ClienteBd) {
-    await tx.$queryRaw`
-      SELECT id FROM usuario WHERE rol = 'ADMIN' AND estado = 'ACTIVO' ORDER BY id FOR UPDATE`;
+    await this.usuarios.bloquearAdmins(tx);
   }
 
   /** Con los administradores ya bloqueados por bloquearAdmins. */
   private async exigirOtroAdmin(tx: ClienteBd, excepto: string, accion: string) {
-    const otros = await tx.usuario.count({
-      where: { rol: 'ADMIN', estado: 'ACTIVO', id: { not: excepto } },
-    });
+    const otros = await this.usuarios.contarAdminsActivos(excepto, tx);
     if (otros === 0) {
       throw new ErrorDominio(
         'ULTIMO_ADMIN',
@@ -525,8 +487,8 @@ export class UsuariosService {
   }
 
   private async obtenerCon(tx: ClienteBd, id: string) {
-    const usuario = await tx.usuario.findUniqueOrThrow({ where: { id }, select: detalleUsuario });
-    return presentarUsuario(usuario);
+    const usuario = await this.usuarios.detalle(id, tx);
+    return presentarUsuario(usuario!);
   }
 }
 

@@ -19,8 +19,9 @@ describe('registro del Donador (RF-IDE-013, P-040)', () => {
       .post('/api/auth/registro/confirmar')
       .send({ token, contrasena, ...(nombre ? { nombre } : {}) });
 
+  // Una sola entrada para todas las cuentas: el correo va en `usuario`
   const entrar = (correo: string, contrasena: string) =>
-    a.http().post('/api/auth/donador/sesion').send({ correo, contrasena });
+    a.http().post('/api/auth/sesion').send({ usuario: correo, contrasena });
 
   const cookieDe = (r: { headers: Record<string, unknown> }) =>
     ([] as string[]).concat((r.headers['set-cookie'] as string[] | undefined) ?? []).join(';');
@@ -90,6 +91,12 @@ describe('registro del Donador (RF-IDE-013, P-040)', () => {
     const r = await registrar(ADMIN.correo).expect(202);
     expect(r.body.mensaje).toBe('Te enviamos un correo para confirmar tu cuenta');
     expect((await enlaceDe(ADMIN.correo)).asunto).toBe('Ya tienes una cuenta en Acopio');
+    const aviso = await a.prisma.correoSaliente.findFirstOrThrow({
+      where: { destinatario: ADMIN.correo },
+      orderBy: { creado_en: 'desc' },
+    });
+    // El enlace lleva a la única pantalla de entrada
+    expect(aviso.cuerpo_texto).toMatch(/\/entrar\s*$/m);
   });
 
   it('dos registros simultáneos del mismo correo responden 202 los dos', async () => {
@@ -253,18 +260,25 @@ describe('registro del Donador (RF-IDE-013, P-040)', () => {
       expect(pendiente.body).toEqual(inexistente.body);
     });
 
-    it('el Donador no entra por la puerta de la consola', async () => {
-      const { correo, token } = await registrarYTomarEnlace('puerta');
+    it('el Donador entra con su correo, sin importar mayúsculas ni espacios', async () => {
+      const { correo, token } = await registrarYTomarEnlace('mayus');
       await confirmar(token).expect(200);
-      await a
-        .http()
-        .post('/api/auth/sesion')
-        .send({ usuario: correo, contrasena: CONTRASENA })
-        .expect(401);
+      const r = await entrar(`  ${correo.toUpperCase()}  `, CONTRASENA).expect(200);
+      expect(r.body.usuario.rol).toBe('DONADOR');
+      expect(cookieDe(r)).toMatch(/acopio_sesion=/);
     });
 
-    it('una cuenta interna no entra por la puerta del Donador', async () => {
-      await entrar(ADMIN.correo, ADMIN.contrasena).expect(401);
+    it('una cuenta del equipo también entra con su correo', async () => {
+      const r = await entrar(ADMIN.correo, ADMIN.contrasena).expect(200);
+      expect(r.body.usuario.username).toBe(ADMIN.username);
+    });
+
+    it('POST /auth/donador/sesion ya no existe', async () => {
+      await a
+        .http()
+        .post('/api/auth/donador/sesion')
+        .send({ correo: ADMIN.correo, contrasena: ADMIN.contrasena })
+        .expect(404);
     });
   });
 

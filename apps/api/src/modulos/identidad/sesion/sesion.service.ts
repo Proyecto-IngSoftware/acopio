@@ -1,29 +1,31 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { PrismaService } from '../../../comun/prisma/prisma.service';
+import { UsuarioDao } from '../dao/usuario.dao';
 import { PROVEEDOR_IDENTIDAD, type ProveedorIdentidad } from '../proveedor/proveedor-identidad';
 
 const CREDENCIALES_INVALIDAS = () => new UnauthorizedException('Usuario o contraseña incorrectos');
 
 /**
- * Inicio de sesión con nombre de usuario (RF-IDE-004). La API resuelve el usuario a
- * su correo y se lo pasa al proveedor: el correo nunca sale hacia el navegador, y no
- * hace falta un endpoint público que lo revele.
+ * Inicio de sesión de todas las cuentas, con correo o nombre de usuario (RF-IDE-004,
+ * RF-IDE-013). La API resuelve la cuenta a su correo y se lo pasa al proveedor: el correo
+ * de una cuenta del equipo nunca sale hacia el navegador.
  */
 @Injectable()
 export class SesionService {
   constructor(
-    private readonly prisma: PrismaService,
+    private readonly usuarios: UsuarioDao,
     @Inject(PROVEEDOR_IDENTIDAD) private readonly proveedor: ProveedorIdentidad,
   ) {}
 
-  async iniciar(username: string, contrasena: string) {
-    const usuario = await this.prisma.usuario.findUnique({
-      where: { username },
-      select: { id: true, username: true, nombre: true, rol: true, estado: true, correo: true },
-    });
-    // Mismo mensaje para usuario inexistente, contraseña equivocada, invitado o
-    // suspendido: no se revela cuál de las cuatro fue
-    if (!usuario?.correo || usuario.estado !== 'ACTIVO' || usuario.rol === 'DONADOR') {
+  async iniciar(identificador: string, contrasena: string) {
+    // Un nombre de usuario no admite «@», así que la arroba decide cómo se busca
+    const usuario = await this.usuarios.paraSesion(
+      identificador.includes('@')
+        ? { correo: identificador.trim().toLowerCase() }
+        : { username: identificador },
+    );
+    // Mismo mensaje para cuenta inexistente, contraseña equivocada, invitada o
+    // suspendida: no se revela cuál de las cuatro fue
+    if (!usuario?.correo || usuario.estado !== 'ACTIVO') {
       await this.proveedor.iniciarSesion('no-existe@acopio.local', contrasena);
       throw CREDENCIALES_INVALIDAS();
     }
@@ -43,16 +45,7 @@ export class SesionService {
 
   /** El usuario de la sesión, con sus ubicaciones para el conmutador de contexto (RF-IDE-010). */
   async yo(usuarioId: string) {
-    const usuario = await this.prisma.usuario.findUniqueOrThrow({
-      where: { id: usuarioId },
-      select: {
-        id: true,
-        username: true,
-        nombre: true,
-        rol: true,
-        asignaciones: { select: { ubicacion_tipo: true, ubicacion_id: true } },
-      },
-    });
+    const usuario = await this.usuarios.perfil(usuarioId);
     return {
       id: usuario.id,
       username: usuario.username,

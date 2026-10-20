@@ -71,7 +71,7 @@ async function contexto(etiqueta) {
 
 async function entrar(p, usuario, contrasena) {
   await p.goto(`${WEB}/entrar`);
-  await p.getByLabel('Nombre de usuario').fill(usuario);
+  await p.getByLabel('Correo o nombre de usuario').fill(usuario);
   await p.getByLabel('Contraseña', { exact: true }).fill(contrasena);
   await p.getByRole('button', { name: 'Entrar' }).click();
   await p.waitForURL(`${WEB}/`);
@@ -108,7 +108,7 @@ for (const [ruta, titulo] of [
   ['/seguimiento/ACO-2026-DEMA4', 'Seguir una donación'],
   ['/privacidad', 'Cómo usamos tus datos'],
   ['/mas', 'Más'],
-  ['/donador', 'Tu cuenta de Donador'],
+  ['/donador', 'Crea tu cuenta de donador'],
   ['/causas', 'Causas'],
   ['/plataformas', 'Causas'],
 ]) {
@@ -163,7 +163,7 @@ if (SIN_CORREO) {
   await paso('admin invita a un Administrador con correo', async () => {
     await admin.goto(`${WEB}/consola/usuarios/invitar`);
     await admin.getByLabel('Nombre completo').fill('Valeria Validación');
-    await admin.getByLabel('Nombre de usuario').fill(usuarioNuevo);
+    await admin.getByLabel('Nombre de usuario', { exact: true }).fill(usuarioNuevo);
     await admin.getByRole('radio', { name: /Administrador/ }).check();
     await admin.getByLabel(/Correo/).fill(correoNuevo);
     await admin.getByRole('button', { name: 'Crear e invitar' }).click();
@@ -311,11 +311,10 @@ await paso('la bitácora del Administrador muestra la invitación y la activaci�
 // ── Donador ──
 const don = await contexto('donador1');
 await paso('donador1 entra con su correo', async () => {
-  await don.goto(`${WEB}/donador`);
-  await don.getByRole('radiogroup').getByText('Entrar', { exact: true }).click();
-  await don.getByLabel('Correo').fill('donador1@demo.acopio.local');
+  await don.goto(`${WEB}/entrar`);
+  await don.getByLabel('Correo o nombre de usuario').fill('donador1@demo.acopio.local');
   await don.getByLabel('Contraseña', { exact: true }).fill(DEMO);
-  await don.getByRole('button', { name: 'Entrar' }).last().click();
+  await don.getByRole('button', { name: 'Entrar' }).click();
   await don.getByRole('heading', { name: 'Mis donaciones' }).waitFor();
 });
 await paso('donador1 /donar', () => visitar(don, '/donar', { titulo: 'Preparar donación' }));

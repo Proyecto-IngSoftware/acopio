@@ -349,47 +349,6 @@
         ]
       }
     },
-    "/api/auth/donador/sesion": {
-      "post": {
-        "operationId": "DonadorController_iniciar",
-        "parameters": [],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SesionDonadorDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SesionDto"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "Error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "donador"
-        ]
-      }
-    },
     "/api/invitaciones/{token}": {
       "get": {
         "operationId": "InvitacionesController_consultar",
@@ -7040,8 +6999,8 @@
           "usuario": {
             "type": "string",
             "minLength": 1,
-            "maxLength": 64,
-            "description": "Nombre de usuario, no correo"
+            "maxLength": 254,
+            "description": "Correo o nombre de usuario"
           },
           "contrasena": {
             "type": "string",
@@ -7284,25 +7243,6 @@
         },
         "required": [
           "token",
-          "contrasena"
-        ]
-      },
-      "SesionDonadorDto": {
-        "type": "object",
-        "properties": {
-          "correo": {
-            "type": "string",
-            "minLength": 3,
-            "maxLength": 254
-          },
-          "contrasena": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 256
-          }
-        },
-        "required": [
-          "correo",
           "contrasena"
         ]
       },

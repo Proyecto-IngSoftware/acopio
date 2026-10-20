@@ -20,8 +20,8 @@ el número del escenario y una captura.
 Las crea `seed:demo` al arrancar el servidor. Todas usan la contraseña de la demo
 (`DEMO_CONTRASENA`), que Joseph comparte por el chat del equipo y nunca va en el repositorio.
 
-La consola se entra con el nombre de usuario, no con el correo. Solo el Donador entra con su
-correo, desde «Entrar» en `/donador`.
+Todas las cuentas entran por la misma pantalla, «Entrar» en la cabecera (`/entrar`), con su
+correo o con su nombre de usuario. El Donador no tiene nombre de usuario y entra con su correo.
 
 | Rol | Usuario | Correo | Qué tiene asignado |
 |---|---|---|---|

@@ -32,7 +32,7 @@
   </script>
 
 <style>body{background:#e2e7ff;}</style>
-<p style="max-width:430px;margin:12px auto;font:14px Inter,system-ui,sans-serif;color:#3f4946">Maqueta de C01 tal como la generó Stitch. Sin «Sincronizado» ni «Ayuda» en la cabecera. El mensaje de error aparece aquí siempre para mostrarlo; en la aplicación solo sale cuando el inicio de sesión falla o se superan los intentos, y siempre con el mismo texto.</p>
+<p style="max-width:430px;margin:12px auto;font:14px Inter,system-ui,sans-serif;color:#3f4946">Maqueta de C01, la única pantalla para entrar a Acopio desde el 2026-10-19: el Donador escribe su correo y el equipo, su correo o su nombre de usuario. Sin «Sincronizado» ni «Ayuda» en la cabecera. El mensaje de error aparece aquí siempre para mostrarlo; en la aplicación solo sale cuando el inicio de sesión falla o se superan los intentos, y siempre con el mismo texto.</p>
 <div class="mx-auto max-w-[430px] min-h-screen overflow-clip rounded-xl border border-outline-variant bg-surface text-stone-900 font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-teal-brand selection:text-white">
 
 <!-- BEGIN: MainContent -->
@@ -63,10 +63,10 @@
 <!-- BEGIN: HeroDarkSection -->
 <section class="bg-[#0A4F4F] text-white px-5 pt-7 pb-8 shadow-inner" data-purpose="page-title-banner">
 <h1 class="text-2xl sm:text-[26px] font-bold tracking-tight text-white mb-2 leading-tight">
-        Entrar a la consola
+        Entrar a Acopio
       </h1>
 <p class="text-teal-50 text-sm sm:text-[15px] font-normal leading-relaxed opacity-95">
-        Para operadores, receptores, auditores y administradores de Acopio.
+        Para donadores y para quienes trabajan en un acopio.
       </p>
 </section>
 <!-- END: HeroDarkSection -->
@@ -78,11 +78,11 @@
 <!-- Field: Username -->
 <div>
 <label class="block text-sm font-medium text-stone-800 mb-1.5" for="username">
-              Nombre de usuario
+              Correo o nombre de usuario
             </label>
-<input autocomplete="username" class="w-full h-12 px-3.5 bg-[#FAFAF9] border border-[#E7E5E4] rounded-lg text-base text-stone-900 placeholder:text-stone-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F6E6E] focus:border-[#0F6E6E] transition-all" id="username" name="username" placeholder="ej. d.mendez.corferias" required="" type="text"/>
+<input autocomplete="username" class="w-full h-12 px-3.5 bg-[#FAFAF9] border border-[#E7E5E4] rounded-lg text-base text-stone-900 placeholder:text-stone-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F6E6E] focus:border-[#0F6E6E] transition-all" id="username" name="username" placeholder="ana@correo.co o d.mendez" required="" type="text"/>
 <p class="text-stone-500 text-[13px] mt-1.5 font-normal leading-normal">
-              El que te dio el administrador al invitarte
+              Si donas, tu correo. Si trabajas en un acopio, el usuario que te dio el administrador.
             </p>
 </div>
 <!-- Field: Password -->
@@ -129,6 +129,12 @@
 </form>
 </section>
 <!-- END: LoginFormCard -->
+<!-- BEGIN: CrearCuentaDonador -->
+<p class="text-stone-600 text-sm leading-relaxed px-1">
+        ¿Vas a donar y no tienes cuenta?
+        <a class="font-semibold text-[#0F6E6E] underline underline-offset-2" href="#">Crea tu cuenta de donador</a>
+</p>
+<!-- END: CrearCuentaDonador -->
 <!-- BEGIN: PasswordResetAssistanceCard -->
 <section class="bg-white border border-[#E7E5E4] rounded-xl p-4 shadow-sm" data-purpose="recovery-notice">
 <h2 class="text-stone-900 font-semibold text-base leading-tight mb-1.5">

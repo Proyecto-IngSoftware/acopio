@@ -96,7 +96,7 @@ describe('rutas del Donador', () => {
   };
 
   it.each([
-    ['/donador', 'Tu cuenta de Donador'],
+    ['/donador', 'Crea tu cuenta de donador'],
     ['/seguimiento', 'Seguir una donación'],
     ['/seguimiento/ACO-2026-7KQ4M', 'Seguir una donación'],
     ['/privacidad', 'Cómo usamos tus datos'],
@@ -123,10 +123,18 @@ describe('rutas del Donador', () => {
     ).toBeInTheDocument();
   });
 
-  it('/donar sin sesión lleva a /donador', async () => {
+  it('/donar con una cuenta del equipo no cae en un bucle: va a /donador', async () => {
+    const operadora = { id: 'o1', username: 'op', nombre: 'Daniela', rol: 'OPERADOR' as const };
+    render(envolver(<Rutas />, '/donar', clienteFalso(operadora)));
+    expect(
+      await screen.findByRole('heading', { level: 1, name: 'Crea tu cuenta de donador' }),
+    ).toBeInTheDocument();
+  });
+
+  it('/donar sin sesión lleva a la única pantalla de entrada', async () => {
     render(envolver(<Rutas />, '/donar'));
     expect(
-      await screen.findByRole('heading', { level: 1, name: 'Tu cuenta de Donador' }),
+      await screen.findByRole('heading', { level: 1, name: 'Entrar a Acopio' }),
     ).toBeInTheDocument();
   });
 
