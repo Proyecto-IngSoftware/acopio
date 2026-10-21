@@ -136,7 +136,7 @@ function FormularioVersion({
           onChange={(e) => fijarDesde(e.target.value)}
         />
         <FormularioError mensaje={aviso ?? guardar.error?.message} />
-        <Boton type="submit" className="w-full" disabled={guardar.isPending}>
+        <Boton type="submit" className="w-full" ocupado={guardar.isPending}>
           {guardar.isPending ? 'Guardando…' : 'Guardar'}
         </Boton>
       </form>

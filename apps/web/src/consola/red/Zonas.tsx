@@ -274,7 +274,7 @@ function FormularioZona({
           </Selector>
         )}
         <FormularioError mensaje={guardar.error?.message} />
-        <Boton type="submit" className="min-h-[56px] w-full" disabled={guardar.isPending}>
+        <Boton type="submit" className="min-h-[56px] w-full" ocupado={guardar.isPending}>
           {guardar.isPending ? 'Guardando…' : 'Guardar'}
         </Boton>
       </form>

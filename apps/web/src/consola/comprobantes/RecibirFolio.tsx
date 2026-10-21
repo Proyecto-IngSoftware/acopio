@@ -338,7 +338,8 @@ function Confirmar({
       )}
       <Boton
         onClick={registrar}
-        disabled={sinRed || !listoParaRegistrar(lineas) || recibir.isPending}
+        disabled={sinRed || !listoParaRegistrar(lineas)}
+        ocupado={recibir.isPending}
         className="sticky bottom-space-sm min-h-[56px]"
       >
         {n > 0 ? `Registrar recepción (${nEntradas(n)})` : 'Registrar que no llegó nada'}
@@ -410,7 +411,7 @@ function LineaFolio({
             aria-label={`Menos ${l.categoria}`}
             disabled={cantidad <= 0}
             onClick={() => despachar({ tipo: 'sumar', id: l.id, delta: -1 })}
-            className="flex h-12 w-12 items-center justify-center text-on-surface disabled:opacity-40"
+            className="toque flex h-12 w-12 items-center justify-center text-on-surface disabled:bg-surface-container-high disabled:text-on-surface-variant"
           >
             <Icono nombre="remove" className="text-[22px]" />
           </button>

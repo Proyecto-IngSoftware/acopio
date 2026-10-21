@@ -329,3 +329,34 @@ it('mientras concilia, el botón está ocupado y no manda dos veces', async () =
   await userEvent.click(boton);
   expect(llamadas).toBe(1);
 });
+
+it('rechazar es un botón ocupado mientras envía', async () => {
+  let llamadas = 0;
+  vi.spyOn(globalThis, 'fetch').mockImplementation((entrada) => {
+    const p = entrada as Request;
+    if (p.url.endsWith('/rechazar')) {
+      llamadas++;
+      return new Promise(() => {});
+    }
+    return Promise.resolve(
+      new Response(JSON.stringify(DETALLE), { headers: { 'content-type': 'application/json' } }),
+    );
+  });
+  render(
+    envolver(
+      <Routes>
+        <Route path="/consola/comprobantes/:folio" element={<Conciliacion />} />
+      </Routes>,
+      `/consola/comprobantes/${FOLIO}`,
+      clienteFalso(AUDITOR),
+    ),
+  );
+  await userEvent.click(await screen.findByRole('button', { name: 'Rechazar' }));
+  const hoja = await screen.findByRole('dialog', { name: `Rechazar ${FOLIO}` });
+  await userEvent.click(within(hoja).getByRole('radio', { name: 'Duplicado' }));
+  await userEvent.click(within(hoja).getByRole('button', { name: 'Rechazar comprobante' }));
+  const boton = within(hoja).getByRole('button', { name: 'Rechazar comprobante' });
+  expect(boton).toHaveAttribute('aria-busy', 'true');
+  await userEvent.click(boton);
+  expect(llamadas).toBe(1);
+});

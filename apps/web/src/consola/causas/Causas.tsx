@@ -241,7 +241,7 @@ function VistaCausa({
           <Boton
             variante="secundario"
             className="min-h-[56px] w-full"
-            disabled={archivar.isPending}
+            ocupado={archivar.isPending}
             onClick={() => archivar.mutate(undefined, { onSuccess: alVolver })}
           >
             Archivar ahora

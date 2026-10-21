@@ -181,3 +181,15 @@ describe('cuando falla algo que no son las credenciales', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('Algo falló de nuestro lado.');
   });
 });
+
+it('mientras entra, el botón está ocupado y no pide la sesión dos veces', async () => {
+  const cliente = clienteFalso();
+  cliente.iniciarSesion.mockReturnValue(new Promise(() => {}));
+  pantalla('/entrar', cliente);
+  await llenar('d.mendez', 'una frase larga');
+  await userEvent.click(screen.getByRole('button', { name: 'Entrar' }));
+  const boton = screen.getByRole('button', { name: /Entrar|Entrando/ });
+  expect(boton).toHaveAttribute('aria-busy', 'true');
+  await userEvent.click(boton);
+  expect(cliente.iniciarSesion).toHaveBeenCalledTimes(1);
+});

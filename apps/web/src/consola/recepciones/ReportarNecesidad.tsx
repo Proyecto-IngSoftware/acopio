@@ -243,7 +243,7 @@ function Formulario({
 
       <FormularioError mensaje={reportar.error?.message} />
       {(falta || pendientes.length > 0) && (
-        <Boton disabled={n === 0 || reportar.isPending} onClick={enviar} className="w-full">
+        <Boton disabled={n === 0} ocupado={reportar.isPending} onClick={enviar} className="w-full">
           <Icono nombre={falta ? 'send' : 'task_alt'} className="text-[20px]" />
           {textoBoton}
         </Boton>

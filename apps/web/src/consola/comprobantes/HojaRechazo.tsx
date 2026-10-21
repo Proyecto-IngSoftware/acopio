@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { MOTIVOS_RECHAZO, useRechazar, type MotivoRechazo } from '../../api/comprobantes';
+import { Boton } from '../../componentes/Boton';
 import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
 
@@ -56,14 +57,14 @@ export function HojaRechazo({ folio, alCerrar }: { folio: string; alCerrar: () =
           {rechazar.error.message}
         </p>
       )}
-      <button
-        type="button"
-        disabled={!listo || rechazar.isPending}
+      <Boton
+        disabled={!listo}
+        ocupado={rechazar.isPending}
         onClick={confirmar}
-        className="min-h-[56px] rounded-xl bg-error text-label-md text-on-primary disabled:opacity-60"
+        className="min-h-[56px] enabled:bg-error enabled:text-on-error"
       >
         Rechazar comprobante
-      </button>
+      </Boton>
       <button
         type="button"
         onClick={alCerrar}

@@ -88,7 +88,12 @@ export function Entrar() {
             autoComplete="current-password"
           />
           {!enLinea && <p className="text-body-sm text-on-surface-variant">{SIN_RED}</p>}
-          <Boton type="submit" disabled={enviando || !enLinea} className="min-h-[56px] w-full">
+          <Boton
+            type="submit"
+            disabled={!enLinea}
+            ocupado={enviando}
+            className="min-h-[56px] w-full"
+          >
             {enviando ? 'Entrando…' : 'Entrar'}
           </Boton>
           {error && <AlertaError mensaje={error} />}

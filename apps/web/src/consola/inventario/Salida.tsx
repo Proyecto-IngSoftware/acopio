@@ -341,9 +341,9 @@ export function Salida() {
               n <= 0 ||
               sinSaldo !== undefined ||
               fraccion ||
-              (pideNota && !nota.trim()) ||
-              registrar.isPending
+              (pideNota && !nota.trim())
             }
+            ocupado={registrar.isPending}
           >
             <Icono nombre="output" className="text-[22px]" />
             Registrar salida

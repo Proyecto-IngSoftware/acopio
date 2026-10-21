@@ -126,7 +126,7 @@ function Contenido({ acopio }: { acopio: Acopio }) {
               Cambios guardados. El mapa ya los muestra.
             </p>
           )}
-          <Boton type="submit" className="min-h-[56px] w-full" disabled={operar.isPending}>
+          <Boton type="submit" className="min-h-[56px] w-full" ocupado={operar.isPending}>
             <Icono nombre="check" className="text-[20px]" />
             {operar.isPending ? 'Guardando…' : 'Guardar cambios'}
           </Boton>

@@ -189,7 +189,7 @@ function FormularioEmergencia({
           igual.
         </p>
         <FormularioError mensaje={guardar.error?.message} />
-        <Boton type="submit" className="w-full" disabled={guardar.isPending}>
+        <Boton type="submit" className="w-full" ocupado={guardar.isPending}>
           {guardar.isPending ? 'Guardando…' : 'Guardar'}
         </Boton>
       </form>
@@ -231,13 +231,13 @@ function CerrarEmergencia({
           onChange={(e) => fijarMotivo(e.target.value)}
         />
         <FormularioError mensaje={aviso ?? cerrar.error?.message} />
-        <button
+        <Boton
           type="submit"
-          disabled={cerrar.isPending}
-          className="flex min-h-[48px] w-full items-center justify-center rounded-xl bg-secondary-container px-space-md text-label-md text-on-secondary"
+          ocupado={cerrar.isPending}
+          className="w-full enabled:bg-secondary-container enabled:text-on-secondary"
         >
           {cerrar.isPending ? 'Cerrando…' : 'Cerrar emergencia'}
-        </button>
+        </Boton>
       </form>
     </Hoja>
   );

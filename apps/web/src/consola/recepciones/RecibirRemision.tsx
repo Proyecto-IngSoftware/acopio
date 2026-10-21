@@ -276,7 +276,8 @@ function FormularioRecepcion({ remision }: { remision: Remision }) {
 
       <FormularioError mensaje={recibir.error?.message} />
       <Boton
-        disabled={faltaFoto || faltaZona || recibir.isPending}
+        disabled={faltaFoto || faltaZona}
+        ocupado={recibir.isPending}
         onClick={confirmar}
         className="w-full"
       >

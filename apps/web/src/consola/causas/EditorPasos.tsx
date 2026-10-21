@@ -16,7 +16,7 @@ export function EditorPasos({
     alCambiar(otro);
   };
   const boton =
-    'flex h-11 w-9 shrink-0 items-center justify-center text-on-surface-variant disabled:opacity-40';
+    'flex h-11 w-9 shrink-0 items-center justify-center text-on-surface-variant disabled:text-outline-variant';
   return (
     <fieldset className="flex min-w-0 flex-col gap-space-xs">
       <legend className="pb-space-xs text-label-md text-on-surface">Cómo donar</legend>

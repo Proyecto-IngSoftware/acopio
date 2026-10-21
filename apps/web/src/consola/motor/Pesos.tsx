@@ -160,7 +160,8 @@ function Editor({ guardados }: { guardados: DatosConfiguracion }) {
         </p>
       )}
       <Boton
-        disabled={!validos || !cambiado || guardar.isPending}
+        disabled={!validos || !cambiado}
+        ocupado={guardar.isPending}
         onClick={() =>
           guardar.mutate(
             { pesos, cantidadMinima },

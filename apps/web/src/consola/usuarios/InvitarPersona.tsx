@@ -154,7 +154,7 @@ export function InvitarPersona() {
         )}
 
         <FormularioError mensaje={aviso ?? crear.error?.message} />
-        <Boton type="submit" className="min-h-[56px] w-full" disabled={crear.isPending}>
+        <Boton type="submit" className="min-h-[56px] w-full" ocupado={crear.isPending}>
           <Icono nombre="send" className="text-[18px]" />
           {crear.isPending ? 'Creando…' : 'Crear e invitar'}
         </Boton>

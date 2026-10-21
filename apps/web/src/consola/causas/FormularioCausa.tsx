@@ -200,7 +200,8 @@ export function FormularioCausa({
         <Boton
           type="submit"
           className="min-h-[56px] w-full"
-          disabled={mutacion.isPending || fechaInvalida || !entidad}
+          disabled={fechaInvalida || !entidad}
+          ocupado={mutacion.isPending}
         >
           {causa ? 'Guardar cambios' : 'Publicar causa'}
         </Boton>
