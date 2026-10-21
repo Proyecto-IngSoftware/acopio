@@ -44,9 +44,22 @@ it('cada fila dice su estado, su fecha y los cupos reservados', async () => {
   const fila = await screen.findByRole('button', { name: /Armar mercados/ });
   expect(within(fila).getByText('Abierta')).toBeInTheDocument();
   expect(within(fila).getByText(/3 de 10 cupos reservados · 2 sin reserva/)).toBeInTheDocument();
-  expect(within(fila).getByText(/Mié 21 oct · 8:00 a\. m\. – 12:00 p\. m\./)).toBeInTheDocument();
+  // La fecha va en el bloque de la izquierda; el horario queda en texto
+  expect(within(fila).getByText('Miércoles 21 de octubre')).toHaveClass('sr-only');
+  expect(within(fila).getByText('8:00 a. m. – 12:00 p. m.')).toBeInTheDocument();
+  expect(fila.querySelector('.bg-primary-fixed')).not.toBeNull();
   const cerrada = screen.getByRole('button', { name: /Clasificar ropa/ });
   expect(within(cerrada).getByText('Cerrada')).toBeInTheDocument();
+  // Cerrada no admite acción: el bloque va en gris
+  expect(cerrada.querySelector('.bg-primary-fixed')).toBeNull();
+});
+
+it('sin jornadas, el vacío lleva el calendario', async () => {
+  responderSegun({ 'GET /api/turnos/gestion/jornadas': [] });
+  pantalla();
+  expect(
+    await screen.findByRole('img', { name: 'Calendario con una planta que brota' }),
+  ).toBeInTheDocument();
 });
 
 it('«Nueva jornada» abre el formulario y al crear vuelve a la lista con las nuevas', async () => {

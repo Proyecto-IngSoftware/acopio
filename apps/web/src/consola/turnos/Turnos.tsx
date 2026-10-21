@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useJornadasGestion, type JornadaGestion, type PestanaGestion } from '../../api/turnos';
+import { BloqueFecha } from '../../componentes/BloqueFecha';
 import { Boton } from '../../componentes/Boton';
 import { EstadoError } from '../../componentes/EstadoError';
 import { EstadoVacio } from '../../componentes/EstadoVacio';
@@ -16,19 +17,6 @@ type Vista =
   | { tipo: 'lista' }
   | { tipo: 'formulario'; jornada: JornadaGestion | null }
   | { tipo: 'detalle'; jornada: JornadaGestion };
-
-/** «Mié 21 oct», en Bogotá. */
-function diaCorto(iso: string): string {
-  const partes = new Intl.DateTimeFormat('es-CO', {
-    timeZone: 'America/Bogota',
-    weekday: 'short',
-    day: 'numeric',
-    month: 'short',
-  }).formatToParts(new Date(iso));
-  const de = (t: string) => (partes.find((p) => p.type === t)?.value ?? '').replace('.', '');
-  const dia = de('weekday');
-  return `${dia.charAt(0).toUpperCase()}${dia.slice(1)} ${de('day')} ${de('month')}`;
-}
 
 /** El estado de la jornada como lo ve quien la gestiona. */
 export function MarcaGestion({ jornada }: { jornada: JornadaGestion }) {
@@ -87,7 +75,7 @@ export function Turnos() {
       {isPending && <Esqueleto etiqueta="Cargando las jornadas" />}
       {error && <EstadoError mensaje={error.message} alReintentar={() => void refetch()} />}
       {data && data.length === 0 && (
-        <EstadoVacio titulo="No hay jornadas aquí">
+        <EstadoVacio titulo="No hay jornadas aquí" ilustracion="calendario">
           {pestana === 'proximas'
             ? 'Crea una jornada para que la gente reserve su cupo.'
             : 'Las jornadas aparecen aquí según su fecha.'}
@@ -99,14 +87,18 @@ export function Turnos() {
             <button
               type="button"
               onClick={() => fijarVista({ tipo: 'detalle', jornada: j })}
-              className="flex w-full items-center gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md text-left"
+              className="toque flex w-full items-center gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md text-left"
             >
+              <BloqueFecha
+                fecha={j.inicio}
+                apagado={pestana === 'pasadas' || j.motivoSinReserva !== null}
+              />
               <span className="flex min-w-0 flex-1 flex-col gap-1">
                 <MarcaGestion jornada={j} />
                 <span className="text-body-lg font-semibold text-on-surface">{j.titulo}</span>
-                <span className="flex items-center gap-1 text-body-sm text-on-surface-variant">
-                  <Icono nombre="event" className="text-[16px]" />
-                  {diaCorto(j.inicio)} · {rangoHoras(j.inicio, j.fin)}
+                <span className="flex items-center gap-1 text-body-sm text-on-surface-variant tabular-nums">
+                  <Icono nombre="schedule" className="text-[16px]" />
+                  {rangoHoras(j.inicio, j.fin)}
                 </span>
                 <span className="flex items-center gap-1 text-body-sm text-on-surface-variant">
                   <Icono
