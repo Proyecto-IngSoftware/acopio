@@ -20,8 +20,12 @@ cambios a la memoria y al archivo global están propuestos y esperan el visto bu
 |---|---|
 | PR de la rama `auditoria-prompts` | `CLAUDE.md`: la lista de módulos incluye `turnos` e `importacion`, y el CI construye las imágenes de la API y de la web. `vista-general.md` deja de decir que falta `importacion`. Nace [P-088](../../01-requerimientos/pendientes.md#p-088--la-fusión-automática-no-consulta-las-alertas-de-code-scanning). La prueba de Jornadas fija la fecha y ya no depende del día en que corre. |
 | PR de la rama `revisar-plan-fecha` | `scripts/revisar-plan.mjs` lee la fecha de una fila solo en su columna «Fecha». Antes tomaba cualquier fecha del texto, y la fila 20 del plan de acción salía vencida por el nombre del plan que enlaza (`2026-10-20-presentaciones.md`), cuando su fecha es el 15 de noviembre. |
+| PR de la rama `fusion-con-code-scanning` | Resuelve [P-088](../../01-requerimientos/pendientes.md#p-088--la-fusión-automática-no-consulta-las-alertas-de-code-scanning): el comando de fusión del `CLAUDE.md` y el de `.claude/hooks/fusionar-tras-pr.mjs` exigen cero alertas abiertas de code scanning antes de `gh pr review`. |
 
-No hubo cambios fuera del repositorio.
+Fuera del repositorio, con el visto bueno de Joseph, se corrigió la memoria del proyecto:
+`issues-como-plan-de-trabajo` ya no nombra issues cerrados y remite al plan de acción,
+`stitch-modelo-rapido` quedó en una sola versión sin contradicciones (con su línea del índice) y
+`fusionar-tras-pr` describe el comando nuevo.
 
 ## Pruebas
 
@@ -51,18 +55,9 @@ tipos y la suite completa de la web.
 
 ## Pendiente
 
-- Consultar las alertas de code scanning antes de la fusión automática
-  ([P-088](../../01-requerimientos/pendientes.md#p-088--la-fusión-automática-no-consulta-las-alertas-de-code-scanning)).
+Nada. P-088 y los dos cambios de memoria quedaron hechos en la misma sesión. El `CLAUDE.md`
+global no tuvo hallazgos que pidieran cambios.
 
 ## Depende de Joseph
 
-Estos cambios quedan fuera del repositorio y esperan su visto bueno en la sesión:
-
-- Memoria `issues-como-plan-de-trabajo`: nombra como pendientes los issues #34, #35, #36, #38
-  y #42, que ya están cerrados. La propuesta es quitar la lista y remitir al
-  [plan de acción](../../05-planes/plan-de-accion.md) y a las etiquetas `bloque-N` y `deuda`.
-- Memoria `stitch-modelo-rapido`: las entradas del 15, el 17 y el 18 de octubre se contradicen
-  sobre `list_screens` y sobre pedir una o varias pantallas por llamada. La propuesta es dejar
-  una sola versión con lo último que se comprobó, y corregir su línea en el índice `MEMORY.md`.
-- `CLAUDE.md` global: no tiene hallazgos que pidan cambios. El bloque de graphify repite lo que
-  ya hace la skill y puede quedarse.
+Nada.
