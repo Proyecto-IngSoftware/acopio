@@ -107,3 +107,19 @@ it('sin remisiones, el vacío lleva la caja con folio', async () => {
     await screen.findByRole('img', { name: 'Caja con una etiqueta de folio' }),
   ).toBeInTheDocument();
 });
+
+it('al filtrar, las filas entran escalonadas en el orden que da la API', async () => {
+  responderSegun({
+    'GET /api/remisiones': [remision({}), GENERAL],
+    'GET /api/ubicaciones/mias': [],
+  });
+  pantalla();
+  await screen.findByRole('link', { name: /R-2026-K4P7Q/ });
+  const filas = screen.getAllByRole('listitem');
+  expect(filas.map((f) => within(f).getByRole('link').textContent)).toEqual([
+    expect.stringContaining('R-2026-K4P7Q'),
+    expect.stringContaining('R-2026-M2X9D'),
+  ]);
+  expect(filas.every((f) => f.classList.contains('entra-lista'))).toBe(true);
+  expect(filas[1]).toHaveStyle({ animationDelay: '60ms' });
+});

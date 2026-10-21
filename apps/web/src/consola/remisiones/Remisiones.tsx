@@ -11,6 +11,7 @@ import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
 import { EstadoVacio } from '../../componentes/EstadoVacio';
 import { Icono } from '../../componentes/Icono';
+import { retrasoEntrada } from '../../componentes/movimiento';
 import { Pildora } from '../../componentes/Pildora';
 import { haceCuanto } from '../../formato';
 import { useSesion } from '../../sesion/Sesion';
@@ -117,9 +118,9 @@ export function Remisiones() {
             : 'Cuando haya, aparecen aquí.'}
         </EstadoVacio>
       )}
-      <ul className="flex flex-col gap-space-sm">
-        {visibles.map((r) => (
-          <li key={r.id}>
+      <ul key={`${estado}-${zona}`} className="flex flex-col gap-space-sm">
+        {visibles.map((r, i) => (
+          <li key={r.id} className="entra-lista" style={retrasoEntrada(i)}>
             <Fila r={r} />
           </li>
         ))}
