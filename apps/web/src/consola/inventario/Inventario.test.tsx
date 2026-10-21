@@ -105,6 +105,9 @@ describe('C3 Inventario', () => {
   it('sin inventario dice qué aparecerá y cómo empezar', async () => {
     pantalla('OPERADOR', []);
     expect(await screen.findByText('Todavía no hay inventario')).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', { name: 'Cajas de ayuda ordenadas en una bodega' }),
+    ).toBeInTheDocument();
   });
 
   it('no tiene violaciones graves', async () => {

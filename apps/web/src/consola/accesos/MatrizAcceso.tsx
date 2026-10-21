@@ -277,7 +277,7 @@ export function MatrizAcceso() {
       )}
       {!error && !matriz && <Esqueleto etiqueta="Cargando la matriz" className="h-48" />}
       {matriz && matriz.columnas.length === 0 && (
-        <EstadoVacio titulo="Todavía no hay acopios ni zonas">
+        <EstadoVacio ilustracion="cajas" titulo="Todavía no hay acopios ni zonas">
           Cuando el Administrador cree acopios o zonas y asigne personas, aquí se verá quién puede
           tocar cada uno.
         </EstadoVacio>

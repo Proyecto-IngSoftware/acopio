@@ -175,7 +175,7 @@ export function Motor() {
         />
       )}
       {consulta.data && lista.length === 0 && (
-        <EstadoVacio titulo="El motor no encontró traslados que hacer">
+        <EstadoVacio ilustracion="cajas" titulo="El motor no encontró traslados que hacer">
           Recalcula cuando cambie el inventario o la necesidad de una zona.
         </EstadoVacio>
       )}

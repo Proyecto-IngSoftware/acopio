@@ -72,7 +72,13 @@ describe('lista', () => {
     expect(fila).toHaveTextContent('Receptor');
     expect(fila).toHaveTextContent('Invitación pendiente');
     expect(fila).toHaveAttribute('href', '/consola/usuarios/u2');
-    expect(screen.getByRole('link', { name: /Ana Pérez/ })).toHaveTextContent('Suspendido');
+    const suspendida = screen.getByRole('link', { name: /Ana Pérez/ });
+    expect(suspendida).toHaveTextContent('Suspendido');
+    // Desactivada: atenuada y con su etiqueta en gris sólido
+    expect(suspendida).toHaveClass('opacity-70');
+    expect(within(suspendida).getByText('Suspendido').closest('span')).toHaveClass(
+      'bg-surface-container-high',
+    );
   });
 
   it('los filtros y la búsqueda van a la API', async () => {

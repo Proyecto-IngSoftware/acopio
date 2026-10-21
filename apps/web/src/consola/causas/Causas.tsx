@@ -60,7 +60,7 @@ export function CausaConsola() {
   if (!causa)
     return (
       <div className="flex flex-col gap-space-md">
-        <EstadoVacio titulo="No encontramos esa causa">
+        <EstadoVacio ilustracion="cajas" titulo="No encontramos esa causa">
           Puede que el enlace esté mal escrito.
         </EstadoVacio>
         <Link to="/consola/causas" className="text-label-md text-primary">
@@ -109,7 +109,7 @@ function Lista({ alNueva, alAbrir }: { alNueva: () => void; alAbrir: (c: CausaGe
       {isPending && <Esqueleto etiqueta="Cargando las causas" />}
       {error && <EstadoError mensaje={error.message} alReintentar={() => void refetch()} />}
       {data && data.length === 0 && (
-        <EstadoVacio titulo="No hay causas aquí">
+        <EstadoVacio ilustracion="cajas" titulo="No hay causas aquí">
           {estado === 'atendidas'
             ? 'Las causas aparecen aquí cuando cierran.'
             : 'Publica una causa de una entidad verificada.'}

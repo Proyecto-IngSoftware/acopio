@@ -56,7 +56,10 @@ export function DocumentoRemision() {
         />
       )}
       {consulta.data && !conDocumento && (
-        <EstadoVacio titulo="Esta remisión no tiene documento: se imprime al despacharla.">
+        <EstadoVacio
+          ilustracion="caja-folio"
+          titulo="Esta remisión no tiene documento: se imprime al despacharla."
+        >
           Vuelve a la remisión para despacharla.
         </EstadoVacio>
       )}

@@ -111,7 +111,7 @@ export function Remisiones() {
         />
       )}
       {consulta.data && visibles.length === 0 && (
-        <EstadoVacio titulo={`No hay remisiones ${nombreEstado}`}>
+        <EstadoVacio ilustracion="caja-folio" titulo={`No hay remisiones ${nombreEstado}`}>
           {estado === 'BORRADOR'
             ? 'Aprueba sugerencias en el motor o crea una remisión a mano.'
             : 'Cuando haya, aparecen aquí.'}

@@ -185,7 +185,7 @@ function Acciones({
   const [motivo, fijarMotivo] = useState('');
   if (jornada.estado === 'CANCELADA')
     return (
-      <EstadoVacio titulo="Esta jornada está cancelada">
+      <EstadoVacio titulo="Esta jornada está cancelada" ilustracion="calendario">
         No se puede cambiar. Quienes reservaron ven el motivo en su enlace.
       </EstadoVacio>
     );

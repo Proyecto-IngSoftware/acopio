@@ -113,7 +113,7 @@ export function EditorLineas({
   const filas = filasDe(excedentes.data, propias);
   if (filas.length === 0) {
     return (
-      <EstadoVacio titulo="Este acopio no tiene excedente para mandar">
+      <EstadoVacio ilustracion="caja-folio" titulo="Este acopio no tiene excedente para mandar">
         El excedente aparece cuando el saldo pasa del máximo del umbral.
       </EstadoVacio>
     );

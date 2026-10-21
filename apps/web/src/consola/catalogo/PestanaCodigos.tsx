@@ -242,6 +242,7 @@ export function PestanaCodigos({ agregar, alAgregar }: Props) {
       )}
       {codigos.data && visibles.length === 0 && (
         <EstadoVacio
+          ilustracion="cajas"
           titulo={
             q
               ? 'Ningún código coincide.'

@@ -117,7 +117,7 @@ export function Comprobantes() {
       ) : bandeja.error ? (
         <EstadoError mensaje={bandeja.error.message} alReintentar={() => void bandeja.refetch()} />
       ) : bandeja.data.comprobantes.length === 0 ? (
-        <EstadoVacio titulo={vacio}>
+        <EstadoVacio ilustracion="caja-folio" titulo={vacio}>
           Aquí aparecen las donaciones recibidas en los acopios que puedes revisar.
         </EstadoVacio>
       ) : (

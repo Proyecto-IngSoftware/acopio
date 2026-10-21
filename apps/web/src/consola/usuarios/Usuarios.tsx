@@ -81,7 +81,9 @@ export function Usuarios() {
             <li key={u.id}>
               <Link
                 to={`/consola/usuarios/${u.id}`}
-                className="flex items-center gap-space-md rounded-xl bg-surface-container-lowest p-space-md shadow-sm active:bg-surface-container"
+                className={`toque flex items-center gap-space-md rounded-xl bg-surface-container-lowest p-space-md shadow-sm active:bg-surface-container ${
+                  u.estado === 'SUSPENDIDO' ? 'opacity-70' : ''
+                }`}
               >
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-primary-fixed text-label-md font-bold text-primary-container">
                   {iniciales(u.nombre)}

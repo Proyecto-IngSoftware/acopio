@@ -51,7 +51,7 @@ export function NuevaRemision() {
         error={crear.error}
       />
       {!admin && !acopioId && (
-        <EstadoVacio titulo="Elige un acopio para armar la remisión">
+        <EstadoVacio ilustracion="caja-folio" titulo="Elige un acopio para armar la remisión">
           Las remisiones salen de un acopio. Cambia la ubicación activa en la cabecera.
         </EstadoVacio>
       )}

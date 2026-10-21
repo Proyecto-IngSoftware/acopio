@@ -51,7 +51,10 @@ function Informe({ informe }: { informe: InformeDescartes }) {
   const [todos, fijarTodos] = useState(false);
   if (informe.total === 0) {
     return (
-      <EstadoVacio titulo={`Nadie descartó sugerencias en los últimos ${DIAS} días`}>
+      <EstadoVacio
+        ilustracion="cajas"
+        titulo={`Nadie descartó sugerencias en los últimos ${DIAS} días`}
+      >
         Cuando el Administrador descarte una sugerencia, su motivo aparece aquí.
       </EstadoVacio>
     );

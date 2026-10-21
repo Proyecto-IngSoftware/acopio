@@ -62,7 +62,10 @@ export function Entidades() {
       {isPending && <Esqueleto etiqueta="Cargando entidades" />}
       {error && <EstadoError mensaje={error.message} alReintentar={() => void refetch()} />}
       {data && visibles.length === 0 && (
-        <EstadoVacio titulo={q ? 'Ninguna entidad coincide' : 'Todavía no hay entidades'}>
+        <EstadoVacio
+          ilustracion="cajas"
+          titulo={q ? 'Ninguna entidad coincide' : 'Todavía no hay entidades'}
+        >
           {q ? 'Prueba con otro nombre.' : 'Crea la primera para poder registrar acopios.'}
         </EstadoVacio>
       )}

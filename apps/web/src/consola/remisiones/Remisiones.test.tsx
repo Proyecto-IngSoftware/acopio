@@ -99,3 +99,11 @@ it('no tiene violaciones graves de accesibilidad', async () => {
   expect(await violacionesGraves(container)).toEqual([]);
   expect(within(container).getAllByRole('button').length).toBeGreaterThan(0);
 });
+
+it('sin remisiones, el vacío lleva la caja con folio', async () => {
+  responderSegun({ 'GET /api/remisiones': [], 'GET /api/ubicaciones/mias': [] });
+  pantalla();
+  expect(
+    await screen.findByRole('img', { name: 'Caja con una etiqueta de folio' }),
+  ).toBeInTheDocument();
+});

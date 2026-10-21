@@ -104,7 +104,7 @@ export function Inventario() {
         <EstadoError mensaje={saldos.error.message} alReintentar={() => void saldos.refetch()} />
       )}
       {saldos.data && saldos.data.length === 0 && (
-        <EstadoVacio titulo="Todavía no hay inventario">
+        <EstadoVacio ilustracion="cajas" titulo="Todavía no hay inventario">
           Aquí aparecerá cada categoría con su saldo y su estado en cuanto se registre la primera
           entrada.
         </EstadoVacio>
