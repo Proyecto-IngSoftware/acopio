@@ -5,6 +5,7 @@ import { pendientesDeResolver, useReportar, useReportesZona } from '../../api/re
 import { Boton } from '../../componentes/Boton';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
+import { EstadoVacio } from '../../componentes/EstadoVacio';
 import { Icono } from '../../componentes/Icono';
 import { Segmentado } from '../../componentes/Segmentado';
 import { haceCuanto } from '../../formato';
@@ -171,9 +172,9 @@ function Formulario({
         </label>
       )}
       {!falta && pendientes.length === 0 ? (
-        <p className="rounded-xl bg-surface-container-low p-space-md text-body-md text-on-surface-variant">
+        <EstadoVacio titulo="Sin necesidades reportadas" ilustracion="mapa">
           No hay necesidades reportadas en esta zona.
-        </p>
+        </EstadoVacio>
       ) : (
         <fieldset
           aria-label="Categorías"

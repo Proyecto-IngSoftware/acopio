@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { formatearCantidad } from '@acopio/shared';
 import { Boton } from '../componentes/Boton';
 import { Hoja } from '../componentes/Hoja';
+import { EstadoVacio } from '../componentes/EstadoVacio';
 import { Icono } from '../componentes/Icono';
 import { useSesion } from '../sesion/Sesion';
 import { useCategoriasLocales } from '../sin-conexion/busqueda-local';
@@ -74,9 +75,9 @@ export function SinSincronizar() {
       )}
 
       {!isPending && cola?.length === 0 && (
-        <p className="rounded-xl bg-surface-container-low p-space-md text-body-md text-on-surface-variant">
+        <EstadoVacio titulo="Todo enviado" ilustracion="cajas">
           No hay entradas sin enviar.
-        </p>
+        </EstadoVacio>
       )}
 
       {pendientes.length > 0 && (

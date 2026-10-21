@@ -7,6 +7,7 @@ import type { Remision } from '../../api/remisiones';
 import { EnlaceBoton } from '../../componentes/Boton';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
+import { EstadoVacio } from '../../componentes/EstadoVacio';
 import { Icono } from '../../componentes/Icono';
 import { Segmentado } from '../../componentes/Segmentado';
 import { haceCuanto } from '../../formato';
@@ -64,10 +65,9 @@ export function MiZona() {
         />
       )}
       {ubicaciones.data && !elegida && (
-        <p className={AVISO}>
-          <Icono nombre="info" className="text-[22px] text-on-surface-variant" />
+        <EstadoVacio titulo="Sin zona asignada" ilustracion="mapa">
           Todavía no tienes una zona asignada. Pídele al Administrador que te asigne una.
-        </p>
+        </EstadoVacio>
       )}
       {zonas.length > 1 && elegida && (
         <Segmentado
@@ -141,10 +141,9 @@ function PorRecibir({ zonaId }: { zonaId: string }) {
         />
       )}
       {remisiones?.length === 0 && (
-        <p className={AVISO}>
-          <Icono nombre="inbox" className="text-[22px] text-on-surface-variant" />
+        <EstadoVacio titulo="Nada en camino" ilustracion="caja-folio">
           No hay remisiones en camino a tu zona.
-        </p>
+        </EstadoVacio>
       )}
       {n > 0 && (
         <ul className="flex flex-col gap-space-xs">
