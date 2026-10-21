@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-10-20 | [2026-10-20-escanear-en-c18](2026-10-20-escanear-en-c18.md) | Escanear códigos con la cámara en C18, Códigos de barras |
 | 2026-10-20 | [2026-10-20-mapa-de-necesidades](2026-10-20-mapa-de-necesidades.md) | Mapa de necesidades: etiquetas de falta y sobra en P5 y mapa de voluntariado |
 | 2026-10-20 | [2026-10-20-hallazgos-ronda](2026-10-20-hallazgos-ronda.md) | Hallazgos de la ronda, escáner y presentaciones de códigos con selector de unidades |
 | 2026-10-19 | [2026-10-19-entrada-unica](2026-10-19-entrada-unica.md) | Una sola pantalla para entrar e identidad migrado a DAO |

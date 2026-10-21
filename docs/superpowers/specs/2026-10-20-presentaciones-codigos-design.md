@@ -298,3 +298,8 @@ Lo que cambió respecto del diseño al construirlo (2026-10-20):
   si el código sigue propuesto, en Arroz y sin presentación.
 - Lo menor que quedó para después está en [P-084](../../01-requerimientos/pendientes.md), y la
   pantalla para editar presentaciones en [P-085](../../01-requerimientos/pendientes.md).
+- **C18 escanea.** El pie de «Códigos de barras» decía «Escaneando o escribiendo el número», pero
+  «Agregar código» solo dejaba escribirlo. Ahora tiene «Escanear» y «Escribir el número», y el
+  botón del título abre la cámara. Un código que ya existe abre el detalle de su presentación en
+  vez de la hoja «Código nuevo». El detalle está en la nota de
+  [C18 Códigos de barras](../../03-diseno/stitch/C18-codigos-barras/README.md).
