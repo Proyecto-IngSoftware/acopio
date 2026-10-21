@@ -276,7 +276,7 @@ export function Mapa() {
         <EstadoError mensaje={acopios.error.message} alReintentar={() => void acopios.refetch()} />
       )}
       {acopios.data && visibles.length === 0 && referenciados.length === 0 && (
-        <EstadoVacio titulo="Ningún acopio con esos filtros">
+        <EstadoVacio titulo="Ningún acopio con esos filtros" ilustracion="mapa">
           Quita algún filtro para ver más acopios.
         </EstadoVacio>
       )}

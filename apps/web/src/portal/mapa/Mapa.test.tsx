@@ -568,3 +568,12 @@ describe('puntos de RedAcopio (pieza E)', () => {
     expect(await violacionesGraves(container)).toEqual([]);
   });
 });
+
+it('sin acopios con esos filtros, el vacío lleva el mapa', async () => {
+  responderSegun({ ...RESPUESTAS, 'GET /api/acopios': [] });
+  pantalla('/mapa?vista=lista&referenciados=no');
+  expect(await screen.findByText('Ningún acopio con esos filtros')).toBeInTheDocument();
+  expect(
+    screen.getByRole('img', { name: 'Mapa de curvas de nivel con un punto marcado' }),
+  ).toBeInTheDocument();
+});

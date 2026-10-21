@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { useCausasAtendidas, type CategoriaCausa } from '../../api/causas';
 import { EstadoError } from '../../componentes/EstadoError';
 import { EstadoVacio } from '../../componentes/EstadoVacio';
+import { retrasoEntrada } from '../../componentes/movimiento';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { Icono } from '../../componentes/Icono';
 import { Chips, TarjetaCausa } from './piezas';
@@ -43,11 +44,15 @@ export function Atendidas() {
           alReintentar={() => void refetch()}
         />
       ) : data.length === 0 ? (
-        <EstadoVacio titulo="Todavía no hay causas atendidas">
+        <EstadoVacio titulo="Todavía no hay causas atendidas" ilustracion="cajas">
           Aquí aparecen las causas cuando cierran.
         </EstadoVacio>
       ) : (
-        data.map((c) => <TarjetaCausa key={c.id} causa={c} />)
+        data.map((c, i) => (
+          <div key={c.id} className="entra-lista" style={retrasoEntrada(i)}>
+            <TarjetaCausa causa={c} />
+          </div>
+        ))
       )}
     </div>
   );

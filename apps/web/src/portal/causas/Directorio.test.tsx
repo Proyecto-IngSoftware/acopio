@@ -4,6 +4,7 @@ import { violacionesGraves } from '../../pruebas/accesibilidad';
 import { causaDePrueba } from '../../pruebas/datos-causas';
 import { envolver, peticiones, responderSegun } from '../../pruebas/utilidades';
 import { Directorio } from './Directorio';
+import { ImagenCausa } from './piezas';
 
 const DOS = [
   causaDePrueba(),
@@ -151,4 +152,27 @@ describe('otras plataformas que ayudan (al final de Causas)', () => {
     await screen.findByRole('region', { name: 'Otras plataformas que ayudan' });
     expect(await violacionesGraves(container)).toEqual([]);
   });
+});
+
+it('sin causas, el vacío lleva las cajas', async () => {
+  responderSegun({ 'GET /api/causas': [] });
+  render(envolver(<Directorio />, '/causas'));
+  expect(
+    await screen.findByRole('img', { name: 'Cajas de ayuda ordenadas en una bodega' }),
+  ).toBeInTheDocument();
+});
+
+it('una causa sin foto lleva el mapa si es de rescatistas y las cajas si no', () => {
+  const { container, rerender } = render(
+    <ImagenCausa causa={causaDePrueba({ categoria: 'RESCATISTAS' })} />,
+  );
+  expect(
+    container.querySelector('svg[aria-label="Mapa de curvas de nivel con un punto marcado"]'),
+  ).not.toBeNull();
+  rerender(<ImagenCausa causa={causaDePrueba({ categoria: 'ANIMALES' })} />);
+  expect(
+    container.querySelector('svg[aria-label="Cajas de ayuda ordenadas en una bodega"]'),
+  ).not.toBeNull();
+  // La imagen es decorativa: el lector de pantalla no la anuncia
+  expect(container.firstElementChild).toHaveAttribute('aria-hidden', 'true');
 });
