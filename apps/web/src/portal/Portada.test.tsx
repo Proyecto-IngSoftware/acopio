@@ -77,6 +77,65 @@ describe('con emergencias', () => {
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
+  describe('título con la necesidad del día', () => {
+    const agua = { categoriaId: 'c1', categoria: 'Agua potable', acopios: 1 };
+    const aseo = { categoriaId: 'c2', categoria: 'Kit de aseo', acopios: 1 };
+    const necesidad = (acopioId: string, faltan: { categoriaId: string; categoria: string }[]) => ({
+      acopioId,
+      faltan,
+      sobran: [],
+      alDia: [],
+      noRecibe: [],
+    });
+    const con = (balance: unknown, necesidades: unknown) =>
+      responderSegun({
+        'GET /api/emergencias': DOS,
+        'GET /api/publico/balance': balance,
+        'GET /api/publico/necesidades': necesidades,
+        'GET /api/turnos/jornadas': [],
+      });
+
+    it('dice cuántas categorías faltan y en cuántos acopios', async () => {
+      con({ faltan: [agua, aseo], noTraigan: [] }, [
+        necesidad('x', [agua, aseo]),
+        necesidad('y', []),
+      ]);
+      render(envolver(<Portada />));
+      expect(
+        await screen.findByRole('heading', {
+          level: 1,
+          name: 'Hoy faltan 2 categorías en 1 acopio.',
+        }),
+      ).toBeInTheDocument();
+    });
+
+    it('con una sola categoría, la frase completa no se corta en la cifra repetida', async () => {
+      con({ faltan: [agua], noTraigan: [] }, [necesidad('x', [agua])]);
+      const { container } = render(envolver(<Portada />));
+      await screen.findByRole('heading', { level: 1, name: 'Hoy falta 1 categoría en 1 acopio.' });
+      expect(container.querySelector('h1 [aria-hidden]')).toHaveTextContent(
+        'Hoy falta 1 categoría en 1 acopio.',
+      );
+    });
+
+    it('sin faltantes, el título lo dice', async () => {
+      con(BALANCE_VACIO, []);
+      render(envolver(<Portada />));
+      expect(
+        await screen.findByRole('heading', {
+          level: 1,
+          name: 'Hoy ningún acopio reporta faltantes.',
+        }),
+      ).toBeInTheDocument();
+    });
+
+    it('muestra el punto en vivo con el origen de los datos', async () => {
+      con(BALANCE_VACIO, []);
+      render(envolver(<Portada />));
+      expect(await screen.findByText('Datos de los acopios')).toBeInTheDocument();
+    });
+  });
+
   it('sin jornadas ni reportes, sus bloques lo dicen y no inventan datos', async () => {
     responder(DOS);
     render(envolver(<Portada />));

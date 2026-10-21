@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Emergencia } from '../../api/emergencias';
+import { Desplegable } from '../../componentes/Desplegable';
 import { Icono } from '../../componentes/Icono';
 
 interface Props {
@@ -26,7 +27,7 @@ export function SelectorEmergencia({ emergencias, elegida, alElegir }: Props) {
         aria-expanded={varias ? abierto : undefined}
         onClick={() => varias && fijarAbierto(!abierto)}
         onKeyDown={(e) => e.key === 'Escape' && fijarAbierto(false)}
-        className="flex min-h-[48px] w-full items-center justify-between rounded-xl bg-primary-container px-space-md py-space-xs text-left text-on-primary shadow-sm"
+        className="toque flex min-h-[56px] w-full items-center justify-between rounded-[14px] bg-primary-container px-[14px] py-2.5 text-left text-on-primary shadow-sm"
       >
         <span className="flex min-w-0 flex-col">
           <span className="text-label-caps tracking-wider text-primary-fixed uppercase">
@@ -34,52 +35,59 @@ export function SelectorEmergencia({ emergencias, elegida, alElegir }: Props) {
           </span>
           <span className="text-headline-sm font-bold break-words">{elegida.nombre}</span>
         </span>
-        {varias && <Icono nombre="expand_more" className="text-[24px] text-primary-fixed-dim" />}
+        {varias && (
+          <Icono
+            nombre="expand_more"
+            className={`gira text-[24px] text-primary-fixed-dim ${abierto ? 'abierto' : ''}`}
+          />
+        )}
       </button>
-      {varias && abierto && (
-        <div
-          role="menu"
-          aria-label="Emergencias"
-          className="mt-space-xs flex flex-col gap-space-xs rounded-xl bg-surface-container-lowest p-space-sm text-on-surface shadow-lg"
-        >
-          <p className="p-space-xs text-label-caps text-on-surface-variant uppercase">
-            Seleccionar otra emergencia
-          </p>
-          {emergencias.map((e) => {
-            const actual = e.id === elegida.id;
-            return (
-              <button
-                key={e.id}
-                type="button"
-                role="menuitemradio"
-                aria-checked={actual}
-                onClick={() => {
-                  alElegir(e.id);
-                  fijarAbierto(false);
-                }}
-                className={`flex min-h-[48px] items-center justify-between rounded-lg p-space-sm text-left ${
-                  actual ? 'bg-surface-container-high' : 'hover:bg-surface-container'
-                }`}
-              >
-                <span className="flex flex-col">
-                  <span
-                    className={`text-label-md font-bold ${actual ? 'text-primary' : 'text-on-surface'}`}
-                  >
-                    {e.nombre}
+      {varias && (
+        <Desplegable abierto={abierto}>
+          <div
+            role="menu"
+            aria-label="Emergencias"
+            className="mt-space-xs flex flex-col gap-space-xs rounded-xl bg-surface-container-lowest p-space-sm text-on-surface shadow-lg"
+          >
+            <p className="p-space-xs text-label-caps text-on-surface-variant uppercase">
+              Seleccionar otra emergencia
+            </p>
+            {emergencias.map((e) => {
+              const actual = e.id === elegida.id;
+              return (
+                <button
+                  key={e.id}
+                  type="button"
+                  role="menuitemradio"
+                  aria-checked={actual}
+                  onClick={() => {
+                    alElegir(e.id);
+                    fijarAbierto(false);
+                  }}
+                  className={`flex min-h-[48px] items-center justify-between rounded-lg p-space-sm text-left ${
+                    actual ? 'bg-surface-container-high' : 'hover:bg-surface-container'
+                  }`}
+                >
+                  <span className="flex flex-col">
+                    <span
+                      className={`text-label-md font-bold ${actual ? 'text-primary' : 'text-on-surface'}`}
+                    >
+                      {e.nombre}
+                    </span>
+                    {e.estado === 'EN_SEGUIMIENTO' && (
+                      <span className="text-body-sm text-on-surface-variant">En seguimiento</span>
+                    )}
                   </span>
-                  {e.estado === 'EN_SEGUIMIENTO' && (
-                    <span className="text-body-sm text-on-surface-variant">En seguimiento</span>
-                  )}
-                </span>
-                <Icono
-                  nombre={actual ? 'check_circle' : 'chevron_right'}
-                  relleno={actual}
-                  className={`text-[20px] ${actual ? 'text-primary' : 'text-outline'}`}
-                />
-              </button>
-            );
-          })}
-        </div>
+                  <Icono
+                    nombre={actual ? 'check_circle' : 'chevron_right'}
+                    relleno={actual}
+                    className={`text-[20px] ${actual ? 'text-primary' : 'text-outline'}`}
+                  />
+                </button>
+              );
+            })}
+          </div>
+        </Desplegable>
       )}
     </div>
   );
