@@ -13,16 +13,19 @@ import { EstadoVacio } from '../../componentes/EstadoVacio';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
+import { Boton } from '../../componentes/Boton';
 import { Segmentado } from '../../componentes/Segmentado';
-import { diaBogota, diaSemana } from '../../formato';
+import { TiraDias } from '../../componentes/TiraDias';
+import { retrasoEntrada } from '../../componentes/movimiento';
+import { diaBogota, diasDeLaTira, type DiaTira } from '../../formato';
 import { estadoCupos, porLugar, type EstadoCupos } from './cupos';
 // El mapa es la vista por defecto y esta pantalla ya se descarga al abrirla (rutas.tsx): Leaflet
 // viaja en su mismo fragmento y así se ahorra una ida y vuelta en 3G, como en P5 (I-02)
 import MapaJornadas from './MapaJornadas';
 import { NOMBRE_PERFIL } from './piezas';
-import { TarjetaJornada } from './TarjetaJornada';
+import { FilaJornada } from './FilaJornada';
 
-type Clave = 'lugar' | 'dia' | 'perfil';
+type Clave = 'lugar' | 'perfil';
 type Chip = 'todas' | Exclude<EstadoCupos, 'llena'>;
 const leerChip = (v: string | null): Chip => (v === 'faltan' || v === 'cupos' ? v : 'todas');
 // El mismo patrón que `z.uuid()` de la API: con el dígito de versión y la variante
@@ -81,9 +84,7 @@ export function Jornadas() {
   const acopio = useAcopio(filtro.acopio ?? '', sinOpcion && todas.isSuccess);
   if (sinOpcion && acopio.data)
     lugares.push({ valor: `acopio:${acopio.data.id}`, texto: acopio.data.nombre });
-  const dias = unicos(
-    (todas.data ?? []).map((j) => ({ valor: diaBogota(j.inicio), texto: diaSemana(j.inicio) })),
-  );
+  const tira = tiraDe(todas.data ?? []);
   const perfiles = Object.entries(NOMBRE_PERFIL).map(([valor, texto]) => ({ valor, texto }));
 
   const lugarActual = filtro.acopio
@@ -93,14 +94,12 @@ export function Jornadas() {
       : null;
   const actual: Record<Clave, string | null> = {
     lugar: lugarActual,
-    dia: filtro.desde ?? null,
     perfil: filtro.perfil ?? null,
   };
-  const opciones: Record<Clave, Opcion[]> = { lugar: lugares, dia: dias, perfil: perfiles };
-  const nombres: Record<Clave, string> = { lugar: 'Lugar', dia: 'Día', perfil: 'Perfil' };
+  const opciones: Record<Clave, Opcion[]> = { lugar: lugares, perfil: perfiles };
+  const nombres: Record<Clave, string> = { lugar: 'Lugar', perfil: 'Perfil' };
   const titulos: Record<Clave, string> = {
     lugar: 'Dónde',
-    dia: 'Qué día',
     perfil: 'Perfil que pide la jornada',
   };
 
@@ -126,7 +125,8 @@ export function Jornadas() {
     abrir(null);
   }
 
-  const hayFiltro = Object.values(actual).some(Boolean) || chip !== 'todas';
+  const hayFiltro =
+    Object.values(actual).some(Boolean) || Boolean(filtro.desde) || chip !== 'todas';
 
   // Los chips cuentan jornadas, no lugares, y son excluyentes según la etiqueta
   const datos = jornadas.data;
@@ -162,7 +162,7 @@ export function Jornadas() {
       </header>
 
       <div className="-mx-margin flex gap-space-xs overflow-x-auto px-margin [scrollbar-width:none]">
-        {(['lugar', 'dia', 'perfil'] as const).map((clave) => {
+        {(['lugar', 'perfil'] as const).map((clave) => {
           const valor = actual[clave];
           const texto = valor
             ? (opciones[clave].find((o) => o.valor === valor)?.texto ?? nombres[clave])
@@ -174,7 +174,7 @@ export function Jornadas() {
               aria-pressed={Boolean(valor)}
               aria-haspopup="dialog"
               onClick={() => abrir(clave)}
-              className={`flex min-h-[40px] shrink-0 items-center gap-1 rounded-full border px-space-md text-label-md ${
+              className={`toque flex min-h-[40px] shrink-0 items-center gap-1 rounded-full border px-space-md text-label-md ${
                 valor
                   ? 'border-primary-container bg-primary-container text-on-primary'
                   : 'border-outline-variant bg-surface-container-lowest text-on-surface'
@@ -186,6 +186,13 @@ export function Jornadas() {
           );
         })}
       </div>
+
+      <TiraDias
+        etiqueta="Día"
+        dias={tira}
+        elegido={filtro.desde ?? 'todos'}
+        alElegir={(clave) => cambiar('dia', clave === 'todos' ? null : clave)}
+      />
 
       <Segmentado
         etiqueta="Ver como"
@@ -234,7 +241,7 @@ export function Jornadas() {
           alLimpiar={() => fijarParametros(vista === 'lista' ? { vista } : {})}
         />
       ) : vista === 'lista' ? (
-        <Lista jornadas={filtradas} />
+        <Lista key={`${filtro.desde ?? 'todos'}-${chip}`} jornadas={filtradas} />
       ) : (
         <>
           {grupos.length > 0 ? (
@@ -242,7 +249,7 @@ export function Jornadas() {
               <MapaJornadas grupos={grupos} elegido={elegido} alElegir={elegir} />
             </div>
           ) : (
-            <EstadoVacio titulo="Ninguna jornada en el mapa">
+            <EstadoVacio titulo="Ninguna jornada en el mapa" ilustracion="calendario">
               Las jornadas que se ven aquí no tienen ubicación o ya no reciben reservas. Míralas en
               la lista.
             </EstadoVacio>
@@ -264,7 +271,7 @@ export function Jornadas() {
             <section aria-label={seleccionado.lugar.nombre} className="flex flex-col gap-space-sm">
               <h2 className="text-label-md text-on-surface">{seleccionado.lugar.nombre}</h2>
               {seleccionado.jornadas.map((j) => (
-                <TarjetaJornada key={j.id} jornada={j} />
+                <FilaJornada key={j.id} jornada={j} />
               ))}
             </section>
           )}
@@ -274,27 +281,25 @@ export function Jornadas() {
       {abierta && (
         <Hoja titulo={titulos[abierta]} alCerrar={() => abrir(null)}>
           <div className="flex flex-col gap-space-xs">
-            {[{ valor: '', texto: abierta === 'dia' ? 'Cualquier día' : 'Cualquiera' }]
-              .concat(opciones[abierta])
-              .map((o) => {
-                const elegida = (actual[abierta] ?? '') === o.valor;
-                return (
-                  <button
-                    key={o.valor || 'todas'}
-                    type="button"
-                    aria-pressed={elegida}
-                    onClick={() => elegirFiltro(abierta, o.valor || null)}
-                    className={`flex min-h-[48px] items-center gap-space-sm rounded-xl border px-space-md text-left text-body-md ${
-                      elegida
-                        ? 'border-primary-container text-primary-container'
-                        : 'border-outline-variant text-on-surface'
-                    }`}
-                  >
-                    {o.texto}
-                    {elegida && <Icono nombre="check" className="ml-auto text-[20px]" />}
-                  </button>
-                );
-              })}
+            {[{ valor: '', texto: 'Cualquiera' }].concat(opciones[abierta]).map((o) => {
+              const elegida = (actual[abierta] ?? '') === o.valor;
+              return (
+                <button
+                  key={o.valor || 'todas'}
+                  type="button"
+                  aria-pressed={elegida}
+                  onClick={() => elegirFiltro(abierta, o.valor || null)}
+                  className={`flex min-h-[48px] items-center gap-space-sm rounded-xl border px-space-md text-left text-body-md ${
+                    elegida
+                      ? 'border-primary-container text-primary-container'
+                      : 'border-outline-variant text-on-surface'
+                  }`}
+                >
+                  {o.texto}
+                  {elegida && <Icono nombre="check" className="ml-auto text-[20px]" />}
+                </button>
+              );
+            })}
           </div>
         </Hoja>
       )}
@@ -305,53 +310,46 @@ export function Jornadas() {
 function SinJornadas({ hayFiltro, alLimpiar }: { hayFiltro: boolean; alLimpiar: () => void }) {
   return (
     <>
-      <EstadoVacio titulo="Por ahora no hay jornadas abiertas">
+      <EstadoVacio titulo="Por ahora no hay jornadas abiertas" ilustracion="calendario">
         {hayFiltro
           ? 'Ninguna jornada coincide con los filtros.'
           : 'Los acopios y las entidades publican aquí sus jornadas cuando necesitan manos.'}
       </EstadoVacio>
       {hayFiltro && (
-        <button
-          type="button"
-          onClick={alLimpiar}
-          className="min-h-[48px] self-start rounded-xl border border-outline-variant bg-surface-container-lowest px-space-md text-label-md text-primary"
-        >
+        <Boton variante="secundario" onClick={alLimpiar} className="self-start">
           Quitar los filtros
-        </button>
+        </Boton>
       )}
     </>
   );
 }
 
+/** Las jornadas en filas, sin encabezados por día: la fecha va en cada fila. Entran
+ *  escalonadas cada vez que cambia el filtro (quien llama cambia la `key`). */
 function Lista({ jornadas }: { jornadas: JornadaPublica[] }) {
-  const hoy = diaBogota(new Date());
   return (
-    <>
-      {porDia(jornadas).map(([dia, delDia]) => {
-        const nombre = diaSemana(delDia[0]!.inicio);
-        const titulo =
-          dia === hoy ? `Hoy, ${nombre.charAt(0).toLowerCase()}${nombre.slice(1)}` : nombre;
-        return (
-          <section key={dia} aria-label={titulo} className="flex flex-col gap-space-sm">
-            <h2 className="text-label-md text-on-surface">{titulo}</h2>
-            {delDia.map((j) => (
-              <TarjetaJornada key={j.id} jornada={j} />
-            ))}
-          </section>
-        );
-      })}
-    </>
+    <div className="flex flex-col gap-space-sm">
+      {jornadas.map((j, i) => (
+        <FilaJornada key={j.id} jornada={j} className="entra-lista" style={retrasoEntrada(i)} />
+      ))}
+    </div>
   );
 }
 
-/** Agrupadas por día de Bogotá, en el orden en que llegan (la API ya las ordena por inicio). */
-function porDia(jornadas: JornadaPublica[]): [string, JornadaPublica[]][] {
-  const grupos = new Map<string, JornadaPublica[]>();
-  for (const j of jornadas) {
-    const dia = diaBogota(j.inicio);
-    grupos.set(dia, [...(grupos.get(dia) ?? []), j]);
-  }
-  return [...grupos];
+/** «Todos» y los días desde hoy hasta la última jornada, entre una semana y un mes. */
+function tiraDe(jornadas: JornadaPublica[]): DiaTira[] {
+  const hoy = new Date();
+  const conEventos = new Set(jornadas.map((j) => diaBogota(j.inicio)));
+  const ultima = jornadas.reduce((m, j) => (j.inicio > m ? j.inicio : m), '');
+  const hasta = ultima ? Math.ceil((Date.parse(ultima) - hoy.getTime()) / 86_400_000) + 1 : 0;
+  const todos: DiaTira = {
+    clave: 'todos',
+    arriba: 'Todos',
+    numero: String(jornadas.length),
+    nombre: 'Todos los días',
+    conEventos: false,
+  };
+  return [todos, ...diasDeLaTira(hoy, Math.min(30, Math.max(7, hasta)), conEventos)];
 }
 
 const unicos = (opciones: Opcion[]) => [...new Map(opciones.map((o) => [o.valor, o])).values()];

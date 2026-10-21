@@ -190,3 +190,19 @@ it('si se llenó al enviar, conserva lo escrito y ofrece ver otras jornadas', as
   );
   expect(screen.getByLabelText('Nombre')).toHaveValue('Ana Gómez');
 });
+
+// El detalle conserva la regla de RF-TUR-006: reservas, no personas, y el ajuste aparte
+it('con ajuste manual, los cupos dicen cuántos llegaron sin reserva y desde cuándo', async () => {
+  const haceDosHoras = new Date(Date.now() - 2 * 3_600_000 - 60_000).toISOString();
+  responderSegun({
+    'GET /api/turnos/jornadas/j1': jornadaDe({
+      ocupados: 3,
+      ajuste: 2,
+      libres: 5,
+      ajusteActualizadoEn: haceDosHoras,
+    }),
+  });
+  pantalla();
+  expect(await screen.findByText('3 de 10 cupos reservados · 2 sin reserva')).toBeInTheDocument();
+  expect(screen.getByText('Ajustado hace 2 h')).toBeInTheDocument();
+});
