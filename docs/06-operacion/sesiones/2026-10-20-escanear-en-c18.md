@@ -14,7 +14,7 @@ En el catálogo maestro, la pestaña «Códigos de barras» decía «Escaneando 
 
 | PR o commit | Qué trae |
 |---|---|
-| Rama `escanear-codigos-catalogo` | «Escanear» y «Escribir el número» al pie de la pestaña; «Agregar código» del título abre la cámara; un código nuevo abre «Código nuevo» con el número leído; uno que ya existe avisa y abre su presentación; sin cámara, la hoja para escribirlo. Cinco pruebas en `PestanaCodigos.test.tsx` y un paso más en `presentaciones.mjs` |
+| [#170](https://github.com/Proyecto-IngSoftware/acopio/pull/170), fusionado con el CI en verde | «Escanear» y «Escribir el número» al pie de la pestaña; «Agregar código» del título abre la cámara; un código nuevo abre «Código nuevo» con el número leído; uno que ya existe avisa y abre su presentación; sin cámara, la hoja para escribirlo. Cinco pruebas en `PestanaCodigos.test.tsx` y un paso más en `presentaciones.mjs` |
 
 No hubo cambios fuera del repositorio. La API no cambió.
 
