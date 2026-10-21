@@ -1198,6 +1198,10 @@ apruebe la maqueta antes de escribir el código.
 proponer presentaciones repetidas. Mientras no exista, se corrige con SQL si urge.
 **Estado:** ABIERTO → decide Joseph si entra en la próxima fase.
 
+---
+
+## Resueltos
+
 ### P-086 · Íconos de 24 px y la clase `text-label-sm`
 **Fecha:** 2026-10-20 · **Propuesto por:** Claude, al construir el mapa de necesidades
 **Qué:** la hoja de Material Symbols que baja `index.html` fija los íconos en 24 px y le gana a
@@ -1207,8 +1211,15 @@ clase `text-label-sm` se usa en al menos siete archivos, pero `packages/ui-token
 (solo `label-md` y `label-caps`), así que ese texto sale con el tamaño heredado.
 **Por qué:** los tamaños de íconos y etiquetas no coinciden con Stitch, y el ancho calculado de
 las etiquetas del mapa (`anchoPunto`) depende de ese tamaño heredado.
-**Estado:** ABIERTO → poner la hoja de íconos en una capa de Tailwind o bajar su especificidad,
-definir `label-sm` en los tokens según Stitch y revisar `anchoPunto` después.
+**Estado:** RESUELTO el 2026-10-20. `Icono` y los marcadores del mapa usan la clase `icono`,
+definida en `@layer components` de `estilos.css` con las mismas propiedades de la hoja de Google y
+24 px por defecto, así que `text-[18px]` y similares ya mandan. Stitch no tiene `label-sm`: solo
+`label-md` y `label-caps`, y el sistema de diseño deja los 12 px para `label-caps`. Por eso no se
+creó el token; cada uso pasó a `text-label-md` (chips y pasos) o a `text-label-caps` (etiquetas del
+mapa y título en mayúsculas de la tarjeta). Apareció otro token inexistente, `gap-space-2xs`, en
+siete lugares; pasó a `gap-space-xs`, el paso más chico de Stitch. `src/tokens.test.ts` falla si el
+código usa un token de texto o de espacio que `ui-tokens` no define. `anchoPunto` se midió en
+Chromium: el ícono mide 16 px y cada letra de `label-caps` entre 7,4 y 8,5 px.
 
 
 ### P-087 · Menores que quedaron del mapa de necesidades
@@ -1233,11 +1244,21 @@ Pantalla:
 - La captura de página completa de P5 deja la fila «NO RECIBE» bajo la cabecera fija; tomar la
   leyenda como elemento.
 - `anchoPunto` calcula 8 px por letra; revisar con P-086.
-**Estado:** ABIERTO → se toman en el Sprint 3 o cuando se toque P5.
-
----
-
-## Resueltos
+**Estado:** RESUELTO el 2026-10-20, punto por punto:
+- La prueba de integración borra en `afterAll` el umbral que deja en `ACOPIO_B`, comprueba que
+  `ACOPIO_B` sale mientras está activo antes de cerrarlo y revisa el orden alfabético de cada lista.
+- `Mapa.test.tsx` suma el chip combinado con una categoría, el subtítulo y los apagados en la vista
+  de mapa; la leyenda ya tenía prueba. El `title` del marcador salió a `tituloMarcador`, con prueba
+  en `marcador.test.ts`.
+- `portal-turnos.mjs` filtra el mapa de P7 con el chip que tenga jornadas y vuelve a «Todas». La
+  cita de `recorridos.md` dice que la etiqueta era la de esa tarde.
+- El aviso «N acopios no reciben…» cuenta solo los que se ven y va debajo del mapa (o encima de la
+  lista), como en la maqueta.
+- P7 deja el chip de un `?estado=` aunque no haya jornadas, como P5.
+- La leyenda a 360 px envuelve la frase al lado de la píldora, no debajo
+  ([construida-leyenda.png](../03-diseno/stitch/P05-mapa/construida-leyenda.png)), y
+  `referenciados.mjs` la captura como elemento, centrada para que la cabecera no la tape.
+- `anchoPunto` quedó medido con P-086.
 
 ### P-079 · Una sola pantalla para entrar
 **Fecha:** 2026-10-19 · **Propuesto por:** Joseph, en la ronda por rol

@@ -76,6 +76,7 @@ En la web:
 - Un componente que se usa en más de una pantalla va a `apps/web/src/componentes/`. Uno que solo usa una pantalla se queda junto a ella.
 - Cada recurso de la API tiene su archivo en `apps/web/src/api/` con sus tipos y sus hooks `useAlgo`. Las pantallas no llaman a `fetch` ni a `api` directamente.
 - Colores solo desde `packages/ui-tokens` ([ADR-0013](adr/ADR-0013-estetica-desde-stitch.md)); íconos de Material Symbols, y tras usar uno nuevo se corre `node scripts/iconos.mjs`.
+- Los tokens de texto y de espacio (`text-label-md`, `gap-space-sm`) salen de `packages/ui-tokens`; `src/tokens.test.ts` falla si el código usa uno que no existe. Los íconos van con la clase `icono` de `estilos.css`, que está en una capa de Tailwind para que `text-[18px]` y similares le ganen (P-086).
 - Ninguna pantalla se escribe sin la maqueta aprobada en `docs/03-diseno/stitch/`.
 - Las pruebas usan `envolver` y `responderSegun` de `src/pruebas/utilidades.tsx`; una petición sin simular falla como sin red.
 
