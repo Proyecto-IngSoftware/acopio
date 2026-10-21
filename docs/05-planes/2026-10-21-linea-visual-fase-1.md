@@ -23,19 +23,19 @@ actualizado: 2026-10-21
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 `partesFecha` y `diasDeLaTira` | ⬜ | |
-| 2 Clases de movimiento, `movimiento.ts` y esqueleto con brillo | ⬜ | |
-| 3 Botones: toque, inhabilitado sólido, ocupado y compacto | ⬜ | |
-| 4 Bloque de fecha | ⬜ | |
-| 5 Tira de días | ⬜ | |
-| 6 Barra que se llena | ⬜ | |
-| 7 Ilustraciones y estado vacío | ⬜ | |
-| 8 Sello de confirmación | ⬜ | |
-| 9 Hoja que entra y sale | ⬜ | |
-| 10 Píldora deslizante en `Segmentado` y en la barra inferior | ⬜ | |
-| 11 Desplegable en las cabeceras | ⬜ | |
-| 12 Entrada de página | ⬜ | |
-| 13 Documentos, verificación y PR | ⬜ | |
+| 1 `partesFecha` y `diasDeLaTira` | ✅ | |
+| 2 Clases de movimiento, `movimiento.ts` y esqueleto con brillo | ✅ | |
+| 3 Botones: toque, inhabilitado sólido, ocupado y compacto | ✅ | |
+| 4 Bloque de fecha | ✅ | |
+| 5 Tira de días | ✅ | |
+| 6 Barra que se llena | ✅ | |
+| 7 Ilustraciones y estado vacío | ✅ | |
+| 8 Sello de confirmación | ✅ | |
+| 9 Hoja que entra y sale | ✅ | |
+| 10 Píldora deslizante en `Segmentado` y en la barra inferior | ✅ | |
+| 11 Desplegable en las cabeceras | ✅ | |
+| 12 Entrada de página | ✅ | |
+| 13 Documentos, verificación y PR | 🟡 | El PR queda abierto; la fusión espera a después de la sustentación del 23 (#177) |
 
 ## Global Constraints
 

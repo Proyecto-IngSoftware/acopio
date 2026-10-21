@@ -3,7 +3,7 @@ title: "Componentes compartidos · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, componentes]
 estado: vigente
-actualizado: 2026-10-01
+actualizado: 2026-10-21
 ---
 
 # Componentes compartidos
@@ -21,6 +21,21 @@ Maqueta: [maqueta.html](maqueta.html), publicada en
 | Cabecera de acceso | C01: entrar y activar cuenta | La misma marca, sin «Entrar» | Igual a la pública |
 | Cabecera con sesión | Todo, con sesión iniciada | Marca, conmutador de ubicación (ícono `warehouse`, nombre y `expand_more`) y botón redondo con las iniciales, que abre el menú de la cuenta | Pantalla «Inicio con sesión - Acopio» (`03abc1a013724b4ab0957bd8f01ee818`), guardada en [cabecera-con-sesion/](cabecera-con-sesion/) |
 | Barra inferior | Todas las pantallas del portal, con o sin sesión | Inicio, Mapa, Causas, Voluntariado y Más | Portada de Stitch |
+
+## Piezas de la línea visual
+
+Aprobadas por Joseph el 2026-10-21 en el lienzo <https://claude.ai/artifact/6E2tVtacyqTcuifM1VNFyR>
+([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)).
+El lienzo hace de maqueta de estas piezas; la estructura de cada pantalla sigue saliendo de Stitch.
+
+| Pieza | Dónde se usa | Contenido |
+|---|---|---|
+| Bloque de fecha | Días de agenda: jornadas, reservas, turnos | Recuadro verde claro con el día de la semana y el número; el mes si está a más de una semana; gris si ya no admite acción |
+| Tira de días | Voluntariado (P7) | Fila deslizable de días, con punto en los que tienen jornadas; reemplaza el filtro «Día» |
+| Barra | Cupos, balance de la Portada | Medidor delgado que se llena al aparecer; ámbar cuando quedan pocos cupos |
+| Ilustraciones | Estados vacíos y piezas sin foto | Cajas, calendario, mapa y caja con folio, planos y en los verdes de la marca |
+| Sello | Confirmaciones | Check que se traza dentro de un círculo |
+| Movimiento | Todo el portal y la consola | Toque al presionar, entrada de página según la dirección, hoja que sube y baja, menú que se despliega, píldora que se desliza |
 
 ## Reglas
 
