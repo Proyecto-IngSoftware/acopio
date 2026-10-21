@@ -10,7 +10,8 @@ actualizado: 2026-10-20
 
 Joseph pidió que el mapa sirva para ver dónde falta un producto y dónde ya hay mucho, como en las
 pantallas de Stitch «Mapa de Acopios y Necesidades» y «Voluntariado - Mapa de Jornadas y Reserva
-de Cupos». Quedó construido en la rama `mapa-necesidades`, con su diseño, su plan y un solo PR.
+de Cupos». Quedó construido en la rama `mapa-necesidades` y entró a `main` con el PR 168. El
+servidor ya lo tiene desplegado.
 
 ## Qué cambió
 
@@ -22,6 +23,8 @@ de Cupos». Quedó construido en la rama `mapa-necesidades`, con su diseño, su 
 | `c75a100`, `a300709`, `49b5044` | P7: vista de mapa por defecto con «Faltan N personas», «Quedan N cupos» o «Llena», chips y precarga |
 | `41d6c52`, `f80eabe` | Leyenda pequeña con una frase por estado, etiqueta acortada, ancla en la punta del círculo y chip de la URL siempre visible |
 | `6aaddf1` | RF-RED-002, notas de P5 y P7, recorridos y capturas |
+| `c9eb0b6` | Una prueba del marcador lee el texto con el DOM; CodeQL la había marcado |
+| [#168](https://github.com/Proyecto-IngSoftware/acopio/pull/168) | El PR de la rama, fusionado el 2026-10-20 |
 
 Fuera del repositorio, la maqueta quedó publicada en
 <https://claude.ai/artifact/EekofY8Z5Ky2VprW6FXLe4>.
@@ -31,8 +34,9 @@ Fuera del repositorio, la maqueta quedó publicada en
 La verificación completa en local salió con código 0: lint, tipos, depcruise,
 `revisar-colores.sh`, unitarias (api 100, web 1147, shared 116, ui-tokens 4) e integración (551
 pruebas en 48 suites, contra el contenedor aparte). Los recorridos `referenciados.mjs` y
-`portal-turnos.mjs` pasaron 7 de 7 contra la API del Compose, sin errores de página. En el servidor
-no se probó; se despliega solo al fusionar.
+`portal-turnos.mjs` pasaron 7 de 7 contra la API del Compose, sin errores de página. Después de
+fusionar, `GET /api/publico/necesidades` del servidor respondió 200 con los datos de la demo. Las
+pantallas en el servidor no se recorrieron.
 
 Cada tarea la hizo un subagente y la revisó otro antes de pasar a la siguiente. Al final hubo una
 revisión de toda la rama y otra de sus arreglos.
@@ -53,6 +57,9 @@ revisión de toda la rama y otra de sus arreglos.
   quitarlo. Quedó arreglado; en P7 hay un caso parecido, anotado en P-087.
 - Un subagente dijo haber escrito su informe y el archivo no existía. Las pruebas se comprobaron a
   mano, y desde ahí cada despacho pide confirmar que el archivo existe.
+- El primer CI del PR 168 salió en rojo por CodeQL: una prueba nueva quitaba etiquetas HTML con
+  una expresión regular (`js/incomplete-multi-character-sanitization`). Ninguna revisión lo vio.
+  La prueba pasó a leer el texto con el DOM y el CI quedó en verde.
 - La tarea 6 pareció detenida. Esperaba a que venciera una jornada de la demo para volver a
   sembrarla; se le pidió correr todo en primer plano.
 
@@ -63,7 +70,7 @@ revisión de toda la rama y otra de sus arreglos.
 - Menores de las revisiones: pruebas que faltan, el orden del aviso y los chips, el chip de P7 en
   una URL compartida y la captura de P5 tapada por la cabecera
   ([P-087](../../01-requerimientos/pendientes.md)).
-- Ver el mapa nuevo en el servidor después del despliegue, junto con las pantallas de
+- Recorrer en el servidor el mapa nuevo y el de voluntariado, junto con las pantallas de
   [#163](https://github.com/Proyecto-IngSoftware/acopio/issues/163).
 
 ## Depende de Joseph
