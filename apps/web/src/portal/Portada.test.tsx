@@ -136,6 +136,47 @@ describe('con emergencias', () => {
     });
   });
 
+  it('cada faltante lleva su barra medida contra el mayor', async () => {
+    responderSegun({
+      'GET /api/emergencias': DOS,
+      'GET /api/publico/balance': {
+        faltan: [
+          { categoriaId: 'c1', categoria: 'Agua potable', acopios: 4 },
+          { categoriaId: 'c2', categoria: 'Kit de aseo', acopios: 2 },
+        ],
+        noTraigan: [],
+      },
+      'GET /api/turnos/jornadas': [],
+    });
+    render(envolver(<Portada />));
+    const barras = await screen.findAllByRole('meter', { name: /falta en/ });
+    expect(barras.map((b) => b.getAttribute('aria-valuenow'))).toEqual(['4', '2']);
+    expect(barras.every((b) => b.getAttribute('aria-valuemax') === '4')).toBe(true);
+    expect(screen.getByText('Falta en 4 acopios')).toBeInTheDocument();
+  });
+
+  it('«¿Cómo apoyar?» trae la línea de cada canal', async () => {
+    responder(DOS);
+    render(envolver(<Portada />));
+    expect(
+      await screen.findByRole('link', { name: /Donar productos.*Busca el acopio más cercano/ }),
+    ).toHaveAttribute('href', '/mapa');
+    expect(
+      screen.getByRole('link', { name: /Ser voluntario.*Reserva un cupo en una jornada/ }),
+    ).toBeInTheDocument();
+  });
+
+  it('los vacíos de jornadas y del reporte llevan su ilustración', async () => {
+    responder(DOS);
+    render(envolver(<Portada />));
+    expect(
+      await screen.findByRole('img', { name: 'Calendario con una planta que brota' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', { name: 'Mapa de curvas de nivel con un punto marcado' }),
+    ).toBeInTheDocument();
+  });
+
   it('sin jornadas ni reportes, sus bloques lo dicen y no inventan datos', async () => {
     responder(DOS);
     render(envolver(<Portada />));
@@ -245,6 +286,9 @@ describe('sin emergencias vigentes', () => {
     );
     expect(screen.queryByRole('region', { name: /Balance de recepción/i })).not.toBeInTheDocument();
     for (const texto of FIJOS) expect(screen.getByText(texto)).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', { name: 'Cajas de ayuda ordenadas en una bodega' }),
+    ).toBeInTheDocument();
   });
 });
 

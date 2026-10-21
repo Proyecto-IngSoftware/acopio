@@ -3,6 +3,7 @@ import { useEmergenciasVigentes } from '../api/emergencias';
 import { useBalance, useNecesidades } from '../api/inventario';
 import { Esqueleto } from '../componentes/Esqueleto';
 import { EstadoError } from '../componentes/EstadoError';
+import { EstadoVacio } from '../componentes/EstadoVacio';
 import { AvisoSinDinero } from './bloques/AvisoSinDinero';
 import { BalanceRecepcion } from './bloques/BalanceRecepcion';
 import { ComoApoyar } from './bloques/ComoApoyar';
@@ -62,15 +63,24 @@ export function Portada() {
       </section>
 
       <div className="flex flex-col gap-space-lg px-margin py-space-lg">
+        {!isPending && !error && !elegida && (
+          <EstadoVacio titulo="Sin emergencias activas" ilustracion="cajas">
+            Mientras tanto, puedes conocer los acopios del mapa o las causas verificadas.
+          </EstadoVacio>
+        )}
         {elegida && <BalanceRecepcion />}
         <ComoApoyar />
         <RastrearFolio />
         {elegida && (
           <>
             <JornadasPortada />
-            <SeccionVacia id="reporte" titulo="Reporte en terreno" icono="campaign">
-              Todavía no hay reportes. Aquí verás las novedades de las entidades que atienden la
-              emergencia.
+            <SeccionVacia
+              id="reporte"
+              titulo="Reporte en terreno"
+              vacio="Todavía no hay reportes"
+              ilustracion="mapa"
+            >
+              Aquí verás las novedades de las entidades que atienden la emergencia.
             </SeccionVacia>
           </>
         )}

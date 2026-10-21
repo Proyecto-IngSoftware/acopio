@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { useBalance, type Balance } from '../../api/inventario';
+import { Barra } from '../../componentes/Barra';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
 import { Icono } from '../../componentes/Icono';
+import { retrasoEntrada } from '../../componentes/movimiento';
 
 type Pestana = 'falta' | 'sobra';
 
@@ -20,9 +22,9 @@ const acopios = (n: number) => `${n} ${n === 1 ? 'acopio' : 'acopios'}`;
 export function BalanceRecepcion() {
   const [pestana, fijarPestana] = useState<Pestana>('falta');
   const { data, isPending, error, refetch } = useBalance();
-  const clasePestana = (activa: boolean, color: string) =>
-    `flex min-h-[48px] items-center justify-center gap-1.5 rounded-lg px-space-sm text-label-md transition-colors ${
-      activa ? `${color} text-on-primary shadow-sm` : 'bg-transparent text-on-surface-variant'
+  const clasePestana = (activa: boolean) =>
+    `toque relative flex min-h-[48px] items-center justify-center gap-1.5 rounded-lg px-space-sm text-label-md transition-colors duration-200 ${
+      activa ? 'text-on-primary' : 'text-on-surface-variant'
     }`;
 
   return (
@@ -36,7 +38,15 @@ export function BalanceRecepcion() {
           Balance de recepción
         </h2>
       </div>
-      <div role="tablist" className="grid grid-cols-2 gap-1 rounded-xl bg-surface-container p-1">
+      <div role="tablist" className="relative grid grid-cols-2 rounded-xl bg-surface-container p-1">
+        {/* La píldora del elegido se desliza de una pestaña a la otra (ADR-0022) */}
+        <span
+          aria-hidden="true"
+          data-pildora
+          className={`absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-lg shadow-sm transition-[transform,background-color] duration-300 ease-[var(--curva)] ${
+            pestana === 'falta' ? 'bg-primary-container' : 'translate-x-full bg-secondary-container'
+          }`}
+        />
         <button
           type="button"
           role="tab"
@@ -44,7 +54,7 @@ export function BalanceRecepcion() {
           aria-selected={pestana === 'falta'}
           aria-controls="panel-balance"
           onClick={() => fijarPestana('falta')}
-          className={clasePestana(pestana === 'falta', 'bg-primary-container')}
+          className={clasePestana(pestana === 'falta')}
         >
           <Icono nombre="warning" className="text-[18px]" />
           Qué hace falta
@@ -56,7 +66,7 @@ export function BalanceRecepcion() {
           aria-selected={pestana === 'sobra'}
           aria-controls="panel-balance"
           onClick={() => fijarPestana('sobra')}
-          className={clasePestana(pestana === 'sobra', 'bg-secondary-container')}
+          className={clasePestana(pestana === 'sobra')}
         >
           <Icono nombre="block" className="text-[18px]" />
           No traigan
@@ -96,31 +106,42 @@ function Vacio({ texto }: { texto: string }) {
 }
 
 function Faltan({ filas }: { filas: Filas }) {
+  // /api/publico/necesidades no lista todos los acopios abiertos, así que la barra se mide
+  // contra la fila que falta en más acopios («Cambios al construir» de la línea visual)
+  const mayor = Math.max(0, ...filas.map((f) => f.acopios));
   return (
     <>
       {filas.length === 0 ? (
         <Vacio texto={VACIO.falta} />
       ) : (
-        <ul className="flex flex-col gap-space-sm">
-          {filas.map((f) => (
+        <ul className="flex flex-col gap-space-xs">
+          {filas.map((f, i) => (
             <li
               key={f.categoriaId}
-              className="flex min-h-[48px] items-center justify-between gap-space-sm rounded-xl bg-surface-container-low p-space-sm"
+              style={retrasoEntrada(i)}
+              className="entra-lista flex flex-col gap-space-xs rounded-xl bg-surface-container-low p-space-sm"
             >
-              <span className="text-label-md font-bold text-on-surface">{f.categoria}</span>
-              <span className="shrink-0 rounded bg-error-container px-space-sm py-0.5 text-label-caps text-error">
-                Falta en {acopios(f.acopios)}
+              <span className="flex items-baseline justify-between gap-space-sm">
+                <span className="text-label-md font-bold text-on-surface">{f.categoria}</span>
+                <span className="shrink-0 text-[13px] font-semibold text-primary-container">
+                  Falta en {acopios(f.acopios)}
+                </span>
               </span>
+              <Barra
+                valor={f.acopios}
+                total={mayor}
+                etiqueta={`${f.categoria}: falta en ${acopios(f.acopios)}`}
+              />
             </li>
           ))}
         </ul>
       )}
       <Link
         to="/mapa"
-        className="mt-space-xs flex min-h-[44px] items-center justify-center gap-space-xs rounded-xl bg-primary-fixed text-label-md text-on-primary-fixed"
+        className="toque mt-space-xs flex min-h-[48px] items-center justify-center gap-space-xs rounded-xl bg-primary-fixed text-label-md text-on-primary-fixed"
       >
         Ver mapa de acopios
-        <Icono nombre="chevron_right" className="text-[18px]" />
+        <Icono nombre="chevron_right" className="avanza text-[18px]" />
       </Link>
     </>
   );
