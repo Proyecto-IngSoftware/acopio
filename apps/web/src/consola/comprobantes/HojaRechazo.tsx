@@ -61,7 +61,7 @@ export function HojaRechazo({ folio, alCerrar }: { folio: string; alCerrar: () =
         disabled={!listo}
         ocupado={rechazar.isPending}
         onClick={confirmar}
-        className="min-h-[56px] enabled:bg-error enabled:text-on-error"
+        className="min-h-[56px] enabled:bg-error enabled:text-on-error enabled:active:bg-error"
       >
         Rechazar comprobante
       </Boton>

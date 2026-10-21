@@ -216,7 +216,7 @@ function Suspender({ u, alCerrar }: { u: Usuario; alCerrar: () => void }) {
       <Boton
         ocupado={suspender.isPending}
         onClick={() => suspender.mutate(u.id, { onSuccess: alCerrar })}
-        className="enabled:bg-secondary-container enabled:text-on-secondary"
+        className="enabled:bg-secondary-container enabled:text-on-secondary enabled:active:bg-secondary-container"
       >
         Suspender
       </Boton>

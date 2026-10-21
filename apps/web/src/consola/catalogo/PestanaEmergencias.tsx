@@ -236,7 +236,7 @@ function CerrarEmergencia({
         <Boton
           type="submit"
           ocupado={cerrar.isPending}
-          className="w-full enabled:bg-secondary-container enabled:text-on-secondary"
+          className="w-full enabled:bg-secondary-container enabled:text-on-secondary enabled:active:bg-secondary-container"
         >
           {cerrar.isPending ? 'Cerrando…' : 'Cerrar emergencia'}
         </Boton>
