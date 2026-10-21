@@ -9,7 +9,7 @@ export function Esqueleto({ etiqueta, className = 'h-24' }: Props) {
     <div
       role="status"
       aria-label={etiqueta}
-      className={`animate-pulse rounded-xl bg-surface-container-high ${className}`}
+      className={`esqueleto-brillo rounded-xl bg-surface-container-high ${className}`}
     />
   );
 }

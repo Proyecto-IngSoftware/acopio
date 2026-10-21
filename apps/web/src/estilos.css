@@ -30,6 +30,179 @@ body {
   }
 }
 
+/* Movimiento de la línea visual (especificación del 2026-10-21). El estilo base de cada
+   elemento es su estado final: con «reducir movimiento» la regla del final del archivo apaga
+   las animaciones y nada queda a medias. */
+:root {
+  --curva: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes desde-derecha {
+  from {
+    opacity: 0;
+    transform: translateX(24px);
+  }
+}
+@keyframes desde-izquierda {
+  from {
+    opacity: 0;
+    transform: translateX(-24px);
+  }
+}
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes subir {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes latir {
+  0% {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--primary-fixed) 70%, transparent);
+  }
+  70%,
+  100% {
+    box-shadow: 0 0 0 9px transparent;
+  }
+}
+@keyframes brillar {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+@keyframes sellar {
+  0% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.12);
+  }
+}
+@keyframes trazar {
+  from {
+    stroke-dashoffset: var(--largo);
+  }
+}
+@keyframes hoja-subir {
+  from {
+    transform: translateY(100%);
+  }
+}
+@keyframes hoja-bajar {
+  to {
+    transform: translateY(100%);
+  }
+}
+@keyframes desvanecer {
+  to {
+    opacity: 0;
+  }
+}
+
+@layer components {
+  .icono {
+    transition: font-variation-settings 250ms;
+  }
+  .toque {
+    transition:
+      transform 150ms,
+      background-color 150ms,
+      color 150ms;
+  }
+  .toque:active {
+    transform: scale(0.97);
+  }
+  .toque:disabled:active {
+    transform: none;
+  }
+  .avanza {
+    transition: transform 200ms var(--curva);
+  }
+  .toque:hover .avanza {
+    transform: translateX(3px);
+  }
+  .entra-adelante {
+    animation: desde-derecha 300ms var(--curva) both;
+  }
+  .entra-atras {
+    animation: desde-izquierda 300ms var(--curva) both;
+  }
+  .aparece {
+    animation: aparecer 200ms ease-out both;
+  }
+  .entra-lista {
+    animation: subir 400ms var(--curva) both;
+  }
+  .latido {
+    animation: latir 2s ease-out infinite;
+  }
+  .esqueleto-brillo {
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, var(--surface-container-lowest) 60%, transparent),
+      transparent
+    );
+    background-size: 200% 100%;
+    animation: brillar 1.4s linear infinite;
+  }
+  .desplegable {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition:
+      grid-template-rows 300ms var(--curva),
+      opacity 200ms,
+      transform 300ms var(--curva);
+  }
+  .desplegable.abierto {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: none;
+  }
+  .gira {
+    transition: transform 300ms var(--curva);
+  }
+  .gira.abierto {
+    transform: rotate(180deg);
+  }
+  .sello {
+    animation: sellar 500ms var(--curva) both;
+  }
+  .sello-aro {
+    --largo: 170;
+    stroke-dasharray: 170;
+    animation: trazar 550ms ease-out both;
+  }
+  .sello-check {
+    --largo: 40;
+    stroke-dasharray: 40;
+    animation: trazar 350ms 350ms ease-out both;
+  }
+  .hoja-entra {
+    animation: hoja-subir 380ms cubic-bezier(0.2, 0.9, 0.25, 1) both;
+  }
+  .hoja-sale {
+    animation: hoja-bajar 250ms ease-in forwards;
+  }
+  .velo-entra {
+    animation: aparecer 250ms ease-out both;
+  }
+  .velo-sale {
+    animation: desvanecer 250ms ease-in forwards;
+  }
+}
+
 :focus-visible {
   outline: 3px solid var(--surface-tint);
   outline-offset: 2px;
