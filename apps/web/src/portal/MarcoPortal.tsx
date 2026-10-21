@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useRef } from 'react';
+import { Suspense, useRef } from 'react';
 import { Outlet, useLocation, useNavigationType } from 'react-router';
 import { Esqueleto } from '../componentes/Esqueleto';
 import { useSesion } from '../sesion/Sesion';
@@ -18,15 +18,18 @@ export function MarcoPortal() {
   const { pathname } = useLocation();
   const tipo = useNavigationType();
   const amplia = AMPLIAS.includes(pathname);
-  // La ruta anterior se lee en el render y se actualiza después: el render de la nueva ruta
-  // todavía ve la anterior y sabe hacia dónde entrar
-  const anterior = useRef<string | null>(null);
-  const direccion = direccionEntre(anterior.current, pathname, tipo);
-  useEffect(() => {
-    anterior.current = pathname;
-  }, [pathname]);
-  const entrada =
-    direccion === 'adelante' ? 'entra-adelante' : direccion === 'atras' ? 'entra-atras' : '';
+  // La dirección se decide una vez por ruta: si el marco se vuelve a dibujar en la misma ruta
+  // (cambia la consulta, llega la sesión), la clase se conserva y la entrada no se corta
+  const transicion = useRef<{ ruta: string | null; clase: string }>({ ruta: null, clase: '' });
+  if (transicion.current.ruta !== pathname) {
+    const direccion = direccionEntre(transicion.current.ruta, pathname, tipo);
+    transicion.current = {
+      ruta: pathname,
+      clase:
+        direccion === 'adelante' ? 'entra-adelante' : direccion === 'atras' ? 'entra-atras' : '',
+    };
+  }
+  const entrada = transicion.current.clase;
   return (
     <div className="flex min-h-screen flex-col bg-surface text-body-md text-on-surface">
       {/* Mientras se sabe si hay sesión, solo la marca: evita mostrar «Entrar» de más */}

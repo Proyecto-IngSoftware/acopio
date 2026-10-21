@@ -19,25 +19,24 @@ interface Props<T extends string> {
 export function Segmentado<T extends string>({ etiqueta, valor, alCambiar, opciones }: Props<T>) {
   const nombre = useId();
   const n = opciones.length;
-  const i = Math.max(
-    0,
-    opciones.findIndex((o) => o.valor === valor),
-  );
+  const i = opciones.findIndex((o) => o.valor === valor);
   return (
     <div
       role="radiogroup"
       aria-label={etiqueta}
       className="relative grid auto-cols-fr grid-flow-col gap-1 rounded-xl border border-outline-variant bg-surface-container-low p-1"
     >
-      <span
-        aria-hidden="true"
-        data-pildora
-        className="absolute top-1 bottom-1 left-1 rounded-lg bg-primary-container transition-transform duration-300 ease-[var(--curva)]"
-        style={{
-          width: `calc((100% - 0.5rem - ${n - 1} * 0.25rem) / ${n})`,
-          transform: `translateX(calc(${i} * (100% + 0.25rem)))`,
-        }}
-      />
+      {i >= 0 && (
+        <span
+          aria-hidden="true"
+          data-pildora
+          className="absolute top-1 bottom-1 left-1 rounded-lg bg-primary-container transition-transform duration-300 ease-[var(--curva)]"
+          style={{
+            width: `calc((100% - 0.5rem - ${n - 1} * 0.25rem) / ${n})`,
+            transform: `translateX(calc(${i} * (100% + 0.25rem)))`,
+          }}
+        />
+      )}
       {opciones.map((o) => (
         <label
           key={o.valor}

@@ -33,3 +33,15 @@ it('la píldora se mueve a la opción elegida', async () => {
     'translateX(calc(1 * (100% + 0.25rem)))',
   );
 });
+
+it('sin opción elegida no dibuja la píldora', () => {
+  const { container } = render(
+    <Segmentado
+      etiqueta="Estado"
+      valor={'OTRO' as 'ACTIVO'}
+      alCambiar={() => {}}
+      opciones={[{ valor: 'ACTIVO', texto: 'Activo' }]}
+    />,
+  );
+  expect(container.querySelector('[data-pildora]')).toBeNull();
+});
