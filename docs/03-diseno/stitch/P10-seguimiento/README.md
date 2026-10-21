@@ -3,7 +3,7 @@ title: "P10 · Seguir mi donación · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portal, donador]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-21
 ---
 
 # P10 · Seguir mi donación · diseño en Stitch
@@ -33,3 +33,7 @@ en unidad base. Un folio mal escrito y uno que no existe muestran el mismo mensa
 - Sin «Escanear código desde la cámara» ni los consejos de formato. El error da un ejemplo
   de folio.
 - La nota de privacidad queda en una línea: «No mostramos quién donó».
+
+## Línea visual, fase 2 (2026-10-21)
+
+Antes de buscar, el recuadro con el ícono `tag` pasa a ser un estado vacío con la caja con folio. El resultado aparece con un desvanecido y el check de cada paso cumplido se traza. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

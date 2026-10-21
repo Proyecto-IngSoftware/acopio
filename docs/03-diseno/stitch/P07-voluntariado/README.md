@@ -3,7 +3,7 @@ title: "P7 · Voluntariado · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portal, turnos]
 estado: vigente
-actualizado: 2026-10-20
+actualizado: 2026-10-21
 ---
 
 # P7 · Voluntariado · diseño en Stitch
@@ -66,3 +66,7 @@ el nombre va en el `title` del marcador y en el encabezado de sus jornadas.
 - El aviso de gente sin reserva suma la frase de RF-TUR-006 sobre reservas y personas presentes.
 - Armadas con los tokens, sin Stitch: la hoja de filtros, el error de cupo, la jornada cancelada
   y la cerrada por plazo.
+
+## Línea visual, fase 2 (2026-10-21)
+
+La lista usa filas con bloque de fecha en lugar de tarjetas, y la tira de días reemplaza el filtro «Día» y los encabezados por día. Las filas entran escalonadas al cambiar de día o de chip. El detalle de reservar lleva el bloque de fecha junto al título y el botón gira mientras reserva. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

@@ -3,7 +3,7 @@ title: "P01 · Portada · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portada]
 estado: vigente
-actualizado: 2026-10-18
+actualizado: 2026-10-21
 ---
 
 # P01 · Portada · diseño en Stitch
@@ -53,3 +53,7 @@ de Stitch y se pueden borrar desde su interfaz; la pantalla original no se tocó
 - El buscador de folio está, pero responde que el rastreo aún no está disponible.
 - La foto del reporte en terreno es una imagen de ejemplo generada por Stitch. No entra
   al repositorio.
+
+## Línea visual, fase 2 (2026-10-21)
+
+La franja dice cuántas categorías faltan y en cuántos acopios, con la cifra que cuenta desde 0, el punto en vivo y las curvas de nivel quietas. El selector de emergencia se despliega con animación. Cada faltante del balance lleva su barra, las pestañas tienen píldora deslizante y «¿Cómo apoyar?» suma una línea por canal. Las jornadas van en filas con bloque de fecha y los vacíos (sin emergencias, jornadas, reporte) llevan ilustración. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

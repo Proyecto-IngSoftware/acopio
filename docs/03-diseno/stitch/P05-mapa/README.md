@@ -3,7 +3,7 @@ title: "P5 · Mapa de acopios · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portal]
 estado: vigente
-actualizado: 2026-10-20
+actualizado: 2026-10-21
 ---
 
 # P5 · Mapa de acopios · diseño en Stitch
@@ -84,3 +84,7 @@ Aprobadas por Joseph el 2026-09-30:
 Aprobada por Joseph el 2026-10-01, después de construida:
 
 - El filtro de categorías es «¿Qué vas a llevar?». Oculta los acopios que no reciben esa categoría y dice cuántos ocultó (desde el 2026-10-20 los deja apagados, ver «Mapa de necesidades»). La pantalla de Stitch tenía «No recibe: Ropa» como filtro activo, que muestra lo contrario de lo que pide RF-RED-002. Stitch todavía no se ha corregido (P-035).
+
+## Línea visual, fase 2 (2026-10-21)
+
+«Ningún acopio con esos filtros» lleva el mapa ilustrado. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

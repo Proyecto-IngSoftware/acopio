@@ -3,7 +3,7 @@ title: "P3 · Directorio de causas · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portal, causas]
 estado: vigente
-actualizado: 2026-10-19
+actualizado: 2026-10-21
 ---
 
 # P3 · Directorio de causas · diseño en Stitch
@@ -81,3 +81,7 @@ construida es [construida-plataformas.png](construida-plataformas.png).
 - Personas desaparecidas lleva el ícono `person_search` en el color de la marca. Stitch puso un
   triángulo de alerta rojo, y el rojo está reservado para el inventario.
 - La categoría va en una píldora neutra, igual para todas.
+
+## Línea visual, fase 2 (2026-10-21)
+
+Las causas sin foto muestran el mapa (rescatistas) o las cajas (las demás categorías) en lugar del ícono suelto. La lista entra escalonada al filtrar y el vacío lleva las cajas. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

@@ -23,14 +23,14 @@ actualizado: 2026-10-21
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 Fila de jornada | ⬜ | |
-| 2 P7 con la tira de días | ⬜ | |
-| 3 Franja de la Portada | ⬜ | |
-| 4 Balance, «¿Cómo apoyar?» y vacíos de la Portada | ⬜ | |
-| 5 Reservar y Mi reserva | ⬜ | |
-| 6 Donador: folio, confirmar correo y mis donaciones | ⬜ | |
-| 7 Seguimiento, causas y mapa | ⬜ | |
-| 8 Documentos, verificación y PR | ⬜ | |
+| 1 Fila de jornada | ✅ | |
+| 2 P7 con la tira de días | ✅ | |
+| 3 Franja de la Portada | ✅ | |
+| 4 Balance, «¿Cómo apoyar?» y vacíos de la Portada | ✅ | |
+| 5 Reservar y Mi reserva | ✅ | |
+| 6 Donador: folio, confirmar correo y mis donaciones | ✅ | |
+| 7 Seguimiento, causas y mapa | ✅ | |
+| 8 Documentos, verificación y PR | 🟡 | Verificación completa en verde y PR abierto. Faltan los recorridos y las `construida.png` nuevas, que piden el Compose |
 
 ## Global Constraints
 
