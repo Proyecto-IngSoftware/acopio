@@ -11,6 +11,10 @@ export const etiquetaMarcador = (a: AcopioPublico) =>
 export const capitalizar = (t: string) =>
   t.replace(/^(?:[A-ZÁÉÍÓÚÑ ]|\d+(?= ))+/, (m) => m.charAt(0) + m.slice(1).toLowerCase());
 
+/** El title del marcador en P5: el nombre y, si lleva etiqueta, la etiqueta como frase. */
+export const tituloMarcador = (a: AcopioPublico, etiqueta: EtiquetaMapa | null) =>
+  etiqueta ? `${etiquetaMarcador(a)}. ${capitalizar(etiqueta.texto)}` : etiquetaMarcador(a);
+
 const LARGO_PIN = 14;
 
 /** El nombre que cabe en el pin: sin el «Acopio» del comienzo y cortado en una palabra entera. */
@@ -29,14 +33,14 @@ export function nombreCorto(nombre: string) {
 // `rounded-full` del tema de Stitch vale 0.75rem; un círculo o una píldora necesitan el radio entero
 const anillo = (elegido: boolean) => (elegido ? 'ring-4 ring-primary' : '');
 const icono = (nombre: string) =>
-  `<span aria-hidden="true" class="material-symbols-outlined text-[16px]">${nombre}</span>`;
+  `<span aria-hidden="true" class="icono text-[16px]">${nombre}</span>`;
 const escapar = (texto: string) =>
   texto.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 
 /** La píldora de Stitch con su sombra debajo; el ancla del marcador es la punta de abajo.
  *  Va con aria-hidden: el lector de pantalla anuncia el title del marcador, no el texto corto. */
 function pildora(clases: string, nombreIcono: string, texto: string, elegido: boolean) {
-  return `<div aria-hidden="true" class="flex flex-col items-center"><div class="flex items-center gap-1 whitespace-nowrap rounded-[999px] px-2.5 py-1 text-label-sm font-semibold shadow-md ${clases} ${anillo(elegido)}">${icono(nombreIcono)}${escapar(texto)}</div><div class="mt-0.5 h-1.5 w-4 rounded-[999px] bg-on-surface/25 blur-[1px]"></div></div>`;
+  return `<div aria-hidden="true" class="flex flex-col items-center"><div class="flex items-center gap-1 whitespace-nowrap rounded-[999px] px-2.5 py-1 text-label-caps font-semibold shadow-md ${clases} ${anillo(elegido)}">${icono(nombreIcono)}${escapar(texto)}</div><div class="mt-0.5 h-1.5 w-4 rounded-[999px] bg-on-surface/25 blur-[1px]"></div></div>`;
 }
 
 export interface OpcionesPunto {
@@ -77,10 +81,10 @@ const GAP = 4;
 export const altoPunto = (elegido: boolean, conEtiqueta: boolean) =>
   (elegido ? CIRCULO.elegido : CIRCULO.normal) + (conEtiqueta ? GAP + ALTO_ETIQUETA : 0);
 
-// La etiqueta mide su borde (2 × 2), el px-2 (2 × 8), el ícono (24: la hoja de Material Symbols
-// fija 24 px sobre el text-[16px]), el gap-1 y unos 8 px por letra en la letra de 12 px de Leaflet
-const FIJO_ETIQUETA = 4 + 16 + 24 + 4;
-const POR_LETRA = 8;
+// La etiqueta mide su borde (2 × 2), el px-2 (2 × 8), el ícono de 16 px, el gap-1 y hasta 8,5 px
+// por letra en label-caps (medido en Chromium: entre 7,4 y 8,5 según las letras)
+const FIJO_ETIQUETA = 4 + 16 + 16 + 4;
+const POR_LETRA = 8.5;
 
 /** Ancho del ícono del marcador: el círculo con su anillo (40 px, 48 elegido) sin etiqueta, y lo
  *  que mida la etiqueta con ella. Sin etiqueta no queda una franja invisible que tape a otros. */
@@ -97,7 +101,7 @@ export function anchoPunto(elegido: boolean, texto: string | null) {
 export function htmlPunto(o: OpcionesPunto) {
   const etiqueta =
     o.etiqueta && !o.apagado
-      ? `<div class="flex h-9 items-center gap-1 whitespace-nowrap rounded-[999px] border-2 border-surface-container-lowest px-2 text-label-sm font-bold shadow-md ${o.etiqueta.clases}">${icono(o.etiqueta.icono)}${escapar(etiquetaCorta(o.etiqueta.texto, LARGO_ETIQUETA))}</div>`
+      ? `<div class="flex h-9 items-center gap-1 whitespace-nowrap rounded-[999px] border-2 border-surface-container-lowest px-2 text-label-caps font-bold shadow-md ${o.etiqueta.clases}">${icono(o.etiqueta.icono)}${escapar(etiquetaCorta(o.etiqueta.texto, LARGO_ETIQUETA))}</div>`
       : '';
   const tamano = o.elegido ? 'size-10' : 'size-8';
   return `<div aria-hidden="true" class="flex flex-col items-center gap-1${o.apagado ? ' opacity-45' : ''}">${etiqueta}<div class="flex ${tamano} items-center justify-center rounded-[999px] border-2 border-surface-container-lowest shadow-md ${o.circulo} ${anillo(o.elegido)}">${icono(o.icono)}</div></div>`;

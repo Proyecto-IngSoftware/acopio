@@ -11,12 +11,11 @@ import { claveEncuadre, leerClave } from './encuadre';
 import {
   altoPunto,
   anchoPunto,
-  capitalizar,
-  etiquetaMarcador,
   htmlGrupo,
   htmlMarcador,
   htmlZona,
   tipoDeGrupo,
+  tituloMarcador,
   type TipoGrupo,
 } from './marcador';
 
@@ -71,9 +70,7 @@ function Marcadores({
     };
     for (const a of acopios) {
       const etiqueta = etiquetas.get(a.id) ?? null;
-      const titulo = etiqueta
-        ? `${etiquetaMarcador(a)}. ${capitalizar(etiqueta.texto)}`
-        : etiquetaMarcador(a);
+      const titulo = tituloMarcador(a, etiqueta);
       L.marker([a.lat, a.lng], {
         icon: marcador(a, a.id === elegido, etiqueta, apagados.has(a.id)),
         title: titulo,

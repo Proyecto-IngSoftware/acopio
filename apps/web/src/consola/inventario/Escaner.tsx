@@ -442,7 +442,7 @@ export function HojaCodigoPropuesto({
         {codigo.creadoPor ? `${codigo.creadoPor} lo propuso` : 'Lo propuso un donador'} y nadie lo
         ha confirmado. ¿Es esto?
       </p>
-      <div className="flex flex-col gap-space-2xs rounded-xl border-[1.5px] border-primary-container p-space-md">
+      <div className="flex flex-col gap-space-xs rounded-xl border-[1.5px] border-primary-container p-space-md">
         <span className="font-bold text-on-surface">{codigo.categoria}</span>
         <span className="text-body-md text-on-surface-variant">
           {presentacion

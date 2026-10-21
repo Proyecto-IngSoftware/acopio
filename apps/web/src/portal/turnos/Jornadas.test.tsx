@@ -303,3 +303,23 @@ it('«Quitar los filtros» conserva la vista', async () => {
   await userEvent.click(await screen.findByRole('button', { name: 'Quitar los filtros' }));
   expect(screen.getByTestId('busqueda')).toHaveTextContent(/^\?vista=lista$/);
 });
+
+it('un ?estado= de un enlace compartido sin jornadas deja su chip en el mapa para quitarlo', async () => {
+  responderSegun({ 'GET /api/turnos/jornadas': [] });
+  function Ubicacion() {
+    return <p data-testid="busqueda">{useLocation().search}</p>;
+  }
+  render(
+    envolver(
+      <>
+        <Jornadas />
+        <Ubicacion />
+      </>,
+      '/voluntariado?estado=faltan',
+    ),
+  );
+  const falta = await screen.findByRole('button', { name: 'Falta gente 0' });
+  expect(falta).toHaveAttribute('aria-pressed', 'true');
+  await userEvent.click(screen.getByRole('button', { name: 'Todas 0' }));
+  expect(screen.getByTestId('busqueda')).not.toHaveTextContent('estado=');
+});

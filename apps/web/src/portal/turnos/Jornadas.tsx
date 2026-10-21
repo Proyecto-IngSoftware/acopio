@@ -197,7 +197,8 @@ export function Jornadas() {
         ]}
       />
 
-      {cuentas.todas > 0 && (
+      {/* Un ?estado= de un enlace compartido deja su chip aunque no haya jornadas, para quitarlo */}
+      {(cuentas.todas > 0 || chip !== 'todas') && (
         <ChipsEstado
           etiqueta="Ver por cupos"
           valor={chip}

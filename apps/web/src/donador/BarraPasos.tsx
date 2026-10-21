@@ -11,7 +11,7 @@ export function BarraPasos({ paso }: { paso: 1 | 2 | 3 }) {
           <li
             key={nombre}
             aria-current={actual ? 'step' : undefined}
-            className={`flex flex-col gap-space-2xs text-label-sm ${
+            className={`flex flex-col gap-space-xs text-label-md ${
               actual ? 'font-bold text-primary-container' : 'text-on-surface-variant'
             }`}
           >

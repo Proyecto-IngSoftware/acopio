@@ -155,6 +155,16 @@ export function Mapa() {
     [visibles, referenciados],
   );
   const refsEnMapa = enMapa.length - visibles.length;
+  // Cuenta solo los que se ven: un chip puede haber ocultado a los que no la reciben
+  const apagadosVisibles = visibles.filter((a) => noLaReciben.has(a.id)).length;
+  // Como en la maqueta, va debajo del mapa (o encima de la lista)
+  const avisoNoReciben = categoria && apagadosVisibles > 0 && (
+    <p className="flex items-start gap-space-xs text-body-sm text-on-surface-variant">
+      <Icono nombre="block" className="text-[18px]" />
+      {apagadosVisibles} {apagadosVisibles === 1 ? 'acopio no recibe' : 'acopios no reciben'}{' '}
+      {categoria.nombre.toLocaleLowerCase('es-CO')}.
+    </p>
+  );
   const sufijo = cerca ? `?cerca=${encodeURIComponent(`${cerca.lat},${cerca.lng}`)}` : '';
   const seleccionado = enMapa.find((a) => a.id === elegido);
   // La capa de zonas es un extra: si falla, el mapa de acopios sigue igual
@@ -198,13 +208,6 @@ export function Mapa() {
         {categoria && necesidades && (
           <p className="text-body-md text-on-surface">
             {fraseCategoria(categoria.nombre, cuentas)}
-          </p>
-        )}
-        {categoria && noLaReciben.size > 0 && (
-          <p className="flex items-start gap-space-xs text-body-sm text-on-surface-variant">
-            <Icono nombre="block" className="text-[18px]" />
-            {noLaReciben.size} {noLaReciben.size === 1 ? 'acopio no recibe' : 'acopios no reciben'}{' '}
-            {categoria.nombre.toLocaleLowerCase('es-CO')}.
           </p>
         )}
         {necesidades && (cuentas.todos > 0 || chip !== 'todos') && (
@@ -293,6 +296,7 @@ export function Mapa() {
               apagados={noLaReciben}
             />
           </div>
+          {avisoNoReciben}
           {necesidades && (
             <ul aria-label="Estados del inventario" className="flex flex-col gap-space-xs">
               {LEYENDA.map((e) => (
@@ -376,6 +380,7 @@ export function Mapa() {
 
       {acopios.data && vista === 'lista' && (
         <>
+          {avisoNoReciben}
           {referenciados.length > 0 && visibles.length > 0 && (
             <h2 className="text-label-md tracking-wide text-on-surface-variant uppercase">
               Acopios

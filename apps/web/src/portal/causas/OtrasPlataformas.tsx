@@ -84,7 +84,7 @@ function TarjetaPlataforma({ plataforma: p }: { plataforma: Plataforma }) {
         </span>
       )}
       <div className="flex min-w-0 flex-col gap-1">
-        <span className="w-fit rounded-full bg-surface-container px-2 py-0.5 text-label-sm text-on-surface-variant">
+        <span className="w-fit rounded-full bg-surface-container px-2 py-0.5 text-label-md text-on-surface-variant">
           {p.categoria}
         </span>
         <h3 className="text-body-lg font-semibold text-on-surface">{p.nombre}</h3>

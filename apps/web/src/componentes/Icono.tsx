@@ -10,7 +10,7 @@ export function Icono({ nombre, relleno = false, className = '' }: Props) {
   return (
     <span
       aria-hidden="true"
-      className={`material-symbols-outlined ${className}`}
+      className={`icono ${className}`}
       style={relleno ? { fontVariationSettings: "'FILL' 1" } : undefined}
     >
       {nombre}

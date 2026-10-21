@@ -40,7 +40,7 @@ function Resultado({ folio }: { folio: string }) {
     <article className="flex flex-col gap-space-md rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
       <div className="flex items-center justify-between gap-space-sm">
         <span className="font-mono text-label-md text-on-surface">{datos.folio}</span>
-        <span className="rounded-full bg-surface-container-high px-space-sm py-1 text-label-sm text-on-surface-variant">
+        <span className="rounded-full bg-surface-container-high px-space-sm py-1 text-label-md text-on-surface-variant">
           {datos.estado}
         </span>
       </div>

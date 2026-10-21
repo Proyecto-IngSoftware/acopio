@@ -50,10 +50,7 @@ function Bloque({
       aria-labelledby={id}
       className="flex flex-col gap-1.5 border-t border-outline-variant pt-space-sm"
     >
-      <h3
-        id={id}
-        className={`flex items-center gap-1.5 text-label-sm font-bold tracking-wide uppercase ${tono.titulo}`}
-      >
+      <h3 id={id} className={`flex items-center gap-1.5 text-label-caps uppercase ${tono.titulo}`}>
         <Icono nombre={tono.icono} className="text-[16px]" />
         {titulo}
       </h3>
