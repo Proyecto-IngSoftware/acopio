@@ -3,7 +3,7 @@ title: "C16 · Detalle de usuario · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-21
 ---
 
 # C16 · Detalle de usuario · diseño en Stitch
@@ -20,3 +20,7 @@ actualizado: 2026-09-30
 Usa la cabecera con sesión y la barra inferior de [componentes compartidos](../../_compartidos/README.md).
 Stitch la generó en formato de escritorio con la columna móvil al centro; el código es
 móvil primero.
+
+## Línea visual, fase 3 (2026-10-21)
+
+«Suspender» pasa a `Boton` y gira mientras espera; los demás botones también giran mientras esperan. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

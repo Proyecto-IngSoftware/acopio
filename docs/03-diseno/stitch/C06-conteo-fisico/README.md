@@ -3,7 +3,7 @@ title: "C6 · Conteo físico · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, inventario]
 estado: vigente
-actualizado: 2026-10-02
+actualizado: 2026-10-21
 ---
 
 # C6 · Conteo físico · diseño en Stitch
@@ -40,3 +40,7 @@ Aprobadas por Joseph el 2026-10-02:
   mientras haya menos de 10 y desaparece al llegar.
 - Si la cantidad contada es igual al saldo, la franja dice «Coincide con el sistema» y
   el botón queda inactivo (422 `SIN_DIFERENCIA` en la API).
+
+## Línea visual, fase 3 (2026-10-21)
+
+Los botones que esperan una respuesta giran mientras tanto y lo inhabilitado va en gris sólido. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

@@ -3,7 +3,7 @@ title: "C4 · Escáner y código nuevo · maqueta"
 type: diseno
 tags: [diseno, stitch, consola, inventario]
 estado: vigente
-actualizado: 2026-10-20
+actualizado: 2026-10-21
 ---
 
 # C4 · Escáner y código nuevo · maqueta
@@ -63,3 +63,6 @@ Pendiente de revisión por Joseph. Las dos hojas parten de la [maqueta de la ide
 - «Corregir el código» reutiliza «Código nuevo» y se abre sobre la categoría y la presentación
   del código propuesto.
 
+## Línea visual, fase 3 (2026-10-21)
+
+Los botones que esperan una respuesta giran mientras tanto y lo inhabilitado va en gris sólido. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

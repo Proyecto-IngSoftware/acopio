@@ -23,12 +23,12 @@ actualizado: 2026-10-21
 
 | Tarea | Estado | Qué falta |
 |---|---|---|
-| 1 C14 Turnos con fecha | ⬜ | |
-| 2 Sellos de confirmación | ⬜ | |
-| 3 Botones ocupados e inhabilitado sólido | ⬜ | |
-| 4 Vacíos ilustrados y estados desactivados | ⬜ | |
-| 5 Listas que entran al filtrar | ⬜ | |
-| 6 Documentos, verificación y PR | ⬜ | |
+| 1 C14 Turnos con fecha | ✅ | |
+| 2 Sellos de confirmación | ✅ | |
+| 3 Botones ocupados e inhabilitado sólido | ✅ | |
+| 4 Vacíos ilustrados y estados desactivados | ✅ | |
+| 5 Listas que entran al filtrar | ✅ | |
+| 6 Documentos, verificación y PR | 🟡 | Verificación completa en verde y PR abierto. Faltan los recorridos y las `construida.png` nuevas, que piden el Compose (#177) |
 
 ## Global Constraints
 

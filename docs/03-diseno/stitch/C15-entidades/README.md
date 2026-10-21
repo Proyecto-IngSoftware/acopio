@@ -3,7 +3,7 @@ title: "C15 · Entidades · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola]
 estado: vigente
-actualizado: 2026-10-01
+actualizado: 2026-10-21
 ---
 
 # C15 · Entidades · diseño en Stitch
@@ -34,3 +34,7 @@ Joseph aprobó el 2026-10-17 los cambios de la
 - Verificar abre el aviso de seguridad. El botón queda inactivo hasta marcar «Confirmo que
   revisé la entidad y su sitio oficial».
 - «Quitar verificación» pide confirmación y dice cuántas causas activas pasan a atendidas.
+
+## Línea visual, fase 3 (2026-10-21)
+
+El vacío lleva las cajas. Los botones que esperan una respuesta giran mientras tanto y lo inhabilitado va en gris sólido. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

@@ -3,7 +3,7 @@ title: "C22 · Causas · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, causas]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-21
 ---
 
 # C22 · Causas · diseño en Stitch
@@ -44,3 +44,7 @@ Cubre RF-RED-007 y RF-RED-010 según la
   «Volver» debajo.
 - Armadas con los tokens, sin Stitch: la pestaña de atendidas, la vista de una causa y la
   confirmación de publicar.
+
+## Línea visual, fase 3 (2026-10-21)
+
+Los vacíos llevan las cajas. Los botones que esperan una respuesta giran mientras tanto y lo inhabilitado va en gris sólido. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

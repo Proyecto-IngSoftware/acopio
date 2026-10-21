@@ -3,7 +3,7 @@ title: "C4 · Sin sincronizar · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, inventario, offline]
 estado: vigente
-actualizado: 2026-10-05
+actualizado: 2026-10-21
 ---
 
 # C4 · Sin sincronizar · diseño en Stitch
@@ -34,3 +34,7 @@ Propuestas en la maqueta:
 - La rechazada en neutro, con el motivo en el color de error. Stitch usó ámbar.
 - Sin «Requiere revisión» ni «Guardadas localmente» junto a los títulos de sección.
 - «Enviar ahora» dentro del aviso, activo solo con red.
+
+## Línea visual, fase 3 (2026-10-21)
+
+Sin entradas por enviar, el vacío lleva las cajas ilustradas. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

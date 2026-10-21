@@ -3,7 +3,7 @@ title: "C3 · Inventario e Historial · maqueta"
 type: diseno
 tags: [diseno, stitch, consola, inventario]
 estado: vigente
-actualizado: 2026-10-01
+actualizado: 2026-10-21
 ---
 
 # C3 · Inventario e Historial · maqueta
@@ -30,3 +30,7 @@ La maqueta usa los tokens del tema, la cabecera con sesión y la barra inferior 
 
 Si Stitch genera estas pantallas más tarde, se guardan aquí su captura y su HTML, y esta
 nota anota las diferencias con la maqueta.
+
+## Línea visual, fase 3 (2026-10-21)
+
+Inventario e historial vacíos llevan las cajas ilustradas. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

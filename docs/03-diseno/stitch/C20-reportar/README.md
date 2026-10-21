@@ -3,7 +3,7 @@ title: "Reportar necesidad · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, motor, reportes]
 estado: vigente
-actualizado: 2026-10-16
+actualizado: 2026-10-21
 ---
 
 # Reportar necesidad · diseño en Stitch
@@ -37,3 +37,7 @@ zona (C10).
 - Los reportes recientes van en la ficha de la zona, adonde se vuelve al enviar, y no debajo
   del formulario.
 - Cabecera de la consola, sin la barra que inventó Stitch.
+
+## Línea visual, fase 3 (2026-10-21)
+
+Sin necesidades reportadas, el vacío lleva el mapa. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

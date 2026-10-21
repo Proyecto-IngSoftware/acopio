@@ -3,7 +3,7 @@ title: "C8 · Comprobantes · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, custodia]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-21
 ---
 
 # C8 · Comprobantes · diseño en Stitch
@@ -34,3 +34,7 @@ los acopios que tiene asignados.
 - Sin «Acopio CO», «Rol Auditor», subtítulo ni «Mostrando 4 de 8».
 - El orden es fijo, sin selector. Sin «Sin foto»: solo se marca la que trae factura.
 - Sin «4 categorías» en la fila.
+
+## Línea visual, fase 3 (2026-10-21)
+
+El vacío lleva la caja con folio. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.
