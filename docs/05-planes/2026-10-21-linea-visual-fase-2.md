@@ -30,7 +30,7 @@ actualizado: 2026-10-21
 | 5 Reservar y Mi reserva | ✅ | |
 | 6 Donador: folio, confirmar correo y mis donaciones | ✅ | |
 | 7 Seguimiento, causas y mapa | ✅ | |
-| 8 Documentos, verificación y PR | 🟡 | Verificación completa en verde y PR abierto. Faltan los recorridos y las `construida.png` nuevas, que piden el Compose |
+| 8 Documentos, verificación y PR | ✅ | Fusionada el 21 con el PR 179, a pedido de Joseph. Los recorridos y las `construida.png` nuevas esperan al Compose (#177) |
 
 ## Global Constraints
 

@@ -74,7 +74,7 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | 13 | Deuda de las revisiones: menores de los bloques 1 a 3 (P-034, P-038 y los del Bloque 3) y la imagen que falta en Garage (P-058). Los del cierre del Bloque 5 (P-070, P-071, #129) quedaron hechos el 18 de octubre. De la ronda por rol del 19: los datos de inventario de más de 6 horas (#151), el «no recibir» de un acopio ajeno (#152), estos dos hechos el 20 de octubre, y la frase de la bitácora para un cambio de fecha (#153). De la revisión de la entrada única, el correo de una cuenta activa y su credencial (P-080) quedó hecho el 19 de octubre | #43, #153 | 2026-11-22 | 🟡 |
 | 14 | P5 de Stitch con el filtro viejo | #39 | 2026-11-22 | ⬜ |
 | 15 | Íconos que se ven como texto mientras baja su fuente | #41 | 2026-11-22 | ⬜ |
-| 22 | Línea visual ([ADR-0022](../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)): fechas en bloque, botones, estados desactivados y vacíos con ilustración, y movimiento al tocar, en portal y consola. Fase 1, las piezas base y el movimiento global ([plan](2026-10-21-linea-visual-fase-1.md)), se fusionó el 21 con el PR 178, a pedido de Joseph, y Dokploy la despliega en el servidor. La fase 2, el portal ([plan](2026-10-21-linea-visual-fase-2.md)), quedó construida el 21 en la rama `claude/beautiful-faraday-11mzwz`, con su PR. Falta la fase 3 (consola), con su propio plan | #177 | 2026-11-15 | 🟡 |
+| 22 | Línea visual ([ADR-0022](../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)): fechas en bloque, botones, estados desactivados y vacíos con ilustración, y movimiento al tocar, en portal y consola. Fase 1, las piezas base y el movimiento global ([plan](2026-10-21-linea-visual-fase-1.md)), se fusionó el 21 con el PR 178, a pedido de Joseph, y Dokploy la despliega en el servidor. La fase 2, el portal ([plan](2026-10-21-linea-visual-fase-2.md)), se fusionó el 21 con el PR 179, también a pedido de Joseph; sus recorridos esperan al Compose. Falta la fase 3 (consola), con su propio plan | #177 | 2026-11-15 | 🟡 |
 
 ## Cierre: del 23 de noviembre al 6 de diciembre
 
@@ -116,7 +116,7 @@ Sprint 3.
 
 ## Registro de cambios
 
-- 2026-10-21: fila 22, la fase 2 de la línea visual (portal) quedó construida con su plan, en la rama `claude/beautiful-faraday-11mzwz` y su PR. Los recorridos y las `construida.png` nuevas esperan al Compose ([informe](../06-operacion/sesiones/2026-10-21-linea-visual-fase-2.md)).
+- 2026-10-21: fila 22, la fase 2 de la línea visual (portal) se fusionó con el PR 179, a pedido de Joseph. Los recorridos y las `construida.png` nuevas esperan al Compose ([informe](../06-operacion/sesiones/2026-10-21-linea-visual-fase-2.md)).
 - 2026-10-18: se crea el plan a partir del estado de GitHub, los pendientes y el cronograma.
   Se cierran #35 y #55, que ya estaban hechos. #45, #23 y #21 pasan a la semana 12 y #26 a la
   17. Nace #129 con P-070 y P-071. #47 suma las casillas del Avance 5 y de la sustentación.
