@@ -10,6 +10,16 @@ import {
 } from '../../pruebas/utilidades';
 import { Catalogo } from './Catalogo';
 
+// La cámara «lee» `camara.lee` apenas se abre (sin él, queda abierta), o falla con `camara.falla`
+const camara = vi.hoisted(() => ({ lee: '', falla: null as unknown }));
+vi.mock('../inventario/camara', () => ({
+  abrirCamara: async (_video: unknown, alLeer: (codigo: string) => void) => {
+    if (camara.falla) throw camara.falla;
+    if (camara.lee) setTimeout(() => alLeer(camara.lee), 0);
+    return () => {};
+  },
+}));
+
 const ADMIN = { id: 'a', username: 'admin', nombre: 'Joseph Quintero', rol: 'ADMIN' as const };
 const horasAtras = (h: number) => new Date(Date.now() - h * 3600_000).toISOString();
 const BOTELLA = { id: 'p1', nombre: 'Botella de agua 600 ml', tamano: 0.6 };
@@ -101,6 +111,11 @@ const pantalla = (extra: Record<string, unknown> = {}) => {
 const fila = (nombre: string | RegExp) => screen.findByRole('button', { name: nombre });
 
 describe('C18 Códigos', () => {
+  beforeEach(() => {
+    camara.lee = '';
+    camara.falla = null;
+  });
+
   it('es la cuarta pestaña y el filtro arranca en «Propuestos» con PROPUESTO y por revisar', async () => {
     pantalla();
     expect(screen.getAllByRole('tab')).toHaveLength(4);
@@ -194,12 +209,56 @@ describe('C18 Códigos', () => {
     await waitFor(() => expect(screen.queryByRole('dialog')).not.toBeInTheDocument());
   });
 
-  it('«Agregar código» abre la hoja con el campo para escribir el número', async () => {
+  it('«Escribir el número» abre la hoja con el campo vacío para escribirlo', async () => {
+    pantalla();
+    await userEvent.click(await screen.findByRole('button', { name: 'Escribir el número' }));
+    const hoja = screen.getByRole('dialog', { name: 'Código nuevo' });
+    expect(within(hoja).getByRole('textbox', { name: 'Número del código' })).toHaveValue('');
+  });
+
+  it('«Agregar código» del encabezado y «Escanear» del pie abren la cámara', async () => {
     pantalla();
     await screen.findByRole('radio', { name: 'Propuestos (4)' });
-    await userEvent.click(screen.getAllByRole('button', { name: 'Agregar código' })[0]!);
+    await userEvent.click(screen.getByRole('button', { name: 'Agregar código' }));
+    const escaner = screen.getByRole('dialog', { name: 'Escáner' });
+    await userEvent.click(within(escaner).getByRole('button', { name: 'Cancelar' }));
+    expect(screen.queryByRole('dialog', { name: 'Escáner' })).not.toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Escanear' }));
+    expect(screen.getByRole('dialog', { name: 'Escáner' })).toBeInTheDocument();
+  });
+
+  it('un código que Acopio no conoce abre «Código nuevo» con el número leído, que se puede corregir', async () => {
+    camara.lee = '7709999000001';
+    pantalla();
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    const hoja = await screen.findByRole('dialog', { name: 'Código nuevo' });
+    const numero = within(hoja).getByRole('textbox', { name: 'Número del código' });
+    expect(numero).toHaveValue('7709999000001');
+    expect(screen.queryByRole('dialog', { name: 'Escáner' })).not.toBeInTheDocument();
+    expect(peticiones()).toContain('GET /api/codigos-barras/7709999000001');
+  });
+
+  it('un código que ya existe lo avisa y abre el detalle de su presentación', async () => {
+    camara.lee = '7702001000001';
+    pantalla({ 'GET /api/codigos-barras/*': CODIGOS[0] });
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    expect(
+      await screen.findByText('Ese código ya está en Agua potable · Paquete x12 · botella 600 ml.'),
+    ).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { level: 2, name: /Paquete x12/ })).toBeVisible();
+    expect(screen.getByRole('article', { name: '7702001000001' })).toBeInTheDocument();
+    expect(screen.queryByRole('dialog', { name: 'Código nuevo' })).not.toBeInTheDocument();
+  });
+
+  it('sin permiso para la cámara lo avisa y abre la hoja para escribir el número', async () => {
+    camara.falla = new DOMException('negado', 'NotAllowedError');
+    pantalla();
+    await userEvent.click(await screen.findByRole('button', { name: 'Escanear' }));
+    expect(
+      await screen.findByText('Sin permiso para usar la cámara. Escribe el número.'),
+    ).toBeInTheDocument();
     const hoja = screen.getByRole('dialog', { name: 'Código nuevo' });
-    expect(within(hoja).getByRole('textbox', { name: 'Número del código' })).toBeInTheDocument();
+    expect(within(hoja).getByRole('textbox', { name: 'Número del código' })).toHaveValue('');
   });
 
   it('sin propuestos lo dice', async () => {

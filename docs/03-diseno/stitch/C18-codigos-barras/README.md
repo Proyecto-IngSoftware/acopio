@@ -72,3 +72,13 @@ Con la app:
 - Detalle de una presentación, hecho a mano sobre el HTML de Stitch con las mismas clases: [pantalla-detalle-presentacion.html](pantalla-detalle-presentacion.html) · [render-detalle-presentacion.png](render-detalle-presentacion.png). Muestra cada código con quién lo asoció y su estado («Propuesto», «Por revisar», «Validado»), y las acciones «Aprobar» y «Cambiar de presentación». «Aprobar» no aparece en los validados. No hay «Borrar»: una nota al pie lo dice.
 - Los chips de estado no usan ámbar, que es del inventario. «Propuesto» va en el teal de la marca con ícono; «Por revisar» y «Validado» en neutro con ícono, como «Sin revisar» y «Revisado» en `PestanaCodigos.tsx`.
 - Botones de 48 px de alto como mínimo.
+
+### Escanear desde la pestaña (2026-10-20)
+
+La leyenda «Escaneando o escribiendo el número» prometía la cámara, pero «Agregar código» solo abría la hoja para escribir el número. Joseph aprobó en la sesión el cambio sin pantalla nueva en Stitch, porque usa la misma cámara de [C04](../C04-escaner/):
+
+- Al pie quedan dos botones: «Escanear» (principal, ícono `barcode_scanner`) y «Escribir el número» (secundario). La leyenda se quitó.
+- «Agregar código», junto al título, abre la cámara igual que «Escanear». En la cámara, «Escribir el número» lleva a la hoja y «Cancelar» vuelve a la lista.
+- Si Acopio no conoce el código, se abre «Código nuevo» con el número leído, que el Administrador puede corregir antes de elegir la categoría y la presentación.
+- Si el código ya existe, un aviso dice dónde está («Ese código ya está en Arroz · Bolsa de arroz 500 g.») y se abre el detalle de su presentación. Un código propuesto se aprueba desde ahí.
+- Si el navegador niega la cámara o no hay una, el aviso pide escribir el número y se abre la hoja vacía.

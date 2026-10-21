@@ -119,7 +119,7 @@ Con la demo recién sembrada, conviene correr `consola-motor.mjs` antes que
 | `validacion-general.mjs` | Cada pantalla con cada rol, accesos negados, invitar y activar, salida, conteo y bitácora | 60 | No guarda capturas |
 | `donador.mjs` | El Donador de punta a punta (Bloque 3, ciclo 1) | 8 | P09, P10, P12 y P13 |
 | `consola-comprobantes.mjs` | Recibir, conciliar, rechazar y vincular (Bloque 3, ciclo 2) | 10 | C04-recibir-folio, C08-comprobantes y C08-conciliacion |
-| `presentaciones.mjs` | Presentaciones y códigos de barras (fase de presentaciones): el Donador escanea con la cámara falsa un EAN que Acopio no conoce, propone una presentación nueva y prepara una donación para Acopio Chapinero; `operador1` recibe el folio y confirma el código con «Es correcto»; el Administrador lo ve «Validado» en C18. Comprueba en la API el estado del código (`PROPUESTO` y luego `VALIDADO`) y que la línea recibida conserva el EAN con cantidad confirmada. Inventa un EAN y una presentación por corrida, así que se puede repetir. Entra como `donador1@demo.acopio.local` y `operador1` con `DEMO_CONTRASENA`, y como `admin` con `ADMIN_CONTRASENA` | 9 | No guarda capturas |
+| `presentaciones.mjs` | Presentaciones y códigos de barras (fase de presentaciones): el Donador escanea con la cámara falsa un EAN que Acopio no conoce, propone una presentación nueva y prepara una donación para Acopio Chapinero; `operador1` recibe el folio y confirma el código con «Es correcto»; el Administrador lo ve «Validado» en C18 y, al escanearlo ahí, se abre su presentación. Comprueba en la API el estado del código (`PROPUESTO` y luego `VALIDADO`) y que la línea recibida conserva el EAN con cantidad confirmada. Inventa un EAN y una presentación por corrida, así que se puede repetir. Entra como `donador1@demo.acopio.local` y `operador1` con `DEMO_CONTRASENA`, y como `admin` con `ADMIN_CONTRASENA` | 10 | No guarda capturas |
 | `consola-motor.mjs` | El motor para el Administrador: ficha de zona, recálculo, aprobar con la cantidad editada, descartar con motivo, pesos con vista previa e informe de descartes (Bloque 4, interfaz ciclo 1) | 9 | C10-ficha-zona y C11-motor |
 | `consola-remisiones.mjs` | Remisiones para el Operador de Kennedy: la fila de «Más», editar una línea, despachar con responsable y folio comprobando que el saldo baja lo despachado, el documento con QR, cancelar lo despachado comprobando que el saldo vuelve, y un despacho general creado a mano y cancelado (Bloque 4, interfaz ciclo 2). Entra como `operador2` con `DEMO_CONTRASENA`. Al cancelar lo despachado deja la demo como estaba, así se puede repetir | 7 | C12-remisiones |
 | `consola-recepciones.mjs` | El Receptor (Bloque 4, interfaz ciclo 3): la fila «Mi zona» de «Más», la pantalla «Mi zona» y su «Ver todas» hacia «Por recibir», confirmar deshabilitado sin foto, subir una foto y ver su miniatura, confirmar y comprobar en la API que la remisión quedó recibida con la nota y la foto, reportar una categoría en C20, comprobar que un visitante sin sesión la ve en el mapa público y en la lista (HU-13.1) y marcarla resuelta. Entra como `receptor1` con `DEMO_CONTRASENA`. El 2026-10-17 pasó 7/7 en local | 7 | mi-zona, C13-recepcion, C20-reportar y P05-mapa |
@@ -189,6 +189,8 @@ donaciones».
 5. Por la API, el código está `VALIDADO` y la línea conserva el EAN con cantidad confirmada. El
    Administrador abre Catálogo, «Códigos de barras», busca el número, abre la presentación y ve
    la ficha «Validado».
+6. El Administrador toca «Escanear» en C18. La cámara falsa lee el mismo número, que ya existe:
+   sale el aviso «Ese código ya está en Arroz · …» y se abre el detalle de su presentación.
 
 La API de entrada limita a 5 intentos por minuto, así que el script entra una sola vez como
 administrador por la API y reutiliza esa cookie en la pantalla de C18.
@@ -245,6 +247,11 @@ un instante en quedar con `aria-pressed`, y la etiqueta del punto de P7 lleva el
 ícono delante, así que una expresión con `^` no la encontraba. «Armar mercados (demo)» estaba
 fuera de plazo y no salía en el mapa; terminó a las 18:00 y `seed:demo` la volvió a crear tres
 días después. Con eso, Chapinero muestra «FALTAN 18 PERSONAS +1».
+
+**2026-10-20, en local, escanear en C18** (rama `escanear-codigos-catalogo`, build servido con
+`vite preview` contra la API del Compose): `presentaciones.mjs` 10 de 10, sin errores de página.
+La primera corrida falló al entrar el Donador: la demo local se sembró con la contraseña por
+defecto y el `.env` trae otra `DEMO_CONTRASENA`. Se repitió sin esa variable.
 
 **2026-10-20, en local, fase de presentaciones** (rama `presentaciones`, API reconstruida con
 `servicios:todo`): `presentaciones.mjs` 9 de 9, sin errores de página. Antes fallaron tres

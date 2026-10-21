@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { formatearCantidad } from '@acopio/shared';
 import {
+  consultarCodigo,
   useBuscarCategorias,
   useCodigos,
   useEditarCodigo,
@@ -15,8 +16,9 @@ import { EstadoVacio } from '../../componentes/EstadoVacio';
 import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
 import { Segmentado } from '../../componentes/Segmentado';
+import { ErrorApi } from '../../api/cliente';
 import { haceCuanto } from '../../formato';
-import { HojaCodigoNuevo } from '../inventario/Escaner';
+import { HojaCodigoNuevo, VistaCamara } from '../inventario/Escaner';
 import { FormularioError } from './FormularioError';
 
 type Filtro = 'propuestos' | 'todos';
@@ -70,18 +72,22 @@ function useEspera(texto: string, ms = 300) {
   return valor;
 }
 
+/** Cómo va «Agregar código»: la cámara, o la hoja con el número leído (vacío para escribirlo). */
+export type Agregar = { paso: 'nada' } | { paso: 'camara' } | { paso: 'nuevo'; ean: string };
+
 interface Props {
-  agregando: boolean;
-  alAgregar: (abierta: boolean) => void;
+  agregar: Agregar;
+  alAgregar: (agregar: Agregar) => void;
 }
 
 /** C18, pestaña «Códigos»: el Administrador revisa los códigos que propusieron los Donadores o
  *  que una recepción marcó, agrupados por presentación (RF-CAT-004). Los códigos no se borran:
  *  se aprueban o se pasan a otra presentación. Diseño: docs/03-diseno/stitch/C18-codigos-barras. */
-export function PestanaCodigos({ agregando, alAgregar }: Props) {
+export function PestanaCodigos({ agregar, alAgregar }: Props) {
   const [filtro, fijarFiltro] = useState<Filtro>('propuestos');
   const [busqueda, fijarBusqueda] = useState('');
   const [abierta, fijarAbierta] = useState<string | null>(null);
+  const [aviso, fijarAviso] = useState('');
   const [cambiando, fijarCambiando] = useState<CodigoBarras | null>(null);
   const q = useEspera(busqueda.trim());
   const codigos = useCodigos(q);
@@ -97,15 +103,64 @@ export function PestanaCodigos({ agregando, alAgregar }: Props) {
         .find((p) => key(p) === abierta) ?? null)
     : null;
 
+  const cerrarAgregar = () => alAgregar({ paso: 'nada' });
+
+  // Un código que ya existe se muestra en su presentación; uno nuevo se asocia en la hoja
+  const leer = async (ean: string) => {
+    cerrarAgregar();
+    fijarAviso('');
+    try {
+      const c = await consultarCodigo(ean);
+      const presentacion = c.presentacion?.nombre ?? 'Sin presentación';
+      fijarAviso(`Ese código ya está en ${c.categoria} · ${presentacion}.`);
+      // Buscar por el número trae el código aunque la lista no lo tuviera aún
+      fijarBusqueda(ean);
+      fijarAbierta(c.presentacion ? c.presentacion.id : `${SIN_PRESENTACION}:${c.categoria}`);
+    } catch (e) {
+      if (e instanceof ErrorApi && e.estado === 404) alAgregar({ paso: 'nuevo', ean });
+      else fijarAviso((e as Error).message);
+    }
+  };
+
+  const fallar = (e: unknown) => {
+    fijarAviso(
+      e instanceof DOMException && e.name === 'NotAllowedError'
+        ? 'Sin permiso para usar la cámara. Escribe el número.'
+        : 'No pudimos abrir la cámara. Escribe el número.',
+    );
+    alAgregar({ paso: 'nuevo', ean: '' });
+  };
+
+  const avisar = aviso && (
+    <p
+      role="status"
+      className="flex items-center gap-space-xs rounded-xl border border-outline-variant bg-surface-container-low p-space-sm text-on-surface"
+    >
+      <Icono nombre="info" className="shrink-0 text-[20px]" />
+      {aviso}
+    </p>
+  );
+
   const hojas = (
     <>
       {cambiando && <HojaCambiar codigo={cambiando} alCerrar={() => fijarCambiando(null)} />}
-      {agregando && (
+      {agregar.paso === 'camara' && (
+        <VistaCamara
+          alLeer={(ean) => void leer(ean)}
+          alCerrar={cerrarAgregar}
+          alFallar={fallar}
+          textoSalir="Cancelar"
+          alEscribir={() => alAgregar({ paso: 'nuevo', ean: '' })}
+        />
+      )}
+      {agregar.paso === 'nuevo' && (
         <HojaCodigoNuevo
-          ean=""
+          // El número leído cambia la hoja: no se reusa la del intento anterior
+          key={agregar.ean}
+          ean={agregar.ean}
           escribirNumero
-          alCerrar={() => alAgregar(false)}
-          alAsociar={() => alAgregar(false)}
+          alCerrar={cerrarAgregar}
+          alAsociar={cerrarAgregar}
         />
       )}
     </>
@@ -116,12 +171,16 @@ export function PestanaCodigos({ agregando, alAgregar }: Props) {
       <div className="flex flex-col gap-space-md pt-space-md">
         <button
           type="button"
-          onClick={() => fijarAbierta(null)}
+          onClick={() => {
+            fijarAviso('');
+            fijarAbierta(null);
+          }}
           className="-ml-space-xs flex min-h-[48px] w-fit items-center gap-space-xs px-space-xs text-label-md text-primary-container"
         >
           <Icono nombre="arrow_back" className="shrink-0 text-[20px]" />
           Códigos
         </button>
+        {avisar}
         <div className="flex flex-col">
           <h2 className="text-headline-md text-on-surface">{detalle.nombre}</h2>
           <p className="text-body-sm text-on-surface-variant">
@@ -156,6 +215,7 @@ export function PestanaCodigos({ agregando, alAgregar }: Props) {
 
   return (
     <div className="flex flex-col gap-space-md pt-space-md">
+      {avisar}
       <label className="flex min-h-[48px] items-center gap-space-xs rounded-xl border-[1.5px] border-outline-variant bg-surface-container-lowest px-space-md">
         <Icono nombre="search" className="shrink-0 text-[20px] text-on-surface-variant" />
         <input
@@ -226,14 +286,28 @@ export function PestanaCodigos({ agregando, alAgregar }: Props) {
           })}
         </section>
       ))}
-      <div className="flex flex-col gap-space-xs">
-        <Boton className="min-h-[56px] w-full" onClick={() => alAgregar(true)}>
-          <Icono nombre="add" className="shrink-0 text-[22px]" />
-          Agregar código
+      <div className="flex flex-col gap-space-sm">
+        <Boton
+          className="min-h-[56px] w-full"
+          onClick={() => {
+            fijarAviso('');
+            alAgregar({ paso: 'camara' });
+          }}
+        >
+          <Icono nombre="barcode_scanner" className="shrink-0 text-[22px]" />
+          Escanear
         </Boton>
-        <p className="text-center text-body-sm text-on-surface-variant">
-          Escaneando o escribiendo el número
-        </p>
+        <Boton
+          variante="secundario"
+          className="min-h-[56px] w-full"
+          onClick={() => {
+            fijarAviso('');
+            alAgregar({ paso: 'nuevo', ean: '' });
+          }}
+        >
+          <Icono nombre="edit" className="shrink-0 text-[22px]" />
+          Escribir el número
+        </Boton>
       </div>
       {hojas}
     </div>

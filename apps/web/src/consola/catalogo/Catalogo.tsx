@@ -5,7 +5,7 @@ import { Icono } from '../../componentes/Icono';
 import { Encabezado } from '../Encabezado';
 import { PestanaCanasta } from './PestanaCanasta';
 import { PestanaCategorias } from './PestanaCategorias';
-import { PestanaCodigos } from './PestanaCodigos';
+import { PestanaCodigos, type Agregar } from './PestanaCodigos';
 import { PestanaEmergencias } from './PestanaEmergencias';
 
 const PESTANAS = [
@@ -24,14 +24,14 @@ export function Catalogo() {
   const activa: Pestana = PESTANAS.some((p) => p.id === pedida)
     ? (pedida as Pestana)
     : 'categorias';
-  // «Agregar código» está junto al título y al pie de la pestaña: la hoja es una sola
-  const [agregando, fijarAgregando] = useState(false);
+  // «Agregar código» del título abre la misma cámara que «Escanear» al pie de la pestaña
+  const [agregar, fijarAgregar] = useState<Agregar>({ paso: 'nada' });
 
   return (
     <div className="flex flex-col gap-space-md px-margin py-space-md">
       <Encabezado titulo="Catálogo maestro" subtitulo="Categorías, canasta estándar y emergencias">
         {activa === 'codigos' && (
-          <Boton className="min-h-[48px]" onClick={() => fijarAgregando(true)}>
+          <Boton className="min-h-[48px]" onClick={() => fijarAgregar({ paso: 'camara' })}>
             <Icono nombre="add" className="shrink-0 text-[20px]" />
             Agregar código
           </Boton>
@@ -65,9 +65,7 @@ export function Catalogo() {
         {activa === 'categorias' && <PestanaCategorias />}
         {activa === 'canasta' && <PestanaCanasta />}
         {activa === 'emergencias' && <PestanaEmergencias />}
-        {activa === 'codigos' && (
-          <PestanaCodigos agregando={agregando} alAgregar={fijarAgregando} />
-        )}
+        {activa === 'codigos' && <PestanaCodigos agregar={agregar} alAgregar={fijarAgregar} />}
       </div>
     </div>
   );
