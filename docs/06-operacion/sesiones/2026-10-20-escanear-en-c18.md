@@ -16,7 +16,7 @@ En el catálogo maestro, la pestaña «Códigos de barras» decía «Escaneando 
 |---|---|
 | [#170](https://github.com/Proyecto-IngSoftware/acopio/pull/170), fusionado con el CI en verde | «Escanear» y «Escribir el número» al pie de la pestaña; «Agregar código» del título abre la cámara; un código nuevo abre «Código nuevo» con el número leído; uno que ya existe avisa y abre su presentación; sin cámara, la hoja para escribirlo. Cinco pruebas en `PestanaCodigos.test.tsx` y un paso más en `presentaciones.mjs` |
 
-| Rama `pendientes-086-087` | P-086: los íconos van con la clase `icono` en una capa de Tailwind y toman el tamaño que pide el código; `text-label-sm` y `gap-space-2xs`, que no existían, pasan a tokens de Stitch; `tokens.test.ts` detecta tokens inexistentes; `anchoPunto` medido en Chromium. P-087: el aviso «no reciben» cuenta solo los visibles y va debajo del mapa, P7 deja el chip de un `?estado=` sin jornadas, pruebas nuevas en P5, P7, el marcador y la integración, un paso de chips en `portal-turnos.mjs` y la leyenda capturada aparte |
+| [#172](https://github.com/Proyecto-IngSoftware/acopio/pull/172), fusionado con el CI en verde | P-086: los íconos van con la clase `icono` en una capa de Tailwind y toman el tamaño que pide el código; `text-label-sm` y `gap-space-2xs`, que no existían, pasan a tokens de Stitch; `tokens.test.ts` detecta tokens inexistentes; `anchoPunto` medido en Chromium. P-087: el aviso «no reciben» cuenta solo los visibles y va debajo del mapa, P7 deja el chip de un `?estado=` sin jornadas, pruebas nuevas en P5, P7, el marcador y la integración, un paso de chips en `portal-turnos.mjs` y la leyenda capturada aparte |
 
 No hubo cambios fuera del repositorio. La API no cambió.
 
