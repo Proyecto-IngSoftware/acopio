@@ -6,8 +6,8 @@
 //
 // Una fila es una línea de tabla que nombra un issue (#N) y lleva un estado: ✅ hecho,
 // 🟡 en curso, ⬜ pendiente o ⛔ bloqueado. Avisa si una fila ✅ apunta a un issue abierto,
-// si una fila sin ✅ apunta a uno cerrado (todos los issues de la fila cerrados), si una
-// fecha AAAA-MM-DD de una fila sin ✅ ya pasó, y si hay issues abiertos que el plan no nombra.
+// si una fila sin ✅ apunta a uno cerrado (todos los issues de la fila cerrados), si la
+// fecha de una fila sin ✅ ya pasó, y si hay issues abiertos que el plan no nombra.
 import { execFileSync } from 'node:child_process';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
@@ -51,9 +51,9 @@ for (const [i, linea] of readFileSync(PLAN, 'utf8').split('\n').entries()) {
       `${donde}: dice ${estado} pero ${conocidos.map((x) => `#${x.number}`).join(', ')} ya se cerró`,
     );
   }
-  const vencida = [...linea.matchAll(/\b(\d{4}-\d{2}-\d{2})\b/g)]
-    .map((m) => m[1])
-    .find((f) => f < hoy);
+  // Solo la columna de la fecha, la penúltima: el «Qué» puede enlazar un plan con fecha en el nombre
+  const fecha = /^\d{4}-\d{2}-\d{2}$/.exec(linea.split('|').slice(1, -1).at(-2)?.trim() ?? '')?.[0];
+  const vencida = fecha && fecha < hoy ? fecha : undefined;
   if (estado !== '✅' && vencida)
     avisos.push(`${donde}: la fecha ${vencida} ya pasó y dice ${estado}`);
 }

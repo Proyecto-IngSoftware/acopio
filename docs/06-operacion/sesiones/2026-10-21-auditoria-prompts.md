@@ -19,6 +19,7 @@ cambios a la memoria y al archivo global están propuestos y esperan el visto bu
 | PR o commit | Qué trae |
 |---|---|
 | PR de la rama `auditoria-prompts` | `CLAUDE.md`: la lista de módulos incluye `turnos` e `importacion`, y el CI construye las imágenes de la API y de la web. `vista-general.md` deja de decir que falta `importacion`. Nace [P-088](../../01-requerimientos/pendientes.md#p-088--la-fusión-automática-no-consulta-las-alertas-de-code-scanning). La prueba de Jornadas fija la fecha y ya no depende del día en que corre. |
+| PR de la rama `revisar-plan-fecha` | `scripts/revisar-plan.mjs` lee la fecha de una fila solo en su columna «Fecha». Antes tomaba cualquier fecha del texto, y la fila 20 del plan de acción salía vencida por el nombre del plan que enlaza (`2026-10-20-presentaciones.md`), cuando su fecha es el 15 de noviembre. |
 
 No hubo cambios fuera del repositorio.
 
