@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -57,7 +58,9 @@ export function SesionProveedor({
     [consultas],
   );
 
-  useEffect(() => {
+  // En el mismo commit que el render: con useEffect, un 401 que llegara justo después de
+  // pintar la sesión encontraba la referencia todavía vacía y no la cerraba
+  useLayoutEffect(() => {
     usuarioActual.current = usuario;
   }, [usuario]);
 
