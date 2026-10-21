@@ -1207,7 +1207,10 @@ fusionar si hay alguna. El repositorio tiene CodeQL en configuración por defect
 (`code-scanning/default-setup` responde `configured`), así que esa consulta aplica aquí.
 **Por qué:** el check de CodeQL solo falla con las alertas graves. Una alerta media pasa el CI y,
 con el comando actual, el PR se fusiona y la alerta queda abierta en `main`.
-**Estado:** ABIERTO → decide Joseph si se agrega la consulta al comando del `CLAUDE.md` y al hook.
+**Estado:** RESUELTO el 2026-10-21 → Joseph pidió agregarla. El comando de fusión del
+`CLAUDE.md` y el de `fusionar-tras-pr.mjs` llevan, entre `gh pr checks` y `gh pr review`, un
+`test` que exige cero alertas abiertas en `refs/pull/<n>/merge`. Si `gh api` falla, la salida
+queda vacía y el `test` también falla.
 
 ---
 
