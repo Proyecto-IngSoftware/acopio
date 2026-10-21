@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { Desplegable } from '../../componentes/Desplegable';
 import type { UsuarioSesion } from '../../sesion/cliente-auth';
 import { iniciales, nombreRol } from '../../sesion/roles';
 import { useSalida } from '../../sesion/useSalida';
@@ -48,11 +49,11 @@ export function CabeceraConSesion({ usuario }: { usuario: UsuarioSesion }) {
           >
             {iniciales(usuario.nombre)}
           </button>
-          {abierto && (
+          <Desplegable abierto={abierto} className="absolute right-0 mt-space-xs w-64">
             <div
               role="menu"
               aria-label="Cuenta"
-              className="absolute right-0 mt-space-xs flex w-64 flex-col gap-space-xs rounded-xl bg-surface-container-lowest p-space-sm text-on-surface shadow-lg"
+              className="flex flex-col gap-space-xs rounded-xl bg-surface-container-lowest p-space-sm text-on-surface shadow-lg"
             >
               <div className="p-space-xs">
                 <p className="text-label-md font-bold">{usuario.nombre}</p>
@@ -70,7 +71,7 @@ export function CabeceraConSesion({ usuario }: { usuario: UsuarioSesion }) {
                 Cerrar sesión
               </button>
             </div>
-          )}
+          </Desplegable>
         </div>
       </div>
       {hoja}

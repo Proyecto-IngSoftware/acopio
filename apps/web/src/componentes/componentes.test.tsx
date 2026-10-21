@@ -8,6 +8,7 @@ import { ChipsEstado } from './ChipsEstado';
 import { Esqueleto } from './Esqueleto';
 import { EstadoError } from './EstadoError';
 import { EstadoVacio } from './EstadoVacio';
+import { Desplegable } from './Desplegable';
 import { Ilustracion } from './ilustraciones/Ilustracion';
 import { SelloConfirmacion } from './SelloConfirmacion';
 
@@ -174,5 +175,22 @@ describe('SelloConfirmacion', () => {
   it('se lee con su etiqueta', () => {
     render(<SelloConfirmacion etiqueta="Cupo reservado" />);
     expect(screen.getByRole('img', { name: 'Cupo reservado' })).toHaveClass('sello');
+  });
+});
+
+describe('Desplegable', () => {
+  it('cerrado esconde su contenido a los lectores y abierto lo muestra', () => {
+    const { rerender } = render(
+      <Desplegable abierto={false}>
+        <button type="button">Salir</button>
+      </Desplegable>,
+    );
+    expect(screen.queryByRole('button', { name: 'Salir' })).not.toBeInTheDocument();
+    rerender(
+      <Desplegable abierto>
+        <button type="button">Salir</button>
+      </Desplegable>,
+    );
+    expect(screen.getByRole('button', { name: 'Salir' })).toBeInTheDocument();
   });
 });
