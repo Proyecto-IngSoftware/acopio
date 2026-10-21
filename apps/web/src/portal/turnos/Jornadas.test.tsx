@@ -49,7 +49,12 @@ const TRES = [
   }),
 ];
 
+afterEach(() => vi.useRealTimers());
+
 it('agrupa las jornadas por día y marca las llenas y las cerradas', async () => {
+  // 20 de octubre de 2026 en Bogotá: ningún día de TRES es «Hoy»
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(new Date('2026-10-20T15:00:00Z'));
   responderSegun({ 'GET /api/turnos/jornadas': TRES });
   const { container } = render(envolver(<Jornadas />, '/voluntariado?vista=lista'));
   const dia21 = await screen.findByRole('region', { name: 'Miércoles 21 de octubre' });
