@@ -8,6 +8,7 @@ import { ChipsEstado } from './ChipsEstado';
 import { Esqueleto } from './Esqueleto';
 import { EstadoError } from './EstadoError';
 import { EstadoVacio } from './EstadoVacio';
+import { Ilustracion } from './ilustraciones/Ilustracion';
 
 describe('Boton', () => {
   it('responde al clic y a la tecla Enter', async () => {
@@ -70,6 +71,30 @@ describe('estados', () => {
     expect(screen.getByText('Todavía no hay jornadas publicadas.')).toBeInTheDocument();
   });
 
+  it('EstadoVacio con ilustración la muestra con su nombre', () => {
+    render(
+      <EstadoVacio titulo="Sin jornadas" ilustracion="calendario">
+        Todavía no hay jornadas.
+      </EstadoVacio>,
+    );
+    expect(
+      screen.getByRole('img', { name: 'Calendario con una planta que brota' }),
+    ).toBeInTheDocument();
+  });
+
+  it('EstadoVacio sin ilustración no dibuja imagen', () => {
+    render(<EstadoVacio titulo="Sin jornadas">Todavía no hay jornadas.</EstadoVacio>);
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+  });
+
+  it.each(['cajas', 'calendario', 'mapa', 'caja-folio'] as const)(
+    'la ilustración %s tiene nombre',
+    (nombre) => {
+      render(<Ilustracion nombre={nombre} />);
+      expect(screen.getByRole('img')).toHaveAccessibleName();
+    },
+  );
+
   it('EstadoError se anuncia como alerta y permite reintentar', async () => {
     const alReintentar = vi.fn();
     render(<EstadoError mensaje="No hay conexión" alReintentar={alReintentar} />);
@@ -90,6 +115,9 @@ describe('estados', () => {
         <Boton ocupado>Tres</Boton>
         <EnlaceBoton a="/x">Dos</EnlaceBoton>
         <EstadoVacio titulo="Vacío">Texto</EstadoVacio>
+        <EstadoVacio titulo="Con dibujo" ilustracion="cajas">
+          Texto
+        </EstadoVacio>
         <EstadoError mensaje="Falló" alReintentar={() => {}} />
         <Esqueleto etiqueta="Cargando" />
       </MemoryRouter>,
