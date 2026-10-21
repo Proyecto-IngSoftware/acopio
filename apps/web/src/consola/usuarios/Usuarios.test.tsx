@@ -75,7 +75,8 @@ describe('lista', () => {
     const suspendida = screen.getByRole('link', { name: /Ana Pérez/ });
     expect(suspendida).toHaveTextContent('Suspendido');
     // Desactivada: atenuada y con su etiqueta en gris sólido
-    expect(suspendida).toHaveClass('opacity-70');
+    // Sin opacidad: atenuar el texto lo dejaba por debajo de AA; la etiqueta gris basta
+    expect(suspendida).not.toHaveClass('opacity-70');
     expect(within(suspendida).getByText('Suspendido').closest('span')).toHaveClass(
       'bg-surface-container-high',
     );

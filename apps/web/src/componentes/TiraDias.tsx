@@ -21,7 +21,7 @@ export function TiraDias({ etiqueta, dias, elegido, alElegir }: Props) {
         const color = activo
           ? 'border-primary-container bg-primary-container text-on-primary'
           : `border-outline-variant bg-surface-container-lowest ${
-              d.conEventos || d.clave === 'todos' ? 'text-on-surface' : 'text-outline'
+              d.conEventos || d.clave === 'todos' ? 'text-on-surface' : 'text-on-surface-variant'
             }`;
         return (
           <button

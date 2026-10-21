@@ -23,9 +23,7 @@ export function FilaJornada({ jornada, className = '', style }: Props) {
   return (
     <article
       style={style}
-      className={`toque relative flex min-h-[72px] items-center gap-space-sm rounded-2xl bg-surface-container-lowest p-space-sm shadow-sm ${
-        marca ? 'opacity-70' : ''
-      } ${className}`}
+      className={`toque relative flex min-h-[72px] items-center gap-space-sm rounded-2xl bg-surface-container-lowest p-space-sm shadow-sm ${className}`}
     >
       <BloqueFecha fecha={jornada.inicio} apagado={marca !== null} />
       <div className="flex min-w-0 flex-1 flex-col gap-0.5">

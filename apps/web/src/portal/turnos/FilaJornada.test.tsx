@@ -49,6 +49,8 @@ it('llena: etiqueta «Llena», bloque apagado y sin botón ni barra', () => {
   expect(screen.queryByRole('link', { name: /^Reservar/ })).toBeNull();
   expect(screen.queryByRole('meter')).toBeNull();
   expect(container.querySelector('.bg-primary-fixed')).toBeNull();
+  // Sin opacidad: el texto atenuado quedaba por debajo de AA
+  expect(container.querySelector('article')).not.toHaveClass('opacity-70');
 });
 
 it('lleva el perfil que pide la jornada', () => {

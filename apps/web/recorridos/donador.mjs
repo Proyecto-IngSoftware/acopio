@@ -202,10 +202,12 @@ await paso('cancelar la donación desde «Mis donaciones»', async () => {
   // El Donador de la demo tiene otras donaciones: todo se busca en la fila del folio
   const fila = p.getByRole('listitem').filter({ hasText: folio });
   await fila.waitFor();
-  await revisar(p, 'P13 mis donaciones', SIN_CORREO ? undefined : 'P13-mi-cuenta/construida.png');
+  // Primero se cancela y después se revisa: si la revisión falla, la demo no queda con una
+  // donación preparada de más (pasó en el servidor el 2026-10-21)
   await fila.getByRole('button', { name: 'Cancelar donación' }).click();
   await p.getByRole('button', { name: 'Sí, cancelar' }).click();
   await fila.getByText('Cancelada').waitFor();
+  await revisar(p, 'P13 mis donaciones', SIN_CORREO ? undefined : 'P13-mi-cuenta/construida.png');
 });
 
 await b.close();

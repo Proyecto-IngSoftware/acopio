@@ -47,3 +47,10 @@ it('no tiene violaciones graves', async () => {
   );
   expect(await violacionesGraves(container)).toEqual([]);
 });
+
+it('un día sin eventos conserva el contraste AA: no usa el gris de contorno', () => {
+  render(<TiraDias etiqueta="Días" dias={dias} elegido="todos" alElegir={() => {}} />);
+  expect(screen.getByRole('button', { name: 'Miércoles 21 de octubre' })).not.toHaveClass(
+    'text-outline',
+  );
+});

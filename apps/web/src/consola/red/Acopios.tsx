@@ -80,7 +80,7 @@ export function Acopios() {
           <li key={a.id}>
             <Link
               to={`/consola/acopios/${a.id}`}
-              className={`flex items-center gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md ${a.estado === 'CERRADO' ? 'opacity-70' : ''}`}
+              className={`flex items-center gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md`}
             >
               <span className="flex min-w-0 flex-1 flex-col gap-1">
                 <span className="text-body-lg font-semibold text-on-surface">{a.nombre}</span>

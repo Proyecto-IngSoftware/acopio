@@ -67,9 +67,7 @@ export function PestanaEmergencias() {
         return (
           <article
             key={e.id}
-            className={`flex flex-col gap-space-sm rounded-xl bg-surface-container-lowest p-space-md shadow-sm ${
-              abierta ? '' : 'opacity-70'
-            }`}
+            className={`flex flex-col gap-space-sm rounded-xl bg-surface-container-lowest p-space-md shadow-sm`}
           >
             <div className="flex items-start justify-between gap-space-sm">
               <h3 className="text-body-lg font-bold text-on-surface">{e.nombre}</h3>

@@ -118,10 +118,7 @@ export function PestanaCategorias() {
             {categorias.map((c) => {
               const canastaDe = cantidades.get(c.id);
               return (
-                <li
-                  key={c.id}
-                  className={`flex items-start gap-space-sm p-space-md ${c.archivada ? 'opacity-70' : ''}`}
-                >
+                <li key={c.id} className={`flex items-start gap-space-sm p-space-md`}>
                   <div className="flex min-w-0 flex-1 flex-col gap-1">
                     <div className="flex flex-wrap items-center gap-space-xs">
                       <span className="text-body-lg font-bold text-on-surface">{c.nombre}</span>
