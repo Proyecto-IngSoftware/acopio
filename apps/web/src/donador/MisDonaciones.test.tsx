@@ -135,7 +135,8 @@ it('una donación cancelada se ve atenuada, con su etiqueta en gris sólido', as
   render(envolver(<MisDonaciones />, '/donador'));
   const etiqueta = await screen.findByText('Cancelada');
   expect(etiqueta).toHaveClass('bg-surface-container-high');
-  expect(etiqueta.closest('li')).toHaveClass('opacity-70');
+  // Sin opacidad: atenuar el texto lo dejaba por debajo de AA (P7 en el servidor, axe)
+  expect(etiqueta.closest('li')).not.toHaveClass('opacity-70');
 });
 
 it('mientras cancela, «Sí, cancelar» está ocupado y no manda dos veces', async () => {

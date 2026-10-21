@@ -119,9 +119,7 @@ function ZonasDe({ emergencia }: { emergencia: Emergencia }) {
           return (
             <li
               key={z.id}
-              className={`flex items-stretch rounded-xl border border-outline-variant bg-surface-container-lowest ${
-                cerrada ? 'opacity-70' : ''
-              }`}
+              className={`flex items-stretch rounded-xl border border-outline-variant bg-surface-container-lowest`}
             >
               <Link
                 to={`/consola/zonas/${z.id}`}

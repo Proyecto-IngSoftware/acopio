@@ -81,7 +81,15 @@ await paso('P7 lista las jornadas y marca la llena', async () => {
   jornadaId = armar.id;
   await p.goto(`${WEB}/voluntariado?vista=lista`);
   await p.getByRole('heading', { level: 1, name: 'Voluntariado' }).waitFor();
-  const llena = p.getByRole('link', { name: /Clasificar ropa donada \(demo\)/ });
+  // La tira de días reemplaza el filtro «Día» (línea visual, fase 2)
+  await p
+    .getByRole('group', { name: 'Día' })
+    .getByRole('button', { name: 'Todos los días' })
+    .waitFor();
+  // La marca va en la fila, fuera del enlace del título
+  const llena = p
+    .getByRole('article')
+    .filter({ has: p.getByRole('link', { name: 'Clasificar ropa donada (demo)', exact: true }) });
   // Sembrada hace días, la llena puede quedar a menos de 12 horas: «Reservas cerradas» le gana a «Llena»
   await llena.getByText(/^(Llena|Reservas cerradas)$/).waitFor();
   if (await p.getByText(/personas presentes/i).count()) throw new Error('dice personas presentes');
@@ -145,7 +153,8 @@ await paso('P7 en «Mapa» filtra con los chips y «Todas» los quita', async ()
 });
 
 await paso('reserva en «Armar mercados (demo)» con un correo nuevo', async () => {
-  await p.getByRole('link', { name: /Armar mercados \(demo\)/ }).click();
+  // El título abre la jornada; «Reservar en …» es otro enlace de la misma fila
+  await p.getByRole('link', { name: 'Armar mercados (demo)', exact: true }).click();
   await p.getByRole('heading', { level: 1, name: 'Armar mercados (demo)' }).waitFor();
   await p.getByLabel('Nombre', { exact: true }).fill('Recorrido de turnos');
   await p.getByLabel('Correo', { exact: true }).fill(CORREO);

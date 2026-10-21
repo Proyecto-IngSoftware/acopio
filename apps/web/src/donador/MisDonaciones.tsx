@@ -96,9 +96,7 @@ export function MisDonaciones() {
             <li
               key={d.folio}
               style={retrasoEntrada(i)}
-              className={`entra-lista flex flex-col gap-space-xs rounded-xl bg-surface-container-lowest p-space-md shadow-sm ${
-                d.estado === 'CANCELADO' ? 'opacity-70' : ''
-              }`}
+              className={`entra-lista flex flex-col gap-space-xs rounded-xl bg-surface-container-lowest p-space-md shadow-sm`}
             >
               <div className="flex items-center justify-between gap-space-sm">
                 <span className="font-mono text-label-md text-on-surface">{d.folio}</span>
