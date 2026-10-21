@@ -58,7 +58,7 @@ export function FilaMenu({ icono, titulo, descripcion, a, distintivo }: PropsFil
   return (
     <li>
       {a ? (
-        <Link to={a} className={`${clases} active:bg-surface-container`}>
+        <Link to={a} className={`${clases} toque active:bg-surface-container`}>
           {contenido}
         </Link>
       ) : (

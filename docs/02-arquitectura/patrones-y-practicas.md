@@ -3,7 +3,7 @@ title: "Patrones y prácticas de código"
 type: arquitectura
 tags: [arquitectura, patrones, buenas-practicas]
 estado: vigente
-actualizado: 2026-10-20
+actualizado: 2026-10-21
 ---
 
 # Patrones y prácticas de código
@@ -136,27 +136,35 @@ Servicios de otros módulos que se usan desde cualquier parte: `BitacoraService.
 
 | Archivo en `apps/web/src/` | Qué ofrece |
 |---|---|
-| `componentes/Boton.tsx` | `Boton`, `EnlaceBoton` |
+| `componentes/Barra.tsx` | `Barra`: medidor delgado (`role="meter"`) que se llena al aparecer, con tono `aviso` en ámbar (cupos, balance) |
+| `componentes/BloqueFecha.tsx` | `BloqueFecha`: recuadro «jue / 22» de un día de agenda, o con el mes si está a más de una semana; `apagado` lo pone en gris (ADR-0022) |
+| `componentes/Boton.tsx` | `Boton`, `EnlaceBoton`, con `ocupado` (ícono que gira, inhabilitado y `aria-busy`) y `tamano="compacto"` de 40 px |
 | `componentes/Campo.tsx` | `Campo`, `Selector` |
 | `componentes/ChipsEstado.tsx` | `ChipsEstado`: fila de chips que filtran por estado, cada uno con su cuenta y un puntito de color opcional; un chip con 0 no se dibuja, salvo el elegido (P5, voluntariado) |
+| `componentes/Desplegable.tsx` | `Desplegable`: contenido que se abre por alto con animación; cerrado queda `inert` y fuera del árbol de accesibilidad |
 | `componentes/EditorHorario.tsx` | `EditorHorario` |
-| `componentes/Esqueleto.tsx` | `Esqueleto` mientras carga |
-| `componentes/EstadoError.tsx`, `componentes/EstadoVacio.tsx` | `EstadoError`, `EstadoVacio` |
+| `componentes/Esqueleto.tsx` | `Esqueleto` mientras carga, con un brillo que lo barre |
+| `componentes/EstadoError.tsx`, `componentes/EstadoVacio.tsx` | `EstadoError`, `EstadoVacio`; este último acepta `ilustracion` |
 | `componentes/EtiquetaEstado.tsx` | `EtiquetaEstado` |
 | `componentes/EtiquetaSemaforo.tsx` | `EtiquetaSemaforo`, `ORDEN_URGENCIA` |
-| `componentes/Hoja.tsx` | `Hoja`, panel inferior |
+| `componentes/Hoja.tsx` | `Hoja`, panel inferior que sube al abrir y baja antes de cerrarse |
+| `componentes/ilustraciones/Ilustracion.tsx` | `Ilustracion` (`cajas`, `calendario`, `mapa`, `caja-folio`): dibujos planos con los tokens, para estados vacíos y piezas sin foto (ADR-0022) |
 | `componentes/Icono.tsx` | `Icono` de Material Symbols |
 | `componentes/IconoGrupo.tsx` | `IconoGrupo`: el ícono del grupo de una categoría en el recuadro menta; el mapa es `ICONO_GRUPO` de `api/catalogo.ts` (ADR-0020) |
 | `componentes/Menu.tsx` | `SeccionMenu`, `FilaMenu` |
-| `componentes/Pildora.tsx`, `componentes/Segmentado.tsx` | `Pildora`, `Segmentado` |
+| `componentes/movimiento.ts` | `prefiereMenosMovimiento()` (verdadero en jsdom) y `retrasoEntrada(i)` para listas que entran escalonadas. Las clases (`toque`, `avanza`, `entra-adelante`, `entra-atras`, `aparece`, `entra-lista`, `latido`, `desplegable`, `gira`, `sello`, `hoja-entra`…) están en `estilos.css` |
+| `componentes/Pildora.tsx`, `componentes/Segmentado.tsx` | `Pildora`, `Segmentado`, este con la píldora que se desliza a la opción elegida |
 | `componentes/Qr.tsx` | `Qr`, un código QR como imagen SVG a partir de un texto |
 | `componentes/SelectorUnidad.tsx`, `componentes/cantidad-base.ts` | `SelectorUnidad`: elige kg o g, L o ml junto a un campo de cantidad (en `UNIDAD` solo muestra el símbolo). `leerCantidad(texto, factor, unidad)` convierte lo escrito a la unidad base y devuelve el error de decimales o de tope de línea; `simboloDe` da el símbolo del factor. Cada pantalla guarda su `factor`, que arranca en 1 y vuelve a 1 al cambiar de categoría |
+| `componentes/SelloConfirmacion.tsx` | `SelloConfirmacion`: el check animado de una acción confirmada |
 | `componentes/SubirAlNavegar.tsx` | `SubirAlNavegar` |
 | `componentes/TarjetaNoTraigan.tsx` | `TarjetaNoTraigan` |
+| `componentes/TiraDias.tsx` | `TiraDias`: fila deslizable de días para filtrar una agenda, con punto en los días con eventos |
 | `componentes/mapa/MapaLeaflet.tsx`, `componentes/mapa/MapaConPin.tsx`, `componentes/mapa/BuscadorDireccion.tsx` | Mapa base, mapa con pin y buscador de direcciones |
 | `api/cliente.ts` | `api`, `desenvolver`, `ErrorApi`, `reintentarConsulta`, `alPerderSesion` |
 | `api/*.ts` | Tipos y hooks por recurso (`useSaldos`, `useBandeja`, `useAcopio`…) |
-| `formato.ts` | `diaLargo`, `haceCuanto`, `fechaHora` |
+| `formato.ts` | `diaLargo`, `haceCuanto`, `fechaHora`; `partesFecha` (semana, día, mes y si está lejana) y `diasDeLaTira` para el bloque de fecha y la tira |
+| `portal/secciones.ts`, `portal/direccion.ts` | `DESTINOS` y `seccionDe(ruta)` de la barra inferior; `direccionEntre` decide desde qué lado entra una página |
 | `sesion/Sesion.tsx` | `SesionProveedor`, `useSesion` |
 | `sesion/roles.ts` | `nombreRol`, `iniciales` |
 | `sesion/ubicacion-activa.ts` | `useUbicacionActiva` |

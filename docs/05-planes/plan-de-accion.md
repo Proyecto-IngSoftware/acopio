@@ -3,7 +3,7 @@ title: "Plan de acción del proyecto"
 type: plan
 tags: [plan, seguimiento, cronograma]
 estado: vigente
-actualizado: 2026-10-20
+actualizado: 2026-10-21
 ---
 
 # Plan de acción del proyecto
@@ -74,6 +74,7 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 | 13 | Deuda de las revisiones: menores de los bloques 1 a 3 (P-034, P-038 y los del Bloque 3) y la imagen que falta en Garage (P-058). Los del cierre del Bloque 5 (P-070, P-071, #129) quedaron hechos el 18 de octubre. De la ronda por rol del 19: los datos de inventario de más de 6 horas (#151), el «no recibir» de un acopio ajeno (#152), estos dos hechos el 20 de octubre, y la frase de la bitácora para un cambio de fecha (#153). De la revisión de la entrada única, el correo de una cuenta activa y su credencial (P-080) quedó hecho el 19 de octubre | #43, #153 | 2026-11-22 | 🟡 |
 | 14 | P5 de Stitch con el filtro viejo | #39 | 2026-11-22 | ⬜ |
 | 15 | Íconos que se ven como texto mientras baja su fuente | #41 | 2026-11-22 | ⬜ |
+| 22 | Línea visual ([ADR-0022](../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)): fechas en bloque, botones, estados desactivados y vacíos con ilustración, y movimiento al tocar, en portal y consola. Fase 1, las piezas base y el movimiento global ([plan](2026-10-21-linea-visual-fase-1.md)), se fusionó el 21 con el PR 178, a pedido de Joseph, y Dokploy la despliega en el servidor. Las fases 2 (portal) y 3 (consola) llevan su propio plan | #177 | 2026-11-15 | 🟡 |
 
 ## Cierre: del 23 de noviembre al 6 de diciembre
 
@@ -222,3 +223,6 @@ Sprint 3.
 - 2026-10-20: «Escanear» en C18 quedó fusionado con el PR 170, con el CI en verde. La prueba en el teléfono entra en la revisión de #163.
 - 2026-10-20: P-086 y P-087 quedan resueltos (fila 21). Los íconos ya toman el tamaño que pide el código, y una prueba nueva detecta tokens de texto o de espacio que no existen.
 - 2026-10-20: P-086 y P-087 quedaron fusionados con el PR 172, con el CI en verde.
+- 2026-10-21: nace #177, la línea visual, con la fila 22. La fase 1 se construye en la rama
+  `linea-visual-fase-1`. Joseph pidió fusionarla el mismo 21, antes de la sustentación, y
+  quedó fusionada con el PR 178.

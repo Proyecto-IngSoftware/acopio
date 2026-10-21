@@ -25,3 +25,23 @@ it('es un grupo de opciones: marca la elegida y cambia al tocar otra', async () 
   expect(screen.getByRole('radio', { name: 'Pausado' })).toBeChecked();
   expect(screen.getByRole('radiogroup', { name: 'Estado' })).toBeInTheDocument();
 });
+
+it('la píldora se mueve a la opción elegida', async () => {
+  const { container } = render(<Prueba />);
+  await userEvent.click(screen.getByRole('radio', { name: 'Pausado' }));
+  expect((container.querySelector('[data-pildora]') as HTMLElement).style.transform).toBe(
+    'translateX(calc(1 * (100% + 0.25rem)))',
+  );
+});
+
+it('sin opción elegida no dibuja la píldora', () => {
+  const { container } = render(
+    <Segmentado
+      etiqueta="Estado"
+      valor={'OTRO' as 'ACTIVO'}
+      alCambiar={() => {}}
+      opciones={[{ valor: 'ACTIVO', texto: 'Activo' }]}
+    />,
+  );
+  expect(container.querySelector('[data-pildora]')).toBeNull();
+});

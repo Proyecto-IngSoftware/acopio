@@ -3,7 +3,7 @@ title: "Registro de decisiones de arquitectura"
 type: moc
 tags: [moc, adr]
 estado: vigente
-actualizado: 2026-10-18
+actualizado: 2026-10-21
 ---
 
 # Registro de decisiones de arquitectura
@@ -40,6 +40,7 @@ documento que se reescribe hasta perder la historia.
 | [0019](ADR-0019-dao-sobre-prisma.md) | El acceso a datos pasa por DAO sobre Prisma | aceptada |
 | [0020](ADR-0020-grises-piedra.md) | Grises piedra en los fondos y bordes, e íconos por grupo de categoría | aceptada |
 | [0021](ADR-0021-presentaciones-y-estado-del-codigo.md) | Presentaciones como entidad y estado en el código de barras | aceptada |
+| [0022](ADR-0022-linea-visual-con-movimiento-e-ilustracion.md) | Línea visual con movimiento e ilustraciones propias | aceptada |
 
 ## Cuándo escribir una
 

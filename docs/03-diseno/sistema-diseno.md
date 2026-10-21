@@ -3,7 +3,7 @@ title: "Sistema de diseño"
 type: diseno
 tags: [diseno]
 estado: vigente
-actualizado: 2026-10-18
+actualizado: 2026-10-21
 ---
 
 # Sistema de diseño
@@ -26,7 +26,7 @@ Ninguna decisión visual de este documento es estética. Todas salen de esa fras
 | Una sola mano | Acciones primarias en la mitad inferior de la pantalla |
 | Con guantes | Área táctil mínima de 48 × 48 px, sin excepción |
 | Bajo sol | Contraste AAA en el texto, cero degradados |
-| Batería baja | Fondo claro, sin animación decorativa, sin video |
+| Batería baja | Fondo claro, sin video; nada se anima solo salvo el punto en vivo de la Portada (ADR-0022) |
 | Señal intermitente | Estado offline siempre visible, nunca un error genérico |
 | Con prisa | Un dato por línea, jerarquía brutal, cero adorno |
 
@@ -177,7 +177,25 @@ fondo translúcido con desenfoque. Sin degradados.
 | Peligro | Destructiva, fondo `--estado-critico` | 48 px |
 
 Estado de carga con texto: *«Guardando…»*, no solo un giro. El operador necesita
-saber qué está pasando, no que algo pasa.
+saber qué está pasando, no que algo pasa. `Boton` con `ocupado` suma el ícono que gira y se
+inhabilita; el texto lo sigue cambiando la pantalla.
+
+Desde [ADR-0022](../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md),
+todo botón se hunde un poco al tocarlo, el inhabilitado va en gris sólido
+(`surface-container-high`) y hay un tamaño compacto de 40 px para las filas.
+
+### Bloque de fecha y tira de días
+
+Para un día al que alguien tiene que ir (jornadas, reservas, turnos): un recuadro verde claro
+con el día de la semana y el número («jue / 22»), o el mes si está a más de una semana. Una
+fecha de registro («recibida el 7 de octubre») sigue en texto. La tira de días filtra una agenda
+por día y marca con un punto los días que tienen eventos.
+
+### Estado desactivado
+
+Lo que existe pero no se puede usar ahora (jornada llena, categoría archivada) conserva su
+opacidad atenuada, pasa sus piezas de color a gris sólido, lleva una etiqueta corta («Llena»,
+«Archivada») y no muestra la acción principal.
 
 ### Campo numérico
 
@@ -225,8 +243,10 @@ marca de tiempo es una afirmación que nadie puede verificar.
 Todo listado define los tres. Nunca una pantalla en blanco.
 
 - **Vacío:** qué significa y qué hacer. *«Este acopio no tiene movimientos
-  registrados. Registra el primero.»* con el botón al lado.
-- **Carga:** esqueleto con la forma del contenido, nunca un giro centrado.
+  registrados. Registra el primero.»* con el botón al lado. Puede llevar una de las
+  ilustraciones de la marca (cajas, calendario, mapa, caja con folio).
+- **Carga:** esqueleto con la forma del contenido y un brillo que lo barre, nunca un giro
+  centrado.
 - **Error:** qué pasó y qué hacer. *«No se pudo guardar. Tu conexión falló; el
   movimiento quedó en cola y se enviará solo.»*
 
@@ -255,6 +275,25 @@ equivocado se corrige con un ajuste, no con un borrado.**
 Toda acción secundaria se abre como hoja inferior deslizable, no como modal
 centrado. Está al alcance del pulgar y se cierra deslizando.
 
+### Movimiento
+
+El movimiento responde a lo que hace la persona ([ADR-0022](../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)).
+Las clases están en `apps/web/src/estilos.css` y la curva común es `cubic-bezier(.2,.8,.2,1)`.
+
+| Movimiento | Dónde | Detalle |
+|---|---|---|
+| Toque | Botones y filas enlazadas | Escala a .97 en 150 ms |
+| Entrada de página | Todas las rutas | Desliza 24 px y aparece en 300 ms; desde la izquierda al volver |
+| Hoja | `Hoja` | Sube en 380 ms y baja en 250 ms antes de cerrarse |
+| Desplegable | Menú de la cuenta | Se abre por alto en 300 ms |
+| Píldora | `Segmentado` y barra inferior | Se desliza a la opción activa en 320 ms |
+| Barra | Cupos, balance | Se llena desde 0 en 1 s |
+| Lista al filtrar | Tira de días, píldoras | Cada fila entra 60 ms después de la anterior, hasta la sexta |
+| Sello | Confirmaciones | El círculo crece, el aro se dibuja y el check se traza en 500 ms |
+| Punto en vivo | Franja de la Portada | Late cada 2 s; es lo único que se repite solo |
+
+Con «reducir movimiento» todo se apaga y cada elemento aparece en su estado final.
+
 ### Escáner
 
 Pantalla completa, con recuadro guía. Botón de **entrada manual siempre visible** y
@@ -282,7 +321,9 @@ trabaja.
 **Serio, claro y rápido.** Ni la alegría de una startup ni la solemnidad de un
 funeral.
 
-- **Cero ilustración.** Fotografía real de la operación, o nada.
+- **Ilustración propia, plana, en los verdes de la marca** con un acento durazno
+  (`tertiary-fixed`), para los estados vacíos y las piezas sin foto (ADR-0022). Una ilustración
+  nueva se aprueba en el lienzo antes de entrar al código.
 - Sin fotos de archivo de gente sonriendo con cajas.
 - Los números hablan por sí solos; no hace falta adjetivarlos.
 - El texto de interfaz es directo: *«No traigan más agua»*, no *«Recepción

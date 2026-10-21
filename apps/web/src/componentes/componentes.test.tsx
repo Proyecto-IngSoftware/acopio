@@ -8,6 +8,9 @@ import { ChipsEstado } from './ChipsEstado';
 import { Esqueleto } from './Esqueleto';
 import { EstadoError } from './EstadoError';
 import { EstadoVacio } from './EstadoVacio';
+import { Desplegable } from './Desplegable';
+import { Ilustracion } from './ilustraciones/Ilustracion';
+import { SelloConfirmacion } from './SelloConfirmacion';
 
 describe('Boton', () => {
   it('responde al clic y a la tecla Enter', async () => {
@@ -23,6 +26,34 @@ describe('Boton', () => {
   it('por defecto es type="button", para no enviar formularios sin querer', () => {
     render(<Boton>Guardar</Boton>);
     expect(screen.getByRole('button')).toHaveAttribute('type', 'button');
+  });
+
+  it('ocupado: inhabilitado, anuncia que trabaja y no responde al clic', async () => {
+    const alPulsar = vi.fn();
+    render(
+      <Boton ocupado onClick={alPulsar}>
+        Guardar
+      </Boton>,
+    );
+    const boton = screen.getByRole('button', { name: 'Guardar' });
+    expect(boton).toBeDisabled();
+    expect(boton).toHaveAttribute('aria-busy', 'true');
+    await userEvent.click(boton);
+    expect(alPulsar).not.toHaveBeenCalled();
+  });
+
+  it('inhabilitado usa relleno sólido y no transparencia', () => {
+    render(<Boton disabled>Guardar</Boton>);
+    const clases = screen.getByRole('button').className;
+    expect(clases).toContain('disabled:bg-surface-container-high');
+    expect(clases).not.toContain('opacity');
+  });
+
+  it('compacto mide 40 px de alto', () => {
+    render(<Boton tamano="compacto">Reservar</Boton>);
+    const clases = screen.getByRole('button').className;
+    expect(clases).toContain('min-h-[40px]');
+    expect(clases).not.toContain('min-h-[48px]');
   });
 
   it('EnlaceBoton navega a su ruta', () => {
@@ -42,6 +73,30 @@ describe('estados', () => {
     expect(screen.getByText('Todavía no hay jornadas publicadas.')).toBeInTheDocument();
   });
 
+  it('EstadoVacio con ilustración la muestra con su nombre', () => {
+    render(
+      <EstadoVacio titulo="Sin jornadas" ilustracion="calendario">
+        Todavía no hay jornadas.
+      </EstadoVacio>,
+    );
+    expect(
+      screen.getByRole('img', { name: 'Calendario con una planta que brota' }),
+    ).toBeInTheDocument();
+  });
+
+  it('EstadoVacio sin ilustración no dibuja imagen', () => {
+    render(<EstadoVacio titulo="Sin jornadas">Todavía no hay jornadas.</EstadoVacio>);
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+  });
+
+  it.each(['cajas', 'calendario', 'mapa', 'caja-folio'] as const)(
+    'la ilustración %s tiene nombre',
+    (nombre) => {
+      render(<Ilustracion nombre={nombre} />);
+      expect(screen.getByRole('img')).toHaveAccessibleName();
+    },
+  );
+
   it('EstadoError se anuncia como alerta y permite reintentar', async () => {
     const alReintentar = vi.fn();
     render(<EstadoError mensaje="No hay conexión" alReintentar={alReintentar} />);
@@ -59,8 +114,12 @@ describe('estados', () => {
     const { container } = render(
       <MemoryRouter>
         <Boton>Uno</Boton>
+        <Boton ocupado>Tres</Boton>
         <EnlaceBoton a="/x">Dos</EnlaceBoton>
         <EstadoVacio titulo="Vacío">Texto</EstadoVacio>
+        <EstadoVacio titulo="Con dibujo" ilustracion="cajas">
+          Texto
+        </EstadoVacio>
         <EstadoError mensaje="Falló" alReintentar={() => {}} />
         <Esqueleto etiqueta="Cargando" />
       </MemoryRouter>,
@@ -109,5 +168,29 @@ describe('ChipsEstado', () => {
       'false',
     );
     expect(screen.queryByRole('button', { name: /Falta/ })).not.toBeInTheDocument();
+  });
+});
+
+describe('SelloConfirmacion', () => {
+  it('se lee con su etiqueta', () => {
+    render(<SelloConfirmacion etiqueta="Cupo reservado" />);
+    expect(screen.getByRole('img', { name: 'Cupo reservado' })).toHaveClass('sello');
+  });
+});
+
+describe('Desplegable', () => {
+  it('cerrado esconde su contenido a los lectores y abierto lo muestra', () => {
+    const { rerender } = render(
+      <Desplegable abierto={false}>
+        <button type="button">Salir</button>
+      </Desplegable>,
+    );
+    expect(screen.queryByRole('button', { name: 'Salir' })).not.toBeInTheDocument();
+    rerender(
+      <Desplegable abierto>
+        <button type="button">Salir</button>
+      </Desplegable>,
+    );
+    expect(screen.getByRole('button', { name: 'Salir' })).toBeInTheDocument();
   });
 });

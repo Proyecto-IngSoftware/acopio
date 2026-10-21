@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-10-21 | [2026-10-21-linea-visual-fase-1](2026-10-21-linea-visual-fase-1.md) | Línea visual, fase 1: bloque de fecha, tira de días, ilustraciones, botones y movimiento al tocar (ADR-0022, #177) |
 | 2026-10-21 | [2026-10-21-auditoria-prompts](2026-10-21-auditoria-prompts.md) | Auditoría de las instrucciones para Claude: módulos y CI al día en el `CLAUDE.md`, fusión con alertas de code scanning (P-088) y memoria corregida |
 | 2026-10-20 | [2026-10-20-escanear-en-c18](2026-10-20-escanear-en-c18.md) | Escanear códigos con la cámara en C18, íconos con su tamaño (P-086) y menores del mapa (P-087) |
 | 2026-10-20 | [2026-10-20-mapa-de-necesidades](2026-10-20-mapa-de-necesidades.md) | Mapa de necesidades: etiquetas de falta y sobra en P5 y mapa de voluntariado |
