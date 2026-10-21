@@ -46,7 +46,7 @@ Las pruebas de la web corren con Vitest (`bun run --filter @acopio/web test`); u
 
 Si el 5432 está ocupado por un PostgreSQL del equipo, cambiar `DB_PUERTO` en `.env` y usar el mismo puerto en `DATABASE_URL` y `DATABASE_URL_OWNER`.
 
-CI (`.github/workflows/ci.yml`) corre en cada PR y en `main`: lint, tipos, depcruise, `scripts/revisar-colores.sh`, unitarias, integración y `docker build` de la API.
+CI (`.github/workflows/ci.yml`) corre en cada PR y en `main`: lint, tipos, depcruise, `scripts/revisar-colores.sh`, unitarias, integración y `docker build` de la API y de la web.
 
 ## Arquitectura
 
@@ -61,7 +61,7 @@ Monorepo con workspaces de Bun:
 
 ### Módulos de la API
 
-Cada carpeta de `apps/api/src/modulos/` es un límite de dominio. Hoy existen `identidad`, `auditoria`, `catalogo`, `notificaciones`, `salud`, `acopios`, `inventario` (movimientos, saldos, umbrales y «no recibir»; los códigos de barras viven en `catalogo`), `comprobantes` (donaciones con folio, recepción, conciliación y seguimiento), `almacenamiento` (Garage por S3, hoja del grafo) y `motor` (necesidad, excedentes, sugerencias, pesos, remisiones y recepción en zona; las fórmulas viven en `packages/shared/src/motor`); faltan `turnos` e `importacion`.
+Cada carpeta de `apps/api/src/modulos/` es un límite de dominio: `identidad`, `auditoria`, `catalogo`, `notificaciones`, `salud`, `acopios`, `inventario` (movimientos, saldos, umbrales y «no recibir»; los códigos de barras viven en `catalogo`), `comprobantes` (donaciones con folio, recepción, conciliación y seguimiento), `almacenamiento` (Garage por S3, hoja del grafo), `motor` (necesidad, excedentes, sugerencias, pesos, remisiones y recepción en zona; las fórmulas viven en `packages/shared/src/motor`), `turnos` (jornadas, reservas sin cuenta, aforo, asistencia y recordatorios) e `importacion` (puntos referenciados desde fuentes externas, un adaptador por fuente).
 
 Quién puede importar a quién está en la tabla «Dependencias permitidas» de `docs/02-arquitectura/vista-general.md`, y `apps/api/.dependency-cruiser.cjs` la hace cumplir. Un módulo nuevo se agrega a las dos. `comun/`, `config/` y `generado/` no son módulos y los usa cualquiera; los decoradores de autorización viven en `comun/autorizacion` para evitar un ciclo entre `identidad` y `auditoria`.
 

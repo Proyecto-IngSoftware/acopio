@@ -3,7 +3,7 @@ title: "Vista general de arquitectura"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-19
+actualizado: 2026-10-21
 ---
 
 # Vista general de arquitectura
@@ -111,10 +111,10 @@ Un módulo NestJS por límite de dominio. Sin dependencias circulares; cuando do
 módulos necesitan hablarse, lo hacen por una interfaz declarada, no importando
 clases internas.
 
-Construidos al 2026-10-18: `identidad`, `auditoria`, `catalogo`, `notificaciones`,
+Construidos al 2026-10-21: `identidad`, `auditoria`, `catalogo`, `notificaciones`,
 `salud`, `acopios` (con las causas), `inventario`, `comprobantes`, `almacenamiento`, `motor`
-completo (cálculo, sugerencias, remisiones, recepción y reportes) y `turnos` (Bloque 5). Falta
-`importacion`.
+completo (cálculo, sugerencias, remisiones, recepción y reportes), `turnos` (Bloque 5) e
+`importacion` (pieza E).
 
 | Módulo | Responsabilidad | Expone |
 |---|---|---|

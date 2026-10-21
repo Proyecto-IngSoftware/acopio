@@ -3,7 +3,7 @@ title: "Informes de sesión — índice"
 type: moc
 tags: [moc, operacion, sesion]
 estado: vigente
-actualizado: 2026-10-20
+actualizado: 2026-10-21
 ---
 
 # Informes de sesión
@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-10-21 | [2026-10-21-auditoria-prompts](2026-10-21-auditoria-prompts.md) | Auditoría de las instrucciones para Claude: módulos y CI al día en el `CLAUDE.md`, P-088 |
 | 2026-10-20 | [2026-10-20-escanear-en-c18](2026-10-20-escanear-en-c18.md) | Escanear códigos con la cámara en C18, íconos con su tamaño (P-086) y menores del mapa (P-087) |
 | 2026-10-20 | [2026-10-20-mapa-de-necesidades](2026-10-20-mapa-de-necesidades.md) | Mapa de necesidades: etiquetas de falta y sobra en P5 y mapa de voluntariado |
 | 2026-10-20 | [2026-10-20-hallazgos-ronda](2026-10-20-hallazgos-ronda.md) | Hallazgos de la ronda, escáner y presentaciones de códigos con selector de unidades |

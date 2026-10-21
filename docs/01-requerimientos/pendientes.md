@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-20
+actualizado: 2026-10-21
 ---
 
 # Pendientes — bandeja de entrada
@@ -1197,6 +1197,17 @@ apruebe la maqueta antes de escribir el código.
 ([P-084](#p-084--menores-que-quedaron-de-la-fase-de-presentaciones)), y los Donadores pueden
 proponer presentaciones repetidas. Mientras no exista, se corrige con SQL si urge.
 **Estado:** ABIERTO → decide Joseph si entra en la próxima fase.
+
+### P-088 · La fusión automática no consulta las alertas de code scanning
+**Fecha:** 2026-10-21 · **Propuesto por:** Claude, en la auditoría de las instrucciones
+**Qué:** el comando de fusión del `CLAUDE.md` («Flujo de trabajo») y el aviso de
+`.claude/hooks/fusionar-tras-pr.mjs` esperan el CI y fusionan. El `CLAUDE.md` global de Joseph
+pide además consultar las alertas abiertas de code scanning del PR antes de fusionar, y no
+fusionar si hay alguna. El repositorio tiene CodeQL en configuración por defecto
+(`code-scanning/default-setup` responde `configured`), así que esa consulta aplica aquí.
+**Por qué:** el check de CodeQL solo falla con las alertas graves. Una alerta media pasa el CI y,
+con el comando actual, el PR se fusiona y la alerta queda abierta en `main`.
+**Estado:** ABIERTO → decide Joseph si se agrega la consulta al comando del `CLAUDE.md` y al hook.
 
 ---
 
