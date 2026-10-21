@@ -126,6 +126,7 @@ describe('Seguimiento', () => {
     pantalla('/seguimiento');
     expect(screen.getByLabelText('Folio')).toHaveValue('');
     expect(consulta).not.toHaveBeenCalled();
+    expect(screen.getByRole('img', { name: 'Caja con una etiqueta de folio' })).toBeInTheDocument();
   });
 
   it('el buscador navega a la ruta con el folio escrito', async () => {

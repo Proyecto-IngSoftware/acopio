@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 import { Link, useNavigate, useParams } from 'react-router';
 import { useJornada, useReservar, type JornadaPublica, type Perfil } from '../../api/turnos';
+import { BloqueFecha } from '../../componentes/BloqueFecha';
 import { Boton, EnlaceBoton } from '../../componentes/Boton';
 import { Campo } from '../../componentes/Campo';
 import { EstadoError } from '../../componentes/EstadoError';
@@ -52,7 +53,7 @@ function Detalle({ jornada }: { jornada: JornadaPublica }) {
   const marca = marcaJornada(jornada);
   const lista = requisitos(jornada.requisitos);
   return (
-    <article className="flex flex-col gap-space-md px-margin py-space-md">
+    <article className="aparece flex flex-col gap-space-md px-margin py-space-md">
       <Link
         to="/voluntariado"
         className="flex min-h-[44px] items-center gap-space-xs self-start text-label-md text-primary-container"
@@ -68,7 +69,12 @@ function Detalle({ jornada }: { jornada: JornadaPublica }) {
           )}
         </span>
       )}
-      <h1 className="text-headline-lg-mobile text-balance text-on-surface">{jornada.titulo}</h1>
+      <div className="flex items-center gap-space-md">
+        <BloqueFecha fecha={jornada.inicio} tamano="detalle" apagado={!jornada.aceptaReservas} />
+        <h1 className="min-w-0 text-headline-lg-mobile text-balance text-on-surface">
+          {jornada.titulo}
+        </h1>
+      </div>
       <Dato
         icono={jornada.lugar.tipo === 'ENTIDAD' ? 'verified' : 'warehouse'}
         relleno={jornada.lugar.tipo === 'ENTIDAD'}
@@ -264,8 +270,8 @@ function Formulario({ jornada }: { jornada: JornadaPublica }) {
           </span>
         </p>
       )}
-      <Boton type="submit" disabled={!listo || reservar.isPending} className="min-h-[56px]">
-        Reservar
+      <Boton type="submit" disabled={!listo} ocupado={reservar.isPending} className="min-h-[56px]">
+        {reservar.isPending ? 'Reservando…' : 'Reservar'}
       </Boton>
       <p className="flex items-center justify-center gap-1 text-body-sm text-on-surface-variant">
         <Icono nombre="schedule" className="text-[16px]" />

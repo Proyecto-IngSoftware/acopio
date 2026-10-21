@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { Boton } from '../../componentes/Boton';
 import { Icono } from '../../componentes/Icono';
 
 /** Buscador de folio de Stitch: lleva al seguimiento público del folio. */
@@ -33,15 +34,12 @@ export function RastrearFolio() {
           value={folio}
           onChange={(e) => fijarFolio(e.target.value)}
           aria-label="Número de folio"
-          className="min-h-[44px] min-w-0 flex-1 rounded-xl bg-surface-container-low px-space-md text-label-md text-on-surface placeholder:text-outline focus:bg-surface-container-lowest"
+          className="min-h-[48px] min-w-0 flex-1 rounded-xl bg-surface-container-low px-space-md text-label-md text-on-surface placeholder:text-outline focus:bg-surface-container-lowest"
         />
-        <button
-          type="submit"
-          className="flex min-h-[44px] items-center justify-center gap-space-xs rounded-xl bg-primary-container px-space-md text-label-md font-bold text-on-primary shadow-sm active:bg-primary"
-        >
+        <Boton type="submit" className="font-bold">
           <Icono nombre="search" className="text-[18px]" />
           Consultar
-        </button>
+        </Boton>
       </form>
     </section>
   );

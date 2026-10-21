@@ -3,7 +3,7 @@ title: "P13 · Mi cuenta de Donador · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portal, donador]
 estado: vigente
-actualizado: 2026-10-19
+actualizado: 2026-10-21
 ---
 
 # P13 · Mi cuenta de Donador · diseño en Stitch
@@ -51,3 +51,7 @@ cuenta» y «Entrar», con el título «Crea tu cuenta de donador» y el enlace 
 Entrar» a C01. Después de pedir la cuenta queda el aviso de revisar el correo y un botón
 «Entrar». Joseph aprobó la maqueta ajustada el 2026-10-19
 ([especificación](../../../superpowers/specs/2026-10-19-entrada-unica-design.md)).
+
+## Línea visual, fase 2 (2026-10-21)
+
+Mis donaciones entra escalonada al cambiar de filtro, la cancelada se ve atenuada y el vacío lleva la caja con folio. «Sí, cancelar» gira mientras espera. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

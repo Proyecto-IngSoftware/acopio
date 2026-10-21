@@ -12,3 +12,8 @@ it('cada ícono que usa el código está en icon_names de index.html', () => {
   );
   expect(faltan).toEqual([]);
 });
+
+it('los nombres de las ilustraciones no se piden como íconos', () => {
+  const usados = iconosUsados(join(process.cwd(), 'src')) as string[];
+  for (const dibujo of ['cajas', 'calendario', 'mapa']) expect(usados).not.toContain(dibujo);
+});

@@ -2,6 +2,7 @@ import { ENLACES_DESAPARECIDOS } from '@acopio/shared';
 import { Link } from 'react-router';
 import { urlImagenCausa, urlLogo, type CategoriaCausa, type CausaPublica } from '../../api/causas';
 import { Icono } from '../../componentes/Icono';
+import { Ilustracion } from '../../componentes/ilustraciones/Ilustracion';
 import { diaConAnio } from '../../formato';
 
 export const NOMBRE_CATEGORIA: Record<CategoriaCausa, string> = {
@@ -39,7 +40,8 @@ export function Sello({ verificadaEn }: { verificadaEn: string }) {
   );
 }
 
-/** La imagen de la causa, o el espacio neutro de la maqueta si no tiene (C-10). */
+/** La imagen de la causa o, si no tiene (C-10), una ilustración: el mapa para rescatistas y
+ *  las cajas para las demás (línea visual, ADR-0022). Decorativa en los dos casos. */
 export function ImagenCausa({ causa }: { causa: CausaPublica }) {
   const url = urlImagenCausa(causa);
   return url ? (
@@ -47,9 +49,12 @@ export function ImagenCausa({ causa }: { causa: CausaPublica }) {
   ) : (
     <div
       aria-hidden="true"
-      className="flex aspect-video w-full max-w-full items-center justify-center bg-surface-container text-on-surface-variant"
+      className="flex aspect-video w-full max-w-full items-center justify-center bg-surface-container-low"
     >
-      <Icono nombre="volunteer_activism" className="text-[40px]" />
+      <Ilustracion
+        nombre={causa.categoria === 'RESCATISTAS' ? 'mapa' : 'cajas'}
+        className="h-3/4 max-w-[60%]"
+      />
     </div>
   );
 }
@@ -162,7 +167,7 @@ export function Chips({
           type="button"
           aria-pressed={activa === clave}
           onClick={() => alElegir(clave)}
-          className={`min-h-[40px] shrink-0 rounded-full border px-space-md text-label-md ${
+          className={`toque min-h-[40px] shrink-0 rounded-full border px-space-md text-label-md ${
             activa === clave
               ? 'border-primary-container bg-primary-container text-on-primary'
               : 'border-outline-variant bg-surface-container-lowest text-on-surface'

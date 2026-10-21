@@ -51,39 +51,91 @@ const TRES = [
 
 afterEach(() => vi.useRealTimers());
 
-it('agrupa las jornadas por día y marca las llenas y las cerradas', async () => {
+it('lista las jornadas con su fecha y marca las llenas y las cerradas', async () => {
   // 20 de octubre de 2026 en Bogotá: ningún día de TRES es «Hoy»
   vi.useFakeTimers({ toFake: ['Date'] });
   vi.setSystemTime(new Date('2026-10-20T15:00:00Z'));
   responderSegun({ 'GET /api/turnos/jornadas': TRES });
   const { container } = render(envolver(<Jornadas />, '/voluntariado?vista=lista'));
-  const dia21 = await screen.findByRole('region', { name: 'Miércoles 21 de octubre' });
-  const dia22 = screen.getByRole('region', { name: 'Jueves 22 de octubre' });
-  expect(within(dia21).getAllByRole('link')).toHaveLength(2);
-  expect(within(dia22).getAllByRole('link')).toHaveLength(1);
-
-  const llena = screen.getByRole('link', { name: /Clasificar ropa donada/ });
-  expect(within(llena).getByText('Llena')).toBeInTheDocument();
-  expect(llena).toHaveAttribute('href', '/voluntariado/j2');
-  const cerrada = screen.getByRole('link', { name: /Descargar el camión/ });
-  expect(within(cerrada).getByText('Reservas cerradas')).toBeInTheDocument();
+  const fila = (titulo: string) =>
+    screen.getByRole('link', { name: titulo }).closest('article') as HTMLElement;
+  await screen.findByText('Armar mercados');
+  // Sin encabezados por día: la fecha va en el bloque de cada fila
+  expect(screen.queryByRole('region', { name: /octubre/ })).toBeNull();
+  expect(within(fila('Armar mercados')).getByText('Miércoles 21 de octubre')).toBeInTheDocument();
   expect(
-    within(screen.getByRole('link', { name: /Armar mercados/ })).getByText(
-      '3 de 10 cupos reservados',
-    ),
+    within(fila('Descargar el camión de agua')).getByText('Jueves 22 de octubre'),
   ).toBeInTheDocument();
+
+  const llena = fila('Clasificar ropa donada');
+  expect(within(llena).getByText('Llena')).toBeInTheDocument();
+  expect(within(llena).getByRole('link', { name: 'Clasificar ropa donada' })).toHaveAttribute(
+    'href',
+    '/voluntariado/j2',
+  );
+  expect(within(llena).queryByRole('link', { name: /^Reservar/ })).toBeNull();
+  expect(
+    within(fila('Descargar el camión de agua')).getByText('Reservas cerradas'),
+  ).toBeInTheDocument();
+  expect(within(fila('Armar mercados')).getByText('Quedan 7 de 10')).toBeInTheDocument();
 
   expect(container.textContent).not.toMatch(/personas presentes/i);
   expect(await violacionesGraves(container)).toEqual([]);
 });
 
-it('muestra hace cuánto se ajustaron los cupos a mano', async () => {
-  const haceDosHoras = new Date(Date.now() - 2 * 3_600_000 - 60_000).toISOString();
-  responderSegun({
-    'GET /api/turnos/jornadas': [jornadaDe({ ajuste: 2, ajusteActualizadoEn: haceDosHoras })],
-  });
+it('la tira filtra por día y «Todos» quita el filtro', async () => {
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(new Date('2026-10-20T15:00:00Z'));
+  responderSegun({ 'GET /api/turnos/jornadas': TRES });
+  render(
+    envolver(
+      <>
+        <Jornadas />
+        <Ubicacion />
+      </>,
+      '/voluntariado?vista=lista',
+    ),
+  );
+  await screen.findByText('Armar mercados');
+  const tira = screen.getByRole('group', { name: 'Día' });
+  expect(within(tira).getByRole('button', { name: 'Todos los días' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  // Del 20 al 22 hay tres días; el 20 no tiene jornadas y no lleva punto
+  expect(within(tira).getAllByRole('button')).toHaveLength(1 + 7);
+  await userEvent.click(within(tira).getByRole('button', { name: 'Jueves 22 de octubre' }));
+  expect(screen.getByTestId('busqueda')).toHaveTextContent('dia=2026-10-22');
+  await waitFor(() =>
+    expect(peticiones()).toContain('GET /api/turnos/jornadas?desde=2026-10-22&hasta=2026-10-22'),
+  );
+  expect(within(tira).getByRole('button', { name: 'Jueves 22 de octubre' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  await userEvent.click(within(tira).getByRole('button', { name: 'Todos los días' }));
+  expect(screen.getByTestId('busqueda')).not.toHaveTextContent('dia=');
+});
+
+it('ya no hay filtro «Día» en los botones de arriba', async () => {
+  responderSegun({ 'GET /api/turnos/jornadas': TRES });
   render(envolver(<Jornadas />, '/voluntariado?vista=lista'));
-  expect(await screen.findByText('Ajustado hace 2 h')).toBeInTheDocument();
+  await screen.findByText('Armar mercados');
+  expect(screen.queryByRole('button', { name: /^Día/ })).toBeNull();
+  expect(screen.getByRole('button', { name: /^Lugar/ })).toBeInTheDocument();
+  expect(screen.getByRole('button', { name: /^Perfil/ })).toBeInTheDocument();
+});
+
+it('un ?dia= fuera de la tira filtra igual y no marca ningún día', async () => {
+  vi.useFakeTimers({ toFake: ['Date'] });
+  vi.setSystemTime(new Date('2026-10-20T15:00:00Z'));
+  responderSegun({ 'GET /api/turnos/jornadas': TRES });
+  render(envolver(<Jornadas />, '/voluntariado?vista=lista&dia=2027-01-15'));
+  await waitFor(() =>
+    expect(peticiones()).toContain('GET /api/turnos/jornadas?desde=2027-01-15&hasta=2027-01-15'),
+  );
+  const tira = await screen.findByRole('group', { name: 'Día' });
+  expect(within(tira).queryAllByRole('button', { pressed: true })).toHaveLength(0);
 });
 
 it('el filtro de perfil pide las jornadas de ese perfil', async () => {
@@ -135,19 +187,13 @@ it('abierta con ?acopio= filtra por ese acopio', async () => {
   );
 });
 
-it('con ajuste manual, los cupos dicen cuántos llegaron sin reserva', async () => {
+it('en la fila, los cupos se cuentan como libres de los totales', async () => {
   responderSegun({
-    'GET /api/turnos/jornadas': [
-      jornadaDe({
-        ocupados: 3,
-        ajuste: 2,
-        libres: 5,
-        ajusteActualizadoEn: new Date().toISOString(),
-      }),
-    ],
+    'GET /api/turnos/jornadas': [jornadaDe({ ocupados: 3, ajuste: 2, libres: 5 })],
   });
   render(envolver(<Jornadas />, '/voluntariado?vista=lista'));
-  expect(await screen.findByText('3 de 10 cupos reservados · 2 sin reserva')).toBeInTheDocument();
+  expect(await screen.findByText('Quedan 5 de 10')).toBeInTheDocument();
+  expect(screen.getByRole('meter')).toHaveAttribute('aria-valuenow', '5');
 });
 
 it('ignora un día o un acopio mal escritos en la URL', async () => {
@@ -203,7 +249,7 @@ it('los filtros avisan que abren un diálogo', async () => {
   responderSegun({ 'GET /api/turnos/jornadas': [jornadaDe()] });
   render(envolver(<Jornadas />, '/voluntariado?vista=lista'));
   await screen.findByText('Armar mercados');
-  for (const nombre of [/Lugar/, /Día/, /Perfil/]) {
+  for (const nombre of [/Lugar/, /Perfil/]) {
     expect(screen.getByRole('button', { name: nombre })).toHaveAttribute('aria-haspopup', 'dialog');
   }
 });
@@ -265,8 +311,8 @@ it('la lista queda en la URL y los chips filtran en el mapa', async () => {
   expect(screen.queryByRole('link')).not.toBeInTheDocument();
 
   await userEvent.click(screen.getByRole('button', { name: 'lugar a1 con 2' }));
-  expect(screen.getByRole('link', { name: /Armar mercados/ })).toBeInTheDocument();
-  expect(screen.getByRole('link', { name: /Clasificar ropa donada/ })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Armar mercados' })).toBeInTheDocument();
+  expect(screen.getByRole('link', { name: 'Clasificar ropa donada' })).toBeInTheDocument();
 
   await userEvent.click(screen.getByRole('button', { name: 'Falta gente 1' }));
   expect(screen.getByTestId('busqueda')).toHaveTextContent('estado=faltan');
@@ -276,8 +322,8 @@ it('la lista queda en la URL y los chips filtran en el mapa', async () => {
 
   await userEvent.click(screen.getByRole('radio', { name: 'Lista' }));
   expect(screen.getByTestId('busqueda')).toHaveTextContent('vista=lista');
-  expect(screen.getAllByRole('link')).toHaveLength(1);
-  expect(screen.getByRole('link', { name: /Armar mercados/ })).toBeInTheDocument();
+  expect(screen.getAllByRole('article')).toHaveLength(1);
+  expect(screen.getByRole('link', { name: 'Armar mercados' })).toBeInTheDocument();
 });
 
 it('una jornada sin coordenadas lo avisa bajo el mapa', async () => {

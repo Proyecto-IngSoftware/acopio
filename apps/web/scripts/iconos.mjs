@@ -10,7 +10,8 @@ export function iconosUsados(dir = new URL('../src', import.meta.url).pathname) 
       const ruta = join(d, f);
       if (statSync(ruta).isDirectory()) recorrer(ruta);
       else if (/\.tsx?$/.test(f) && !/\.test\.tsx?$/.test(f)) {
-        const src = readFileSync(ruta, 'utf8');
+        // <Ilustracion nombre="mapa"> nombra un dibujo propio, no un ícono
+        const src = readFileSync(ruta, 'utf8').replace(/<Ilustracion\b[^>]*>/g, '');
         for (const m of src.matchAll(/(?:nombre|icono)(?:=|:\s*)["'`]([a-z0-9_]+)["'`]/g))
           nombres.add(m[1]);
         // nombre={cond ? 'uno' : 'otro'}: cada texto entre las llaves

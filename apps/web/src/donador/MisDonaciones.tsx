@@ -11,6 +11,7 @@ import {
 import { Boton, EnlaceBoton } from '../componentes/Boton';
 import { EstadoError } from '../componentes/EstadoError';
 import { EstadoVacio } from '../componentes/EstadoVacio';
+import { retrasoEntrada } from '../componentes/movimiento';
 import { Esqueleto } from '../componentes/Esqueleto';
 import { Hoja } from '../componentes/Hoja';
 import { Icono } from '../componentes/Icono';
@@ -86,15 +87,18 @@ export function MisDonaciones() {
       ) : donaciones.isError ? (
         <EstadoError mensaje={donaciones.error.message} alReintentar={() => donaciones.refetch()} />
       ) : donaciones.data.length === 0 ? (
-        <EstadoVacio titulo="Todavía no preparas ninguna donación">
+        <EstadoVacio titulo="Todavía no preparas ninguna donación" ilustracion="caja-folio">
           Cuando prepares una, la verás aquí con su folio.
         </EstadoVacio>
       ) : (
-        <ul className="flex flex-col gap-space-sm">
-          {donaciones.data.map((d) => (
+        <ul key={filtro} className="flex flex-col gap-space-sm">
+          {donaciones.data.map((d, i) => (
             <li
               key={d.folio}
-              className="flex flex-col gap-space-xs rounded-xl bg-surface-container-lowest p-space-md shadow-sm"
+              style={retrasoEntrada(i)}
+              className={`entra-lista flex flex-col gap-space-xs rounded-xl bg-surface-container-lowest p-space-md shadow-sm ${
+                d.estado === 'CANCELADO' ? 'opacity-70' : ''
+              }`}
             >
               <div className="flex items-center justify-between gap-space-sm">
                 <span className="font-mono text-label-md text-on-surface">{d.folio}</span>
@@ -122,7 +126,7 @@ export function MisDonaciones() {
                 <button
                   type="button"
                   onClick={() => fijarPorCancelar(d)}
-                  className="min-h-[48px] self-start px-space-xs font-label-md text-label-md text-error"
+                  className="toque min-h-[48px] self-start px-space-xs font-label-md text-label-md text-error"
                 >
                   Cancelar donación
                 </button>
@@ -145,10 +149,10 @@ export function MisDonaciones() {
           )}
           <Boton
             className="bg-error! text-on-error!"
-            disabled={cancelar.isPending}
+            ocupado={cancelar.isPending}
             onClick={() => cancelar.mutate(porCancelar.folio, { onSuccess: cerrarHoja })}
           >
-            Sí, cancelar
+            {cancelar.isPending ? 'Cancelando…' : 'Sí, cancelar'}
           </Boton>
           <Boton variante="secundario" onClick={cerrarHoja}>
             No, conservarla

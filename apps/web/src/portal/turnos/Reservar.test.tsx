@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { Route, Routes, useLocation } from 'react-router';
 import { violacionesGraves } from '../../pruebas/accesibilidad';
@@ -189,4 +189,52 @@ it('si se llenó al enviar, conserva lo escrito y ofrece ver otras jornadas', as
     '/voluntariado',
   );
   expect(screen.getByLabelText('Nombre')).toHaveValue('Ana Gómez');
+});
+
+// El detalle conserva la regla de RF-TUR-006: reservas, no personas, y el ajuste aparte
+it('con ajuste manual, los cupos dicen cuántos llegaron sin reserva y desde cuándo', async () => {
+  const haceDosHoras = new Date(Date.now() - 2 * 3_600_000 - 60_000).toISOString();
+  responderSegun({
+    'GET /api/turnos/jornadas/j1': jornadaDe({
+      ocupados: 3,
+      ajuste: 2,
+      libres: 5,
+      ajusteActualizadoEn: haceDosHoras,
+    }),
+  });
+  pantalla();
+  expect(await screen.findByText('3 de 10 cupos reservados · 2 sin reserva')).toBeInTheDocument();
+  expect(screen.getByText('Ajustado hace 2 h')).toBeInTheDocument();
+});
+
+it('el detalle muestra el bloque de fecha junto al título', async () => {
+  responderSegun({ 'GET /api/turnos/jornadas/j1': jornadaDe() });
+  pantalla();
+  const titulo = await screen.findByRole('heading', { level: 1 });
+  const fila = titulo.parentElement as HTMLElement;
+  expect(within(fila).getByText('Miércoles 21 de octubre')).toHaveClass('sr-only');
+});
+
+it('mientras reserva, el botón está ocupado y no envía dos veces', async () => {
+  let posts = 0;
+  vi.spyOn(globalThis, 'fetch').mockImplementation((entrada) => {
+    const p = entrada as Request;
+    if (p.method === 'POST') {
+      posts++;
+      return new Promise(() => {});
+    }
+    return Promise.resolve(
+      new Response(JSON.stringify(jornadaDe()), {
+        headers: { 'content-type': 'application/json' },
+      }),
+    );
+  });
+  pantalla();
+  await llenar();
+  await userEvent.click(screen.getByRole('checkbox', { name: /Acepto que guarden/ }));
+  await userEvent.click(screen.getByRole('button', { name: 'Reservar' }));
+  const boton = await screen.findByRole('button', { name: /Reservando/ });
+  expect(boton).toHaveAttribute('aria-busy', 'true');
+  await userEvent.click(boton);
+  expect(posts).toBe(1);
 });

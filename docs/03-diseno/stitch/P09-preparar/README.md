@@ -3,7 +3,7 @@ title: "P9 · Preparar mi donación · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portal, donador]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-21
 ---
 
 # P9 · Preparar mi donación · diseño en Stitch
@@ -37,3 +37,7 @@ Tres pasos en `/donar`:
 - La fecha de vencimiento aparece solo en las líneas perecederas.
 - «No está recibiendo Agua» va en neutro con ícono, no en ámbar.
 - Sin el texto explicativo de la factura que agregó Stitch.
+
+## Línea visual, fase 2 (2026-10-21)
+
+El paso 3 abre con el sello «Donación preparada». El botón «−» inhabilitado va en gris sólido y el botón de la factura gira mientras sube la foto. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

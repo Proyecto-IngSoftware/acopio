@@ -77,6 +77,118 @@ describe('con emergencias', () => {
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
 
+  describe('título con la necesidad del día', () => {
+    const agua = { categoriaId: 'c1', categoria: 'Agua potable', acopios: 1 };
+    const aseo = { categoriaId: 'c2', categoria: 'Kit de aseo', acopios: 1 };
+    const necesidad = (acopioId: string, faltan: { categoriaId: string; categoria: string }[]) => ({
+      acopioId,
+      faltan,
+      sobran: [],
+      alDia: [],
+      noRecibe: [],
+    });
+    const con = (balance: unknown, necesidades: unknown) =>
+      responderSegun({
+        'GET /api/emergencias': DOS,
+        'GET /api/publico/balance': balance,
+        'GET /api/publico/necesidades': necesidades,
+        'GET /api/turnos/jornadas': [],
+      });
+
+    it('dice cuántas categorías faltan y en cuántos acopios', async () => {
+      con({ faltan: [agua, aseo], noTraigan: [] }, [
+        necesidad('x', [agua, aseo]),
+        necesidad('y', []),
+      ]);
+      render(envolver(<Portada />));
+      expect(
+        await screen.findByRole('heading', {
+          level: 1,
+          name: 'Hoy faltan 2 categorías en 1 acopio.',
+        }),
+      ).toBeInTheDocument();
+    });
+
+    it('con una sola categoría, la frase completa no se corta en la cifra repetida', async () => {
+      con({ faltan: [agua], noTraigan: [] }, [necesidad('x', [agua])]);
+      const { container } = render(envolver(<Portada />));
+      await screen.findByRole('heading', { level: 1, name: 'Hoy falta 1 categoría en 1 acopio.' });
+      expect(container.querySelector('h1 [aria-hidden]')).toHaveTextContent(
+        'Hoy falta 1 categoría en 1 acopio.',
+      );
+    });
+
+    it('una categoría baja que el acopio marcó «no recibir» no deja «en 0 acopios»', async () => {
+      // El balance la cuenta en faltan; necesidades la pasa a noRecibe
+      con({ faltan: [agua], noTraigan: [agua] }, [{ ...necesidad('x', []), noRecibe: [agua] }]);
+      render(envolver(<Portada />));
+      expect(
+        await screen.findByRole('heading', {
+          level: 1,
+          name: 'Hoy ningún acopio reporta faltantes.',
+        }),
+      ).toBeInTheDocument();
+    });
+
+    it('sin faltantes, el título lo dice', async () => {
+      con(BALANCE_VACIO, []);
+      render(envolver(<Portada />));
+      expect(
+        await screen.findByRole('heading', {
+          level: 1,
+          name: 'Hoy ningún acopio reporta faltantes.',
+        }),
+      ).toBeInTheDocument();
+    });
+
+    it('muestra el punto en vivo con el origen de los datos', async () => {
+      con(BALANCE_VACIO, []);
+      render(envolver(<Portada />));
+      expect(await screen.findByText('Datos de los acopios')).toBeInTheDocument();
+    });
+  });
+
+  it('cada faltante lleva su barra medida contra el mayor', async () => {
+    responderSegun({
+      'GET /api/emergencias': DOS,
+      'GET /api/publico/balance': {
+        faltan: [
+          { categoriaId: 'c1', categoria: 'Agua potable', acopios: 4 },
+          { categoriaId: 'c2', categoria: 'Kit de aseo', acopios: 2 },
+        ],
+        noTraigan: [],
+      },
+      'GET /api/turnos/jornadas': [],
+    });
+    render(envolver(<Portada />));
+    const barras = await screen.findAllByRole('meter', { name: /falta en/ });
+    expect(barras.map((b) => b.getAttribute('aria-valuenow'))).toEqual(['4', '2']);
+    expect(barras.every((b) => b.getAttribute('aria-valuemax') === '4')).toBe(true);
+    expect(screen.getByText('Falta en 4 acopios')).toBeInTheDocument();
+  });
+
+  it('«¿Cómo apoyar?» trae la línea de cada canal', async () => {
+    responder(DOS);
+    render(envolver(<Portada />));
+    expect(
+      await screen.findByRole('link', { name: /Donar productos.*Busca el acopio más cercano/ }),
+    ).toHaveAttribute('href', '/mapa');
+    expect(
+      screen.getByRole('link', { name: /Ser voluntario.*Reserva un cupo en una jornada/ }),
+    ).toBeInTheDocument();
+  });
+
+  it('los vacíos de jornadas y del reporte llevan su ilustración', async () => {
+    responder(DOS);
+    render(envolver(<Portada />));
+    expect(
+      await screen.findByRole('img', { name: 'Calendario con una planta que brota' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', { name: 'Mapa de curvas de nivel con un punto marcado' }),
+    ).toBeInTheDocument();
+  });
+
   it('sin jornadas ni reportes, sus bloques lo dicen y no inventan datos', async () => {
     responder(DOS);
     render(envolver(<Portada />));
@@ -186,6 +298,9 @@ describe('sin emergencias vigentes', () => {
     );
     expect(screen.queryByRole('region', { name: /Balance de recepción/i })).not.toBeInTheDocument();
     for (const texto of FIJOS) expect(screen.getByText(texto)).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', { name: 'Cajas de ayuda ordenadas en una bodega' }),
+    ).toBeInTheDocument();
   });
 });
 

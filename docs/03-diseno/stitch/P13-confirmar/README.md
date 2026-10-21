@@ -3,7 +3,7 @@ title: "Confirmar correo del Donador · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portal, donador]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-21
 ---
 
 # Confirmar correo del Donador · diseño en Stitch
@@ -31,3 +31,7 @@ error y lleva a crear la cuenta otra vez.
   no en una tarjeta aparte.
 - El error dice 48 horas; Stitch puso 24.
 - Sin el pie de «Plataforma oficial…».
+
+## Línea visual, fase 2 (2026-10-21)
+
+Sobre «Elige tu contraseña» va el sello «Correo confirmado». El botón gira mientras guarda. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

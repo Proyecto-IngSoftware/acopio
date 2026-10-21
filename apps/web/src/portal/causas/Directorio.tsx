@@ -3,6 +3,7 @@ import { Link } from 'react-router';
 import { useCausas, type CategoriaCausa } from '../../api/causas';
 import { EstadoError } from '../../componentes/EstadoError';
 import { EstadoVacio } from '../../componentes/EstadoVacio';
+import { retrasoEntrada } from '../../componentes/movimiento';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { Icono } from '../../componentes/Icono';
 import {
@@ -70,6 +71,7 @@ function Lista({ categoria }: { categoria?: CategoriaCausa }) {
     <>
       {data.length === 0 ? (
         <EstadoVacio
+          ilustracion="cajas"
           titulo={
             categoria
               ? `Aún no hay causas de ${NOMBRE_CATEGORIA[categoria].toLowerCase()}`
@@ -79,7 +81,11 @@ function Lista({ categoria }: { categoria?: CategoriaCausa }) {
           Solo se publican causas de entidades que el equipo de Acopio verificó.
         </EstadoVacio>
       ) : (
-        data.map((c) => <TarjetaCausa key={c.id} causa={c} />)
+        data.map((c, i) => (
+          <div key={c.id} className="entra-lista" style={retrasoEntrada(i)}>
+            <TarjetaCausa causa={c} />
+          </div>
+        ))
       )}
       {!categoria && <Desaparecidas />}
     </>

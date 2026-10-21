@@ -5,6 +5,7 @@ import { AlertaError } from '../acceso/AlertaError';
 import { CampoContrasena } from '../acceso/CampoContrasena';
 import { ErrorApi } from '../api/cliente';
 import { Boton, EnlaceBoton } from '../componentes/Boton';
+import { SelloConfirmacion } from '../componentes/SelloConfirmacion';
 import { Campo } from '../componentes/Campo';
 import { EstadoError } from '../componentes/EstadoError';
 import { Esqueleto } from '../componentes/Esqueleto';
@@ -112,6 +113,7 @@ export function Confirmar() {
   return (
     <section className="flex flex-col gap-space-md px-margin py-space-lg">
       <div className="flex flex-col gap-space-xs">
+        <SelloConfirmacion etiqueta="Correo confirmado" className="self-center" />
         <h1 className="text-headline-lg-mobile text-on-surface">Elige tu contraseña</h1>
         <p className="text-body-md text-on-surface-variant">
           Confirmaste el correo <b className="text-on-surface">{enlace.correo}</b>. Ahora elige la
@@ -143,7 +145,7 @@ export function Confirmar() {
           autoComplete="new-password"
         />
         {fallo && <AlertaError mensaje={fallo} />}
-        <Boton type="submit" disabled={enviando} className="min-h-[56px] w-full">
+        <Boton type="submit" ocupado={enviando} className="min-h-[56px] w-full">
           {enviando ? 'Guardando…' : 'Guardar y entrar'}
         </Boton>
       </form>

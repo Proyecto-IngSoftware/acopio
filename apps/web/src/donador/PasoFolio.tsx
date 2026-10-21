@@ -6,6 +6,7 @@ import { subirFactura, type Donacion } from '../api/donaciones';
 import { Boton, EnlaceBoton } from '../componentes/Boton';
 import { Icono } from '../componentes/Icono';
 import { Qr } from '../componentes/Qr';
+import { SelloConfirmacion } from '../componentes/SelloConfirmacion';
 import { resumen } from './MisDonaciones';
 
 export interface FalloFactura {
@@ -34,6 +35,8 @@ export function PasoFolio({ donacion: inicial, archivo = null, falloInicial = nu
   const [pendiente, fijarPendiente] = useState<File | null>(archivo);
   const [fallo, fijarFallo] = useState<FalloFactura | null>(falloInicial);
   const [subiendo, fijarSubiendo] = useState(false);
+  // Cuál de los dos botones de la factura lanzó la subida, para que solo ese gire
+  const [repitiendo, fijarRepitiendo] = useState(false);
   const [aviso, fijarAviso] = useState<string | null>(null);
   const folioRef = useRef<HTMLSpanElement>(null);
   const entrada = useRef<HTMLInputElement>(null);
@@ -50,6 +53,7 @@ export function PasoFolio({ donacion: inicial, archivo = null, falloInicial = nu
       fijarFallo(describirFallo(e));
     } finally {
       fijarSubiendo(false);
+      fijarRepitiendo(false);
     }
   }
 
@@ -73,7 +77,8 @@ export function PasoFolio({ donacion: inicial, archivo = null, falloInicial = nu
 
   return (
     <>
-      <h2 className="text-headline-sm text-on-surface">Tu donación está preparada</h2>
+      <SelloConfirmacion etiqueta="Donación preparada" className="self-center" />
+      <h2 className="text-center text-headline-sm text-on-surface">Tu donación está preparada</h2>
       <Qr texto={donacion.folio} alt="Código QR del folio" className="h-48 w-48 self-center" />
       <span
         ref={folioRef}
@@ -119,11 +124,24 @@ export function PasoFolio({ donacion: inicial, archivo = null, falloInicial = nu
           {/* Sin red o con el servidor caído vale repetir la misma foto; si la API la
               rechazó, solo sirve elegir otra */}
           {pendiente && fallo && !fallo.otraFoto && (
-            <Boton variante="secundario" disabled={subiendo} onClick={() => void subir(pendiente)}>
+            <Boton
+              variante="secundario"
+              disabled={subiendo}
+              ocupado={subiendo && repitiendo}
+              onClick={() => {
+                fijarRepitiendo(true);
+                void subir(pendiente);
+              }}
+            >
               Intentar otra vez
             </Boton>
           )}
-          <Boton variante="secundario" disabled={subiendo} onClick={() => entrada.current?.click()}>
+          <Boton
+            variante="secundario"
+            disabled={subiendo}
+            ocupado={subiendo && !repitiendo}
+            onClick={() => entrada.current?.click()}
+          >
             <Icono nombre="photo_camera" className="text-[20px]" />
             {fallo ? 'Elegir otra foto' : 'Agregar foto de la factura'}
           </Boton>

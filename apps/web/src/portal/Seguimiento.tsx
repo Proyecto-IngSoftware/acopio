@@ -6,6 +6,7 @@ import { Boton } from '../componentes/Boton';
 import { Campo } from '../componentes/Campo';
 import { EstadoError } from '../componentes/EstadoError';
 import { Esqueleto } from '../componentes/Esqueleto';
+import { EstadoVacio } from '../componentes/EstadoVacio';
 import { Icono } from '../componentes/Icono';
 import { fechaHora } from '../formato';
 
@@ -37,7 +38,7 @@ function Resultado({ folio }: { folio: string }) {
     );
   }
   return (
-    <article className="flex flex-col gap-space-md rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+    <article className="aparece flex flex-col gap-space-md rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
       <div className="flex items-center justify-between gap-space-sm">
         <span className="font-mono text-label-md text-on-surface">{datos.folio}</span>
         <span className="rounded-full bg-surface-container-high px-space-sm py-1 text-label-md text-on-surface-variant">
@@ -56,10 +57,11 @@ function Resultado({ folio }: { folio: string }) {
               <span
                 className={`flex size-8 shrink-0 items-center justify-center rounded-full ${hecho ? 'bg-primary-container text-on-primary' : 'border border-outline-variant text-on-surface-variant'}`}
               >
-                <Icono
-                  nombre={hecho ? 'check' : 'radio_button_unchecked'}
-                  className="text-[18px]"
-                />
+                {hecho ? (
+                  <Check />
+                ) : (
+                  <Icono nombre="radio_button_unchecked" className="text-[18px]" />
+                )}
               </span>
               <div className="flex flex-col">
                 <span className="text-label-md text-on-surface">{nombre}</span>
@@ -85,6 +87,22 @@ function Resultado({ folio }: { folio: string }) {
       </ul>
       <p className="text-body-sm text-on-surface-variant">No mostramos quién donó.</p>
     </article>
+  );
+}
+
+/** El check de un paso cumplido, con el mismo trazo del sello: se dibuja al aparecer. */
+function Check() {
+  return (
+    <svg aria-hidden="true" viewBox="12 14 36 30" width="18" height="18">
+      <path
+        d="M19 31 l7 7 l15 -16"
+        fill="none"
+        strokeWidth="5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        className="sello-check stroke-current"
+      />
+    </svg>
   );
 }
 
@@ -136,13 +154,10 @@ export function Seguimiento() {
       {folio ? (
         <Resultado key={folio} folio={folio} />
       ) : (
-        <p className="flex items-start gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md text-body-sm text-on-surface-variant">
-          <Icono nombre="tag" className="text-[22px] text-primary-container" />
-          <span>
-            El folio está en el comprobante que recibiste al preparar la donación, por ejemplo
-            ACO-2026-7KQ4M. Con él ves en qué va, sin mostrar quién donó.
-          </span>
-        </p>
+        <EstadoVacio titulo="Escribe tu folio" ilustracion="caja-folio">
+          El folio está en el comprobante que recibiste al preparar la donación, por ejemplo
+          ACO-2026-7KQ4M. Con él ves en qué va, sin mostrar quién donó.
+        </EstadoVacio>
       )}
     </section>
   );

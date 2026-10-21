@@ -20,6 +20,13 @@ export const textoCupos = (j: Pick<ConCupos, 'cupoMaximo' | 'ocupados' | 'ajuste
   `${j.ocupados} de ${j.cupoMaximo} cupos reservados` +
   (j.ajuste > 0 ? ` · ${j.ajuste} sin reserva` : '');
 
+/** Los cupos libres en pocas palabras, para la fila de una lista: «Quedan 4 de 12». */
+export function textoCuposFila(j: Pick<JornadaPublica, 'cupoMaximo' | 'libres'>): string {
+  if (j.libres <= 0) return 'Sin cupos';
+  if (j.libres === 1) return 'Queda 1 cupo';
+  return `Quedan ${j.libres} de ${j.cupoMaximo}`;
+}
+
 /** Por qué una jornada no acepta reservas, como lo ve el público; null si las acepta. */
 export function marcaJornada(j: Pick<JornadaPublica, 'motivoSinReserva'>): string | null {
   switch (j.motivoSinReserva) {

@@ -119,6 +119,8 @@ Servicios de otros módulos que se usan desde cualquier parte: `BitacoraService.
 
 | Archivo en `packages/shared/src/` | Qué ofrece |
 |---|---|
+| `portal/turnos/FilaJornada.tsx`, `portal/turnos/piezas.tsx` | `FilaJornada`: una jornada en una lista, con bloque de fecha, cupos con barra y «Reservar» compacto; `textoCuposFila` («Quedan 4 de 12») |
+| `portal/bloques/franja.ts`, `portal/bloques/CurvasNivel.tsx` | `tituloFranja`, `acopiosConFaltantes` y `useCuenta` (una cifra que sube de 0 a la meta al aparecer); `CurvasNivel`, el fondo topográfico quieto de la franja |
 | `formato.ts` | `formatearNumero`, `formatearCantidad` |
 | `unidades.ts` | `UnidadBase`, `SIMBOLO_UNIDAD` |
 | `distancia.ts` | `distanciaKm` entre dos `Punto` |

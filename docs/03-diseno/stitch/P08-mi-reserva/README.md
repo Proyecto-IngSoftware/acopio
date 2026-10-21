@@ -3,7 +3,7 @@ title: "P8 · Mi reserva · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, portal, turnos]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-21
 ---
 
 # P8 · Mi reserva · diseño en Stitch
@@ -40,3 +40,7 @@ después del `#` y la web lo manda a la API en el cuerpo de un `POST` (T-07 de l
 - «Cancelar reserva» queda como botón de texto al final, como en Stitch, con 48 px de alto.
 - Armadas con los tokens, sin Stitch: la confirmación de cancelar, la reserva cancelada, la
   jornada cancelada y los dos errores de enlace.
+
+## Línea visual, fase 2 (2026-10-21)
+
+El círculo con check pasa a ser el sello animado. La jornada lleva su bloque de fecha, la reserva cancelada lo muestra en gris con la etiqueta «Cancelada», y el enlace incompleto o la reserva que no aparece muestran el calendario ilustrado. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.
