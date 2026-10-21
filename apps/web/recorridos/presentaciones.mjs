@@ -1,7 +1,8 @@
 // Recorrido de la fase de presentaciones y códigos de barras, de punta a punta, a 360 × 640,
 // contra la API del Compose. Un Donador escanea un EAN que Acopio no conoce, propone una
 // presentación nueva y prepara una donación con ella; operador1 recibe el folio y confirma el
-// código con «Es correcto»; el Administrador lo ve validado en C18 (Catálogo, códigos de barras).
+// código con «Es correcto»; el Administrador lo ve validado en C18 (Catálogo, códigos de barras)
+// y, al escanearlo ahí, Acopio lo reconoce y abre su presentación.
 //
 // La cámara es la falsa de Chromium. Como lee un video de prueba y no un código, el script
 // dibuja un EAN-13 con sharp, lo convierte en un archivo MJPEG y se lo da a Chromium con
@@ -312,6 +313,21 @@ await paso('el Administrador ve el código validado en C18', async () => {
   if (!texto.includes('Validado')) throw new Error(`la ficha dice: ${texto.slice(0, 120)}`);
   await revisar(adm, 'C18');
 });
+
+await paso(
+  'el Administrador escanea en C18 el código que ya existe y abre su presentación',
+  async () => {
+    await adm.goto(`${WEB}/consola/catalogo?pestana=codigos`);
+    await adm.getByRole('button', { name: 'Escanear' }).click();
+    // La cámara falsa lee el mismo EAN, que ya está validado: no se ofrece «Código nuevo»
+    await adm
+      .getByText(`Ese código ya está en Arroz · ${PRESENTACION}.`)
+      .waitFor({ timeout: 20_000 });
+    await adm.getByRole('heading', { level: 2, name: PRESENTACION }).waitFor();
+    await adm.getByRole('article', { name: EAN }).waitFor();
+    await revisar(adm, 'C18, código escaneado que ya existe');
+  },
+);
 
 await b.close();
 console.log(`\nErrores de la página: ${errores.length}`);
