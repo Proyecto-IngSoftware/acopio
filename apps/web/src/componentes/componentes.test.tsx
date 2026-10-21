@@ -9,6 +9,7 @@ import { Esqueleto } from './Esqueleto';
 import { EstadoError } from './EstadoError';
 import { EstadoVacio } from './EstadoVacio';
 import { Ilustracion } from './ilustraciones/Ilustracion';
+import { SelloConfirmacion } from './SelloConfirmacion';
 
 describe('Boton', () => {
   it('responde al clic y a la tecla Enter', async () => {
@@ -166,5 +167,12 @@ describe('ChipsEstado', () => {
       'false',
     );
     expect(screen.queryByRole('button', { name: /Falta/ })).not.toBeInTheDocument();
+  });
+});
+
+describe('SelloConfirmacion', () => {
+  it('se lee con su etiqueta', () => {
+    render(<SelloConfirmacion etiqueta="Cupo reservado" />);
+    expect(screen.getByRole('img', { name: 'Cupo reservado' })).toHaveClass('sello');
   });
 });
