@@ -13,7 +13,7 @@ export function Pildora({
       type="button"
       aria-pressed={activa}
       onClick={alTocar}
-      className={`min-h-[40px] shrink-0 rounded-full px-space-md text-label-md ${
+      className={`toque min-h-[40px] shrink-0 rounded-full px-space-md text-label-md ${
         activa
           ? 'bg-primary-container text-on-primary'
           : 'bg-surface-container text-on-surface-variant'

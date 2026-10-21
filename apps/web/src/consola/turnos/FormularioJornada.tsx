@@ -343,7 +343,7 @@ export function FormularioJornada({
         Las reservas se cierran 12 horas antes del inicio. Crea la jornada con al menos{' '}
         {LIMITES_TURNOS.horasAnticipacion} horas de anticipación.
       </p>
-      <Boton type="submit" disabled={!listo || mutacion.isPending} className="min-h-[56px]">
+      <Boton type="submit" disabled={!listo} ocupado={mutacion.isPending} className="min-h-[56px]">
         {jornada ? 'Guardar cambios' : n > 1 ? `Crear ${n} jornadas` : 'Crear jornada'}
       </Boton>
       <Boton variante="secundario" onClick={alTerminar}>

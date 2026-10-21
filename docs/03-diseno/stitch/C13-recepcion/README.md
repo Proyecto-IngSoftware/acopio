@@ -3,7 +3,7 @@ title: "Recepción en zona · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, motor, recepcion]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-21
 ---
 
 # Recepción en zona · diseño en Stitch
@@ -48,3 +48,7 @@ C13 Recepción, para el Receptor, según el
   agregar otra foto, hasta 5.
 - Sin Stitch, armadas con los tokens en la maqueta: la sección de «Más», la ficha con el
   botón de C20, la lista vacía, el escáner, el despacho general, «recibida» y el aviso.
+
+## Línea visual, fase 3 (2026-10-21)
+
+Al recibir, el sello «Remisión recibida» reemplaza el círculo con check. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

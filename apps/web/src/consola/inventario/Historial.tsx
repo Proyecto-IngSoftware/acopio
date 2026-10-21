@@ -131,7 +131,7 @@ export function Historial() {
         />
       )}
       {historial.data && filas.length === 0 && (
-        <EstadoVacio titulo="Sin movimientos">
+        <EstadoVacio ilustracion="cajas" titulo="Sin movimientos">
           Esta categoría todavía no tiene entradas, salidas ni ajustes en este acopio.
         </EstadoVacio>
       )}

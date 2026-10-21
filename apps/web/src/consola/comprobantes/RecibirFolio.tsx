@@ -9,6 +9,7 @@ import { useAcopio, useNoRecibir } from '../../api/red';
 import { Boton, EnlaceBoton } from '../../componentes/Boton';
 import { Campo } from '../../componentes/Campo';
 import { EstadoError } from '../../componentes/EstadoError';
+import { SelloConfirmacion } from '../../componentes/SelloConfirmacion';
 import { Icono } from '../../componentes/Icono';
 import { haceCuanto } from '../../formato';
 import { useEnLinea } from '../../sin-conexion/en-linea';
@@ -158,9 +159,7 @@ export function RecibirFolio() {
 
       {vista === 'hecho' && hecho && (
         <section className="flex flex-col gap-space-md" aria-labelledby="titulo-hecho">
-          <span className="flex h-14 w-14 items-center justify-center self-center rounded-full bg-primary-fixed text-primary-container">
-            <Icono nombre="check" className="text-[32px]" />
-          </span>
+          <SelloConfirmacion etiqueta="Donación recibida" className="self-center" />
           <div className="text-center">
             <h2
               id="titulo-hecho"
@@ -339,7 +338,8 @@ function Confirmar({
       )}
       <Boton
         onClick={registrar}
-        disabled={sinRed || !listoParaRegistrar(lineas) || recibir.isPending}
+        disabled={sinRed || !listoParaRegistrar(lineas)}
+        ocupado={recibir.isPending}
         className="sticky bottom-space-sm min-h-[56px]"
       >
         {n > 0 ? `Registrar recepción (${nEntradas(n)})` : 'Registrar que no llegó nada'}
@@ -411,7 +411,7 @@ function LineaFolio({
             aria-label={`Menos ${l.categoria}`}
             disabled={cantidad <= 0}
             onClick={() => despachar({ tipo: 'sumar', id: l.id, delta: -1 })}
-            className="flex h-12 w-12 items-center justify-center text-on-surface disabled:opacity-40"
+            className="toque flex h-12 w-12 items-center justify-center text-on-surface disabled:bg-surface-container-high disabled:text-on-surface-variant"
           >
             <Icono nombre="remove" className="text-[22px]" />
           </button>

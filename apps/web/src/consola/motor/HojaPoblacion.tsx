@@ -72,7 +72,7 @@ export function HojaPoblacion({
             {falta ?? ajustar.error?.message}
           </p>
         )}
-        <Boton type="submit" disabled={ajustar.isPending}>
+        <Boton type="submit" ocupado={ajustar.isPending}>
           Guardar población
         </Boton>
       </form>

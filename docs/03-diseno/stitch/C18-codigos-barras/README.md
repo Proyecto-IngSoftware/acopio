@@ -3,7 +3,7 @@ title: "C18 · Códigos de barras · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, catalogo]
 estado: vigente
-actualizado: 2026-10-20
+actualizado: 2026-10-21
 ---
 
 # C18 · Códigos de barras · diseño en Stitch
@@ -82,3 +82,7 @@ La leyenda «Escaneando o escribiendo el número» prometía la cámara, pero «
 - Si Acopio no conoce el código, se abre «Código nuevo» con el número leído, que el Administrador puede corregir antes de elegir la categoría y la presentación.
 - Si el código ya existe, un aviso dice dónde está («Ese código ya está en Arroz · Bolsa de arroz 500 g.») y se abre el detalle de su presentación. Un código propuesto se aprueba desde ahí.
 - Si el navegador niega la cámara o no hay una, el aviso pide escribir el número y se abre la hoja vacía.
+
+## Línea visual, fase 3 (2026-10-21)
+
+El vacío lleva las cajas. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

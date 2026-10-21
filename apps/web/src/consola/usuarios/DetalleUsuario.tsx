@@ -131,7 +131,8 @@ function CambiarRol({ u }: { u: Usuario }) {
       )}
       <Boton
         variante="secundario"
-        disabled={rol === u.rol || cambiar.isPending}
+        disabled={rol === u.rol}
+        ocupado={cambiar.isPending}
         onClick={() => cambiar.mutate({ id: u.id, rol })}
       >
         Guardar rol
@@ -171,7 +172,7 @@ function Acceso({ u }: { u: Usuario }) {
       )}
       {u.estado === 'SUSPENDIDO' && (
         <>
-          <Boton disabled={reactivar.isPending} onClick={() => reactivar.mutate(u.id)}>
+          <Boton ocupado={reactivar.isPending} onClick={() => reactivar.mutate(u.id)}>
             Reactivar
           </Boton>
           <FormularioError mensaje={reactivar.error?.message} />
@@ -189,7 +190,7 @@ function Acceso({ u }: { u: Usuario }) {
           ) : (
             <Boton
               variante="secundario"
-              disabled={reenviar.isPending}
+              ocupado={reenviar.isPending}
               onClick={() => reenviar.mutate(u.id)}
             >
               Generar enlace nuevo
@@ -212,14 +213,13 @@ function Suspender({ u, alCerrar }: { u: Usuario; alCerrar: () => void }) {
         No podrá entrar a la consola hasta que la reactives. Sus registros se conservan.
       </p>
       <FormularioError mensaje={suspender.error?.message} />
-      <button
-        type="button"
-        disabled={suspender.isPending}
+      <Boton
+        ocupado={suspender.isPending}
         onClick={() => suspender.mutate(u.id, { onSuccess: alCerrar })}
-        className="flex min-h-[48px] items-center justify-center rounded-xl bg-secondary-container px-space-md text-label-md text-on-secondary"
+        className="enabled:bg-secondary-container enabled:text-on-secondary enabled:active:bg-secondary-container"
       >
         Suspender
-      </button>
+      </Boton>
     </Hoja>
   );
 }
@@ -256,7 +256,7 @@ function Restablecer({ u, alCerrar }: { u: Usuario; alCerrar: () => void }) {
             onChange={(e) => fijarMotivo(e.target.value)}
           />
           <FormularioError mensaje={aviso ?? restablecer.error?.message} />
-          <Boton type="submit" disabled={restablecer.isPending}>
+          <Boton type="submit" ocupado={restablecer.isPending}>
             Generar enlace
           </Boton>
         </form>

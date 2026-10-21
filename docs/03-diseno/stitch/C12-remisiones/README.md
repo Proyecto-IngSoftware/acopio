@@ -3,7 +3,7 @@ title: "Remisiones · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, motor, remisiones]
 estado: vigente
-actualizado: 2026-10-15
+actualizado: 2026-10-21
 ---
 
 # Remisiones · diseño en Stitch
@@ -51,3 +51,7 @@ C12 Remisiones, para el Operador del acopio de origen y el Administrador, según
 - Al construir, el número de borradores de «Más» va en el recuadro del ícono de la fila (la prop `distintivo` de `FilaMenu`), no a la derecha como en la maqueta.
 - El QR guarda la dirección de recepción de Acopio con el token de la remisión. Hasta el
   ciclo 3 esa dirección muestra la página de no encontrada.
+
+## Línea visual, fase 3 (2026-10-21)
+
+Las remisiones entran escalonadas al cambiar de estado o de zona, y los vacíos llevan la caja con folio. Tras despachar aparece el sello «Remisión despachada». Cancelar y descartar pasan a `Boton` con su borde rojo. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

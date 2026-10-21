@@ -164,7 +164,7 @@ export function HojaDespachar({ remision, alCerrar, alDespachar, alError }: Prop
           {fallo}
         </p>
       )}
-      <Boton disabled={ocupado} onClick={() => void enviar()}>
+      <Boton ocupado={ocupado} onClick={() => void enviar()}>
         Despachar
       </Boton>
     </Hoja>

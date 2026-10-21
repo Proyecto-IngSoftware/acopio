@@ -242,6 +242,7 @@ export function PestanaCodigos({ agregar, alAgregar }: Props) {
       )}
       {codigos.data && visibles.length === 0 && (
         <EstadoVacio
+          ilustracion="cajas"
           titulo={
             q
               ? 'Ningún código coincide.'
@@ -494,7 +495,8 @@ function HojaCambiar({ codigo, alCerrar }: { codigo: CodigoBarras; alCerrar: () 
       <FormularioError mensaje={editar.error?.message} />
       <Boton
         className="min-h-[56px] w-full"
-        disabled={editar.isPending || buscando || eleccion === null}
+        disabled={buscando || eleccion === null}
+        ocupado={editar.isPending}
         onClick={() =>
           editar.mutate(
             { ean: codigo.ean, cambios: { presentacionId: eleccion! } },

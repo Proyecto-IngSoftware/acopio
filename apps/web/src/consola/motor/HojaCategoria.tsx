@@ -100,7 +100,7 @@ export function HojaCategoria({
               {falta ?? corregir.error?.message}
             </p>
           )}
-          <Boton type="submit" disabled={corregir.isPending}>
+          <Boton type="submit" ocupado={corregir.isPending}>
             Guardar corrección
           </Boton>
           {c.origen === 'MANUAL' && (

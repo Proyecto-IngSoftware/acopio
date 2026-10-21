@@ -3,7 +3,7 @@ title: "Conciliación de un comprobante · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, custodia]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-21
 ---
 
 # Conciliación de un comprobante · diseño en Stitch
@@ -41,3 +41,7 @@ actualizado: 2026-10-06
 - Sin el nombre ni el peso del archivo de la factura.
 - La hoja de rechazo y la vista de vincular no salieron de Stitch; se armaron con los tokens.
 - Quién registró cada entrada no lo devolvía la API; el plan del ciclo 2 lo agrega.
+
+## Línea visual, fase 3 (2026-10-21)
+
+Justo después de conciliar aparece el sello «Donación conciliada»; abrir una ya conciliada solo muestra la fecha. «Rechazar comprobante» pasa a `Boton` con su rojo y gira mientras envía. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

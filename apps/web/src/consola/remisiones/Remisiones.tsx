@@ -11,6 +11,7 @@ import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
 import { EstadoVacio } from '../../componentes/EstadoVacio';
 import { Icono } from '../../componentes/Icono';
+import { retrasoEntrada } from '../../componentes/movimiento';
 import { Pildora } from '../../componentes/Pildora';
 import { haceCuanto } from '../../formato';
 import { useSesion } from '../../sesion/Sesion';
@@ -111,15 +112,15 @@ export function Remisiones() {
         />
       )}
       {consulta.data && visibles.length === 0 && (
-        <EstadoVacio titulo={`No hay remisiones ${nombreEstado}`}>
+        <EstadoVacio ilustracion="caja-folio" titulo={`No hay remisiones ${nombreEstado}`}>
           {estado === 'BORRADOR'
             ? 'Aprueba sugerencias en el motor o crea una remisión a mano.'
             : 'Cuando haya, aparecen aquí.'}
         </EstadoVacio>
       )}
-      <ul className="flex flex-col gap-space-sm">
-        {visibles.map((r) => (
-          <li key={r.id}>
+      <ul key={`${estado}-${zona}`} className="flex flex-col gap-space-sm">
+        {visibles.map((r, i) => (
+          <li key={r.id} className="entra-lista" style={retrasoEntrada(i)}>
             <Fila r={r} />
           </li>
         ))}

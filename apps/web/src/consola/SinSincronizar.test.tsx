@@ -89,6 +89,9 @@ describe('Sin sincronizar', () => {
 
     await waitFor(async () => expect(await listarCola('u1')).toEqual([]));
     expect(await screen.findByText('No hay entradas sin enviar.')).toBeInTheDocument();
+    expect(
+      screen.getByRole('img', { name: 'Cajas de ayuda ordenadas en una bodega' }),
+    ).toBeInTheDocument();
   });
 
   it('una rechazada por la fecha se corrige y vuelve a la cola', async () => {

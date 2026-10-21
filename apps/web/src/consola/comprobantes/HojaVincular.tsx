@@ -113,7 +113,8 @@ export function HojaVincular({ folio, acopio, alCerrar }: Props) {
       )}
       <Boton
         className="min-h-[56px]"
-        disabled={n === 0 || vincular.isPending}
+        disabled={n === 0}
+        ocupado={vincular.isPending}
         onClick={() => vincular.mutate({ movimientoIds: [...elegidas] }, { onSuccess: alCerrar })}
       >
         {n === 1 ? 'Vincular 1 entrada' : `Vincular ${n} entradas`}

@@ -36,7 +36,7 @@ export function Zonas() {
         />
       )}
       {emergencias.data && lista.length === 0 && (
-        <EstadoVacio titulo="Todavía no hay emergencias">
+        <EstadoVacio ilustracion="mapa" titulo="Todavía no hay emergencias">
           Cada zona pertenece a una emergencia.{' '}
           <Link
             to="/consola/catalogo?pestana=emergencias"
@@ -89,7 +89,7 @@ function ZonasDe({ emergencia }: { emergencia: Emergencia }) {
       {isPending && <Esqueleto etiqueta="Cargando zonas" />}
       {error && <EstadoError mensaje={error.message} alReintentar={() => void refetch()} />}
       {data && data.length === 0 && (
-        <EstadoVacio titulo="Sin zonas registradas">
+        <EstadoVacio ilustracion="mapa" titulo="Sin zonas registradas">
           {cerrada ? 'Esta emergencia no tuvo zonas.' : 'Agrega la primera con «Nueva zona».'}
         </EstadoVacio>
       )}
@@ -119,7 +119,9 @@ function ZonasDe({ emergencia }: { emergencia: Emergencia }) {
           return (
             <li
               key={z.id}
-              className="flex items-stretch rounded-xl border border-outline-variant bg-surface-container-lowest"
+              className={`flex items-stretch rounded-xl border border-outline-variant bg-surface-container-lowest ${
+                cerrada ? 'opacity-70' : ''
+              }`}
             >
               <Link
                 to={`/consola/zonas/${z.id}`}
@@ -274,7 +276,7 @@ function FormularioZona({
           </Selector>
         )}
         <FormularioError mensaje={guardar.error?.message} />
-        <Boton type="submit" className="min-h-[56px] w-full" disabled={guardar.isPending}>
+        <Boton type="submit" className="min-h-[56px] w-full" ocupado={guardar.isPending}>
           {guardar.isPending ? 'Guardando…' : 'Guardar'}
         </Boton>
       </form>

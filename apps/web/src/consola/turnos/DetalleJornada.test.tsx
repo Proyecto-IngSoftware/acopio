@@ -204,3 +204,13 @@ it('si fallan los inscritos lo dice y deja reintentar, no que nadie reservó', a
   expect(await screen.findByRole('button', { name: /Reintentar/ })).toBeInTheDocument();
   expect(screen.queryByText('Nadie ha reservado todavía')).not.toBeInTheDocument();
 });
+
+it('el detalle lleva el bloque de fecha junto al título', async () => {
+  responderSegun({ [INSCRITOS]: [] });
+  pantalla(gestionDe());
+  const titulo = await screen.findByRole('heading', { level: 1, name: 'Armar mercados' });
+  const fila = titulo.parentElement!.parentElement as HTMLElement;
+  expect(
+    within(fila).getByText('Miércoles 21 de octubre', { selector: '.sr-only' }),
+  ).toBeInTheDocument();
+});

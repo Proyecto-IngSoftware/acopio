@@ -291,14 +291,9 @@ export function Conteo() {
             type="submit"
             className="min-h-[56px] w-full text-body-lg"
             disabled={
-              !categoria ||
-              !escrita ||
-              coincide ||
-              faltan > 0 ||
-              fraccion ||
-              !!errorCantidad ||
-              registrar.isPending
+              !categoria || !escrita || coincide || faltan > 0 || fraccion || !!errorCantidad
             }
+            ocupado={registrar.isPending}
           >
             <Icono nombre="fact_check" className="text-[22px]" />
             Registrar ajuste

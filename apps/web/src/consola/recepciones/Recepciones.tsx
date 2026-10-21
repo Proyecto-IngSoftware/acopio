@@ -44,7 +44,7 @@ export function Recepciones() {
         />
       )}
       {consulta.data?.length === 0 && (
-        <EstadoVacio titulo="Nada por recibir">
+        <EstadoVacio ilustracion="caja-folio" titulo="Nada por recibir">
           No hay remisiones en camino a tus zonas. Cuando un acopio despache una, aparece aquí.
         </EstadoVacio>
       )}

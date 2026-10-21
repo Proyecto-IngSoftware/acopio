@@ -71,7 +71,7 @@ export function Acopios() {
       {isPending && <Esqueleto etiqueta="Cargando acopios" />}
       {error && <EstadoError mensaje={error.message} alReintentar={() => void refetch()} />}
       {data && todos.length === 0 && (
-        <EstadoVacio titulo="Todavía no hay acopios">
+        <EstadoVacio ilustracion="cajas" titulo="Todavía no hay acopios">
           Crea el primero con «Nuevo acopio».
         </EstadoVacio>
       )}

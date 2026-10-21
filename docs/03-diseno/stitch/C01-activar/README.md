@@ -3,7 +3,7 @@ title: "C01 · Activar cuenta · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, acceso]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-21
 ---
 
 # C01 · Activar cuenta · diseño en Stitch
@@ -32,3 +32,7 @@ y define la contraseña. Sale con la cabecera de acceso de
   `CONTRASENA_DEBIL`).
 - Al activar, lleva al acceso con el nombre de usuario ya escrito.
 - El pie «Respuesta Oficial Caldas 2026» que puso Stitch no va.
+
+## Línea visual, fase 3 (2026-10-21)
+
+El botón gira mientras activa la cuenta. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

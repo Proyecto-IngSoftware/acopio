@@ -301,7 +301,12 @@ export function HojaNuevaPresentacion({
       )}
 
       <FormularioError mensaje={crear.error?.message} />
-      <Boton className="min-h-[56px] w-full" disabled={!listo || crear.isPending} onClick={guardar}>
+      <Boton
+        className="min-h-[56px] w-full"
+        disabled={!listo}
+        ocupado={crear.isPending}
+        onClick={guardar}
+      >
         Crear presentación
       </Boton>
     </Hoja>

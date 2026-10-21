@@ -15,6 +15,7 @@ import { Boton } from '../../componentes/Boton';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
 import { Hoja } from '../../componentes/Hoja';
+import { SelloConfirmacion } from '../../componentes/SelloConfirmacion';
 import { Icono } from '../../componentes/Icono';
 import { diaLargo, fechaHora } from '../../formato';
 import { useEnLinea } from '../../sin-conexion/en-linea';
@@ -280,7 +281,7 @@ export function Conciliacion() {
             <>
               <Boton
                 className="min-h-[56px]"
-                disabled={conciliar.isPending}
+                ocupado={conciliar.isPending}
                 onClick={() => conciliar.mutate()}
               >
                 <Icono nombre="done_all" className="text-[22px]" />
@@ -316,7 +317,7 @@ export function Conciliacion() {
           )}
           <Boton
             variante="secundario"
-            disabled={revertir.isPending}
+            ocupado={revertir.isPending}
             onClick={() => revertir.mutate()}
           >
             Revertir rechazo
@@ -324,6 +325,10 @@ export function Conciliacion() {
         </section>
       )}
 
+      {/* El sello es de la acción recién hecha; abrir una ya conciliada solo da la fecha */}
+      {conciliar.isSuccess && (
+        <SelloConfirmacion etiqueta="Donación conciliada" className="self-center" />
+      )}
       {d.estado === 'CONCILIADO' && d.verificadoEn && (
         <p className="flex items-center gap-space-sm text-body-md text-on-surface">
           <Icono nombre="done_all" className="text-[22px] text-primary-container" />

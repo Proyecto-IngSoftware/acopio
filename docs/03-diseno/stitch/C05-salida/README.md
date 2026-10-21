@@ -3,7 +3,7 @@ title: "C5 · Salida · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, inventario]
 estado: vigente
-actualizado: 2026-10-02
+actualizado: 2026-10-21
 ---
 
 # C5 · Salida · diseño en Stitch
@@ -40,3 +40,7 @@ Aprobadas por Joseph el 2026-10-02:
 - El campo «Nota» aparece solo al elegir Traslado u Otro.
 - El aviso de saldo insuficiente sale solo cuando la cantidad pasa del saldo, sin la
   referencia «RN-03» ni la frase de abajo.
+
+## Línea visual, fase 3 (2026-10-21)
+
+Los botones que esperan una respuesta giran mientras tanto y lo inhabilitado va en gris sólido. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

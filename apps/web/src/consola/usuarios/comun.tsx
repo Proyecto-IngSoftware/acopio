@@ -32,7 +32,8 @@ export const ESTADOS: Record<EstadoUsuario, { texto: string; icono: string; clas
   SUSPENDIDO: {
     texto: 'Suspendido',
     icono: 'block',
-    clases: 'bg-error-container text-on-error-container',
+    // Desactivado: gris sólido con su texto, como el resto de la línea visual (ADR-0022)
+    clases: 'bg-surface-container-high text-on-surface-variant',
   },
 };
 

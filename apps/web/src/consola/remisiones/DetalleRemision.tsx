@@ -13,6 +13,7 @@ import {
 import { Boton, EnlaceBoton } from '../../componentes/Boton';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
+import { SelloConfirmacion } from '../../componentes/SelloConfirmacion';
 import { Icono } from '../../componentes/Icono';
 import { diaLargo, haceCuanto } from '../../formato';
 import { useEnLinea } from '../../sin-conexion/en-linea';
@@ -37,6 +38,8 @@ export function DetalleRemision() {
   const [cambioEn, fijarCambioEn] = useState<number | null>(null);
   const [hoja, fijarHoja] = useState<'despachar' | 'cancelar' | null>(null);
   const [sinGuardar, fijarSinGuardar] = useState(false);
+  // Solo justo después de despachar se ve el sello, no al abrir una que ya va en camino
+  const [despachada, fijarDespachada] = useState(false);
 
   const encabezado = <Encabezado titulo={codigo} volverA="/consola/remisiones" />;
   if (!enLinea) {
@@ -83,6 +86,7 @@ export function DetalleRemision() {
       {encabezado}
       <Cabecera r={r} />
 
+      {despachada && <SelloConfirmacion etiqueta="Remisión despachada" className="self-center" />}
       {aviso && (
         <p
           role="status"
@@ -152,6 +156,7 @@ export function DetalleRemision() {
           alError={alConflicto}
           alDespachar={() => {
             fijarHoja(null);
+            fijarDespachada(true);
             fijarAviso(`${r.codigo} va en camino`);
           }}
         />
@@ -281,7 +286,8 @@ function SeccionDestino({
       )}
       <Boton
         variante="secundario"
-        disabled={editar.isPending || !hayCambios}
+        disabled={!hayCambios}
+        ocupado={editar.isPending}
         onClick={() =>
           editar.mutate(cambios, {
             onSuccess: () => alGuardar('Destino guardado'),

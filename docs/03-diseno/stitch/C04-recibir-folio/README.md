@@ -3,7 +3,7 @@ title: "Recibir por folio · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, custodia]
 estado: vigente
-actualizado: 2026-10-20
+actualizado: 2026-10-21
 ---
 
 # Recibir por folio · diseño en Stitch
@@ -61,3 +61,7 @@ Pendiente de revisión por Joseph. Parte de la [maqueta de la idea](../../superp
 - «Corregir» y «Es correcto» tienen 48 px de alto como mínimo. «Declaradas» y «Recibidas» suben a 14 px.
 - Se quitó una tarjeta duplicada que Stitch había dejado arriba y se puso una de folio simple.
 - Vista «Corregir», hecha a mano como hoja inferior: [pantalla-corregir.html](pantalla-corregir.html) · [render-corregir.png](render-corregir.png). Trae buscador arriba y las presentaciones agrupadas por categoría, con una elegida. Se guarda con «Guardar corrección».
+
+## Línea visual, fase 3 (2026-10-21)
+
+Al registrar, el círculo con check pasa a ser el sello animado «Donación recibida». Los botones «−» inhabilitados van en gris sólido. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

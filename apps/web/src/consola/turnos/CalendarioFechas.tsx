@@ -64,7 +64,7 @@ export function CalendarioFechas({ hoy, fechas, alCambiar }: Props) {
           aria-label="Mes anterior"
           disabled={!anterior}
           onClick={() => mover(-1)}
-          className="flex h-11 w-11 items-center justify-center rounded-full text-on-surface-variant disabled:opacity-30"
+          className="flex h-11 w-11 items-center justify-center rounded-full text-on-surface-variant disabled:text-outline-variant"
         >
           <Icono nombre="chevron_left" className="text-[24px]" />
         </button>
@@ -74,7 +74,7 @@ export function CalendarioFechas({ hoy, fechas, alCambiar }: Props) {
           aria-label="Mes siguiente"
           disabled={!siguiente}
           onClick={() => mover(1)}
-          className="flex h-11 w-11 items-center justify-center rounded-full text-on-surface-variant disabled:opacity-30"
+          className="flex h-11 w-11 items-center justify-center rounded-full text-on-surface-variant disabled:text-outline-variant"
         >
           <Icono nombre="chevron_right" className="text-[24px]" />
         </button>

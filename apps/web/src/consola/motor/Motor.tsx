@@ -103,7 +103,7 @@ export function Motor() {
       <section className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md">
         <div className="flex flex-wrap items-center gap-space-sm">
           <Boton
-            disabled={recalcular.isPending}
+            ocupado={recalcular.isPending}
             onClick={() =>
               recalcular.mutate(undefined, {
                 onSuccess: (r) =>
@@ -175,7 +175,7 @@ export function Motor() {
         />
       )}
       {consulta.data && lista.length === 0 && (
-        <EstadoVacio titulo="El motor no encontró traslados que hacer">
+        <EstadoVacio ilustracion="cajas" titulo="El motor no encontró traslados que hacer">
           Recalcula cuando cambie el inventario o la necesidad de una zona.
         </EstadoVacio>
       )}

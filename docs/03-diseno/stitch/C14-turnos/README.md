@@ -3,7 +3,7 @@ title: "C14 · Turnos · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, turnos]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-21
 ---
 
 # C14 · Turnos · diseño en Stitch
@@ -47,3 +47,7 @@ desde «Más». Cubre el §6 de la
   detalle con inscritos y asistencia, las acciones y la cancelación. Stitch respondió dos veces
   que había generado el formulario y el detalle, pero no devolvió las pantallas, y no aparecen
   en el proyecto.
+
+## Línea visual, fase 3 (2026-10-21)
+
+Cada jornada lleva el bloque de fecha en lugar de la línea con el ícono de calendario; las cerradas, llenas, canceladas y pasadas lo llevan en gris. El detalle lleva el bloque junto al título y los vacíos el calendario ilustrado. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

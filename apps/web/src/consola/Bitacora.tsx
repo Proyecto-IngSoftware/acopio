@@ -4,6 +4,8 @@ import { useBitacora, type FiltrosBitacora, type RegistroBitacora } from '../api
 import { Boton } from '../componentes/Boton';
 import { Esqueleto } from '../componentes/Esqueleto';
 import { EstadoError } from '../componentes/EstadoError';
+import { retrasoEntrada } from '../componentes/movimiento';
+import { EstadoVacio } from '../componentes/EstadoVacio';
 import { Hoja } from '../componentes/Hoja';
 import { Icono } from '../componentes/Icono';
 import { Encabezado } from './Encabezado';
@@ -110,16 +112,18 @@ export function Bitacora() {
       {isPending && <Esqueleto etiqueta="Cargando la bitácora" className="h-48" />}
       {error && <EstadoError mensaje={error.message} alReintentar={() => void refetch()} />}
       {!isPending && !error && registros.length === 0 && (
-        <p className="rounded-xl bg-surface-container-low p-space-md text-on-surface-variant">
+        <EstadoVacio titulo="Sin registros" ilustracion="cajas">
           No hay registros con estos filtros.
-        </p>
+        </EstadoVacio>
       )}
 
-      {grupos.map((g) => (
+      {grupos.map((g, i) => (
         <section
-          key={g.dia}
+          // Con la clave de los filtros, la lista vuelve a entrar escalonada al filtrar
+          key={`${JSON.stringify(filtros)}-${g.dia}`}
           aria-labelledby={`dia-${g.dia}`}
-          className="flex flex-col gap-space-xs"
+          style={retrasoEntrada(i)}
+          className="entra-lista flex flex-col gap-space-xs"
         >
           <h2
             id={`dia-${g.dia}`}

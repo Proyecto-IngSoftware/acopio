@@ -12,6 +12,7 @@ import { Boton, EnlaceBoton } from '../../componentes/Boton';
 import { Selector } from '../../componentes/Campo';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
+import { SelloConfirmacion } from '../../componentes/SelloConfirmacion';
 import { Icono } from '../../componentes/Icono';
 import { haceCuanto } from '../../formato';
 import { useUbicacionActiva } from '../../sesion/ubicacion-activa';
@@ -275,7 +276,8 @@ function FormularioRecepcion({ remision }: { remision: Remision }) {
 
       <FormularioError mensaje={recibir.error?.message} />
       <Boton
-        disabled={faltaFoto || faltaZona || recibir.isPending}
+        disabled={faltaFoto || faltaZona}
+        ocupado={recibir.isPending}
         onClick={confirmar}
         className="w-full"
       >
@@ -290,9 +292,7 @@ function FormularioRecepcion({ remision }: { remision: Remision }) {
 function Recibida({ remision: r }: { remision: Remision }) {
   return (
     <div className="flex flex-col items-center gap-space-sm text-center">
-      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-fixed text-primary-container">
-        <Icono nombre="check" className="text-[32px]" />
-      </span>
+      <SelloConfirmacion etiqueta="Remisión recibida" />
       <h2 className="text-headline-sm text-on-surface">{r.codigo} recibida</h2>
       <p className="text-body-md text-on-surface-variant">
         {r.lineas

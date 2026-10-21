@@ -3,7 +3,7 @@ title: "Mi zona · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, motor, recepcion]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-21
 ---
 
 # Mi zona · diseño en Stitch
@@ -54,3 +54,7 @@ repartido entre la sección de «Más», C13 y la ficha de zona (C10). Cierra lo
   camino» y el nombre de la zona, la fila cortaba el número.
 - «Por recibir» muestra tres remisiones. En la demo local se acumulan las de cada corrida del
   recorrido, y con más la tarjeta ocupaba media pantalla; las demás están en «Ver todas».
+
+## Línea visual, fase 3 (2026-10-21)
+
+Sin zona asignada, el vacío lleva el mapa; sin remisiones en camino, la caja con folio. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

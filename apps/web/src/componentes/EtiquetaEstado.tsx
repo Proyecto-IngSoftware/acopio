@@ -15,7 +15,7 @@ const ESTADOS: Record<EstadoRed, { texto: string; icono: string; clases: string 
   CERRADO: {
     texto: 'Cerrado',
     icono: 'cancel',
-    clases: 'bg-surface-container text-on-surface-variant',
+    clases: 'bg-surface-container-high text-on-surface-variant',
   },
   SIN_ATENDER: {
     texto: 'Sin atender',

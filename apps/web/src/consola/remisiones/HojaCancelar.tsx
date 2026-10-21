@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ErrorApi } from '../../api/cliente';
 import { useCancelar, type Remision } from '../../api/remisiones';
 import { Campo } from '../../componentes/Campo';
+import { Boton } from '../../componentes/Boton';
 import { Hoja } from '../../componentes/Hoja';
 
 interface Props {
@@ -56,14 +57,14 @@ export function HojaCancelar({ remision, alCerrar, alCancelar, alError }: Props)
           {corto ? 'Escribe al menos 10 caracteres' : otroError?.message}
         </p>
       )}
-      <button
-        type="button"
-        disabled={cancelar.isPending}
+      <Boton
+        variante="secundario"
+        ocupado={cancelar.isPending}
         onClick={enviar}
-        className="min-h-[48px] rounded-lg border-[1.5px] border-error bg-surface-container-lowest px-space-lg text-label-md text-error"
+        className="border-error! text-error!"
       >
         Cancelar remisión
-      </button>
+      </Boton>
     </Hoja>
   );
 }

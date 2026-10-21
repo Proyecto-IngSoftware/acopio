@@ -3,7 +3,7 @@ title: "C01 · Acceso · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, acceso]
 estado: vigente
-actualizado: 2026-10-19
+actualizado: 2026-10-21
 ---
 
 # C01 · Acceso · diseño en Stitch
@@ -47,3 +47,7 @@ Desde el mismo día, a pedido de Joseph, `/entrar` va dentro del marco del porta
 cabecera, el botón «Entrar» y la barra de secciones; antes, al abrir la pantalla, desaparecían
 la barra y el botón. La maqueta no muestra ese marco, pero el formulario y los textos son los
 mismos.
+
+## Línea visual, fase 3 (2026-10-21)
+
+«Entrar» gira mientras espera la sesión. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

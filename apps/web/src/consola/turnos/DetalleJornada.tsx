@@ -9,6 +9,7 @@ import {
 import { Boton } from '../../componentes/Boton';
 import { EstadoError } from '../../componentes/EstadoError';
 import { EstadoVacio } from '../../componentes/EstadoVacio';
+import { BloqueFecha } from '../../componentes/BloqueFecha';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { Hoja } from '../../componentes/Hoja';
 import { Icono } from '../../componentes/Icono';
@@ -50,12 +51,19 @@ export function DetalleJornada({
         Turnos
       </button>
       <MarcaGestion jornada={jornada} />
-      <div className="flex flex-col">
-        <h1 className="text-headline-md text-balance text-on-surface">{jornada.titulo}</h1>
-        <p className="text-body-sm text-on-surface-variant">
-          {diaSemana(jornada.inicio)} · {rangoHoras(jornada.inicio, jornada.fin)} ·{' '}
-          {jornada.lugar.nombre}
-        </p>
+      <div className="flex items-center gap-space-md">
+        <BloqueFecha
+          fecha={jornada.inicio}
+          tamano="detalle"
+          apagado={jornada.motivoSinReserva !== null}
+        />
+        <div className="flex min-w-0 flex-col">
+          <h1 className="text-headline-md text-balance text-on-surface">{jornada.titulo}</h1>
+          <p className="text-body-sm text-on-surface-variant">
+            {diaSemana(jornada.inicio)} · {rangoHoras(jornada.inicio, jornada.fin)} ·{' '}
+            {jornada.lugar.nombre}
+          </p>
+        </div>
       </div>
       {cancelada && jornada.motivoCancelacion && (
         <p className="rounded-xl bg-surface-container p-space-sm text-body-sm text-on-surface">
@@ -82,7 +90,7 @@ export function DetalleJornada({
             alReintentar={() => void inscritos.refetch()}
           />
         ) : vigentes.length === 0 ? (
-          <EstadoVacio titulo="Nadie ha reservado todavía">
+          <EstadoVacio titulo="Nadie ha reservado todavía" ilustracion="calendario">
             Las reservas aparecen aquí con el nombre y el contacto de cada persona.
           </EstadoVacio>
         ) : (
@@ -122,7 +130,7 @@ function Ajuste({ jornada }: { jornada: JornadaGestion }) {
   }
   const ajustar = useAjustarCupos(jornada.id);
   const boton =
-    'flex h-11 w-11 items-center justify-center rounded-xl border border-outline text-on-surface disabled:opacity-40';
+    'flex h-11 w-11 items-center justify-center rounded-xl border border-outline text-on-surface disabled:border-transparent disabled:bg-surface-container-high disabled:text-on-surface-variant';
   return (
     <div className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md">
       <div className="flex items-center justify-between gap-space-sm">
@@ -152,7 +160,7 @@ function Ajuste({ jornada }: { jornada: JornadaGestion }) {
       </div>
       <FormularioError mensaje={ajustar.error?.message} />
       {cupos !== jornada.ajuste && (
-        <Boton disabled={ajustar.isPending} onClick={() => ajustar.mutate(cupos)}>
+        <Boton ocupado={ajustar.isPending} onClick={() => ajustar.mutate(cupos)}>
           Guardar ajuste
         </Boton>
       )}
@@ -177,13 +185,13 @@ function Acciones({
   const [motivo, fijarMotivo] = useState('');
   if (jornada.estado === 'CANCELADA')
     return (
-      <EstadoVacio titulo="Esta jornada está cancelada">
+      <EstadoVacio titulo="Esta jornada está cancelada" ilustracion="calendario">
         No se puede cambiar. Quienes reservaron ven el motivo en su enlace.
       </EstadoVacio>
     );
 
   const fila =
-    'flex min-h-[52px] w-full items-center gap-space-sm border-t border-outline-variant px-space-md text-left text-label-md text-on-surface first:border-t-0 disabled:opacity-50';
+    'flex min-h-[52px] w-full items-center gap-space-sm border-t border-outline-variant px-space-md text-left text-label-md text-on-surface first:border-t-0 disabled:cursor-not-allowed disabled:text-on-surface-variant';
   return (
     <div className="flex flex-col gap-space-sm">
       <FormularioError mensaje={cambiar.error?.message ?? borrar.error?.message} />
@@ -253,7 +261,8 @@ function Acciones({
           </div>
           <FormularioError mensaje={cambiar.error?.message} />
           <Boton
-            disabled={motivo.trim().length < 5 || cambiar.isPending}
+            disabled={motivo.trim().length < 5}
+            ocupado={cambiar.isPending}
             onClick={() =>
               cambiar.mutate(
                 { accion: 'cancelar', motivo: motivo.trim() },
@@ -275,7 +284,7 @@ function Acciones({
           </p>
           <FormularioError mensaje={borrar.error?.message} />
           <Boton
-            disabled={borrar.isPending}
+            ocupado={borrar.isPending}
             onClick={() => borrar.mutate(undefined, { onSuccess: alVolver })}
           >
             Borrar jornada

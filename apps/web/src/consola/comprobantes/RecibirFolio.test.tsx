@@ -202,6 +202,7 @@ it('registra con el cuerpo exacto y muestra lo que entró', async () => {
   expect(registrar).toHaveAccessibleName('Registrar recepción (3 entradas)');
   await userEvent.click(registrar);
   expect(await screen.findByRole('heading', { name: 'Recibido' })).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: 'Donación recibida' })).toBeInTheDocument();
   expect(await cuerpoDe(`POST /api/comprobantes/${FOLIO}/recepcion`)).toEqual({
     acopioId: 'x1',
     lineas: [

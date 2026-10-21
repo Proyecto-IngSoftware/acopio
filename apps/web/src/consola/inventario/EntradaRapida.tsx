@@ -367,9 +367,8 @@ export function EntradaRapida() {
         <Boton
           type="submit"
           className="min-h-[56px] w-full text-body-lg"
-          disabled={
-            !categoria || n <= 0 || !!falta || fraccion || !!errorCantidad || registrar.isPending
-          }
+          disabled={!categoria || n <= 0 || !!falta || fraccion || !!errorCantidad}
+          ocupado={registrar.isPending}
         >
           <Icono nombre={sinRed ? 'save' : 'check'} className="shrink-0 text-[22px]" />
           {sinRed

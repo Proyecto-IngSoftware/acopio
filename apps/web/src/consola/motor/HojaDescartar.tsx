@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { FormEvent } from 'react';
 import { useDescartar, type Sugerencia } from '../../api/motor';
 import { Campo } from '../../componentes/Campo';
+import { Boton } from '../../componentes/Boton';
 import { Hoja } from '../../componentes/Hoja';
 import { YA_NO_SE_PUEDE } from './HojaAprobar';
 
@@ -82,13 +83,14 @@ export function HojaDescartar({
             {corto ? 'Escribe al menos 10 caracteres' : descartar.error?.message}
           </p>
         )}
-        <button
+        <Boton
           type="submit"
-          disabled={descartar.isPending}
-          className="min-h-[48px] rounded-lg border-[1.5px] border-error bg-surface-container-lowest px-space-lg text-label-md text-error"
+          variante="secundario"
+          ocupado={descartar.isPending}
+          className="border-error! text-error!"
         >
           Descartar
-        </button>
+        </Boton>
       </form>
     </Hoja>
   );

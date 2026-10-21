@@ -88,7 +88,7 @@ export function Inscritos({
                     aria-pressed={i.estado === estado}
                     disabled={!asistenciaAbierta || marcar.isPending}
                     onClick={() => marcar.mutate({ reservaId: i.id, estado })}
-                    className={`inline-flex min-h-[44px] items-center justify-center gap-1 rounded-xl border text-label-md disabled:opacity-50 ${
+                    className={`inline-flex min-h-[44px] items-center justify-center gap-1 toque rounded-xl border text-label-md disabled:cursor-not-allowed disabled:border-transparent disabled:bg-surface-container-high disabled:text-on-surface-variant ${
                       i.estado === estado
                         ? 'border-primary-container bg-primary-container text-on-primary'
                         : 'border-outline-variant bg-surface-container-lowest text-on-surface-variant'

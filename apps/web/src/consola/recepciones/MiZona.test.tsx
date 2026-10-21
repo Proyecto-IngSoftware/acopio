@@ -229,6 +229,7 @@ it('sin nada pendiente lo dice y no ofrece «Ya se resolvió algo»', async () =
   });
   pantalla();
   expect(await screen.findByText('No hay remisiones en camino a tu zona.')).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: 'Caja con una etiqueta de folio' })).toBeInTheDocument();
   expect(
     await screen.findByText(
       'Con lo recibido y lo que viene en camino se cubre lo que la zona necesita por ahora.',

@@ -62,7 +62,10 @@ export function Entidades() {
       {isPending && <Esqueleto etiqueta="Cargando entidades" />}
       {error && <EstadoError mensaje={error.message} alReintentar={() => void refetch()} />}
       {data && visibles.length === 0 && (
-        <EstadoVacio titulo={q ? 'Ninguna entidad coincide' : 'Todavía no hay entidades'}>
+        <EstadoVacio
+          ilustracion="cajas"
+          titulo={q ? 'Ninguna entidad coincide' : 'Todavía no hay entidades'}
+        >
           {q ? 'Prueba con otro nombre.' : 'Crea la primera para poder registrar acopios.'}
         </EstadoVacio>
       )}
@@ -213,7 +216,7 @@ function FormularioEntidad({
           />
         </div>
         <FormularioError mensaje={guardar.error?.message} />
-        <Boton type="submit" className="min-h-[56px] w-full" disabled={guardar.isPending}>
+        <Boton type="submit" className="min-h-[56px] w-full" ocupado={guardar.isPending}>
           {guardar.isPending ? 'Guardando…' : 'Guardar'}
         </Boton>
       </form>
@@ -303,7 +306,8 @@ function AvisoVerificar({ entidad, alCerrar }: { entidad: Entidad; alCerrar: () 
       <FormularioError mensaje={verificar.error?.message} />
       <Boton
         className="min-h-[56px] w-full"
-        disabled={!confirmo || verificar.isPending}
+        disabled={!confirmo}
+        ocupado={verificar.isPending}
         onClick={() => verificar.mutate(undefined, { onSuccess: alCerrar })}
       >
         Verificar entidad
@@ -330,7 +334,7 @@ function ConfirmarQuitar({ entidad, alCerrar }: { entidad: Entidad; alCerrar: ()
       <FormularioError mensaje={quitar.error?.message} />
       <Boton
         className="min-h-[56px] w-full"
-        disabled={quitar.isPending}
+        ocupado={quitar.isPending}
         onClick={() => quitar.mutate(undefined, { onSuccess: alCerrar })}
       >
         Quitar verificación

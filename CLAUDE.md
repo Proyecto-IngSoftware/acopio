@@ -86,6 +86,7 @@ Los patrones en uso, los descartados y el catálogo de lo reutilizable están en
 - Si cambia un endpoint, se regenera el contrato con `openapi`, luego los tipos de la web con `api:tipos`, y se versionan los dos.
 - Los íconos son Material Symbols y `index.html` baja solo los que usa el código. Tras usar uno nuevo se corre `node scripts/iconos.mjs` en `apps/web`; `src/iconos.test.ts` falla si falta alguno.
 - En `apps/web` no se escriben colores hexadecimales. Salen de `packages/ui-tokens` y CI lo revisa. La estética la fija el diseño de Stitch (ADR-0013); cuando la bóveda y Stitch no coinciden, se alinea la bóveda.
+- Antes de diseñar o cambiar el aspecto de una pantalla o una pieza de `apps/web`, invocar la skill `frontend-design:frontend-design` y usarla como control de diseño (Joseph lo pidió el 2026-10-21). La estética la siguen fijando Stitch, el lienzo aprobado y `packages/ui-tokens`; la skill revisa el movimiento (que responda a una acción de la persona), la tipografía, los textos y lo que sobra.
 - Cada pantalla guarda su diseño en `docs/03-diseno/stitch/<código>-<nombre>/`: captura, HTML de Stitch, maqueta aprobada y nota con las diferencias. No se escribe código de una pantalla sin la maqueta aprobada por Joseph.
 
 ### Versiones fijadas a propósito

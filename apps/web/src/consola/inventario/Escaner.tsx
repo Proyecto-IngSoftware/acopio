@@ -453,7 +453,8 @@ export function HojaCodigoPropuesto({
       <FormularioError mensaje={fallo || validar.error?.message} />
       <Boton
         className="min-h-[56px] w-full"
-        disabled={!presentacion || validar.isPending}
+        disabled={!presentacion}
+        ocupado={validar.isPending}
         onClick={() =>
           validar.mutate(
             { ean: codigo.ean, presentacionId: presentacion!.id },

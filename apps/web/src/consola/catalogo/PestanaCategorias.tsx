@@ -158,7 +158,7 @@ export function PestanaCategorias() {
                     aria-label={`${c.archivada ? 'Reactivar' : 'Archivar'} ${c.nombre}`}
                     disabled={archivar.isPending}
                     onClick={() => archivar.mutate({ id: c.id, archivar: !c.archivada })}
-                    className="flex h-12 w-12 items-center justify-center rounded-lg text-on-surface-variant"
+                    className="toque flex h-12 w-12 items-center justify-center rounded-lg text-on-surface-variant disabled:text-outline-variant"
                   >
                     <Icono nombre={c.archivada ? 'unarchive' : 'archive'} className="text-[22px]" />
                   </button>
@@ -274,7 +274,7 @@ function FormularioCategoria({
           Perecedero (pide fecha de vencimiento al recibir)
         </label>
         <FormularioError mensaje={guardar.error?.message} />
-        <Boton type="submit" className="w-full" disabled={guardar.isPending}>
+        <Boton type="submit" className="w-full" ocupado={guardar.isPending}>
           {guardar.isPending ? 'Guardando…' : 'Guardar'}
         </Boton>
       </form>

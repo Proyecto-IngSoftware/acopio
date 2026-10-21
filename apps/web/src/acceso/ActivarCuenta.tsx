@@ -133,7 +133,7 @@ export function ActivarCuenta() {
                 alCambiar={fijarConfirmacion}
                 autoComplete="new-password"
               />
-              <Boton type="submit" disabled={enviando} className="min-h-[56px] w-full">
+              <Boton type="submit" ocupado={enviando} className="min-h-[56px] w-full">
                 {enviando ? 'Guardando…' : restablecer ? 'Guardar contraseña' : 'Activar mi cuenta'}
               </Boton>
               {fallo && <AlertaError mensaje={fallo} />}

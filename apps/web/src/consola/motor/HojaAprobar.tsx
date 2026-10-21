@@ -115,7 +115,7 @@ export function HojaAprobar({
             )}
           </div>
         )}
-        <Boton type="submit" disabled={!valida || aprobar.isPending}>
+        <Boton type="submit" disabled={!valida} ocupado={aprobar.isPending}>
           Aprobar {valida ? formatearCantidad(cantidad, unidad) : ''}
         </Boton>
       </form>

@@ -162,6 +162,7 @@ it('conciliar cierra el comprobante', async () => {
   pantalla();
   await userEvent.click(await screen.findByRole('button', { name: 'Conciliar' }));
   await waitFor(() => expect(peticiones()).toContain(`POST /api/comprobantes/${FOLIO}/conciliar`));
+  expect(await screen.findByRole('img', { name: 'Donación conciliada' })).toBeInTheDocument();
 });
 
 it('sin entradas vinculadas explica el 422 y ofrece vincular', async () => {
@@ -225,6 +226,8 @@ it('un conciliado no tiene acciones', async () => {
   expect(await screen.findByText(/Conciliada el/)).toBeInTheDocument();
   expect(screen.queryByRole('button', { name: 'Conciliar' })).not.toBeInTheDocument();
   expect(screen.queryByRole('button', { name: 'Rechazar' })).not.toBeInTheDocument();
+  // El sello es de la acción recién hecha, no de abrir algo que ya estaba conciliado
+  expect(screen.queryByRole('img', { name: 'Donación conciliada' })).not.toBeInTheDocument();
 });
 
 it('un folio sin recibir solo deja vincular', async () => {
@@ -297,4 +300,63 @@ it('axe: sin violaciones graves en la pantalla y en la hoja de rechazo', async (
   expect(await violacionesGraves(container)).toEqual([]);
   await userEvent.click(screen.getByRole('button', { name: 'Rechazar' }));
   expect(await violacionesGraves(document.body)).toEqual([]);
+});
+
+it('mientras concilia, el botón está ocupado y no manda dos veces', async () => {
+  let llamadas = 0;
+  vi.spyOn(globalThis, 'fetch').mockImplementation((entrada) => {
+    const p = entrada as Request;
+    if (p.url.endsWith('/conciliar')) {
+      llamadas++;
+      return new Promise(() => {});
+    }
+    return Promise.resolve(
+      new Response(JSON.stringify(DETALLE), { headers: { 'content-type': 'application/json' } }),
+    );
+  });
+  render(
+    envolver(
+      <Routes>
+        <Route path="/consola/comprobantes/:folio" element={<Conciliacion />} />
+      </Routes>,
+      `/consola/comprobantes/${FOLIO}`,
+      clienteFalso(AUDITOR),
+    ),
+  );
+  await userEvent.click(await screen.findByRole('button', { name: 'Conciliar' }));
+  const boton = await screen.findByRole('button', { name: 'Conciliar' });
+  expect(boton).toHaveAttribute('aria-busy', 'true');
+  await userEvent.click(boton);
+  expect(llamadas).toBe(1);
+});
+
+it('rechazar es un botón ocupado mientras envía', async () => {
+  let llamadas = 0;
+  vi.spyOn(globalThis, 'fetch').mockImplementation((entrada) => {
+    const p = entrada as Request;
+    if (p.url.endsWith('/rechazar')) {
+      llamadas++;
+      return new Promise(() => {});
+    }
+    return Promise.resolve(
+      new Response(JSON.stringify(DETALLE), { headers: { 'content-type': 'application/json' } }),
+    );
+  });
+  render(
+    envolver(
+      <Routes>
+        <Route path="/consola/comprobantes/:folio" element={<Conciliacion />} />
+      </Routes>,
+      `/consola/comprobantes/${FOLIO}`,
+      clienteFalso(AUDITOR),
+    ),
+  );
+  await userEvent.click(await screen.findByRole('button', { name: 'Rechazar' }));
+  const hoja = await screen.findByRole('dialog', { name: `Rechazar ${FOLIO}` });
+  await userEvent.click(within(hoja).getByRole('radio', { name: 'Duplicado' }));
+  await userEvent.click(within(hoja).getByRole('button', { name: 'Rechazar comprobante' }));
+  const boton = within(hoja).getByRole('button', { name: 'Rechazar comprobante' });
+  expect(boton).toHaveAttribute('aria-busy', 'true');
+  await userEvent.click(boton);
+  expect(llamadas).toBe(1);
 });

@@ -3,7 +3,7 @@ title: "Motor de sugerencias · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, motor]
 estado: vigente
-actualizado: 2026-10-14
+actualizado: 2026-10-21
 ---
 
 # Motor de sugerencias · diseño en Stitch
@@ -38,3 +38,7 @@ En la misma maqueta están los pesos (`/consola/motor/pesos`), con cuatro desliz
 - Las hojas de aprobar y descartar, los pesos y el informe de descartes no salieron de Stitch. Los armé con los tokens.
 - La hoja de aprobar no dice de antemano a qué remisión se suma: la API lo responde al aprobar y el aviso lo muestra. Tampoco muestra el máximo hasta que la API responde que la cantidad lo pasa; entonces ofrece «Usar N».
 - La especificación no pide los atajos de motivo. Los agregué para que el informe agrupe motivos iguales, y el texto sigue siendo libre.
+
+## Línea visual, fase 3 (2026-10-21)
+
+«Recalcular» gira mientras espera. El motor sin traslados y los descartes vacíos llevan las cajas. Maqueta: el lienzo aprobado de la línea visual ([ADR-0022](../../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md)). La `construida.png` todavía es la anterior; se rehace con los recorridos.

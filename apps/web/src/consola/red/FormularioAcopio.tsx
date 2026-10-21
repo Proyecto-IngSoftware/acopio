@@ -251,7 +251,7 @@ function Formulario({ acopio, entidades }: { acopio: Acopio | null; entidades: E
       )}
 
       <FormularioError mensaje={guardar.error?.message} />
-      <Boton type="submit" className="min-h-[56px] w-full" disabled={guardar.isPending}>
+      <Boton type="submit" className="min-h-[56px] w-full" ocupado={guardar.isPending}>
         <Icono nombre="check" className="text-[20px]" />
         {acopio ? 'Guardar cambios' : 'Crear acopio'}
       </Boton>
@@ -304,7 +304,7 @@ function Formulario({ acopio, entidades }: { acopio: Acopio | null; entidades: E
             Deja de aparecer en el mapa y nadie podrá llevarle donaciones. Lo puedes reabrir
             después.
           </p>
-          <Boton onClick={() => cambiarEstado('CERRADO')} disabled={guardar.isPending}>
+          <Boton onClick={() => cambiarEstado('CERRADO')} ocupado={guardar.isPending}>
             Sí, cerrar
           </Boton>
           <Boton variante="terciario" onClick={() => fijarConfirmarCierre(false)}>

@@ -99,6 +99,7 @@ it('confirma con la nota y muestra la remisión recibida', async () => {
   expect(screen.getByText('18 / 280')).toBeInTheDocument();
   await userEvent.click(confirmar());
   expect(await screen.findByRole('heading', { name: 'R-2026-DEMA2 recibida' })).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: 'Remisión recibida' })).toBeInTheDocument();
   expect(await cuerpoDe('POST /api/remisiones/R-2026-DEMA2/recibir')).toEqual({
     nota: 'Dos bultos mojados',
   });
