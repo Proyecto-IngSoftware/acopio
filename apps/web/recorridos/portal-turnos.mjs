@@ -74,11 +74,14 @@ async function jornada(titulo) {
 
 let antes = 0;
 let jornadaId = '';
+// En local es Acopio Chapinero; en el servidor la demo vive en otro acopio
+let lugarArmar = '';
 
 await paso('P7 lista las jornadas y marca la llena', async () => {
   const armar = await jornada('Armar mercados (demo)');
   antes = armar.ocupados;
   jornadaId = armar.id;
+  lugarArmar = armar.lugar.nombre;
   await p.goto(`${WEB}/voluntariado?vista=lista`);
   await p.getByRole('heading', { level: 1, name: 'Voluntariado' }).waitFor();
   // La tira de días reemplaza el filtro «Día» (línea visual, fase 2)
@@ -96,16 +99,15 @@ await paso('P7 lista las jornadas y marca la llena', async () => {
   await revisar(p, 'P7', 'P07-voluntariado/construida.png');
 });
 
-await paso('P7 en «Mapa» pone la etiqueta de cupos sobre Acopio Chapinero', async () => {
+await paso('P7 en «Mapa» pone la etiqueta de cupos sobre el acopio de la demo', async () => {
   await p.locator('label', { hasText: 'Mapa' }).click();
   // El mapa es la vista por defecto: elegirlo quita `vista` de la URL
   if (new URL(p.url()).searchParams.has('vista')) throw new Error(`url ${p.url()}`);
-  // Chapinero tiene «Clasificar ropa donada (demo)» llena y, si sigue en plazo, «Armar mercados»
+  // El acopio de la demo tiene «Clasificar ropa donada (demo)» llena y, si sigue en plazo, «Armar mercados»
   const etiqueta = /(FALTAN? \d+ PERSONAS?|QUEDAN? \d+ CUPOS?|LLENA)( \+\d+)?/;
-  const punto = p.locator('.leaflet-marker-icon', { hasText: etiqueta });
+  // Hay más acopios con jornadas: se busca el de «Armar mercados (demo)» por su título
+  const punto = p.locator(`.leaflet-marker-icon[title^="${lugarArmar}"]`, { hasText: etiqueta });
   await punto.first().waitFor();
-  const titulo = await punto.first().getAttribute('title');
-  if (!titulo?.startsWith('Acopio Chapinero')) throw new Error(`el punto es «${titulo}»`);
   await punto.first().click();
   // A menos de 12 horas, «Clasificar ropa donada» cierra reservas y sale del mapa: vale cualquiera
   await p

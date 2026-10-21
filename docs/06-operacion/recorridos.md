@@ -3,7 +3,7 @@ title: "Recorridos de punta a punta"
 type: operacion
 tags: [operacion, pruebas, web]
 estado: vigente
-actualizado: 2026-10-20
+actualizado: 2026-10-21
 ---
 
 # Recorridos de punta a punta
@@ -237,6 +237,25 @@ baja hasta la sección «Otras plataformas que ayudan» de `/causas` y, en `/map
 de Bogotá para que se vean los dos tipos de punto.
 
 ## Últimos resultados
+
+**2026-10-21, contra el servidor de pruebas, con la línea visual** (fases 1 a 3 desplegadas,
+`CAPTURAS=no`, `SIN_CORREO=1`): `referenciados.mjs` 7 de 7, `portal-causas.mjs` 4 de 4,
+`portal-turnos.mjs` 8 de 8 y `donador.mjs` 7 de 7, sin errores de página. Las primeras corridas
+encontraron contraste por debajo de AA en P7 y en «Mis donaciones»: las filas desactivadas con
+`opacity-70` y los días sin jornadas de la tira. Se corrigió en el PR 181 y se repitió después del
+despliegue. `portal-turnos.mjs` ahora busca la marca en la fila (`article`), abre la jornada por
+el nombre exacto del título y toma el acopio de «Armar mercados (demo)» de la API, porque en el
+servidor la demo vive en «Acopio Suba (prueba)». `donador.mjs` cancela la donación antes de revisar
+la página: la primera corrida falló en la revisión y dejó `ACO-2026-3G8QP` preparada, que se
+canceló a mano. El Chromium del contenedor en la nube no es el que pide Playwright 1.63; los
+recorridos corrieron con una precarga que pasa `executablePath: '/opt/pw-browsers/chromium'`.
+
+- `consola-turnos.mjs` no corrió: en el servidor, `operador1` («Operador Chapinero (prueba)») no
+  gestiona el acopio de «Armar mercados (demo)», así que C14 sale vacío. Es un dato de la demo
+  del servidor, no de la pantalla.
+- Los que gastan la demo (`consola-motor`, `consola-remisiones`, `consola-recepciones`,
+  `consola-comprobantes`, `presentaciones`, `consola-causas`, `sin-conexion` y
+  `validacion-general`) quedan para la ronda del 24 (fila 5 del plan de acción).
 
 **2026-10-20, en local, mapa de necesidades** (rama `mapa-necesidades`, API reconstruida con
 `servicios:todo`): `referenciados.mjs` 7 de 7 y `portal-turnos.mjs` 7 de 7, sin errores de
