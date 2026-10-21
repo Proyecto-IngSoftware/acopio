@@ -47,7 +47,12 @@ Todas en «Cambios al construir» de la especificación:
 
 - Correr los 13 recorridos contra el Compose y rehacer las `construida.png` del portal y la consola ([#177](https://github.com/Proyecto-IngSoftware/acopio/issues/177)).
 
+## Después de fusionar
+
+Joseph pidió fusionar el PR 180 y recorrer el servidor. Con las tres fases desplegadas pasaron `referenciados`, `portal-causas`, `portal-turnos` (8 de 8) y `donador` (7 de 7). Las primeras corridas encontraron contraste por debajo de AA, corregido en el PR 181; el detalle está en «Últimos resultados» de [recorridos](../recorridos.md). Joseph habilitó «Accept edits» para que la sesión corriera los recorridos contra el servidor.
+
 ## Depende de Joseph
 
-- Decidir si el PR de la fase 3 se fusiona antes o después de la sustentación del 23: al fusionarlo, cambia la consola del servidor ([#177](https://github.com/Proyecto-IngSoftware/acopio/issues/177)).
+- Que `operador1` del servidor gestione el acopio de «Armar mercados (demo)», o decidir otra cuenta, para que `consola-turnos.mjs` corra allá ([#177](https://github.com/Proyecto-IngSoftware/acopio/issues/177)).
 - Recorrer la demo del servidor antes del 23 ([#177](https://github.com/Proyecto-IngSoftware/acopio/issues/177)).
+- Los recorridos que gastan la demo, en la ronda del 24 ([fila 5 del plan de acción](../../05-planes/plan-de-accion.md)).

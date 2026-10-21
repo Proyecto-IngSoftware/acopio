@@ -28,7 +28,7 @@ actualizado: 2026-10-21
 | 3 Botones ocupados e inhabilitado sólido | ✅ | |
 | 4 Vacíos ilustrados y estados desactivados | ✅ | |
 | 5 Listas que entran al filtrar | ✅ | |
-| 6 Documentos, verificación y PR | 🟡 | Verificación completa en verde y PR abierto. Faltan los recorridos y las `construida.png` nuevas, que piden el Compose (#177) |
+| 6 Documentos, verificación y PR | ✅ | Fusionada el 21 con el PR 180; el 181 corrigió el contraste. Faltan las `construida.png` nuevas (#177) |
 
 ## Global Constraints
 
