@@ -118,6 +118,18 @@ describe('con emergencias', () => {
       );
     });
 
+    it('una categoría baja que el acopio marcó «no recibir» no deja «en 0 acopios»', async () => {
+      // El balance la cuenta en faltan; necesidades la pasa a noRecibe
+      con({ faltan: [agua], noTraigan: [agua] }, [{ ...necesidad('x', []), noRecibe: [agua] }]);
+      render(envolver(<Portada />));
+      expect(
+        await screen.findByRole('heading', {
+          level: 1,
+          name: 'Hoy ningún acopio reporta faltantes.',
+        }),
+      ).toBeInTheDocument();
+    });
+
     it('sin faltantes, el título lo dice', async () => {
       con(BALANCE_VACIO, []);
       render(envolver(<Portada />));

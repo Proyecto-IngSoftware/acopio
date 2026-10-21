@@ -62,7 +62,7 @@ export function FilaJornada({ jornada, className = '', style }: Props) {
               className="w-16 shrink-0"
             />
             <span
-              className={`text-[12px] font-semibold tabular-nums ${
+              className={`text-[12px] font-semibold whitespace-nowrap tabular-nums ${
                 pocos ? 'text-tertiary-container' : 'text-on-surface-variant'
               }`}
             >

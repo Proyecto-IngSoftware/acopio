@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { acopiosConFaltantes, tituloFranja, useCuenta } from './franja';
+import { acopiosConFaltantes, categoriasQueFaltan, tituloFranja, useCuenta } from './franja';
 
 const agua = { categoriaId: 'c1', categoria: 'Agua' };
 const aseo = { categoriaId: 'c2', categoria: 'Aseo' };
@@ -29,4 +29,14 @@ it('con menos movimiento, la cuenta llega de una vez a la meta', () => {
   expect(result.current).toBe(6);
   rerender({ meta: 3 });
   expect(result.current).toBe(3);
+});
+
+it('categoriasQueFaltan cuenta cada categoría una vez aunque falte en varios acopios', () => {
+  expect(
+    categoriasQueFaltan([
+      { acopioId: 'a', faltan: [agua, aseo] },
+      { acopioId: 'b', faltan: [agua] },
+      { acopioId: 'c', faltan: [] },
+    ]),
+  ).toBe(2);
 });
