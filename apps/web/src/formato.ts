@@ -82,3 +82,54 @@ export function diaSemana(fecha: string): string {
   const dia = de('weekday');
   return `${dia.charAt(0).toUpperCase()}${dia.slice(1)} ${de('day')} de ${de('month')}`;
 }
+
+const sinPunto = (t: string) => t.replace('.', '').toLowerCase();
+// Un día `YYYY-MM-DD` como mediodía UTC: restar dos así da días enteros sin saltos de horario
+const mediodia = (dia: string) => new Date(`${dia}T12:00:00Z`).getTime();
+
+/** Partes del bloque de fecha: «jue», «22», «oct». `lejana` si el día de Bogotá no está entre
+ *  hoy y hoy + 6; ahí el bloque muestra el mes en lugar del día de la semana. */
+export function partesFecha(
+  fecha: string,
+  hoy = new Date(),
+): { semana: string; dia: string; mes: string; lejana: boolean } {
+  const partes = new Intl.DateTimeFormat('es-CO', {
+    timeZone: BOGOTA,
+    weekday: 'short',
+    day: 'numeric',
+    month: 'short',
+  }).formatToParts(new Date(fecha));
+  const de = (tipo: string) => partes.find((p) => p.type === tipo)?.value ?? '';
+  const dias = (mediodia(diaBogota(fecha)) - mediodia(diaBogota(hoy))) / 86_400_000;
+  return {
+    semana: sinPunto(de('weekday')),
+    dia: de('day'),
+    mes: sinPunto(de('month')),
+    lejana: dias < 0 || dias > 6,
+  };
+}
+
+export interface DiaTira {
+  clave: string;
+  arriba: string;
+  numero: string;
+  nombre: string;
+  conEventos: boolean;
+}
+
+/** Los días de la tira desde hoy: «Hoy 21», «jue 22»… con punto si tienen eventos. */
+export function diasDeLaTira(hoy: Date, cantidad: number, conEventos: Set<string>): DiaTira[] {
+  const base = mediodia(diaBogota(hoy));
+  return Array.from({ length: cantidad }, (_, i) => {
+    const instante = new Date(base + i * 86_400_000).toISOString();
+    const clave = diaBogota(instante);
+    const { semana, dia } = partesFecha(instante, hoy);
+    return {
+      clave,
+      arriba: i === 0 ? 'Hoy' : semana,
+      numero: dia,
+      nombre: diaSemana(instante),
+      conEventos: conEventos.has(clave),
+    };
+  });
+}
