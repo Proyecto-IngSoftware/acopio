@@ -7,7 +7,10 @@ import {
   type JornadaPublica,
   type ReservaPublica,
 } from '../../api/turnos';
+import { BloqueFecha } from '../../componentes/BloqueFecha';
 import { Boton, EnlaceBoton } from '../../componentes/Boton';
+import { Ilustracion } from '../../componentes/ilustraciones/Ilustracion';
+import { SelloConfirmacion } from '../../componentes/SelloConfirmacion';
 import { EstadoError } from '../../componentes/EstadoError';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { Hoja } from '../../componentes/Hoja';
@@ -35,7 +38,7 @@ export function MiReserva() {
 
   if (secreto === null)
     return (
-      <Mensaje icono="link_off" titulo="Este enlace está incompleto">
+      <Mensaje titulo="Este enlace está incompleto">
         Le falta la parte final. Ábrelo desde el correo o copia el enlace completo que guardaste.
       </Mensaje>
     );
@@ -45,7 +48,7 @@ export function MiReserva() {
   if (consulta.data) return <Reserva reserva={consulta.data} secreto={secreto} />;
   if (consulta.error?.estado === 404)
     return (
-      <Mensaje icono="search_off" titulo="No encontramos esa reserva">
+      <Mensaje titulo="No encontramos esa reserva">
         Revisa que el enlace esté completo. Si la jornada ya pasó, la reserva ya no se puede
         consultar.
       </Mensaje>
@@ -60,10 +63,10 @@ export function MiReserva() {
   );
 }
 
-function Mensaje({ icono, titulo, children }: { icono: string; titulo: string; children: string }) {
+function Mensaje({ titulo, children }: { titulo: string; children: string }) {
   return (
     <div className="flex flex-col items-center gap-space-sm px-margin py-space-xl text-center">
-      <Icono nombre={icono} className="text-[40px] text-outline" />
+      <Ilustracion nombre="calendario" className="w-28" />
       <h1 className="text-headline-sm text-on-surface">{titulo}</h1>
       <p className="max-w-[32ch] text-body-md text-on-surface-variant">{children}</p>
       <EnlaceBoton a="/voluntariado" variante="secundario" className="mt-space-sm">
@@ -116,7 +119,10 @@ function Reserva({ reserva, secreto }: { reserva: ReservaPublica; secreto: strin
   if (reserva.estado === 'CANCELADA' || cancelar.isSuccess)
     return (
       <div className="flex flex-col items-center gap-space-sm px-margin py-space-xl text-center">
-        <Icono nombre="event_available" className="text-[40px] text-outline" />
+        <BloqueFecha fecha={j.inicio} tamano="detalle" apagado />
+        <span className="rounded-full bg-surface-container-high px-space-sm py-0.5 text-label-md text-on-surface-variant">
+          Cancelada
+        </span>
         <h1 className="text-headline-sm text-on-surface">Cancelaste tu reserva</h1>
         <p className="max-w-[32ch] text-body-md text-on-surface-variant">
           Tu cupo en «{j.titulo}» ya está libre.
@@ -149,7 +155,15 @@ function Reserva({ reserva, secreto }: { reserva: ReservaPublica; secreto: strin
   if (j.estado === 'CANCELADA')
     return (
       <div className="flex flex-col gap-space-md px-margin py-space-md">
-        <h1 className="text-headline-lg-mobile text-on-surface">{j.titulo}</h1>
+        <div className="flex items-center gap-space-md">
+          <BloqueFecha fecha={j.inicio} tamano="detalle" apagado />
+          <div className="flex min-w-0 flex-col items-start gap-space-xs">
+            <span className="rounded-full bg-surface-container-high px-space-sm py-0.5 text-label-md text-on-surface-variant">
+              Cancelada
+            </span>
+            <h1 className="text-headline-lg-mobile text-on-surface">{j.titulo}</h1>
+          </div>
+        </div>
         {codigo}
         <Aviso icono="event_busy" titulo="Esta jornada se canceló">
           {j.motivoCancelacion ? `«${j.motivoCancelacion}». ` : ''}Tu reserva ya no cuenta; no
@@ -162,11 +176,11 @@ function Reserva({ reserva, secreto }: { reserva: ReservaPublica; secreto: strin
     );
 
   return (
-    <div className="flex flex-col gap-space-md px-margin py-space-md">
+    <div className="aparece flex flex-col gap-space-md px-margin py-space-md">
       <div className="flex flex-col items-center gap-space-xs text-center">
-        <span className="flex h-14 w-14 items-center justify-center rounded-full bg-primary-container text-on-primary">
-          <Icono nombre="check" className="text-[30px]" />
-        </span>
+        <SelloConfirmacion
+          etiqueta={reserva.estado === 'ACTIVA' ? 'Reserva confirmada' : 'Reserva registrada'}
+        />
         <h1 className="text-headline-sm text-on-surface">
           {reserva.estado === 'ACTIVA' ? 'Tu cupo está reservado' : 'Tu reserva'}
         </h1>
@@ -191,7 +205,10 @@ function Reserva({ reserva, secreto }: { reserva: ReservaPublica; secreto: strin
         aria-label="La jornada"
         className="flex flex-col gap-space-sm rounded-xl border border-outline-variant bg-surface-container-lowest p-space-md"
       >
-        <h2 className="text-headline-sm text-on-surface">{j.titulo}</h2>
+        <div className="flex items-center gap-space-md">
+          <BloqueFecha fecha={j.inicio} tamano="detalle" />
+          <h2 className="min-w-0 text-headline-sm text-on-surface">{j.titulo}</h2>
+        </div>
         <Dato icono="event">
           <b className="font-label-md text-on-surface">{diaSemana(j.inicio)}</b>
           <br />
@@ -261,8 +278,8 @@ function Reserva({ reserva, secreto }: { reserva: ReservaPublica; secreto: strin
               {cancelar.error.message}
             </p>
           )}
-          <Boton disabled={cancelar.isPending} onClick={() => cancelar.mutate(secreto)}>
-            Cancelar reserva
+          <Boton ocupado={cancelar.isPending} onClick={() => cancelar.mutate(secreto)}>
+            {cancelar.isPending ? 'Cancelando…' : 'Cancelar reserva'}
           </Boton>
           <Boton variante="secundario" onClick={() => fijarConfirmando(false)}>
             Mantener mi reserva

@@ -201,3 +201,47 @@ it('sin cambios no muestra el aviso', async () => {
   await screen.findByText('K7QM4XPA');
   expect(screen.queryByRole('status', { name: 'La jornada cambió' })).not.toBeInTheDocument();
 });
+
+it('la reserva activa muestra el sello y el bloque de fecha de la jornada', async () => {
+  responderSegun({ [CONSULTAR]: reservaDe() });
+  pantalla();
+  expect(await screen.findByRole('img', { name: 'Reserva confirmada' })).toBeInTheDocument();
+  const jornada = screen.getByRole('region', { name: 'La jornada' });
+  expect(
+    within(jornada).getByText('Miércoles 21 de octubre', { selector: '.sr-only' }),
+  ).toBeInTheDocument();
+});
+
+it('sin reserva que mostrar, el mensaje lleva el calendario', async () => {
+  responderSegun({
+    [CONSULTAR]: conEstado(404, { estado: 404, codigo: 'NO_ENCONTRADO', mensaje: 'No existe' }),
+  });
+  pantalla();
+  expect(
+    await screen.findByRole('img', { name: 'Calendario con una planta que brota' }),
+  ).toBeInTheDocument();
+});
+
+it('mientras cancela, el botón de la hoja está ocupado', async () => {
+  let cancelaciones = 0;
+  vi.spyOn(globalThis, 'fetch').mockImplementation((entrada) => {
+    const p = entrada as Request;
+    if (p.url.endsWith('/cancelar')) {
+      cancelaciones++;
+      return new Promise(() => {});
+    }
+    return Promise.resolve(
+      new Response(JSON.stringify(reservaDe()), {
+        headers: { 'content-type': 'application/json' },
+      }),
+    );
+  });
+  pantalla();
+  await userEvent.click(await screen.findByRole('button', { name: 'Cancelar reserva' }));
+  const hoja = screen.getByRole('dialog');
+  await userEvent.click(within(hoja).getByRole('button', { name: 'Cancelar reserva' }));
+  const boton = await within(hoja).findByRole('button', { name: /Cancelando/ });
+  expect(boton).toHaveAttribute('aria-busy', 'true');
+  await userEvent.click(boton);
+  expect(cancelaciones).toBe(1);
+});
