@@ -18,7 +18,7 @@ cambios a la memoria y al archivo global están propuestos y esperan el visto bu
 
 | PR o commit | Qué trae |
 |---|---|
-| PR de la rama `auditoria-prompts` | `CLAUDE.md`: la lista de módulos incluye `turnos` e `importacion`, y el CI construye las imágenes de la API y de la web. `vista-general.md` deja de decir que falta `importacion`. Nace [P-088](../../01-requerimientos/pendientes.md#p-088--la-fusión-automática-no-consulta-las-alertas-de-code-scanning). |
+| PR de la rama `auditoria-prompts` | `CLAUDE.md`: la lista de módulos incluye `turnos` e `importacion`, y el CI construye las imágenes de la API y de la web. `vista-general.md` deja de decir que falta `importacion`. Nace [P-088](../../01-requerimientos/pendientes.md#p-088--la-fusión-automática-no-consulta-las-alertas-de-code-scanning). La prueba de Jornadas fija la fecha y ya no depende del día en que corre. |
 
 No hubo cambios fuera del repositorio.
 
@@ -26,8 +26,8 @@ No hubo cambios fuera del repositorio.
 
 Las rutas, los scripts, los identificadores y las versiones que nombra el `CLAUDE.md` se
 compararon con el repositorio: unas 45 rutas, 25 identificadores de código y los scripts de
-los tres `package.json`. Solo fallaron los dos datos corregidos. El cambio toca únicamente
-Markdown, así que la verificación de código la corre el CI del PR.
+los tres `package.json`. Solo fallaron los dos datos corregidos. Lint, tipos, depcruise y las
+pruebas unitarias y de integración las corre el CI del PR.
 
 ## Decisiones
 
@@ -41,6 +41,12 @@ Markdown, así que la verificación de código la corre el CI del PR.
 
 El primer intento de editar `vista-general.md` lo frenó el hook de humanizer porque la skill no
 se había invocado en ese turno. Se invocó y se repitió la edición.
+
+El CI del PR falló en `apps/web/src/portal/turnos/Jornadas.test.tsx`, que no tenía que ver con
+el cambio. La prueba busca la sección «Miércoles 21 de octubre», y el 21 de octubre la pantalla
+la titula «Hoy, miércoles 21 de octubre». Se reprodujo en local: falla sin el arreglo y pasa con
+él. La prueba ahora fija el reloj en el 20 de octubre, como ya hacen las de Causas. Pasaron lint,
+tipos y la suite completa de la web.
 
 ## Pendiente
 
