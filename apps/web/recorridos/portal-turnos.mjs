@@ -99,8 +99,48 @@ await paso('P7 en «Mapa» pone la etiqueta de cupos sobre Acopio Chapinero', as
   const titulo = await punto.first().getAttribute('title');
   if (!titulo?.startsWith('Acopio Chapinero')) throw new Error(`el punto es «${titulo}»`);
   await punto.first().click();
-  await p.getByRole('link', { name: /Clasificar ropa donada \(demo\)/ }).waitFor();
+  // A menos de 12 horas, «Clasificar ropa donada» cierra reservas y sale del mapa: vale cualquiera
+  await p
+    .getByRole('link', { name: /(Clasificar ropa donada|Armar mercados) \(demo\)/ })
+    .first()
+    .waitFor();
   await revisar(p, 'P7 mapa', 'P07-voluntariado/construida-mapa.png');
+  await p.locator('label', { hasText: 'Lista' }).click();
+});
+
+await paso('P7 en «Mapa» filtra con los chips y «Todas» los quita', async () => {
+  await p.goto(`${WEB}/voluntariado`);
+  await p.locator('.leaflet-marker-icon').first().waitFor();
+  // Se usa el chip que tenga jornadas: cuál depende de las reservas y del plazo de la demo
+  const chips = [
+    { nombre: /^Falta gente (\d+)$/, estado: 'faltan', etiqueta: /FALTAN? \d+ PERSONAS?/ },
+    { nombre: /^Con cupos (\d+)$/, estado: 'cupos', etiqueta: /QUEDAN? \d+ CUPOS?/ },
+  ];
+  let usado = null;
+  for (const c of chips) {
+    const boton = p.getByRole('button', { name: c.nombre });
+    // La cuenta va al final del texto del chip
+    const n = Number((await boton.textContent())?.match(/(\d+)\s*$/)?.[1] ?? 0);
+    if (n > 0) {
+      usado = { ...c, boton };
+      break;
+    }
+  }
+  if (!usado) throw new Error('ningún chip tiene jornadas');
+  await usado.boton.click();
+  await p.waitForFunction(
+    (estado) => new URL(window.location.href).searchParams.get('estado') === estado,
+    usado.estado,
+  );
+  if ((await usado.boton.getAttribute('aria-pressed')) !== 'true')
+    throw new Error('chip sin marcar');
+  const textos = await p.locator('.leaflet-marker-icon').allTextContents();
+  if (!textos.length || textos.some((t) => !usado.etiqueta.test(t))) {
+    throw new Error(`etiquetas con ${usado.estado}: ${textos.join(' | ')}`);
+  }
+  await p.getByRole('button', { name: /^Todas \d+$/ }).click();
+  await p.waitForFunction(() => !new URL(window.location.href).searchParams.has('estado'));
+  // El paso siguiente reserva desde la lista
   await p.locator('label', { hasText: 'Lista' }).click();
 });
 

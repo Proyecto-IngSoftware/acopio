@@ -162,7 +162,7 @@ function LineaDonacion({
         </div>
       )}
       {linea.perecedero && (
-        <label className="flex flex-col gap-space-2xs text-label-md text-on-surface-variant">
+        <label className="flex flex-col gap-space-xs text-label-md text-on-surface-variant">
           Vence (opcional)
           <input
             type="date"

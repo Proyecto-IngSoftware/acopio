@@ -126,9 +126,9 @@ Con la demo recién sembrada, conviene correr `consola-motor.mjs` antes que
 | `sin-conexion.mjs` | La captura sin conexión de C4 (Bloque 2, ciclo 3) | 12 | C04-sin-conexion y C04-pendientes |
 | `portal-causas.mjs` | Lo público de la pieza C sin iniciar sesión: P3 con las causas «(demo)» y su sello, el chip de personas desaparecidas con sus tres enlaces, la ficha con la hoja de salida y su `rel`, y las causas atendidas | 4 | P03-causas y P04-ficha-causa |
 | `consola-causas.mjs` | La consola de la pieza C: crea una entidad nueva por corrida, la verifica con el aviso (el botón empieza inactivo), publica una causa con la confirmación de destino, la renueva, archiva otra y le quita la verificación a la entidad; en P4 el enlace desaparece. Entra como `admin` con `ADMIN_CONTRASENA` y no toca las causas «(demo)» | 6 | C15-entidades, C22-causas y P04-ficha-causa |
-| `portal-turnos.mjs` | Lo público de turnos sin iniciar sesión (HU-03): P7 con «Clasificar ropa donada (demo)» marcada «Llena», la pestaña «Mapa» con la etiqueta de cupos sobre Acopio Chapinero («FALTAN N PERSONAS», «QUEDAN N CUPOS» o «LLENA», con «+N» si tiene más jornadas) y sus jornadas al tocarlo, reservar en «Armar mercados (demo)» con un correo nuevo, P8 con el código y el secreto después del `#`, el `.ics`, cancelar y comprobar en la API que `ocupados` volvió a su valor, y P8 sin `#`. Deja la demo como estaba | 7 | P07-voluntariado (construida, construida-mapa y construida-reservar) y P08-mi-reserva |
+| `portal-turnos.mjs` | Lo público de turnos sin iniciar sesión (HU-03): P7 con «Clasificar ropa donada (demo)» marcada «Llena», la pestaña «Mapa» con la etiqueta de cupos sobre Acopio Chapinero («FALTAN N PERSONAS», «QUEDAN N CUPOS» o «LLENA», con «+N» si tiene más jornadas) y sus jornadas al tocarlo, el chip que tenga jornadas filtrando el mapa y «Todas» quitándolo, reservar en «Armar mercados (demo)» con un correo nuevo, P8 con el código y el secreto después del `#`, el `.ics`, cancelar y comprobar en la API que `ocupados` volvió a su valor, y P8 sin `#`. Deja la demo como estaba | 8 | P07-voluntariado (construida, construida-mapa y construida-reservar) y P08-mi-reserva |
 | `consola-turnos.mjs` | C14 con `operador1` y `DEMO_CONTRASENA`: llega desde «Más», crea una serie de dos fechas y comprueba en la API que comparten serie, mueve una (cambia la hora de fin) y revisa `fin` en la API, ve los inscritos de «Armar mercados (demo)», suma un cupo de ajuste, cierra y reabre las reservas (con el portal sin aceptar reservas mientras está cerrada). Al final devuelve el ajuste y borra la serie desde la pantalla | 7 | C14-turnos |
-| `referenciados.mjs` | La pieza E sin iniciar sesión: P5 con la leyenda de RedAcopio y la casilla «Mostrar puntos de RedAcopio» (apagarla quita la leyenda), la sección «Puntos de RedAcopio Bogotá» de la lista con «según RedAcopio» y el enlace a la fuente, la ficha de Sugoi Taller Creativo con su antigüedad, «Ver en RedAcopio» y «Lo que piden», sin «Preparar donación», «Lo que urge» ni «Voluntariado»; P5 con el chip «Falta», la etiqueta «FALTA: Aceite» sobre Acopio Chapinero y su tarjeta con «Qué falta hoy»; y las 9 plataformas al final de Causas, con al menos una foto; `/plataformas` lleva a esa sección | 7 | P05-mapa (construida-referenciados y construida-necesidades), P06-ficha-referenciado y P03-causas (construida-plataformas) |
+| `referenciados.mjs` | La pieza E sin iniciar sesión: P5 con la leyenda de RedAcopio y la casilla «Mostrar puntos de RedAcopio» (apagarla quita la leyenda), la sección «Puntos de RedAcopio Bogotá» de la lista con «según RedAcopio» y el enlace a la fuente, la ficha de Sugoi Taller Creativo con su antigüedad, «Ver en RedAcopio» y «Lo que piden», sin «Preparar donación», «Lo que urge» ni «Voluntariado»; P5 con el chip «Falta», la etiqueta «FALTA: Aceite» sobre Acopio Chapinero y su tarjeta con «Qué falta hoy»; y las 9 plataformas al final de Causas, con al menos una foto; `/plataformas` lleva a esa sección | 7 | P05-mapa (construida-referenciados, construida-necesidades y construida-leyenda), P06-ficha-referenciado y P03-causas (construida-plataformas) |
 
 ### `validacion-general.mjs`
 
@@ -246,7 +246,15 @@ escribe con cookie. La primera corrida de cada uno falló por el script: el chip
 un instante en quedar con `aria-pressed`, y la etiqueta del punto de P7 lleva el nombre del
 ícono delante, así que una expresión con `^` no la encontraba. «Armar mercados (demo)» estaba
 fuera de plazo y no salía en el mapa; terminó a las 18:00 y `seed:demo` la volvió a crear tres
-días después. Con eso, Chapinero muestra «FALTAN 18 PERSONAS +1».
+días después. Con eso, esa tarde Chapinero mostraba «FALTAN 18 PERSONAS +1»; la cifra cambia con las reservas y con el plazo de cada jornada.
+
+**2026-10-20, en local, P-086 y P-087** (rama `pendientes-086-087`, build servido con
+`vite preview --port 4173` y `WEB=http://localhost:4173`): `referenciados.mjs` 7 de 7 y
+`portal-turnos.mjs` 8 de 8, sin errores de página, con capturas nuevas porque los íconos cambiaron
+de tamaño. `portal-turnos.mjs` falló dos veces antes. La primera, porque «Clasificar ropa donada
+(demo)» empezaba en menos de 12 horas, ya no aceptaba reservas y no salía en el mapa; el paso ahora
+acepta cualquiera de las dos jornadas de Chapinero. La segunda, porque el paso nuevo de los chips
+dejaba la vista de mapa y el siguiente reserva desde la lista.
 
 **2026-10-20, en local, escanear en C18** (rama `escanear-codigos-catalogo`, build servido con
 `vite preview` contra la API del Compose): `presentaciones.mjs` 10 de 10, sin errores de página.

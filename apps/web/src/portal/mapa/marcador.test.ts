@@ -7,6 +7,7 @@ import {
   capitalizar,
   etiquetaCorta,
   etiquetaMarcador,
+  tituloMarcador,
   htmlGrupo,
   htmlMarcador,
   htmlPunto,
@@ -180,6 +181,9 @@ it('anchoPunto: el círculo sin etiqueta y lo que mida la etiqueta con ella', ()
   expect(anchoPunto(false, null)).toBe(40);
   expect(anchoPunto(true, null)).toBe(48);
   expect(anchoPunto(false, 'AL DÍA')).toBeGreaterThan(48);
+  // borde, px-2, ícono de 16 px y gap-1 (40), más 8,5 px por letra de label-caps: en Chromium
+  // «FALTA: ARROZ» mide 135 px, así que la caja no queda más angosta que la etiqueta
+  expect(anchoPunto(false, 'FALTA: ARROZ')).toBe(40 + 12 * 8.5);
   // la etiqueta crece con el texto hasta 24 letras y no más
   expect(anchoPunto(false, 'FALTA: Aceite')).toBeGreaterThan(anchoPunto(false, 'AL DÍA'));
   expect(anchoPunto(false, 'FALTA: Alimento para animales +2')).toBe(
@@ -192,4 +196,14 @@ it('capitalizar baja la parte en mayúsculas del comienzo y deja el resto', () =
   expect(capitalizar('ARROZ DE SOBRA')).toBe('Arroz de sobra');
   expect(capitalizar('FALTAN 18 PERSONAS')).toBe('Faltan 18 personas');
   expect(capitalizar('FALTA AGUA 5L')).toBe('Falta agua 5L');
+});
+
+it('tituloMarcador: el nombre y, si hay etiqueta, la etiqueta escrita como frase', () => {
+  expect(tituloMarcador(acopioDePrueba(), null)).toBe('Acopio Chapinero');
+  expect(tituloMarcador(acopioDePrueba(), { estado: 'falta', texto: 'FALTA: Arroz +1' })).toBe(
+    'Acopio Chapinero. Falta: Arroz +1',
+  );
+  expect(tituloMarcador(referenciadoDePrueba(), null)).toBe(
+    etiquetaMarcador(referenciadoDePrueba()),
+  );
 });

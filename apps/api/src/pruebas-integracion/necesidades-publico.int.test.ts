@@ -73,7 +73,11 @@ describe('necesidades públicas', () => {
       data: { acopio_id: ACOPIO_A, categoria_id: ids.noRecibe, marcado_por: adminId },
     });
   });
-  afterAll(() => a.cerrar());
+  afterAll(async () => {
+    // ACOPIO_B es de todas las suites: no se le deja el umbral de esta categoría
+    await a.prisma.umbral.deleteMany({ where: { acopio_id: ACOPIO_B, categoria_id: ids.falta } });
+    await a.cerrar();
+  });
 
   const leer = async () =>
     (await a.http().get('/api/publico/necesidades').expect(200)).body as Fila[];
@@ -85,6 +89,17 @@ describe('necesidades públicas', () => {
     expect(idsDe(fila.sobran)).toContain(ids.sobra);
     expect(idsDe(fila.alDia)).toEqual(expect.arrayContaining([ids.rango, ids.cerca]));
     expect(idsDe(fila.noRecibe)).toContain(ids.noRecibe);
+  });
+
+  it('cada lista va en orden alfabético de la categoría', async () => {
+    const fila = (await leer()).find((f) => f.acopioId === ACOPIO_A)!;
+    for (const lista of [fila.faltan, fila.sobran, fila.alDia, fila.noRecibe]) {
+      const nombres = lista.map((c) => c.categoria);
+      expect(nombres).toEqual([...nombres].sort((x, y) => x.localeCompare(y, 'es')));
+    }
+    // «Cerca …» va antes que «Rango …»
+    const alDia = idsDe(fila.alDia);
+    expect(alDia.indexOf(ids.cerca)).toBeLessThan(alDia.indexOf(ids.rango));
   });
 
   it('una categoría con umbral y marca vigente solo sale en noRecibe', async () => {
@@ -129,6 +144,8 @@ describe('necesidades públicas', () => {
         actualizado_por: adminId,
       },
     });
+    // Activo sale: así la ausencia de abajo prueba algo
+    expect((await leer()).some((f) => f.acopioId === ACOPIO_B)).toBe(true);
     await a.prisma.acopio.update({ where: { id: ACOPIO_B }, data: { estado: 'CERRADO' } });
     try {
       expect((await leer()).some((f) => f.acopioId === ACOPIO_B)).toBe(false);

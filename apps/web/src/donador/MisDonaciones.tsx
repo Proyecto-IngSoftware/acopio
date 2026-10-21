@@ -98,7 +98,7 @@ export function MisDonaciones() {
             >
               <div className="flex items-center justify-between gap-space-sm">
                 <span className="font-mono text-label-md text-on-surface">{d.folio}</span>
-                <span className="rounded-full bg-surface-container-high px-space-sm py-1 text-label-sm text-on-surface-variant">
+                <span className="rounded-full bg-surface-container-high px-space-sm py-1 text-label-md text-on-surface-variant">
                   {ESTADOS_DONACION[d.estado]}
                 </span>
               </div>

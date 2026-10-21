@@ -16,7 +16,7 @@ actualizado: 2026-10-20
 | Archivos | [captura.png](captura.png) · [pantalla.html](pantalla.html) |
 | Aprobación | Joseph la aprobó en Stitch el 2026-09-30, con las diferencias de abajo |
 | Construida | [construida.png](construida.png), en Chromium a 360 × 640 |
-| Mapa de necesidades | [maqueta-necesidades.html](maqueta-necesidades.html) (<https://claude.ai/artifact/EekofY8Z5Ky2VprW6FXLe4>), aprobada por Joseph el 2026-10-20. Construida: [construida-necesidades.png](construida-necesidades.png) (`referenciados.mjs`) |
+| Mapa de necesidades | [maqueta-necesidades.html](maqueta-necesidades.html) (<https://claude.ai/artifact/EekofY8Z5Ky2VprW6FXLe4>), aprobada por Joseph el 2026-10-20. Construida: [construida-necesidades.png](construida-necesidades.png) y la leyenda sola, [construida-leyenda.png](construida-leyenda.png) (`referenciados.mjs`) |
 | Capa de zonas | [maqueta-zonas.html](maqueta-zonas.html) (<https://claude.ai/artifact/LL5E9aWJDeJfQ2f51sAwXu>), aprobada por Joseph el 2026-10-17. Construida: [construida-zona.png](construida-zona.png) · [construida-zonas-lista.png](construida-zonas-lista.png) (`consola-recepciones.mjs`) |
 
 ## Mapa de necesidades (2026-10-20)

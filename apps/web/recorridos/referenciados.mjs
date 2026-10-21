@@ -121,6 +121,13 @@ await paso(
     await punto.click();
     await p.getByText('Qué falta hoy').waitFor();
     await revisar(p, 'P5 con necesidades', 'P05-mapa/construida-necesidades.png');
+    // En la captura de página entera la cabecera fija tapa la fila «NO RECIBE»: la leyenda va aparte
+    if (process.env.CAPTURAS !== 'no') {
+      const leyenda = p.getByRole('list', { name: 'Estados del inventario' });
+      // Centrada: pegada al borde de arriba, la cabecera fija la taparía
+      await leyenda.evaluate((e) => e.scrollIntoView({ block: 'center' }));
+      await leyenda.screenshot({ path: `${DISENO}P05-mapa/construida-leyenda.png` });
+    }
   },
 );
 

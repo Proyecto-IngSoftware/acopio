@@ -94,7 +94,7 @@ export function PasoFolio({ donacion: inicial, archivo = null, falloInicial = nu
         <Icono nombre="info" className="text-[22px]" />
         Muestra este folio en el acopio. Vence en 7 días si no la entregas.
       </p>
-      <div className="flex flex-col gap-space-2xs rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
+      <div className="flex flex-col gap-space-xs rounded-xl bg-surface-container-lowest p-space-md shadow-sm">
         <b className="text-body-lg text-on-surface">{donacion.acopio.nombre}</b>
         <span className="text-body-md text-on-surface">{resumen(donacion)}</span>
         <Link

@@ -7,23 +7,34 @@ import { acopioDePrueba, referenciadoDePrueba } from '../../pruebas/datos-red';
 import { envolver, peticiones, responderSegun } from '../../pruebas/utilidades';
 import { Mapa } from './Mapa';
 
-// Leaflet no corre en jsdom: el doble muestra un botón por cada acopio y cada zona que recibe
+// Leaflet no corre en jsdom: el doble muestra un botón por cada acopio y cada zona que recibe,
+// con la etiqueta y si va apagado en data-etiqueta y data-apagado
 vi.mock('./MapaAcopios', () => ({
   default: ({
     acopios = [],
     alElegir,
     zonas = [],
     alElegirZona,
+    etiquetas,
+    apagados,
   }: {
     acopios?: { id: string }[];
     alElegir?: (id: string) => void;
     zonas?: { zonaId: string }[];
     alElegirZona?: (id: string) => void;
+    etiquetas?: Map<string, { texto: string }>;
+    apagados?: Set<string>;
   }) => (
-    <div>
+    <div data-testid="mapa">
       mapa de acopios
       {acopios.map((a) => (
-        <button key={a.id} type="button" onClick={() => alElegir?.(a.id)}>
+        <button
+          key={a.id}
+          type="button"
+          onClick={() => alElegir?.(a.id)}
+          data-etiqueta={etiquetas?.get(a.id)?.texto}
+          data-apagado={apagados?.has(a.id) ? 'si' : undefined}
+        >
           acopio {a.id}
         </button>
       ))}
@@ -210,6 +221,45 @@ it('un ?estado= sin acopios activos deja su chip visible para quitarlo', async (
   await userEvent.click(screen.getByRole('button', { name: 'Todos 0' }));
   expect(screen.getByTestId('busqueda')).not.toHaveTextContent('estado=');
   expect(screen.getByTestId('busqueda')).toHaveTextContent('vista=lista');
+});
+
+it('el subtítulo invita a revisar antes de salir', async () => {
+  responderSegun(RESPUESTAS);
+  pantalla('/mapa');
+  expect(
+    await screen.findByText('Antes de salir, revisa qué falta y qué no reciben.'),
+  ).toBeInTheDocument();
+});
+
+it('en el mapa, los que no reciben la categoría van apagados y el aviso va debajo', async () => {
+  responderSegun(RESPUESTAS);
+  pantalla(`/mapa?lleva=c2`);
+  const kennedy = await screen.findByRole('button', { name: 'acopio x4' });
+  await waitFor(() => expect(kennedy).toHaveAttribute('data-apagado', 'si'));
+  expect(screen.getByRole('button', { name: 'acopio x1' })).not.toHaveAttribute('data-apagado');
+  expect(screen.getByRole('button', { name: 'acopio x1' })).toHaveAttribute(
+    'data-etiqueta',
+    'ROPA USADA DE SOBRA',
+  );
+  // Como en la maqueta: el aviso va después del mapa, no entre la frase y los chips
+  const aviso = screen.getByText('1 acopio no recibe ropa usada.');
+  expect(
+    screen.getByTestId('mapa').compareDocumentPosition(aviso) & Node.DOCUMENT_POSITION_FOLLOWING,
+  ).toBeTruthy();
+});
+
+it('un chip con una categoría elegida filtra por el estado de esa categoría y el aviso no cuenta a los que ocultó', async () => {
+  responderSegun(RESPUESTAS);
+  pantalla('/mapa?vista=lista&lleva=c2&estado=sobra');
+  const chapinero = await screen.findByRole('link', { name: /Acopio Chapinero/ });
+  await waitFor(() => expect(screen.getAllByRole('link')).toEqual([chapinero]));
+  expect(chapinero).toHaveTextContent('ROPA USADA DE SOBRA');
+  expect(screen.getByRole('button', { name: 'De sobra 1' })).toHaveAttribute(
+    'aria-pressed',
+    'true',
+  );
+  // Kennedy no recibe ropa, pero el chip lo ocultó: el aviso no lo cuenta
+  expect(screen.queryByText(/no recibe ropa usada/)).not.toBeInTheDocument();
 });
 
 it('la tarjeta del acopio elegido dice qué falta y qué sobra', async () => {

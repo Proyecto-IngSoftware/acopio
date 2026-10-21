@@ -143,7 +143,7 @@ export function PasoEntrega({ lineas, acopioId, factura, alElegir, alFactura, al
                 onChange={() => alElegir(s.acopioId)}
                 className="mt-1 h-5 w-5 accent-primary-container"
               />
-              <span className="flex min-w-0 flex-1 flex-col gap-space-2xs">
+              <span className="flex min-w-0 flex-1 flex-col gap-space-xs">
                 <b className="text-body-lg text-on-surface">{s.nombre}</b>
                 <span className="text-body-sm text-on-surface-variant">
                   {s.direccion} · {s.abiertoAhora ? 'abierto ahora' : 'cerrado ahora'}
@@ -153,7 +153,7 @@ export function PasoEntrega({ lineas, acopioId, factura, alElegir, alFactura, al
                   {lineas.length === 1 ? 'producto' : 'productos'}
                 </span>
                 {s.noRecibe.length > 0 && (
-                  <span className="flex items-center gap-space-2xs text-body-sm text-on-surface-variant">
+                  <span className="flex items-center gap-space-xs text-body-sm text-on-surface-variant">
                     <Icono nombre="block" className="text-[18px]" />
                     No está recibiendo{' '}
                     {s.noRecibe
@@ -176,7 +176,7 @@ export function PasoEntrega({ lineas, acopioId, factura, alElegir, alFactura, al
 
   return (
     <>
-      <div className="flex flex-col gap-space-2xs">
+      <div className="flex flex-col gap-space-xs">
         <h2 className="text-headline-sm text-on-surface">¿Dónde la entregas?</h2>
         <p className="text-body-md text-on-surface-variant">
           Primero los acopios que reciben más de lo que llevas y están abiertos.

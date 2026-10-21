@@ -10,14 +10,24 @@ body {
   overscroll-behavior: none;
 }
 
-.material-symbols-outlined {
-  font-family: 'Material Symbols Outlined';
-  font-weight: normal;
-  font-style: normal;
-  line-height: 1;
-  display: inline-block;
-  white-space: nowrap;
-  -webkit-font-smoothing: antialiased;
+/* Los íconos de Material Symbols. La hoja de Google fija 24 px en .material-symbols-outlined fuera
+   de toda capa, y eso le gana a cualquier utilidad de Tailwind (P-086). Esta clase va en una capa:
+   24 px por defecto y el tamaño que pida el código con text-[18px] y similares. */
+@layer components {
+  .icono {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 1.5rem;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+  }
 }
 
 :focus-visible {

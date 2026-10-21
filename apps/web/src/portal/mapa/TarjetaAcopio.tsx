@@ -25,13 +25,12 @@ export function PildoraEstado({
   mini?: boolean;
 }) {
   const e = ESTILO_ESTADO[etiqueta.estado];
-  // La hoja de Material Symbols fija 24 px y le gana a text-[12px]: por eso va con «!»
   const tamano = mini
     ? 'shrink-0 gap-0.5 px-1.5 py-0.5 text-label-caps'
-    : 'gap-1 px-2 py-0.5 text-label-sm font-bold';
+    : 'gap-1 px-2 py-0.5 text-label-md font-bold';
   return (
     <span className={`inline-flex w-fit items-center rounded-[999px] ${tamano} ${e.clases}`}>
-      <Icono nombre={e.icono} className={mini ? 'text-[12px]!' : 'text-[14px]'} />
+      <Icono nombre={e.icono} className={mini ? 'text-[12px]' : 'text-[14px]'} />
       {etiqueta.texto}
     </span>
   );
