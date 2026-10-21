@@ -74,7 +74,7 @@ function LineaDonacion({
           type="button"
           aria-label={`Quitar ${linea.nombre}`}
           onClick={alQuitar}
-          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-on-surface-variant"
+          className="toque flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-on-surface-variant"
         >
           <Icono nombre="delete" className="shrink-0 text-[22px]" />
         </button>
@@ -131,7 +131,7 @@ function LineaDonacion({
               aria-label={`Menos ${linea.nombre}`}
               disabled={linea.cantidad <= 1}
               onClick={() => alCambiar(linea.cantidad - 1)}
-              className="flex h-12 w-12 items-center justify-center text-title-lg text-on-surface disabled:opacity-40"
+              className="toque flex h-12 w-12 items-center justify-center text-title-lg text-on-surface disabled:bg-surface-container-high disabled:text-on-surface-variant"
             >
               <Icono nombre="remove" className="shrink-0 text-[22px]" />
             </button>
@@ -142,7 +142,7 @@ function LineaDonacion({
               type="button"
               aria-label={`Más ${linea.nombre}`}
               onClick={() => alCambiar(linea.cantidad + 1)}
-              className="flex h-12 w-12 items-center justify-center text-on-surface"
+              className="toque flex h-12 w-12 items-center justify-center text-on-surface"
             >
               <Icono nombre="add" className="shrink-0 text-[22px]" />
             </button>
@@ -324,7 +324,7 @@ export function Preparar() {
           type="button"
           aria-label="Volver"
           onClick={() => enviar({ tipo: 'paso', paso: 1 })}
-          className="flex h-12 w-12 shrink-0 items-center justify-center self-start rounded-full text-on-surface"
+          className="toque flex h-12 w-12 shrink-0 items-center justify-center self-start rounded-full text-on-surface"
         >
           <Icono nombre="arrow_back" className="shrink-0 text-[24px]" />
         </button>

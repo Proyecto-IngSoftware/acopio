@@ -121,3 +121,41 @@ it('no tiene violaciones graves de accesibilidad', async () => {
   await screen.findByText('ACO-2026-7KQ4M');
   expect(await violacionesGraves(container)).toEqual([]);
 });
+
+it('sin donaciones, el vacío lleva la caja con folio', async () => {
+  responderSegun({ 'GET /api/donaciones': [] });
+  render(envolver(<MisDonaciones />, '/donador'));
+  expect(
+    await screen.findByRole('img', { name: 'Caja con una etiqueta de folio' }),
+  ).toBeInTheDocument();
+});
+
+it('una donación cancelada se ve atenuada, con su etiqueta en gris sólido', async () => {
+  responderSegun({ 'GET /api/donaciones': [{ ...base, estado: 'CANCELADO' }] });
+  render(envolver(<MisDonaciones />, '/donador'));
+  const etiqueta = await screen.findByText('Cancelada');
+  expect(etiqueta).toHaveClass('bg-surface-container-high');
+  expect(etiqueta.closest('li')).toHaveClass('opacity-70');
+});
+
+it('mientras cancela, «Sí, cancelar» está ocupado y no manda dos veces', async () => {
+  let cancelaciones = 0;
+  vi.spyOn(globalThis, 'fetch').mockImplementation((entrada) => {
+    const p = entrada as Request;
+    if (p.url.endsWith('/cancelar')) {
+      cancelaciones++;
+      return new Promise(() => {});
+    }
+    return Promise.resolve(
+      new Response(JSON.stringify([base]), { headers: { 'content-type': 'application/json' } }),
+    );
+  });
+  render(envolver(<MisDonaciones />, '/donador'));
+  await userEvent.click(await screen.findByRole('button', { name: 'Cancelar donación' }));
+  const hoja = await screen.findByRole('dialog');
+  await userEvent.click(within(hoja).getByRole('button', { name: 'Sí, cancelar' }));
+  const boton = await within(hoja).findByRole('button', { name: /Cancelando/ });
+  expect(boton).toHaveAttribute('aria-busy', 'true');
+  await userEvent.click(boton);
+  expect(cancelaciones).toBe(1);
+});

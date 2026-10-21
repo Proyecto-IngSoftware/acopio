@@ -62,6 +62,19 @@ it('con el enlace vigente muestra el correo y el nombre editable', async () => {
   pantalla(conEnlace());
   expect(await screen.findByLabelText('Nombre')).toHaveValue('Ana Rodríguez');
   expect(screen.getByText('ana@correo.co')).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: 'Correo confirmado' })).toBeInTheDocument();
+});
+
+it('mientras guarda, el botón está ocupado y no confirma dos veces', async () => {
+  const cliente = conEnlace();
+  cliente.confirmarCorreo.mockReturnValue(new Promise(() => {}));
+  pantalla(cliente);
+  await escribir('una-clave-larga-2026', 'una-clave-larga-2026');
+  await userEvent.click(screen.getByRole('button', { name: 'Guardar y entrar' }));
+  const boton = await screen.findByRole('button', { name: /Guardando/ });
+  expect(boton).toHaveAttribute('aria-busy', 'true');
+  await userEvent.click(boton);
+  expect(cliente.confirmarCorreo).toHaveBeenCalledTimes(1);
 });
 
 it('confirma con el nombre editado, deja la sesión y va a /donador', async () => {

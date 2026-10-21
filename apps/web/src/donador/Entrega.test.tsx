@@ -404,6 +404,7 @@ describe('P9, paso 3 por folio', () => {
     expect(await screen.findByText('ACO-2026-7KQ4M')).toBeInTheDocument();
     expect(await screen.findByRole('img', { name: 'Código QR del folio' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Agregar foto de la factura' })).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: 'Donación preparada' })).toBeInTheDocument();
   });
 
   it('un folio que no está entre las preparadas lo dice', async () => {
