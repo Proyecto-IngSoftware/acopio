@@ -10,14 +10,14 @@ actualizado: 2026-10-21
 
 Joseph sentía la web pesada y vacía, y quería animaciones y jornadas con fecha en la Portada. Se
 probaron variantes en Stitch, se armó un lienzo con cuatro ideas que Joseph aprobó y se construyó
-la fase 1: las piezas comunes y el movimiento global. Queda en el PR de la rama
-`linea-visual-fase-1`, sin fusionar hasta después de la sustentación del 23.
+la fase 1: las piezas comunes y el movimiento global. Se fusionó el mismo día con el PR
+178, a pedido de Joseph.
 
 ## Qué cambió
 
 | PR o commit | Qué trae |
 |---|---|
-| PR de `linea-visual-fase-1` ([#177](https://github.com/Proyecto-IngSoftware/acopio/issues/177)) | `partesFecha` y `diasDeLaTira`; clases de movimiento en `estilos.css` y esqueleto con brillo; botones con toque, inhabilitado en gris sólido, `ocupado` y tamaño compacto; `BloqueFecha`, `TiraDias`, `Barra`, `Ilustracion` (cuatro dibujos), `EstadoVacio` con ilustración, `SelloConfirmacion` y `Desplegable`; la hoja entra y sale; píldora deslizante en `Segmentado` y en la barra inferior; la página entra según la dirección |
+| PR 178, rama `linea-visual-fase-1` ([#177](https://github.com/Proyecto-IngSoftware/acopio/issues/177)) | `partesFecha` y `diasDeLaTira`; clases de movimiento en `estilos.css` y esqueleto con brillo; botones con toque, inhabilitado en gris sólido, `ocupado` y tamaño compacto; `BloqueFecha`, `TiraDias`, `Barra`, `Ilustracion` (cuatro dibujos), `EstadoVacio` con ilustración, `SelloConfirmacion` y `Desplegable`; la hoja entra y sale; píldora deslizante en `Segmentado` y en la barra inferior; la página entra según la dirección |
 | Mismo PR, documentos | [Especificación](../../superpowers/specs/2026-10-21-linea-visual-design.md), [plan de la fase 1](../../05-planes/2026-10-21-linea-visual-fase-1.md), [ADR-0022](../../02-arquitectura/adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md), sistema de diseño (§1, §5, §6 y §8), piezas compartidas de Stitch, catálogo de patrones y la fila 22 del [plan de acción](../../05-planes/plan-de-accion.md) |
 
 Fuera del repositorio:
@@ -37,7 +37,7 @@ Fuera del repositorio:
 
 - Joseph aprobó las cuatro ideas del lienzo y su paridad en toda la web, consola incluida, y que las transparencias de hoy se mantengan. También que la tira de días reemplace el filtro «Día» en P7 y que las curvas de la franja queden quietas, con el punto en vivo como única animación que se repite. Todo quedó en la especificación y en el ADR-0022.
 - Propuesto por Claude y aprobado con la especificación: el bloque de fecha va solo en fechas de agenda, y lleva el mes cuando la fecha está a más de siete días.
-- La fusión espera a después del 23, porque Dokploy despliega al fusionar en `main` y la sustentación se hace sobre la demo del servidor. Claude lo propuso y Joseph no lo objetó; está escrito en [#177](https://github.com/Proyecto-IngSoftware/acopio/issues/177) y en la fila 22 del plan de acción.
+- Claude propuso esperar a después de la sustentación del 23 para fusionar, porque Dokploy despliega al fusionar en `main`. Joseph pidió fusionar el mismo 21, y así quedó en la fila 22 del plan de acción.
 - Lo que cambió al construir está en la sección «Cambios al construir» de la especificación.
 
 ## Errores y correcciones
@@ -47,9 +47,9 @@ Fuera del repositorio:
 
 ## Pendiente
 
-- Fusionar el PR de la fase 1 después de la sustentación del 23, con el CI en verde y sin alertas de code scanning ([#177](https://github.com/Proyecto-IngSoftware/acopio/issues/177)).
+- Revisar la línea visual en el servidor de pruebas después del despliegue, antes de la sustentación del 23 ([#177](https://github.com/Proyecto-IngSoftware/acopio/issues/177)).
 - Planes y construcción de las fases 2 (portal) y 3 (consola) ([#177](https://github.com/Proyecto-IngSoftware/acopio/issues/177), fila 22 del [plan de acción](../../05-planes/plan-de-accion.md)).
 
 ## Depende de Joseph
 
-- Confirmar que la fusión de la fase 1 va después del 23 ([#177](https://github.com/Proyecto-IngSoftware/acopio/issues/177)).
+- Recorrer la demo del servidor con la línea visual nueva antes de presentarla el 23 ([#177](https://github.com/Proyecto-IngSoftware/acopio/issues/177)).

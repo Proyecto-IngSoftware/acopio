@@ -35,7 +35,7 @@ actualizado: 2026-10-21
 | 10 Píldora deslizante en `Segmentado` y en la barra inferior | ✅ | |
 | 11 Desplegable en las cabeceras | ✅ | |
 | 12 Entrada de página | ✅ | |
-| 13 Documentos, verificación y PR | 🟡 | El PR queda abierto; la fusión espera a después de la sustentación del 23 (#177) |
+| 13 Documentos, verificación y PR | ✅ | Fusionada el 21 con el PR 178, a pedido de Joseph |
 
 ## Global Constraints
 
