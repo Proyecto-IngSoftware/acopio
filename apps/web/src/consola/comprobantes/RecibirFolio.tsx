@@ -9,6 +9,7 @@ import { useAcopio, useNoRecibir } from '../../api/red';
 import { Boton, EnlaceBoton } from '../../componentes/Boton';
 import { Campo } from '../../componentes/Campo';
 import { EstadoError } from '../../componentes/EstadoError';
+import { SelloConfirmacion } from '../../componentes/SelloConfirmacion';
 import { Icono } from '../../componentes/Icono';
 import { haceCuanto } from '../../formato';
 import { useEnLinea } from '../../sin-conexion/en-linea';
@@ -158,9 +159,7 @@ export function RecibirFolio() {
 
       {vista === 'hecho' && hecho && (
         <section className="flex flex-col gap-space-md" aria-labelledby="titulo-hecho">
-          <span className="flex h-14 w-14 items-center justify-center self-center rounded-full bg-primary-fixed text-primary-container">
-            <Icono nombre="check" className="text-[32px]" />
-          </span>
+          <SelloConfirmacion etiqueta="Donación recibida" className="self-center" />
           <div className="text-center">
             <h2
               id="titulo-hecho"

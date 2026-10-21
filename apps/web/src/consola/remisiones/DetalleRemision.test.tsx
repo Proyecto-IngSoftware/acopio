@@ -141,6 +141,7 @@ it('despachar sin responsable lo pide, lo guarda y después despacha con los fol
   await userEvent.click(await within(hoja).findByRole('checkbox', { name: /ACO-2026-AB12C/ }));
   await userEvent.click(within(hoja).getByRole('button', { name: 'Despachar' }));
   expect(await screen.findByText('R-2026-K4P7Q va en camino')).toBeInTheDocument();
+  expect(screen.getByRole('img', { name: 'Remisión despachada' })).toBeInTheDocument();
   const orden = peticiones().filter((p) => !p.startsWith('GET'));
   expect(orden).toEqual([
     'PATCH /api/remisiones/R-2026-K4P7Q',
