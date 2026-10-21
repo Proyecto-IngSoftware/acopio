@@ -25,6 +25,7 @@ Fuera del repositorio: el PR 179 de la fase 2 se fusionó con el CI en verde y s
 - Las pruebas nuevas se vieron fallar antes del cambio: C14 con su bloque y el gris de la cerrada, cada sello solo tras su acción, «Conciliar», «Entrar» y «Rechazar comprobante» ocupados sin mandar dos veces, los vacíos de cada grupo y la suspendida atenuada.
 - Con la web construida se comprobó que Tailwind genera las clases `enabled:` de los botones que conservan su color.
 - No se corrieron los recorridos ni se rehicieron las `construida.png`: los dos necesitan la API del Compose.
+- A pedido de Joseph, revisé el diseño con la skill `frontend-design`. Sobraba un efecto: las filas del balance de la Portada entraban escalonadas al cargar, sin que nadie filtrara. Se quitó, y la regla de usar la skill quedó en el `CLAUDE.md`.
 - La revisión final la hice yo, sin un revisor aparte. Encontró que los botones rojos y durazno destellaban en verde al presionarlos, por el `active:` del primario, y quedó corregido.
 
 ## Decisiones

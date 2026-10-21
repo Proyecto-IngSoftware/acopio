@@ -5,7 +5,6 @@ import { Barra } from '../../componentes/Barra';
 import { Esqueleto } from '../../componentes/Esqueleto';
 import { EstadoError } from '../../componentes/EstadoError';
 import { Icono } from '../../componentes/Icono';
-import { retrasoEntrada } from '../../componentes/movimiento';
 
 type Pestana = 'falta' | 'sobra';
 
@@ -115,11 +114,10 @@ function Faltan({ filas }: { filas: Filas }) {
         <Vacio texto={VACIO.falta} />
       ) : (
         <ul className="flex flex-col gap-space-xs">
-          {filas.map((f, i) => (
+          {filas.map((f) => (
             <li
               key={f.categoriaId}
-              style={retrasoEntrada(i)}
-              className="entra-lista flex flex-col gap-space-xs rounded-xl bg-surface-container-low p-space-sm"
+              className="flex flex-col gap-space-xs rounded-xl bg-surface-container-low p-space-sm"
             >
               <span className="flex items-baseline justify-between gap-space-sm">
                 <span className="text-label-md font-bold text-on-surface">{f.categoria}</span>

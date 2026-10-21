@@ -165,6 +165,8 @@ describe('con emergencias', () => {
     expect(barras.map((b) => b.getAttribute('aria-valuenow'))).toEqual(['4', '2']);
     expect(barras.every((b) => b.getAttribute('aria-valuemax') === '4')).toBe(true);
     expect(screen.getByText('Falta en 4 acopios')).toBeInTheDocument();
+    // Al cargar solo crecen las barras: las filas no entran escalonadas (nadie filtró nada)
+    expect(barras[0]!.closest('li')).not.toHaveClass('entra-lista');
   });
 
   it('«¿Cómo apoyar?» trae la línea de cada canal', async () => {
