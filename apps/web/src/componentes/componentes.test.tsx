@@ -25,6 +25,34 @@ describe('Boton', () => {
     expect(screen.getByRole('button')).toHaveAttribute('type', 'button');
   });
 
+  it('ocupado: inhabilitado, anuncia que trabaja y no responde al clic', async () => {
+    const alPulsar = vi.fn();
+    render(
+      <Boton ocupado onClick={alPulsar}>
+        Guardar
+      </Boton>,
+    );
+    const boton = screen.getByRole('button', { name: 'Guardar' });
+    expect(boton).toBeDisabled();
+    expect(boton).toHaveAttribute('aria-busy', 'true');
+    await userEvent.click(boton);
+    expect(alPulsar).not.toHaveBeenCalled();
+  });
+
+  it('inhabilitado usa relleno sólido y no transparencia', () => {
+    render(<Boton disabled>Guardar</Boton>);
+    const clases = screen.getByRole('button').className;
+    expect(clases).toContain('disabled:bg-surface-container-high');
+    expect(clases).not.toContain('opacity');
+  });
+
+  it('compacto mide 40 px de alto', () => {
+    render(<Boton tamano="compacto">Reservar</Boton>);
+    const clases = screen.getByRole('button').className;
+    expect(clases).toContain('min-h-[40px]');
+    expect(clases).not.toContain('min-h-[48px]');
+  });
+
   it('EnlaceBoton navega a su ruta', () => {
     render(
       <MemoryRouter>
@@ -59,6 +87,7 @@ describe('estados', () => {
     const { container } = render(
       <MemoryRouter>
         <Boton>Uno</Boton>
+        <Boton ocupado>Tres</Boton>
         <EnlaceBoton a="/x">Dos</EnlaceBoton>
         <EstadoVacio titulo="Vacío">Texto</EstadoVacio>
         <EstadoError mensaje="Falló" alReintentar={() => {}} />
