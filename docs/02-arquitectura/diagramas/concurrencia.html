@@ -37,7 +37,7 @@ figcaption p { color: var(--muted); }
 
   <figure>
     <div class="lamina">
-      <svg viewBox="0 0 1240 690" role="img" aria-label="Cuatro servicios productores insertan correos en la tabla correo_saliente dentro de la transacción de su operación y responden al cliente sin esperar. Cada minuto el consumidor procesarCola toma hasta 50 correos listos, los envía a Resend por SMTP y marca cada uno ENVIADO o FALLIDO con una espera creciente.">
+      <svg viewBox="0 0 1240 690" role="img" aria-label="Cuatro servicios productores insertan correos en la tabla correo_saliente dentro de la transacción de su operación y responden al cliente sin esperar. Cada minuto el consumidor procesarCola reclama hasta 50 correos listos sin que otra instancia los tome, los envía a Resend por SMTP y marca cada uno ENVIADO o FALLIDO con una espera creciente.">
         <defs>
           <marker id="f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
           <marker id="fa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#0F6E6E"/></marker>
@@ -127,12 +127,12 @@ figcaption p { color: var(--muted); }
           <circle cx="845" cy="261" r="9" fill="#0F6E6E"/><text x="845" y="265" fill="#fff">3</text>
         </g>
         <g style="font:13px var(--sans);fill:currentColor">
-          <text x="862" y="195">toma hasta 50 correos listos, del más viejo</text>
+          <text x="862" y="195">reclama hasta 50 listos (FOR UPDATE SKIP LOCKED)</text>
           <text x="862" y="230">envía cada uno por SMTP</text>
           <text x="862" y="265">ENVIADO si Resend lo acepta; si no, FALLIDO</text>
           <text x="862" y="282" style="fill:var(--muted)">y espera 1, 2, 4, 8… min (tope 2 h, máx. 8 intentos)</text>
         </g>
-        <text x="836" y="322" style="font:12.5px var(--sans);fill:var(--muted)">bandera procesando: un lote a la vez por instancia</text>
+        <text x="836" y="322" style="font:12.5px var(--sans);fill:var(--muted)">el lote queda apartado 5 min: dos instancias no lo repiten</text>
 
         <!-- cola ⇄ consumidor -->
         <g style="stroke:currentColor;fill:none" stroke-width="1.6">
@@ -140,7 +140,7 @@ figcaption p { color: var(--muted); }
           <line x1="818" y1="300" x2="744" y2="300" stroke-dasharray="6 4" marker-end="url(#f)"/>
         </g>
         <g style="font:12.5px var(--sans);fill:currentColor" text-anchor="middle">
-          <text x="789" y="196">lee</text>
+          <text x="789" y="196">reclama</text>
           <text x="789" y="292">marca</text>
         </g>
 

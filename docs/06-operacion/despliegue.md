@@ -3,7 +3,7 @@ title: "Despliegue"
 type: operacion
 tags: [operacion]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-30
 ---
 
 # Despliegue
@@ -187,6 +187,7 @@ SEED_ADMIN_CONTRASENA=         # cambiarla al primer ingreso
 MIGRAR_AL_ARRANCAR=true        # migraciones antes de levantar la API
 SEMBRAR_AL_ARRANCAR=true       # seed base antes de levantar la API
 SEMBRAR_DEMO_AL_ARRANCAR=true  # la demo, solo en el servidor de pruebas
+CAPTCHA_LLAVE=                 # openssl rand -hex 32; sin ella la API no arranca (ADR-0024)
 DEMO_CONTRASENA=               # contraseña de las cuentas de la demo; nunca la del repositorio
 ```
 

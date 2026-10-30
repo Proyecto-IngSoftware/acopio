@@ -3,7 +3,7 @@ title: "Patrones y prácticas de código"
 type: arquitectura
 tags: [arquitectura, patrones, buenas-practicas]
 estado: vigente
-actualizado: 2026-10-21
+actualizado: 2026-10-30
 ---
 
 # Patrones y prácticas de código
@@ -113,6 +113,8 @@ Cada sección lista lo que hay, por archivo. Cuando se agrega una pieza reutiliz
 
 DAO que otros módulos usan: `CategoriaDao` y `CodigoBarrasDao` (`catalogo/dao/`), `MovimientoDao`, `NoRecibirDao` y `SaldoDao` con `candadoSaldo` (`inventario/dao/`), `AcopioDao` (`acopios/dao/`) y `UsuarioDao` (`identidad/dao/`).
 
+Para un endpoint público que crea filas o manda correo: `@RequiereCaptcha()` de `captcha/captcha.guard.ts` exige la prueba de ALTCHA en `X-Captcha` (ADR-0024); el módulo que lo use importa `CaptchaModule`. En las pruebas de integración, `captcha(a)` y `reservaDeCaptchas(a, n)` de `test/app-prueba.ts` dan pruebas válidas.
+
 Servicios de otros módulos que se usan desde cualquier parte: `BitacoraService.registrar(tx, evento)` en `auditoria` y `NotificacionService.encolar(tx, destinatario, correo)` en `notificaciones`, con las plantillas de `notificaciones/plantillas.ts`.
 
 ### Compartido
@@ -164,6 +166,7 @@ Servicios de otros módulos que se usan desde cualquier parte: `BitacoraService.
 | `componentes/TiraDias.tsx` | `TiraDias`: fila deslizable de días para filtrar una agenda, con punto en los días con eventos |
 | `componentes/mapa/MapaLeaflet.tsx`, `componentes/mapa/MapaConPin.tsx`, `componentes/mapa/BuscadorDireccion.tsx` | Mapa base, mapa con pin y buscador de direcciones |
 | `api/cliente.ts` | `api`, `desenvolver`, `ErrorApi`, `reintentarConsulta`, `alPerderSesion` |
+| `api/captcha.ts` | `pruebaCaptcha()`: pide y resuelve el reto de ALTCHA para el encabezado `X-Captcha` de un formulario público (ADR-0024); en las pruebas, `retoDePrueba()` de `pruebas/datos-captcha.ts` |
 | `api/*.ts` | Tipos y hooks por recurso (`useSaldos`, `useBandeja`, `useAcopio`…) |
 | `formato.ts` | `diaLargo`, `haceCuanto`, `fechaHora`; `partesFecha` (semana, día, mes y si está lejana) y `diasDeLaTira` para el bloque de fecha y la tira |
 | `portal/secciones.ts`, `portal/direccion.ts` | `DESTINOS` y `seccionDe(ruta)` de la barra inferior; `direccionEntre` decide desde qué lado entra una página |

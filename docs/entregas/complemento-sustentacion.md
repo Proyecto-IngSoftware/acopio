@@ -72,9 +72,11 @@ ADR-0008 del repositorio.
 | Decisión | Un monorepo con `apps/web`, `apps/api`, `packages/shared` (funciones puras de las dos apps), `packages/ui-tokens` (colores), `prisma/` e `infra/`. La web solo habla con la API por HTTP y toma los tipos del contrato OpenAPI. En la API, un módulo por dominio, apilado en las cinco capas del diagrama. Un módulo importa a los de capas inferiores y, en dos casos, a uno de su misma capa (`comprobantes` usa `inventario`; `identidad` usa `auditoria` y `notificaciones`). Ninguno importa hacia arriba, y dependency-cruiser lo revisa en CI. Cuando un módulo de abajo necesita algo de uno de arriba, declara un puerto en `comun/` y el de arriba lo implementa (`VerificadorUbicaciones`, `ProveedorIdentidad`) |
 | Alternativa considerada | Organizar por capas técnicas, con carpetas globales de controladores, servicios y repositorios, donde cualquier servicio puede llamar a cualquier otro. También separar la web y la API en dos repositorios |
 | Justificación | Cada módulo es un límite del dominio y casi siempre lo que una persona tiene asignado. La regla de dependencias la revisa una herramienta en cada PR. Las fórmulas se escriben una sola vez. Con capas técnicas, las cuatro personas tocarían las mismas carpetas y nada impediría que el motor leyera tablas de otro módulo. Con dos repositorios, un cambio de endpoint necesitaría dos PR coordinados y `packages/shared` tendría que publicarse como paquete |
-| Consecuencias | Facilita ubicar un cambio, medir qué afecta y cambiar la web y la API en el mismo PR. Limita las llamadas hacia arriba, que necesitan un puerto, y deja todo en un proceso: el motor no se puede escalar aparte. Puede requerir ajustes: `motor` ya depende de siete módulos y convendría partirlo si sigue creciendo, y la cola de correo solo es segura con una instancia de la API (P-089) |
+| Consecuencias | Facilita ubicar un cambio, medir qué afecta y cambiar la web y la API en el mismo PR. Limita las llamadas hacia arriba, que necesitan un puerto, y deja todo en un proceso: el motor no se puede escalar aparte. Puede requerir ajustes: `motor` ya depende de siete módulos y convendría partirlo si sigue creciendo |
 
 ## 2. Diagrama de comportamiento: estados de la donación
+
+![Estados de la donación: PREPARADO, PENDIENTE, CONCILIADO, RECHAZADO y CANCELADO, con nueve transiciones numeradas y coloreadas según quién las dispara.](../assets/diagramas/comportamiento-01-estados-de-la-donacion.png)
 
 ### 2a. Qué representa y por qué un diagrama de estados
 
@@ -90,7 +92,6 @@ Operador, Auditor y una tarea programada) y lo que cada uno puede hacer depende 
 la encuentra. Un diagrama de actividades habría repartido esas reglas entre carriles y no dejaría
 ver de un vistazo, por ejemplo, que un rechazo se puede revertir y una conciliación no.
 
-![Estados de la donación: PREPARADO, PENDIENTE, CONCILIADO, RECHAZADO y CANCELADO, con nueve transiciones numeradas y coloreadas según quién las dispara.](../assets/diagramas/comportamiento-01-estados-de-la-donacion.png)
 
 ### 2b. Cómo leerlo
 
@@ -165,9 +166,9 @@ primera línea punteada del diagrama y el envío ocurre a la derecha, después.
 
 | Componente | Papel | Dónde está en el código |
 |---|---|---|
-| `UsuariosService`, `DonadorService`, `ConciliacionService` y los avisos de `turnos` | Productores. Llaman a `NotificacionService.encolar` dentro de la transacción de su operación: si la operación se deshace, el correo tampoco queda | `notificacion.service.ts`, método `encolar` (línea 56); un uso en `identidad/usuarios/usuarios.service.ts`, línea 131 |
+| `UsuariosService`, `DonadorService`, `ConciliacionService` y los avisos de `turnos` | Productores. Llaman a `NotificacionService.encolar` dentro de la transacción de su operación: si la operación se deshace, el correo tampoco queda | `notificacion.service.ts`, método `encolar` (línea 59); un uso en `identidad/usuarios/usuarios.service.ts`, línea 131 |
 | Tabla `correo_saliente` | Cola. Guarda el estado (PENDIENTE, ENVIADO o FALLIDO), los intentos, el último error y `enviar_despues_de`. Tiene un índice por estado y fecha, que es la consulta del consumidor | Modelo `CorreoSaliente` en `prisma/schema.prisma`; consultas en `notificaciones/dao/correo-saliente.dao.ts` |
-| `NotificacionService.procesarCola` | Consumidor. Corre cada minuto (`@Cron`), toma hasta 50 correos listos del más viejo al más nuevo y los envía | `notificacion.service.ts`, `procesarCola` (líneas 62 a 79) y `enviar` (81 a 114) |
+| `NotificacionService.procesarCola` | Consumidor. Corre cada minuto (`@Cron`), reclama hasta 50 correos listos del más viejo al más nuevo y los envía. El reclamo es un solo `UPDATE` con `FOR UPDATE SKIP LOCKED` que aparta el lote cinco minutos, así que dos instancias de la API se reparten las filas sin repetir correos | `notificacion.service.ts`, `procesarCola` (líneas 65 a 82) y `enviar` (84 a 117); el reclamo, en `notificaciones/dao/correo-saliente.dao.ts`, método `reclamar` |
 | Resend | Servidor de correo, por SMTP (`smtp.resend.com`, puerto 465 con TLS). La API no usa el SDK de Resend: cambiar de proveedor es cambiar variables | `.env.example` y P-055 |
 
 Cuando un envío falla, el consumidor marca el correo FALLIDO y le pone una espera que se duplica
@@ -178,8 +179,9 @@ y después de 8 intentos se deja de reintentar.
 
 - Pruebas de integración contra PostgreSQL (`src/pruebas-integracion/notificaciones.int.test.ts`):
   con el servidor de correo arriba el correo queda ENVIADO; con el servidor caído queda FALLIDO,
-  espera y sale solo cuando el servidor vuelve; después del máximo de intentos no se reintenta; y
-  con `CORREO_ACTIVO=false` no se encola nada.
+  espera y sale solo cuando el servidor vuelve; después del máximo de intentos no se reintenta;
+  con `CORREO_ACTIVO=false` no se encola nada; y con dos instancias a la vez cada correo sale una
+  sola vez.
 - Prueba real con Resend el 30 de octubre, en la API local. Un registro de Donador para
   `contacto@josephqaz.dev` respondió 202 de inmediato y dejó el correo de confirmación en la cola a
   las 05:50:11. El consumidor lo tomó en su siguiente pasada y Resend lo aceptó a las 05:51:01, en
@@ -196,11 +198,15 @@ confirmar la cuenta:
 
 - Servidor de correo caído o lento: es el caso que la cola resuelve. La operación no se entera y el
   correo se reintenta solo, y una prueba de integración lo cubre.
-- Dos consumidores a la vez: la bandera `procesando` evita que un lote empiece antes de que
-  termine el anterior, pero solo dentro de una instancia de la API. Con dos instancias, las dos
-  leerían las mismas filas y el correo saldría dos veces. Hoy corre una sola. El arreglo es
-  reclamar el lote con `SELECT … FOR UPDATE SKIP LOCKED`, y quedó anotado como
-  [P-089](../01-requerimientos/pendientes.md).
+- Dos consumidores a la vez: la bandera `procesando` solo evitaba dos lotes dentro de una
+  instancia, y con dos instancias de la API el mismo correo podía salir dos veces. Lo vimos al
+  escribir esta ficha y lo resolvimos el mismo día
+  ([P-089](../01-requerimientos/pendientes.md)): el consumidor reclama el lote con
+  `UPDATE … WHERE id IN (SELECT … FOR UPDATE SKIP LOCKED)` y lo aparta cinco minutos. Una prueba
+  de integración pone dos instancias a procesar la cola al mismo tiempo con un servidor de correo
+  lento; con el código anterior salieron seis correos repetidos, y con el reclamo cada uno sale una
+  vez. Si la instancia que apartó el lote se cae, el préstamo vence y los correos vuelven a la
+  cola.
 - Caída entre enviar y marcar: si la API se cae después de que Resend acepta el correo y antes de
   marcarlo ENVIADO, el siguiente lote lo vuelve a enviar. La entrega es «al menos una vez»; para
   una invitación, un correo repetido es preferible a uno perdido.

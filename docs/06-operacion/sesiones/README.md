@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-10-30 | [2026-10-30-captcha-y-cola-segura](2026-10-30-captcha-y-cola-segura.md) | Captcha con ALTCHA en el registro y las reservas, cola de correo segura con varias instancias (P-089) y el complemento en PDF |
 | 2026-10-30 | [2026-10-30-complemento-sustentacion](2026-10-30-complemento-sustentacion.md) | Complemento de la sustentación: diagrama de paquetes al día, ADR-0023, diagrama de estados de la donación, ficha de concurrencia y correo con Resend |
 | 2026-10-30 | [2026-10-30-plan-al-dia](2026-10-30-plan-al-dia.md) | Plan de acción al día: sustentación y Review el 30, Planning del Sprint 3 el 2 de noviembre, ronda de pruebas y escáner hechos, fila 3 descartada |
 | 2026-10-30 | [2026-10-30-alinear-boveda-obsidian](2026-10-30-alinear-boveda-obsidian.md) | La guía de la bóveda alineada con los tipos, estados y etiquetas en uso, y seis errores corregidos (enlaces, huérfanas, índices, ajustes de `.obsidian`) |

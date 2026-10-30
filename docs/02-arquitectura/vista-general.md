@@ -3,7 +3,7 @@ title: "Vista general de arquitectura"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-21
+actualizado: 2026-10-30
 ---
 
 # Vista general de arquitectura
@@ -128,6 +128,7 @@ completo (cálculo, sugerencias, remisiones, recepción y reportes), `turnos` (B
 | `auditoria` | Bitácora. Cada servicio la escribe en la misma transacción que el cambio; no hay interceptor | `BitacoraService` |
 | `notificaciones` | Correo por SMTP: invitaciones, reservas, avisos de folio y de acopio cerrado. Envío con reintentos | `NotificacionService` |
 | `almacenamiento` | Archivos en Garage, por la API de S3: facturas, evidencias de remisión, documentos de verificación, logotipos e imágenes de causas y plataformas. La API lee el objeto y entrega los bytes | `AlmacenamientoService` |
+| `captcha` | Retos de ALTCHA y la verificación de la prueba en el registro de Donador y las reservas sin cuenta; cada prueba sirve una vez ([ADR-0024](adr/ADR-0024-captcha-con-altcha.md)) | `CaptchaService`, `@RequiereCaptcha()` |
 | `importacion` | Puntos referenciados desde fuentes externas, un adaptador por fuente ([RF-RED-011](../01-requerimientos/funcionales/red.md#rf-red-011--importar-acopios-de-una-fuente-externa)) | `ImportadorService` |
 
 **Validación del 2026-09-14 ([P-023](../01-requerimientos/pendientes.md)):**
@@ -151,9 +152,10 @@ acopios        ← inventario, comprobantes, motor, turnos, importacion
 inventario     ← comprobantes, motor, importacion
 turnos         ← importacion
 comprobantes   ← motor           (solo lectura, para trazabilidad)
+captcha        ← identidad, turnos
 ```
 
-`notificaciones` y `almacenamiento` no dependen de ningún módulo de dominio: son
+`notificaciones`, `almacenamiento` y `captcha` no dependen de ningún módulo de dominio: son
 hojas del grafo, y por eso no pueden crear ciclos. `importacion` está en la otra punta: escribe
 en `acopios`, `catalogo`, `inventario` y `turnos` con sus servicios, y nadie la importa
 (pieza E, 2026-10-18).
