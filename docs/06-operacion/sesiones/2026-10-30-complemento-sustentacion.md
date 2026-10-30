@@ -18,7 +18,8 @@ Resend para mostrar la cola en vivo, y solo falta la API key.
 
 | PR o commit | Qué trae |
 |---|---|
-| Rama `docs/complemento-sustentacion` | Plan [2026-10-30-complemento-sustentacion.md](../../05-planes/2026-10-30-complemento-sustentacion.md); etiqueta de `AlmacenamientoService` en `paquetes.html` y PNG regenerados; [ADR-0023](../../02-arquitectura/adr/ADR-0023-organizacion-en-paquetes.md); nota [comportamiento.md](../../02-arquitectura/comportamiento.md) con el diagrama de estados de la donación, que `build.mjs` ahora extrae; [complemento-sustentacion.md](../../entregas/complemento-sustentacion.md), `generar-complemento.py` y el Word unido; bloque de Resend en `.env.example`; P-055 al día y P-089 nuevo |
+| Rama `docs/evidencia-resend` | Capturas del envío por Resend en la ficha, el Word regenerado (una captura sola va a todo el ancho) y los planes al día |
+| #185, rama `docs/complemento-sustentacion` | Plan [2026-10-30-complemento-sustentacion.md](../../05-planes/2026-10-30-complemento-sustentacion.md); etiqueta de `AlmacenamientoService` en `paquetes.html` y PNG regenerados; [ADR-0023](../../02-arquitectura/adr/ADR-0023-organizacion-en-paquetes.md); nota [comportamiento.md](../../02-arquitectura/comportamiento.md) con el diagrama de estados de la donación, que `build.mjs` ahora extrae; [complemento-sustentacion.md](../../entregas/complemento-sustentacion.md), `generar-complemento.py` y el Word unido; bloque de Resend en `.env.example`; P-055 al día y P-089 nuevo |
 
 Al regenerar los diagramas, `build.mjs` también actualizó el C4 de contenedores, que todavía
 decía «pendiente: importacion».
@@ -40,7 +41,13 @@ su método en `comprobantes/*.service.ts` y `tareas-custodia.service.ts`, y los 
 de la ficha de concurrencia contra `notificacion.service.ts`. El Word se revisó renderizado a PDF
 página por página.
 
-No se probó todavía el envío por Resend, porque falta la API key.
+Envío real por Resend, en la API local con la llave de Joseph en el `.env`: un registro de Donador
+para `contacto@josephqaz.dev` respondió 202 y encoló el correo de confirmación a las 05:50:11
+(hora de Colombia). El consumidor lo envió a las 05:51:01, en el primer intento y sin error, y
+Joseph confirmó que llegó a la bandeja desde `no-reply@josephqaz.dev`. Las dos capturas están en
+`docs/entregas/evidencia/complemento/` y en la ficha. Se probó con el registro de Donador en vez
+de una invitación porque en la base local la contraseña del administrador ya no coincide con
+`SEED_ADMIN_CONTRASENA`, y los intentos de entrar llegaron al límite de la API (429).
 
 ## Decisiones
 
@@ -62,8 +69,7 @@ No se probó todavía el envío por Resend, porque falta la API key.
 
 ## Pendiente
 
-- Poner la API key de Resend en el `.env` local, probar el envío con una invitación y tomar las
-  capturas del correo entregado y de la fila `ENVIADO`
+- Encender Resend en el servidor de pruebas
   ([plan, tarea 4](../../05-planes/2026-10-30-complemento-sustentacion.md),
   [plan de acción, fila 23](../../05-planes/plan-de-accion.md)).
 - Cola de correo con dos instancias de la API ([P-089](../../01-requerimientos/pendientes.md)).

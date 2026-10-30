@@ -346,9 +346,11 @@ def volcar_md(md, nivel_base=1):
 
     def soltar():
         # Las capturas seguidas van en galería; un diagrama, solo y a todo el ancho
-        if capturas:
+        if len(capturas) == 1:
+            figura(capturas[0][1], capturas[0][0])
+        elif capturas:
             galeria(capturas)
-            capturas.clear()
+        capturas.clear()
 
     for tipo, dato in bloques_md(md):
         if tipo == "img" and "assets/diagramas" not in dato[1]:
