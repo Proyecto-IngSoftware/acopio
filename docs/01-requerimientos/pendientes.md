@@ -951,6 +951,9 @@ servidor de pruebas pasa a `CORREO_ACTIVO=true` con esas variables en el panel d
 eso también se puede probar el registro de un Donador de punta a punta (P-056). La cola de correo
 es la bonificación de concurrencia del complemento del segundo corte
 ([complemento-sustentacion.md](../entregas/complemento-sustentacion.md)).
+**2026-10-30 · encendido en el servidor.** Joseph puso las variables en Dokploy. Un registro de
+Donador en `acopio.josephqaz.dev` llegó a `contacto@josephqaz.dev` con el enlace apuntando al
+servidor, y Joseph confirmó la cuenta con él.
 
 ### P-056 · Registro de Donadores mientras el correo está apagado
 **Fecha:** 2026-10-16 · **Propuesto por:** Claude, al apagar el correo (P-055)
@@ -964,7 +967,8 @@ punta en el servidor.
 **Decisión (2026-10-16, Joseph):** mientras el correo esté apagado, la ronda de pruebas usa
 `donador1@demo.acopio.local` de la demo y no prueba el registro de punta a punta. La API no
 escribe el enlace en el log. El registro con confirmación se prueba cuando vuelva el correo.
-**Estado:** RESUELTO el 2026-10-16.
+**Estado:** RESUELTO el 2026-10-16. El 2026-10-30, con el correo encendido (P-055), Joseph probó
+en el servidor el registro de punta a punta: llegó el correo y la cuenta quedó confirmada.
 
 ### P-057 · `net::ERR_FAILED` intermitente en el servidor de pruebas
 **Fecha:** 2026-10-16 · **Propuesto por:** Claude, en el recorrido contra el servidor
