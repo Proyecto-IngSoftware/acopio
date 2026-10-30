@@ -26,6 +26,7 @@ AVANCES = [
     "Avance 3 - Arquitectura inicial - Acopio.docx",
     "Avance 4 - Sprint 1 - Acopio.docx",
     "Avance 5 - Sprint 2 - Acopio.docx",
+    "Complemento - Sustentacion segundo corte - Acopio.docx",
 ]
 SALIDA = AQUI / "Acopio - Avances IS1.docx"
 

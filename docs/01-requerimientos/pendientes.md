@@ -944,6 +944,13 @@ pegar los enlaces que depender de un SMTP en estas semanas de pruebas.
 encole ni envíe nada, y el SMTP deja de ser obligatorio. Vale `true` por defecto. Con el correo
 apagado no llegan el aviso de rechazo de una donación, los avisos de asignación ni la
 confirmación del registro de un Donador: un Donador nuevo no puede confirmar su correo.
+**2026-10-30 · el correo vuelve.** Joseph eligió Resend, por SMTP y sin su SDK:
+`smtp.resend.com`, puerto 465 con `SMTP_SEGURO=true`, usuario `resend`, la API key como
+contraseña y remitente `no-reply@josephqaz.dev`, del dominio verificado. El código no cambió. El
+servidor de pruebas pasa a `CORREO_ACTIVO=true` con esas variables en el panel de Dokploy, y con
+eso también se puede probar el registro de un Donador de punta a punta (P-056). La cola de correo
+es la bonificación de concurrencia del complemento del segundo corte
+([complemento-sustentacion.md](../entregas/complemento-sustentacion.md)).
 
 ### P-056 · Registro de Donadores mientras el correo está apagado
 **Fecha:** 2026-10-16 · **Propuesto por:** Claude, al apagar el correo (P-055)
@@ -1215,6 +1222,22 @@ con el comando actual, el PR se fusiona y la alerta queda abierta en `main`.
 `CLAUDE.md` y el de `fusionar-tras-pr.mjs` llevan, entre `gh pr checks` y `gh pr review`, un
 `test` que exige cero alertas abiertas en `refs/pull/<n>/merge`. Si `gh api` falla, la salida
 queda vacía y el `test` también falla.
+
+### P-089 · La cola de correo no admite dos consumidores
+**Fecha:** 2026-10-30 · **Propuesto por:** Claude, al escribir la ficha de concurrencia del
+complemento del segundo corte
+**Qué:** `NotificacionService.procesarCola` evita dos lotes a la vez con la bandera en memoria
+`procesando`, que solo vale dentro de un proceso. `CorreoSalienteDao.listos` lee las filas sin
+reclamarlas, así que dos instancias de la API leerían el mismo lote y cada correo saldría dos
+veces. El arreglo es reclamar el lote dentro de una transacción con
+`SELECT … FOR UPDATE SKIP LOCKED` (o marcar las filas como tomadas antes de enviar). `acopio_app`
+ya tiene `UPDATE` sobre `correo_saliente`.
+**Por qué:** hoy corre una sola instancia de la API y el problema no aparece. Hay que resolverlo
+antes de escalar a dos. La ficha de concurrencia del
+[complemento](../entregas/complemento-sustentacion.md) lo declara como limitación, y el
+[ADR-0023](../02-arquitectura/adr/ADR-0023-organizacion-en-paquetes.md) como algo que podría
+requerir ajustes.
+**Estado:** ABIERTO.
 
 ---
 
