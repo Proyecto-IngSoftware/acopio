@@ -11,6 +11,7 @@ import { ConfigModule } from './config/config.module';
 import { ENTORNO, type Entorno } from './config/entorno';
 import { AcopiosModule } from './modulos/acopios/acopios.module';
 import { AuditoriaModule } from './modulos/auditoria/auditoria.module';
+import { CaptchaModule } from './modulos/captcha/captcha.module';
 import { CatalogoModule } from './modulos/catalogo/catalogo.module';
 import { AutenticacionGuard } from './modulos/identidad/autenticacion/autenticacion.guard';
 import { IdentidadModule } from './modulos/identidad/identidad.module';
@@ -37,6 +38,7 @@ import { ImportacionModule } from './modulos/importacion/importacion.module';
     AuditoriaModule,
     AlmacenamientoModule,
     NotificacionesModule,
+    CaptchaModule,
     IdentidadModule,
     CatalogoModule,
     AcopiosModule,

@@ -153,6 +153,15 @@ model Bitacora {
 
 // ── Notificaciones ───────────────────────────────────────────────────────────
 
+/// Pruebas de ALTCHA ya usadas: una prueba sirve una sola vez (ADR-0024)
+model CaptchaUsado {
+  nonce     String   @id
+  expira_en DateTime @db.Timestamptz
+
+  @@index([expira_en])
+  @@map("captcha_usado")
+}
+
 enum EstadoCorreo {
   PENDIENTE
   ENVIADO

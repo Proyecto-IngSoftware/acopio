@@ -1,17 +1,25 @@
 import { BitacoraService } from '../modulos/auditoria/bitacora.service';
-import { ADMIN, crearAppPrueba, unico, type AppPrueba } from '../../test/app-prueba';
+import {
+  ADMIN,
+  crearAppPrueba,
+  unico,
+  type AppPrueba,
+  reservaDeCaptchas,
+} from '../../test/app-prueba';
 
 const CONTRASENA = 'una frase larga para donar';
 
 describe('registro del Donador (RF-IDE-013, P-040)', () => {
   let a: AppPrueba;
+  let captchaLibre: () => string;
   beforeAll(async () => {
     a = await crearAppPrueba();
+    captchaLibre = await reservaDeCaptchas(a, 40);
   });
   afterAll(() => a.cerrar());
 
   const registrar = (correo: string, nombre = 'Ana Donadora') =>
-    a.http().post('/api/auth/registro').send({ correo, nombre });
+    a.http().post('/api/auth/registro').set('X-Captcha', captchaLibre()).send({ correo, nombre });
 
   const confirmar = (token: string, contrasena = CONTRASENA, nombre?: string) =>
     a
@@ -67,6 +75,7 @@ describe('registro del Donador (RF-IDE-013, P-040)', () => {
     const r = await a
       .http()
       .post('/api/auth/registro')
+      .set('X-Captcha', captchaLibre())
       .send({ correo, nombre: 'Ana Donadora', contrasena: CONTRASENA })
       .expect(400);
     expect(r.body.codigo).toBe('VALIDACION');
@@ -288,6 +297,7 @@ describe('registro del Donador (RF-IDE-013, P-040)', () => {
     await a
       .http()
       .post('/api/auth/registro')
+      .set('X-Captcha', captchaLibre())
       .send({ correo, nombre: 'Víctima', contrasena: 'contraseña del atacante 1' })
       .expect(400);
     await registrar(correo).expect(202);

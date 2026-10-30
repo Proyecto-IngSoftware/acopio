@@ -5,6 +5,7 @@ import {
   iniciarSesion,
   unico,
   type AppPrueba,
+  reservaDeCaptchas,
 } from '../../test/app-prueba';
 import { TareasTurnosService } from '../modulos/turnos/tareas-turnos.service';
 import { sembrarCausasDemo, sembrarTurnosDemo } from '../seed/demo';
@@ -15,11 +16,13 @@ const AHORA = Date.parse('2026-10-19T15:00:00Z');
 /** Bloque 5: correos de turnos, recordatorio y borrado de datos (RF-TUR-003, 004, T-05, T-06). */
 describe('turnos: correos y tareas', () => {
   let a: AppPrueba;
+  let captchaLibre: () => string;
   let admin: string;
   let tareas: TareasTurnosService;
 
   beforeAll(async () => {
     a = await crearAppPrueba({ ahora: AHORA });
+    captchaLibre = await reservaDeCaptchas(a, 40);
     admin = await iniciarSesion(a, ADMIN.username, ADMIN.contrasena);
     tareas = a.app.get(TareasTurnosService);
   });
@@ -52,6 +55,7 @@ describe('turnos: correos y tareas', () => {
     const r = await a
       .http()
       .post(`/api/turnos/jornadas/${jornadaId}/reservas`)
+      .set('X-Captcha', captchaLibre())
       .send({ nombre: 'Voluntaria', correo, telefono: '300 123 4567', consentimiento: true })
       .expect(201);
     return { correo, codigo: r.body.codigo as string, secreto: r.body.secreto as string };

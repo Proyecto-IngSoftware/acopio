@@ -1,4 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { pruebaCaptcha } from './captcha';
 import { api, desenvolver, type ErrorApi } from './cliente';
 import type { components } from './esquema';
 
@@ -50,7 +51,7 @@ export function useReservar(jornadaId: string) {
     mutationFn: async (datos) =>
       await desenvolver(
         api.POST('/api/turnos/jornadas/{id}/reservas', {
-          params: { path: { id: jornadaId } },
+          params: { path: { id: jornadaId }, header: { 'X-Captcha': await pruebaCaptcha() } },
           body: { ...datos, consentimiento: true },
         }),
       ),

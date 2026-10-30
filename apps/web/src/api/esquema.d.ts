@@ -20,6 +20,22 @@ export interface paths {
     patch?: never;
     trace?: never;
   };
+  '/api/captcha/reto': {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    get: operations['CaptchaController_reto'];
+    put?: never;
+    post?: never;
+    delete?: never;
+    options?: never;
+    head?: never;
+    patch?: never;
+    trace?: never;
+  };
   '/api/auth/sesion': {
     parameters: {
       query?: never;
@@ -2099,6 +2115,14 @@ export interface components {
           nombre: string;
         } | null;
       }[];
+    };
+    RetoCaptchaDto: {
+      reto: {
+        parameters: {
+          [key: string]: unknown;
+        };
+        signature?: string;
+      } | null;
     };
     IniciarSesionDto: {
       /** @description Correo o nombre de usuario */
@@ -4345,6 +4369,25 @@ export interface operations {
       };
     };
   };
+  CaptchaController_reto: {
+    parameters: {
+      query?: never;
+      header?: never;
+      path?: never;
+      cookie?: never;
+    };
+    requestBody?: never;
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown;
+        };
+        content: {
+          'application/json': components['schemas']['RetoCaptchaDto'];
+        };
+      };
+    };
+  };
   SesionController_iniciar: {
     parameters: {
       query?: never;
@@ -4433,7 +4476,10 @@ export interface operations {
   DonadorController_registrar: {
     parameters: {
       query?: never;
-      header?: never;
+      header: {
+        /** @description Prueba de ALTCHA: base64 de { challenge, solution }, sacada de GET /api/captcha/reto */
+        'X-Captcha': string;
+      };
       path?: never;
       cookie?: never;
     };
@@ -8435,7 +8481,10 @@ export interface operations {
   PublicoController_reservar: {
     parameters: {
       query?: never;
-      header?: never;
+      header: {
+        /** @description Prueba de ALTCHA: base64 de { challenge, solution }, sacada de GET /api/captcha/reto */
+        'X-Captcha': string;
+      };
       path: {
         id: string;
       };

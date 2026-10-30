@@ -17,6 +17,7 @@ const TODOS = [
   'turnos',
   'importacion',
   'salud',
+  'captcha',
 ];
 
 /** Módulos cuyo acceso a datos ya pasa por DAO (ADR-0019). Los demás se migran al tocarlos. */
@@ -31,6 +32,7 @@ const MIGRADOS_A_DAO = [
   'catalogo',
   'importacion',
   'identidad',
+  'captcha',
 ];
 
 /** módulo → módulos que lo pueden importar */
@@ -47,6 +49,7 @@ const PERMITIDOS = {
   turnos: ['importacion'],
   importacion: [],
   salud: [],
+  captcha: ['identidad', 'turnos'],
 };
 
 const reglasDeModulo = Object.entries(PERMITIDOS).map(([destino, quienes]) => {

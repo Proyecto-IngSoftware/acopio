@@ -7,6 +7,7 @@ import {
   iniciarSesion,
   unico,
   type AppPrueba,
+  reservaDeCaptchas,
 } from '../../test/app-prueba';
 
 /** Lunes 19 de octubre de 2026, 10:00 en Bogotá. */
@@ -16,6 +17,7 @@ const HORA = 3_600_000;
 /** Bloque 5: listado público, inscritos y asistencia (RF-TUR-002, RF-TUR-005, RF-TUR-006). */
 describe('turnos: público e inscritos', () => {
   let a: AppPrueba;
+  let captchaLibre: () => string;
   let admin: string;
   let operador: string;
   let adminId: string;
@@ -24,6 +26,7 @@ describe('turnos: público e inscritos', () => {
 
   beforeAll(async () => {
     a = await crearAppPrueba({ ahora: AHORA });
+    captchaLibre = await reservaDeCaptchas(a, 40);
     admin = await iniciarSesion(a, ADMIN.username, ADMIN.contrasena);
     adminId = (await a.prisma.usuario.findUniqueOrThrow({ where: { username: ADMIN.username } }))
       .id;
@@ -106,6 +109,7 @@ describe('turnos: público e inscritos', () => {
     a
       .http()
       .post(`/api/turnos/jornadas/${jornadaId}/reservas`)
+      .set('X-Captcha', captchaLibre())
       .send({ nombre, correo, telefono, perfilDeclarado: perfil, consentimiento: true })
       .expect(201);
 
@@ -176,6 +180,7 @@ describe('turnos: público e inscritos', () => {
     await a
       .http()
       .post(`/api/turnos/jornadas/${j.id}/reservas`)
+      .set('X-Captcha', captchaLibre())
       .send({
         nombre: 'Otra',
         correo: 'otra@demo.test',

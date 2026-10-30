@@ -1,3 +1,4 @@
+import { pruebaCaptcha } from '../api/captcha';
 import { api, desenvolver, ErrorApi } from '../api/cliente';
 import type { components } from '../api/esquema';
 
@@ -57,7 +58,13 @@ export const clienteAuthLocal: ClienteAuth = {
   },
 
   async registrarDonador(nombre, correo) {
-    await desenvolver(api.POST('/api/auth/registro', { body: { nombre, correo } }));
+    const captcha = await pruebaCaptcha();
+    await desenvolver(
+      api.POST('/api/auth/registro', {
+        params: { header: { 'X-Captcha': captcha } },
+        body: { nombre, correo },
+      }),
+    );
   },
 
   async validarEnlace(token) {

@@ -24,8 +24,12 @@ services:
       NODE_ENV: development
       AUTH_PROVEEDOR: local
       SUPABASE_JWKS_URL: http://localhost:3000/api/auth/.well-known/jwks.json
+      # Mailpit no usa TLS ni usuario: aunque el .env apunte a Resend, aquí no se heredan
       SMTP_HOST: mailpit
       SMTP_PORT: 1025
+      SMTP_SEGURO: 'false'
+      SMTP_USER: ''
+      SMTP_PASSWORD: ''
 
   # El build de la web servido por nginx, como en el servidor. No arranca con servicios:todo
   # porque ocupa el 5173 de Vite: bun run servicios:web

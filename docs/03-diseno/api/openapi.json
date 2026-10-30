@@ -132,6 +132,27 @@
         ]
       }
     },
+    "/api/captcha/reto": {
+      "get": {
+        "operationId": "CaptchaController_reto",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RetoCaptchaDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "captcha"
+        ]
+      }
+    },
     "/api/auth/sesion": {
       "post": {
         "operationId": "SesionController_iniciar",
@@ -230,7 +251,17 @@
     "/api/auth/registro": {
       "post": {
         "operationId": "DonadorController_registrar",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "X-Captcha",
+            "in": "header",
+            "description": "Prueba de ALTCHA: base64 de { challenge, solution }, sacada de GET /api/captcha/reto",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -6809,6 +6840,15 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "X-Captcha",
+            "in": "header",
+            "description": "Prueba de ALTCHA: base64 de { challenge, solution }, sacada de GET /api/captcha/reto",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
@@ -7250,6 +7290,30 @@
           "pagina",
           "porPagina",
           "registros"
+        ]
+      },
+      "RetoCaptchaDto": {
+        "type": "object",
+        "properties": {
+          "reto": {
+            "type": "object",
+            "required": [
+              "parameters"
+            ],
+            "properties": {
+              "parameters": {
+                "type": "object",
+                "additionalProperties": {}
+              },
+              "signature": {
+                "type": "string"
+              }
+            },
+            "nullable": true
+          }
+        },
+        "required": [
+          "reto"
         ]
       },
       "IniciarSesionDto": {
