@@ -78,5 +78,9 @@ cambio a PBKDF2 va en su propio PR.
 
 ## Depende de Joseph
 
-- Si en el panel de Dokploy hay un `CAPTCHA_DIFICULTAD` de 20000, quitarlo o ponerlo en 1500:
-  con PBKDF2, 20000 haría esperar varios segundos.
+Nada. Tras desplegar el PR 190, el primer reto del servidor salió con contador 16.873 y tardó
+13 s en resolverse: el panel de Dokploy tenía `CAPTCHA_DIFICULTAD=20000`. Joseph lo cambió a
+1500, y cinco retos medidos después dieron contadores de 552 a 1.305, resueltos en 353 a 826 ms
+con Web Crypto y en 335 a 757 ms con Node nativo.
+
+Por pedido de Joseph, este cierre se subió directo a `main`, sin PR.
