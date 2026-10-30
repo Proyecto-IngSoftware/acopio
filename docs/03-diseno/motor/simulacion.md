@@ -1,9 +1,9 @@
 ---
 title: "Simulación del motor"
 type: informe
-tags: [motor, simulador, rf-mot-010]
+tags: [motor, simulador, rf]
 estado: vigente
-actualizado: 2026-10-10
+actualizado: 2026-10-30
 ---
 
 # Simulación del motor

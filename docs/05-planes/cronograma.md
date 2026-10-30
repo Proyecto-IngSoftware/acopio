@@ -1,9 +1,9 @@
 ---
 title: "Cronograma semanal hasta la entrega final"
 type: plan
-tags: [planes, cronograma]
+tags: [plan, cronograma]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-30
 ---
 
 # Cronograma semanal hasta la entrega final

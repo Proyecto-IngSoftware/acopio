@@ -1,9 +1,9 @@
 ---
 title: "Mapa de necesidades · diseño"
-type: especificacion
+type: spec
 tags: [red, inventario, turnos, portal, diseno]
 estado: vigente
-actualizado: 2026-10-20
+actualizado: 2026-10-30
 ---
 
 # Mapa de necesidades

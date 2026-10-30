@@ -1,9 +1,9 @@
 ---
 title: "Entrada única para todas las cuentas · diseño"
-type: especificacion
+type: spec
 tags: [identidad, acceso, diseno]
 estado: vigente
-actualizado: 2026-10-19
+actualizado: 2026-10-30
 ---
 
 # Entrada única para todas las cuentas

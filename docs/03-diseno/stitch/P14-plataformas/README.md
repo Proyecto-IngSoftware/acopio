@@ -2,8 +2,8 @@
 title: "P14 · Otras plataformas que ayudan"
 type: diseno
 tags: [diseno, stitch, portal, pieza-e]
-estado: reemplazada
-actualizado: 2026-10-19
+estado: reemplazado
+actualizado: 2026-10-30
 ---
 
 # P14 · Otras plataformas que ayudan

@@ -1,9 +1,9 @@
 ---
 title: "Planes de implementación"
 type: moc
-tags: [moc, planes]
+tags: [moc, plan]
 estado: vigente
-actualizado: 2026-10-20
+actualizado: 2026-10-30
 ---
 
 # Planes de implementación

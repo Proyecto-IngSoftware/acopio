@@ -3,7 +3,7 @@ title: "Guía de la bóveda en Obsidian"
 type: moc
 tags: [moc, obsidian]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-10-30
 ---
 
 # Guía de la bóveda en Obsidian
@@ -74,13 +74,24 @@ actualizado: 2026-08-20
 | `diseno` | Sistema de diseño, flujos |
 | `prompt` | Prompts de video o de generación (por ejemplo, el video de la donación) |
 | `spec` | Especificaciones formales |
+| `plan` | Planes de implementación, en `05-planes/` |
 | `operacion` | Despliegue, runbook |
+| `guia` | Guías de uso, como los escenarios por rol |
+| `informe` | Informes de sesión, en `06-operacion/sesiones/` |
 | `entrega` | Entregables de la asignatura |
 | `backlog` | Aplazado |
 
 ### Valores de `estado`
 
 `vigente` · `borrador` · `reemplazado`
+
+Los planes (`type: plan`) usan además tres estados propios:
+
+| Valor | Significa |
+|---|---|
+| `aprobado` | Joseph aprobó el plan; su tabla de estado dice qué tarea falta |
+| `ejecutado` | Sus tareas están hechas |
+| `cerrado` | Se ejecutó y el bloque o ciclo quedó cerrado, con su issue |
 
 ### Propiedades adicionales por tipo
 
@@ -91,14 +102,20 @@ actualizado: 2026-08-20
 
 ### Vocabulario de etiquetas
 
-Cerrado. **No inventes etiquetas nuevas sin acordarlo en la reunión semanal**; los
-tableros y las búsquedas dependen de que no se disperse.
+Las búsquedas dependen de que no se disperse. Estas son las etiquetas en uso,
+agrupadas por lo que nombran:
 
-```
-moc · indice · contexto · requerimientos · rf · rnf · historias
-pendientes · arquitectura · adr · diseno · ui · prompt · spec
-operacion · futuro · entrega · is1 · obsidian
-```
+| Grupo | Etiquetas |
+|---|---|
+| Tipo de nota | `moc` · `indice` · `contexto` · `requerimientos` · `rf` · `rnf` · `historias` · `pendientes` · `arquitectura` · `adr` · `diseno` · `prompt` · `spec` · `plan` · `operacion` · `sesion` · `futuro` · `entrega` · `is1` · `obsidian` |
+| Módulo o tema del dominio | `identidad` · `acceso` · `catalogo` · `codigos-de-barras` · `inventario` · `comprobantes` · `custodia` · `recepcion` · `seguimiento` · `donador` · `motor` · `simulador` · `remisiones` · `turnos` · `importacion` · `almacenamiento` · `causas` · `red` · `reportes` · `offline` · `persistencia` · `seguridad` · `legal` |
+| Interfaz | `interfaz` · `web` · `api` · `stitch` · `consola` · `portal` · `portada` · `ux` · `componentes` · `color` |
+| Etapa del trabajo | `bloque-N` · `sprint-N` · `pieza-X` · `cronograma` · `calendario` |
+| Práctica y operación | `pruebas` · `recorridos` · `despliegue` · `servidor` · `seed` · `demo` · `patrones` · `buenas-practicas` · `resumen` |
+
+`bloque-N`, `sprint-N` y `pieza-X` siguen su patrón sin pedir permiso. Cualquier
+otra etiqueta nueva se agrega a esta tabla en el mismo cambio que la usa por
+primera vez; si ya hay una que dice lo mismo, se usa esa.
 
 ---
 
@@ -119,7 +136,9 @@ README.md                    ← portada
 ├─ 05-planes/README.md
 ├─ 06-operacion/README.md
 ├─ entregas/README.md
-└─ superpowers/specs/README.md
+├─ superpowers/specs/README.md
+├─ 99-futuro/README.md
+└─ plantillas/README.md
 ```
 
 **Regla:** toda nota nueva se enlaza desde al menos un índice. Una nota que nadie
@@ -142,21 +161,30 @@ En [tableros/](tableros/):
 > —*Nueva base* → filtro por la propiedad `type` → elige columnas— y reemplaza el
 > archivo. Toma dos minutos y queda con la sintaxis exacta de tu versión.
 
-Bases requiere Obsidian 1.9 o superior. No hay plugins de comunidad instalados.
+Bases requiere Obsidian 1.9 o superior.
+
+Hay un solo plugin de comunidad, [Mehrmaid](.obsidian/plugins/mehrmaid/manifest.json),
+que permite escribir Markdown dentro de los diagramas Mermaid. Está versionado en
+`.obsidian/plugins/`, así que llega con el repositorio.
 
 ---
 
 ## Plantillas
 
-En [plantillas/](plantillas/): [ADR](plantillas/plantilla-adr.md) ·
-[requerimiento](plantillas/plantilla-requerimiento.md).
+En [plantillas/](plantillas/README.md): [ADR](plantillas/plantilla-adr.md) ·
+[requerimiento](plantillas/plantilla-requerimiento.md) ·
+[informe de sesión](plantillas/plantilla-informe-sesion.md).
 
-> **Ajustes → Plantillas → Carpeta de plantillas:** `plantillas`. Después se insertan
-> con la paleta de comandos.
+La carpeta de plantillas ya está fijada en `.obsidian/templates.json`; se insertan
+con la paleta de comandos.
 
 ---
 
 ## Ajustes recomendados
+
+Estos ajustes están guardados en `.obsidian/app.json` y `.obsidian/templates.json`,
+que van en el repositorio: quien abre la bóveda ya los tiene. La tabla sirve para
+revisarlos si alguien los cambia.
 
 | Ajuste | Valor | Por qué |
 |---|---|---|

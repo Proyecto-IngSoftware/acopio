@@ -3,7 +3,7 @@ title: "Recibir por folio · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, custodia]
 estado: vigente
-actualizado: 2026-10-21
+actualizado: 2026-10-30
 ---
 
 # Recibir por folio · diseño en Stitch
@@ -39,7 +39,7 @@ actualizado: 2026-10-21
 
 ## Códigos propuestos en la recepción (2026-10-20)
 
-Pendiente de revisión por Joseph. Parte de la [maqueta de la idea](../../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
+Pendiente de revisión por Joseph. Parte de la [maqueta de la idea](../../../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
 
 | | |
 |---|---|

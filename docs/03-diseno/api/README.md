@@ -1,9 +1,9 @@
 ---
 title: "Contrato de la API para el frontend"
 type: diseno
-tags: [diseno, api, frontend]
+tags: [diseno, api, web]
 estado: vigente
-actualizado: 2026-09-30
+actualizado: 2026-10-30
 ---
 
 # Contrato de la API para el frontend

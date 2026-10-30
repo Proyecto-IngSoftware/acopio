@@ -3,7 +3,7 @@ title: "Plan de acción del proyecto"
 type: plan
 tags: [plan, seguimiento, cronograma]
 estado: vigente
-actualizado: 2026-10-21
+actualizado: 2026-10-30
 ---
 
 # Plan de acción del proyecto
@@ -116,6 +116,7 @@ Sprint 3.
 
 ## Registro de cambios
 
+- 2026-10-30: sin fila propia, la guía de la bóveda se alineó con la bóveda y se corrigieron seis errores de estructura ([informe](../06-operacion/sesiones/2026-10-30-alinear-boveda-obsidian.md)).
 - 2026-10-21: fila 22, se fusionaron la fase 3 (PR 180) y el arreglo de contraste AA (PR 181). Los recorridos que no gastan la demo pasaron en el servidor.
 - 2026-10-21: fila 22, la fase 3 de la línea visual (consola) quedó construida con su plan y su PR ([informe](../06-operacion/sesiones/2026-10-21-linea-visual-fase-3.md)).
 - 2026-10-21: fila 22, la fase 2 de la línea visual (portal) se fusionó con el PR 179, a pedido de Joseph. Los recorridos y las `construida.png` nuevas esperan al Compose ([informe](../06-operacion/sesiones/2026-10-21-linea-visual-fase-2.md)).

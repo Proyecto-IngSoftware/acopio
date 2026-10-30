@@ -1,4 +1,15 @@
+---
+title: "Diseño de Acopio · primera versión"
+type: spec
+tags: [spec]
+estado: reemplazado
+actualizado: 2026-10-30
+---
+
 # Acopio — Especificación de diseño
+
+> Primera versión, reemplazada por la del
+> [2026-08-20](2026-08-20-acopio-design.md). Se conserva como registro.
 
 **Fecha:** 2026-08-17
 **Estado:** aprobado, pendiente de plan de implementación

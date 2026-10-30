@@ -3,7 +3,7 @@ title: "Diseños de Stitch — índice"
 type: moc
 tags: [moc, diseno, stitch]
 estado: vigente
-actualizado: 2026-10-17
+actualizado: 2026-10-30
 ---
 
 # Diseños de Stitch
@@ -32,6 +32,7 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 | P12 Privacidad | [P12-privacidad](P12-privacidad/README.md) | Bloque 3, ciclo 1 |
 | P13 Mi cuenta de Donador | [P13-mi-cuenta](P13-mi-cuenta/README.md) | Bloque 3, ciclo 1 |
 | Confirmar correo del Donador | [P13-confirmar](P13-confirmar/README.md) | Bloque 3, ciclo 1 |
+| P14 Otras plataformas que ayudan | [P14-plataformas](P14-plataformas/README.md) | Reemplazada el 2026-10-19: las plataformas pasaron al final de P3 |
 
 ## Consola
 
@@ -58,7 +59,7 @@ Las piezas que se repiten están en [_compartidos](_compartidos/README.md).
 | C13 Recepción en zona | [C13-recepcion](C13-recepcion/README.md) | Bloque 4, ciclo 3 |
 | C14 Turnos | [C14-turnos](C14-turnos/README.md) | Bloque 5 |
 | C15 Entidades | [C15-entidades](C15-entidades/README.md) | Bloque 1; verificación en la pieza C |
-| C16 Usuarios y accesos | [C16-usuarios](C16-usuarios/) (lista, detalle, invitar y matriz) | Bloque 0 y Bloque 1 |
+| C16 Usuarios y accesos | C16-usuarios: [lista](C16-usuarios/lista/README.md), [detalle](C16-usuarios/detalle/README.md), [invitar](C16-usuarios/invitar/README.md) y [matriz](C16-usuarios/matriz/README.md) | Bloque 0 y Bloque 1 |
 | C17 Bitácora | [C17-bitacora](C17-bitacora/README.md) | Bloque 0 |
 | C18 Catálogo maestro | [C18-catalogo](C18-catalogo/README.md) | Bloque 0 |
 | C18 Códigos de barras | [C18-codigos-barras](C18-codigos-barras/README.md) | Bloque 2 |
