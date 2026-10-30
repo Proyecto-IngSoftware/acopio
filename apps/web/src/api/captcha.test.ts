@@ -1,5 +1,5 @@
 import { createChallenge, verifySolution } from 'altcha-lib';
-import { deriveKey } from 'altcha-lib/algorithms/sha';
+import { deriveKey } from 'altcha-lib/algorithms/pbkdf2';
 import { responderSegun } from '../pruebas/utilidades';
 import { pruebaCaptcha } from './captcha';
 
@@ -7,8 +7,8 @@ const LLAVE = 'llave-de-prueba-del-captcha-en-la-web';
 
 it('resuelve el reto de la API y la prueba la puede verificar el servidor (ADR-0024)', async () => {
   const reto = await createChallenge({
-    algorithm: 'SHA-256',
-    cost: 1,
+    algorithm: 'PBKDF2/SHA-256',
+    cost: 100,
     counter: 30,
     deriveKey,
     hmacSignatureSecret: LLAVE,

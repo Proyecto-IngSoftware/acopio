@@ -28,9 +28,14 @@ Los dos endpoints exigen una prueba de ALTCHA en el encabezado `X-Captcha`:
 
 - La API firma un reto con su llave (`CAPTCHA_LLAVE`) en `GET /api/captcha/reto`. La llave no
   sale de la API.
-- La web pide un reto al enviar el formulario, lo resuelve en el navegador con `altcha-lib`
-  (prueba de trabajo con SHA-256, alrededor de un segundo con la dificultad por defecto) y manda
-  la prueba. No se agrega ningún componente visible.
+- La web pide un reto al enviar el formulario, lo resuelve en el navegador con `altcha-lib` y
+  manda la prueba. No se agrega ningún componente visible.
+- El reto usa PBKDF2/SHA-256 con 5.000 iteraciones por intento y un contador de hasta 1.500
+  (alrededor de medio segundo en un computador). PBKDF2 corre en código nativo también en el
+  navegador, así que un bot no resuelve más rápido que una persona. La primera versión usaba
+  SHA-256 a una iteración, y en la medición del 30 de octubre un contador de 15.000 tardó
+  1.242 ms en Web Crypto y 28 ms con el SHA nativo de Node. Con PBKDF2, 100 intentos tardaron
+  62 ms en Web Crypto y 58 ms en Node.
 - El guard `CaptchaGuard`, que se pone con `@RequiereCaptcha()`, verifica la firma, la solución y
   el vencimiento (10 minutos). Si algo falla responde 400 `CAPTCHA_INVALIDO`.
 - Cada prueba sirve una vez: su `nonce` queda en la tabla `captcha_usado`, y un segundo uso choca
@@ -57,7 +62,7 @@ El módulo `captcha` es una hoja del grafo: no importa ningún módulo de domini
 ### A favor
 
 - No hay cuenta externa, cookies ni rastreo, y la verificación no depende de ningún servicio.
-- Cada registro o reserva le cuesta al bot alrededor de un segundo de cómputo, y no puede reusar
+- Cada registro o reserva le cuesta al bot el mismo cómputo que a una persona, y no puede reusar
   una prueba.
 - Las pantallas no cambiaron.
 
@@ -65,6 +70,6 @@ El módulo `captcha` es una hoja del grafo: no importa ningún módulo de domini
 
 - Una prueba de trabajo frena bots baratos, pero no a un atacante dispuesto a pagar el cómputo.
   El límite por IP sigue activo como segunda barrera.
-- En un teléfono lento, enviar el formulario tarda un segundo más.
+- En un teléfono lento, enviar el formulario puede tardar un par de segundos más.
 - La llave es un secreto más que hay que poner en cada entorno (en el servidor, en el panel de
   Dokploy).

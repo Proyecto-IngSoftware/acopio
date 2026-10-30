@@ -2,7 +2,7 @@ import '../src/config/zod-es';
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { solveChallenge } from 'altcha-lib';
-import { deriveKey } from 'altcha-lib/algorithms/sha';
+import { deriveKey } from 'altcha-lib/algorithms/pbkdf2';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { LimiteIntentosGuard } from '../src/comun/limite-intentos.guard';

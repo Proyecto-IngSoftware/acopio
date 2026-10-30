@@ -17,7 +17,7 @@ describe('captcha (ADR-0024)', () => {
   it('el reto es público y viene firmado', async () => {
     const { body } = await a.http().get('/api/captcha/reto').expect(200);
     expect(body.reto.signature).toEqual(expect.any(String));
-    expect(body.reto.parameters).toMatchObject({ algorithm: 'SHA-256' });
+    expect(body.reto.parameters).toMatchObject({ algorithm: 'PBKDF2/SHA-256', cost: 5000 });
   });
 
   it('con una prueba válida el registro pasa', async () => {

@@ -1,10 +1,10 @@
 import { solveChallenge, type Challenge } from 'altcha-lib';
-import { deriveKey } from 'altcha-lib/algorithms/web/sha';
+import { deriveKey } from 'altcha-lib/algorithms/web/pbkdf2';
 import { api, desenvolver, ErrorApi } from './cliente';
 
 /**
  * Prueba de ALTCHA para el siguiente envío de un formulario público (ADR-0024): pide un reto a
- * la API, lo resuelve en el navegador (alrededor de un segundo) y la devuelve lista para el
+ * la API, lo resuelve en el navegador (menos de un segundo en un computador) y la devuelve lista para el
  * encabezado X-Captcha. Cada prueba sirve una vez, así que se pide una por envío. Con el captcha
  * apagado devuelve una cadena vacía, que la API no revisa.
  */

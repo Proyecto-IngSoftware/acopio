@@ -44,7 +44,7 @@ públicos que crean filas y mandan correo: `POST /api/auth/registro` y
 | 2. Retos y verificación en la API | ✅ Módulo `captcha`, tabla `captcha_usado`, variables y 7 pruebas de integración |
 | 3. Proteger registro y reservas | ✅ `@RequiereCaptcha()` en los dos endpoints; las pruebas que los llaman usan `reservaDeCaptchas` |
 | 4. La web resuelve el reto | ✅ `pruebaCaptcha()` en el registro y la reserva; las pantallas no cambiaron |
-| 5. Cierre | 🟡 ADR-0024, P-089, verificación y recorridos hechos. Falta que Joseph ponga `CAPTCHA_LLAVE` en Dokploy antes de fusionar |
+| 5. Cierre | ✅ PR 189 fusionado y desplegado con la llave; el reto pasó a PBKDF2 (ver «Cambios al construir») |
 
 ## Task 1: Cola de correo segura con varias instancias (P-089)
 
@@ -88,6 +88,13 @@ públicos que crean filas y mandan correo: `POST /api/auth/registro` y
   llave, la API no arranca.
 - [ ] Verificación completa, recorridos de registro y reserva contra el Compose, informe de sesión
   y PR.
+
+## Cambios al construir
+
+- El reto pasó de SHA-256 a una iteración a PBKDF2/SHA-256 con 5.000 iteraciones y un contador
+  de hasta 1.500. Después de desplegar se vio que un bot nativo resolvía el reto SHA 44 veces más
+  rápido que el navegador (28 ms contra 1.242 ms); con PBKDF2 tardan casi lo mismo. La
+  dificultad por defecto bajó de 20.000 a 1.500.
 
 ## Registro de cambios
 
