@@ -1,9 +1,9 @@
 ---
 title: "Línea visual: fechas, botones, estados y movimiento · diseño"
-type: especificacion
+type: spec
 tags: [web, diseno, portal, consola, ux]
 estado: vigente
-actualizado: 2026-10-21
+actualizado: 2026-10-30
 ---
 
 # Línea visual: fechas, botones, estados y movimiento

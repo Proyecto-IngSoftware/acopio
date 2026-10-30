@@ -3,7 +3,7 @@ title: "C18 · Códigos de barras · diseño en Stitch"
 type: diseno
 tags: [diseno, stitch, consola, catalogo]
 estado: vigente
-actualizado: 2026-10-21
+actualizado: 2026-10-30
 ---
 
 # C18 · Códigos de barras · diseño en Stitch
@@ -44,7 +44,7 @@ Aprobadas por Joseph el 2026-10-02:
 
 ## Presentaciones y códigos propuestos (2026-10-20)
 
-Maqueta de la fase «presentaciones, códigos de barras y unidades». Pendiente de revisión; la idea sale de la [maqueta de la conversación del 20 de octubre](../../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
+Maqueta de la fase «presentaciones, códigos de barras y unidades». Pendiente de revisión; la idea sale de la [maqueta de la conversación del 20 de octubre](../../../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
 
 | | |
 |---|---|

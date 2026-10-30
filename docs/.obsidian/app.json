@@ -1,4 +1,8 @@
 {
   "showInlineTitle": true,
-  "readableLineLength": true
+  "readableLineLength": true,
+  "useMarkdownLinks": true,
+  "newLinkFormat": "relative",
+  "attachmentFolderPath": "assets",
+  "defaultViewMode": "preview"
 }

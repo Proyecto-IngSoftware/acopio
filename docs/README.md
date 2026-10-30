@@ -3,7 +3,7 @@ title: "Acopio — portada"
 type: moc
 tags: [moc, indice]
 estado: vigente
-actualizado: 2026-10-07
+actualizado: 2026-10-30
 ---
 
 # Acopio
@@ -58,8 +58,8 @@ plan de trabajo: el próximo es el ciclo 2 del Bloque 3 (#34).
 | [05-planes/](05-planes/README.md) | Planes de implementación | Al iniciar un bloque |
 | [06-operacion/](06-operacion/README.md) | Despliegue, runbook, recorridos | Al desplegar, y cuando algo falla |
 | [entregas/](entregas/README.md) | Entregables de la asignatura | En cada avance de proyecto |
-| [99-futuro/](99-futuro/backlog.md) | Aplazado, recuperable | Al recortar algo |
-| [plantillas/](plantillas/plantilla-adr.md) | Plantillas de ADR y de requerimiento | Al crear una nota nueva |
+| [99-futuro/](99-futuro/README.md) | Aplazado, recuperable | Al recortar algo |
+| [plantillas/](plantillas/README.md) | Plantillas de ADR, de requerimiento y de informe de sesión | Al crear una nota nueva |
 | [tableros/](tableros/tablero-notas.base) | Vistas Bases sobre las propiedades | Para consultar de un vistazo |
 
 ---

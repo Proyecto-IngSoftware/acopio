@@ -3,7 +3,7 @@ title: "Informes de sesión — índice"
 type: moc
 tags: [moc, operacion, sesion]
 estado: vigente
-actualizado: 2026-10-21
+actualizado: 2026-10-30
 ---
 
 # Informes de sesión
@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-10-30 | [2026-10-30-alinear-boveda-obsidian](2026-10-30-alinear-boveda-obsidian.md) | La guía de la bóveda alineada con los tipos, estados y etiquetas en uso, y seis errores corregidos (enlaces, huérfanas, índices, ajustes de `.obsidian`) |
 | 2026-10-21 | [2026-10-21-linea-visual-fase-3](2026-10-21-linea-visual-fase-3.md) | Línea visual, fase 3: la consola con C14 fechado, sellos, botones ocupados, vacíos ilustrados y desactivados (#177) |
 | 2026-10-21 | [2026-10-21-linea-visual-fase-2](2026-10-21-linea-visual-fase-2.md) | Línea visual, fase 2: el portal con filas de jornada, tira de días, franja con la cifra real, vacíos ilustrados y sello (#177) |
 | 2026-10-21 | [2026-10-21-linea-visual-fase-1](2026-10-21-linea-visual-fase-1.md) | Línea visual, fase 1: bloque de fecha, tira de días, ilustraciones, botones y movimiento al tocar (ADR-0022, #177) |

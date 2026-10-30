@@ -3,7 +3,7 @@ title: "C4 · Escáner y código nuevo · maqueta"
 type: diseno
 tags: [diseno, stitch, consola, inventario]
 estado: vigente
-actualizado: 2026-10-21
+actualizado: 2026-10-30
 ---
 
 # C4 · Escáner y código nuevo · maqueta
@@ -29,7 +29,7 @@ El botón «Escanear» está en el buscador de categoría que comparten C4, C5 y
 
 ## Código nuevo y Nueva presentación (2026-10-20)
 
-Pendiente de revisión por Joseph. Las dos hojas parten de la [maqueta de la idea](../../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
+Pendiente de revisión por Joseph. Las dos hojas parten de la [maqueta de la idea](../../../superpowers/specs/2026-10-20-presentaciones-codigos-design.md).
 
 | | |
 |---|---|
