@@ -55,8 +55,10 @@ Un monorepo con workspaces de Bun y seis paquetes de primer nivel:
 La web no importa código de la API. Le habla por HTTP en `/api` y toma los tipos del contrato
 `openapi.json`, que exporta la API.
 
-Dentro de la API hay un módulo por dominio en `apps/api/src/modulos/`, apilados en capas. Cada uno
-importa solo módulos de capas inferiores:
+Dentro de la API hay un módulo por dominio en `apps/api/src/modulos/`, apilados en capas. Un
+módulo importa módulos de capas inferiores y, en dos casos, de su misma capa (`comprobantes` usa
+`inventario`, e `identidad` usa `auditoria` y `notificaciones`). Ninguno importa a uno de una capa
+superior:
 
 1. `importacion`, que nadie importa. Escribe en `acopios`, `catalogo`, `inventario` y `turnos`.
 2. `motor` y `turnos`.

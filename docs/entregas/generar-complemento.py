@@ -360,7 +360,14 @@ def volcar_md(md, nivel_base=1):
         if tipo in ("h2", "h3", "h4"):
             titulo(dato, min(3, nivel_base + int(tipo[1]) - 2))
         elif tipo == "img":
-            figura(AQUI / dato[1], dato[0])
+            # Un diagrama apaisado va solo en una página horizontal para que su texto se lea
+            ancho, alto = tam_png(AQUI / dato[1])
+            if ancho > 1.4 * alto:
+                nueva_seccion(True)
+                figura(AQUI / dato[1], dato[0])
+                nueva_seccion(False)
+            else:
+                figura(AQUI / dato[1], dato[0])
         elif tipo == "p" and dato.startswith("Pendiente:"):
             recuadro(dato)
         elif tipo == "p":

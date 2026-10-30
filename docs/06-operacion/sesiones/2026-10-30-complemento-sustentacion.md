@@ -18,7 +18,8 @@ Resend para mostrar la cola en vivo, y solo falta la API key.
 
 | PR o commit | Qué trae |
 |---|---|
-| Rama `docs/evidencia-resend` | Capturas del envío por Resend en la ficha, el Word regenerado (una captura sola va a todo el ancho) y los planes al día |
+| Rama `docs/diagramas-complemento` | Joseph pidió diagramas y textos más claros. El de estados se redibujó a mano en SVG (`comportamiento.html`), con colores por actor, flechas numeradas y notación «evento [guarda] / efecto»; el de paquetes de la API ganó un riel con las cinco capas; la cola de correo tiene su propio diagrama (`concurrencia.html`) con la línea de tiempo de la prueba real. `exportar-complemento.mjs` saca los PNG, `build.mjs` ya no extrae el Mermaid y el Word pone los diagramas apaisados en páginas horizontales. El documento del complemento explica cómo leer cada diagrama, los recorridos y una tabla de capas |
+| #186, rama `docs/evidencia-resend` | Capturas del envío por Resend en la ficha, el Word regenerado (una captura sola va a todo el ancho) y los planes al día |
 | #185, rama `docs/complemento-sustentacion` | Plan [2026-10-30-complemento-sustentacion.md](../../05-planes/2026-10-30-complemento-sustentacion.md); etiqueta de `AlmacenamientoService` en `paquetes.html` y PNG regenerados; [ADR-0023](../../02-arquitectura/adr/ADR-0023-organizacion-en-paquetes.md); nota [comportamiento.md](../../02-arquitectura/comportamiento.md) con el diagrama de estados de la donación, que `build.mjs` ahora extrae; [complemento-sustentacion.md](../../entregas/complemento-sustentacion.md), `generar-complemento.py` y el Word unido; bloque de Resend en `.env.example`; P-055 al día y P-089 nuevo |
 
 Al regenerar los diagramas, `build.mjs` también actualizó el C4 de contenedores, que todavía
@@ -64,6 +65,10 @@ de una invitación porque en la base local la contraseña del administrador ya n
   movió al tramo libre debajo de `comprobantes`.
 - En el primer render del diagrama de estados se encimaba la etiqueta del rechazo y el bucle de
   PENDIENTE salía sin texto. Se cambió el bucle por una nota y la orientación a vertical.
+- El ADR-0023 y el documento decían que cada módulo importa solo a los de capas inferiores. Al
+  armar la tabla de capas se vio que `comprobantes` importa `inventario` y que `identidad` importa
+  `auditoria` y `notificaciones`, que están en su misma capa. Se corrigió a «ninguno importa hacia
+  arriba» en el ADR, el documento y el riel del diagrama.
 - El hook de humanizer rechazó escrituras cuando la invocación cubría otro archivo; se invocó por
   cada texto.
 

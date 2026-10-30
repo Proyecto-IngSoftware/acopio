@@ -108,10 +108,6 @@ mkdirSync(dirMmd, { recursive: true });
 const salidas = [
   ...clusters.flatMap((c, i) => c.codigos.map((cod, k) => [`er-${String(i + 1).padStart(2, '0')}${c.codigos.length > 1 ? 'abcdef'[k] : ''}-${c.id}`, cod])),
   ...c4.map((c, i) => [`arquitectura-${String(i + 1).padStart(2, '0')}-${c.id}`, c.codigo]),
-  // Comportamiento: un .mmd por sección `## ` de comportamiento.md que tenga diagrama
-  ...leer('comportamiento.md').split(/\n## /).slice(1)
-    .filter((s) => bloquesMermaid(s).length)
-    .map((s, i) => [`comportamiento-${String(i + 1).padStart(2, '0')}-${slug(s.split('\n')[0])}`, bloquesMermaid(s)[0]]),
 ];
 for (const [nombre, codigo] of salidas) writeFileSync(join(dirMmd, `${nombre}.mmd`), conTema(codigo) + '\n');
 

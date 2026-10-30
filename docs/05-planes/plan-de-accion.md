@@ -117,6 +117,7 @@ Sprint 3.
 
 ## Registro de cambios
 
+- 2026-10-30: fila 23, los diagramas del complemento se redibujaron a mano en SVG (estados de la donación, capas de la API y cola de correo) y el documento explica cómo leer cada uno ([informe](../06-operacion/sesiones/2026-10-30-complemento-sustentacion.md)).
 - 2026-10-30: fila 23, se fusionó el PR 185 y Resend envió en local el correo de confirmación de un Donador al primer intento; las capturas entraron a la ficha ([informe](../06-operacion/sesiones/2026-10-30-complemento-sustentacion.md)).
 - 2026-10-30: fila 23 nueva, el complemento de la sustentación: diagramas, ADR-0023, ficha de concurrencia y correo con Resend; quedó anotado P-089 ([informe](../06-operacion/sesiones/2026-10-30-complemento-sustentacion.md)).
 - 2026-10-30: filas 3 a 7, 10 y 20. La sustentación y la Review del Sprint 2 pasan al 30 y el Planning del Sprint 3 al 2 de noviembre; Joseph terminó la ronda de pruebas sin hallazgos (#58 cerrado) y el escáner leyó en el teléfono (#40 cerrado, P-037 resuelto); la fila 3 quedó descartada con P-012 y los issues 45, 23 y 21 ([informe](../06-operacion/sesiones/2026-10-30-plan-al-dia.md)).

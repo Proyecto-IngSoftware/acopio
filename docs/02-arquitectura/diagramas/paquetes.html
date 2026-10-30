@@ -157,10 +157,56 @@ figcaption p { color: var(--muted); }
   <figure>
     <h2>2. Paquetes de la API</h2>
     <div class="lamina">
-      <svg viewBox="0 0 1200 1100" role="img" aria-label="Los módulos de dominio de la API se apilan en capas: importacion arriba, luego motor y turnos, luego comprobantes e inventario, luego acopios y catálogo. Todos importan hacia abajo; ningún módulo de abajo importa a uno de arriba.">
+      <svg viewBox="-200 0 1400 1100" role="img" aria-label="Los módulos de dominio de la API se apilan en capas: importacion arriba, luego motor y turnos, luego comprobantes e inventario, luego acopios y catálogo. Todos importan hacia abajo; ningún módulo de abajo importa a uno de arriba.">
         <defs>
           <marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
         </defs>
+
+        <!-- riel de capas: qué hay en cada franja y hacia dónde van las dependencias -->
+        <g style="fill:var(--inner);stroke:var(--pkg-line)">
+          <rect x="-160" y="30" width="160" height="140" rx="6"/>
+          <rect x="-160" y="230" width="160" height="140" rx="6"/>
+          <rect x="-160" y="430" width="160" height="140" rx="6"/>
+          <rect x="-160" y="630" width="160" height="140" rx="6"/>
+          <rect x="-160" y="825" width="160" height="120" rx="6"/>
+          <rect x="-160" y="985" width="160" height="100" rx="6"/>
+        </g>
+        <g style="fill:var(--accent)">
+          <rect x="-160" y="30" width="5" height="140"/>
+          <rect x="-160" y="230" width="5" height="140"/>
+          <rect x="-160" y="430" width="5" height="140"/>
+          <rect x="-160" y="630" width="5" height="140"/>
+          <rect x="-160" y="825" width="5" height="120"/>
+          <rect x="-160" y="985" width="5" height="100"/>
+        </g>
+        <g style="font:600 12px var(--mono);fill:var(--accent)" letter-spacing=".06em">
+          <text x="-145" y="56">CAPA 1</text>
+          <text x="-145" y="256">CAPA 2</text>
+          <text x="-145" y="456">CAPA 3</text>
+          <text x="-145" y="656">CAPA 4</text>
+          <text x="-145" y="851">CAPA 5</text>
+          <text x="-145" y="1011">BASE COMÚN</text>
+        </g>
+        <g style="font:600 14px var(--sans);fill:currentColor">
+          <text x="-145" y="78">Integración</text>
+          <text x="-145" y="278">Procesos</text>
+          <text x="-145" y="478">Registro</text>
+          <text x="-145" y="678">Red y catálogo</text>
+          <text x="-145" y="873">Transversales</text>
+          <text x="-145" y="1033">Sin dominio</text>
+        </g>
+        <g style="font:12.5px var(--sans);fill:var(--muted)">
+          <text x="-145" y="100">trae puntos de</text><text x="-145" y="117">fuentes externas;</text><text x="-145" y="134">nadie la importa</text>
+          <text x="-145" y="300">combinan datos de</text><text x="-145" y="317">varios módulos:</text><text x="-145" y="334">necesidad, turnos</text>
+          <text x="-145" y="500">lo que entra y sale</text><text x="-145" y="517">de cada acopio:</text><text x="-145" y="534">donaciones, saldos</text>
+          <text x="-145" y="700">dónde y qué:</text><text x="-145" y="717">acopios, zonas,</text><text x="-145" y="734">categorías</text>
+          <text x="-145" y="895">los usan todos;</text><text x="-145" y="912">no importan ningún</text><text x="-145" y="929">módulo de dominio</text>
+          <text x="-145" y="1055">tipos, errores,</text><text x="-145" y="1072">Prisma, entorno</text>
+        </g>
+        <g style="stroke:var(--accent);fill:none" stroke-width="2">
+          <line x1="-182" y1="40" x2="-182" y2="1070" marker-end="url(#m2)" style="color:var(--accent)"/>
+        </g>
+        <text transform="translate(-188 560) rotate(-90)" text-anchor="middle" style="font:600 12.5px var(--sans);fill:var(--accent)">las dependencias bajan o van de lado, nunca suben · depcruise lo revisa en CI</text>
 
         <!-- grupo de dominio -->
         <rect x="15" y="8" width="1170" height="772" rx="8" style="fill:none;stroke:var(--pkg-line)" stroke-dasharray="8 6"/>

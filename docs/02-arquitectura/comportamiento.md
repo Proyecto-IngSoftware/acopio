@@ -8,54 +8,49 @@ actualizado: 2026-10-30
 
 # Comportamiento
 
-Diagramas de comportamiento de lo que ya está construido. Los PNG salen de esta nota con
-`node diagramas/build.mjs` y `node diagramas/renderizar.mjs`, igual que los entidad-relación y el
-C4.
+Diagramas de comportamiento de lo que ya está construido. Se dibujan a mano en SVG en
+[diagramas/comportamiento.html](diagramas/comportamiento.html) y se exportan a PNG con
+`node diagramas/exportar-complemento.mjs`, igual que el diagrama de paquetes.
 
 ## Ciclo de vida de la donación
 
-```mermaid
-stateDiagram-v2
-    [*] --> PREPARADO : Donador prepara la donación<br/>[acopio abierto, menos de 5 preparadas]<br/>/ folio y QR
-    PREPARADO --> CANCELADO : Donador cancela, o tarea diaria 00:15<br/>[7 días sin entregar]
-    PREPARADO --> PENDIENTE : Operador recibe<br/>[acopio asignado, cada línea confirmada]<br/>/ entradas al inventario
-    PREPARADO --> PENDIENTE : Auditor vincula entradas<br/>[mismo acopio, sin otra donación]
-    note right of PENDIENTE : El Auditor puede vincular más entradas<br/>sin que cambie el estado
-    PENDIENTE --> CONCILIADO : Auditor concilia<br/>[al menos una entrada vinculada]
-    PENDIENTE --> RECHAZADO : Auditor rechaza con motivo<br/>/ correo al Donador
-    RECHAZADO --> PENDIENTE : Auditor revierte el rechazo
-    CONCILIADO --> [*]
-    CANCELADO --> [*]
-```
+![Estados de la donación: PREPARADO, PENDIENTE, CONCILIADO, RECHAZADO y CANCELADO, con nueve transiciones numeradas y coloreadas según quién las dispara.](../assets/diagramas/comportamiento-01-estados-de-la-donacion.png)
 
 El diagrama sigue a una donación (tabla `comprobante`, enum `EstadoComprobante`) desde que el
 Donador la prepara en el portal hasta que un Auditor la concilia contra las entradas de
-inventario o la rechaza. Corresponde a la historia
+inventario, la rechaza, o hasta que se cancela. Corresponde a la historia
 [HU-006](../01-requerimientos/historias/README.md) («Comprobar que mi donación llegó») y a los
-requerimientos RF-CMP-001B (preparar), RF-CMP-001C (recibir), RF-CMP-004 (conciliar), RF-CMP-005
-(rechazar) y RF-CMP-006 (seguimiento por folio), descritos en
-[comprobantes.md](../01-requerimientos/funcionales/comprobantes.md). Las guardas son reglas de
-negocio que la API hace cumplir: un Donador tiene como máximo cinco donaciones preparadas, una
-preparada vence a los siete días, solo el Operador asignado al acopio la recibe y nadie concilia
-sin una entrada vinculada. Elegimos un diagrama de estados porque en la donación intervienen
-cuatro actores (Donador, Operador, Auditor y una tarea programada), y lo que cada uno puede hacer
-depende del estado en que la encuentra. En un diagrama de actividades esas reglas quedarían
-repartidas entre carriles, y costaría ver que un rechazo se puede revertir y una conciliación no.
+requerimientos RF-CMP-001B, RF-CMP-001C, RF-CMP-004, RF-CMP-005 y RF-CMP-006 de
+[comprobantes.md](../01-requerimientos/funcionales/comprobantes.md). Es un diagrama de estados
+porque en la donación intervienen cuatro actores (Donador, Operador, Auditor y una tarea
+programada) y lo que cada uno puede hacer depende del estado en que la encuentra.
+
+El color de cada flecha dice quién dispara el cambio, y cada etiqueta sigue la notación UML
+«evento [guarda] / efecto». Las cajas grises de borde grueso son estados finales. Los números son
+los de esta tabla:
+
+| # | Transición | Quién | Guarda que exige la API | Método en `modulos/comprobantes/` |
+|---|---|---|---|---|
+| 1 | inicio → PREPARADO | Donador | El acopio está abierto y el Donador tiene menos de 5 donaciones preparadas | `DonacionesService.crear` |
+| 2 | PREPARADO → PENDIENTE | Operador | Tiene asignado ese acopio y confirma cada línea una vez | `RecepcionService.recibir` |
+| 3 | PREPARADO → PENDIENTE | Auditor o Admin | Las entradas son del mismo acopio y no pertenecen a otra donación | `ConciliacionService.vincular` |
+| 4 | PENDIENTE → PENDIENTE | Auditor o Admin | Igual que 3 | `ConciliacionService.vincular` |
+| 5 | PENDIENTE → CONCILIADO | Auditor o Admin | Hay al menos una entrada vinculada | `ConciliacionService.conciliar` |
+| 6 | PENDIENTE → RECHAZADO | Auditor o Admin | Indica un motivo; si el Donador tiene correo, se encola el aviso | `ConciliacionService.rechazar` |
+| 7 | RECHAZADO → PENDIENTE | Auditor o Admin | El acopio está en su alcance | `ConciliacionService.revertirRechazo` |
+| 8 | PREPARADO → CANCELADO | Donador | La donación es suya | `DonacionesService.cancelar` |
+| 9 | PREPARADO → CANCELADO | Tarea `preparadas-vencidas`, 00:15 hora de Colombia | Pasaron 7 días sin entregarla | `TareasCustodiaService.cancelarVencidas` |
+
+Los límites de 5 preparadas y 7 días son los valores por defecto de `PREPARADAS_MAXIMO` y
+`PREPARADA_VIGENCIA_DIAS` (`apps/api/src/config/entorno.ts`).
 
 Cada cambio de estado exige el estado anterior en el mismo `UPDATE` (`cambiarSiEstado` del DAO de
 comprobantes). Si el Operador recibe un folio en el mismo instante en que la tarea diaria lo
-cancela, una de las dos operaciones ya no encuentra la fila en `PREPARADO` y no cambia nada.
+cancela (flechas 2 y 9), una de las dos operaciones ya no encuentra la fila en `PREPARADO` y no
+cambia nada.
 
-| Transición | Quién | Dónde vive en el código |
-|---|---|---|
-| inicio → PREPARADO | Donador | `DonacionesService.crear` (`comprobantes/donaciones.service.ts`) |
-| PREPARADO → CANCELADO | Donador | `DonacionesService.cancelar` |
-| PREPARADO → CANCELADO | Tarea `preparadas-vencidas`, 00:15 hora de Colombia | `TareasCustodiaService.cancelarVencidas` (`tareas-custodia.service.ts`) |
-| PREPARADO → PENDIENTE | Operador del acopio | `RecepcionService.recibir` (`recepcion.service.ts`) |
-| PREPARADO o PENDIENTE → PENDIENTE | Auditor o Admin con el acopio en su alcance | `ConciliacionService.vincular` (`conciliacion.service.ts`) |
-| PENDIENTE → CONCILIADO | Auditor o Admin | `ConciliacionService.conciliar` |
-| PENDIENTE → RECHAZADO | Auditor o Admin | `ConciliacionService.rechazar`, que encola el correo al Donador si tiene correo real |
-| RECHAZADO → PENDIENTE | Auditor o Admin | `ConciliacionService.revertirRechazo` |
+## Cola de correo
 
-Los límites de cinco preparadas y siete días son los valores por defecto de `PREPARADAS_MAXIMO` y
-`PREPARADA_VIGENCIA_DIAS` (`apps/api/src/config/entorno.ts`).
+El diagrama de productores, cola y consumidor de `correo_saliente` está en
+[diagramas/concurrencia.html](diagramas/concurrencia.html), y su explicación en la sección 3 del
+[complemento de la sustentación](../entregas/complemento-sustentacion.md).
