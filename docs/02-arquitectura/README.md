@@ -3,7 +3,7 @@ title: "Arquitectura — índice"
 type: moc
 tags: [moc, arquitectura]
 estado: vigente
-actualizado: 2026-10-09
+actualizado: 2026-10-30
 ---
 
 # Arquitectura — índice
@@ -12,6 +12,7 @@ actualizado: 2026-10-09
 |---|---|
 | [vista-general.md](vista-general.md) | Cómo encajan las piezas: C4, contenedores, módulos, dependencias |
 | [modelo-datos.md](modelo-datos.md) | Qué tablas hay, qué invariantes se hacen cumplir y dónde |
+| [comportamiento.md](comportamiento.md) | Cómo cambia de estado una donación, quién dispara cada cambio y dónde está en el código |
 | [patrones-y-practicas.md](patrones-y-practicas.md) | Qué patrones usa el código, cuáles se descartaron y qué hay para reutilizar antes de escribir algo nuevo |
 | [adr/](adr/) | Por qué se decidió cada cosa |
 | [diagramas/](diagramas/diagramas-acopio.html) | Los ocho clústeres entidad-relación y el C4, generados desde estas notas con `node diagramas/build.mjs`; los PNG están en [assets/diagramas](../assets/diagramas) |
@@ -37,6 +38,7 @@ actualizado: 2026-10-09
 | [0015](adr/ADR-0015-saldo-en-tabla-por-disparador.md) | El saldo vive en una tabla que mantiene un disparador |
 | [0016](adr/ADR-0016-service-worker-con-vite-plugin-pwa.md) | La captura sin conexión usa un service worker de vite-plugin-pwa |
 | [0017](adr/ADR-0017-factura-servida-por-la-api.md) | La API sirve la foto de la factura y Garage no se expone |
+| [0023](adr/ADR-0023-organizacion-en-paquetes.md) | Organización del código en paquetes, el «ADR-002» del curso |
 
 ## La decisión de la que cuelga todo lo demás
 
