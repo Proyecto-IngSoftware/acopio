@@ -46,7 +46,7 @@ Resend, que hace falta para mostrar en vivo el punto de concurrencia.
 | 1. Diagrama de paquetes | ✅ Etiqueta de `AlmacenamientoService` y PNG regenerados |
 | 2. ADR-0023 | ✅ Con fila en los dos índices |
 | 3. Diagrama de estados | ✅ En [comportamiento.md](../02-arquitectura/comportamiento.md); `build.mjs` lo extrae como `comportamiento-01-…` |
-| 4. Correo con Resend | 🟡 Probado en local: el correo de confirmación de un Donador quedó `ENVIADO` al primer intento y llegó a `contacto@josephqaz.dev`. Faltan las variables del panel de Dokploy |
+| 4. Correo con Resend | ✅ Probado en local (`ENVIADO` al primer intento) y en el servidor: con las variables en Dokploy, el correo de confirmación de un Donador llegó a `contacto@josephqaz.dev` con el enlace del servidor, y la cuenta quedó confirmada |
 | 5. Ficha de concurrencia | ✅ Con las capturas de la fila y de la bandeja. Limitación anotada como P-089 |
 | 6. Documento y cierre | ✅ Word generado y unido; PR 185 y PR de la evidencia |
 

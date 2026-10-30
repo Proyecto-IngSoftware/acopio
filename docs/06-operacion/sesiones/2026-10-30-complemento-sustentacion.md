@@ -74,15 +74,13 @@ de una invitación porque en la base local la contraseña del administrador ya n
 
 ## Pendiente
 
-- Encender Resend en el servidor de pruebas
-  ([plan, tarea 4](../../05-planes/2026-10-30-complemento-sustentacion.md),
-  [plan de acción, fila 23](../../05-planes/plan-de-accion.md)).
 - Cola de correo con dos instancias de la API ([P-089](../../01-requerimientos/pendientes.md)).
 - El issue [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26) (remitente de correo)
   queda con el remitente decidido; el resto del issue sigue abierto.
 
 ## Depende de Joseph
 
-- La API key de Resend en `.env` y en el panel de Dokploy de `acopio-app-yrtfbo`, con
-  `CORREO_ACTIVO=true` y las variables de `.env.example`, y redesplegar
-  ([P-055](../../01-requerimientos/pendientes.md)).
+Nada pendiente. Joseph puso la API key en el `.env` y las variables de Resend en Dokploy. Un
+registro de Donador en el servidor (06:58 hora de Colombia) llegó a `contacto@josephqaz.dev` con
+el enlace del servidor, y Joseph confirmó la cuenta
+([P-055](../../01-requerimientos/pendientes.md)).
