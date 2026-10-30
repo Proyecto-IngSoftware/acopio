@@ -121,6 +121,6 @@ dos apps usaran la misma versión de las fórmulas.
 - `motor` ya depende de siete módulos (`acopios`, `almacenamiento`, `auditoria`, `catalogo`,
   `comprobantes`, `identidad` e `inventario`). Si sigue creciendo, convendría partirlo, por
   ejemplo en cálculo y remisiones.
-- La cola de correo se consume con una bandera en memoria, que solo protege una instancia de la
-  API ([P-089](../../01-requerimientos/pendientes.md)). Antes de correr dos instancias hay que
-  arreglarlo.
+- La cola de correo se consumía con una bandera en memoria, que solo protegía una instancia de la
+  API. Se resolvió el mismo 30 de octubre: el lote se reclama con `FOR UPDATE SKIP LOCKED`
+  ([P-089](../../01-requerimientos/pendientes.md)).

@@ -1,7 +1,9 @@
+import { vi } from 'vitest';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { cuerpoDe, peticiones, responderSegun } from '../pruebas/utilidades';
+import { retoDePrueba } from '../pruebas/datos-captcha';
 import { jornadaDe } from '../pruebas/datos-turnos';
 import {
   useAjustarCupos,
@@ -53,8 +55,9 @@ it('useConsultarReserva sin secreto no llama a la API', async () => {
   expect(peticiones()).toEqual([]);
 });
 
-it('useReservar manda los datos con el consentimiento', async () => {
+it('useReservar manda los datos con el consentimiento y la prueba del captcha', async () => {
   responderSegun({
+    'GET /api/captcha/reto': await retoDePrueba(),
     'POST /api/turnos/jornadas/*/reservas': { codigo: 'K7QM4XPA', secreto: 'x', jornada: {} },
   });
   const { result } = renderHook(() => useReservar('j1'), { wrapper: conConsultas() });
@@ -66,6 +69,11 @@ it('useReservar manda los datos con el consentimiento', async () => {
     perfilDeclarado: false,
     consentimiento: true,
   });
+  const reserva = vi
+    .mocked(globalThis.fetch)
+    .mock.calls.map(([p]) => p as Request)
+    .find((p) => p.method === 'POST');
+  expect(reserva?.headers.get('X-Captcha')).toMatch(/^[A-Za-z0-9+/=]{40,}$/);
 });
 
 it('useJornadasGestion pide la pestaña', async () => {

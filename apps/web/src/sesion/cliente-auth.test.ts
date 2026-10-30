@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 import { alPerderSesion, ErrorApi } from '../api/cliente';
-import { responderJson } from '../pruebas/utilidades';
+import { conEstado, responderJson, responderSegun } from '../pruebas/utilidades';
+import { retoDePrueba } from '../pruebas/datos-captcha';
 import { clienteAuthLocal } from './cliente-auth';
 
 const USUARIO = { id: 'u1', username: 'd.mendez', nombre: 'Daniela Méndez', rol: 'OPERADOR' };
@@ -66,12 +67,16 @@ it('un 401 en otra llamada avisa que se perdió la sesión', async () => {
 describe('registro y sesión del Donador', () => {
   const DONADOR = { id: 'u9', username: null, nombre: 'Ana Pérez', rol: 'DONADOR' };
 
-  it('registrarDonador envía nombre y correo', async () => {
-    responderJson({ mensaje: 'Revisa tu correo' }, 202);
+  it('registrarDonador resuelve el captcha y envía nombre y correo', async () => {
+    responderSegun({
+      'GET /api/captcha/reto': await retoDePrueba(),
+      'POST /api/auth/registro': conEstado(202, { mensaje: 'Revisa tu correo' }),
+    });
     await expect(clienteAuthLocal.registrarDonador('Ana Pérez', 'ana@correo.co')).resolves.toBe(
       undefined,
     );
-    const p = peticion();
+    const p = peticion(1);
+    expect(p.headers.get('X-Captcha')).toMatch(/^[A-Za-z0-9+/=]{40,}$/);
     expect(p.method).toBe('POST');
     expect(p.url).toMatch(/\/api\/auth\/registro$/);
     expect(await p.json()).toEqual({ nombre: 'Ana Pérez', correo: 'ana@correo.co' });

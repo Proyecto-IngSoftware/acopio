@@ -1241,7 +1241,13 @@ antes de escalar a dos. La ficha de concurrencia del
 [complemento](../entregas/complemento-sustentacion.md) lo declara como limitación, y el
 [ADR-0023](../02-arquitectura/adr/ADR-0023-organizacion-en-paquetes.md) como algo que podría
 requerir ajustes.
-**Estado:** ABIERTO.
+**Estado:** RESUELTO el 2026-10-30 → `CorreoSalienteDao.reclamar` toma el lote con un solo
+`UPDATE … WHERE id IN (SELECT … FOR UPDATE SKIP LOCKED)` y corre su `enviar_despues_de` cinco
+minutos (`PRESTAMO_MS`). Otra instancia salta las filas bloqueadas y, al verlas libres, ya no
+están listas; si quien las tomó se cae, el préstamo vence y se reintentan. La prueba de
+integración «con dos instancias a la vez, cada correo sale una sola vez» falló con el código
+anterior (seis correos repetidos) y pasa con este
+([plan](../05-planes/2026-10-30-captcha-y-cola-segura.md)).
 
 ---
 

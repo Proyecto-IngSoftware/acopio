@@ -1,5 +1,6 @@
 import { Global, Module } from '@nestjs/common';
 import { ENTORNO } from '../../config/entorno';
+import { CaptchaModule } from '../captcha/captcha.module';
 import { AsignacionDao } from './dao/asignacion.dao';
 import { IdentidadLocalDao } from './dao/identidad-local.dao';
 import { InvitacionDao } from './dao/invitacion.dao';
@@ -24,6 +25,7 @@ import { UsuariosService } from './usuarios/usuarios.service';
 /** Autenticación, autorización, usuarios e invitaciones. Todos los módulos dependen de él. */
 @Global()
 @Module({
+  imports: [CaptchaModule],
   controllers: [SesionController, DonadorController, InvitacionesController, UsuariosController],
   providers: [
     UsuarioDao,

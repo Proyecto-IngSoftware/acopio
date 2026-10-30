@@ -28,7 +28,9 @@ async function llenar() {
 }
 
 it('pide nombre, correo, teléfono opcional y el consentimiento con enlace a la política', async () => {
-  responderSegun({ 'GET /api/turnos/jornadas/j1': jornadaDe() });
+  responderSegun({
+    'GET /api/turnos/jornadas/j1': jornadaDe(),
+  });
   const { container } = pantalla();
   expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent('Armar mercados');
   expect(screen.getByText(/Puede haber gente que llegó sin reserva/)).toBeInTheDocument();
@@ -61,6 +63,7 @@ it('si la jornada pide un perfil, la casilla del perfil es obligatoria y avisa q
 
 it('al reservar va a la reserva con el secreto después del #', async () => {
   responderSegun({
+    'GET /api/captcha/reto': { reto: null },
     'GET /api/turnos/jornadas/j1': jornadaDe(),
     'POST /api/turnos/jornadas/j1/reservas': {
       codigo: 'K7QM4XPA',
@@ -87,6 +90,7 @@ it('al reservar va a la reserva con el secreto después del #', async () => {
 
 it('si otra persona tomó el último cupo, muestra el mensaje y conserva lo escrito', async () => {
   responderSegun({
+    'GET /api/captcha/reto': { reto: null },
     'GET /api/turnos/jornadas/j1': jornadaDe(),
     'POST /api/turnos/jornadas/j1/reservas': conEstado(409, {
       estado: 409,
@@ -105,6 +109,7 @@ it('si otra persona tomó el último cupo, muestra el mensaje y conserva lo escr
 
 it('un correo que ya reservó muestra el mensaje de la API', async () => {
   responderSegun({
+    'GET /api/captcha/reto': { reto: null },
     'GET /api/turnos/jornadas/j1': jornadaDe(),
     'POST /api/turnos/jornadas/j1/reservas': conEstado(409, {
       estado: 409,
@@ -156,7 +161,9 @@ it('un 500 al cargar la jornada no dice que no existe y deja reintentar', async 
 });
 
 it('no deja reservar con un nombre de una letra ni un teléfono con paréntesis', async () => {
-  responderSegun({ 'GET /api/turnos/jornadas/j1': jornadaDe() });
+  responderSegun({
+    'GET /api/turnos/jornadas/j1': jornadaDe(),
+  });
   pantalla();
   await userEvent.type(await screen.findByLabelText('Nombre'), 'A');
   await userEvent.type(screen.getByLabelText('Correo'), 'ana@correo.co');
@@ -172,6 +179,7 @@ it('no deja reservar con un nombre de una letra ni un teléfono con paréntesis'
 
 it('si se llenó al enviar, conserva lo escrito y ofrece ver otras jornadas', async () => {
   responderSegun({
+    'GET /api/captcha/reto': { reto: null },
     'GET /api/turnos/jornadas/j1': jornadaDe(),
     'POST /api/turnos/jornadas/j1/reservas': conEstado(409, {
       estado: 409,

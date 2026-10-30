@@ -8,6 +8,7 @@ import { Publico } from '../../../comun/autorizacion/decoradores';
 import { COOKIE_SESION, opcionesCookie } from '../../../comun/cookie-sesion';
 import { ErrorDto, MensajeDto, SesionDto } from '../../../comun/respuestas';
 import { ENTORNO, type Entorno } from '../../../config/entorno';
+import { RequiereCaptcha } from '../../captcha/captcha.guard';
 import { LONGITUD_MINIMA } from '../invitaciones/politica-contrasena';
 import { DonadorService } from './donador.service';
 
@@ -40,6 +41,7 @@ export class DonadorController {
   /** Crea la cuenta de un Donador y envía el enlace de confirmación (RF-IDE-013). */
   @Publico()
   @Throttle({ default: { limit: 5, ttl: 60_000 } })
+  @RequiereCaptcha()
   @Post('registro')
   @HttpCode(202)
   @ApiResponse({ status: 202, type: MensajeDto })

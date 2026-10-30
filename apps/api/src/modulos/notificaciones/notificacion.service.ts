@@ -9,6 +9,9 @@ import type { CorreoRedactado } from './plantillas';
 /** Después de este número de intentos el correo queda FALLIDO sin más reintentos. */
 export const MAX_INTENTOS = 8;
 
+/** Cuánto tiempo queda tomado un lote: si la instancia se cae enviándolo, vuelve a la cola. */
+export const PRESTAMO_MS = 5 * 60_000;
+
 /** Espera antes del siguiente intento: 1, 2, 4, 8… minutos, hasta 2 horas. */
 export function esperaTrasIntento(intentos: number): number {
   return Math.min(2 ** Math.max(intentos - 1, 0), 120) * 60_000;
@@ -67,7 +70,7 @@ export class NotificacionService implements OnApplicationBootstrap {
     }
     this.procesando = true;
     try {
-      const lote = await this.cola.listos(MAX_INTENTOS, 50);
+      const lote = await this.cola.reclamar(MAX_INTENTOS, 50, PRESTAMO_MS);
       let enviados = 0;
       for (const correo of lote) {
         if (await this.enviar(transporte, correo)) enviados++;

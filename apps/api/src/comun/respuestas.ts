@@ -36,6 +36,15 @@ export class SesionDto extends crearDto(
 
 export class MensajeDto extends crearDto(z.object({ mensaje: z.string() })) {}
 
+/** Reto de ALTCHA (ADR-0024); null con el captcha apagado. */
+export class RetoCaptchaDto extends crearDto(
+  z.object({
+    reto: z
+      .object({ parameters: z.record(z.string(), z.unknown()), signature: z.string().optional() })
+      .nullable(),
+  }),
+) {}
+
 export class YoDto extends crearDto(
   z.object({
     id: z.uuid(),

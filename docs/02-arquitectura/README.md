@@ -39,6 +39,7 @@ actualizado: 2026-10-30
 | [0016](adr/ADR-0016-service-worker-con-vite-plugin-pwa.md) | La captura sin conexión usa un service worker de vite-plugin-pwa |
 | [0017](adr/ADR-0017-factura-servida-por-la-api.md) | La API sirve la foto de la factura y Garage no se expone |
 | [0023](adr/ADR-0023-organizacion-en-paquetes.md) | Organización del código en paquetes, el «ADR-002» del curso |
+| [0024](adr/ADR-0024-captcha-con-altcha.md) | Captcha con ALTCHA en los formularios públicos |
 
 ## La decisión de la que cuelga todo lo demás
 

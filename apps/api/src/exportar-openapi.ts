@@ -23,6 +23,7 @@ async function exportar(): Promise<void> {
     SMTP_HOST: 'localhost',
     SMTP_PORT: '1025',
     CORREO_REMITENTE: 'Acopio <no-responder@acopio.local>',
+    CAPTCHA_LLAVE: 'solo-para-exportar-el-contrato-openapi',
     S3_ENDPOINT: 'http://localhost:3900',
     S3_REGION: 'garage',
     S3_BUCKET: 'comprobantes',

@@ -1,6 +1,8 @@
 import '../src/config/zod-es';
 import type { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
+import { solveChallenge } from 'altcha-lib';
+import { deriveKey } from 'altcha-lib/algorithms/sha';
 import request from 'supertest';
 import { AppModule } from '../src/app.module';
 import { LimiteIntentosGuard } from '../src/comun/limite-intentos.guard';
@@ -229,5 +231,27 @@ export async function crearDonador(a: AppPrueba) {
     correo,
     contrasena,
     token: sesion!.accessToken,
+  };
+}
+
+/** Una prueba de ALTCHA válida para el encabezado X-Captcha: pide un reto y lo resuelve (ADR-0024). */
+export async function captcha(a: AppPrueba): Promise<string> {
+  const { body } = await a.http().get('/api/captcha/reto').expect(200);
+  const solution = await solveChallenge({ challenge: body.reto, deriveKey });
+  if (!solution) throw new Error('No se pudo resolver el reto del captcha');
+  return Buffer.from(JSON.stringify({ challenge: body.reto, solution })).toString('base64');
+}
+
+/**
+ * Resuelve de antemano `n` pruebas de ALTCHA y devuelve quién las entrega una por una, sin
+ * esperar: así una petición de supertest puede llevar el encabezado y seguir encadenando .expect.
+ */
+export async function reservaDeCaptchas(a: AppPrueba, n: number): Promise<() => string> {
+  const libres: string[] = [];
+  for (let i = 0; i < n; i++) libres.push(await captcha(a));
+  return () => {
+    const prueba = libres.shift();
+    if (!prueba) throw new Error(`Se acabaron las ${n} pruebas de captcha reservadas`);
+    return prueba;
   };
 }

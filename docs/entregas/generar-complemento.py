@@ -145,6 +145,10 @@ def tabla(filas, anchos, centradas=(), tam=8, relleno_fila=None):
     t = doc.add_table(rows=len(filas), cols=len(filas[0]))
     t.style = "Table Grid"
     t.alignment = WD_TABLE_ALIGNMENT.CENTER
+    # LibreOffice toma los anchos de la cuadrícula (gridCol), no los de cada celda
+    t.autofit = False
+    for columna, a in zip(t.columns, anchos):
+        columna.width = Cm(a)
     for i, fila in enumerate(filas):
         for j, texto in enumerate(fila):
             celda = t.cell(i, j)
@@ -152,6 +156,8 @@ def tabla(filas, anchos, centradas=(), tam=8, relleno_fila=None):
             p = celda.paragraphs[0]
             p.paragraph_format.space_after = Pt(2)
             p.alignment = WD_ALIGN_PARAGRAPH.CENTER if j in centradas else WD_ALIGN_PARAGRAPH.LEFT
+            # Un nombre como Clase.metodo puede partirse después del punto
+            texto = re.sub(r"(?<=[A-Za-z])\.(?=[A-Za-z])", ".\u200b", texto)
             if i == 0:
                 sombrear(celda, MARCA)
                 escribir(p, texto, tam=tam, color=BLANCO, negrita=True)
@@ -336,10 +342,24 @@ def anchos_para(filas):
         return [4.2, 2.4, ancho - 6.6]
     if n == 2:
         return [4.0, ancho - 4.0]
-    return [ancho / n] * n
+    # Cada columna cabe al menos su palabra más larga (un nombre de método no se parte); el
+    # resto va a las columnas con texto corrido. 0,2 cm por carácter a 8 pt, con margen.
+    columnas = list(zip(*filas))
+    # Lo que no se puede partir: palabras, cortadas también en guiones y en Clase.metodo
+    partes = lambda c: re.split(r"[\s\-]+|(?<=[A-Za-z]\.)(?=[A-Za-z])", c) or [""]
+    largas = [max(len(p) for c in col for p in partes(c)) for col in columnas]
+    minimos = [max(1.0, n * 0.2 + 0.3) for n in largas]
+    pesos = [
+        max(0.5, sum(len(c) for c in col[1:]) / max(1, len(col) - 1) - n)
+        for col, n in zip(columnas, largas)
+    ]
+    sobra = ancho - sum(minimos)
+    if sobra <= 0:
+        return [m * ancho / sum(minimos) for m in minimos]
+    return [m + sobra * p / sum(pesos) for m, p in zip(minimos, pesos)]
 
 
-def volcar_md(md, nivel_base=1):
+def volcar_md(md, nivel_base=1, apaisar=True):
     """Vuelca Markdown. «## X» queda en el nivel `nivel_base`, «###» uno más abajo."""
     md = re.sub(r"<(https?://[^>]+)>", r"[\1](\1)", md)
     capturas = []
@@ -352,20 +372,44 @@ def volcar_md(md, nivel_base=1):
             galeria(capturas)
         capturas.clear()
 
-    for tipo, dato in bloques_md(md):
+    def apaisado(bloque):
+        tipo, dato = bloque
+        if tipo != "img" or "assets/diagramas" not in dato[1]:
+            return False
+        ancho, alto = tam_png(AQUI / dato[1])
+        return ancho > 1.4 * alto
+
+    bloques = list(bloques_md(md))
+    saltar = False
+    for k, (tipo, dato) in enumerate(bloques):
+        if saltar:
+            saltar = False
+            continue
         if tipo == "img" and "assets/diagramas" not in dato[1]:
             capturas.append((dato[0], AQUI / dato[1]))
             continue
         soltar()
-        if tipo in ("h2", "h3", "h4"):
+        siguiente = bloques[k + 1] if k + 1 < len(bloques) else None
+        if tipo in ("h2", "h3", "h4") and apaisar and siguiente and apaisado(siguiente):
+            # Un título seguido de un diagrama apaisado se va con él a la página horizontal,
+            # para no dejar la vertical anterior cortada por un título solo
+            nueva_seccion(True)
+            titulo(dato, min(3, nivel_base + int(tipo[1]) - 2))
+            figura(AQUI / siguiente[1][1], siguiente[1][0], alto_max=util(doc.sections[-1])[1] - 3.5)
+            nueva_seccion(False)
+            saltar = True
+        elif tipo in ("h2", "h3", "h4"):
             titulo(dato, min(3, nivel_base + int(tipo[1]) - 2))
         elif tipo == "img":
             # Un diagrama apaisado va solo en una página horizontal para que su texto se lea
             ancho, alto = tam_png(AQUI / dato[1])
-            if ancho > 1.4 * alto:
+            if apaisar and ancho > 1.4 * alto:
                 nueva_seccion(True)
                 figura(AQUI / dato[1], dato[0])
                 nueva_seccion(False)
+            elif not apaisar:
+                # Ya en una página horizontal con texto arriba: la figura cabe debajo
+                figura(AQUI / dato[1], dato[0], alto_max=util(doc.sections[-1])[1] - 6.5)
             else:
                 figura(AQUI / dato[1], dato[0])
         elif tipo == "p" and dato.startswith("Pendiente:"):
@@ -399,9 +443,14 @@ metadato("Institución", "Escuela Tecnológica Instituto Técnico Central (ETITC
 metadato("Integrantes", "Joseph · Brayan · Alejandra · Michael")
 metadato("Sustentación", "30 de octubre de 2026")
 metadato("Repositorio", REPO)
-salto_pagina()
 
-volcar_md(cuerpo)
+# La sección 1 abre con el diagrama del monorepo, que es apaisado: el título, su párrafo y el
+# diagrama van juntos en una página horizontal, sin dejar la vertical anterior casi vacía
+fin = cuerpo.index("\n", cuerpo.index("arquitectura-03-paquetes-del-monorepo.png"))
+nueva_seccion(True)
+volcar_md(cuerpo[:fin], apaisar=False)
+nueva_seccion(False)
+volcar_md(cuerpo[fin:])
 
 doc.core_properties.title = "Complemento de la sustentación del segundo corte"
 doc.core_properties.subject = "Acopio · Ingeniería de Software I · ETITC"

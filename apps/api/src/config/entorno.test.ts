@@ -14,6 +14,7 @@ const valido = {
   S3_BUCKET: 'comprobantes',
   S3_ACCESS_KEY: 'GK0',
   S3_SECRET_KEY: '0',
+  CAPTCHA_LLAVE: 'llave-de-prueba-de-al-menos-32-caracteres',
 };
 
 describe('leerEntorno', () => {
@@ -48,6 +49,27 @@ describe('leerEntorno', () => {
   it('con el correo encendido exige SMTP_HOST y CORREO_REMITENTE', () => {
     const { SMTP_HOST: _h, CORREO_REMITENTE: _r, ...sinCorreo } = valido;
     expect(() => leerEntorno(sinCorreo)).toThrow(/CORREO_ACTIVO=true exige SMTP_HOST/);
+  });
+
+  it('el captcha viene encendido y con la dificultad por defecto (ADR-0024)', () => {
+    const e = leerEntorno(valido);
+    expect(e.CAPTCHA_ACTIVO).toBe(true);
+    expect(e.CAPTCHA_DIFICULTAD).toBe(20_000);
+  });
+
+  it('con el captcha encendido exige una CAPTCHA_LLAVE de al menos 32 caracteres', () => {
+    const { CAPTCHA_LLAVE: _l, ...sinLlave } = valido;
+    expect(() => leerEntorno(sinLlave)).toThrow(/CAPTCHA_ACTIVO=true exige CAPTCHA_LLAVE/);
+    expect(() => leerEntorno({ ...valido, CAPTCHA_LLAVE: 'corta' })).toThrow();
+  });
+
+  it('con el captcha apagado no exige la llave', () => {
+    const { CAPTCHA_LLAVE: _l, ...sinLlave } = valido;
+    expect(leerEntorno({ ...sinLlave, CAPTCHA_ACTIVO: 'false' }).CAPTCHA_ACTIVO).toBe(false);
+    // El Compose pasa las variables sin definir como cadena vacía
+    expect(
+      leerEntorno({ ...valido, CAPTCHA_ACTIVO: 'false', CAPTCHA_LLAVE: '' }).CAPTCHA_LLAVE,
+    ).toBeUndefined();
   });
 
   it('la importación lee la copia guardada y la lectura programada viene apagada (pieza E)', () => {

@@ -35,6 +35,9 @@ export function entornoPruebas(): Record<string, string> {
     SMTP_HOST: '127.0.0.1',
     SMTP_PORT: '9',
     CORREO_REMITENTE: 'Acopio <no-responder@acopio.local>',
+    // El captcha corre en todas las suites; con dificultad mínima un reto se resuelve al instante
+    CAPTCHA_LLAVE: 'llave-del-captcha-solo-para-pruebas',
+    CAPTCHA_DIFICULTAD: '20',
     S3_ENDPOINT: 'http://localhost:3900',
     S3_REGION: 'garage',
     S3_BUCKET: 'pruebas',

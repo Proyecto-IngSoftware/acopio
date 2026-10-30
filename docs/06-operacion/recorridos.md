@@ -3,7 +3,7 @@ title: "Recorridos de punta a punta"
 type: operacion
 tags: [operacion, pruebas, web]
 estado: vigente
-actualizado: 2026-10-21
+actualizado: 2026-10-30
 ---
 
 # Recorridos de punta a punta
@@ -237,6 +237,14 @@ baja hasta la sección «Otras plataformas que ayudan» de `/causas` y, en `/map
 de Bogotá para que se vean los dos tipos de punto.
 
 ## Últimos resultados
+
+**2026-10-30, captcha con ALTCHA** (en local, API reconstruida con `servicios:todo`,
+`CAPTURAS=no`): `portal-turnos.mjs` 8 de 8 y `donador.mjs` 8 de 8, sin errores de página. Los dos
+envían formularios con captcha desde Chromium: la reserva de turno y el registro de Donador. La
+primera corrida de `donador.mjs` falló porque el correo de confirmación no llegaba a Mailpit: el
+`.env` apuntaba a Resend con `SMTP_SEGURO=true`, y el Compose de desarrollo cambiaba el servidor
+a Mailpit sin cambiar esa variable. `docker-compose.dev.yml` ahora fija también `SMTP_SEGURO`,
+`SMTP_USER` y `SMTP_PASSWORD` para Mailpit.
 
 **2026-10-21, contra el servidor de pruebas, con la línea visual** (fases 1 a 3 desplegadas,
 `CAPTURAS=no`, `SIN_CORREO=1`): `referenciados.mjs` 7 de 7, `portal-causas.mjs` 4 de 4,

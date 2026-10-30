@@ -5,6 +5,7 @@ import { PERFILES_VOLUNTARIO } from '@acopio/shared';
 import { z } from 'zod';
 import { Publico } from '../../comun/autorizacion/decoradores';
 import { crearDto } from '../../comun/dto';
+import { RequiereCaptcha } from '../captcha/captcha.guard';
 import { JornadaPublicaDto, ReservaCreadaDto, ReservaPublicaDto } from '../../comun/respuestas';
 import { JornadasService } from './jornadas.service';
 import { ReservasService } from './reservas.service';
@@ -61,6 +62,7 @@ export class PublicoController {
 
   @Post('jornadas/:id/reservas')
   @Throttle({ default: { limit: 5, ttl: 60_000 } })
+  @RequiereCaptcha()
   @ApiCreatedResponse({ type: ReservaCreadaDto })
   reservar(@Param('id', ParseUUIDPipe) id: string, @Body() d: ReservarDto) {
     return this.reservas.reservar(id, d);
