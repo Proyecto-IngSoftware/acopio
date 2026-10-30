@@ -29,7 +29,7 @@ El plan se corrige cada vez que pasa algo, no al final de la semana:
   con 1 si encuentra algo.
 - Al cerrar una sesión, el informe enlaza las filas que cambiaron.
 
-Estados de una fila: ✅ hecho, 🟡 en curso, ⬜ pendiente y ⛔ bloqueado. Todo lo ejecuta Joseph
+Estados de una fila: ✅ hecho, 🟡 en curso, ⬜ pendiente y ⛔ bloqueado. Una fila que Joseph saca del plan dice «descartada» y conserva la fecha en que lo decidió. Todo lo ejecuta Joseph
 (CLAUDE.md, «Flujo de trabajo»); los issues conservan el reparto por rol del curso.
 
 Si el tiempo no alcanza, se recorta en este orden: el Bloque 6, la pieza D y la deuda menor.
@@ -39,36 +39,36 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 
 | Fecha | Qué pasa |
 |---|---|
-| Viernes 23 de octubre | Sustentación del segundo corte y Review del Sprint 2 |
 | Domingo 25 de octubre | Fin del Sprint 2 ([P-047](../01-requerimientos/pendientes.md)) |
-| Lunes 26 de octubre | Planning del Sprint 3 |
+| Viernes 30 de octubre | Sustentación del segundo corte y Review del Sprint 2 (antes el 23) |
+| Lunes 2 de noviembre | Planning del Sprint 3, como dice el issue 51 |
 | Miércoles 21 de octubre | Pieza E desplegada en el servidor de pruebas (hecho el 19) |
 | Domingo 15 de noviembre | Pieza D del Bloque 1 |
 | Viernes 20 de noviembre | Review del Sprint 3 |
 | Domingo 29 de noviembre | Congelamiento y calidad |
 | Semana 18, hasta el 6 de diciembre | Entrega final y sustentación |
 
-## Ahora: hasta la sustentación del 23 de octubre
+## Ahora: hasta la sustentación del 30 de octubre
 
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
 | 1 | Fecha de la Review del Sprint 2: el viernes 23, según la guía ([P-072](../01-requerimientos/pendientes.md)) | P-072 | 2026-10-18 | ✅ |
 | 2 | Avance 5 en el Word de OneDrive: pantallas con su flujo, patrones, registro del Sprint 2 y enlace al repositorio. Generado y revisado renderizado. El 19 entraron las capturas nuevas de Causas y del mapa, con las plataformas y los puntos de RedAcopio, y el diagrama de paquetes con `importacion`. Ese mismo día entraron las capturas del tablero y del seguimiento, con el tablero al día. Llega a OneDrive con cada push al repositorio. Es una casilla del issue 47, que sigue abierto por la sustentación (fila 4) | — | 2026-10-22 | ✅ |
-| 3 | Lo que falta del Word de avances anteriores. Del Avance 4 ya está la captura del tablero; faltan el seguimiento del 9 de octubre con su captura, las filas de Brayan, Alejandra y Michael, la retrospectiva confirmada y regenerar el Word. Del Avance 2, la revisión de redacción ([P-012](../01-requerimientos/pendientes.md)) y la captura de la vista Board | #45, #23, #21 | 2026-10-22 | ⬜ |
-| 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes. La demo ya tiene el balance de la portada, los 85 puntos de RedAcopio en el mapa, las causas con su ilustración y los logos reales de sus fundaciones, y las otras plataformas con foto al final de Causas. El diagrama de paquetes tiene `importacion` desde el 19, medido con dependency-cruiser. Ese día, en el servidor, pasaron los recorridos públicos y entraron las cuatro cuentas de rol. También el 19 quedó una sola pantalla para entrar, `/entrar`, con la barra del portal. Falta que Joseph ensaye la presentación | #47 | 2026-10-23 | 🟡 |
-| 5 | Ronda de pruebas en el servidor, por rol, con los escenarios de `escenarios-por-rol.md`; cada hallazgo entra como issue `hallazgo`. El 19 se hicieron en el servidor los escenarios que no gastan la demo (#150 a #154). Quedan el 21 revisar el 15 (el 20 Sal seguía en «no recibir», como debe: la fecha es el último día sin recibir), y el 24 los que gastan datos: 7, 8, 18 a 20, 22, 23 y 28 a 31 | #58 | 2026-10-25 | 🟡 |
-| 6 | Cierre del Sprint 2: Review historia por historia el 23, seguimiento de la semana 12 con captura y retrospectiva con una acción para el Sprint 3 | #47 | 2026-10-25 | ⬜ |
+| 3 | Lo que falta del Word de avances anteriores. Del Avance 4 ya está la captura del tablero; faltan el seguimiento del 9 de octubre con su captura, las filas de Brayan, Alejandra y Michael, la retrospectiva confirmada y regenerar el Word. Del Avance 2, la revisión de redacción ([P-012](../01-requerimientos/pendientes.md)) y la captura de la vista Board. Joseph la descartó el 30 de octubre, con P-012 y los issues 45, 23 y 21 | #45, #23, #21 | 2026-10-30 | descartada |
+| 4 | Sustentación: proyecto en ejecución sobre la demo del servidor y diagrama de paquetes. La demo ya tiene el balance de la portada, los 85 puntos de RedAcopio en el mapa, las causas con su ilustración y los logos reales de sus fundaciones, y las otras plataformas con foto al final de Causas. El diagrama de paquetes tiene `importacion` desde el 19, medido con dependency-cruiser. Ese día, en el servidor, pasaron los recorridos públicos y entraron las cuatro cuentas de rol. También el 19 quedó una sola pantalla para entrar, `/entrar`, con la barra del portal. Falta que Joseph ensaye la presentación. Pasó del 23 al viernes 30 de octubre | #47 | 2026-10-30 | 🟡 |
+| 5 | Ronda de pruebas en el servidor, por rol, con los escenarios de `escenarios-por-rol.md`; cada hallazgo entra como issue `hallazgo`. El 19 se hicieron en el servidor los escenarios que no gastan la demo (#150 a #154). Quedan el 21 revisar el 15 (el 20 Sal seguía en «no recibir», como debe: la fecha es el último día sin recibir), y el 24 los que gastan datos: 7, 8, 18 a 20, 22, 23 y 28 a 31. Joseph terminó la ronda antes del 30, sin hallazgos nuevos | #58 | 2026-10-30 | ✅ |
+| 6 | Cierre del Sprint 2: Review historia por historia en la sustentación del 30, seguimiento de la semana 12 con captura y retrospectiva con una acción para el Sprint 3 | #47 | 2026-10-30 | ⬜ |
 | 21 | Mapa de necesidades: cada acopio de P5 con su etiqueta de falta, sobra, al día o no recibe, chips por estado, y voluntariado con vista de mapa por defecto ([plan](2026-10-20-mapa-de-necesidades.md)). Fusionado en `main` con el PR 168 y desplegado en el servidor. [P-086](../01-requerimientos/pendientes.md) y [P-087](../01-requerimientos/pendientes.md) quedaron resueltos con el PR 172 | — | 2026-10-20 | ✅ |
 
 ## Sprint 3: del 26 de octubre al 22 de noviembre
 
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
-| 7 | Planning del Sprint 3 | #51 | 2026-10-26 | ⬜ |
+| 7 | Planning del Sprint 3 | #51 | 2026-11-02 | ⬜ |
 | 8 | Pieza E, lo que queda: las cuatro casillas de RF-RED-011 (P-076), los menores de la revisión final (P-077) y las fotos de cuatro plataformas (P-078). Va antes de prender la lectura programada | P-076 | 2026-11-15 | ⬜ |
 | 9 | Pieza D: contenido del home, páginas legales y Open Graph, con su ADR. El balance de la portada (P-073) ya quedó hecho. Joseph la une a la pieza E: el Open Graph de la ficha del acopio, referenciado u operado, sigue a la ficha de la fila 8d | #50 | 2026-11-15 | ⬜ |
-| 10 | Escáner probado con un teléfono y un código real contra el servidor. El 20, en Android con Chrome, abría y no leía: pedía 640 × 480. Ahora pide 1920 × 1080 y enfoque continuo ([P-037](../01-requerimientos/pendientes.md)); falta repetir la prueba en el teléfono | #40 | 2026-11-15 | 🟡 |
-| 20 | Presentaciones, códigos de barras y unidades ([P-081](../01-requerimientos/pendientes.md), [plan](2026-10-20-presentaciones.md)). Fusionado en `main` el 20 de octubre con el PR 165. Falta comprobar el despliegue en el servidor y ajustar su demo ([P-082](../01-requerimientos/pendientes.md)). Joseph decide el tope del conteo ([P-083](../01-requerimientos/pendientes.md)) y la pantalla para editar presentaciones ([P-085](../01-requerimientos/pendientes.md)). C18 ya escanea con la cámara (PR 170); falta probarlo en el teléfono | #163 | 2026-11-15 | 🟡 |
+| 10 | Escáner probado con un teléfono y un código real contra el servidor. El 20, en Android con Chrome, abría y no leía: pedía 640 × 480. Ahora pide 1920 × 1080 y enfoque continuo ([P-037](../01-requerimientos/pendientes.md)). Joseph repitió la prueba en el teléfono antes del 30 y leyó el código | #40 | 2026-10-30 | ✅ |
+| 20 | Presentaciones, códigos de barras y unidades ([P-081](../01-requerimientos/pendientes.md), [plan](2026-10-20-presentaciones.md)). Fusionado en `main` el 20 de octubre con el PR 165. Falta comprobar el despliegue en el servidor y ajustar su demo ([P-082](../01-requerimientos/pendientes.md)). Joseph decide el tope del conteo ([P-083](../01-requerimientos/pendientes.md)) y la pantalla para editar presentaciones ([P-085](../01-requerimientos/pendientes.md)). C18 ya escanea con la cámara (PR 170), y el escáner leyó en el teléfono (fila 10) | #163 | 2026-11-15 | 🟡 |
 | 11 | Review y retrospectiva del Sprint 3 | #51 | 2026-11-20 | ⬜ |
 | 12 | Bloque 6: bitácora enriquecida, transparencia y publicaciones. Es lo primero que se recorta | #37 | 2026-11-22 | ⬜ |
 | 13 | Deuda de las revisiones: menores de los bloques 1 a 3 (P-034, P-038 y los del Bloque 3) y la imagen que falta en Garage (P-058). Los del cierre del Bloque 5 (P-070, P-071, #129) quedaron hechos el 18 de octubre. De la ronda por rol del 19: los datos de inventario de más de 6 horas (#151), el «no recibir» de un acopio ajeno (#152), estos dos hechos el 20 de octubre, y la frase de la bitácora para un cambio de fecha (#153). De la revisión de la entrada única, el correo de una cuenta activa y su credencial (P-080) quedó hecho el 19 de octubre | #43, #153 | 2026-11-22 | 🟡 |
@@ -116,6 +116,7 @@ Sprint 3.
 
 ## Registro de cambios
 
+- 2026-10-30: filas 3 a 7, 10 y 20. La sustentación y la Review del Sprint 2 pasan al 30 y el Planning del Sprint 3 al 2 de noviembre; Joseph terminó la ronda de pruebas sin hallazgos (#58 cerrado) y el escáner leyó en el teléfono (#40 cerrado, P-037 resuelto); la fila 3 quedó descartada con P-012 y los issues 45, 23 y 21 ([informe](../06-operacion/sesiones/2026-10-30-plan-al-dia.md)).
 - 2026-10-30: sin fila propia, la guía de la bóveda se alineó con la bóveda y se corrigieron seis errores de estructura ([informe](../06-operacion/sesiones/2026-10-30-alinear-boveda-obsidian.md)).
 - 2026-10-21: fila 22, se fusionaron la fase 3 (PR 180) y el arreglo de contraste AA (PR 181). Los recorridos que no gastan la demo pasaron en el servidor.
 - 2026-10-21: fila 22, la fase 3 de la línea visual (consola) quedó construida con su plan y su PR ([informe](../06-operacion/sesiones/2026-10-21-linea-visual-fase-3.md)).
