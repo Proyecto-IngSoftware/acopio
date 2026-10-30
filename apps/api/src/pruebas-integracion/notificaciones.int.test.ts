@@ -108,4 +108,26 @@ describe('notificaciones', () => {
     const correo = await a.prisma.correoSaliente.findUniqueOrThrow({ where: { id } });
     expect(correo.intentos).toBe(MAX_INTENTOS);
   });
+
+  it('con dos instancias a la vez, cada correo sale una sola vez (P-089)', async () => {
+    const destinatarios = Array.from({ length: 6 }, (_, i) => `doble${i}@acopio.test`);
+    for (const d of destinatarios) await encolar(d);
+
+    // Un SMTP lento deja a las dos instancias leyendo la cola al mismo tiempo
+    const enviados: string[] = [];
+    const lento = {
+      sendMail: async (m: { to: string }) => {
+        await new Promise((r) => setTimeout(r, 50));
+        enviados.push(m.to);
+      },
+    };
+    const otra = new NotificacionService(a.app.get(CorreoSalienteDao), a.app.get<Entorno>(ENTORNO));
+    usarTransporte(lento);
+    (otra as unknown as { transporte: unknown }).transporte = lento;
+
+    await Promise.all([servicio.procesarCola(), otra.procesarCola()]);
+
+    const propios = enviados.filter((d) => destinatarios.includes(d)).sort();
+    expect(propios).toEqual([...destinatarios].sort());
+  });
 });
