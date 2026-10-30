@@ -17,7 +17,8 @@ sustentación en PDF, revisado.
 
 | PR o commit | Qué trae |
 |---|---|
-| Rama `feat/captcha-y-cola-segura` | Módulo `captcha` (reto en `GET /api/captcha/reto`, `CaptchaGuard` con `@RequiereCaptcha()`, tabla `captcha_usado` con su migración, variables `CAPTCHA_*`), los dos endpoints protegidos, `pruebaCaptcha()` en la web, `CorreoSalienteDao.reclamar` con `FOR UPDATE SKIP LOCKED`, contrato y tipos regenerados, [ADR-0024](../../02-arquitectura/adr/ADR-0024-captcha-con-altcha.md), P-089 resuelto, el complemento actualizado y su PDF |
+| Rama `fix/captcha-pbkdf2` | El reto pasa a PBKDF2/SHA-256 con 5.000 iteraciones y dificultad 1.500, para que un bot no resuelva más rápido que el navegador |
+| #189, rama `feat/captcha-y-cola-segura` | Módulo `captcha` (reto en `GET /api/captcha/reto`, `CaptchaGuard` con `@RequiereCaptcha()`, tabla `captcha_usado` con su migración, variables `CAPTCHA_*`), los dos endpoints protegidos, `pruebaCaptcha()` en la web, `CorreoSalienteDao.reclamar` con `FOR UPDATE SKIP LOCKED`, contrato y tipos regenerados, [ADR-0024](../../02-arquitectura/adr/ADR-0024-captcha-con-altcha.md), P-089 resuelto, el complemento actualizado y su PDF |
 
 Fuera del repositorio: el `.env` local tiene una `CAPTCHA_LLAVE` generada con
 `openssl rand -hex 32`, y la contraseña local del administrador quedó igual a
@@ -50,6 +51,13 @@ Fuera del repositorio: el `.env` local tiene una `CAPTCHA_LLAVE` generada con
 
 ## Errores y correcciones
 
+- El primer captcha usaba SHA-256 a una iteración y el ADR decía que le costaba un segundo a un
+  bot. Al probarlo contra el servidor ya desplegado, un script con el SHA nativo de Node lo
+  resolvió en 28 ms, mientras que el navegador tarda alrededor de 1,2 s. Se cambió a PBKDF2/SHA-256
+  con 5.000 iteraciones y dificultad 1.500, donde el navegador y Node tardan casi lo mismo
+  (62 contra 58 ms en 100 intentos), y se corrigió el ADR. Los recorridos repetidos con PBKDF2
+  dieron `portal-turnos.mjs` 8 de 8 y `donador.mjs` 8 de 8.
+
 - Un script mío agregó el reto simulado en bloques equivocados de `Reservar.test.tsx`: dos pruebas
   siguieron fallando y dos tenían un reto que no usaban. Se corrigieron a mano.
 - La base del Compose no tenía aplicada la migración de `captcha_usado`: el contenedor no migra al
@@ -64,11 +72,11 @@ Fuera del repositorio: el `.env` local tiene una `CAPTCHA_LLAVE` generada con
 
 ## Pendiente
 
-- Joseph pone `CAPTCHA_LLAVE` en el panel de Dokploy antes de fusionar; sin ella, la API del
-  servidor no arranca
-  ([plan](../../05-planes/2026-10-30-captcha-y-cola-segura.md),
-  [plan de acción, fila 24](../../05-planes/plan-de-accion.md)).
+Nada. Joseph puso `CAPTCHA_LLAVE` en Dokploy, el PR 189 se fusionó y en el servidor el reto sale
+firmado, un registro sin captcha da 400 `CAPTCHA_INVALIDO` y una prueba repetida también. El
+cambio a PBKDF2 va en su propio PR.
 
 ## Depende de Joseph
 
-- `CAPTCHA_LLAVE` en Dokploy (`openssl rand -hex 32`), y avisar para fusionar el PR.
+- Si en el panel de Dokploy hay un `CAPTCHA_DIFICULTAD` de 20000, quitarlo o ponerlo en 1500:
+  con PBKDF2, 20000 haría esperar varios segundos.

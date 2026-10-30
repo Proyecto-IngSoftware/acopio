@@ -28,11 +28,12 @@ const esquema = z
     SMTP_SEGURO: z.stringbool().default(false),
     CORREO_REMITENTE: z.string().optional(),
     // ALTCHA (ADR-0024): prueba de trabajo en el registro de Donador y las reservas sin cuenta.
-    // La dificultad es el contador más alto que puede tocar resolver; un reto toma ~1 s.
+    // La dificultad es el contador más alto que puede tocar resolver; con PBKDF2 de 5000
+    // iteraciones, 1500 es ~0,5 s en un computador y unos segundos en un teléfono lento.
     CAPTCHA_ACTIVO: z.stringbool().default(true),
     // El Compose la pasa vacía cuando no está definida: vacía es lo mismo que ausente
     CAPTCHA_LLAVE: z.preprocess((v) => (v === '' ? undefined : v), z.string().min(32).optional()),
-    CAPTCHA_DIFICULTAD: z.coerce.number().int().positive().default(20_000),
+    CAPTCHA_DIFICULTAD: z.coerce.number().int().positive().default(1_500),
     // Geocodificación de direcciones (RF-RED-002)
     NOMINATIM_URL: z.url().default('https://nominatim.openstreetmap.org'),
     // Custodia (Bloque 3, C-10)

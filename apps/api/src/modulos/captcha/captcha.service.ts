@@ -1,9 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { createChallenge, randomInt, verifySolution, type Challenge } from 'altcha-lib';
-import { deriveKey } from 'altcha-lib/algorithms/sha';
+import { deriveKey } from 'altcha-lib/algorithms/pbkdf2';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { ENTORNO, type Entorno } from '../../config/entorno';
 import { CaptchaUsadoDao } from './dao/captcha-usado.dao';
+
+/**
+ * Iteraciones de PBKDF2 por intento. PBKDF2 corre en código nativo también en el navegador
+ * (Web Crypto), así que un bot no resuelve más rápido que una persona; con SHA-256 a una
+ * iteración, un bot nativo resolvía 44 veces más rápido que el navegador.
+ */
+const ITERACIONES = 5000;
 
 /** Cuánto tiempo sirve un reto: alcanza para llenar el formulario con calma. */
 const VIGENCIA_MS = 10 * 60_000;
@@ -35,8 +42,8 @@ export class CaptchaService {
     if (!this.activo) return null;
     const maximo = this.entorno.CAPTCHA_DIFICULTAD;
     return createChallenge({
-      algorithm: 'SHA-256',
-      cost: 1,
+      algorithm: 'PBKDF2/SHA-256',
+      cost: ITERACIONES,
       counter: randomInt(Math.ceil(maximo / 4), maximo),
       deriveKey,
       expiresAt: new Date(Date.now() + VIGENCIA_MS),

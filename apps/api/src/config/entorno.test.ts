@@ -54,7 +54,7 @@ describe('leerEntorno', () => {
   it('el captcha viene encendido y con la dificultad por defecto (ADR-0024)', () => {
     const e = leerEntorno(valido);
     expect(e.CAPTCHA_ACTIVO).toBe(true);
-    expect(e.CAPTCHA_DIFICULTAD).toBe(20_000);
+    expect(e.CAPTCHA_DIFICULTAD).toBe(1_500);
   });
 
   it('con el captcha encendido exige una CAPTCHA_LLAVE de al menos 32 caracteres', () => {
