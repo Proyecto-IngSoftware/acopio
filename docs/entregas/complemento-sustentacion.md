@@ -120,12 +120,17 @@ responde en cuanto la transacción confirma y el envío ocurre después, a su pr
   con el SMTP arriba el correo queda `ENVIADO`; con el SMTP caído queda `FALLIDO`, espera y sale
   solo cuando vuelve; después del máximo de intentos no se reintenta; y con `CORREO_ACTIVO=false`
   no se encola nada.
-- En vivo: se invita a un usuario desde la consola, la petición responde de inmediato y el correo
-  llega desde `no-reply@josephqaz.dev` en menos de un minuto.
+- Prueba real con Resend, el 30 de octubre en la API local: un registro de Donador para
+  `contacto@josephqaz.dev` respondió 202 de inmediato y dejó el correo de confirmación en la cola
+  a las 05:50:11. El consumidor lo tomó en su siguiente pasada y Resend lo aceptó a las 05:51:01,
+  en el primer intento. El correo llegó a la bandeja desde `no-reply@josephqaz.dev`.
 
-Pendiente: la captura del panel de Resend con el correo entregado y la de la fila de
-`correo_saliente` en `ENVIADO`. Se toman el 30 de octubre, con la API key de Resend puesta en el
-servidor.
+![La fila de correo_saliente después del envío: estado ENVIADO, un intento y sin error.](evidencia/complemento/correo-saliente-enviado.png)
+
+El correo de confirmación en la bandeja de `contacto@josephqaz.dev`, con el enlace para
+confirmar la cuenta:
+
+![El correo «Confirma tu correo en Acopio» recibido desde no-reply@josephqaz.dev.](evidencia/complemento/resend-bandeja.png)
 
 ### Limitaciones y fallos considerados
 
