@@ -3,7 +3,7 @@ title: "Línea visual: fechas, botones, estados y movimiento · diseño"
 type: spec
 tags: [web, diseno, portal, consola, ux]
 estado: vigente
-actualizado: 2026-10-30
+actualizado: 2026-11-18
 ---
 
 # Línea visual: fechas, botones, estados y movimiento
@@ -255,6 +255,8 @@ Queda al constructor:
 - Capturas nuevas a 360 px de las pantallas de la tabla, con «reducir movimiento» encendido y apagado en P1 y P8.
 
 ## Cambios al construir
+
+- 2026-11-18. La portada recibe las cifras del titular junto con el panel en `/api/publico/balance`. Para el titular se excluyen las categorías con «no recibir» en el acopio. El panel sigue contando los umbrales bajos aunque exista esa marca.
 
 - Fase 1, 2026-10-21. El desplegable animado va solo en el menú de la cuenta. El conmutador de ubicación de la cabecera abre una hoja, que ya entra y sale con animación, así que no hay menú que desplegar ahí. La clase `gira` queda lista para el selector de emergencia de la Portada (fase 2).
 - Fase 1, 2026-10-21. Con «reducir movimiento», `Hoja` llama a `alCerrar` de inmediato y sin guarda. Con animación, la guarda contra un doble cierre se libera al terminar la salida, para que una hoja que el padre deja montada se pueda volver a cerrar.

@@ -374,7 +374,12 @@ export class UrgenteDto extends crearDto(
 ) {}
 
 export class BalanceDto extends crearDto(
-  z.object({ faltan: z.array(filaBalance), noTraigan: z.array(filaBalance) }),
+  z.object({
+    faltan: z.array(filaBalance),
+    noTraigan: z.array(filaBalance),
+    categoriasFaltantes: z.number().int(),
+    acopiosConFaltantes: z.number().int(),
+  }),
 ) {}
 
 const categoriaNombrada = z.object({ categoriaId: z.uuid(), categoria: z.string() });

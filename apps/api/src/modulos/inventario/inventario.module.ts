@@ -4,6 +4,7 @@ import { BalanceController } from './balance.controller';
 import { BalanceService } from './balance.service';
 import { ConsultasController } from './consultas.controller';
 import { ConsultasService } from './consultas.service';
+import { BalancePublicoDao } from './dao/balance-publico.dao';
 import { MovimientoDao } from './dao/movimiento.dao';
 import { NoRecibirDao } from './dao/no-recibir.dao';
 import { SaldoDao } from './dao/saldo.dao';
@@ -26,6 +27,7 @@ import { UmbralesService } from './umbrales.service';
     UmbralesController,
   ],
   providers: [
+    BalancePublicoDao,
     MovimientoDao,
     SaldoDao,
     UmbralDao,

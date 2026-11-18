@@ -3,7 +3,7 @@ title: "Registro de decisiones de arquitectura"
 type: moc
 tags: [moc, adr]
 estado: vigente
-actualizado: 2026-10-30
+actualizado: 2026-11-18
 ---
 
 # Registro de decisiones de arquitectura
@@ -43,6 +43,7 @@ documento que se reescribe hasta perder la historia.
 | [0022](ADR-0022-linea-visual-con-movimiento-e-ilustracion.md) | Línea visual con movimiento e ilustraciones propias | aceptada |
 | [0023](ADR-0023-organizacion-en-paquetes.md) | Organización del código en paquetes, el «ADR-002» del curso | aceptada |
 | [0024](ADR-0024-captcha-con-altcha.md) | Captcha con ALTCHA en el registro de Donador y las reservas sin cuenta | aceptada |
+| [0025](ADR-0025-saldos-del-historial-por-bloques.md) | Saldos del historial por bloques de secuencias | aceptada |
 
 ## Cuándo escribir una
 

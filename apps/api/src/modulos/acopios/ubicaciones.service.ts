@@ -43,10 +43,14 @@ export class UbicacionesService implements VerificadorUbicaciones {
   /** Acopios y zonas cuyo nombre contiene `q`, sin importar mayúsculas. Sin `q`, todos. */
   async buscar(q?: string): Promise<UbicacionVista[]> {
     const filtro = q ? { nombre: { contains: q.trim(), mode: 'insensitive' as const } } : {};
-    const [acopios, zonas] = await Promise.all([
-      this.acopios.buscar(filtro),
-      this.zonas.buscar(filtro),
-    ]);
+    return this.listar(this.acopios.buscar(filtro), this.zonas.buscar(filtro));
+  }
+
+  private async listar(
+    buscarAcopios: Promise<Pick<UbicacionVista, 'id' | 'nombre' | 'municipio' | 'estado'>[]>,
+    buscarZonas: Promise<Pick<UbicacionVista, 'id' | 'nombre' | 'municipio' | 'estado'>[]>,
+  ): Promise<UbicacionVista[]> {
+    const [acopios, zonas] = await Promise.all([buscarAcopios, buscarZonas]);
     return [
       ...acopios.map((x) => ({
         tipo: 'ACOPIO' as const,
@@ -72,7 +76,9 @@ export class UbicacionesService implements VerificadorUbicaciones {
       this.alcance.idsAsignados(usuario, 'ZONA'),
     ]);
     if (acopios === null || zonas === null) return [];
-    const todas = await this.buscar();
-    return todas.filter((u) => (u.tipo === 'ACOPIO' ? acopios : zonas).includes(u.id));
+    return this.listar(
+      acopios.length ? this.acopios.buscar({ id: { in: acopios } }) : Promise.resolve([]),
+      zonas.length ? this.zonas.buscar({ id: { in: zonas } }) : Promise.resolve([]),
+    );
   }
 }

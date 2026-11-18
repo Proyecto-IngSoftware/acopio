@@ -54,6 +54,8 @@ describe('balance público', () => {
     (await a.http().get('/api/publico/balance').expect(200)).body as {
       faltan: Fila[];
       noTraigan: Fila[];
+      categoriasFaltantes: number;
+      acopiosConFaltantes: number;
     };
 
   it('sin sesión dice qué falta y qué no traer, con cuántos acopios', async () => {
@@ -71,6 +73,33 @@ describe('balance público', () => {
       expect(b.noTraigan.find((f) => f.categoriaId === sobra)).toMatchObject({ acopios: 1 });
     } finally {
       await a.prisma.acopio.update({ where: { id: ACOPIO_B }, data: { estado: 'ACTIVO' } });
+    }
+  });
+
+  it('el titular excluye las marcas y coincide con el detalle del mapa', async () => {
+    await a.prisma.noRecibir.createMany({
+      data: [ACOPIO_A, ACOPIO_B].map((acopio_id) => ({
+        acopio_id,
+        categoria_id: falta,
+        marcado_por: adminId,
+      })),
+    });
+    try {
+      const b = await balance();
+      const mapa = (await a.http().get('/api/publico/necesidades').expect(200)).body as {
+        faltan: { categoriaId: string }[];
+      }[];
+      const faltantes = mapa.filter((a) => a.faltan.length > 0);
+      const categorias = new Set(faltantes.flatMap((a) => a.faltan.map((f) => f.categoriaId)));
+      expect(categorias.has(falta)).toBe(false);
+      expect(b).toMatchObject({
+        categoriasFaltantes: categorias.size,
+        acopiosConFaltantes: faltantes.length,
+      });
+      expect(b.faltan.find((f) => f.categoriaId === falta)).toMatchObject({ acopios: 2 });
+      expect(b.noTraigan.find((f) => f.categoriaId === falta)).toMatchObject({ acopios: 2 });
+    } finally {
+      await a.prisma.noRecibir.deleteMany({ where: { categoria_id: falta } });
     }
   });
 

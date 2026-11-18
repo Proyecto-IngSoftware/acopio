@@ -110,6 +110,13 @@ const teclear = async (...teclas: string[]) => {
 };
 
 describe('C4 Entrada rápida', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-21T15:00:00Z'));
+  });
+
+  afterEach(() => vi.useRealTimers());
+
   it('elegir otra categoría limpia la fecha de vencimiento (P-038)', async () => {
     pantalla();
     await elegir('arroz', /Arroz/);

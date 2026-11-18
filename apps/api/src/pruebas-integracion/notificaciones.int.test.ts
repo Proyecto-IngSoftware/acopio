@@ -130,4 +130,25 @@ describe('notificaciones', () => {
     const propios = enviados.filter((d) => destinatarios.includes(d)).sort();
     expect(propios).toEqual([...destinatarios].sort());
   });
+
+  it('renueva el préstamo y rechaza el resultado de un reclamo anterior', async () => {
+    const { id } = await encolar('prestamo@acopio.test');
+    const dao = a.app.get(CorreoSalienteDao);
+    const tomar = async () => {
+      const lote = await dao.reclamar(MAX_INTENTOS, 50, 60_000);
+      return lote.find((c) => c.id === id)!;
+    };
+    const anterior = await tomar();
+    await a.prisma.correoSaliente.update({
+      where: { id },
+      data: { enviar_despues_de: new Date(0) },
+    });
+    const actual = await tomar();
+
+    expect(actual.reclamo_id).not.toBe(anterior.reclamo_id);
+    expect(await dao.renovar(anterior, 60_000)).toBe(false);
+    expect(await dao.renovar(actual, 60_000)).toBe(true);
+    expect(await dao.marcarEnviado(anterior, 1)).toEqual({ count: 0 });
+    expect(await dao.marcarEnviado(actual, 1)).toEqual({ count: 1 });
+  });
 });

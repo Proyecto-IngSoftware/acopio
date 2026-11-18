@@ -116,7 +116,7 @@ describe('turnos: correos y tareas', () => {
     expect(await correosDe(cancelada.correo)).toHaveLength(2);
   });
 
-  it('el recordatorio se encola una sola vez, 24 horas antes', async () => {
+  it('dos tareas simultáneas encolan un solo recordatorio, 24 horas antes', async () => {
     const j = await crearJornada('2026-10-21');
     const r = await reservar(j);
     // La jornada empieza el 21 a las 13:00Z; el 20 a las 14:00Z faltan 23 horas
@@ -124,9 +124,8 @@ describe('turnos: correos y tareas', () => {
       0,
     );
     expect(await correosDe(r.correo)).toHaveLength(1);
-    expect(await tareas.recordarReservas(new Date('2026-10-20T14:00:00Z'))).toBeGreaterThanOrEqual(
-      1,
-    );
+    const hora = new Date('2026-10-20T14:00:00Z');
+    await Promise.all([tareas.recordarReservas(hora), tareas.recordarReservas(hora)]);
     const tras = await correosDe(r.correo);
     expect(tras).toHaveLength(2);
     expect(tras[1]!.asunto).toContain('Mañana');
