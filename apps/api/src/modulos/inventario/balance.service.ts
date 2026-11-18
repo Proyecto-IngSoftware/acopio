@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { semaforo } from '@acopio/shared';
 import { hoyEnBogota } from '../catalogo/emergencias.service';
+import { BalancePublicoDao } from './dao/balance-publico.dao';
 import { NoRecibirDao } from './dao/no-recibir.dao';
 import { SaldoDao } from './dao/saldo.dao';
 import { UmbralDao } from './dao/umbral.dao';
@@ -14,20 +15,9 @@ export interface FilaBalance {
   acopios: number;
 }
 
-/** Cuenta los acopios por categoría y deja primero la que más se repite. */
-function agrupar(filas: { categoria_id: string; categoria: { nombre: string } }[]): FilaBalance[] {
-  const porCategoria = new Map<string, FilaBalance>();
-  for (const f of filas) {
-    const actual = porCategoria.get(f.categoria_id);
-    if (actual) actual.acopios++;
-    else
-      porCategoria.set(f.categoria_id, {
-        categoriaId: f.categoria_id,
-        categoria: f.categoria.nombre,
-        acopios: 1,
-      });
-  }
-  return [...porCategoria.values()]
+function principales(filas: FilaBalance[]): FilaBalance[] {
+  return filas
+    .filter((f) => f.acopios > 0)
     .sort((a, b) => b.acopios - a.acopios || a.categoria.localeCompare(b.categoria, 'es'))
     .slice(0, MAXIMO);
 }
@@ -56,27 +46,26 @@ export class BalanceService {
     private readonly umbrales: UmbralDao,
     private readonly saldos: SaldoDao,
     private readonly marcas: NoRecibirDao,
+    private readonly publico: BalancePublicoDao,
   ) {}
 
   async balance() {
-    const [umbrales, marcas] = await Promise.all([
-      this.umbrales.deAcopiosAbiertos(),
-      this.marcas.vigentesAbiertas(hoyEnBogota()),
-    ]);
-    const saldos = umbrales.length
-      ? await this.saldos.deVarios([...new Set(umbrales.map((u) => u.acopio_id))])
-      : [];
-    const cantidad = new Map(
-      saldos.map((s) => [`${s.acopio_id}:${s.categoria_id}`, Number(s.cantidad)]),
-    );
-    const bajos = umbrales.filter(
-      (u) =>
-        semaforo(cantidad.get(`${u.acopio_id}:${u.categoria_id}`) ?? 0, {
-          minimo: Number(u.minimo),
-          maximo: Number(u.maximo),
-        }) === 'BAJO',
-    );
-    return { faltan: agrupar(bajos), noTraigan: agrupar(marcas) };
+    const { panel, categoriasFaltantes, acopiosConFaltantes } =
+      await this.publico.portada(hoyEnBogota());
+    const vista = (campo: 'faltan' | 'noTraigan') =>
+      principales(
+        panel.map((f) => ({
+          categoriaId: f.categoriaId,
+          categoria: f.categoria,
+          acopios: f[campo],
+        })),
+      );
+    return {
+      faltan: vista('faltan'),
+      noTraigan: vista('noTraigan'),
+      categoriasFaltantes,
+      acopiosConFaltantes,
+    };
   }
 
   /**

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import type { ClienteBd } from '../../../comun/prisma/cliente-bd';
 import { PrismaService } from '../../../comun/prisma/prisma.service';
 
-type CorreoReclamado = {
+export type CorreoReclamado = {
   id: string;
   destinatario: string;
   asunto: string;
@@ -10,6 +10,7 @@ type CorreoReclamado = {
   cuerpo_html: string | null;
   intentos: number;
   creado_en: Date;
+  reclamo_id: string;
 };
 
 /** La cola `correo_saliente`: se encola en la transacción de quien llama y se envía aparte. */
@@ -41,7 +42,8 @@ export class CorreoSalienteDao {
   async reclamar(maxIntentos: number, limite: number, prestamoMs: number) {
     const lote = await this.prisma.$queryRaw<CorreoReclamado[]>`
       UPDATE correo_saliente
-         SET enviar_despues_de = now() + ${prestamoMs} * interval '1 millisecond'
+         SET enviar_despues_de = now() + ${prestamoMs} * interval '1 millisecond',
+             reclamo_id = gen_random_uuid()
        WHERE id IN (
          SELECT id FROM correo_saliente
           WHERE estado IN ('PENDIENTE', 'FALLIDO')
@@ -50,22 +52,48 @@ export class CorreoSalienteDao {
           ORDER BY creado_en
           LIMIT ${limite}
           FOR UPDATE SKIP LOCKED)
-      RETURNING id, destinatario, asunto, cuerpo_texto, cuerpo_html, intentos, creado_en`;
+      RETURNING id, destinatario, asunto, cuerpo_texto, cuerpo_html, intentos, creado_en, reclamo_id`;
     // RETURNING no garantiza orden
     return lote.sort((x, y) => x.creado_en.getTime() - y.creado_en.getTime());
   }
 
-  marcarEnviado(id: string, intentos: number) {
-    return this.prisma.correoSaliente.update({
-      where: { id },
-      data: { estado: 'ENVIADO', intentos, enviado_en: new Date(), ultimo_error: null },
+  async renovar({ id, reclamo_id }: CorreoReclamado, prestamoMs: number) {
+    const filas = await this.prisma.$executeRaw`
+      UPDATE correo_saliente
+         SET enviar_despues_de = now() + ${prestamoMs} * interval '1 millisecond'
+       WHERE id = ${id}::uuid AND reclamo_id = ${reclamo_id}::uuid
+         AND enviar_despues_de > now()`;
+    return filas === 1;
+  }
+
+  marcarEnviado({ id, reclamo_id }: CorreoReclamado, intentos: number) {
+    return this.prisma.correoSaliente.updateMany({
+      where: { id, reclamo_id },
+      data: {
+        estado: 'ENVIADO',
+        intentos,
+        enviado_en: new Date(),
+        ultimo_error: null,
+        reclamo_id: null,
+      },
     });
   }
 
-  marcarFallido(id: string, intentos: number, error: string, reintentarEn: Date) {
-    return this.prisma.correoSaliente.update({
-      where: { id },
-      data: { estado: 'FALLIDO', intentos, ultimo_error: error, enviar_despues_de: reintentarEn },
+  marcarFallido(
+    { id, reclamo_id }: CorreoReclamado,
+    intentos: number,
+    error: string,
+    reintentarEn: Date,
+  ) {
+    return this.prisma.correoSaliente.updateMany({
+      where: { id, reclamo_id },
+      data: {
+        estado: 'FALLIDO',
+        intentos,
+        ultimo_error: error,
+        enviar_despues_de: reintentarEn,
+        reclamo_id: null,
+      },
     });
   }
 }

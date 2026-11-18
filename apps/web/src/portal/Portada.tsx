@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router';
 import { useEmergenciasVigentes } from '../api/emergencias';
-import { useNecesidades } from '../api/inventario';
+import { useBalance } from '../api/inventario';
 import { Esqueleto } from '../componentes/Esqueleto';
 import { EstadoError } from '../componentes/EstadoError';
 import { EstadoVacio } from '../componentes/EstadoVacio';
@@ -8,12 +8,7 @@ import { AvisoSinDinero } from './bloques/AvisoSinDinero';
 import { BalanceRecepcion } from './bloques/BalanceRecepcion';
 import { ComoApoyar } from './bloques/ComoApoyar';
 import { CurvasNivel } from './bloques/CurvasNivel';
-import {
-  acopiosConFaltantes,
-  categoriasQueFaltan,
-  tituloFranja,
-  useCuenta,
-} from './bloques/franja';
+import { tituloFranja, useCuenta } from './bloques/franja';
 import { JornadasPortada } from './bloques/JornadasPortada';
 import { RastrearFolio } from './bloques/RastrearFolio';
 import { SeccionVacia } from './bloques/SeccionVacia';
@@ -95,16 +90,13 @@ export function Portada() {
   );
 }
 
-/** «Hoy faltan N categorías en M acopios.», con la N que cuenta desde 0. Las dos cifras salen
- *  de las necesidades, así no se contradicen. Mientras cargan, o si fallan, queda el título
- *  fijo. */
 function TituloFranja() {
-  const necesidades = useNecesidades();
-  const categorias = categoriasQueFaltan(necesidades.data ?? []);
+  const { data } = useBalance();
+  const categorias = data?.categoriasFaltantes ?? 0;
   const cuenta = useCuenta(categorias);
   const clase = 'text-headline-lg-mobile font-extrabold tracking-tight';
-  if (!necesidades.data) return <h1 className={clase}>Revisa qué hace falta antes de donar.</h1>;
-  const frase = tituloFranja(categorias, acopiosConFaltantes(necesidades.data));
+  if (!data) return <h1 className={clase}>Revisa qué hace falta antes de donar.</h1>;
+  const frase = tituloFranja(categorias, data.acopiosConFaltantes);
   // El lector de pantalla oye la frase final; la cifra que cuenta es solo para la vista
   // Solo la primera cifra cuenta: en «falta 1 categoría en 1 acopio» la segunda es otra
   const corte = categorias === 0 ? frase.length : frase.indexOf(` ${categorias} `) + 1;

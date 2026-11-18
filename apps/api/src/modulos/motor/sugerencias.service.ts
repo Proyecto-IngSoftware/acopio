@@ -1,3 +1,5 @@
+import { extname, join } from 'node:path';
+import { Worker } from 'node:worker_threads';
 import { estadoZona } from '@acopio/shared';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
@@ -8,7 +10,12 @@ import { candadoSaldo } from '../inventario/dao/saldo.dao';
 import { RemisionesBorradorService } from './remisiones-borrador.service';
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { BLOQUEO_DESCARTE_HORAS, clavePar, emparejar, type EntradaMotor } from '@acopio/shared';
+import {
+  BLOQUEO_DESCARTE_HORAS,
+  clavePar,
+  type emparejar,
+  type EntradaMotor,
+} from '@acopio/shared';
 import type { ClienteBd } from '../../comun/prisma/cliente-bd';
 import { Transacciones } from '../../comun/prisma/transacciones';
 import { ZonaDao } from '../acopios/dao/zona.dao';
@@ -24,6 +31,7 @@ const HORA = 3_600_000;
 @Injectable()
 export class SugerenciasService {
   private readonly log = new Logger(SugerenciasService.name);
+  private recalculoEnCurso?: Promise<{ ronda: Date; generadas: number }>;
 
   constructor(
     private readonly transacciones: Transacciones,
@@ -61,13 +69,24 @@ export class SugerenciasService {
 
   /** Cada 15 minutos y bajo demanda: borra las PROPUESTA y guarda la ronda nueva (M-04). */
   @Cron('*/15 * * * *', { name: 'motor-recalculo', timeZone: 'America/Bogota' })
-  async recalcular(ahora = new Date()): Promise<{ ronda: Date; generadas: number }> {
+  recalcular(ahora = new Date()): Promise<{ ronda: Date; generadas: number }> {
+    this.recalculoEnCurso ??= this.generarRonda(ahora).finally(() => {
+      this.recalculoEnCurso = undefined;
+    });
+    return this.recalculoEnCurso;
+  }
+
+  private async generarRonda(ahora: Date) {
     const r = await this.transacciones.ejecutar(
       async (tx) => {
+        const inicio = performance.now();
         await this.configuracion.bloquearMotor(tx);
+        const leidoDesde = performance.now();
         const { pesos, cantidadMinima } = await this.configuracion.leer(tx);
         const { entrada, zonas } = await this.cargarEntrada(tx, ahora);
-        const calculadas = emparejar(entrada, pesos, cantidadMinima);
+        const calculoDesde = performance.now();
+        const calculadas = await this.calcularPropuestas(entrada, pesos, cantidadMinima);
+        const escrituraDesde = performance.now();
         const emergencia = new Map(zonas.map((z) => [z.id, z.emergenciaId]));
         await this.sugerencias.reemplazarPropuestas(
           tx,
@@ -83,12 +102,38 @@ export class SugerenciasService {
             justificacion: s.justificacion,
           })),
         );
+        this.log.debug({
+          mensaje: 'Duración del recálculo del motor en ms',
+          esperaCandado: Math.round(leidoDesde - inicio),
+          lectura: Math.round(calculoDesde - leidoDesde),
+          calculo: Math.round(escrituraDesde - calculoDesde),
+          escritura: Math.round(performance.now() - escrituraDesde),
+        });
         return { ronda: ahora, generadas: calculadas.length };
       },
       { timeout: 30_000, maxWait: 10_000 },
     );
     this.log.log(`Motor: ${r.generadas} sugerencias`);
     return r;
+  }
+
+  private calcularPropuestas(
+    entrada: EntradaMotor,
+    pesos: Parameters<typeof emparejar>[1],
+    cantidadMinima: Parameters<typeof emparejar>[2],
+  ): Promise<ReturnType<typeof emparejar>> {
+    const extension = extname(__filename);
+    return new Promise((resolve, reject) => {
+      const worker = new Worker(join(__dirname, `emparejar.worker${extension}`), {
+        workerData: { entrada, pesos, cantidadMinima },
+        execArgv: extension === '.ts' ? ['--require', require.resolve('@swc-node/register')] : [],
+      });
+      worker.once('message', resolve);
+      worker.once('error', reject);
+      worker.once('exit', (codigo) =>
+        reject(new Error(`El worker del motor terminó con código ${codigo}`)),
+      );
+    });
   }
 
   async listar(filtro: {

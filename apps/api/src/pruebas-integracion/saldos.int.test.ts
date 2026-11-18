@@ -179,6 +179,40 @@ describe('saldos e historial', () => {
       .expect(400);
   });
 
+  it('conserva el saldo de páginas antiguas cuando hay movimientos en bloques posteriores', async () => {
+    const admin = await a.prisma.usuario.findFirstOrThrow({ where: { username: ADMIN.username } });
+    const categoria = await a.prisma.categoria.create({
+      data: { nombre: unico('Historial bloques '), grupo: 'ALIMENTOS', unidad_base: 'KILOGRAMO' },
+    });
+    await a.prisma.movimiento.createMany({
+      data: Array.from({ length: 1025 }, () => ({
+        tipo: 'ENTRADA',
+        acopio_id: ACOPIO_A,
+        categoria_id: categoria.id,
+        cantidad: 0.001,
+        signo: 1,
+        usuario_id: admin.id,
+        ocurrido_en: new Date(),
+      })),
+    });
+    const primeras = await a.prisma.movimiento.findMany({
+      where: { categoria_id: categoria.id },
+      orderBy: { secuencia: 'asc' },
+      take: 4,
+    });
+    const r = await a
+      .http()
+      .get(
+        `/api/acopios/${ACOPIO_A}/movimientos?categoriaId=${categoria.id}&limite=2&cursor=${primeras[3]!.secuencia}`,
+      )
+      .set(como(op.token))
+      .expect(200);
+    expect(r.body.filas.map((f: { saldoDespues: number }) => f.saldoDespues)).toEqual([
+      0.003, 0.002,
+    ]);
+    expect(r.body.siguiente).toBe(String(primeras[1]!.secuencia));
+  });
+
   it('el historial sigue el orden en que entraron los movimientos, no registrado_en', async () => {
     const cat = (
       await a.prisma.categoria.create({
