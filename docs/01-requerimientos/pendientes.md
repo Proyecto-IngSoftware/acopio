@@ -956,6 +956,9 @@ es la bonificación de concurrencia del complemento del segundo corte
 Donador en `acopio.josephqaz.dev` llegó a `contacto@josephqaz.dev` con el enlace apuntando al
 servidor, y Joseph confirmó la cuenta con él.
 
+**2026-11-18 · cambio a Hostinger.** La [guía de despliegue](../06-operacion/despliegue.md#correo-de-acopio-con-hostinger)
+recoge la configuración del nuevo proveedor. La prueba de entrega queda en [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26).
+
 ### P-056 · Registro de Donadores mientras el correo está apagado
 **Fecha:** 2026-10-16 · **Propuesto por:** Claude, al apagar el correo (P-055)
 **Qué:** con `CORREO_ACTIVO=false`, quien se registra como Donador en el portal nunca recibe
@@ -1267,6 +1270,17 @@ mejoró las latencias de la API y de la portada en 3G. Falta contrastarlas con l
 el volumen y los recursos del servidor.
 
 **Estado:** ABIERTO · [#25](https://github.com/Proyecto-IngSoftware/acopio/issues/25).
+
+### P-091 · Remediación de la revisión de main y Hostinger
+
+**Fecha:** 2026-11-18 · **Propuesto por:** Joseph y la revisión de `main`
+
+**Qué:** extender la purga de datos a los correos de reservas, aislar la cola
+sin conexión al cambiar de sesión, rearmar los recordatorios al mover una
+jornada y pasar a Compose las variables de RedAcopio. Validar Hostinger con
+una prueba de conexión y entrega desde el servidor.
+
+**Estado:** ABIERTO · [plan y criterios de aceptación](../05-planes/2026-11-18-remediacion-main-y-hostinger.md).
 
 ---
 

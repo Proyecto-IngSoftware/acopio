@@ -84,7 +84,7 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 |---|---|---|---|---|
 | 16 | RNF y escenarios de calidad verificados, cada uno con su prueba. Carga local del RNF-05 medida con k6; falta repetirla en preproducción aislada ([P-090](../01-requerimientos/pendientes.md#p-090--validar-la-carga-en-preproducción-aislada)) | #25 | 2026-11-29 | 🟡 |
 | 17 | Revisión final del ADR-001 y su matriz de riesgos | #24 | 2026-11-29 | ⬜ |
-| 18 | Despliegue: probar el SMTP desde Supabase y decidir cómo se lee Garage en producción (P-041) | #26 | 2026-11-29 | ⬜ |
+| 18 | Despliegue: validar la conexión y entrega de Hostinger desde la API en Dokploy y decidir cómo se lee Garage en producción (P-041). [Plan de remediación](2026-11-18-remediacion-main-y-hostinger.md) | #26 | 2026-11-29 | 🟡 |
 | 19 | Congelamiento, recorridos contra el servidor, Word final, ensayo y sustentación final | #52 | 2026-12-06 | ⬜ |
 
 ## Se vigila sin fecha
@@ -117,6 +117,8 @@ Sprint 3.
 | Contenedor para renderizar los Word de los avances, `render.Dockerfile` (PR 133) | | 2026-10-18 | ✅ |
 
 ## Registro de cambios
+
+- 2026-11-18. La fila 18 recoge el cambio a Hostinger y la prueba de entrega pendiente en Dokploy. [Plan y hallazgos](2026-11-18-remediacion-main-y-hostinger.md)
 
 - 2026-11-18. La fila 16 pasa a en curso con la primera medición del RNF-05. [Informe](../06-operacion/sesiones/2026-11-18-rendimiento-acopio.md)
 

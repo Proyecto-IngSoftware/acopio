@@ -3,7 +3,7 @@ title: "Planes de implementación"
 type: moc
 tags: [moc, plan]
 estado: vigente
-actualizado: 2026-10-30
+actualizado: 2026-11-18
 ---
 
 # Planes de implementación
@@ -54,6 +54,9 @@ Bloque 6  Extras       offline · bitácora enriquecida · transparencia
 | Servidor de pruebas | [despliegue.md](../06-operacion/despliegue.md) | [plan de trabajo](2026-10-16-servidor-de-pruebas.md) · [factura y demo](2026-10-16-servidor-de-pruebas-factura-y-demo.md) | 🟡 Arriba desde el 2026-10-16 (#91, #92, #93). Factura por la API y demo con `DEMO_CONTRASENA` hechas en local; faltan desplegarlas, sembrar la demo y los recorridos contra el servidor. [#53](https://github.com/Proyecto-IngSoftware/acopio/issues/53), [#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26) |
 
 ## Lo que sigue
+
+- [Remediación de main y cambio de correo a Hostinger](2026-11-18-remediacion-main-y-hostinger.md)
+  ([P-091](../01-requerimientos/pendientes.md#p-091--remediación-de-la-revisión-de-main-y-hostinger)).
 
 El orden de lo que falta, con su issue, su fecha y su estado, está en el
 [plan de acción](plan-de-accion.md). Se corrige cada vez que cambia algo y
