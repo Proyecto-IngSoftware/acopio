@@ -3062,6 +3062,8 @@ export interface components {
         /** @description Cuántos acopios abiertos están en ese caso */
         acopios: number;
       }[];
+      categoriasFaltantes: number;
+      acopiosConFaltantes: number;
     };
     NecesidadAcopioDto: {
       /** Format: uuid */

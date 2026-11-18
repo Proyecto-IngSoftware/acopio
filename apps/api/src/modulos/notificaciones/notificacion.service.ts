@@ -3,7 +3,7 @@ import { Cron, CronExpression } from '@nestjs/schedule';
 import { createTransport, type Transporter } from 'nodemailer';
 import type { ClienteBd } from '../../comun/prisma/cliente-bd';
 import { ENTORNO, type Entorno } from '../../config/entorno';
-import { CorreoSalienteDao } from './dao/correo-saliente.dao';
+import { CorreoSalienteDao, type CorreoReclamado } from './dao/correo-saliente.dao';
 import type { CorreoRedactado } from './plantillas';
 
 /** Después de este número de intentos el correo queda FALLIDO sin más reintentos. */
@@ -72,10 +72,13 @@ export class NotificacionService implements OnApplicationBootstrap {
     try {
       const lote = await this.cola.reclamar(MAX_INTENTOS, 50, PRESTAMO_MS);
       let enviados = 0;
+      let fallidos = 0;
       for (const correo of lote) {
-        if (await this.enviar(transporte, correo)) enviados++;
+        const resultado = await this.enviar(transporte, correo);
+        if (resultado === 'ENVIADO') enviados++;
+        if (resultado === 'FALLIDO') fallidos++;
       }
-      return { enviados, fallidos: lote.length - enviados };
+      return { enviados, fallidos };
     } finally {
       this.procesando = false;
     }
@@ -83,15 +86,16 @@ export class NotificacionService implements OnApplicationBootstrap {
 
   private async enviar(
     transporte: Transporter,
-    correo: {
-      id: string;
-      destinatario: string;
-      asunto: string;
-      cuerpo_texto: string;
-      cuerpo_html: string | null;
-      intentos: number;
-    },
-  ): Promise<boolean> {
+    correo: CorreoReclamado,
+  ): Promise<'ENVIADO' | 'FALLIDO' | 'VENCIDO'> {
+    if (!(await this.cola.renovar(correo, PRESTAMO_MS))) return 'VENCIDO';
+    const renovacion = setInterval(() => {
+      void this.cola.renovar(correo, PRESTAMO_MS).catch((error: unknown) => {
+        const mensaje = error instanceof Error ? error.message : String(error);
+        this.log.warn(`No se pudo renovar el préstamo de ${correo.id}: ${mensaje}`);
+      });
+    }, PRESTAMO_MS / 3);
+    renovacion.unref();
     const intentos = correo.intentos + 1;
     try {
       await transporte.sendMail({
@@ -101,18 +105,20 @@ export class NotificacionService implements OnApplicationBootstrap {
         text: correo.cuerpo_texto,
         html: correo.cuerpo_html ?? undefined,
       });
-      await this.cola.marcarEnviado(correo.id, intentos);
-      return true;
     } catch (error) {
       const mensaje = error instanceof Error ? error.message : String(error);
       this.log.warn(`No se pudo enviar el correo ${correo.id} (intento ${intentos}): ${mensaje}`);
-      await this.cola.marcarFallido(
-        correo.id,
+      const { count } = await this.cola.marcarFallido(
+        correo,
         intentos,
         mensaje.slice(0, 500),
         new Date(Date.now() + esperaTrasIntento(intentos)),
       );
-      return false;
+      return count === 1 ? 'FALLIDO' : 'VENCIDO';
+    } finally {
+      clearInterval(renovacion);
     }
+    const { count } = await this.cola.marcarEnviado(correo, intentos);
+    return count === 1 ? 'ENVIADO' : 'VENCIDO';
   }
 }

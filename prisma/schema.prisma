@@ -178,6 +178,7 @@ model CorreoSaliente {
   intentos          Int          @default(0)
   ultimo_error      String?
   enviar_despues_de DateTime     @default(now()) @db.Timestamptz
+  reclamo_id        String?      @db.Uuid
   creado_en         DateTime     @default(now()) @db.Timestamptz
   enviado_en        DateTime?    @db.Timestamptz
 
@@ -535,6 +536,7 @@ model Movimiento {
   vinculo        ComprobanteMovimiento?
 
   @@index([acopio_id, categoria_id, registrado_en])
+  @@index([acopio_id, categoria_id, secuencia])
   @@index([registrado_en])
   @@index([zona_id, categoria_id, ocurrido_en])
   @@map("movimiento")
@@ -551,6 +553,17 @@ model Saldo {
 
   @@id([acopio_id, categoria_id])
   @@map("saldo")
+}
+
+/// Variación neta de inventario por bloque de 1024 secuencias. Solo lectura para acopio_app.
+model SaldoHistorialBloque {
+  acopio_id    String  @db.Uuid
+  categoria_id String  @db.Uuid
+  bloque       BigInt
+  variacion    Decimal @db.Decimal
+
+  @@id([acopio_id, categoria_id, bloque])
+  @@map("saldo_historial_bloque")
 }
 
 /// Sin fila, la categoría no tiene umbral en ese acopio (V-03).
@@ -839,6 +852,7 @@ model ReporteNecesidad {
   reportado_en  DateTime  @default(now()) @db.Timestamptz
 
   @@index([zona_id, categoria_id, reportado_en])
+  @@index([reportado_en])
   @@map("reporte_necesidad")
 }
 

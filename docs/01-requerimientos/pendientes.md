@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-10-30
+actualizado: 2026-11-18
 ---
 
 # Pendientes — bandeja de entrada
@@ -639,7 +639,8 @@ RF-RED-001, `modelo-datos.md` y el catálogo de pantallas quedaron al día el 20
 - `sitioWeb` de entidad acepta cualquier esquema, incluso `javascript:`; se mostrará como
   enlace público
 - `engines` dice `>=22`, pero `require` de ESM sin bandera pide Node 22.12
-- `GET /ubicaciones/mias` carga todas las ubicaciones y filtra en memoria
+- `GET /ubicaciones/mias` carga todas las ubicaciones y filtra en memoria. Resuelto el
+  2026-11-18: los DAO consultan solo los IDs asignados.
 - `poblacionFecha` sale con hora y `hasta` sin hora
 - `no_recibir.marcado_por` no tiene llave foránea a `usuario`
 
@@ -1248,6 +1249,24 @@ están listas; si quien las tomó se cae, el préstamo vence y se reintentan. La
 integración «con dos instancias a la vez, cada correo sale una sola vez» falló con el código
 anterior (seis correos repetidos) y pasa con este
 ([plan](../05-planes/2026-10-30-captcha-y-cola-segura.md)).
+
+El 2026-11-18 la cola empezó a renovar el préstamo del correo en envío y a comprobar
+el identificador de reclamo antes de registrar el resultado. El recordatorio de una
+reserva se reclama en la misma transacción que lo encola.
+
+### P-090 · Validar la carga en preproducción aislada
+
+**Fecha:** 2026-11-18 · **Propuesto por:** revisión del rendimiento
+
+**Qué:** repetir la [prueba con k6](../06-operacion/carga.md) con datos representativos
+en un entorno desechable. Medir la portada servida por nginx, la espera del pool y de
+candados, y la duración del relleno histórico durante la migración.
+
+**Por qué:** el [ensayo local](../06-operacion/sesiones/2026-11-18-rendimiento-acopio.md)
+mejoró las latencias de la API y de la portada en 3G. Falta contrastarlas con la red,
+el volumen y los recursos del servidor.
+
+**Estado:** ABIERTO · [#25](https://github.com/Proyecto-IngSoftware/acopio/issues/25).
 
 ---
 

@@ -28,18 +28,19 @@ export class TareasTurnosService {
    */
   @Cron('*/15 * * * *', { name: 'recordar-reservas', timeZone: 'America/Bogota' })
   async recordarReservas(ahora = new Date(this.reloj.ahora())): Promise<number> {
-    const pendientes = await this.reservas.porRecordar(
-      ahora,
-      new Date(ahora.getTime() + 24 * MS_HORA),
-    );
+    const hasta = new Date(ahora.getTime() + 24 * MS_HORA);
+    const pendientes = await this.reservas.porRecordar(ahora, hasta);
+    let marcados = 0;
     for (const r of pendientes) {
-      await this.transacciones.ejecutar(async (tx) => {
+      const marcado = await this.transacciones.ejecutar(async (tx) => {
+        if (!(await this.reservas.reclamarRecordatorio(r.id, ahora, hasta, tx))) return false;
         await this.avisos.recordatorio(tx, r, r.jornada);
-        await this.reservas.actualizar(r.id, { recordatorio_en: ahora }, tx);
+        return true;
       });
+      if (marcado) marcados++;
     }
-    if (pendientes.length > 0) this.log.log(`Recordatorios encolados: ${pendientes.length}`);
-    return pendientes.length;
+    if (marcados > 0) this.log.log(`Recordatorios marcados: ${marcados}`);
+    return marcados;
   }
 
   /** T-06: los datos personales de una reserva duran 30 días después de su jornada. */

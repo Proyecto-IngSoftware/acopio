@@ -10870,11 +10870,23 @@
                 "acopios"
               ]
             }
+          },
+          "categoriasFaltantes": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "acopiosConFaltantes": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
           }
         },
         "required": [
           "faltan",
-          "noTraigan"
+          "noTraigan",
+          "categoriasFaltantes",
+          "acopiosConFaltantes"
         ]
       },
       "NecesidadAcopioDto": {

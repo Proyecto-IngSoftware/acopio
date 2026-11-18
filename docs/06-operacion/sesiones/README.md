@@ -19,7 +19,9 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-11-18 | [2026-11-18-fusion-pr-191-192](2026-11-18-fusion-pr-191-192.md) | Integración de rendimiento y la entrega PICS en main |
 | 2026-11-18 | [2026-11-18-proyecto-integrador-ingles](2026-11-18-proyecto-integrador-ingles.md) | Proyecto integrador PICS en español, abstract y guion en inglés |
+| 2026-11-18 | [2026-11-18-rendimiento-acopio](2026-11-18-rendimiento-acopio.md) | Mediciones con k6 y correcciones de inventario, motor, mapa y correo |
 | 2026-10-30 | [2026-10-30-captcha-y-cola-segura](2026-10-30-captcha-y-cola-segura.md) | Captcha con ALTCHA en el registro y las reservas, cola de correo segura con varias instancias (P-089) y el complemento en PDF |
 | 2026-10-30 | [2026-10-30-complemento-sustentacion](2026-10-30-complemento-sustentacion.md) | Complemento de la sustentación: diagrama de paquetes al día, ADR-0023, diagrama de estados de la donación, ficha de concurrencia y correo con Resend |
 | 2026-10-30 | [2026-10-30-plan-al-dia](2026-10-30-plan-al-dia.md) | Plan de acción al día: sustentación y Review el 30, Planning del Sprint 3 el 2 de noviembre, ronda de pruebas y escáner hechos, fila 3 descartada |

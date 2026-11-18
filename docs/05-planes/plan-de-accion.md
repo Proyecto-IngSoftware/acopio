@@ -3,7 +3,7 @@ title: "Plan de acción del proyecto"
 type: plan
 tags: [plan, seguimiento, cronograma]
 estado: vigente
-actualizado: 2026-10-30
+actualizado: 2026-11-18
 ---
 
 # Plan de acción del proyecto
@@ -82,7 +82,7 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
-| 16 | RNF y escenarios de calidad verificados, cada uno con su prueba | #25 | 2026-11-29 | ⬜ |
+| 16 | RNF y escenarios de calidad verificados, cada uno con su prueba. Carga local del RNF-05 medida con k6; falta repetirla en preproducción aislada ([P-090](../01-requerimientos/pendientes.md#p-090--validar-la-carga-en-preproducción-aislada)) | #25 | 2026-11-29 | 🟡 |
 | 17 | Revisión final del ADR-001 y su matriz de riesgos | #24 | 2026-11-29 | ⬜ |
 | 18 | Despliegue: probar el SMTP desde Supabase y decidir cómo se lee Garage en producción (P-041) | #26 | 2026-11-29 | ⬜ |
 | 19 | Congelamiento, recorridos contra el servidor, Word final, ensayo y sustentación final | #52 | 2026-12-06 | ⬜ |
@@ -117,6 +117,8 @@ Sprint 3.
 | Contenedor para renderizar los Word de los avances, `render.Dockerfile` (PR 133) | | 2026-10-18 | ✅ |
 
 ## Registro de cambios
+
+- 2026-11-18. La fila 16 pasa a en curso con la primera medición del RNF-05. [Informe](../06-operacion/sesiones/2026-11-18-rendimiento-acopio.md)
 
 - 2026-10-30: fila 24 cerrada. El PR 189 quedó desplegado con la llave del captcha, y el reto pasó a PBKDF2 porque con SHA-256 un bot nativo resolvía 44 veces más rápido ([informe](../06-operacion/sesiones/2026-10-30-captcha-y-cola-segura.md)).
 - 2026-10-30: fila 24 nueva, captcha con ALTCHA y P-089 resuelto; el complemento queda también en PDF ([informe](../06-operacion/sesiones/2026-10-30-captcha-y-cola-segura.md)).

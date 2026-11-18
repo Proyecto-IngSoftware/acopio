@@ -126,8 +126,9 @@ describe('rendimiento del motor', () => {
   it('recalcula en menos de 5 s', async () => {
     const motor = a.app.get(SugerenciasService);
     const inicio = performance.now();
-    const r = await motor.recalcular();
+    const [r, compartida] = await Promise.all([motor.recalcular(), motor.recalcular()]);
     const ms = performance.now() - inicio;
+    expect(compartida).toBe(r);
     expect(r.generadas).toBeGreaterThan(0);
     expect(ms).toBeLessThan(5000);
   }, 30_000);

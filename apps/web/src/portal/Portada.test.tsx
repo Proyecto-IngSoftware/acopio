@@ -25,8 +25,8 @@ const DOS = [
   emergencia({ id: 'b', nombre: 'Inundación en La Mojana', estado: 'EN_SEGUIMIENTO' }),
 ];
 const FIJOS = ['¿Cómo apoyar?', 'Canal oficial sin intermediación financiera'];
-const TITULO = 'Revisa qué hace falta antes de donar.';
-const BALANCE_VACIO = { faltan: [], noTraigan: [] };
+const TITULO = 'Hoy ningún acopio reporta faltantes.';
+const BALANCE_VACIO = { faltan: [], noTraigan: [], categoriasFaltantes: 0, acopiosConFaltantes: 0 };
 /** La portada pide las emergencias y el balance; cada uno con su respuesta. */
 const responder = (emergencias: unknown) =>
   responderSegun({
@@ -39,7 +39,7 @@ describe('con emergencias', () => {
   it('muestra el título y la primera emergencia en el selector', async () => {
     responder(DOS);
     render(envolver(<Portada />));
-    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(TITULO);
+    expect(await screen.findByRole('heading', { level: 1, name: TITULO })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Sismo en Caldas/ })).toBeInTheDocument();
   });
 
@@ -80,26 +80,15 @@ describe('con emergencias', () => {
   describe('título con la necesidad del día', () => {
     const agua = { categoriaId: 'c1', categoria: 'Agua potable', acopios: 1 };
     const aseo = { categoriaId: 'c2', categoria: 'Kit de aseo', acopios: 1 };
-    const necesidad = (acopioId: string, faltan: { categoriaId: string; categoria: string }[]) => ({
-      acopioId,
-      faltan,
-      sobran: [],
-      alDia: [],
-      noRecibe: [],
-    });
-    const con = (balance: unknown, necesidades: unknown) =>
+    const con = (balance: unknown) =>
       responderSegun({
         'GET /api/emergencias': DOS,
         'GET /api/publico/balance': balance,
-        'GET /api/publico/necesidades': necesidades,
         'GET /api/turnos/jornadas': [],
       });
 
     it('dice cuántas categorías faltan y en cuántos acopios', async () => {
-      con({ faltan: [agua, aseo], noTraigan: [] }, [
-        necesidad('x', [agua, aseo]),
-        necesidad('y', []),
-      ]);
+      con({ faltan: [agua, aseo], noTraigan: [], categoriasFaltantes: 2, acopiosConFaltantes: 1 });
       render(envolver(<Portada />));
       expect(
         await screen.findByRole('heading', {
@@ -110,7 +99,7 @@ describe('con emergencias', () => {
     });
 
     it('con una sola categoría, la frase completa no se corta en la cifra repetida', async () => {
-      con({ faltan: [agua], noTraigan: [] }, [necesidad('x', [agua])]);
+      con({ faltan: [agua], noTraigan: [], categoriasFaltantes: 1, acopiosConFaltantes: 1 });
       const { container } = render(envolver(<Portada />));
       await screen.findByRole('heading', { level: 1, name: 'Hoy falta 1 categoría en 1 acopio.' });
       expect(container.querySelector('h1 [aria-hidden]')).toHaveTextContent(
@@ -119,8 +108,7 @@ describe('con emergencias', () => {
     });
 
     it('una categoría baja que el acopio marcó «no recibir» no deja «en 0 acopios»', async () => {
-      // El balance la cuenta en faltan; necesidades la pasa a noRecibe
-      con({ faltan: [agua], noTraigan: [agua] }, [{ ...necesidad('x', []), noRecibe: [agua] }]);
+      con({ faltan: [agua], noTraigan: [agua], categoriasFaltantes: 0, acopiosConFaltantes: 0 });
       render(envolver(<Portada />));
       expect(
         await screen.findByRole('heading', {
@@ -131,7 +119,7 @@ describe('con emergencias', () => {
     });
 
     it('sin faltantes, el título lo dice', async () => {
-      con(BALANCE_VACIO, []);
+      con(BALANCE_VACIO);
       render(envolver(<Portada />));
       expect(
         await screen.findByRole('heading', {
@@ -142,7 +130,7 @@ describe('con emergencias', () => {
     });
 
     it('muestra el punto en vivo con el origen de los datos', async () => {
-      con(BALANCE_VACIO, []);
+      con(BALANCE_VACIO);
       render(envolver(<Portada />));
       expect(await screen.findByText('Datos de los acopios')).toBeInTheDocument();
     });
@@ -277,7 +265,7 @@ describe('si la API falla', () => {
 
     responder(DOS);
     await userEvent.click(screen.getByRole('button', { name: 'Reintentar' }));
-    expect(await screen.findByRole('heading', { level: 1 })).toHaveTextContent(TITULO);
+    expect(await screen.findByRole('heading', { level: 1, name: TITULO })).toBeInTheDocument();
   });
 
   it('no tiene violaciones graves de accesibilidad', async () => {
@@ -309,6 +297,6 @@ describe('sin emergencias vigentes', () => {
 it('la portada ya no enlaza las otras plataformas en su pie', async () => {
   responder(DOS);
   render(envolver(<Portada />));
-  await screen.findByText(TITULO);
+  await screen.findByRole('heading', { level: 1, name: TITULO });
   expect(screen.queryByRole('link', { name: /Otras plataformas/ })).not.toBeInTheDocument();
 });

@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
-import { semaforo, vencimientoEstimado } from '@acopio/shared';
+import { semaforo, vencimientoEstimado, type MovimientoParaVencimiento } from '@acopio/shared';
 import type { UsuarioAutenticado } from '../../comun/autorizacion/usuario-autenticado';
 import { ErrorDominio } from '../../comun/errores/error-dominio';
 import { CategoriaDao } from '../catalogo/dao/categoria.dao';
@@ -41,14 +41,27 @@ export class ConsultasService {
     ];
     const categorias = await this.categorias.varias(ids);
     const perecederas = categorias.filter((c) => c.perecedero).map((c) => c.id);
-    const movimientos = perecederas.length
-      ? await this.movimientos.paraVencimientos(acopioId, perecederas)
+    const lotes = perecederas.length
+      ? await this.movimientos.lotesPerecederos([acopioId], perecederas)
       : [];
+    const lotesPorCategoria = new Map<string, MovimientoParaVencimiento[]>();
+    for (const lote of lotes) {
+      const movimientos = lotesPorCategoria.get(lote.categoria_id) ?? [];
+      movimientos.push({
+        tipo: lote.entrada ? 'ENTRADA' : 'AJUSTE',
+        signo: lote.signo as 1 | -1,
+        cantidad: Number(lote.total),
+        venceEn: lote.vence_en?.toISOString().slice(0, 10) ?? null,
+      });
+      lotesPorCategoria.set(lote.categoria_id, movimientos);
+    }
+    const saldoPorCategoria = new Map(saldos.map((s) => [s.categoria_id, s]));
+    const umbralPorCategoria = new Map(umbrales.map((u) => [u.categoria_id, u]));
 
     return categorias
       .map((c) => {
-        const s = saldos.find((x) => x.categoria_id === c.id);
-        const u = umbrales.find((x) => x.categoria_id === c.id);
+        const s = saldoPorCategoria.get(c.id);
+        const u = umbralPorCategoria.get(c.id);
         const cantidad = s ? Number(s.cantidad) : 0;
         const umbral = u ? { minimo: Number(u.minimo), maximo: Number(u.maximo) } : null;
         return {
@@ -61,22 +74,7 @@ export class ConsultasService {
           umbral,
           semaforo: semaforo(cantidad, umbral),
           ultimoMovimiento: s?.ultimo_movimiento ?? null,
-          vencimientos: c.perecedero
-            ? vencimientoEstimado(
-                movimientos
-                  .filter((m) => m.categoria_id === c.id)
-                  .filter(
-                    (m): m is typeof m & { tipo: 'ENTRADA' | 'SALIDA' | 'AJUSTE' } =>
-                      m.tipo !== 'RECEPCION',
-                  )
-                  .map((m) => ({
-                    tipo: m.tipo,
-                    signo: m.signo as 1 | -1,
-                    cantidad: Number(m.cantidad),
-                    venceEn: m.vence_en ? m.vence_en.toISOString().slice(0, 10) : null,
-                  })),
-              )
-            : [],
+          vencimientos: c.perecedero ? vencimientoEstimado(lotesPorCategoria.get(c.id) ?? []) : [],
         };
       })
       .sort((x, y) => x.categoria.localeCompare(y.categoria, 'es-CO'));

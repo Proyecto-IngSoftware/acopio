@@ -70,6 +70,20 @@ export class ReservaDao {
     });
   }
 
+  async reclamarRecordatorio(id: string, desde: Date, hasta: Date, tx: ClienteBd) {
+    const { count } = await tx.reserva.updateMany({
+      where: {
+        id,
+        estado: 'ACTIVA',
+        correo: { not: null },
+        recordatorio_en: null,
+        jornada: { estado: { in: ['ABIERTA', 'CERRADA'] }, inicio: { gt: desde, lte: hasta } },
+      },
+      data: { recordatorio_en: desde },
+    });
+    return count === 1;
+  }
+
   /** Vacía nombre, correo y teléfono de las reservas de jornadas que terminaron antes de `limite`. */
   async borrarDatos(limite: Date, ahora: Date, tx: ClienteBd) {
     const r = await tx.reserva.updateMany({

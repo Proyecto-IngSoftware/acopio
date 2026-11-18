@@ -140,10 +140,10 @@ export class NecesidadDao {
         JOIN zona z ON z.id = r.zona_id
         JOIN emergencia e ON e.id = z.emergencia_id
         WHERE e.estado IN ('ACTIVA', 'EN_SEGUIMIENTO')
+          AND r.reportado_en >= ${ahora}::timestamptz - make_interval(days => ${VIGENCIA_REPORTE_DIAS}::int)
         ORDER BY r.zona_id, r.categoria_id, r.reportado_en DESC
       ) t
       WHERE NOT t.resuelta
-        AND t.reportado_en >= ${ahora}::timestamptz - make_interval(days => ${VIGENCIA_REPORTE_DIAS}::int)
       ORDER BY t.reportado_en DESC`;
   }
 
