@@ -118,6 +118,8 @@ Sprint 3.
 
 ## Registro de cambios
 
+- 2026-11-18. Avanzó P-091 con la purga de correos vinculados a reservas y la preparación de Hostinger. [Informe](../06-operacion/sesiones/2026-11-18-purga-correo-turnos.md)
+
 - 2026-11-18. La fila 18 recoge el cambio a Hostinger y la prueba de entrega pendiente en Dokploy. [Plan y hallazgos](2026-11-18-remediacion-main-y-hostinger.md)
 
 - 2026-11-18. La fila 16 pasa a en curso con la primera medición del RNF-05. [Informe](../06-operacion/sesiones/2026-11-18-rendimiento-acopio.md)

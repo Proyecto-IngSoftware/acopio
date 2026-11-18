@@ -21,10 +21,11 @@ configura el buzón y las credenciales en los paneles.
 
 ## 1. P1 · Borrar las copias de datos de reservas
 
-- Asociar los mensajes de turnos a su reserva y conservar una fecha de vencimiento
-  derivada del fin de la jornada. La tarea de [purga](../../apps/api/src/modulos/turnos/tareas-turnos.service.ts)
-  debe cubrir las copias de la cola en todos los estados, incluidas las enviadas.
-  Al mover una jornada, actualizar el vencimiento de las copias relacionadas.
+- Asociar los mensajes de turnos a su reserva y calcular su vigencia a partir
+  del fin actual de la jornada. La tarea de
+  [purga](../../apps/api/src/modulos/turnos/tareas-turnos.service.ts)
+  cubre las copias de la cola en todos los estados, incluidas las enviadas.
+  Al mover una jornada, el plazo se calcula con su nuevo fin.
 - Impedir que el trabajador reclame mensajes vencidos y coordinar la purga con el
   préstamo del trabajador. Un mensaje que SMTP ya aceptó queda sujeto a la
   retención del buzón receptor. El plazo de 30 días cubre las copias bajo control
@@ -33,6 +34,12 @@ configura el buzón y las credenciales en los paneles.
   Clasificar mediante datos que identifiquen con certeza la reserva y el tipo de
   mensaje. Revisar los casos ambiguos antes de decidir su tratamiento. Un mismo
   buzón puede recibir correos de varias reservas y de otros módulos.
+
+La [consulta de inventario histórico](../../scripts/auditar-correo-turnos.sql)
+devuelve conteos por plantilla. Para confirmaciones, distingue las que tienen
+un código y un enlace que apuntan a la misma reserva. La consulta solo lee.
+La clasificación y el tratamiento de las filas históricas siguen pendientes
+de ejecutar con los resultados de esa revisión.
 
 **Aceptación.** Con una reserva vigente y otra vencida, PostgreSQL conserva los
 mensajes de la primera y borra o anonimiza las copias personales de la segunda,

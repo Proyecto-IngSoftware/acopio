@@ -194,6 +194,7 @@ DEMO_CONTRASENA=               # contraseña de las cuentas de la demo; nunca la
 Con `CORREO_ACTIVO=false` la API no encola ni envía correo, y al arrancar lo avisa en el log.
 Las invitaciones y los restablecimientos se comparten con el enlace que muestra la consola.
 Un Donador que se registra solo no recibe el enlace para confirmar su correo.
+Con el correo activo, la API exige `SMTP_PASSWORD` si se define `SMTP_USER`.
 
 ### Correo de Acopio con Hostinger
 

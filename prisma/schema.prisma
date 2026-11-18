@@ -181,8 +181,11 @@ model CorreoSaliente {
   reclamo_id        String?      @db.Uuid
   creado_en         DateTime     @default(now()) @db.Timestamptz
   enviado_en        DateTime?    @db.Timestamptz
+  reserva_id        String?      @db.Uuid
+  reserva           Reserva?     @relation(fields: [reserva_id], references: [id], onDelete: Cascade)
 
   @@index([estado, enviar_despues_de])
+  @@index([reserva_id])
   @@map("correo_saliente")
 }
 
@@ -954,22 +957,23 @@ model Jornada {
 /// jornada (T-06). El índice parcial reserva_correo_unico (jornada_id, correo) WHERE
 /// estado <> 'CANCELADA' vive en la migración: Prisma no lo expresa. Sin DELETE para acopio_app.
 model Reserva {
-  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  jornada_id        String        @db.Uuid
-  jornada           Jornada       @relation(fields: [jornada_id], references: [id])
+  id                String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  jornada_id        String           @db.Uuid
+  jornada           Jornada          @relation(fields: [jornada_id], references: [id])
   nombre            String?
   correo            String?
   telefono          String?
-  codigo            String        @unique
+  codigo            String           @unique
   /// sha256 en hexadecimal del secreto del enlace (T-07); el secreto no se guarda.
   secreto_hash      String
-  perfil_declarado  Boolean       @default(false)
-  estado            EstadoReserva @default(ACTIVA)
-  consentimiento_en DateTime      @db.Timestamptz
-  recordatorio_en   DateTime?     @db.Timestamptz
-  cancelada_en      DateTime?     @db.Timestamptz
-  datos_borrados_en DateTime?     @db.Timestamptz
-  creada_en         DateTime      @default(now()) @db.Timestamptz
+  perfil_declarado  Boolean          @default(false)
+  estado            EstadoReserva    @default(ACTIVA)
+  consentimiento_en DateTime         @db.Timestamptz
+  recordatorio_en   DateTime?        @db.Timestamptz
+  cancelada_en      DateTime?        @db.Timestamptz
+  datos_borrados_en DateTime?        @db.Timestamptz
+  creada_en         DateTime         @default(now()) @db.Timestamptz
+  correos           CorreoSaliente[]
 
   @@index([jornada_id])
   @@map("reserva")

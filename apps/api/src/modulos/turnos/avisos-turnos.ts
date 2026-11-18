@@ -6,6 +6,7 @@ import { plantillas } from '../notificaciones/plantillas';
 import type { FilaJornada } from './turnos.vistas';
 
 interface Destinatario {
+  id: string;
   nombre: string | null;
   correo: string | null;
 }
@@ -93,7 +94,7 @@ export class AvisosTurnos {
     redactar: (nombre: string) => ReturnType<typeof plantillas.reservaCancelada>,
   ) {
     if (!r.correo) return;
-    await this.notificaciones.encolar(tx, r.correo, redactar(r.nombre ?? ''));
+    await this.notificaciones.encolar(tx, r.correo, redactar(r.nombre ?? ''), { reservaId: r.id });
   }
 }
 

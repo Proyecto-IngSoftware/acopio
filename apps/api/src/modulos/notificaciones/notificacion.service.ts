@@ -56,9 +56,18 @@ export class NotificacionService implements OnApplicationBootstrap {
    * Encola un correo en la misma transacción que la operación que lo origina. Con el
    * correo apagado no guarda nada y devuelve null.
    */
-  async encolar(cliente: ClienteBd, destinatario: string, correo: CorreoRedactado) {
+  async encolar(
+    cliente: ClienteBd,
+    destinatario: string,
+    correo: CorreoRedactado,
+    origen?: { reservaId: string },
+  ) {
     if (!this.entorno.CORREO_ACTIVO) return null;
-    return this.cola.crear(cliente, { destinatario, ...correo });
+    return this.cola.crear(cliente, { destinatario, ...correo, reservaId: origen?.reservaId });
+  }
+
+  borrarDeReservasVencidas(cliente: ClienteBd, limite: Date) {
+    return this.cola.borrarDeReservasVencidas(cliente, limite);
   }
 
   /** Cada minuto: envía lo pendiente y reintenta lo fallido cuyo turno ya llegó. */

@@ -56,6 +56,10 @@ const esquema = z
     message: 'CORREO_ACTIVO=true exige SMTP_HOST y CORREO_REMITENTE',
     path: ['CORREO_ACTIVO'],
   })
+  .refine((e) => !e.CORREO_ACTIVO || Boolean(e.SMTP_USER) === Boolean(e.SMTP_PASSWORD), {
+    message: 'SMTP_USER y SMTP_PASSWORD deben configurarse juntos',
+    path: ['SMTP_PASSWORD'],
+  })
   .refine((e) => !e.CAPTCHA_ACTIVO || e.CAPTCHA_LLAVE, {
     message: 'CAPTCHA_ACTIVO=true exige CAPTCHA_LLAVE',
     path: ['CAPTCHA_ACTIVO'],
