@@ -87,7 +87,7 @@ export class ReservaDao {
   /** Vacía nombre, correo y teléfono de las reservas de jornadas que terminaron antes de `limite`. */
   async borrarDatos(limite: Date, ahora: Date, tx: ClienteBd) {
     const r = await tx.reserva.updateMany({
-      where: { datos_borrados_en: null, jornada: { fin: { lt: limite } } },
+      where: { datos_borrados_en: null, jornada: { fin: { lte: limite } } },
       data: { nombre: null, correo: null, telefono: null, datos_borrados_en: ahora },
     });
     return r.count;

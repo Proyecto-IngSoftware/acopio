@@ -51,6 +51,21 @@ describe('leerEntorno', () => {
     expect(() => leerEntorno(sinCorreo)).toThrow(/CORREO_ACTIVO=true exige SMTP_HOST/);
   });
 
+  it('exige las dos credenciales si se activa un SMTP autenticado', () => {
+    const hostinger = {
+      ...valido,
+      SMTP_HOST: 'smtp.hostinger.com',
+      SMTP_PORT: '465',
+      SMTP_SEGURO: 'true',
+      SMTP_USER: 'remitente@ejemplo.test',
+    };
+    expect(() => leerEntorno({ ...hostinger, SMTP_PASSWORD: '' })).toThrow(/SMTP_PASSWORD/);
+    expect(leerEntorno({ ...hostinger, CORREO_ACTIVO: 'false' }).CORREO_ACTIVO).toBe(false);
+    expect(leerEntorno({ ...hostinger, SMTP_PASSWORD: 'contraseña-de-prueba' }).SMTP_SEGURO).toBe(
+      true,
+    );
+  });
+
   it('el captcha viene encendido y con la dificultad por defecto (ADR-0024)', () => {
     const e = leerEntorno(valido);
     expect(e.CAPTCHA_ACTIVO).toBe(true);

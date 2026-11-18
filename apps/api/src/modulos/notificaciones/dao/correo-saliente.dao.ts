@@ -1,6 +1,16 @@
 import { Injectable } from '@nestjs/common';
+import { LIMITES_TURNOS } from '@acopio/shared';
 import type { ClienteBd } from '../../../comun/prisma/cliente-bd';
 import { PrismaService } from '../../../comun/prisma/prisma.service';
+import { Prisma } from '../../../generado/prisma/client';
+
+const correoVigente = Prisma.sql`
+  NOT EXISTS (
+    SELECT 1 FROM reserva r JOIN jornada j ON j.id = r.jornada_id
+    WHERE r.id = correo_saliente.reserva_id
+      AND (r.datos_borrados_en IS NOT NULL OR j.fin <= now()
+        - make_interval(hours => ${24 * LIMITES_TURNOS.diasBorrado}::int))
+  )`;
 
 export type CorreoReclamado = {
   id: string;
@@ -20,7 +30,13 @@ export class CorreoSalienteDao {
 
   crear(
     tx: ClienteBd,
-    datos: { destinatario: string; asunto: string; texto: string; html: string | null },
+    datos: {
+      destinatario: string;
+      asunto: string;
+      texto: string;
+      html: string | null;
+      reservaId?: string;
+    },
   ) {
     return tx.correoSaliente.create({
       data: {
@@ -28,9 +44,21 @@ export class CorreoSalienteDao {
         asunto: datos.asunto,
         cuerpo_texto: datos.texto,
         cuerpo_html: datos.html,
+        reserva_id: datos.reservaId,
       },
       select: { id: true },
     });
+  }
+
+  async borrarDeReservasVencidas(tx: ClienteBd, limite: Date) {
+    const { count } = await tx.correoSaliente.deleteMany({
+      where: {
+        reserva: {
+          is: { OR: [{ datos_borrados_en: { not: null } }, { jornada: { fin: { lte: limite } } }] },
+        },
+      },
+    });
+    return count;
   }
 
   /**
@@ -49,6 +77,7 @@ export class CorreoSalienteDao {
           WHERE estado IN ('PENDIENTE', 'FALLIDO')
             AND intentos < ${maxIntentos}
             AND enviar_despues_de <= now()
+            AND ${correoVigente}
           ORDER BY creado_en
           LIMIT ${limite}
           FOR UPDATE SKIP LOCKED)
@@ -62,7 +91,8 @@ export class CorreoSalienteDao {
       UPDATE correo_saliente
          SET enviar_despues_de = now() + ${prestamoMs} * interval '1 millisecond'
        WHERE id = ${id}::uuid AND reclamo_id = ${reclamo_id}::uuid
-         AND enviar_despues_de > now()`;
+         AND enviar_despues_de > now()
+         AND ${correoVigente}`;
     return filas === 1;
   }
 

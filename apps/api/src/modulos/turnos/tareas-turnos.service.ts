@@ -4,6 +4,7 @@ import { LIMITES_TURNOS } from '@acopio/shared';
 import { Transacciones } from '../../comun/prisma/transacciones';
 import { RELOJ, type Reloj } from '../acopios/geocodificacion';
 import { BitacoraService } from '../auditoria/bitacora.service';
+import { NotificacionService } from '../notificaciones/notificacion.service';
 import { AvisosTurnos } from './avisos-turnos';
 import { ReservaDao } from './dao/reserva.dao';
 
@@ -18,6 +19,7 @@ export class TareasTurnosService {
     private readonly reservas: ReservaDao,
     private readonly transacciones: Transacciones,
     private readonly avisos: AvisosTurnos,
+    private readonly notificaciones: NotificacionService,
     private readonly bitacora: BitacoraService,
     @Inject(RELOJ) private readonly reloj: Reloj,
   ) {}
@@ -49,12 +51,13 @@ export class TareasTurnosService {
     const limite = new Date(ahora.getTime() - LIMITES_TURNOS.diasBorrado * 24 * MS_HORA);
     return this.transacciones.ejecutar(async (tx) => {
       const cantidad = await this.reservas.borrarDatos(limite, ahora, tx);
-      if (cantidad > 0) {
+      const correosBorrados = await this.notificaciones.borrarDeReservasVencidas(tx, limite);
+      if (cantidad > 0 || correosBorrados > 0) {
         await this.bitacora.registrar(tx, {
           usuarioId: null,
           accion: 'reservas.datos_borrados',
           entidad: 'reserva',
-          despues: { cantidad, jornadasTerminadasAntesDe: limite.toISOString() },
+          despues: { cantidad, correosBorrados, jornadasTerminadasHasta: limite.toISOString() },
         });
       }
       return cantidad;

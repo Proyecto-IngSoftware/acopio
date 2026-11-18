@@ -3,7 +3,7 @@ title: "Modelo de datos"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-20
+actualizado: 2026-11-18
 ---
 
 # Modelo de datos
@@ -512,6 +512,7 @@ su UUID y su hash, y se elimina
 ```
 correo_saliente
   id · destinatario citext · asunto · cuerpo_texto · cuerpo_html?
+  reserva_id? → reserva
   estado  PENDIENTE | ENVIADO | FALLIDO
   intentos int · ultimo_error text? · enviar_despues_de timestamptz
   creado_en · enviado_en?
@@ -521,6 +522,9 @@ correo_saliente
 Cola de correos. La tarea «reintentar correos fallidos» toma las filas `FALLIDO` cuyo
 `enviar_despues_de` ya pasó; la espera crece con cada intento (1, 2, 4… minutos, hasta
 dos horas) y se detiene a los 8 intentos.
+
+La purga de una reserva elimina sus correos en todos los estados. El trabajador
+comprueba el fin vigente de la jornada antes de reclamar o renovar un aviso.
 
 **2026-09-28 · construido en el Bloque 0.** Además de las columnas de arriba, la
 primera migración crea `acopio_sin_tildes(text)`, una envoltura `IMMUTABLE` de
@@ -1021,9 +1025,10 @@ erDiagram
 
 ### Notificaciones
 
-`correo_saliente` no tiene llaves foráneas: guarda el destinatario como texto. Cada
-servicio lo encola dentro de la transacción de la operación, y una tarea programada
-envía cada minuto.
+`correo_saliente` guarda el destinatario como texto. Los avisos de turnos guardan
+`reserva_id` para que la purga de la reserva elimine también sus correos. Los
+demás mensajes pueden llevar ese campo nulo. Cada servicio encola dentro de
+la transacción de la operación, y una tarea programada envía cada minuto.
 
 ```mermaid
 erDiagram
@@ -1031,11 +1036,13 @@ erDiagram
         uuid id PK
         citext destinatario
         text asunto
+        uuid reserva_id FK "opcional"
         text estado "PENDIENTE | ENVIADO | FALLIDO"
         int intentos
         timestamptz enviar_despues_de
         timestamptz enviado_en "obligatoria si ENVIADO"
     }
+    RESERVA o|--o{ CORREO_SALIENTE : vincula
 ```
 
 ### Roles secundarios de `usuario` no dibujados

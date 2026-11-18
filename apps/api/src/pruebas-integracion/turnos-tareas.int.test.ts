@@ -7,6 +7,7 @@ import {
   type AppPrueba,
   reservaDeCaptchas,
 } from '../../test/app-prueba';
+import { CorreoSalienteDao } from '../modulos/notificaciones/dao/correo-saliente.dao';
 import { TareasTurnosService } from '../modulos/turnos/tareas-turnos.service';
 import { sembrarCausasDemo, sembrarTurnosDemo } from '../seed/demo';
 
@@ -50,8 +51,7 @@ describe('turnos: correos y tareas', () => {
     return r.body[0].id as string;
   }
 
-  const reservar = async (jornadaId: string) => {
-    const correo = `${unico('vol')}@demo.test`;
+  const reservar = async (jornadaId: string, correo = `${unico('vol')}@demo.test`) => {
     const r = await a
       .http()
       .post(`/api/turnos/jornadas/${jornadaId}/reservas`)
@@ -68,6 +68,8 @@ describe('turnos: correos y tareas', () => {
     const j = await crearJornada();
     const { correo, codigo, secreto } = await reservar(j);
     const [c] = await correosDe(correo);
+    const reserva = await a.prisma.reserva.findUniqueOrThrow({ where: { codigo } });
+    expect(c!.reserva_id).toBe(reserva.id);
     expect(c!.asunto).toContain('reserva');
     expect(c!.cuerpo_texto).toContain(codigo);
     expect(c!.cuerpo_texto).toContain(`/voluntariado/reserva/${codigo}#${secreto}`);
@@ -136,14 +138,37 @@ describe('turnos: correos y tareas', () => {
   it('los datos personales se borran 30 días después de la jornada', async () => {
     const j = await crearJornada('2026-10-21');
     const r = await reservar(j);
+    const siguiente = await reservar(await crearJornada('2026-10-22'), r.correo);
+    const vencida = await a.prisma.reserva.findUniqueOrThrow({ where: { codigo: r.codigo } });
+    const vigente = await a.prisma.reserva.findUniqueOrThrow({
+      where: { codigo: siguiente.codigo },
+    });
+    const copias = [
+      { estado: 'ENVIADO', reserva_id: vencida.id, enviado_en: new Date(AHORA) },
+      { estado: 'FALLIDO', reserva_id: vencida.id },
+      { estado: 'PENDIENTE', reserva_id: null },
+    ] as const;
+    await a.prisma.correoSaliente.createMany({
+      data: copias.map((fila) => ({
+        ...fila,
+        destinatario: r.correo,
+        asunto: 'Otro aviso de prueba',
+        cuerpo_texto: 'Persona de prueba',
+      })),
+    });
     // La jornada termina el 21 a las 17:00Z; 30 días después es el 20 de noviembre a las 17:00Z
     await tareas.borrarDatosVencidos(new Date('2026-11-20T16:59:00Z'));
     expect((await a.prisma.reserva.findUniqueOrThrow({ where: { codigo: r.codigo } })).nombre).toBe(
       'Voluntaria',
     );
-    expect(
-      await tareas.borrarDatosVencidos(new Date('2026-11-20T17:01:00Z')),
-    ).toBeGreaterThanOrEqual(1);
+    expect((await correosDe(r.correo)).filter((c) => c.reserva_id === vencida.id)).toHaveLength(3);
+    const venceEn = new Date('2026-11-20T17:00:00Z');
+    expect(await tareas.borrarDatosVencidos(venceEn)).toBeGreaterThanOrEqual(1);
+    expect(await tareas.borrarDatosVencidos(venceEn)).toBe(0);
+    expect((await correosDe(r.correo)).map((c) => c.reserva_id)).toEqual(
+      expect.arrayContaining([vigente.id, null]),
+    );
+    expect(await correosDe(r.correo)).toHaveLength(2);
     const fila = await a.prisma.reserva.findUniqueOrThrow({ where: { codigo: r.codigo } });
     expect(fila).toMatchObject({ nombre: null, correo: null, telefono: null, estado: 'ACTIVA' });
     expect(fila.datos_borrados_en).not.toBeNull();
@@ -160,6 +185,40 @@ describe('turnos: correos y tareas', () => {
       .set(como())
       .expect(200);
     expect(inscritos.body[0]).toMatchObject({ nombre: null, correo: null });
+  });
+
+  it('el trabajador respeta el fin vigente y la purga de un correo ya reclamado', async () => {
+    const jornada = await crearJornada();
+    const { correo } = await reservar(jornada);
+    const [fila] = await correosDe(correo);
+    const dao = a.app.get(CorreoSalienteDao);
+    const ahora = Date.now();
+    const horas = 3_600_000;
+    const mover = (fin: Date) =>
+      a.prisma.jornada.update({
+        where: { id: jornada },
+        data: { inicio: new Date(fin.getTime() - horas), fin },
+      });
+    await a.prisma.correoSaliente.update({
+      where: { id: fila!.id },
+      data: { creado_en: new Date(0), enviar_despues_de: new Date(0) },
+    });
+    await mover(new Date(ahora - 31 * 24 * horas));
+    expect((await dao.reclamar(8, 1, horas)).some((c) => c.id === fila!.id)).toBe(false);
+
+    await mover(new Date(ahora - 29 * 24 * horas));
+    const [reclamado] = await dao.reclamar(8, 1, horas);
+    expect(reclamado?.id).toBe(fila!.id);
+    expect(await dao.renovar(reclamado!, horas)).toBe(true);
+    await mover(new Date(ahora - 31 * 24 * horas));
+    expect(await dao.renovar(reclamado!, horas)).toBe(false);
+
+    await Promise.all([
+      tareas.borrarDatosVencidos(new Date(ahora)),
+      dao.marcarEnviado(reclamado!, 1),
+    ]);
+    expect(await correosDe(correo)).toHaveLength(0);
+    expect(await dao.marcarFallido(reclamado!, 1, 'prueba', new Date())).toEqual({ count: 0 });
   });
 
   it('la demo de turnos es idempotente y trae la jornada de la Cruz Roja', async () => {

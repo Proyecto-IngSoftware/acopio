@@ -3,7 +3,7 @@ title: "Despliegue"
 type: operacion
 tags: [operacion]
 estado: vigente
-actualizado: 2026-10-30
+actualizado: 2026-11-18
 ---
 
 # Despliegue
@@ -173,13 +173,13 @@ S3_REGION=garage
 S3_BUCKET=comprobantes
 S3_ACCESS_KEY=                 # echo GK$(openssl rand -hex 12) (GK y 24 hexadecimales)
 S3_SECRET_KEY=                 # openssl rand -hex 32 (64 hexadecimales)
-CORREO_ACTIVO=false            # sin correo mientras dure el desarrollo (P-055)
-SMTP_HOST=                     # solo con CORREO_ACTIVO=true, igual que las cinco de abajo
-SMTP_PORT=587
-SMTP_USER=
-SMTP_PASSWORD=
-SMTP_SEGURO=false              # true solo con el puerto 465
-CORREO_REMITENTE="Acopio <no-responder@<dominio>>"
+CORREO_ACTIVO=true
+SMTP_HOST=smtp.hostinger.com   # Hostinger Mail. Confirma el producto y el host en hPanel
+SMTP_PORT=465
+SMTP_USER=no-reply@josephqaz.dev
+SMTP_PASSWORD=                 # contraseña del buzón, solo en Dokploy
+SMTP_SEGURO=true               # TLS desde que se abre la conexión
+CORREO_REMITENTE="Acopio <no-reply@josephqaz.dev>"
 SEED_ADMIN_USUARIO=admin
 SEED_ADMIN_NOMBRE=Administrador
 SEED_ADMIN_CORREO=
@@ -194,6 +194,64 @@ DEMO_CONTRASENA=               # contraseña de las cuentas de la demo; nunca la
 Con `CORREO_ACTIVO=false` la API no encola ni envía correo, y al arrancar lo avisa en el log.
 Las invitaciones y los restablecimientos se comparten con el enlace que muestra la consola.
 Un Donador que se registra solo no recibe el enlace para confirmar su correo.
+Con el correo activo, la API exige `SMTP_PASSWORD` si se define `SMTP_USER`.
+
+### Correo de Acopio con Hostinger
+
+En hPanel abre **Emails → Administrar → Conectar aplicaciones y dispositivos**
+y revisa la configuración manual. Usa la dirección completa de un buzón real como
+`SMTP_USER` y esa misma dirección en `CORREO_REMITENTE`. El ejemplo de arriba usa
+el remitente histórico de Acopio. Usa su contraseña de correo en el panel de
+Dokploy. [Configuración oficial de Hostinger Mail](https://www.hostinger.com/support/4305847-set-up-hostinger-email-on-your-applications-and-devices/)
+
+Si el panel indica Titan Email, usa `smtp.titan.email` con el mismo puerto 465 y
+`SMTP_SEGURO=true`. Si hay un problema de conectividad con el puerto 465, ambos
+proveedores ofrecen el 587 con STARTTLS, que en Acopio se configura con
+`SMTP_SEGURO=false`. [Configuración de Titan Email](https://www.hostinger.com/support/5966022-how-to-get-email-account-configuration-details-for-titan-email-at-hostinger/)
+
+Contrasta los registros del dominio con hPanel y comprueba SPF, DKIM y DMARC en
+las cabeceras de un mensaje recibido. Revisa también la cuota del plan del
+buzón antes de liberar correo acumulado.
+[Configuración de DNS](https://www.hostinger.com/support/8671319-set-up-a-domain-for-hostinger-email-manually/) · [Límites de envío](https://www.hostinger.com/support/4625828-parameters-and-limits-of-hostinger-email/)
+
+Después de redesplegar, ejecuta esta comprobación en el contenedor `api`, desde
+`/app/apps/api`. `verify()` comprueba la conexión y la autenticación SMTP con
+las variables del contenedor, sin enviar un mensaje. Puedes realizar la
+comprobación con `CORREO_ACTIVO=false` en un entorno de pruebas.
+
+```sh
+node <<'NODE'
+const { createTransport } = require('nodemailer');
+const { leerEntorno } = require('./dist/config/entorno.js');
+const entorno = leerEntorno();
+if (!entorno.SMTP_HOST || !entorno.SMTP_USER || !entorno.SMTP_PASSWORD) {
+  console.error('Faltan el servidor SMTP o las credenciales del buzón.');
+  process.exit(1);
+}
+const transporte = createTransport({
+  host: entorno.SMTP_HOST,
+  port: entorno.SMTP_PORT,
+  secure: entorno.SMTP_SEGURO,
+  requireTLS: !entorno.SMTP_SEGURO,
+  connectionTimeout: 10_000,
+  greetingTimeout: 10_000,
+  auth: { user: entorno.SMTP_USER, pass: entorno.SMTP_PASSWORD },
+});
+transporte.verify()
+  .then(() => console.log('SMTP autenticado.'))
+  .catch(({ code, responseCode }) => {
+    console.error('Falló la comprobación SMTP.', code ?? '', responseCode ?? '');
+    process.exitCode = 1;
+  })
+  .finally(() => transporte.close());
+NODE
+```
+
+Con `CORREO_ACTIVO=true`, comprueba la entrega con un destinatario autorizado y datos de prueba. La API
+debe marcar el correo como `ENVIADO` y el buzón debe recibirlo con el remitente
+y el enlace correctos. [Qué comprueba Nodemailer](https://nodemailer.com/smtp#verifying-the-configuration)
+
+### Diagnóstico de arranque
 
 Garage no arranca con un `GARAGE_RPC_SECRET` más corto (`Invalid RPC secret key: expected
 32 bytes of random hex`). Si las dos llaves de S3 no sirven, la API no levanta y su log dice qué respondió Garage.
@@ -240,16 +298,16 @@ docker compose -f infra/docker-compose.yml \
 
 **Decisión (P-025, 2026-09-28):** mientras el desarrollo es local, el login lo
 resuelve la API con el adaptador `local`. No hace falta un proyecto de Supabase para
-trabajar. Supabase Auth en la nube sigue siendo el destino
-([ADR-0001](../02-arquitectura/adr/ADR-0001-supabase-solo-auth.md)): solo inicia
-sesión, confirma el correo y envía esos correos.
+trabajar. Supabase Auth en la nube sigue siendo el proveedor de identidad
+([ADR-0001](../02-arquitectura/adr/ADR-0001-supabase-solo-auth.md)).
+Acopio conserva sus flujos de correo transaccional en su propia API.
 
 | | Adaptador `local` | Adaptador `supabase` |
 |---|---|---|
 | Quién emite el JWT | La API, con RS256 | Supabase Auth |
 | URL del JWKS | `http://api:3000/auth/.well-known/jwks.json` | `https://xxxx.supabase.co/auth/v1/.well-known/jwks.json` |
 | Contraseñas | bcrypt en nuestra base | bcrypt en Supabase |
-| Correos de confirmación y restablecer | SMTP de la API; en desarrollo, Mailpit | SMTP propio configurado en Supabase |
+| Invitación, confirmación de Donador y restablecer acceso desde la consola | SMTP de la API con Mailpit en desarrollo | SMTP de la API con Hostinger en Dokploy |
 
 El guard valida contra `SUPABASE_JWKS_URL` en los dos casos; lo único que cambia es la
 URL.
@@ -331,11 +389,11 @@ En el panel del proyecto:
 2. Agregar `APP_URL` a las URLs de redirección permitidas
 3. Confirmación de correo activada
 4. Anotar la URL del JWKS
-5. **Configurar el SMTP propio** (*Authentication → SMTP Settings*) con el mismo
-   servidor que usa la API. Supabase envía los correos de restablecer contraseña y
-   verificar correo, y su servidor por defecto solo manda 2 por hora. Al activar el
-   propio, subir el límite en *Rate Limits*
-   ([I-004](../00-contexto/investigaciones.md))
+5. Configurar *Authentication → SMTP Settings* si el proyecto usa un flujo nativo
+   de correo de Supabase Auth. Los flujos de invitación, confirmación de Donador y
+   restablecimiento administrativo de Acopio usan el SMTP de Dokploy. Si un flujo
+   nativo comparte el buzón, revisar el límite de envío de Supabase y la cuota
+   compartida del proveedor. [SMTP propio en Supabase](https://supabase.com/docs/guides/auth/auth-smtp)
 
 ## Respaldos
 
