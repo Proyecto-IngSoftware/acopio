@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-11-18 | [2026-11-18-remediacion-main](2026-11-18-remediacion-main.md) | Cola sin conexión, recordatorios reprogramados, Compose y confirmaciones históricas |
 | 2026-11-18 | [2026-11-18-purga-correo-turnos](2026-11-18-purga-correo-turnos.md) | Purga de correo de reservas y preparación del SMTP de Hostinger |
 | 2026-11-18 | [2026-11-18-remediacion-y-smtp-hostinger](2026-11-18-remediacion-y-smtp-hostinger.md) | Plan de remediación de main y configuración SMTP |
 | 2026-11-18 | [2026-11-18-fusion-pr-191-192](2026-11-18-fusion-pr-191-192.md) | Integración de rendimiento y la entrega PICS en main |

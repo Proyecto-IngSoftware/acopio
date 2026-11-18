@@ -135,7 +135,7 @@ describe('concurrencia', () => {
   });
 
   describe('saldo con registros simultáneos (RF-INV-011, la prueba más importante)', () => {
-    let op1: { token: string };
+    let op1: { id: string; token: string };
     let op2: { token: string };
     const como = (t: string) => ({ authorization: `Bearer ${t}` });
     const nuevaCategoria = async () =>
@@ -232,11 +232,13 @@ describe('concurrencia', () => {
       const cat = await nuevaCategoria();
       const id = randomUUID();
       const respuestas = await simultaneas(5, () =>
-        a
-          .http()
-          .post(`/api/acopios/${ACOPIO_A}/entradas`)
-          .set(como(op1.token))
-          .send({ id, categoriaId: cat, cantidad: 4, origenOffline: true }),
+        a.http().post(`/api/acopios/${ACOPIO_A}/entradas`).set(como(op1.token)).send({
+          id,
+          categoriaId: cat,
+          cantidad: 4,
+          origenOffline: true,
+          usuarioCapturaId: op1.id,
+        }),
       );
       expect(respuestas.every((r) => r.status === 200 || r.status === 201)).toBe(true);
       expect(respuestas.filter((r) => r.status === 201)).toHaveLength(1);

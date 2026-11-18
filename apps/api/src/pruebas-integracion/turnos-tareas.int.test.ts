@@ -135,6 +135,58 @@ describe('turnos: correos y tareas', () => {
     expect(await correosDe(r.correo)).toHaveLength(2);
   });
 
+  it('rearma al mover el inicio, descarta el aviso previo y conserva los enviados', async () => {
+    const j = await crearJornada();
+    const enviada = await reservar(j);
+    const pendiente = await reservar(j);
+    const hora = new Date('2026-10-20T14:00:00Z');
+    const recordatorios = async (correo: string) =>
+      (await correosDe(correo)).filter((c) => c.asunto.startsWith('Mañana: '));
+
+    await tareas.recordarReservas(hora);
+    const [primero] = await recordatorios(enviada.correo);
+    await a.prisma.correoSaliente.update({
+      where: { id: primero!.id },
+      data: { estado: 'ENVIADO', enviado_en: hora },
+    });
+    const [avisoPendiente] = await recordatorios(pendiente.correo);
+    const reclamoId = '12345678-1234-4321-a321-123456789abc';
+    await a.prisma.correoSaliente.update({
+      where: { id: avisoPendiente!.id },
+      data: { reclamo_id: reclamoId, enviar_despues_de: new Date(Date.now() + 60_000) },
+    });
+
+    const editar = (datos: object) =>
+      a.http().patch(`/api/turnos/gestion/jornadas/${j}`).set(como()).send(datos).expect(200);
+    await editar({ titulo: 'Cargar camiones y volver' });
+    await tareas.recordarReservas(hora);
+    expect((await recordatorios(pendiente.correo)).map((c) => c.id)).toEqual([avisoPendiente!.id]);
+
+    await editar({ fecha: '2026-10-22', horaInicio: '09:00', horaFin: '13:00' });
+    expect(await recordatorios(pendiente.correo)).toEqual([]);
+    const dao = a.app.get(CorreoSalienteDao);
+    expect(await dao.renovar({ ...avisoPendiente!, reclamo_id: reclamoId }, 60_000)).toBe(false);
+    const horaNueva = new Date('2026-10-21T15:00:00Z');
+    await Promise.all([tareas.recordarReservas(horaNueva), tareas.recordarReservas(horaNueva)]);
+    const inicioNuevo = new Date('2026-10-22T14:00:00Z');
+    expect((await recordatorios(enviada.correo)).map((c) => c.recordatorio_inicio)).toEqual([
+      primero!.recordatorio_inicio,
+      inicioNuevo,
+    ]);
+    expect((await recordatorios(pendiente.correo)).map((c) => c.recordatorio_inicio)).toEqual([
+      inicioNuevo,
+    ]);
+
+    await a
+      .http()
+      .post(`/api/turnos/gestion/jornadas/${j}/cancelar`)
+      .set(como())
+      .send({ motivo: 'El acopio se inundó' })
+      .expect(200);
+    expect(await recordatorios(pendiente.correo)).toEqual([]);
+    expect((await recordatorios(enviada.correo)).map((c) => c.id)).toEqual([primero!.id]);
+  });
+
   it('los datos personales se borran 30 días después de la jornada', async () => {
     const j = await crearJornada('2026-10-21');
     const r = await reservar(j);

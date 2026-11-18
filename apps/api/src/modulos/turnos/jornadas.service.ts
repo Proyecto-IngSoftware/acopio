@@ -173,8 +173,13 @@ export class JornadasService {
         }
       }
       let despues = await this.dao.actualizar(id, datos, tx);
+      const cambioInicio = despues.inicio.getTime() !== vigente.inicio.getTime();
+      if (cambioInicio) {
+        await this.reservas.reiniciarRecordatorios(id, tx);
+        await this.avisos.descartarRecordatorios(tx, id);
+      }
       const movida =
-        despues.inicio.getTime() !== vigente.inicio.getTime() ||
+        cambioInicio ||
         despues.fin.getTime() !== vigente.fin.getTime() ||
         despues.direccion !== vigente.direccion ||
         despues.municipio !== vigente.municipio;
@@ -214,7 +219,10 @@ export class JornadasService {
         motivo_cancelacion: motivo.trim(),
         cancelada_en: ahora,
       }),
-      async (tx, j) => this.avisos.jornadaCancelada(tx, await this.reservas.activas(id, tx), j),
+      async (tx, j) => {
+        await this.avisos.descartarRecordatorios(tx, id);
+        await this.avisos.jornadaCancelada(tx, await this.reservas.activas(id, tx), j);
+      },
     );
   }
 

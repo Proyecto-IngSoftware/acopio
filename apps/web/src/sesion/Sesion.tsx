@@ -3,7 +3,6 @@ import {
   useCallback,
   useContext,
   useEffect,
-  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -17,6 +16,7 @@ import { leerRecordado, olvidarUsuario, recordarUsuario } from './recordada';
 
 interface EstadoSesion {
   usuario: UsuarioSesion | null;
+  signalSesion: AbortSignal;
   /** Verdadero mientras se pregunta a la API si hay sesión. */
   cargando: boolean;
   /** Inicia sesión con correo o nombre de usuario, para cualquier cuenta. */
@@ -41,28 +41,36 @@ export function SesionProveedor({
   cliente?: ClienteAuth;
   children: ReactNode;
 }) {
-  const [usuario, fijarUsuario] = useState<UsuarioSesion | null>(null);
+  const [sesion, fijarSesion] = useState(() => ({
+    usuario: null as UsuarioSesion | null,
+    cancelacion: new AbortController(),
+  }));
+  const { usuario, cancelacion } = sesion;
   const [cargando, fijarCargando] = useState(true);
   const navegar = useNavigate();
   const consultas = useQueryClient();
-  const usuarioActual = useRef<UsuarioSesion | null>(null);
+  const sesionActual = useRef(sesion);
 
   // Al cambiar de cuenta se descarta lo que vio la anterior: en un teléfono prestado el
   // siguiente no debe ver, ni un momento, los folios de quien salió
   const cambiarUsuario = useCallback(
-    (u: UsuarioSesion | null) => {
-      if (u?.id !== usuarioActual.current?.id) void consultas.resetQueries();
-      usuarioActual.current = u;
-      fijarUsuario(u);
+    (u: UsuarioSesion | null, reiniciarConsultas = true) => {
+      const actual = sesionActual.current;
+      let siguiente = actual.cancelacion;
+      if (u?.id !== actual.usuario?.id) {
+        actual.cancelacion.abort();
+        siguiente = new AbortController();
+        if (reiniciarConsultas) void consultas.resetQueries();
+      }
+      const estado = {
+        usuario: u,
+        cancelacion: siguiente.signal.aborted ? new AbortController() : siguiente,
+      };
+      sesionActual.current = estado;
+      fijarSesion(estado);
     },
     [consultas],
   );
-
-  // En el mismo commit que el render: con useEffect, un 401 que llegara justo después de
-  // pintar la sesión encontraba la referencia todavía vacía y no la cerraba
-  useLayoutEffect(() => {
-    usuarioActual.current = usuario;
-  }, [usuario]);
 
   useEffect(() => {
     let vigente = true;
@@ -75,18 +83,18 @@ export function SesionProveedor({
       })
       // Sin red sigue el último usuario recordado, para capturar sin conexión (O-05)
       .catch((e) => (e instanceof ErrorApi && e.estado === 0 ? leerRecordado() : null))
-      .then((u) => vigente && fijarUsuario(u))
+      .then((u) => vigente && cambiarUsuario(u, sesionActual.current.usuario !== null))
       .finally(() => vigente && fijarCargando(false));
     return () => {
       vigente = false;
     };
-  }, [cliente]);
+  }, [cliente, cambiarUsuario]);
 
   // Sin sesión abierta un 401 no dice nada: el visitante sigue en el portal
   useEffect(
     () =>
       alPerderSesion(() => {
-        const perdido = usuarioActual.current;
+        const perdido = sesionActual.current.usuario;
         if (!perdido) return;
         olvidarUsuario();
         cambiarUsuario(null);
@@ -122,6 +130,7 @@ export function SesionProveedor({
   );
 
   const salir = useCallback(async () => {
+    sesionActual.current.cancelacion.abort();
     await cliente.cerrarSesion();
     olvidarUsuario();
     cambiarUsuario(null);
@@ -130,6 +139,7 @@ export function SesionProveedor({
   const valor = useMemo(
     () => ({
       usuario,
+      signalSesion: cancelacion.signal,
       cargando,
       entrar,
       registrarDonador,
@@ -137,7 +147,7 @@ export function SesionProveedor({
       confirmar,
       salir,
     }),
-    [usuario, cargando, entrar, registrarDonador, validarEnlace, confirmar, salir],
+    [usuario, cancelacion, cargando, entrar, registrarDonador, validarEnlace, confirmar, salir],
   );
   return <Contexto.Provider value={valor}>{children}</Contexto.Provider>;
 }

@@ -46,7 +46,7 @@ api.use({
   onResponse({ request, response }) {
     const ruta = new URL(request.url).pathname;
     const esInicio = ruta.endsWith('/api/auth/sesion');
-    if (response.status === 401 && !esInicio) {
+    if (response.status === 401 && !esInicio && !request.signal.aborted) {
       for (const fn of suscriptores) fn();
     }
   },

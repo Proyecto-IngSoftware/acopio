@@ -6,6 +6,7 @@ import { RELOJ, type Reloj } from '../acopios/geocodificacion';
 import { BitacoraService } from '../auditoria/bitacora.service';
 import { NotificacionService } from '../notificaciones/notificacion.service';
 import { AvisosTurnos } from './avisos-turnos';
+import { JornadaDao } from './dao/jornada.dao';
 import { ReservaDao } from './dao/reserva.dao';
 
 const MS_HORA = 3_600_000;
@@ -17,6 +18,7 @@ export class TareasTurnosService {
 
   constructor(
     private readonly reservas: ReservaDao,
+    private readonly jornadas: JornadaDao,
     private readonly transacciones: Transacciones,
     private readonly avisos: AvisosTurnos,
     private readonly notificaciones: NotificacionService,
@@ -35,8 +37,10 @@ export class TareasTurnosService {
     let marcados = 0;
     for (const r of pendientes) {
       const marcado = await this.transacciones.ejecutar(async (tx) => {
-        if (!(await this.reservas.reclamarRecordatorio(r.id, ahora, hasta, tx))) return false;
-        await this.avisos.recordatorio(tx, r, r.jornada);
+        await this.jornadas.bloquear(r.jornada_id, tx);
+        const vigente = await this.reservas.reclamarRecordatorio(r.id, ahora, hasta, tx);
+        if (!vigente) return false;
+        await this.avisos.recordatorio(tx, vigente, vigente.jornada);
         return true;
       });
       if (marcado) marcados++;

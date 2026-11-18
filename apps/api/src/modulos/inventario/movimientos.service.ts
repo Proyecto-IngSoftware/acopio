@@ -21,6 +21,7 @@ export interface DatosEntrada {
   venceEn: Date | null;
   ocurridoEn: Date | null;
   origenOffline: boolean;
+  usuarioCapturaId?: string;
 }
 
 export interface MovimientoVista {
@@ -167,12 +168,23 @@ export class MovimientosService {
     acopioId: string,
     datos: DatosEntrada,
   ): Promise<{ resultado: ResultadoMovimiento; nuevo: boolean }> {
+    if (datos.origenOffline && datos.usuarioCapturaId !== usuario.id) {
+      throw new ErrorDominio(
+        'SESION_ENTRADA_OFFLINE',
+        'Para enviar esta entrada, actualiza Acopio e inicia sesión con la cuenta que la registró',
+        409,
+      );
+    }
     // Un reintento de la cola recibe el original aunque desde entonces se haya cerrado el
     // acopio o la fecha haya salido de la ventana de 7 días: solo se exige el alcance
     await this.alcance.exigir(usuario, 'ACOPIO', acopioId);
     if (datos.id) {
       const previo = await this.movimientos.buscar(datos.id);
-      if (previo) return { resultado: await this.repetido(previo, acopioId, datos), nuevo: false };
+      if (previo)
+        return {
+          resultado: await this.repetido(previo, usuario.id, acopioId, datos),
+          nuevo: false,
+        };
     }
     await this.acopios.exigirAbierto(acopioId);
     const ocurridoEn = exigirOcurridoEn(datos.ocurridoEn);
@@ -194,7 +206,10 @@ export class MovimientosService {
       if (datos.id && esLlaveDuplicada(e)) {
         const previo = await this.movimientos.buscar(datos.id);
         if (!previo) throw e;
-        return { resultado: await this.repetido(previo, acopioId, datos), nuevo: false };
+        return {
+          resultado: await this.repetido(previo, usuario.id, acopioId, datos),
+          nuevo: false,
+        };
       }
       throw e;
     }
@@ -459,7 +474,19 @@ export class MovimientosService {
   }
 
   /** Un reintento con el mismo id: el original si coincide, 409 si no. */
-  private async repetido(previo: Movimiento, acopioId: string, datos: DatosEntrada) {
+  private async repetido(
+    previo: Movimiento,
+    usuarioId: string,
+    acopioId: string,
+    datos: DatosEntrada,
+  ) {
+    if (datos.origenOffline && previo.usuario_id !== usuarioId) {
+      throw new ErrorDominio(
+        'MOVIMIENTO_DISTINTO',
+        'Esta entrada quedó registrada con otra cuenta',
+        409,
+      );
+    }
     const igual =
       previo.tipo === 'ENTRADA' &&
       previo.acopio_id === acopioId &&

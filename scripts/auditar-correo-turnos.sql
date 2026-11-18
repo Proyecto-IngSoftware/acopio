@@ -12,14 +12,15 @@ WITH historicos AS (
 )
 SELECT h.plantilla,
        count(*) AS mensajes_sin_vinculo,
-       count(r.id) AS con_codigo_y_enlace_de_reserva,
+       count(r.id) AS con_codigo_y_secreto_verificado,
        count(r.id) FILTER (
            WHERE r.datos_borrados_en IS NOT NULL OR j.fin <= now() - interval '720 hours'
        ) AS vinculables_y_vencidos
 FROM historicos h
 LEFT JOIN reserva r ON h.plantilla = 'confirmacion'
     AND r.codigo = substring(h.cuerpo_texto FROM E'\nCódigo de reserva: ([A-HJKMNP-Z2-9]{8})\n')
-    AND position('/voluntariado/reserva/' || r.codigo || '#' IN h.cuerpo_texto) > 0
+    AND r.secreto_hash = encode(sha256(convert_to(substring(h.cuerpo_texto FROM
+        '/voluntariado/reserva/' || r.codigo || '#([A-Za-z0-9_-]{24})' || E'\\n'), 'UTF8')), 'hex')
 LEFT JOIN jornada j ON j.id = r.jornada_id
 WHERE h.plantilla IS NOT NULL
 GROUP BY h.plantilla

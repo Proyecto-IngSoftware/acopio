@@ -71,16 +71,24 @@ export class AvisosTurnos {
   }
 
   recordatorio(tx: ClienteBd, r: Destinatario, j: FilaJornada) {
-    return this.enviar(tx, r, (nombre) =>
-      plantillas.recordatorioJornada({
-        nombre,
-        titulo: j.titulo,
-        lugar: textoLugar(j),
-        inicio: j.inicio,
-        queLlevar: j.que_llevar,
-        enlaceJornada: this.enlaceJornada(j),
-      }),
+    return this.enviar(
+      tx,
+      r,
+      (nombre) =>
+        plantillas.recordatorioJornada({
+          nombre,
+          titulo: j.titulo,
+          lugar: textoLugar(j),
+          inicio: j.inicio,
+          queLlevar: j.que_llevar,
+          enlaceJornada: this.enlaceJornada(j),
+        }),
+      j.inicio,
     );
+  }
+
+  descartarRecordatorios(tx: ClienteBd, jornadaId: string) {
+    return this.notificaciones.descartarRecordatorios(tx, jornadaId);
   }
 
   private enlaceJornada(j: FilaJornada) {
@@ -92,9 +100,13 @@ export class AvisosTurnos {
     tx: ClienteBd,
     r: Destinatario,
     redactar: (nombre: string) => ReturnType<typeof plantillas.reservaCancelada>,
+    recordatorioInicio?: Date,
   ) {
     if (!r.correo) return;
-    await this.notificaciones.encolar(tx, r.correo, redactar(r.nombre ?? ''), { reservaId: r.id });
+    await this.notificaciones.encolar(tx, r.correo, redactar(r.nombre ?? ''), {
+      reservaId: r.id,
+      recordatorioInicio,
+    });
   }
 }
 

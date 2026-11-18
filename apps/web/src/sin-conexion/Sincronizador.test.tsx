@@ -46,6 +46,43 @@ describe('Sincronizador de la cola (O-03)', () => {
     await waitFor(async () => expect(await listarCola('u1')).toEqual([]));
   });
 
+  it('aborta el lote al cambiar de cuenta y lo retoma al volver', async () => {
+    const otra = { ...operadora, id: 'u2' };
+    await encolar('u1', 'x1', { id: 'e1', categoriaId: 'c1', cantidad: 12 });
+    await encolar('u1', 'x1', { id: 'e2', categoriaId: 'c1', cantidad: 5 });
+    await encolar('u2', 'x1', { id: 'e3', categoriaId: 'c1', cantidad: 1 });
+    const envios: { id: string; usuarioCapturaId: string }[] = [];
+    let pendiente: AbortSignal | undefined;
+    vi.spyOn(globalThis, 'fetch').mockImplementation(async (entrada) => {
+      const p = entrada as Request;
+      envios.push(await p.json());
+      if (envios.length === 1) {
+        pendiente = p.signal;
+        return new Promise((_resolver, rechazar) =>
+          p.signal.addEventListener('abort', () => rechazar(p.signal.reason), { once: true }),
+        );
+      }
+      return Response.json(creado, { status: 201 });
+    });
+
+    const vista = render(envolver(<Sincronizador />, '/', clienteFalso(operadora)));
+    await waitFor(() => expect(pendiente).toBeDefined());
+    vista.rerender(envolver(<Sincronizador />, '/', clienteFalso(otra)));
+    await waitFor(async () => expect(await listarCola('u2')).toEqual([]));
+    expect(pendiente?.aborted).toBe(true);
+    expect(envios.map((e) => e.id)).toEqual(['e1', 'e3']);
+    expect(await listarCola('u1')).toHaveLength(2);
+
+    vista.rerender(envolver(<Sincronizador />, '/', clienteFalso(operadora)));
+    await waitFor(async () => expect(await listarCola('u1')).toEqual([]));
+    expect(envios.map(({ id, usuarioCapturaId }) => [id, usuarioCapturaId])).toEqual([
+      ['e1', 'u1'],
+      ['e3', 'u2'],
+      ['e1', 'u1'],
+      ['e2', 'u1'],
+    ]);
+  });
+
   it('sin sesión no envía nada', async () => {
     await encolar('u1', 'x1', { id: 'e1', categoriaId: 'c1', cantidad: 12 });
     const llamadas = api(() => 201);

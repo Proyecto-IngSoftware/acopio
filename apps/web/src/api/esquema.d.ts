@@ -3129,6 +3129,11 @@ export interface components {
       /** Format: date-time */
       ocurridoEn?: string;
       origenOffline?: boolean;
+      /**
+       * Format: uuid
+       * @description Cuenta que guardó la entrada sin conexión
+       */
+      usuarioCapturaId?: string;
     };
     ResultadoMovimientoDto: {
       movimiento: {

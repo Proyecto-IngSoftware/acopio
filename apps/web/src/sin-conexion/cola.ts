@@ -59,7 +59,7 @@ export async function corregirFecha(id: string, ocurridoEn: Date) {
   });
 }
 
-const enCurso = new Map<string, Promise<ResultadoEnvio>>();
+const enCurso = new Map<string, { promesa: Promise<ResultadoEnvio>; signal?: AbortSignal }>();
 
 /**
  * Envía las pendientes en orden, de a una (O-03), y borra cada una solo con un 2xx.
@@ -69,37 +69,49 @@ const enCurso = new Map<string, Promise<ResultadoEnvio>>();
 export function enviarCola(
   usuarioId: string,
   alAvanzar?: (hechas: number, total: number) => void,
+  signal?: AbortSignal,
 ): Promise<ResultadoEnvio> {
-  // Dos llamadas seguidas (el evento online y la vuelta a C4) comparten el mismo envío
+  if (signal?.aborted) return Promise.resolve({ estado: 'sin-sesion', enviadas: 0 });
   const previo = enCurso.get(usuarioId);
-  if (previo) return previo;
-  const envio = enviar(usuarioId, alAvanzar).finally(() => enCurso.delete(usuarioId));
-  enCurso.set(usuarioId, envio);
-  return envio;
+  if (previo) {
+    if (!previo.signal?.aborted) return previo.promesa;
+    return previo.promesa.catch(() => {}).then(() => enviarCola(usuarioId, alAvanzar, signal));
+  }
+  const promesa = enviar(usuarioId, alAvanzar, signal).finally(() => enCurso.delete(usuarioId));
+  enCurso.set(usuarioId, { promesa, signal });
+  return promesa;
 }
 
 async function enviar(
   usuarioId: string,
   alAvanzar?: (hechas: number, total: number) => void,
+  signal?: AbortSignal,
 ): Promise<ResultadoEnvio> {
   let enviadas = 0;
-  const pendientes = (await listarCola(usuarioId)).filter((f) => f.estado === 'pendiente');
+  const pendientes = (await listarCola(usuarioId)).filter(
+    (f) => f.estado === 'pendiente' || f.codigo === 'SESION_ENTRADA_OFFLINE',
+  );
   for (const [i, fila] of pendientes.entries()) {
+    if (signal?.aborted) return { estado: 'sin-sesion', enviadas };
     alAvanzar?.(i, pendientes.length);
     try {
       await desenvolver(
         api.POST('/api/acopios/{id}/entradas', {
           params: { path: { id: fila.acopioId } },
-          body: fila.cuerpo as never,
+          body: { ...fila.cuerpo, usuarioCapturaId: fila.usuarioId },
+          signal,
         }),
       );
     } catch (error) {
       const e = error instanceof ErrorApi ? error : new ErrorApi(0, 'SIN_RED', '');
-      if (e.estado === 401) return { estado: 'sin-sesion', enviadas };
+      if (signal?.aborted || e.estado === 401 || e.codigo === 'SESION_ENTRADA_OFFLINE') {
+        return { estado: 'sin-sesion', enviadas };
+      }
       if (e.estado === 0 || e.estado === 429 || e.estado >= 500) {
         return { estado: 'reintentar', enviadas };
       }
       const base = await abrir();
+      if (signal?.aborted) return { estado: 'sin-sesion', enviadas };
       await base.put('cola', { ...fila, estado: 'rechazada', codigo: e.codigo, motivo: e.message });
       continue;
     }
