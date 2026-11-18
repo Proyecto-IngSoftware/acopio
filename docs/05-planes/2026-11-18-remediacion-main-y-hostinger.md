@@ -36,10 +36,13 @@ configura el buzón y las credenciales en los paneles.
   buzón puede recibir correos de varias reservas y de otros módulos.
 
 La [consulta de inventario histórico](../../scripts/auditar-correo-turnos.sql)
-devuelve conteos por plantilla. Para confirmaciones, distingue las que tienen
-un código y un enlace que apuntan a la misma reserva. La consulta solo lee.
-La clasificación y el tratamiento de las filas históricas siguen pendientes
-de ejecutar con los resultados de esa revisión.
+devuelve conteos por plantilla y verifica el hash del secreto del enlace para
+cada confirmación. Después de revisar esos conteos, el
+[script de vinculación](../../scripts/vincular-confirmaciones-turnos.sql)
+asocia las confirmaciones verificadas a su reserva. La tarea de purga habitual
+aplica el plazo al correo vinculado. Hay que ejecutar ambos pasos sobre la base
+real y revisar los casos sin un vínculo verificable. Los scripts informan
+conteos y conservan las filas ambiguas para esa revisión.
 
 **Aceptación.** Con una reserva vigente y otra vencida, PostgreSQL conserva los
 mensajes de la primera y borra o anonimiza las copias personales de la segunda,
@@ -52,10 +55,11 @@ y fallido, un reclamo simultáneo, una purga repetida y correo de otros módulos
   detener el lote e impedir que se programen más solicitudes de esa cuenta.
   Usar cancelación para las solicitudes que todavía se puedan abortar.
 - Asegurar también en la API que una entrada sin conexión se atribuya a la cuenta
-  que la registró. Acordar la transición para clientes instalados y colas
-  existentes. Conservar las entradas pendientes ante un cambio de sesión o una
-  respuesta ambigua. El identificador del movimiento permite reintentar sin
-  duplicarlo.
+  que la registró. Al actualizar la web, la sincronización toma el identificador
+  de cuenta que ya guarda IndexedDB junto a cada entrada. La API devuelve
+  `SESION_ENTRADA_OFFLINE` a clientes que aún no lo envían. Tras actualizar,
+  la cola retoma también las entradas marcadas con ese código. El identificador
+  del movimiento permite reintentar sin duplicarlo.
 
 **Aceptación.** Una prueba de regresión con dos sesiones sintéticas y una solicitud
 pendiente demuestra que la sincronización se detiene al cambiar de sesión. Al
@@ -67,7 +71,9 @@ las atribuye a la cuenta correspondiente.
 - Asociar el reclamo del recordatorio al inicio vigente de la jornada. Un cambio
   de inicio permite reclamar un recordatorio para la nueva fecha y descarta el
   aviso de la fecha anterior si todavía espera envío. Mantener el aviso de cambio
-  como mensaje separado.
+  como mensaje separado. La migración rearma las jornadas cuya bitácora registra
+  un cambio de inicio posterior al recordatorio. Los recordatorios históricos
+  sin un inicio verificable quedan fuera del envío automático.
 - Coordinar la edición y el reclamo para que dos instancias de la API no encolen
   el mismo recordatorio ni usen una fecha reemplazada.
 
@@ -89,10 +95,9 @@ el interruptor.
 
 ## Cambio de SMTP a Hostinger
 
-1. Confirmar en hPanel el buzón remitente y el producto de correo. Los MX
-   publicados de `josephqaz.dev` apuntan a Hostinger Mail. El ejemplo usa
-   `no-reply@josephqaz.dev`, el remitente histórico documentado. El panel debe
-   confirmar que el buzón existe.
+1. Usar el buzón `contacto@josephqaz.dev` para autenticar y enviar. Hostinger
+   aceptó su autenticación SMTP desde el entorno local. La comprobación desde
+   Dokploy y la prueba de entrega siguen pendientes.
 2. Revisar en el DNS del dominio los registros que indique hPanel y la cuota
    del buzón. Cargar en Dokploy las variables de la
    [guía de SMTP](../06-operacion/despliegue.md#correo-de-acopio-con-hostinger)

@@ -30,6 +30,7 @@ class EntradaDto extends crearDto(
       .transform((t) => new Date(t))
       .optional(),
     origenOffline: z.boolean().optional(),
+    usuarioCapturaId: z.uuid().optional().describe('Cuenta que guardó la entrada sin conexión'),
   }),
 ) {}
 
@@ -84,6 +85,7 @@ export class MovimientosController {
       venceEn: datos.venceEn ?? null,
       ocurridoEn: datos.ocurridoEn ?? null,
       origenOffline: datos.origenOffline ?? false,
+      usuarioCapturaId: datos.usuarioCapturaId,
     });
     res.status(nuevo ? 201 : 200);
     return resultado;

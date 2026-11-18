@@ -1,5 +1,5 @@
 import { useQueryClient } from '@tanstack/react-query';
-import { useEffect, useSyncExternalStore } from 'react';
+import { useLayoutEffect, useSyncExternalStore } from 'react';
 import { useSesion } from '../sesion/Sesion';
 import { enviarCola, esperaReintento, type ResultadoEnvio } from './cola';
 
@@ -44,26 +44,29 @@ export function Sincronizador({
 }: {
   espera?: (intento: number) => number;
 }) {
-  const { usuario } = useSesion();
+  const { usuario, signalSesion } = useSesion();
   const consultas = useQueryClient();
   const usuarioId = usuario?.id;
 
-  useEffect(() => {
-    if (!usuarioId) return;
-    let vigente = true;
+  useLayoutEffect(() => {
+    if (!usuarioId || signalSesion.aborted) return;
+    const efecto = new AbortController();
+    signalSesion.addEventListener('abort', () => efecto.abort(), { signal: efecto.signal });
     let intento = 0;
     let reloj: ReturnType<typeof setTimeout> | undefined;
 
     const enviar = async () => {
       clearTimeout(reloj);
-      const r: ResultadoEnvio = await enviarCola(usuarioId, (hechas, total) =>
-        publicarEnvio({ hechas, total }),
+      const r: ResultadoEnvio = await enviarCola(
+        usuarioId,
+        (hechas, total) => publicarEnvio({ hechas, total }),
+        efecto.signal,
       ).catch(() => ({
         estado: 'reintentar' as const,
         enviadas: 0,
       }));
+      if (efecto.signal.aborted) return;
       publicarEnvio(null);
-      if (!vigente) return;
       void consultas.invalidateQueries({ queryKey: ['cola'] });
       if (r.enviadas > 0) {
         void consultas.invalidateQueries({ queryKey: ['saldos'] });
@@ -82,12 +85,13 @@ export function Sincronizador({
     window.addEventListener('online', alAvisar);
     window.addEventListener(PEDIDO, alAvisar);
     return () => {
-      vigente = false;
+      efecto.abort();
+      publicarEnvio(null);
       clearTimeout(reloj);
       window.removeEventListener('online', alAvisar);
       window.removeEventListener(PEDIDO, alAvisar);
     };
-  }, [usuarioId, espera, consultas]);
+  }, [usuarioId, signalSesion, espera, consultas]);
 
   return null;
 }

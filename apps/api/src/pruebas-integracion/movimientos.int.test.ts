@@ -99,12 +99,42 @@ describe('movimientos', () => {
 
     it('el mismo id dos veces devuelve el original sin duplicar', async () => {
       const id = randomUUID();
-      const datos = { id, categoriaId: panal, cantidad: 3, origenOffline: true };
+      const datos = {
+        id,
+        categoriaId: panal,
+        cantidad: 3,
+        origenOffline: true,
+        usuarioCapturaId: op.id,
+      };
       const primero = await entrada(datos).expect(201);
       const segundo = await entrada(datos).expect(200);
       expect(segundo.body.movimiento.id).toBe(id);
       expect(segundo.body.saldo).toBe(primero.body.saldo);
       expect(await a.prisma.movimiento.count({ where: { id } })).toBe(1);
+    });
+
+    it('una entrada sin conexión se conserva para su cuenta y deja una sola bitácora', async () => {
+      const otra = await crearUsuarioActivo(a, tokenAdmin, {
+        rol: 'OPERADOR',
+        asignaciones: [{ tipo: 'ACOPIO', ubicacionId: ACOPIO_A }],
+      });
+      const id = randomUUID();
+      const datos = { id, categoriaId: panal, cantidad: 1, origenOffline: true };
+      for (const r of [
+        await entrada(datos).expect(409),
+        await entrada({ ...datos, usuarioCapturaId: op.id }, otra.token).expect(409),
+      ]) {
+        expect(r.body.codigo).toBe('SESION_ENTRADA_OFFLINE');
+      }
+      expect(await a.prisma.movimiento.count({ where: { id } })).toBe(0);
+      await entrada({ ...datos, usuarioCapturaId: op.id }).expect(201);
+      await entrada({ ...datos, usuarioCapturaId: op.id }).expect(200);
+      expect(
+        await a.prisma.bitacora.findMany({
+          where: { accion: 'movimiento.entrada', entidad_id: id },
+          select: { usuario_id: true },
+        }),
+      ).toEqual([{ usuario_id: op.id }]);
     });
 
     it('reintento con venceEn en una categoría no perecedera: 200, no 409', async () => {
@@ -161,6 +191,7 @@ describe('movimientos', () => {
         cantidad: 1,
         ocurridoEn: hace,
         origenOffline: true,
+        usuarioCapturaId: op.id,
       }).expect(201);
       expect(r.body.movimiento.ocurridoEn).toBe(hace);
       expect(r.body.movimiento.origenOffline).toBe(true);

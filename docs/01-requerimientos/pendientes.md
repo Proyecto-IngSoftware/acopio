@@ -1280,7 +1280,9 @@ sin conexión al cambiar de sesión, rearmar los recordatorios al mover una
 jornada y pasar a Compose las variables de RedAcopio. Validar Hostinger con
 una prueba de conexión y entrega desde el servidor.
 
-**Estado:** ABIERTO · [plan y criterios de aceptación](../05-planes/2026-11-18-remediacion-main-y-hostinger.md).
+**Estado:** ABIERTO. Quedan la auditoría y el tratamiento del correo histórico
+en la base real, y la prueba de entrega desde Dokploy.
+[Plan y criterios de aceptación](../05-planes/2026-11-18-remediacion-main-y-hostinger.md).
 
 ---
 

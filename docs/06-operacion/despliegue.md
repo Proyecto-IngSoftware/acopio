@@ -176,10 +176,10 @@ S3_SECRET_KEY=                 # openssl rand -hex 32 (64 hexadecimales)
 CORREO_ACTIVO=true
 SMTP_HOST=smtp.hostinger.com   # Hostinger Mail. Confirma el producto y el host en hPanel
 SMTP_PORT=465
-SMTP_USER=no-reply@josephqaz.dev
+SMTP_USER=contacto@josephqaz.dev
 SMTP_PASSWORD=                 # contraseña del buzón, solo en Dokploy
 SMTP_SEGURO=true               # TLS desde que se abre la conexión
-CORREO_REMITENTE="Acopio <no-reply@josephqaz.dev>"
+CORREO_REMITENTE="Acopio <contacto@josephqaz.dev>"
 SEED_ADMIN_USUARIO=admin
 SEED_ADMIN_NOMBRE=Administrador
 SEED_ADMIN_CORREO=
@@ -200,9 +200,11 @@ Con el correo activo, la API exige `SMTP_PASSWORD` si se define `SMTP_USER`.
 
 En hPanel abre **Emails → Administrar → Conectar aplicaciones y dispositivos**
 y revisa la configuración manual. Usa la dirección completa de un buzón real como
-`SMTP_USER` y esa misma dirección en `CORREO_REMITENTE`. El ejemplo de arriba usa
-el remitente histórico de Acopio. Usa su contraseña de correo en el panel de
-Dokploy. [Configuración oficial de Hostinger Mail](https://www.hostinger.com/support/4305847-set-up-hostinger-email-on-your-applications-and-devices/)
+`SMTP_USER` y esa misma dirección en `CORREO_REMITENTE`. El buzón de Acopio es
+`contacto@josephqaz.dev`. Usa su contraseña de correo en Dokploy. Hostinger admite
+enviar desde el alias `no-reply@josephqaz.dev` en Webmail.
+[Configuración SMTP](https://www.hostinger.com/support/4305847-set-up-hostinger-email-on-your-applications-and-devices/) ·
+[Alias de Hostinger](https://www.hostinger.com/support/how-to-send-emails-from-an-email-alias-using-hostinger-mail-web-app/)
 
 Si el panel indica Titan Email, usa `smtp.titan.email` con el mismo puerto 465 y
 `SMTP_SEGURO=true`. Si hay un problema de conectividad con el puerto 465, ambos

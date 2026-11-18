@@ -60,10 +60,14 @@ export class NotificacionService implements OnApplicationBootstrap {
     cliente: ClienteBd,
     destinatario: string,
     correo: CorreoRedactado,
-    origen?: { reservaId: string },
+    origen?: { reservaId: string; recordatorioInicio?: Date },
   ) {
     if (!this.entorno.CORREO_ACTIVO) return null;
-    return this.cola.crear(cliente, { destinatario, ...correo, reservaId: origen?.reservaId });
+    return this.cola.crear(cliente, { destinatario, ...correo, ...origen });
+  }
+
+  descartarRecordatorios(cliente: ClienteBd, jornadaId: string) {
+    return this.cola.descartarRecordatorios(cliente, jornadaId);
   }
 
   borrarDeReservasVencidas(cliente: ClienteBd, limite: Date) {

@@ -169,20 +169,21 @@ enum EstadoCorreo {
 }
 
 model CorreoSaliente {
-  id                String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  destinatario      String       @db.Citext
-  asunto            String
-  cuerpo_texto      String
-  cuerpo_html       String?
-  estado            EstadoCorreo @default(PENDIENTE)
-  intentos          Int          @default(0)
-  ultimo_error      String?
-  enviar_despues_de DateTime     @default(now()) @db.Timestamptz
-  reclamo_id        String?      @db.Uuid
-  creado_en         DateTime     @default(now()) @db.Timestamptz
-  enviado_en        DateTime?    @db.Timestamptz
-  reserva_id        String?      @db.Uuid
-  reserva           Reserva?     @relation(fields: [reserva_id], references: [id], onDelete: Cascade)
+  id                  String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  destinatario        String       @db.Citext
+  asunto              String
+  cuerpo_texto        String
+  cuerpo_html         String?
+  estado              EstadoCorreo @default(PENDIENTE)
+  intentos            Int          @default(0)
+  ultimo_error        String?
+  enviar_despues_de   DateTime     @default(now()) @db.Timestamptz
+  reclamo_id          String?      @db.Uuid
+  creado_en           DateTime     @default(now()) @db.Timestamptz
+  enviado_en          DateTime?    @db.Timestamptz
+  reserva_id          String?      @db.Uuid
+  recordatorio_inicio DateTime?    @db.Timestamptz
+  reserva             Reserva?     @relation(fields: [reserva_id], references: [id], onDelete: Cascade)
 
   @@index([estado, enviar_despues_de])
   @@index([reserva_id])

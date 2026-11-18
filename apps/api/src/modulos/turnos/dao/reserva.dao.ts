@@ -66,7 +66,14 @@ export class ReservaDao {
         recordatorio_en: null,
         jornada: { estado: { in: ['ABIERTA', 'CERRADA'] }, inicio: { gt: desde, lte: hasta } },
       },
-      include: conJornada,
+      select: { id: true, jornada_id: true },
+    });
+  }
+
+  reiniciarRecordatorios(jornadaId: string, tx: ClienteBd) {
+    return tx.reserva.updateMany({
+      where: { jornada_id: jornadaId, estado: 'ACTIVA', recordatorio_en: { not: null } },
+      data: { recordatorio_en: null },
     });
   }
 
@@ -81,7 +88,9 @@ export class ReservaDao {
       },
       data: { recordatorio_en: desde },
     });
-    return count === 1;
+    return count === 1
+      ? tx.reserva.findUniqueOrThrow({ where: { id }, include: conJornada })
+      : null;
   }
 
   /** Vacía nombre, correo y teléfono de las reservas de jornadas que terminaron antes de `limite`. */

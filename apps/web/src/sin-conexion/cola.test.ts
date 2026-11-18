@@ -53,6 +53,7 @@ describe('cola de entradas sin conexión', () => {
     expect(r).toEqual({ estado: 'listo', enviadas: 2 });
     expect(enviados.map((c) => c.categoriaId)).toEqual(['c-arroz', 'c-agua']);
     expect(enviados[0]).toMatchObject({
+      usuarioCapturaId: YO,
       ocurridoEn: a('10:42').toISOString(),
       origenOffline: true,
     });
@@ -77,13 +78,13 @@ describe('cola de entradas sin conexión', () => {
     expect(await listarCola(YO)).toEqual([]);
   });
 
-  it('un 401 detiene el envío, conserva la cola y pide volver a entrar', async () => {
+  it.each([
+    [401, 'NO_AUTENTICADO'],
+    [409, 'SESION_ENTRADA_OFFLINE'],
+  ])('un %s de sesión detiene el envío y conserva la cola', async (estado, codigo) => {
     await encolar(YO, A, arroz, a('10:42'));
     await encolar(YO, A, agua, a('10:45'));
-    const enviados = api(() => [
-      401,
-      { estado: 401, codigo: 'NO_AUTENTICADO', mensaje: 'Falta la sesión' },
-    ]);
+    const enviados = api(() => [estado, { estado, codigo, mensaje: 'Falta la sesión' }]);
 
     expect(await enviarCola(YO)).toEqual({ estado: 'sin-sesion', enviadas: 0 });
     expect(enviados).toHaveLength(1);

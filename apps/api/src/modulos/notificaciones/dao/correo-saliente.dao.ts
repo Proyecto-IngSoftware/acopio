@@ -5,11 +5,17 @@ import { PrismaService } from '../../../comun/prisma/prisma.service';
 import { Prisma } from '../../../generado/prisma/client';
 
 const correoVigente = Prisma.sql`
-  NOT EXISTS (
+  (recordatorio_inicio IS NOT NULL OR asunto NOT LIKE 'Mañana: %'
+    OR position(E'\\nDetalle de la jornada:\\n' IN cuerpo_texto) = 0)
+  AND NOT EXISTS (
     SELECT 1 FROM reserva r JOIN jornada j ON j.id = r.jornada_id
     WHERE r.id = correo_saliente.reserva_id
       AND (r.datos_borrados_en IS NOT NULL OR j.fin <= now()
-        - make_interval(hours => ${24 * LIMITES_TURNOS.diasBorrado}::int))
+        - make_interval(hours => ${24 * LIMITES_TURNOS.diasBorrado}::int)
+        OR (correo_saliente.recordatorio_inicio IS NOT NULL AND (
+          j.inicio <> correo_saliente.recordatorio_inicio OR j.inicio <= now()
+          OR j.estado = 'CANCELADA' OR r.estado <> 'ACTIVA'
+        )))
   )`;
 
 export type CorreoReclamado = {
@@ -36,6 +42,7 @@ export class CorreoSalienteDao {
       texto: string;
       html: string | null;
       reservaId?: string;
+      recordatorioInicio?: Date;
     },
   ) {
     return tx.correoSaliente.create({
@@ -45,8 +52,20 @@ export class CorreoSalienteDao {
         cuerpo_texto: datos.texto,
         cuerpo_html: datos.html,
         reserva_id: datos.reservaId,
+        recordatorio_inicio: datos.recordatorioInicio,
       },
       select: { id: true },
+    });
+  }
+
+  descartarRecordatorios(tx: ClienteBd, jornadaId: string) {
+    return tx.correoSaliente.deleteMany({
+      where: {
+        estado: { in: ['PENDIENTE', 'FALLIDO'] },
+        reserva: { jornada_id: jornadaId },
+        // El asunto identifica recordatorios vinculados creados antes de guardar el inicio.
+        OR: [{ recordatorio_inicio: { not: null } }, { asunto: { startsWith: 'Mañana: ' } }],
+      },
     });
   }
 
