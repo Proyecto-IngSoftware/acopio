@@ -46,30 +46,30 @@ def roles(archivo, pares):
 
 
 roles("funciones.png", [
-    ("Portal público", "Consultar puntos de acopio y causas\nReservar turnos de voluntariado"),
-    ("Operación en acopio", "Registrar existencias y donaciones\nPreparar remisiones"),
-    ("Coordinación de ayuda", "Revisar sugerencias de traslado\nConfirmar recepción en destino"),
+    ("Public portal", "Look up collection points and causes\nReserve volunteer shifts"),
+    ("Collection center", "Record stock and donations\nPrepare dispatch records"),
+    ("Aid coordination", "Review transfer suggestions\nConfirm receipt at the destination"),
 ])
 roles("casos-publico.png", [
-    ("Visitante", "Consultar puntos de acopio y causas"),
-    ("Donante", "Preparar una donación y seguirla por folio"),
-    ("Voluntario", "Reservar un turno disponible"),
+    ("Visitor", "Look up collection points and causes"),
+    ("Donor", "Prepare a donation and track it by code"),
+    ("Volunteer", "Reserve an available shift"),
 ])
 roles("casos-operacion.png", [
-    ("Operador", "Registrar inventario y gestionar remisiones"),
-    ("Administrador", "Revisar sugerencias y gestionar la red"),
-    ("Receptor", "Confirmar entregas y reportar necesidades"),
+    ("Operator", "Record inventory and manage dispatches"),
+    ("Administrator", "Review suggestions and manage the network"),
+    ("Receiver", "Confirm deliveries and report needs"),
 ])
 esquema("paquetes.png", [
-    ("apps/web\nInterfaz en React", (40, 40, 780, 230)),
-    ("apps/api\nReglas de negocio en NestJS", (1020, 40, 1760, 230)),
-    ("packages/shared\nUnidades y fórmulas compartidas", (480, 350, 1320, 540)),
+    ("apps/web\nReact interface", (40, 40, 780, 230)),
+    ("apps/api\nBusiness rules in NestJS", (1020, 40, 1760, 230)),
+    ("packages/shared\nShared units and formulas", (480, 350, 1320, 540)),
 ], [((780, 135), (1020, 135)), ((405, 230), (660, 350)), ((1395, 230), (1140, 350))])
 esquema("contenedores.png", [
-    ("Navegador\nPortal y consola", (40, 40, 780, 230)),
-    ("API de Acopio\nOperaciones de la plataforma", (1020, 40, 1760, 230)),
-    ("Almacenamiento\nArchivos adjuntos", (40, 355, 780, 545)),
-    ("PostgreSQL\nRegistros operativos", (1020, 355, 1760, 545)),
+    ("Browser\nPortal and console", (40, 40, 780, 230)),
+    ("Acopio API\nPlatform operations", (1020, 40, 1760, 230)),
+    ("Storage\nAttached files", (40, 355, 780, 545)),
+    ("PostgreSQL\nOperational records", (1020, 355, 1760, 545)),
 ], [((780, 135), (1020, 135)), ((1390, 230), (1390, 355)), ((1160, 230), (710, 355))])
 
 evidencia = DOCS / "entregas/evidencia/avance-05"

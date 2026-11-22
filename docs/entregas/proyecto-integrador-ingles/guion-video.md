@@ -1,60 +1,129 @@
 # Video script: Acopio
 
-## Opening
+Guion para el video de la asignación, de 3 a 5 minutos. Va con la presentación `Acopio - Video Presentation.html`, una parte por diapositiva. Lo que está en cita se dice en voz alta; lo demás es para el equipo. Cada `[next]` es una pulsación de la flecha derecha y no se lee.
 
-Hello. We are presenting Acopio, a web platform developed as an academic project at Escuela Tecnológica Instituto Técnico Central. Acopio is designed to help people coordinate donations in kind during disaster response.
+## Script
 
-## The problem
+### Joseph
 
-After a disaster, many people want to donate or volunteer. However, collection centers may keep separate records. One center can have too much of an item while another location needs it. Donors may also have difficulty finding current information, and a donation can be hard to follow after it leaves a collection center.
+Slide 1. Cover
 
-Our research question is: How can a web platform support the coordination and traceability of donations between collection centers and affected areas?
+> Hello, everyone. We are Joseph, Brayan, Alejandra and Michel, and we study at ETITC in Bogotá. Our project is Acopio, a web platform for coordinating donations during disasters.
 
-## Objective and methodology
+Slide 2. What is a collection center?
 
-Our general objective is to support coordination through shared inventory information, donation tracking and transfer suggestions. Our specific objectives included defining what each user needs to do and checking whether they can complete those tasks in the prototype. Shared records matter because staff at different locations can use them to review the same proposed shipment. We began with a documented observation at a collection center and then defined the users and requirements. We designed the architecture and built the platform in iterations. We tested representative workflows with demonstration data.
+> After a disaster, people take food, water and other supplies to a collection center. In Colombia we call it a *centro de acopio*, so that is our name. The center sends those supplies to the affected areas.
 
-## How the platform works
+Slide 3. The problem
 
-Collection center staff record the supplies they receive and dispatch. The system uses inventory and reported needs to suggest transfers. An administrator reviews and approves a suggested transfer. The system creates a draft dispatch record. The administrator or the operator at the collection center can dispatch it. A receiver assigned to the destination confirms what arrived.
+> But each center keeps its own records, so one can have too much of an item while another area still needs it. In August we visited a center in Bogotá. Supplies arrived unevenly and the staff were overloaded.
 
-On the public side, people can consult verified causes and reserve volunteer shifts. Acopio sends people to an organization's official website for financial donations; the platform does not receive the money.
+Slide 4. Problem question
 
-## Tools and evidence
+> Our question was: How can a web platform support the coordination and traceability of donations in kind between collection centers and affected areas during the response to a disaster? Traceability means following a donation from start to finish.
 
-The interface uses React. The server uses NestJS, and PostgreSQL stores the records. Figure 5 shows one suggestion and the four criteria behind its score. Figure 9 shows the confirmation of a delivery from a demonstration. In the local test run on October 19, the project log records nine successful checks for the suggestion engine, seven for dispatch and seven for receipt.
+### Brayan
 
-Our research also examined the Sphere Handbook and other humanitarian sources. They provide references for planning, but the quantities in our proposed food basket require further nutritional review and adjustment to local conditions.
+Slide 5. Objectives
 
-## Conclusion
+> Our general objective was to develop that platform, with shared inventory, tracking by code and transfer suggestions. The specific objectives were to define what each user needs, to record inventory, to suggest transfers, to publish verified information, and to test the prototype.
 
-The prototype brings inventory records and delivery information into one workflow. The demonstrations show how staff can review a suggestion and record a delivery. Our evaluation covers selected workflows with test data. A field trial with humanitarian organizations could help us find out whether staff can keep inventory up to date and use the suggestions when a delivery needs to be organized. Thank you.
+Slide 6. Justification
 
-## Recording cues
+> A center that does not know what the others have may keep receiving something it cannot store, while an affected area is left without help. With a shared record, coordinators can identify a possible transfer, and donors know where to go.
 
-These notes are for the presenters. The spoken script is above.
+Slide 7. Methodology
 
-| Presenter | Script sections | What to show |
-| --- | --- | --- |
-| Joseph | Opening and the problem | Project title, then the research question |
-| Brayan | Objective and methodology | The user roles in Figures B1 and B2 |
-| Alejandra | How the platform works | The transfer suggestion and receipt in Figures 5 and 9, then the public verification badge in Figure 11 and the administrator’s confirmation in Figure 12 |
-| Michael | Tools and evidence, then conclusion | The architecture in Figure C1 and the abstract's conclusions |
+> We worked in iterations. We compared three project ideas, wrote requirements for each role, designed the architecture and built the application in two sprints, with React, NestJS and PostgreSQL. Then we tested it in the browser.
 
-Keep each screen visible long enough to point to the detail being discussed. Figures 3 to 13 show the original Spanish interface. Explain the relevant labels aloud in English as you show them.
+### Alejandra
+
+Slide 8. Theoretical framework
+
+> Our first theoretical idea is traceability: every entry, exit and receipt leaves a record. The second is humanitarian standards. The Sphere Handbook gives references such as fifteen liters of water and two thousand one hundred kilocalories per person per day. They must be adjusted to each place.
+
+Slide 9. An example
+
+> Acopio calculates what is missing. For example, an area needs one hundred units. It has received thirty, and twenty are on the way, so it still needs fifty. If one center can give thirty-five, that transfer covers part of the need.
+
+Slide 10. From suggestion to receipt
+
+> These screens are in Spanish. First, the system suggests a transfer with a score. `[next]` Second, the administrator reviews the quantity and approves it. `[next]` Third, the load leaves the center. `[next]` Fourth, the receiver at the destination confirms what arrived, with a photo.
+
+### Michel
+
+Slide 11. Public portal
+
+> On the public portal, people can find collection points on a map, `[next]` follow a donation with its code, `[next]` reserve a volunteer shift and `[next]` look up verified organizations. Acopio does not receive money.
+
+Slide 12. Scope and results
+
+> The prototype covers public information, inventory, tracking, transfers and reservations. In our local tests on October 19, nine of nine checks passed for the suggestion engine, seven of seven for dispatch and seven of seven for receipt. We used demonstration data, and its impact in a real emergency has not been measured.
+
+Slide 13. Conclusions
+
+> In conclusion, a shared record can support coordination when a person reviews and approves each suggestion. The tracking code and the confirmation of receipt let us follow the aid. The next step is a field trial with humanitarian organizations.
+
+Slide 14. Thank you
+
+> These are our main sources. Thank you for watching.
+
+## Tiempos
+
+| Quién | Diapositivas | Palabras | A 110 por minuto | A 130 por minuto |
+|---|---|---|---|---|
+| Joseph | 1 a 4 | 141 | 1:17 | 1:05 |
+| Brayan | 5 a 7 | 119 | 1:05 | 0:55 |
+| Alejandra | 8 a 10 | 129 | 1:10 | 1:00 |
+| Michel | 11 a 14 | 132 | 1:12 | 1:01 |
+| Total | 1 a 14 | 521 | 4:44 | 4:00 |
+
+Faltan los segundos de los cambios de diapositiva y de persona. Si en el ensayo pasan de 4:45, quiten la última frase de la diapositiva 4.
+
+## Pronunciación
+
+| Palabra | Suena como |
+|---|---|
+| Acopio | se dice en español |
+| disasters | di-SAS-ters |
+| inventory | IN-ven-to-ri |
+| traceability | trei-sa-BI-li-ti |
+| suggestion | sag-YES-chon |
+| receipt | ri-SIT, sin pronunciar la p |
+| affected areas | a-FEK-ted E-rias |
+| volunteer | vo-lan-TIR |
+| Sphere Handbook | SFIR HAND-buk |
+| kilocalories | KI-lo-ka-lo-ris |
+| NestJS | nest yei-ES |
+| PostgreSQL | POUST-gres kiu-EL |
+
+## Cómo grabar
+
+1. Abran la presentación en Chrome y presionen F para pantalla completa. Se avanza con la flecha derecha o la barra espaciadora. Las diapositivas 10 y 11 tienen cuatro pasos cada una; la cuarta pulsación pasa a la diapositiva siguiente.
+2. Cada diapositiva deja libre la esquina inferior derecha. Presionen C para ver dónde va la cámara, acomoden ahí el recuadro y presionen C otra vez para ocultar la guía.
+3. Cada persona aparece en cámara mientras habla. Si graban por separado, se unen los cuatro fragmentos en este orden: Joseph, Brayan, Alejandra y Michel.
+4. Miren a la cámara al presentarse, en la pregunta problema y en el cierre. Los rótulos y las pantallas señalan solos lo que van nombrando.
+5. Graben una prueba de diez segundos y escúchenla con audífonos antes de empezar.
+6. Al subir el video, den permiso de ver a cualquiera con el enlace de la institución y ábranlo en una ventana de incógnito o desde otra cuenta.
+
+Copi, la caja que acompaña la presentación, aclara en su globo alguna palabra o dato de cada diapositiva. No hace falta leer el globo en voz alta. Al cambiar de diapositiva, Copi camina durante segundo y medio: esperen a que se detenga antes de hablar. La tecla P pausa las animaciones.
+
+En la diapositiva 10 las pantallas vienen de demostraciones distintas. Por eso una muestra agua y otra arroz.
+
+## Lista para Teams
+
+- [ ] El video dura entre 3 y 5 minutos
+- [ ] Los cuatro aparecen en cámara
+- [ ] El audio se entiende
+- [ ] El docente puede abrir el video
+- [ ] Se subió el trabajo escrito (`Acopio - Integrative Project.pdf`)
+- [ ] Se subió el abstract (`Acopio - Abstract.pdf`)
 
 ## Questions to rehearse
 
-- **What does the public donation record show?** Figure 4 shows the public lookup with the donated item and the current status. The donor’s personal information and invoice were kept private. See the Sprint 1 review in the fourth project submission.
-- **How does Acopio recommend a transfer?** The engine estimates demand for each item, then subtracts supplies that have arrived or are on the way. If a zone needs 100 units, has received 30 and expects 20, it still needs 50. The administrator reviews the recommendation before any dispatch. Show Figure 5 in the PICS report.
-- **What did you test?** The browser test log records the successful local checks on October 19. The Sprint 2 report describes the workflows. Figure 9 shows the final confirmation with demonstration data. A live disaster response would require separate field evaluation.
-- **Does Sphere define your food basket?** Sphere provides planning references. The team selected the amounts of individual foods for the proposed basket. Those amounts need further nutritional review before use in the field.
+The figure numbers refer to the written work.
 
-## Demo sequence and fallback
-
-1. Open the suggestion engine as an administrator. Show the source, destination, quantity, score and four criteria in Figure 5.
-2. Approve a suggestion and show the resulting draft. Use Figure 6 if the application is unavailable.
-3. Dispatch the draft as the administrator or the assigned collection center operator. Use Figures 7 and 8 to show the dispatch form and the document with the matching reference code.
-4. Use the receiver assigned to the destination to confirm the quantities and attach a photo. Show the [receipt form](../evidencia/avance-05/motor-5-recibir.png) and Figure 9 if the live demo is unavailable.
-
-Figures 7 and 8 show the same dispatch. The suggestion, approval and receipt captures come from demonstration runs that do not follow that same shipment. Explain what each screen shows before moving to the next step. The [Sprint 2 report](../avance-05-sprint2.md#1a-flujo-del-motor-de-la-sugerencia-a-la-recepción) describes the workflow and the [test log](../../06-operacion/recorridos.md) records the checks.
+- What does the public donation record show? Figure 4 shows the donated item and the current status. The donor's personal information and invoice are private.
+- How does Acopio recommend a transfer? The engine estimates demand for each item, then subtracts supplies that have arrived or are on the way. The administrator reviews the recommendation before any dispatch. See Figure 5.
+- What did you test? The browser test log records the successful local checks on October 19. Figure 9 shows the final confirmation with demonstration data. A real disaster response would require a separate field evaluation.
+- Does Sphere define your food basket? Sphere provides planning references. The team selected the amounts of each food for the proposed basket, and those amounts need nutritional review before use in the field.
