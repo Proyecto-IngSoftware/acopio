@@ -1,203 +1,205 @@
-# Acopio: plataforma web para coordinar donaciones durante desastres
+# Acopio: A Web Platform for Coordinating Donations During Disasters
 
-## Introducción
+## Introduction
 
-Durante la respuesta a un desastre, los centros de acopio deben decidir qué insumos pueden recibir, qué cantidad pueden enviar y dónde hace falta. Si cada punto lleva sus propios registros, un centro puede acumular un insumo que escasea en otra zona. La necesidad también cambia conforme llegan los envíos. Por eso, antes de movilizar ayuda, APC Colombia recomienda confirmar que responda a una necesidad vigente y que el destino pueda recibirla, almacenarla y distribuirla (APC Colombia, 2026).
+During the response to a disaster, collection centers must decide which supplies they can receive, how much they can send and where it is needed. If each center keeps its own records, one of them may pile up an item that is scarce in another area. Needs also change as shipments arrive. For this reason, APC Colombia recommends confirming, before any aid is moved, that it meets a current need and that the destination can receive, store and distribute it (APC Colombia, 2026).
 
-Acopio es un proyecto académico de la Escuela Tecnológica Instituto Técnico Central (ETITC) que busca facilitar esas decisiones. Su portal permite consultar puntos de acopio, seguir una donación por folio y reservar turnos de voluntariado. En la consola, el personal registra movimientos de inventario y revisa propuestas de traslado. El Administrador decide si aprueba una propuesta y el Receptor confirma qué llegó al destino. Así queda un registro que los equipos pueden consultar después del despacho (Equipo Acopio, 2026d, 2026e).
+Acopio is an academic project of the Escuela Tecnológica Instituto Técnico Central (ETITC) that aims to make those decisions easier. On its public portal, people can find collection points, follow a donation with its tracking code (called *folio* in the application) and reserve volunteer shifts. In the staff console, personnel record inventory movements and review proposed transfers. The Administrator decides whether to approve a proposal, and the Receiver confirms what reached the destination. This leaves a record that the teams can consult after the dispatch (Acopio Team, 2026d, 2026e).
 
-El informe presenta cómo se diseñó el prototipo y qué mostraron los recorridos con datos de prueba. Estas comprobaciones permiten examinar el funcionamiento de la aplicación. Su utilidad durante una emergencia real queda pendiente de evaluación con las organizaciones que coordinan la ayuda.
-
-## Resumen
-
-Acopio es una plataforma web académica que apoya la coordinación de donaciones en especie durante la respuesta a desastres. Los centros de acopio y las zonas afectadas pueden carecer de información compartida sobre los insumos disponibles, las necesidades pendientes y los cupos de voluntariado. La plataforma permite al personal autorizado registrar inventario, seguir donaciones y tomar decisiones sobre traslados. El público puede consultar causas, puntos de acopio y oportunidades de voluntariado. El equipo trabajó en iteraciones que incluyeron el análisis del problema, la definición de requisitos, el diseño de la arquitectura, la implementación y las pruebas. La aplicación usa React para la interfaz, NestJS para la API y PostgreSQL para la base de datos. El diseño toma como referencia orientaciones humanitarias y datos poblacionales para estimar las necesidades. En cada respuesta, esos valores deben revisarse y ajustarse al contexto local. El prototipo documentado muestra el registro de inventario y donaciones, las sugerencias de traslado, la confirmación de entregas, el directorio de causas verificadas y la reserva de turnos. La evaluación se basó en registros de desarrollo y demostraciones con datos de prueba en un entorno controlado. El proyecto muestra cómo un registro compartido y sugerencias con criterios explícitos pueden apoyar la coordinación. Su eficacia en campo sigue sin medirse. Queda por probar la plataforma con organizaciones humanitarias, revisar los supuestos del cálculo de necesidades y evaluar su facilidad de uso en condiciones de emergencia con el personal que recibe y distribuye los insumos.
-
-Palabras clave: respuesta a desastres, logística humanitaria, donaciones en especie, gestión de inventario, ingeniería de software.
+This report explains how the prototype was designed and what the test runs with demonstration data showed. These checks make it possible to examine how the application works. Its usefulness during a real emergency still has to be evaluated with the organizations that coordinate aid.
 
 ## Abstract
 
-Acopio is an academic web platform designed to support the coordination of donations in kind during disaster response. The project addresses a practical problem: collection centers and affected areas may lack a shared view of available supplies, outstanding needs and volunteer capacity. Its purpose is to help authorized staff record inventory, follow donations and make informed transfer decisions, while giving the public access to information about causes, collection points and volunteer opportunities. The team used an iterative software development process that included problem analysis, requirements, architectural design, implementation and testing. The application combines a React web interface, a NestJS application programming interface and a PostgreSQL database. Its design also draws on humanitarian guidance and population data as references for estimating needs; the values used in a specific response must be reviewed and adjusted to the local context. The documented prototype demonstrates inventory and donation workflows, suggestions for transfers from collection centers to affected areas, confirmation of deliveries, a directory of verified causes and volunteer shift reservations. The evaluation used development records and demonstrations with test data in a controlled environment. The project shows how a shared record and an explainable suggestion process can support coordination, but its effectiveness in the field remains unmeasured. Further work includes testing with humanitarian organizations, reviewing the assumptions used in the needs calculation and assessing usability under the constraints of an actual response. These steps require the participation of the people responsible for receiving and distributing supplies.
+Acopio: A Web Platform for Coordinating Donations During Disasters is an academic project developed at Escuela Tecnológica Instituto Técnico Central. Its purpose is to help collection centers and affected areas share information about available supplies and outstanding needs, so that authorized staff can record inventory, follow donations and decide on transfers. The platform also gives the public information about collection points, verified causes and volunteer shifts. The methodology was an iterative software development process that covered problem analysis, requirements, architecture, implementation and testing. The team visited a collection center in Bogotá, wrote user stories for each role and built the application with React, NestJS and PostgreSQL. Humanitarian guidance and population data served as references for estimating needs, and their values must be adjusted to the local context in each response. The results come from demonstrations with test data in a controlled environment. The prototype records inventory and donations, suggests transfers with a visible score, confirms deliveries, publishes verified causes and accepts shift reservations. In the local run of October 19, 2026, all nine checks of the suggestion engine, all seven dispatch checks and all seven receipt checks passed. In conclusion, a shared record and suggestions with explicit criteria can support coordination, because staff can review each proposal before dispatch and record what arrived. The effectiveness of the platform in the field remains unmeasured. Further work includes trials with humanitarian organizations, a review of the assumptions behind the needs calculation and a usability evaluation under emergency conditions.
 
 Keywords: disaster response, humanitarian logistics, donations in kind, inventory management, software engineering.
 
-## Antecedentes
+## Background
 
-El primer avance del proyecto documenta una visita a un centro de acopio en Bogotá el 20 de agosto de 2026. El equipo registró una llegada desigual de suministros, dificultades para asignar tareas a los voluntarios y sobrecarga del personal encargado de clasificar y despachar la ayuda. La visita permitió delimitar el problema en ese centro. Su alcance fue exploratorio (Equipo Acopio, 2026a).
+The first progress report of the project documents a visit to a collection center in Bogotá on August 20, 2026. The team recorded that supplies arrived unevenly, that it was difficult to assign tasks to volunteers and that the staff who sorted and dispatched the aid were overloaded. The visit helped the team define the problem at that center. Its scope was exploratory (Acopio Team, 2026a).
 
-Las orientaciones de APC Colombia tras el sismo de agosto recomiendan verificar con la autoridad territorial que la ayuda responda a una necesidad vigente y que existan medios para recibirla, almacenarla y distribuirla. Un directorio de puntos de acopio facilita la ubicación de los centros. Para coordinar el reparto también se necesita saber qué insumos puede recibir cada punto, qué tiene disponible y a qué destino se envía cada carga (APC Colombia, 2026; Equipo Acopio, 2026a).
+The guidelines that APC Colombia issued after the August earthquake recommend checking with the local authority that the aid meets a current need and that there are means to receive, store and distribute it. A directory of collection points makes it easier to find the centers. To coordinate distribution, teams also need to know which supplies each point can receive, what it has available and where each load is sent (APC Colombia, 2026; Acopio Team, 2026a).
 
-### Fundamentación teórica
+## Justification
 
-La trazabilidad logística relaciona el ingreso de un insumo con su salida y la confirmación de su recepción. En Acopio, el folio identifica la donación y la remisión registra el traslado. Los movimientos de inventario indican por qué cambió el saldo. Estos registros permiten revisar una diferencia entre lo que se despachó y lo que llegó (Equipo Acopio, 2026b, 2026e).
+The purpose of the project is to give collection centers, affected areas and the public a shared record of donations, so that aid can be sent where it is needed and followed until it arrives. A center that does not know what the others have may keep receiving an item it can no longer store. At the same time, an area with little coverage may be left out of the distribution routes. When balances and needs are shared, coordinators can identify a possible transfer and check whether they have the means to carry it out. The portal also tells donors where they can deliver their donations and lets volunteers reserve a shift with available places.
 
-El Manual Esfera aporta referencias de planificación, como 15 litros diarios por persona para necesidades domésticas básicas de agua y 2.100 kilocalorías por persona al día para planificar raciones generales. La cantidad de agua abarca usos como consumo, higiene y cocina. Ambos valores requieren ajustes según la población y el contexto (Asociación Esfera, 2018).
+The project applies software engineering to decisions that depend on correct records and explicit responsibilities. The design requires an approval before dispatch and keeps a record of what the Receiver confirms at the destination (Acopio Team, 2026e, section 1a).
 
-El estudio de la canasta de Acopio encontró que las cantidades por alimento son decisiones del proyecto. El Manual Esfera no prescribe los gramos de arroz, legumbres o aceite empleados en la propuesta. El estudio identificó limitaciones de grasa y proteína que requieren revisión antes de usar la canasta en una distribución real. Los kits familiares de la UNGRD ofrecen un punto de comparación, siempre que se expliciten el tamaño del hogar y el periodo de cobertura. Las proyecciones del DANE sirven como referencia poblacional. El personal en territorio debe establecer cuántas personas necesitan asistencia (Departamento Administrativo Nacional de Estadística, s. f.; Equipo Acopio, 2026f; Unidad Nacional para la Gestión del Riesgo de Desastres, 2013).
+## Objectives
 
-## Justificación
+### General objective
 
-Un centro que desconoce lo que tienen los demás puede seguir recibiendo un insumo que ya no puede almacenar. A la vez, una zona con poca cobertura puede quedar fuera de las rutas de reparto. Compartir saldos y necesidades les permite a los coordinadores identificar un traslado posible y revisar si tienen cómo realizarlo. El portal también ofrece a los donantes información sobre puntos de recepción y a los voluntarios la posibilidad de reservar una jornada con cupo.
+To develop a web platform that supports the coordination of donations in kind between collection centers and affected areas through shared inventory, tracking by code and transfer suggestions.
 
-El proyecto permite aplicar ingeniería de software a decisiones que dependen de registros correctos y de responsabilidades explícitas. El diseño exige una aprobación antes del despacho y conserva un registro de lo que el receptor confirma en el destino (Equipo Acopio, 2026e, sección 1a).
+### Specific objectives
 
-## Objetivos
+1. To define the requirements of donors, volunteers, operators and coordinators.
+2. To record inventory movements and make it easier to follow donations by their tracking code.
+3. To suggest transfers based on the needs of the affected areas and the available stock, with approval before dispatch.
+4. To publish information about collection points and verified causes, and to allow people to reserve volunteer shifts.
+5. To check representative workflows of the prototype with test data and to document its limitations.
 
-### Objetivo general
+## Problem statement
 
-Desarrollar una plataforma web que apoye la coordinación de donaciones en especie entre centros de acopio y zonas afectadas mediante inventario compartido, seguimiento por folio y sugerencias de traslado.
+When each center keeps its own records, teams have difficulty comparing what is needed with what is already available. A donor may deliver an item that the center has no capacity to store. When a load is dispatched, staff need to record both its departure and its arrival at the destination. Without that information it is difficult to reconstruct the route of the aid (Acopio Team, 2026a, 2026b).
 
-### Objetivos específicos
+### Problem question
 
-1. Definir los requisitos de donantes, voluntarios, operadores y coordinadores.
-2. Registrar los movimientos de inventario y facilitar el seguimiento de las donaciones por folio.
-3. Sugerir traslados según las necesidades de las zonas y las existencias disponibles, con aprobación previa al despacho.
-4. Publicar información sobre puntos de acopio y causas verificadas, y permitir la reserva de turnos.
-5. Comprobar los recorridos representativos del prototipo con datos de prueba y documentar sus limitaciones.
+How can a web platform support the coordination and traceability of donations in kind between collection centers and affected areas during the response to a disaster?
 
-## Planteamiento del problema
+## Proposed solution
 
-Cuando cada centro lleva sus propios registros, los equipos tienen dificultades para comparar lo que se necesita con lo que ya está disponible. Un donante puede entregar un insumo que el centro no tiene capacidad de almacenar. Al despachar una carga, el personal necesita registrar tanto su salida como la recepción en destino. Sin esos datos es difícil reconstruir el recorrido de la ayuda (Equipo Acopio, 2026a, 2026b).
+Acopio brings together the public portal and the tools for authorized staff. On the portal, people can look up collection points, verified causes and volunteer shifts. In the console, the Operator records stock and donations, the Administrator reviews the proposed transfers and the Receiver confirms the delivery. Figure 1 shows how the project distributes these responsibilities (Acopio Team, 2026e, section 1).
 
-### Pregunta problema
+![Figure 1. Functions of the portal and of the operation. Source: Diagram based on the initial architecture and the functional demonstration (Acopio Team, 2026c, 2026e).](figuras/funciones.png)
 
-¿Cómo puede una plataforma web apoyar la coordinación y la trazabilidad de las donaciones en especie entre los centros de acopio y las zonas afectadas durante la respuesta a un desastre?
+## Critical analysis
 
-## Planteamiento de la solución a desarrollar
+The usefulness of the suggestion engine depends on the quality of the records. An outdated balance can produce a proposal that is difficult to fulfill. The population figure, the age of the reports and the composition of the food basket also change the calculation. The coordinator must review the proposal against local information, the capacity to receive the load and the available transport (APC Colombia, 2026; Acopio Team, 2026f).
 
-Acopio reúne el portal público y las herramientas para el personal autorizado. En el portal se consultan puntos de acopio, causas verificadas y jornadas de voluntariado. En la consola, el operador registra existencias y donaciones, el Administrador revisa las propuestas de traslado y el receptor confirma la entrega. La Figura 1 muestra cómo el proyecto distribuye estas responsabilidades (Equipo Acopio, 2026e, sección 1).
+Limited connectivity during an emergency can restrict the use of the application. The available tests were carried out with network access and demonstration data. Adoption also depends on the organizations agreeing on who updates the inventory, verifies the causes and confirms the deliveries. Acopio links to the websites of the organizations that receive financial contributions (Acopio Team, 2026e).
 
-![Figura 1. Funciones del portal y de la operación. Fuente: Esquema elaborado a partir de la arquitectura inicial y la demostración funcional (Equipo Acopio, 2026c, 2026e).](figuras/funciones.png)
+## Methodology
 
-## Análisis crítico
+The team compared project ideas, formulated requirements by role and organized them into user stories. In the following progress reports it defined the architecture, implemented increments and documented test runs in the browser. Appendices A, B and C present the selection of the idea, the requirements and the initial design, respectively. To check the workflow, the browser test runs simulated the calculation and approval of a suggestion, the dispatch and the confirmation in the affected area (Acopio Team, 2026e, section 3c).
 
-La utilidad del motor depende de la calidad de los registros. Un saldo desactualizado puede producir una propuesta difícil de cumplir. La cifra de población, la vigencia de los reportes y la composición de la canasta también cambian el cálculo. El coordinador debe revisar la propuesta con la información del territorio, la capacidad de recepción y los medios de transporte (APC Colombia, 2026; Equipo Acopio, 2026f).
+The food basket was reviewed separately. The assumptions of the project were compared with humanitarian references, and those that require adjustment or specialized validation were identified (Acopio Team, 2026f). The software tests were interpreted as evidence of how the prototype behaves under controlled conditions.
 
-La conectividad durante una emergencia puede limitar el uso de la aplicación. Las pruebas disponibles se hicieron con acceso a la red y datos de demostración. La adopción también depende de que las organizaciones acuerden quién actualiza el inventario, verifica las causas y confirma las entregas. Acopio enlaza a las páginas de las entidades que reciben aportes monetarios (Equipo Acopio, 2026e).
+## Tools
 
-## Metodología
+The interface was developed in React and the API in NestJS. PostgreSQL stores the records and Prisma provides access to the database. Docker Compose makes it possible to reproduce the development environment, and GitHub records changes and automatic checks (Acopio Team, 2026e, section 1). Figure 2 shows the division between the web application, the API and the shared packages.
 
-El equipo comparó ideas de proyecto, formuló requisitos por rol y los organizó en historias de usuario. En los avances siguientes definió la arquitectura, implementó incrementos y documentó recorridos en navegador. Los anexos A, B y C recogen la selección de la idea, los requisitos y el diseño inicial, respectivamente. Para comprobar el flujo, los recorridos de navegador simularon el cálculo y la aprobación de una sugerencia, el despacho y la confirmación en la zona (Equipo Acopio, 2026e, sección 3c).
+![Figure 2. Organization of the project packages. Source: Diagram of the separation of the code into web, API and shared logic (Acopio Team, 2026c).](figuras/paquetes.png)
 
-La revisión de la canasta se hizo por separado. Se compararon los supuestos del proyecto con referencias humanitarias y se identificaron los que requieren ajustes o validación especializada (Equipo Acopio, 2026f). Las pruebas del software se interpretaron como evidencia del comportamiento del prototipo en condiciones controladas.
+## Project development
 
-## Herramientas
+### Theoretical framework
 
-La interfaz se desarrolló en React y la API en NestJS. PostgreSQL guarda los registros y Prisma facilita el acceso a la base de datos. Docker Compose permite reproducir el entorno de desarrollo y GitHub registra cambios y comprobaciones automáticas (Equipo Acopio, 2026e, sección 1). La Figura 2 muestra la división entre la aplicación web, la API y los paquetes compartidos.
+Logistics traceability connects the entry of a supply with its departure and the confirmation of its receipt. In Acopio, the tracking code identifies the donation and the dispatch record (*remisión*) documents the transfer. Inventory movements show why a balance changed. These records make it possible to review a difference between what was dispatched and what arrived (Acopio Team, 2026b, 2026e).
 
-![Figura 2. Organización de los paquetes del proyecto. Fuente: Esquema de la separación del código en web, API y lógica compartida (Equipo Acopio, 2026c).](figuras/paquetes.png)
+The Sphere Handbook provides planning references, such as 15 liters of water per person per day for basic household needs and 2,100 kilocalories per person per day for planning general rations. The amount of water covers uses such as drinking, hygiene and cooking. Both values require adjustments according to the population and the context (Asociación Esfera, 2018).
 
-## Desarrollo del proyecto
+The study of the Acopio food basket found that the quantities of each food are decisions of the project. The Sphere Handbook does not prescribe the grams of rice, legumes or oil used in the proposal. The study identified limitations in fat and protein that must be reviewed before the basket is used in a real distribution. The family kits of the National Unit for Disaster Risk Management (UNGRD) offer a point of comparison, as long as the household size and the coverage period are stated. The projections of the National Administrative Department of Statistics (DANE) serve as a population reference. Staff in the field must establish how many people need assistance (Acopio Team, 2026f; Departamento Administrativo Nacional de Estadística, n.d.; Unidad Nacional para la Gestión del Riesgo de Desastres, 2013).
 
-### Inventario y seguimiento de donaciones
+### Inventory and donation tracking
 
-El operador registra entradas, salidas y ajustes. La Figura 3 muestra cómo el historial asocia un ingreso de aceite con el saldo que resultó del movimiento. La conciliación registra quién la hizo y cuándo (Equipo Acopio, 2026d, sección 3c).
+The Operator records entries, exits and adjustments. Figure 3 shows how the history links an entry of oil with the balance that resulted from the movement. The reconciliation records who did it and when (Acopio Team, 2026d, section 3c).
 
-![Figura 3. Saldo e historial de movimientos en el inventario. Fuente: Recorte de la pantalla de inventario construida. Se distinguen el ingreso de 10 L y el saldo resultante en una demostración (Equipo Acopio, 2026d).](figuras/inventario.png)
+![Figure 3. Balance and movement history in the inventory. Source: Detail of the inventory screen with a demonstration entry of 10 L of oil (Aceite). Entrada means entry, Saldo means balance and Sin umbral means no threshold (Acopio Team, 2026d).](figuras/inventario.png)
 
-El seguimiento público por folio muestra los insumos y el estado. En la Figura 4 la donación está preparada y los pasos de recepción en acopio y conciliación siguen pendientes. La pantalla omite la identidad del donante y su factura (Equipo Acopio, 2026d, sección 3c).
+The public lookup by tracking code shows the supplies and the status. In Figure 4 the donation is prepared, and the steps of receipt at the collection center and reconciliation are still pending. The screen omits the identity of the donor and the invoice (Acopio Team, 2026d, section 3c).
 
-![Figura 4. Consulta del estado de una donación por folio. Fuente: Recorte de la pantalla de seguimiento construida con datos de prueba (Equipo Acopio, 2026d).](figuras/folio.png)
+![Figure 4. Status of a donation looked up by its tracking code. Source: Detail of the tracking screen with test data. The steps are Preparada (prepared), Recibida (received) and Conciliada (reconciled), and Arroz means rice (Acopio Team, 2026d).](figuras/folio.png)
 
-### Motor de traslados y recepción
+### Transfer engine and receipt
 
-El motor multiplica la cantidad diaria por persona por la población y los días del periodo. Descuenta lo recibido y lo que está en camino. Después compara el déficit con las existencias que el acopio puede mover teniendo en cuenta sus umbrales, los productos vencidos y lo ya comprometido. La Figura 5 muestra el desglose del puntaje en criticidad, urgencia, proximidad y magnitud (Equipo Acopio, 2026g).
+The engine multiplies the daily quantity per person by the population and the days of the period. It subtracts what has been received and what is on the way. Then it compares the shortage with the stock that the collection center can move, taking into account its thresholds, expired products and the quantities already committed. Figure 5 shows the breakdown of the score into criticality, urgency, proximity and magnitude (Acopio Team, 2026g).
 
-Por ejemplo, si una zona necesita 100 unidades, recibió 30 y espera 20, todavía le faltan 50. Un centro que pueda entregar 35 cubriría hasta 35 en ese traslado.
+For example, if an area needs 100 units, has received 30 and expects 20, it still needs 50. A center that can deliver 35 units would cover up to 35 of them in that transfer.
 
-![Figura 5. Propuesta de traslado con desglose del puntaje. Fuente: Captura del motor construido, recortada para mostrar la propuesta con datos de prueba (Equipo Acopio, 2026e).](figuras/sugerencia.png)
+![Figure 5. Proposed transfer with the breakdown of its score. Source: Screenshot of the engine, cropped to show a proposal with test data. Traslado sugerido means suggested transfer, Puntaje means score, and the buttons are Descartar (discard) and Aprobar (approve) (Acopio Team, 2026e).](figuras/sugerencia.png)
 
-El Administrador revisa y puede ajustar la cantidad antes de aprobar. El aviso de la Figura 6 explica que la aprobación agrega el traslado a una remisión en borrador o crea una si hace falta (Equipo Acopio, 2026e, sección 1a).
+The Administrator reviews the quantity and can adjust it before approving. The notice in Figure 6 explains that the approval adds the transfer to a draft dispatch record, or creates one if necessary (Acopio Team, 2026e, section 1a).
 
-![Figura 6. Aprobación de una cantidad para crear o actualizar un borrador. Fuente: Recorte del formulario de aprobación en el Sprint 2 con datos de prueba (Equipo Acopio, 2026e).](figuras/aprobacion.png)
+![Figure 6. Approval of a quantity to create or update a draft. Source: Detail of the approval form in Sprint 2 with test data. Cantidad means quantity, and the system suggested (Sugeridos) 440 kg (Acopio Team, 2026e).](figuras/aprobacion.png)
 
-El Administrador o el Operador del centro de origen puede despachar la remisión. La Figura 7 muestra el responsable y el folio seleccionado antes de confirmar. La Figura 8 muestra el documento generado para ese despacho, con el mismo código y su QR (Equipo Acopio, 2026e, 2026i).
+The Administrator or the Operator of the center of origin can dispatch the load. Figure 7 shows the person responsible and the selected tracking code before confirmation. Figure 8 shows the document generated for that dispatch, with the same code and its QR (Acopio Team, 2026e, 2026i).
 
-![Figura 7. Preparación del despacho y vinculación de un folio. Fuente: Recorte del formulario de despacho en el Sprint 2 con datos de prueba (Equipo Acopio, 2026e).](figuras/despacho.png)
+![Figure 7. Preparation of the dispatch and linking of a tracking code. Source: Detail of the dispatch form in Sprint 2 with test data. The form asks who carries the shipment (Quién lleva el envío) and which codes travel in it (Acopio Team, 2026e).](figuras/despacho.png)
 
-![Figura 8. Documento de la remisión despachada. Fuente: Recorte del comprobante imprimible del mismo despacho de la Figura 7. Incluye origen, destino, insumo, cantidad y QR de prueba (Equipo Acopio, 2026e).](figuras/remision.png)
+![Figure 8. Document of the dispatched load. Source: Detail of the printable record of the dispatch in Figure 7. It lists the origin, destination, person responsible, linked codes, item and quantity, with a test QR code (Acopio Team, 2026e).](figuras/remision.png)
 
-El Receptor asignado confirma la cantidad que llegó y adjunta una foto. La Figura 9 muestra la confirmación de otra remisión de demostración (Equipo Acopio, 2026e, 2026i).
+The assigned Receiver confirms the quantity that arrived and attaches a photo. Figure 9 shows the confirmation of another demonstration dispatch (Acopio Team, 2026e, 2026i).
 
-![Figura 9. Confirmación de recepción en la zona de destino. Fuente: Captura recortada de una corrida del Sprint 2 distinta al despacho de las Figuras 7 y 8 (Equipo Acopio, 2026e).](figuras/recepcion.png)
+![Figure 9. Confirmation of receipt in the destination area. Source: Cropped screenshot of a Sprint 2 run that is different from the dispatch in Figures 7 and 8. It confirms that 1 L of drinking water (Agua potable) was received with one photo (Acopio Team, 2026e).](figuras/recepcion.png)
 
-### Portal público y voluntariado
+### Public portal and volunteering
 
-El mapa distingue los centros de Acopio de los puntos referenciados de RedAcopio Bogotá. La leyenda de la Figura 10 identifica el origen de los datos para que el visitante sepa qué tipo de punto está consultando (Equipo Acopio, 2026e, sección 1c).
+The map distinguishes the centers of Acopio from the points referenced from RedAcopio Bogotá. The legend in Figure 10 identifies the origin of the data so that visitors know which type of point they are looking at (Acopio Team, 2026e, section 1c).
 
-![Figura 10. Mapa de centros de acopio y puntos referenciados. Fuente: Captura de la demostración del Sprint 2 con la leyenda y la atribución del mapa visibles (Equipo Acopio, 2026e).](figuras/mapa.png)
+![Figure 10. Map of collection centers and referenced points. Source: Screenshot of the Sprint 2 demonstration. The legend separates Acopio centers, with up-to-date inventory, from RedAcopio Bogotá points, with data from their own source (Acopio Team, 2026e).](figuras/mapa.png)
 
-Las personas pueden consultar causas de entidades verificadas. La Figura 11 muestra el sello y la fecha de verificación en la ficha. Para aportes monetarios, la ficha dirige al sitio oficial de la entidad (Equipo Acopio, 2026e, sección 1b).
+People can look up causes of verified organizations. Figure 11 shows the badge and the verification date on the page of a cause. For financial contributions, the page directs people to the official website of the organization (Acopio Team, 2026e, section 1b).
 
-![Figura 11. Ficha pública de una causa y sello de verificación. Fuente: Captura recortada del Sprint 2 con una causa de demostración (Equipo Acopio, 2026e).](figuras/causa.png)
+![Figure 11. Public page of a cause and its verification badge. Source: Cropped Sprint 2 screenshot of a demonstration cause, food packages for affected families, verified (Verificada) on October 17, 2026 (Acopio Team, 2026e).](figuras/causa.png)
 
-La Figura 12 muestra el paso previo al sello: el Administrador confirma que revisó la entidad y su sitio oficial. En la captura, la casilla sigue sin marcar y el botón de verificación está inactivo. El formulario de publicación solo ofrece entidades verificadas (Equipo Acopio, 2026e, sección 1b).
+Figure 12 shows the step before the badge: the Administrator confirms having reviewed the organization and its official website. In the screenshot, the box is still unchecked and the verification button is inactive. The publication form only offers verified organizations (Acopio Team, 2026e, section 1b).
 
-![Figura 12. Confirmación de la revisión de una entidad antes de verificarla. Fuente: Recorte de la captura de prueba incluida en la diapositiva 6 de la sustentación de la Entrega 2 y en el Avance 5 (Equipo Acopio, 2026e).](figuras/verificacion-entidad.png)
+![Figure 12. Confirmation of the review of an organization before verifying it. Source: Detail of the test screenshot included in slide 6 of the Submission 2 presentation and in Progress Report 5. The notice warns that Acopio will direct donors to this organization (Acopio Team, 2026e).](figuras/verificacion-entidad.png)
 
-Los voluntarios pueden reservar jornadas con cupo. La confirmación indica el código, la fecha, el horario y el lugar. La Figura 13 permite distinguir esa confirmación de la pantalla donde se solicita el cupo (Equipo Acopio, 2026e, sección 1c).
+Volunteers can reserve shifts with available places. The confirmation indicates the code, the date, the time and the place. Figure 13 makes it possible to distinguish that confirmation from the screen where the place is requested (Acopio Team, 2026e, section 1c).
 
-![Figura 13. Confirmación de una reserva de voluntariado. Fuente: Recorte de una reserva de demostración del Sprint 2 (Equipo Acopio, 2026e).](figuras/reserva.png)
+![Figure 13. Confirmation of a volunteer reservation. Source: Detail of a demonstration reservation in Sprint 2. The heading means that the place is reserved, and the volunteer shows the reservation code (Código de reserva) on arrival (Acopio Team, 2026e).](figuras/reserva.png)
 
-### Alcances
+### Scope
 
-El prototipo cubre la consulta pública, el inventario, el seguimiento de donaciones, los traslados y las reservas. Se evaluó con recorridos de desarrollo. Queda por comprobar su utilidad en una respuesta real y su desempeño con conectividad intermitente.
+The prototype covers public information, inventory, donation tracking, transfers and reservations. It was evaluated with development test runs. Its usefulness in a real response and its performance with intermittent connectivity still have to be checked.
 
-## Resultados
+## Results
 
-El Avance 5 documenta el recorrido desde la sugerencia hasta la recepción, además de la verificación de entidades y las pantallas de voluntariado. En la corrida local del 19 de octubre, la guía registra nueve de nueve comprobaciones del motor, siete de siete del despacho y siete de siete de la recepción. Son resultados de pruebas de software con datos de demostración (Equipo Acopio, 2026e, 2026i).
+Progress Report 5 documents the workflow from the suggestion to the receipt, as well as the verification of organizations and the volunteering screens. For the local run of October 19, the guide records nine of nine checks for the engine, seven of seven for the dispatch and seven of seven for the receipt. These are results of software tests with demonstration data (Acopio Team, 2026e, 2026i).
 
-La revisión del 19 de octubre, realizada por un integrante con cuentas de demostración, confirmó que el sistema bloqueaba un traslado que excedía la cantidad disponible. Registró también que faltaba una advertencia de inventario desactualizado y que una pantalla podía abrirse aunque la API denegara el cambio. Estas observaciones muestran por qué conviene probar la interfaz y la autorización de la API por separado (Equipo Acopio, 2026h).
+The review of October 19, carried out by one team member with demonstration accounts, confirmed that the system blocked a transfer that exceeded the available quantity. It also recorded that a warning about outdated inventory was missing and that one screen could be opened even though the API denied the change. These observations show why it is useful to test the interface and the authorization of the API separately (Acopio Team, 2026h).
 
-## Análisis de resultados y conclusiones
+## Analysis of results and conclusions
 
-Los recorridos muestran que el prototipo relaciona una sugerencia con el despacho y la confirmación de llegada. El Administrador puede revisar la justificación antes de aprobar el traslado y el Receptor deja constancia de lo que efectivamente llegó. Los resultados corresponden a pruebas con datos de demostración. El equipo aún no ha medido tiempos de entrega, adopción ni impacto en una emergencia.
+### Analysis of results
 
-La investigación de la canasta mostró que un cálculo puede funcionar como se diseñó y seguir dependiendo de supuestos que requieren revisión. Una prueba de campo debería comprobar si los equipos pueden mantener los registros al día, interpretar las sugerencias y contrastarlas con las necesidades locales. Antes de usar la canasta en operaciones reales se necesita revisar su composición y los datos de población con personal especializado.
+The test runs show that the prototype connects a suggestion with the dispatch and the confirmation of arrival. The Administrator can review the justification before approving the transfer, and the Receiver records what actually arrived. The results correspond to tests with demonstration data. The team has not yet measured delivery times, adoption or impact in an emergency.
 
-## Referencias
+### Conclusions
 
-APC Colombia. (2026, 12 de agosto). *Orientaciones para articular las donaciones y ayudas humanitarias destinadas a las víctimas del terremoto*. https://www.apccolombia.gov.co/comunicaciones/noticias/apc-colombia-emite-orientaciones-para-articular-las-donaciones-y-ayudas
+In answer to the problem question, the prototype supports coordination with a shared inventory and with suggestions that a person must approve. It supports traceability with the tracking code, the dispatch record and the confirmation of receipt. So far this has been shown only with demonstration data.
 
-Asociación Esfera. (2018). *El Manual Esfera: Carta Humanitaria y normas mínimas para la respuesta humanitaria* (4.ª ed.). https://spherestandards.org/wp-content/uploads/El-manual-Esfera-2018-ES.pdf
+The research on the food basket showed that a calculation can work as designed and still depend on assumptions that need review. Before the basket is used in real operations, its composition and the population data must be reviewed with specialized staff.
 
-Departamento Administrativo Nacional de Estadística. (s. f.). *Proyecciones de población*. https://www.dane.gov.co/index.php/estadisticas-por-tema/demografia-y-poblacion/proyecciones-de-poblacion
+A field trial should check whether teams can keep the records up to date, interpret the suggestions and compare them with local needs.
 
-Equipo Acopio. (2026a). *Avance 1: Sprint 0. Selección y definición inicial del producto* [Entrega de curso]. ETITC.
+## Bibliography
 
-Equipo Acopio. (2026b). *Avance 2: Requisitos y planeación inicial* [Entrega de curso]. ETITC.
+Acopio Team. (2026a). *Avance 1: Sprint 0. Selección y definición inicial del producto* [Progress report 1: Sprint 0. Selection and initial definition of the product] [Course assignment]. ETITC.
 
-Equipo Acopio. (2026c). *Avance 3: Arquitectura inicial* [Entrega de curso]. ETITC.
+Acopio Team. (2026b). *Avance 2: Requisitos y planeación inicial* [Progress report 2: Requirements and initial planning] [Course assignment]. ETITC.
 
-Equipo Acopio. (2026d). *Avance 4: Sprint 1* [Entrega de curso]. ETITC.
+Acopio Team. (2026c). *Avance 3: Arquitectura inicial* [Progress report 3: Initial architecture] [Course assignment]. ETITC.
 
-Equipo Acopio. (2026e). *Avance 5: Sprint 2. Interfaz funcional y patrones de diseño* [Entrega de curso]. ETITC.
+Acopio Team. (2026d). *Avance 4: Sprint 1* [Progress report 4: Sprint 1] [Course assignment]. ETITC.
 
-Equipo Acopio. (2026f). *Canasta estándar Acopio: Validación* [Informe interno de investigación].
+Acopio Team. (2026e). *Avance 5: Sprint 2. Interfaz funcional y patrones de diseño* [Progress report 5: Sprint 2. Functional interface and design patterns] [Course assignment]. ETITC.
 
-Equipo Acopio. (2026g). *Código fuente del cálculo de necesidades y emparejamiento* [Código fuente]. GitHub. https://github.com/Proyecto-IngSoftware/acopio/tree/main/packages/shared/src/motor
+Acopio Team. (2026f). *Canasta estándar Acopio: Validación* [Acopio standard food basket: Validation] [Internal research report].
 
-Equipo Acopio. (2026h, 19 de octubre). *Ronda de pruebas por rol en el servidor* [Informe de sesión]. GitHub. https://github.com/Proyecto-IngSoftware/acopio/blob/main/docs/06-operacion/sesiones/2026-10-19-ronda-por-rol.md
+Acopio Team. (2026g). *Código fuente del cálculo de necesidades y emparejamiento* [Source code of the needs calculation and matching] [Source code]. GitHub. https://github.com/Proyecto-IngSoftware/acopio/tree/main/packages/shared/src/motor
 
-Equipo Acopio. (2026i, 30 de octubre). *Recorridos de punta a punta* [Registro de pruebas]. GitHub. https://github.com/Proyecto-IngSoftware/acopio/blob/main/docs/06-operacion/recorridos.md
+Acopio Team. (2026h, October 19). *Ronda de pruebas por rol en el servidor* [Round of tests by role on the server] [Session report]. GitHub. https://github.com/Proyecto-IngSoftware/acopio/blob/main/docs/06-operacion/sesiones/2026-10-19-ronda-por-rol.md
 
-Unidad Nacional para la Gestión del Riesgo de Desastres. (2013). *Manual de estandarización de ayuda humanitaria de Colombia*. https://portal.gestiondelriesgo.gov.co/Documents/Manuales/Manual_de_Estandarizacion_AHE_de_Colombia.pdf
+Acopio Team. (2026i, October 30). *Recorridos de punta a punta* [End-to-end test runs] [Test log]. GitHub. https://github.com/Proyecto-IngSoftware/acopio/blob/main/docs/06-operacion/recorridos.md
 
-## Anexos
+APC Colombia. (2026, August 12). *Orientaciones para articular las donaciones y ayudas humanitarias destinadas a las víctimas del terremoto* [Guidelines for coordinating donations and humanitarian aid for the victims of the earthquake]. https://www.apccolombia.gov.co/comunicaciones/noticias/apc-colombia-emite-orientaciones-para-articular-las-donaciones-y-ayudas
 
-### Primera entrega
+Asociación Esfera. (2018). *El Manual Esfera: Carta Humanitaria y normas mínimas para la respuesta humanitaria* [The Sphere Handbook: Humanitarian Charter and minimum standards in humanitarian response] (4th ed.). https://spherestandards.org/wp-content/uploads/El-manual-Esfera-2018-ES.pdf
 
-El equipo comparó Acopio, AulaLibre y MediRuta. La matriz del Sprint 0 les asignó 31, 26 y 22 puntos sobre 35, respectivamente. AulaLibre obtuvo mejor valoración en viabilidad técnica y temporal. El equipo eligió Acopio por el problema observado y por la posibilidad de construir y demostrar la operación de inventario y reparto en etapas (Equipo Acopio, 2026a).
+Departamento Administrativo Nacional de Estadística. (n.d.). *Proyecciones de población* [Population projections]. https://www.dane.gov.co/index.php/estadisticas-por-tema/demografia-y-poblacion/proyecciones-de-poblacion
 
-### Segunda entrega
+Unidad Nacional para la Gestión del Riesgo de Desastres. (2013). *Manual de estandarización de ayuda humanitaria de Colombia* [Standardization manual for humanitarian aid in Colombia]. https://portal.gestiondelriesgo.gov.co/Documents/Manuales/Manual_de_Estandarizacion_AHE_de_Colombia.pdf
 
-El segundo avance documentó los requisitos, los roles y las historias de usuario que alimentaron el plan de trabajo. Las Figuras B1 y B2 presentan recorridos del público y del personal. El diagrama completo del Avance 2 incluye los demás casos de uso y sus relaciones (Equipo Acopio, 2026b).
+## Appendices
 
-![Figura B1. Casos de uso del portal público. Fuente: Vista resumida del diagrama de la segunda entrega (Equipo Acopio, 2026b).](figuras/casos-publico.png)
+### First submission
 
-![Figura B2. Casos de uso del personal autorizado. Fuente: Vista resumida del diagrama de la segunda entrega (Equipo Acopio, 2026b).](figuras/casos-operacion.png)
+The team compared Acopio, AulaLibre and MediRuta. The Sprint 0 matrix gave them 31, 26 and 22 points out of 35, respectively. AulaLibre scored higher in technical and time feasibility. The team chose Acopio because of the problem it had observed and because the inventory and distribution operation could be built and demonstrated in stages (Acopio Team, 2026a).
 
-### Tercera entrega
+### Second submission
 
-El tercer avance definió la arquitectura inicial, la separación de responsabilidades y el modelo de datos. La Figura C1 presenta los componentes del sistema en ejecución. La Figura 2, en cambio, muestra la organización del código en el repositorio (Equipo Acopio, 2026c).
+The second progress report documented the requirements, the roles and the user stories that fed the work plan. Figures B1 and B2 present workflows of the public and of the staff. The complete diagram in Progress Report 2 includes the remaining use cases and their relationships (Acopio Team, 2026b).
 
-![Figura C1. Componentes de Acopio en ejecución. Fuente: Vista resumida del diagrama de contenedores de la tercera entrega (Equipo Acopio, 2026c).](figuras/contenedores.png)
+![Figure B1. Use cases of the public portal. Source: Summary view of the diagram in the second submission (Acopio Team, 2026b).](figuras/casos-publico.png)
+
+![Figure B2. Use cases of the authorized staff. Source: Summary view of the diagram in the second submission (Acopio Team, 2026b).](figuras/casos-operacion.png)
+
+### Third submission
+
+The third progress report defined the initial architecture, the separation of responsibilities and the data model. Figure C1 presents the components of the system at run time. Figure 2, in contrast, shows the organization of the code in the repository (Acopio Team, 2026c).
+
+![Figure C1. Components of Acopio at run time. Source: Summary view of the container diagram in the third submission (Acopio Team, 2026c).](figuras/contenedores.png)
