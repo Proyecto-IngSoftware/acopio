@@ -19,6 +19,7 @@ en otro lugar.
 
 | Fecha | Informe | Tema |
 |---|---|---|
+| 2026-11-22 | [2026-11-22-proyecto-integrador-en-ingles](2026-11-22-proyecto-integrador-en-ingles.md) | Proyecto integrador en inglés, guion del video y presentación con Copi en inglés y en español |
 | 2026-11-18 | [2026-11-18-remediacion-main](2026-11-18-remediacion-main.md) | Cola sin conexión, recordatorios reprogramados, Compose y confirmaciones históricas |
 | 2026-11-18 | [2026-11-18-purga-correo-turnos](2026-11-18-purga-correo-turnos.md) | Purga de correo de reservas y preparación del SMTP de Hostinger |
 | 2026-11-18 | [2026-11-18-remediacion-y-smtp-hostinger](2026-11-18-remediacion-y-smtp-hostinger.md) | Plan de remediación de main y configuración SMTP |
