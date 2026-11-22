@@ -9,7 +9,7 @@ actualizado: 2026-10-30
 # Complemento de la sustentación del segundo corte
 
 Para la sustentación del 30 de octubre de 2026, el docente pidió tres cosas
-([guía](../talleres/Complemento%20Proyecto%20–%20IS1.pdf)): el diagrama de paquetes al día con un
+([guía](../guias/Complemento%20Proyecto%20–%20IS1.pdf)): el diagrama de paquetes al día con un
 ADR-002 que lo explique, un diagrama de comportamiento que corresponda a lo implementado y, como
 bonificación opcional, un patrón de concurrencia integrado a una funcionalidad. Cada sección
 presenta el diagrama, explica cómo leerlo y lo amarra al código, para que se pueda revisar contra
@@ -18,7 +18,7 @@ el repositorio.
 Los tres diagramas se dibujan a mano en SVG, en `docs/02-arquitectura/diagramas/`
 (`paquetes.html`, `comportamiento.html` y `concurrencia.html`), y se exportan a PNG con Playwright.
 El Word sale de esta nota con [generar-complemento.py](generar-complemento.py) y se une al
-documento compartido con [unificar-avances.py](unificar-avances.py).
+documento compartido con [unificar-avances.py](../herramientas/unificar-avances.py).
 
 ## 1. Diagrama de paquetes y ADR-002
 
@@ -30,7 +30,7 @@ API y muestra sus doce módulos. Cada caja es una carpeta real del repositorio y
 Adentro aparecen las clases que más pesan en ese paquete, con su nombre en el código y su
 estereotipo («servicio», «controlador», «interfaz», «dao»).
 
-![Paquetes del monorepo: la web y la API no comparten código salvo packages/shared; se comunican por HTTP y por el contrato OpenAPI.](../assets/diagramas/arquitectura-03-paquetes-del-monorepo.png)
+![Paquetes del monorepo: la web y la API no comparten código salvo packages/shared; se comunican por HTTP y por el contrato OpenAPI.](../../assets/diagramas/arquitectura-03-paquetes-del-monorepo.png)
 
 En la primera lámina, la flecha continua significa «importa código de» y la punteada «genera,
 exporta o llama por HTTP». La web nunca importa código de la API: le habla por HTTP en `/api` y
@@ -38,7 +38,7 @@ toma los tipos del contrato `openapi.json`, que la API exporta. Lo único que co
 `packages/shared`, donde viven las fórmulas del motor y las unidades, para que la web muestre el
 mismo número que calcula la API.
 
-![Paquetes de la API en cinco capas: integración, procesos, registro, red y catálogo, y transversales. Las dependencias bajan o van de lado, nunca suben.](../assets/diagramas/arquitectura-04-paquetes-de-la-api.png)
+![Paquetes de la API en cinco capas: integración, procesos, registro, red y catálogo, y transversales. Las dependencias bajan o van de lado, nunca suben.](../../assets/diagramas/arquitectura-04-paquetes-de-la-api.png)
 
 La segunda lámina se lee de arriba hacia abajo. El riel de la izquierda nombra las cinco capas y
 dice qué resuelve cada una. Cada flecha es un `import` que existe en el código, y todas apuntan
@@ -62,7 +62,7 @@ si un módulo importa a uno que no tiene permitido.
 
 ### 1b. ADR-002 · Organización del código en paquetes
 
-En el repositorio es el [ADR-0023](../02-arquitectura/adr/ADR-0023-organizacion-en-paquetes.md):
+En el repositorio es el [ADR-0023](../../02-arquitectura/adr/ADR-0023-organizacion-en-paquetes.md):
 el número 0002 ya era otra decisión y los números no se reutilizan. El ADR-001 del curso es el
 ADR-0008 del repositorio.
 
@@ -76,7 +76,7 @@ ADR-0008 del repositorio.
 
 ## 2. Diagrama de comportamiento: estados de la donación
 
-![Estados de la donación: PREPARADO, PENDIENTE, CONCILIADO, RECHAZADO y CANCELADO, con nueve transiciones numeradas y coloreadas según quién las dispara.](../assets/diagramas/comportamiento-01-estados-de-la-donacion.png)
+![Estados de la donación: PREPARADO, PENDIENTE, CONCILIADO, RECHAZADO y CANCELADO, con nueve transiciones numeradas y coloreadas según quién las dispara.](../../assets/diagramas/comportamiento-01-estados-de-la-donacion.png)
 
 ### 2a. Qué representa y por qué un diagrama de estados
 
@@ -158,7 +158,7 @@ sirve.
 
 ### 3b. Componentes y cómo se comunican
 
-![Productores, cola y consumidor: cuatro servicios insertan en correo_saliente dentro de su transacción y responden sin esperar; cada minuto procesarCola envía por Resend y marca cada correo ENVIADO o FALLIDO.](../assets/diagramas/concurrencia-01-cola-de-correo.png)
+![Productores, cola y consumidor: cuatro servicios insertan en correo_saliente dentro de su transacción y responden sin esperar; cada minuto procesarCola envía por Resend y marca cada correo ENVIADO o FALLIDO.](../../assets/diagramas/concurrencia-01-cola-de-correo.png)
 
 Productores y consumidor no se llaman entre sí. Lo único que comparten es la tabla
 `correo_saliente`, y por eso trabajan a ritmos distintos: la petición termina a la izquierda de la
@@ -187,12 +187,12 @@ y después de 8 intentos se deja de reintentar.
   las 05:50:11. El consumidor lo tomó en su siguiente pasada y Resend lo aceptó a las 05:51:01, en
   el primer intento. El correo llegó a la bandeja desde `no-reply@josephqaz.dev`.
 
-![La fila de correo_saliente después del envío: estado ENVIADO, un intento y sin error.](evidencia/complemento/correo-saliente-enviado.png)
+![La fila de correo_saliente después del envío: estado ENVIADO, un intento y sin error.](evidencia/correo-saliente-enviado.png)
 
 El correo de confirmación en la bandeja de `contacto@josephqaz.dev`, con el enlace para
 confirmar la cuenta:
 
-![El correo «Confirma tu correo en Acopio» recibido desde no-reply@josephqaz.dev.](evidencia/complemento/resend-bandeja.png)
+![El correo «Confirma tu correo en Acopio» recibido desde no-reply@josephqaz.dev.](evidencia/resend-bandeja.png)
 
 ### 3d. Limitaciones y fallos considerados
 
@@ -201,7 +201,7 @@ confirmar la cuenta:
 - Dos consumidores a la vez: la bandera `procesando` solo evitaba dos lotes dentro de una
   instancia, y con dos instancias de la API el mismo correo podía salir dos veces. Lo vimos al
   escribir esta ficha y lo resolvimos el mismo día
-  ([P-089](../01-requerimientos/pendientes.md)): el consumidor reclama el lote con
+  ([P-089](../../01-requerimientos/pendientes.md)): el consumidor reclama el lote con
   `UPDATE … WHERE id IN (SELECT … FOR UPDATE SKIP LOCKED)` y lo aparta cinco minutos. Una prueba
   de integración pone dos instancias a procesar la cola al mismo tiempo con un servidor de correo
   lento; con el código anterior salieron seis correos repetidos, y con el reclamo cada uno sale una

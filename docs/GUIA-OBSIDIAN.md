@@ -3,7 +3,7 @@ title: "Guía de la bóveda en Obsidian"
 type: moc
 tags: [moc, obsidian]
 estado: vigente
-actualizado: 2026-10-30
+actualizado: 2026-11-22
 ---
 
 # Guía de la bóveda en Obsidian
@@ -135,7 +135,7 @@ README.md                    ← portada
 │  └─ stitch/README.md
 ├─ 05-planes/README.md
 ├─ 06-operacion/README.md
-├─ entregas/README.md
+├─ entregas/README.md          una carpeta por entrega, más guias/ y herramientas/
 ├─ superpowers/specs/README.md
 ├─ 99-futuro/README.md
 └─ plantillas/README.md
@@ -206,7 +206,7 @@ revisarlos si alguien los cambia.
 4. Revisar el grafo: ¿alguna nota quedó suelta? Enlazarla desde su índice
 
 **Responsable:** Alejandra, según el reparto del
-[Avance 1](entregas/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo).
+[Avance 1](entregas/avance-1-sprint-0/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo).
 Rota cada Sprint.
 
 ---

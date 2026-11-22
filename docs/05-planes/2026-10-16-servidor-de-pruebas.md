@@ -178,7 +178,7 @@ parece. Orden:
 3. **Mientras Joseph revisa las maquetas, los escenarios de prueba por rol**
    ([#55](https://github.com/Proyecto-IngSoftware/acopio/issues/55)), en la bóveda: «entro
    como…, hago…, debería ver…», tomados de los criterios del
-   [Avance 2](../entregas/avance-02-requisitos.md#historias), con las cuentas de la demo y
+   [Avance 2](../entregas/avance-2-requisitos/avance-02-requisitos.md#historias), con las cuentas de la demo y
    `donador1@demo.acopio.local` para el Donador (P-056). Quedan como «no probar todavía»
    HU-02, HU-03, HU-15, el criterio de RedAcopio de HU-01, y HU-12 y HU-13 si el ciclo 3 no
    llega.

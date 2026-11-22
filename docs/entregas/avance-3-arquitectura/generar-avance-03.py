@@ -8,7 +8,7 @@ Toma el contenido de las mismas fuentes que las páginas publicadas, sin copiar 
   - assets/diagramas/*.png                          (renderizados a 3x)
 Usa «Avance 1 - Sprint 0 - Acopio.docx» como plantilla: estilos, márgenes y pie.
 
-Uso: python generar-avance-03.py   (desde docs/entregas; requiere python-docx)
+Uso: python generar-avance-03.py   (desde docs/entregas/avance-3-arquitectura; requiere python-docx)
 
 Después de generar, el índice queda como campo sin llenar. Se abre el .docx en Word
 y se actualiza (clic derecho sobre el índice → Actualizar campos → toda la tabla) y
@@ -31,8 +31,8 @@ from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
 
 AQUI = Path(__file__).resolve().parent
-DOCS = AQUI.parent
-PLANTILLA = AQUI / "Avance 1 - Sprint 0 - Acopio.docx"
+DOCS = AQUI.parents[1]
+PLANTILLA = AQUI.parent / "avance-1-sprint-0" / "Avance 1 - Sprint 0 - Acopio.docx"
 SALIDA = AQUI / "Avance 3 - Arquitectura inicial - Acopio.docx"
 IMG = DOCS / "assets" / "diagramas"
 DESC = json.loads((DOCS / "03-diseno" / "descomposicion-funcional" / "datos.json").read_text(encoding="utf-8"))

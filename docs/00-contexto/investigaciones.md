@@ -9,7 +9,7 @@ actualizado: 2026-10-06
 # Investigaciones — evidencia de decisiones de diseño
 
 Registro de las búsquedas hechas para sustentar una decisión de diseño concreta —
-distinto de la [evidencia inicial del Avance 1](../entregas/avance-01-sprint0.md#evidencia-inicial),
+distinto de la [evidencia inicial del Avance 1](../entregas/avance-1-sprint-0/avance-01-sprint0.md#evidencia-inicial),
 que sustenta el problema en general. Mismo criterio: toda afirmación que viene de
 afuera lleva su fuente y su fecha de consulta. Sin fuente, es una suposición, y se
 anota como tal.
@@ -56,7 +56,7 @@ según necesidades identificadas.
 no lo hay.** El Distrito tuvo que cerrar los puntos de acopio descentralizados «por
 incapacidad logística para coordinar múltiples puntos ciegos» y concentrar todo en
 el Palacio de los Deportes — ya citado en el
-[Avance 1](../entregas/avance-01-sprint0.md#evidencia-inicial). La literatura de
+[Avance 1](../entregas/avance-1-sprint-0/avance-01-sprint0.md#evidencia-inicial). La literatura de
 logística humanitaria coincide en que el último tramo es la etapa de mayor
 incertidumbre, y donde el control se rompe con más frecuencia:
 - *Last Mile Distribution in Humanitarian Relief* — Journal of Intelligent
@@ -85,7 +85,7 @@ compromiso de rendición de cuentas, documentar qué se envió y qué llegó. Ni
 las fuentes consultadas especifica una herramienta operativa de campo concreta
 —como una hoja de conteo estandarizada— de acceso público.
 - Core Humanitarian Standard — Sphere Standards — <https://spherestandards.org/humanitarian-standards/core-humanitarian-standard/> — consultado 2026-09-12
-- Manual Esfera — ya citado en el [Avance 1](../entregas/avance-01-sprint0.md#evidencia-inicial)
+- Manual Esfera — ya citado en el [Avance 1](../entregas/avance-1-sprint-0/avance-01-sprint0.md#evidencia-inicial)
 
 **Conclusión aplicada:** sin un estándar operativo público que copiar, el diseño se
 apoya en I-001 en su lugar. `evidencia_keys` (fotografía obligatoria en
@@ -235,7 +235,7 @@ los acopios durante la respuesta ni las emergencias simultáneas.
   destino lo fija quien coordina a partir de la evaluación de necesidades. Eso sostiene
   que el acopio no dependa de una emergencia y que el motor ordene por necesidad, con
   aprobación humana (RN-04 y RN-07 del
-  [Avance 2](../entregas/avance-02-requisitos.md#3-restricciones-y-reglas-de-negocio)).
+  [Avance 2](../entregas/avance-2-requisitos/avance-02-requisitos.md#3-restricciones-y-reglas-de-negocio)).
 - De paso respalda piezas ya diseñadas, sin cambiarlas: verificar la carga contra el
   manifiesto se parece a conciliar lo declarado contra lo confirmado (RF-08); rechazar
   sin almacenar se parece a «no recibir» (RF-06); y la prioridad por plazo es candidata
@@ -324,6 +324,6 @@ cita de cada valor en `canasta_estandar.fuente`. P-001 queda resuelto.
 
 ## Relacionado
 
-- [Evidencia inicial del Avance 1](../entregas/avance-01-sprint0.md#evidencia-inicial) — evidencia del problema en general
+- [Evidencia inicial del Avance 1](../entregas/avance-1-sprint-0/avance-01-sprint0.md#evidencia-inicial) — evidencia del problema en general
 - [Pendientes](../01-requerimientos/pendientes.md) — P-013, decisión que se apoya en I-001
 - [Modelo de datos](../02-arquitectura/modelo-datos.md) — `remision.evidencia_keys`

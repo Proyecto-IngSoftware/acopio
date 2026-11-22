@@ -8,7 +8,7 @@ actualizado: 2026-09-28
 
 # Avance 2 — Requisitos y planeación inicial
 
-**Guía:** [Avance de Proyecto 2 – IS1](../talleres/Avance%20de%20Proyecto%202%20–%20IS1.pdf)
+**Guía:** [Avance de Proyecto 2 – IS1](../guias/Avance%20de%20Proyecto%202%20–%20IS1.pdf)
 · Asignado 2026-08-28 · Docente: Juan Pablo Bustamante Moreno
 
 **Dónde se entrega:** en el Word del proyecto, entre el Avance 1 y el Avance 3. No se
@@ -36,9 +36,9 @@ son las épicas del Avance 2** y que cada funcionalidad se rastrea hasta su hist
 usuario. Este avance tiene que cumplir esa afirmación:
 
 - Cada RF-xx cae en una de las seis épicas, que son los seis módulos de
-  [P-010](../01-requerimientos/pendientes.md).
+  [P-010](../../01-requerimientos/pendientes.md).
 - Cada RF-xx agrupa RF de la bóveda que ya están en el
-  [Anexo A del Avance 3](../03-diseno/descomposicion-funcional/datos.json). Así la
+  [Anexo A del Avance 3](../../03-diseno/descomposicion-funcional/datos.json). Así la
   cadena RF-xx → HU-xx → funcionalidad → módulo queda cerrada.
 
 | Épica | Módulo del Avance 3 | RF del curso |
@@ -83,7 +83,7 @@ van aquí: van a las reglas de negocio de la sección 3.
 
 - **El vertical logístico completo** —acopio → inventario → comprobante → motor →
   zona— queda cubierto de punta a punta: RF-04 a RF-13.
-- **Cada problema del [Avance 1](avance-01-sprint0.md#problema) tiene al menos un
+- **Cada problema del [Avance 1](../avance-1-sprint-0/avance-01-sprint0.md#problema) tiene al menos un
   requisito:** ayuda concentrada en una causa → RF-02; voluntarios que viajan en vano
   → RF-03; acopios saturados → RF-01, RF-06; reparto sin medir → RF-10, RF-13; sin
   trazabilidad → RF-07 a RF-09, RF-12.
@@ -99,25 +99,25 @@ van aquí: van a las reglas de negocio de la sección 3.
 Los códigos RF-01 a RF-15 son del curso. Los de la bóveda (`RF-INV-001`…) no se
 renumeran: detallan cada requisito del curso con sus criterios de aceptación. Es el
 mismo criterio que ADR-001 del Word y ADR-0008 de la bóveda
-([P-011](../01-requerimientos/pendientes.md)).
+([P-011](../../01-requerimientos/pendientes.md)).
 
 | RF del curso | RF de la bóveda que lo detallan | Cant. |
 |---|---|:-:|
-| RF-01 | [RED-002](../01-requerimientos/funcionales/red.md), RED-003, RED-009, RED-011, [HOM-001](../01-requerimientos/funcionales/home.md), HOM-002, HOM-006 | 7 |
-| RF-02 | [RED-008](../01-requerimientos/funcionales/red.md), [HOM-005](../01-requerimientos/funcionales/home.md) | 2 |
-| RF-03 | [TUR-001 a TUR-007](../01-requerimientos/funcionales/turnos.md) | 7 |
-| RF-04 | [INV-001](../01-requerimientos/funcionales/inventario.md), INV-002, INV-004, INV-009, INV-011, [CAT-001](../01-requerimientos/funcionales/catalogo.md), CAT-002, CAT-004, [CMP-001C](../01-requerimientos/funcionales/comprobantes.md) | 9 |
-| RF-05 | [INV-005](../01-requerimientos/funcionales/inventario.md), INV-006, INV-010 | 3 |
-| RF-06 | [INV-007](../01-requerimientos/funcionales/inventario.md), INV-008 | 2 |
-| RF-07 | [CMP-001B](../01-requerimientos/funcionales/comprobantes.md), CMP-001D, CMP-002, CMP-008, [IDE-013](../01-requerimientos/funcionales/identidad.md) | 5 |
-| RF-08 | [CMP-003](../01-requerimientos/funcionales/comprobantes.md), CMP-004, CMP-005 | 3 |
-| RF-09 | [CMP-006](../01-requerimientos/funcionales/comprobantes.md), CMP-007, [HOM-004](../01-requerimientos/funcionales/home.md) | 3 |
-| RF-10 | [MOT-001](../01-requerimientos/funcionales/motor.md) a MOT-007, MOT-010, [RED-004](../01-requerimientos/funcionales/red.md), [CAT-003](../01-requerimientos/funcionales/catalogo.md), CAT-005, CAT-006 | 12 |
-| RF-11 | [MOT-008](../01-requerimientos/funcionales/motor.md), [INV-003](../01-requerimientos/funcionales/inventario.md) | 2 |
-| RF-12 | [MOT-009](../01-requerimientos/funcionales/motor.md) | 1 |
-| RF-13 | [MOT-011](../01-requerimientos/funcionales/motor.md) | 1 |
-| RF-14 | [IDE-001 a IDE-012](../01-requerimientos/funcionales/identidad.md) | 12 |
-| RF-15 | [RED-001](../01-requerimientos/funcionales/red.md), RED-005, RED-006, RED-007, RED-010, [HOM-003](../01-requerimientos/funcionales/home.md) | 6 |
+| RF-01 | [RED-002](../../01-requerimientos/funcionales/red.md), RED-003, RED-009, RED-011, [HOM-001](../../01-requerimientos/funcionales/home.md), HOM-002, HOM-006 | 7 |
+| RF-02 | [RED-008](../../01-requerimientos/funcionales/red.md), [HOM-005](../../01-requerimientos/funcionales/home.md) | 2 |
+| RF-03 | [TUR-001 a TUR-007](../../01-requerimientos/funcionales/turnos.md) | 7 |
+| RF-04 | [INV-001](../../01-requerimientos/funcionales/inventario.md), INV-002, INV-004, INV-009, INV-011, [CAT-001](../../01-requerimientos/funcionales/catalogo.md), CAT-002, CAT-004, [CMP-001C](../../01-requerimientos/funcionales/comprobantes.md) | 9 |
+| RF-05 | [INV-005](../../01-requerimientos/funcionales/inventario.md), INV-006, INV-010 | 3 |
+| RF-06 | [INV-007](../../01-requerimientos/funcionales/inventario.md), INV-008 | 2 |
+| RF-07 | [CMP-001B](../../01-requerimientos/funcionales/comprobantes.md), CMP-001D, CMP-002, CMP-008, [IDE-013](../../01-requerimientos/funcionales/identidad.md) | 5 |
+| RF-08 | [CMP-003](../../01-requerimientos/funcionales/comprobantes.md), CMP-004, CMP-005 | 3 |
+| RF-09 | [CMP-006](../../01-requerimientos/funcionales/comprobantes.md), CMP-007, [HOM-004](../../01-requerimientos/funcionales/home.md) | 3 |
+| RF-10 | [MOT-001](../../01-requerimientos/funcionales/motor.md) a MOT-007, MOT-010, [RED-004](../../01-requerimientos/funcionales/red.md), [CAT-003](../../01-requerimientos/funcionales/catalogo.md), CAT-005, CAT-006 | 12 |
+| RF-11 | [MOT-008](../../01-requerimientos/funcionales/motor.md), [INV-003](../../01-requerimientos/funcionales/inventario.md) | 2 |
+| RF-12 | [MOT-009](../../01-requerimientos/funcionales/motor.md) | 1 |
+| RF-13 | [MOT-011](../../01-requerimientos/funcionales/motor.md) | 1 |
+| RF-14 | [IDE-001 a IDE-012](../../01-requerimientos/funcionales/identidad.md) | 12 |
+| RF-15 | [RED-001](../../01-requerimientos/funcionales/red.md), RED-005, RED-006, RED-007, RED-010, [HOM-003](../../01-requerimientos/funcionales/home.md) | 6 |
 | | **Total** | **75** |
 
 Los 75 RF de la bóveda quedan asignados, ninguno dos veces.
@@ -138,7 +138,7 @@ de la sección 5 tiene que mostrarlo:
 | INV-003 | RF-11 | Inventario | Despachar una remisión registra la salida del inventario |
 
 Verificado con un script contra
-[datos.json](../03-diseno/descomposicion-funcional/datos.json): 75 asignados, 75
+[datos.json](../../03-diseno/descomposicion-funcional/datos.json): 75 asignados, 75
 únicos, ninguno sin asignar.
 
 ---
@@ -146,7 +146,7 @@ Verificado con un script contra
 ## 2. Requisitos no funcionales y escenarios de calidad
 
 Doce condiciones de calidad, cada una con una cifra o una prueba que dice si se
-cumple. Salen de los [13 RNF de la bóveda](../01-requerimientos/no-funcionales.md):
+cumple. Salen de los [13 RNF de la bóveda](../../01-requerimientos/no-funcionales.md):
 del RNF-01 al RNF-11 conservan su número; el de idioma (RNF-12 de la bóveda) se funde
 con la legibilidad en RNF-03, porque ambos tratan de cómo se lee un dato; y el de
 mantenibilidad (RNF-13 de la bóveda) pasa a ser RNF-12.
@@ -262,7 +262,7 @@ que la sección 1 dejó fuera de los requisitos.
 
 **RN-07 es nueva.** Reemplaza la restricción «una emergencia activa a la vez» que el
 Avance 3 incluyó en el ADR-001
-([ADR-0010](../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md)).
+([ADR-0010](../../02-arquitectura/adr/ADR-0010-varias-emergencias-activas.md)).
 
 **Las cuatro reglas del sistema que el Avance 3 dejó fuera de su diagrama** quedan
 cubiertas aquí o en la sección 2: RF-IDE-005 (autorizar cada petición) en RN-06 y
@@ -561,7 +561,7 @@ Son los mismos seis módulos de la vista de descomposición funcional del Avance
 ### Product Backlog
 
 **Qué va primero.** El orden sigue las dependencias del
-[orden de construcción](../superpowers/specs/2026-08-20-acopio-design.md#13-orden-de-construcción):
+[orden de construcción](../../superpowers/specs/2026-08-20-acopio-design.md#13-orden-de-construcción):
 acceso y catálogo (HU-14) antes que todo; después la red pública (HU-01, HU-02,
 HU-15); luego el inventario (HU-04 a HU-06), la custodia (HU-07 a HU-09) y el motor
 (HU-10a a HU-13); por último los turnos (HU-03).
@@ -571,7 +571,7 @@ HU-15); luego el inventario (HU-04 a HU-06), la custodia (HU-07 a HU-09) y el mo
 | **Must** | HU-01, HU-02, HU-04 a HU-15 | El vertical logístico completo y el portal que lo hace útil. Sin ellos no hay aporte original |
 | **Should** | HU-03 | Turnos es el primer recorte si el calendario aprieta; se conserva la reserva básica |
 | **Could** | Captura sin conexión (RF-INV-009), voluntariado especializado (RF-TUR-007), matriz de acceso exportable (RF-IDE-011) | Detalles de requisitos del curso que se pueden aplazar sin romper el flujo |
-| **Won't** (esta versión) | Pagos, datos de personas desaparecidas, optimización de rutas, conteo físico de personas, doble factor | Descartados con razón escrita en [fuera de alcance](../00-contexto/fuera-de-alcance.md) |
+| **Won't** (esta versión) | Pagos, datos de personas desaparecidas, optimización de rutas, conteo físico de personas, doble factor | Descartados con razón escrita en [fuera de alcance](../../00-contexto/fuera-de-alcance.md) |
 
 **Qué necesita más análisis.** HU-10a depende de datos que todavía no existen: la
 canasta estándar y la población por zona.
@@ -594,7 +594,7 @@ Tablero del equipo en GitHub Projects, con las columnas Product Backlog · To Do
 Progress · Review · Done, responsables, etiquetas y lista de tareas en cada tarjeta:
 <https://github.com/orgs/Proyecto-IngSoftware/projects/1>
 
-![Tablero del proyecto, 2026-09-14](../assets/github/backlog1.png)
+![Tablero del proyecto, 2026-09-14](../../assets/github/backlog1.png)
 
 *Captura del 2026-09-14 en vista de tabla. Para el Word conviene la vista de tablero
 agrupada por Status, con las cinco columnas de la guía.*
@@ -606,11 +606,11 @@ agrupada por Status, con las cinco columnas de la guía.*
 Delimita el sistema y valida que cada actor se relaciona con lo que el sistema le
 ofrece. `include` y `extend` aparecen solo donde un caso de uso reutiliza a otro.
 
-![Diagrama de casos de uso de Acopio](../assets/diagramas/avance2-casos-de-uso.png)
+![Diagrama de casos de uso de Acopio](../../assets/diagramas/avance2-casos-de-uso.png)
 
 Versión editable en el
 [lienzo de diagramas del Avance 2](https://claude.ai/code/artifact/026f819a-5775-4db8-92e5-44abc21cc9a3),
-generado desde [build.mjs](../03-diseno/avance2-diagramas/build.mjs). El bloque
+generado desde [build.mjs](../../03-diseno/avance2-diagramas/build.mjs). El bloque
 Mermaid de abajo es la misma estructura en texto, para leerla en GitHub u Obsidian.
 
 ```mermaid
@@ -722,7 +722,7 @@ Matriz de interés contra poder. El interés mide cuánto le afecta el resultado
 poder, cuánto puede cambiar los requisitos, las prioridades o las condiciones del
 proyecto.
 
-![Mapa de stakeholders de Acopio](../assets/diagramas/avance2-stakeholders.png)
+![Mapa de stakeholders de Acopio](../../assets/diagramas/avance2-stakeholders.png)
 
 Versión editable en el mismo
 [lienzo de diagramas del Avance 2](https://claude.ai/code/artifact/026f819a-5775-4db8-92e5-44abc21cc9a3).

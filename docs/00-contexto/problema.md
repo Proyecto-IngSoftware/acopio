@@ -77,7 +77,7 @@ convierte el dato en decisión.
 Se sustenta con observación directa —un centro de acopio en Bogotá, el 2026-08-20— y
 con fuentes de prensa y de entidades del gobierno: Cruz Roja Colombiana, Alcaldía de
 Bogotá, UNGRD y APC Colombia, Canal Capital e Infobae. Detalle y enlaces en el
-[Avance 1, sección 2](../entregas/avance-01-sprint0.md#evidencia-inicial).
+[Avance 1, sección 2](../entregas/avance-1-sprint-0/avance-01-sprint0.md#evidencia-inicial).
 
 ## Qué NO es este problema
 

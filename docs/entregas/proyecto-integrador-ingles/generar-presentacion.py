@@ -13,7 +13,7 @@ from presentacion_es import TEXTOS
 
 AQUI = Path(__file__).resolve().parent
 RAIZ = AQUI.parents[2]
-EVIDENCIA = AQUI.parent / 'evidencia/avance-05'
+EVIDENCIA = AQUI.parent / 'avance-5-sprint-2/evidencia'
 STITCH = RAIZ / 'docs/03-diseno/stitch'
 FUENTE = next(RAIZ.glob(
     'node_modules/.bun/@fontsource-variable+inter@*/node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2'
@@ -577,4 +577,4 @@ def a_espanol(texto):
 
 
 generar(AQUI / 'Acopio - Video Presentation.html')
-generar(AQUI.parent / 'Acopio - Presentación.html', 'es', a_espanol)
+generar(AQUI.parent / 'presentacion-final/Acopio - Presentación.html', 'es', a_espanol)

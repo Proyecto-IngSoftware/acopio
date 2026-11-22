@@ -3,7 +3,7 @@ title: "Sesión 2026-11-18 · Proyecto integrador de inglés"
 type: informe
 tags: [operacion, sesion]
 estado: vigente
-actualizado: 2026-11-18
+actualizado: 2026-11-22
 ---
 
 # Sesión 2026-11-18 · Proyecto integrador de inglés
@@ -28,11 +28,11 @@ La plantilla no incluye el estilo de lista usado inicialmente por el generador. 
 
 ## Pendiente
 
-- Confirmar los apellidos de los cuatro autores en la portada del [Word](../../entregas/proyecto-integrador-ingles/Acopio%20-%20Proyecto%20integrador%20PICS.docx) y revisar el documento antes de entregarlo.
+- Revisar el [documento](../../entregas/proyecto-integrador-ingles/Acopio%20-%20Proyecto%20integrador%20PICS.pdf) antes de entregarlo.
 
 ## Depende de Joseph
 
-Confirmar los datos de portada y grabar el video con el [guion](../../entregas/proyecto-integrador-ingles/guion-video.md).
+Grabar el video con el [guion](../../entregas/proyecto-integrador-ingles/guion-video.md).
 
 ## Documento completo según la plantilla PICS
 
@@ -71,3 +71,7 @@ Se completó el nombre del docente en la portada con la forma usada en los avanc
 Al revisar la presentación HTML de la Entrega 2 se identificó una captura que complementa el sello de las causas: la confirmación del Administrador antes de verificar una entidad. La imagen coincide con la evidencia del Avance 5. Se añadió como Figura 12, se actualizó la numeración del guion y se verificó el índice del PDF regenerado.
 
 La portada quedó fechada el 18 de noviembre de 2026. Se incluyó la presentación HTML de la Entrega 2 como fuente de la captura de verificación de entidades.
+
+## Correcciones solicitadas por el docente
+
+Joseph confirmó los nombres completos de los cuatro autores. Se actualizaron la portada y el índice en el generador, el Word y el PDF. La portada muestra un nombre por línea y conserva la fecha en la primera página. Se retiraron los resaltados del índice y se cotejaron sus 21 entradas con el PDF de 34 páginas.

@@ -32,7 +32,7 @@ cualquier usuario de Supabase.
 ## Responsable
 
 Michael, según el reparto del
-[Avance 1](../entregas/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo).
+[Avance 1](../entregas/avance-1-sprint-0/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo).
 Rota cada Sprint.
 
 ## Relacionado

@@ -13,7 +13,7 @@ actualizado: 2026-09-28
 **Fecha:** 2026-09-14 · **Estado:** aceptada
 
 > **Equivale al «ADR-001: Arquitectura y selección tecnológica inicial»** del
-> [Avance 3](../../entregas/avance-03-arquitectura.md) del curso. En la bóveda lleva
+> [Avance 3](../../entregas/avance-3-arquitectura/avance-03-arquitectura.md) del curso. En la bóveda lleva
 > el número 0008 porque los números asignados no se reutilizan
 > ([P-011](../../01-requerimientos/pendientes.md)). Es la decisión global: los
 > ADR-0001 a 0007 son decisiones de detalle que esta enmarca y cita.

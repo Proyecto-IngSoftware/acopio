@@ -8,16 +8,16 @@ actualizado: 2026-10-18
 
 # Avance 4 — Sprint 1: incremento funcional y arquitectura de desarrollo
 
-**Guía:** [Avance de Proyecto 4 – IS1](../talleres/Avance%20de%20Proyecto%204%20–%20IS1.pdf)
+**Guía:** [Avance de Proyecto 4 – IS1](../guias/Avance%20de%20Proyecto%204%20–%20IS1.pdf)
 · Docente: Juan Pablo Bustamante Moreno
 
 **Sprint 1:** semanas 8 a 10, del lunes 21 de septiembre al domingo 11 de octubre de
-2026 ([calendario](calendario.md)).
+2026 ([calendario](../calendario.md)).
 
 **Dónde se entrega:** en el mismo Word de OneDrive del proyecto, después del Avance 3.
 El avance no se califica solo; se revisa y entra como evidencia en la sustentación del
 segundo corte. El Word de esta entrega sale de [generar-avance-04.py](generar-avance-04.py)
-y después se une a los anteriores con [unificar-avances.py](unificar-avances.py).
+y después se une a los anteriores con [unificar-avances.py](../herramientas/unificar-avances.py).
 
 **Repositorio (público desde el 2026-10-07):**
 <https://github.com/Proyecto-IngSoftware/acopio>
@@ -31,12 +31,12 @@ Lo que todavía depende de una reunión del equipo está marcado como pendiente.
 |---|---|---|
 | 1. Incremento funcional mínimo | ✅ | Nada. Evidencia en [§1](#1-incremento-funcional) |
 | Repositorio público | ✅ | Se publicó el 2026-10-07 |
-| 2. Diagrama de paquetes | ✅ | Dos vistas en [vista-general.md](../02-arquitectura/vista-general.md#diagrama-de-paquetes) |
+| 2. Diagrama de paquetes | ✅ | Dos vistas en [vista-general.md](../../02-arquitectura/vista-general.md#diagrama-de-paquetes) |
 | 3a. Tabla del Sprint Planning | ✅ | |
-| 3a. Captura del tablero con las historias del Sprint 1 | ✅ | Vista [«Sprint 1»](https://github.com/orgs/Proyecto-IngSoftware/projects/1/views/2) en [tablero.png](evidencia/avance-04/tablero.png), desde el 2026-10-16 |
+| 3a. Captura del tablero con las historias del Sprint 1 | ✅ | Vista [«Sprint 1»](https://github.com/orgs/Proyecto-IngSoftware/projects/1/views/2) en [tablero.png](evidencia/tablero.png), desde el 2026-10-16 |
 | 3b. Evidencia del seguimiento (captura o foto) | ❌ | Seguimiento del viernes 9 de octubre |
 | 3b. Tabla del seguimiento | ⚠️ | Falta la fila de Brayan, Alejandra y Michael |
-| 3c. Evidencia de la revisión | ✅ | [Pruebas con curl](evidencia/avance-04/pruebas-api.txt) y [contenedores](evidencia/avance-04/contenedores.txt) |
+| 3c. Evidencia de la revisión | ✅ | [Pruebas con curl](evidencia/pruebas-api.txt) y [contenedores](evidencia/contenedores.txt) |
 | 3c. Tabla del Sprint Review | ✅ | |
 | 3c. Retrospectiva | ⚠️ | Borrador; el equipo la confirma en el seguimiento del 9 de octubre |
 
@@ -47,7 +47,7 @@ Sprint 1 entregó la API y también la interfaz web de los mismos bloques.
 
 | Pide la guía | Cómo se cumple |
 |---|---|
-| API REST funcional | NestJS 11 en `apps/api`, con 10 módulos de dominio. El contrato OpenAPI está en [openapi.json](../03-diseno/api/openapi.json) |
+| API REST funcional | NestJS 11 en `apps/api`, con 10 módulos de dominio. El contrato OpenAPI está en [openapi.json](../../03-diseno/api/openapi.json) |
 | Base de datos real dentro de Docker | PostgreSQL 16 en el servicio `db` de `infra/docker-compose.yml`, con 10 migraciones de Prisma |
 | Ejecutable con Docker Compose | `bun run servicios:todo` levanta `db`, `storage` (Garage), `mailpit` y la `api` construida desde su Dockerfile. Cada servicio tiene `healthcheck` |
 | Variables de entorno | Todo sale del `.env` (plantilla en `.env.example`). La API valida las variables con Zod al arrancar (`src/config/entorno.ts`) y se niega a arrancar si falta una |
@@ -56,7 +56,7 @@ Sprint 1 entregó la API y también la interfaz web de los mismos bloques.
 | CRUD y estado del servicio | `GET /api/salud` responde 200 si la API y la base contestan, y 503 si la base no. Las categorías del catálogo tienen CRUD completo; acopios, zonas, entidades y usuarios tienen crear, consultar y modificar |
 | Manejo básico de errores | Un filtro global (`comun/errores/filtro-errores.ts`) devuelve siempre `{estado, codigo, mensaje}` y, en errores de validación, `detalles` por campo |
 | Seguridad mínima | El filtro nunca devuelve la traza ni el mensaje interno de un error inesperado. La sesión va en una cookie `HttpOnly` y `SameSite=Strict`. Un guard rechaza escrituras desde otro origen. Contraseñas con hash, intentos de inicio de sesión limitados y ningún secreto en el repositorio |
-| Pruebas manuales | [scripts/pruebas-manuales.sh](../../scripts/pruebas-manuales.sh) corre 11 peticiones con curl contra la API del Compose. La salida del 2026-10-07 está en [pruebas-api.txt](evidencia/avance-04/pruebas-api.txt) |
+| Pruebas manuales | [scripts/pruebas-manuales.sh](../../../scripts/pruebas-manuales.sh) corre 11 peticiones con curl contra la API del Compose. La salida del 2026-10-07 está en [pruebas-api.txt](evidencia/pruebas-api.txt) |
 
 Además de las pruebas manuales, el CI corre lint, tipos, límites entre módulos
 (dependency-cruiser), 89 archivos de pruebas unitarias (API, web y `shared`), 27 de
@@ -66,7 +66,7 @@ punta a punta en Chromium (`apps/web/recorridos/`).
 ## 2. Diagrama de paquetes
 
 Está en la bóveda, en
-[vista-general.md § Diagrama de paquetes](../02-arquitectura/vista-general.md#diagrama-de-paquetes),
+[vista-general.md § Diagrama de paquetes](../../02-arquitectura/vista-general.md#diagrama-de-paquetes),
 en dos vistas:
 
 1. **Paquetes del monorepo** (`arquitectura-03-paquetes-del-monorepo.png`): `apps/web`,
@@ -81,7 +81,7 @@ Cada caja lleva la ruta de su carpeta. La leyenda está en la misma sección. Lo
 salen del Mermaid de la bóveda con `node build.mjs` y `node renderizar.mjs` en
 `docs/02-arquitectura/diagramas/`.
 
-Corresponde al ADR-001 ([ADR-0008](../02-arquitectura/adr/ADR-0008-arquitectura-stack-inicial.md)),
+Corresponde al ADR-001 ([ADR-0008](../../02-arquitectura/adr/ADR-0008-arquitectura-stack-inicial.md)),
 que eligió cliente-servidor con un monolito modular en capas: un solo proceso de API,
 con módulos de dominio cuyos límites hace cumplir el CI.
 
@@ -97,24 +97,24 @@ en HU-10a y HU-10b, [#13](https://github.com/Proyecto-IngSoftware/acopio/issues/
 El ADR-001 había limitado el Sprint 1 al Bloque 0 (cimientos y spike de NestJS),
 porque NestJS era nuevo para el equipo. El spike salió rápido y el sprint se fue
 ampliando bloque por bloque, cada uno con su especificación y su plan escrito antes
-de empezar ([docs/05-planes](../05-planes/README.md)). La tabla registra lo que
+de empezar ([docs/05-planes](../../05-planes/README.md)). La tabla registra lo que
 terminó siendo el Sprint 1, no solo lo previsto el 28 de septiembre.
 
 | Elemento | Contenido |
 |---|---|
 | Sprint Goal | Un donante puede ver en el mapa qué recibe cada acopio y llevarle una donación con folio, y el acopio puede registrar lo que entra y sale y conciliar esa donación, con el saldo de inventario siempre derivado de los movimientos |
-| Historias seleccionadas | HU-14 Dar acceso sin conocer contraseñas (8) · HU-01 Saber qué comprar antes de salir (8) · HU-02 Donar a una causa real (3) · HU-15 No dirigir donantes a una estafa (3) · HU-04 Registrar sin frenar la fila (8) · HU-05 Ver qué sobra y qué falta (5) · HU-06 Frenar lo que ya sobra (3) · HU-07 Preparar una donación que pueda demostrar (8) · HU-08 Conciliar sin depender de una foto (5) · HU-09 Comprobar que mi donación llegó (3). Suman 54 puntos. Los criterios de aceptación de cada una están en el [Avance 2](avance-02-requisitos.md#historias). Si sobraba tiempo, se abría HU-10a y HU-10b (13 puntos) |
+| Historias seleccionadas | HU-14 Dar acceso sin conocer contraseñas (8) · HU-01 Saber qué comprar antes de salir (8) · HU-02 Donar a una causa real (3) · HU-15 No dirigir donantes a una estafa (3) · HU-04 Registrar sin frenar la fila (8) · HU-05 Ver qué sobra y qué falta (5) · HU-06 Frenar lo que ya sobra (3) · HU-07 Preparar una donación que pueda demostrar (8) · HU-08 Conciliar sin depender de una foto (5) · HU-09 Comprobar que mi donación llegó (3). Suman 54 puntos. Los criterios de aceptación de cada una están en el [Avance 2](../avance-2-requisitos/avance-02-requisitos.md#historias). Si sobraba tiempo, se abría HU-10a y HU-10b (13 puntos) |
 | Tareas técnicas | Bloque 0: monorepo con Bun, Compose, Prisma con dos roles de base de datos, identidad (sesión, invitaciones, usuarios), catálogo, cola de correo, CI y contrato OpenAPI. Bloque 1: acopios, zonas, entidades, geocodificación con Nominatim, mapa público y portada. Bloque 2: movimientos, saldo por disparador, umbrales, «no recibir», entrada rápida con escáner y captura sin conexión. Bloque 3: donaciones con folio y QR, factura en Garage, recepción, conciliación y seguimiento público. Bloque 4, etapa 1: cálculo de necesidad y excedentes, sugerencias, pesos, aprobar y descartar |
-| Responsables iniciales | Según los roles del Sprint 0 ([Avance 1, §5](avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo)). Joseph: arquitectura, modelo de datos e integración entre la web y la API. Brayan: requerimientos, criterios de aceptación y diseño de las pantallas en Stitch. Alejandra: planeación y cierre del sprint, tablero y documentación. Michael: pruebas, en especial la de concurrencia del inventario, revisión de código, Docker y despliegue |
+| Responsables iniciales | Según los roles del Sprint 0 ([Avance 1, §5](../avance-1-sprint-0/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo)). Joseph: arquitectura, modelo de datos e integración entre la web y la API. Brayan: requerimientos, criterios de aceptación y diseño de las pantallas en Stitch. Alejandra: planeación y cierre del sprint, tablero y documentación. Michael: pruebas, en especial la de concurrencia del inventario, revisión de código, Docker y despliegue |
 | Dependencias o riesgos | RTA-01, NestJS nuevo para el equipo: se resolvió con el spike ([#19](https://github.com/Proyecto-IngSoftware/acopio/issues/19)). RTA-02, concurrencia del inventario: prueba contra PostgreSQL en contenedor ([#27](https://github.com/Proyecto-IngSoftware/acopio/issues/27)). Canasta estándar y población por zona, que bloqueaban el motor ([#20](https://github.com/Proyecto-IngSoftware/acopio/issues/20)). Proveedor del VPS, dominio y remitente de correo, todavía abierto ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)) |
 | Definition of Done | Pasan `lint`, `typecheck`, `depcruise`, las pruebas unitarias, las de integración y `scripts/revisar-colores.sh`, en local y en el CI de `main`. Si cambió un endpoint, el contrato OpenAPI y los tipos de la web están regenerados. Si tocó el Compose o el Dockerfile, levanta con `bun run servicios:todo`. Al cerrar el bloque pasa su recorrido de punta a punta. Los criterios de aceptación de la historia están verificados. El plan del bloque y la sección «Cambios al construir» de su especificación están al día |
 
 ### 3b. Seguimiento del equipo (Daily Scrum)
 
 El equipo no se reúne a diario: hace un seguimiento por semana, el miércoles o el
-viernes ([calendario](calendario.md#seguimiento-del-equipo)). El del Sprint 1 es el
+viernes ([calendario](../calendario.md#seguimiento-del-equipo)). El del Sprint 1 es el
 **viernes 9 de octubre**, al terminar la clase virtual de las 6:30 p. m.
-([agenda](avance-05-sprint2.md#reunión-del-viernes-9-de-octubre-después-de-la-clase)). Se toma una captura de la videollamada o una foto y cada
+([agenda](../avance-5-sprint-2/avance-05-sprint2.md#reunión-del-viernes-9-de-octubre-después-de-la-clase)). Se toma una captura de la videollamada o una foto y cada
 integrante llena su fila.
 
 | Integrante | ¿Qué terminé desde el último seguimiento? | ¿Qué haré a continuación? | ¿Qué bloqueo o ayuda necesito? |
@@ -128,15 +128,15 @@ integrante llena su fila.
 
 **Evidencia.** La revisión se hizo el 2026-10-07 contra la API del Compose:
 
-- [pruebas-api.txt](evidencia/avance-04/pruebas-api.txt): 11 peticiones con curl.
+- [pruebas-api.txt](evidencia/pruebas-api.txt): 11 peticiones con curl.
   Estado del servicio, 401 sin sesión, inicio de sesión con la cookie `HttpOnly`, CRUD
   completo de una categoría, un 400 de validación con el campo que falla, un 404 con
   el formato único de error y el mensaje genérico del seguimiento de un folio que no
   existe.
-- [contenedores.txt](evidencia/avance-04/contenedores.txt): `docker ps` con los cuatro
+- [contenedores.txt](evidencia/contenedores.txt): `docker ps` con los cuatro
   servicios sanos y los volúmenes.
 - Recorridos de punta a punta en Chromium: `donador.mjs`, `consola-comprobantes.mjs`,
-  `sin-conexion.mjs` y `validacion-general.mjs` ([cómo se corren](../06-operacion/recorridos.md)).
+  `sin-conexion.mjs` y `validacion-general.mjs` ([cómo se corren](../../06-operacion/recorridos.md)).
 
 | Historia | ¿Se cumplió? | Criterios pendientes, ajustes u observaciones |
 |---|---|---|

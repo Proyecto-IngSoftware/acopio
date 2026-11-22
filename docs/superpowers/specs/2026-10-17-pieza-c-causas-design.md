@@ -13,7 +13,7 @@ actualizado: 2026-10-18
 **Estado:** aprobada por Joseph el 2026-10-17
 **Deriva de:** [especificación del Bloque 1](2026-09-30-bloque-1-red-design.md) §2 (pieza C),
 [RF-RED-006 a RF-RED-010](../../01-requerimientos/funcionales/red.md#rf-red-006--verificar-entidad),
-HU-02 y HU-15 ([avance 2](../../entregas/avance-02-requisitos.md)), y las maquetas aprobadas de
+HU-02 y HU-15 ([avance 2](../../entregas/avance-2-requisitos/avance-02-requisitos.md)), y las maquetas aprobadas de
 [P3](../../03-diseno/stitch/P03-causas/README.md) y [P4](../../03-diseno/stitch/P04-ficha-causa/README.md)
 **Issue:** [#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48), hasta el 1 de noviembre
 **Plan:** [2026-10-17-pieza-c-causas.md](../../05-planes/2026-10-17-pieza-c-causas.md)

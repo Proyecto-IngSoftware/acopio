@@ -3,7 +3,7 @@ title: "Plan de acción del proyecto"
 type: plan
 tags: [plan, seguimiento, cronograma]
 estado: vigente
-actualizado: 2026-11-18
+actualizado: 2026-11-22
 ---
 
 # Plan de acción del proyecto
@@ -117,6 +117,8 @@ Sprint 3.
 | Contenedor para renderizar los Word de los avances, `render.Dockerfile` (PR 133) | | 2026-10-18 | ✅ |
 
 ## Registro de cambios
+
+- 2026-11-22. Las entregas quedaron en una carpeta cada una y las guías del curso en `docs/entregas/guias/`. Entra P-092: los Word de los avances 4 y 5 traen texto que no está en las notas ni en el unificado. [Informe](../06-operacion/sesiones/2026-11-22-organizar-docs-y-entregas.md)
 
 - 2026-11-18. P-091 incorporó la corrección de la cola sin conexión, el rearme de recordatorios y la configuración de RedAcopio en Compose. Quedan las verificaciones del correo en el servidor. [Informe](../06-operacion/sesiones/2026-11-18-remediacion-main.md)
 

@@ -27,7 +27,7 @@ Joseph las aprobó el mismo día.
 La especificación es
 [2026-10-19-entrada-unica-design.md](../../superpowers/specs/2026-10-19-entrada-unica-design.md)
 y el plan,
-[2026-10-19-entrada-unica.md](../../superpowers/plans/2026-10-19-entrada-unica.md).
+[2026-10-19-entrada-unica.md](../../05-planes/2026-10-19-entrada-unica.md).
 
 ## Pruebas
 

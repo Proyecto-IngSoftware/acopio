@@ -497,7 +497,7 @@ marca explícitamente como tal; sin esa marca, nada se asume urgente.
 
 **3 · Registro de decisiones relevantes.** Toda decisión difícil de revertir se escribe
 como un **ADR** —registro de decisión de arquitectura— en
-[docs/02-arquitectura/adr/](../02-arquitectura/adr/README.md), con contexto,
+[docs/02-arquitectura/adr/](../../02-arquitectura/adr/README.md), con contexto,
 alternativas evaluadas y consecuencias. **Las decisiones aceptadas no se editan:** si
 una cambia, se escribe otra que la reemplace, y la anterior conserva su historia.
 Ninguna decisión se considera tomada si solo existe en el chat.
@@ -509,7 +509,7 @@ la responsabilidad del área, se deja constancia del argumento contrario en el A
 fija una fecha para revisar la decisión con datos.
 
 **5 · Requerimientos nuevos.** Toda idea o requerimiento que surja se anota en
-[docs/01-requerimientos/pendientes.md](../01-requerimientos/pendientes.md), aunque esté
+[docs/01-requerimientos/pendientes.md](../../01-requerimientos/pendientes.md), aunque esté
 mal redactado. En la reunión semanal cada entrada se promueve a requerimiento formal,
 se aplaza al backlog o se descarta con la razón escrita. **Nada se decide en una
 conversación que nadie vuelve a leer.**

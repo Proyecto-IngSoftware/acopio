@@ -218,7 +218,7 @@ entra después; hay que esperar un minuto entre uno y otro.
 En local, `ADMIN_CONTRASENA` no se pasa: el administrador del Compose tiene la contraseña por
 defecto del script. La de `SEED_ADMIN_CONTRASENA` en el `.env` es la del servidor.
 
-Cada captura se copia a `docs/entregas/evidencia/avance-05/` con otro nombre:
+Cada captura se copia a `docs/entregas/avance-5-sprint-2/evidencia/` con otro nombre:
 
 | Recorrido | Captura | En el Word |
 |---|---|---|

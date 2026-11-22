@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-"""Genera el Word del Avance 4 (Sprint 1) con el formato del Avance 1.
+"""Genera el Word del Avance 5 (Sprint 2) con el formato del Avance 1.
 
-El texto sale de avance-04-sprint1.md, desde «## 1. Incremento funcional» hasta el
-final; lo de antes es el tablero de trabajo y no va al Word. Además usa:
-  - assets/diagramas/arquitectura-03-*.png y arquitectura-04-*.png  (diagrama de paquetes)
-  - evidencia/avance-04/pruebas-api.txt y contenedores.txt         (pruebas manuales: tabla resumen
-    en la sección 3c y una ficha por prueba en el anexo)
-  - evidencia/avance-04/tablero.png y seguimiento.png, si existen   (capturas del equipo;
+El texto sale de avance-05-sprint2.md, desde «## 1. Incremento funcional» hasta el
+final; lo de antes es el tablero de trabajo y no va al Word. Las imágenes del Markdown
+(`![pie](ruta)`) entran como figuras y un párrafo que empieza con «Pendiente:» sale como
+recuadro. Además usa:
+  - evidencia/contenedores.txt                  (salida de docker ps y de los volúmenes)
+  - evidencia/tablero.png y seguimiento.png, si existen   (capturas del equipo;
     mientras falten, el Word deja un recuadro que dice qué va ahí)
 Usa «Avance 1 - Sprint 0 - Acopio.docx» como plantilla: estilos, márgenes y pie.
 
-Uso: python generar-avance-04.py   (desde docs/entregas; requiere python-docx)
+Uso: python generar-avance-05.py   (desde docs/entregas/avance-5-sprint-2; requiere python-docx)
 Después se corre unificar-avances.py para el Word que va a OneDrive.
 """
 import copy
@@ -27,12 +27,11 @@ from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
 
 AQUI = Path(__file__).resolve().parent
-DOCS = AQUI.parent
-PLANTILLA = AQUI / "Avance 1 - Sprint 0 - Acopio.docx"
-SALIDA = AQUI / "Avance 4 - Sprint 1 - Acopio.docx"
-IMG = DOCS / "assets" / "diagramas"
-EVIDENCIA = AQUI / "evidencia" / "avance-04"
-NOTA = (AQUI / "avance-04-sprint1.md").read_text(encoding="utf-8")
+DOCS = AQUI.parents[1]
+PLANTILLA = AQUI.parent / "avance-1-sprint-0" / "Avance 1 - Sprint 0 - Acopio.docx"
+SALIDA = AQUI / "Avance 5 - Sprint 2 - Acopio.docx"
+EVIDENCIA = AQUI / "evidencia"
+NOTA = (AQUI / "avance-05-sprint2.md").read_text(encoding="utf-8")
 REPO = "https://github.com/Proyecto-IngSoftware/acopio"
 
 MARCA = "0F6E6E"
@@ -224,6 +223,38 @@ def figura(ruta, pie, alto_max=None):
     escribir(c, pie, tam=9, color=TINTA_2)
 
 
+def galeria(imagenes, por_fila=3):
+    """Capturas de teléfono en filas de `por_fila`, cada una con su pie, en una tabla sin bordes."""
+    global n_figura
+    # El texto que presenta la galería no queda solo al pie de una página
+    if doc.paragraphs:
+        doc.paragraphs[-1].paragraph_format.keep_with_next = True
+    ancho_util = util(doc.sections[-1])[0]
+    ancho_celda = ancho_util / por_fila
+    for i in range(0, len(imagenes), por_fila):
+        fila = imagenes[i:i + por_fila]
+        t = doc.add_table(rows=1, cols=por_fila)
+        t.alignment = WD_TABLE_ALIGNMENT.CENTER
+        for j, (pie, ruta) in enumerate(fila):
+            n_figura += 1
+            celda = t.rows[0].cells[j]
+            celda.width = Cm(ancho_celda)
+            p = celda.paragraphs[0]
+            p.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            p.add_run().add_picture(str(ruta), width=Cm(ancho_celda - 0.8))
+            c = celda.add_paragraph()
+            c.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            r = c.add_run(f"Figura {n_figura}. ")
+            r.bold, r.font.size, r.font.color.rgb = True, Pt(8), TINTA_2
+            escribir(c, pie, tam=8, color=TINTA_2)
+        # La fila no se parte entre páginas
+        trPr = t.rows[0]._tr.get_or_add_trPr()
+        no_partir_fila = OxmlElement("w:cantSplit")
+        no_partir_fila.set(qn("w:val"), "true")
+        trPr.append(no_partir_fila)
+        doc.add_paragraph().paragraph_format.space_after = Pt(4)
+
+
 def captura_o_recuadro(nombre, pie, falta):
     ruta = EVIDENCIA / nombre
     if ruta.exists():
@@ -260,6 +291,11 @@ def bloques_md(md):
             cerrar()
             continue
         if s.startswith(">"):
+            continue
+        m = re.match(r"^!\[(.*)\]\((.+)\)$", s)
+        if m:
+            cerrar()
+            salida.append(("img", (m.group(1), m.group(2))))
             continue
         m = re.match(r"^(#{2,4}) (.+)$", s)
         if m:
@@ -318,9 +354,26 @@ def anchos_para(filas):
 
 def volcar_md(md, nivel_base=1):
     """Vuelca Markdown. «## X» queda en el nivel `nivel_base`, «###» uno más abajo."""
+    md = re.sub(r"<(https?://[^>]+)>", r"[\1](\1)", md)
+    capturas = []
+
+    def soltar():
+        # Las capturas seguidas van en galería; un diagrama, solo y a todo el ancho
+        if capturas:
+            galeria(capturas)
+            capturas.clear()
+
     for tipo, dato in bloques_md(md):
+        if tipo == "img" and "assets/diagramas" not in dato[1]:
+            capturas.append((dato[0], AQUI / dato[1]))
+            continue
+        soltar()
         if tipo in ("h2", "h3", "h4"):
             titulo(dato, min(3, nivel_base + int(tipo[1]) - 2))
+        elif tipo == "img":
+            figura(AQUI / dato[1], dato[0])
+        elif tipo == "p" and dato.startswith("Pendiente:"):
+            recuadro(dato)
         elif tipo == "p":
             parrafo(dato)
         elif tipo == "ul":
@@ -332,95 +385,7 @@ def volcar_md(md, nivel_base=1):
         elif tipo == "tabla":
             filas, centradas = filas_tabla(dato)
             tabla(filas, anchos_para(filas), centradas)
-
-
-# ── Pruebas manuales: salida de scripts/pruebas-manuales.sh → tablas ─────────
-ESPERADO = {1: 200, 2: 401, 3: 200, 4: 200, 5: 201, 6: 200, 7: 200, 8: 400, 9: 204, 10: 404, 11: 404}
-RAZON = {200: "OK", 201: "Created", 204: "No Content", 400: "Bad Request", 401: "Unauthorized", 404: "Not Found"}
-
-
-def leer_pruebas():
-    """Cada bloque «### N. Título» de pruebas-api.txt, con su petición y su respuesta."""
-    texto = (EVIDENCIA / "pruebas-api.txt").read_text(encoding="utf-8")
-    pruebas = []
-    for bloque in re.split(r"\n(?=### )", texto):
-        if not bloque.startswith("### "):
-            continue
-        lineas = bloque.strip().split("\n")
-        m = re.match(r"### (\d+)\. (.+)", lineas[0])
-        num, titulo = int(m.group(1)), m.group(2)
-        cmd = next(l[2:] for l in lineas if l.startswith("$ "))
-        metodo, url = re.match(r"curl -X (\w+) (\S+)", cmd).groups()
-        ruta = re.sub(r"^https?://[^/]+", "", url)
-        enviado = re.search(r"-d '(.+)'$", cmd)
-        token = "Authorization: Bearer" in cmd
-        i_http = next(i for i, l in enumerate(lineas) if l.startswith("HTTP"))
-        codigo = int(re.search(r"\b(\d{3})\b", lineas[i_http]).group(1))
-        resto = lineas[i_http + 1:]
-        cookie = next((l for l in resto if l.lower().startswith("set-cookie")), None)
-        cuerpo = "\n".join(l for l in resto if not l.lower().startswith("set-cookie")).strip()
-        pruebas.append(dict(num=num, titulo=titulo, metodo=metodo, ruta=ruta, token=token,
-                            enviado=enviado.group(1) if enviado else None, codigo=codigo,
-                            cookie=cookie, cuerpo=cuerpo if cuerpo and cuerpo != "(sin cuerpo)" else None))
-    return pruebas
-
-
-def texto_celda(celda, texto, mono=False, tam=8, negrita=False, color=None):
-    p = celda.paragraphs[0]
-    p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    p.paragraph_format.space_after = Pt(1)
-    lineas = texto.split("\n")
-    for k, linea in enumerate(lineas):
-        r = p.add_run(linea)
-        r.font.size = Pt(tam)
-        r.bold = negrita
-        if color is not None:
-            r.font.color.rgb = color
-        if mono:
-            r.font.name = "Consolas"
-            r._element.rPr.rFonts.set(qn("w:hAnsi"), "Consolas")
-        if k < len(lineas) - 1:
-            r.add_break()
-
-
-def no_partir(t):
-    for fila in t.rows:
-        partir = OxmlElement("w:cantSplit")
-        partir.set(qn("w:val"), "true")
-        fila._tr.get_or_add_trPr().append(partir)
-
-
-def ficha(prueba):
-    """Una prueba en una tabla de dos columnas con el encabezado del documento."""
-    filas = [("Petición", f"{prueba['metodo']} {prueba['ruta']}", True)]
-    if prueba["token"]:
-        filas.append(("Sesión", "Authorization: Bearer <token>", True))
-    if prueba["enviado"]:
-        filas.append(("Envía", prueba["enviado"], True))
-    filas.append(("Respuesta", f"{prueba['codigo']} {RAZON.get(prueba['codigo'], '')}".strip(), True))
-    if prueba["cookie"]:
-        filas.append(("Cookie", prueba["cookie"].split(":", 1)[1].strip(), True))
-    if prueba["cuerpo"]:
-        filas.append(("Cuerpo", prueba["cuerpo"], True))
-    ancho = util(doc.sections[-1])[0]
-    t = doc.add_table(rows=len(filas) + 1, cols=2)
-    t.style = "Table Grid"
-    t.alignment = WD_TABLE_ALIGNMENT.CENTER
-    cab = t.cell(0, 0).merge(t.cell(0, 1))
-    sombrear(cab, MARCA)
-    texto_celda(cab, f"{prueba['num']}. {prueba['titulo']}", tam=9, negrita=True, color=BLANCO)
-    for i, (etiqueta, valor, mono) in enumerate(filas, 1):
-        izq, der = t.cell(i, 0), t.cell(i, 1)
-        izq.width, der.width = Cm(2.6), Cm(ancho - 2.6)
-        sombrear(izq, "E6F4F4")
-        texto_celda(izq, etiqueta, tam=8.5, negrita=True)
-        texto_celda(der, valor, mono=mono, tam=8)
-    no_partir(t)
-    encabezado = t.rows[0]._tr.get_or_add_trPr()
-    repetir = OxmlElement("w:tblHeader")
-    repetir.set(qn("w:val"), "true")
-    encabezado.append(repetir)
-    doc.add_paragraph().paragraph_format.space_after = Pt(4)
+    soltar()
 
 
 def tabla_contenedores():
@@ -440,7 +405,8 @@ def tabla_contenedores():
 
 
 # ── Partes de la nota ────────────────────────────────────────────────────────
-cuerpo = NOTA[NOTA.index("## 1. Incremento funcional"):]
+# El título va al inicio de una línea; la introducción de la nota lo cita entre comillas
+cuerpo = NOTA[NOTA.index("\n## 1. Incremento funcional") + 1:]
 
 
 def parte(desde, hasta=None):
@@ -449,115 +415,49 @@ def parte(desde, hasta=None):
     return cuerpo[i:j]
 
 
-def sin_parrafo(md, inicio):
-    """Quita el párrafo que empieza con `inicio` (notas de trabajo que no van al Word)."""
-    return "\n\n".join(b for b in re.split(r"\n{2,}", md) if not b.strip().startswith(inicio))
-
-
 # ═════════════════════════════════════════════════════════════════════════════
 # Portada
 # ═════════════════════════════════════════════════════════════════════════════
-doc.add_paragraph("Avance de proyecto #4 — Sprint 1: primer incremento funcional y arquitectura de desarrollo",
+doc.add_paragraph("Avance de proyecto #5 — Sprint 2: interfaz funcional y aplicación de patrones de diseño",
                   style="Title")
 metadato("Asignatura", "Ingeniería de Software I")
 metadato("Docente", "Juan Pablo Bustamante Moreno")
 metadato("Institución", "Escuela Tecnológica Instituto Técnico Central (ETITC)")
 metadato("Integrantes", "Joseph · Brayan · Alejandra · Michael")
-metadato("Sprint", "1 · semanas 8 a 10, del 21 de septiembre al 11 de octubre de 2026")
+metadato("Sprint", "2 · del 12 al 25 de octubre de 2026")
 metadato("Repositorio", REPO)
 salto_pagina()
 
-# ═════════════════════════════════════════════════════════════════════════════
-# 1. Incremento funcional
-# ═════════════════════════════════════════════════════════════════════════════
-volcar_md(parte("## 1. Incremento funcional", "## 2. Diagrama de paquetes"))
-
-# ═════════════════════════════════════════════════════════════════════════════
-# 2. Diagrama de paquetes (horizontal: los diagramas son anchos)
-# ═════════════════════════════════════════════════════════════════════════════
+# 1. Incremento funcional y 2. Patrones de diseño
+volcar_md(parte("## 1. Incremento funcional", "### 1d. Diagramas"))
+# Los diagramas son anchos: van en una sección horizontal, como en el Avance 4
 nueva_seccion(True)
-titulo("2. Diagrama de paquetes", 1)
-parrafo("Cada caja es una carpeta real del repositorio y lleva su ruta. Adentro van las clases, "
-        "interfaces y componentes que más pesan en ese paquete, con su nombre en el código. Una "
-        "flecha A → B dice que A importa algo de B. Las dependencias entre los módulos de la API "
-        "salen del grafo que mide dependency-cruiser, la herramienta que en el CI rechaza una "
-        "importación no permitida.")
-parrafo("**Leyenda.** «interfaz» es un puerto: un contrato con más de una implementación, elegida "
-        "por configuración o en las pruebas. «controlador» atiende rutas HTTP, «servicio» tiene la "
-        "lógica y la transacción y «guard» corre antes de cada petición. La línea continua es una "
-        "importación en el código; la punteada es una relación que no es un import, como una llamada "
-        "HTTP o un archivo generado. Las cajas grises con pestaña son paquetes y las blancas, su "
-        "contenido. En el diagrama de la API, las flechas hacia auditoria e identidad salen del grupo "
-        "de módulos de dominio, porque las importan casi todos.")
-vista = (DOCS / "02-arquitectura" / "vista-general.md").read_text(encoding="utf-8")
-for enc, png, pie in (
-    ("### Paquetes del monorepo", "arquitectura-03-paquetes-del-monorepo.png",
-     "Paquetes del monorepo de Acopio y cómo se relacionan la web, la API y los paquetes compartidos."),
-    ("### Paquetes de la API", "arquitectura-04-paquetes-de-la-api.png",
-     "Paquetes de apps/api/src: módulos de dominio arriba, módulos hoja y código común abajo."),
-):
-    i = vista.index(enc)
-    j = vista.find("\n## ", i)
-    j = min(x for x in (vista.find("\n### ", i + len(enc)), j) if x > 0)
-    seccion = vista[i:j]
-    titulo(enc[4:], 2)
-    figura(IMG / png, pie)
-    cuerpo_seccion = seccion.split("\n", 1)[1]
-    volcar_md("\n".join(l for l in cuerpo_seccion.split("\n") if not l.startswith("![")), nivel_base=2)
-md2 = parte("## 2. Diagrama de paquetes", "## 3. Registro documental del Sprint")
-volcar_md(md2[md2.index("Corresponde al ADR-001"):])
-
-# ═════════════════════════════════════════════════════════════════════════════
-# 3. Registro documental del Sprint
-# ═════════════════════════════════════════════════════════════════════════════
+volcar_md(parte("### 1d. Diagramas", "## 2. Patrones de diseño"))
 nueva_seccion(False)
-titulo("3. Registro documental del Sprint", 1)
-volcar_md(sin_parrafo(parte("### 3a. Sprint Planning", "### 3b."), "**Falta la captura del tablero"),
-          nivel_base=1)
-captura_o_recuadro("tablero.png", "Tablero del Project con las historias seleccionadas para el Sprint 1.",
-                   "captura del tablero del Project con las historias del Sprint 1 "
-                   "(evidencia/avance-04/tablero.png).")
+volcar_md(parte("## 2. Patrones de diseño", "## 3. Registro documental del Sprint"))
 
-volcar_md(parte("### 3b.", "### 3c."), nivel_base=1)
-captura_o_recuadro("seguimiento.png", "Seguimiento del equipo del viernes 9 de octubre de 2026.",
-                   "captura o foto del seguimiento del viernes 9 de octubre "
-                   "(evidencia/avance-04/seguimiento.png).")
-
-md3c = parte("### 3c.", "#### Retrospectiva")
-corte = md3c.index("| Historia |")
-volcar_md(md3c[:corte], nivel_base=1)
-PRUEBAS = leer_pruebas()
-cumplen = sum(pr["codigo"] == ESPERADO[pr["num"]] for pr in PRUEBAS)
-parrafo(f"**Resultado de las pruebas manuales.** {cumplen} de {len(PRUEBAS)} peticiones respondieron "
-        "el código esperado. El detalle de cada una está en el anexo; `{id}` es la categoría creada "
-        "en la prueba 5.")
-filas_p = [["#", "Prueba", "Petición", "Esperado", "Obtenido", "¿Cumple?"]]
-for pr in PRUEBAS:
-    esperado = ESPERADO[pr["num"]]
-    filas_p.append([str(pr["num"]), pr["titulo"], "`" + pr["metodo"] + " " + re.sub(r"[0-9a-f]{8}-[0-9a-f-]{27}", "{id}", pr["ruta"]) + "`", str(esperado),
-                    str(pr["codigo"]), "Sí" if pr["codigo"] == esperado else "No"])
-ancho_p = util(doc.sections[-1])[0]
-tabla(filas_p, [0.8, ancho_p - 10.8, 5.2, 1.6, 1.6, 1.6], centradas={0, 3, 4, 5}, tam=8)
-volcar_md(md3c[corte:], nivel_base=1)
-retro = parte("#### Retrospectiva")
-retro = retro.replace("#### Retrospectiva (borrador para confirmar el 9 de octubre)", "#### Retrospectiva")
-volcar_md(retro, nivel_base=1)
-
-# ═════════════════════════════════════════════════════════════════════════════
-# Anexo. Salida de las pruebas manuales
-# ═════════════════════════════════════════════════════════════════════════════
+# 3. Registro documental del Sprint
 salto_pagina()
-titulo("Anexo. Evidencia de las pruebas manuales", 1)
-parrafo("Cada ficha es una petición de `scripts/pruebas-manuales.sh` contra la API levantada con "
-        "Docker Compose, con lo que se envió y lo que respondió la API. La contraseña y el token de "
-        "sesión no se muestran: el token aparece como «<token>».")
-for pr in PRUEBAS:
-    ficha(pr)
-titulo("Contenedores y volúmenes", 2)
-parrafo("Salida de `docker ps` el mismo día: los cuatro servicios del Compose en estado «healthy».")
+titulo("3. Registro documental del Sprint", 1)
+volcar_md(parte("### 3a. Sprint Planning", "### 3b."), nivel_base=1)
+captura_o_recuadro("tablero.png", "Tablero del Project con las historias seleccionadas para el Sprint 2.",
+                   "captura del tablero del Project con las historias del Sprint 2 "
+                   "(evidencia/tablero.png).")
+volcar_md(parte("### 3b.", "### 3c."), nivel_base=1)
+captura_o_recuadro("seguimiento.png", "Seguimiento del Sprint 2.",
+                   "captura del seguimiento (evidencia/seguimiento.png).")
+volcar_md(parte("### 3c.", "#### Retrospectiva"), nivel_base=1)
+titulo("Contenedores en ejecución", 3)
+parrafo("Salida de `docker ps` en el equipo de desarrollo: los cuatro servicios del Compose en "
+        "estado «healthy».")
 vols = tabla_contenedores()
 parrafo("Volúmenes donde persisten la base, los archivos y las llaves: " + ", ".join(f"`{v}`" for v in vols) + ".")
-doc.core_properties.title = "Avance de proyecto #4 — Sprint 1"
+volcar_md(parte("#### Retrospectiva", "## 4. Repositorio y servidor"), nivel_base=1)
+
+# 4. Repositorio y servidor
+volcar_md(parte("## 4. Repositorio y servidor"))
+
+doc.core_properties.title = "Avance de proyecto #5 — Sprint 2"
 doc.core_properties.subject = "Acopio · Ingeniería de Software I · ETITC"
 doc.save(str(SALIDA))
 print(f"ok: {SALIDA.name} · {n_figura} figuras · {len(doc.tables)} tablas · {len(doc.sections)} secciones")

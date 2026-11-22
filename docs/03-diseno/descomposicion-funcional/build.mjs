@@ -220,7 +220,7 @@ const nRF = Object.keys(RF).length;
 const nDentro = vistos.size;
 console.log(`módulos ${MODULOS.length} · submódulos ${nSub} · funcionalidades ${nFunc} · RF ${nRF} (${nDentro} en el diagrama, ${Object.keys(FUERA).length} fuera)`);
 
-// Datos para el Word del Avance 3 (docs/entregas/generar-avance-03.py).
+// Datos para el Word del Avance 3 (docs/entregas/avance-3-arquitectura/generar-avance-03.py).
 writeFileSync(join(aqui, 'datos.json'), JSON.stringify({ MODULOS, RF, FUERA, totales: { modulos: MODULOS.length, submodulos: nSub, funcionalidades: nFunc, rf: nRF, dentro: nDentro } }, null, 1));
 
 const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');

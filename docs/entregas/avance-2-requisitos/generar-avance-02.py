@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 """Genera el Word del Avance 2 (requisitos y planeación inicial) con el formato del Avance 1.
 
-Toma el contenido de entregas/avance-02-requisitos.md, secciones 1 a 6, sin copiar a mano.
+Toma el contenido de avance-02-requisitos.md, secciones 1 a 6, sin copiar a mano.
 Las imágenes son las que la nota enlaza con ![pie](ruta): la captura del tablero y los PNG
 de assets/diagramas (generados por 03-diseno/avance2-diagramas/build.mjs).
 Usa «Avance 1 - Sprint 0 - Acopio.docx» como plantilla: estilos, márgenes y pie.
 
-Uso: python generar-avance-02.py   (desde docs/entregas; requiere python-docx)
+Uso: python generar-avance-02.py   (desde docs/entregas/avance-2-requisitos; requiere python-docx)
 
 El índice queda como campo sin llenar: se actualiza en Word (clic derecho → Actualizar
 campos → toda la tabla), o en Windows sin abrirlo, con PowerShell:
@@ -27,7 +27,7 @@ from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
 
 AQUI = Path(__file__).resolve().parent
-PLANTILLA = AQUI / "Avance 1 - Sprint 0 - Acopio.docx"
+PLANTILLA = AQUI.parent / "avance-1-sprint-0" / "Avance 1 - Sprint 0 - Acopio.docx"
 SALIDA = AQUI / "Avance 2 - Requisitos y planeacion inicial - Acopio.docx"
 NOTA = (AQUI / "avance-02-requisitos.md").read_text(encoding="utf-8")
 

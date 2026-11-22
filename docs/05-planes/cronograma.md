@@ -20,7 +20,7 @@ historias y los issues por sprint.
 ## Supuestos
 
 El docente entrega cada consigna a medida que avanza el curso. La del Sprint 2
-([Avance 5](../talleres/Avance%20de%20Proyecto%205%20–%20IS1.pdf)) llegó el 9 de
+([Avance 5](../entregas/guias/Avance%20de%20Proyecto%205%20–%20IS1.pdf)) llegó el 9 de
 octubre: el Sprint 2 va de la semana 10 a la 12 y la sustentación del segundo corte es
 el viernes 23 de octubre ([P-047](../01-requerimientos/pendientes.md)).
 

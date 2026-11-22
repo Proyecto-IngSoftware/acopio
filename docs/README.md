@@ -3,7 +3,7 @@ title: "Acopio — portada"
 type: moc
 tags: [moc, indice]
 estado: vigente
-actualizado: 2026-10-30
+actualizado: 2026-11-22
 ---
 
 # Acopio
@@ -11,10 +11,9 @@ actualizado: 2026-10-30
 Plataforma de coordinación logística para respuesta a desastres.
 Proyecto de **Ingeniería de Software I** · ETITC.
 
-**Estado al 2026-10-06:** construidos los Bloques 0 a 2 y la API y el portal del Donador del
-Bloque 3. Lo que sigue está en [05-planes/](05-planes/README.md) y en los
-[issues del repositorio](https://github.com/Proyecto-IngSoftware/acopio/issues), que son el
-plan de trabajo: el próximo es el ciclo 2 del Bloque 3 (#34).
+**Estado:** lo que falta, en orden, está en el [plan de acción](05-planes/plan-de-accion.md) y
+en los [issues del repositorio](https://github.com/Proyecto-IngSoftware/acopio/issues). Lo que
+se hizo en cada sesión está en los [informes](06-operacion/sesiones/README.md).
 
 > **Esta carpeta es la bóveda de Obsidian.** Ábrela con *Abrir carpeta como bóveda*.
 > Convenciones en [GUIA-OBSIDIAN.md](GUIA-OBSIDIAN.md).
@@ -35,7 +34,7 @@ plan de trabajo: el próximo es el ciclo 2 del Bloque 3 (#34).
 |---|---|
 | Entender el proyecto completo | [Especificación de diseño](superpowers/specs/2026-08-20-acopio-design.md) |
 | Entender el problema | [Problema](00-contexto/problema.md) |
-| Ver el entregable del curso | [Avance 1 — Sprint 0](entregas/avance-01-sprint0.md) |
+| Ver los entregables y las guías del curso | [Entregas](entregas/README.md) |
 | Saber qué está y qué no está en alcance | [Fuera de alcance](00-contexto/fuera-de-alcance.md) |
 | Consultar un término | [Glosario](00-contexto/glosario.md) |
 | Saber por qué se decidió algo | [ADR](02-arquitectura/adr/README.md) |
@@ -57,9 +56,10 @@ plan de trabajo: el próximo es el ciclo 2 del Bloque 3 (#34).
 | [superpowers/specs/](superpowers/specs/README.md) | Especificaciones formales por bloque | Al iniciar un bloque |
 | [05-planes/](05-planes/README.md) | Planes de implementación | Al iniciar un bloque |
 | [06-operacion/](06-operacion/README.md) | Despliegue, runbook, recorridos | Al desplegar, y cuando algo falla |
-| [entregas/](entregas/README.md) | Entregables de la asignatura | En cada avance de proyecto |
+| [entregas/](entregas/README.md) | Una carpeta por entrega de la asignatura, las guías del curso y el proyecto integrador | En cada avance de proyecto |
 | [99-futuro/](99-futuro/README.md) | Aplazado, recuperable | Al recortar algo |
 | [plantillas/](plantillas/README.md) | Plantillas de ADR, de requerimiento y de informe de sesión | Al crear una nota nueva |
+| [assets/](assets/) | Imágenes de las notas y diagramas renderizados | Al regenerar un diagrama |
 | [tableros/](tableros/tablero-notas.base) | Vistas Bases sobre las propiedades | Para consultar de un vistazo |
 
 ---
@@ -98,7 +98,7 @@ diferencias. No se escribe código de una pantalla sin su maqueta aprobada.
 | **Michael** | Calidad, pruebas y despliegue |
 
 Los roles rotan cada Sprint. Detalle en el
-[Avance 1](entregas/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo).
+[Avance 1](entregas/avance-1-sprint-0/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo).
 
 **Reunión semanal:** martes o viernes, de 6:00 a 8:00 p. m., según el espacio que
 asigne el docente.

@@ -22,7 +22,7 @@ hacían, y ningún controlador consultaba la base salvo `salud`. La nota de patr
 descartado envolver Prisma porque el cliente generado ya es tipado y maneja
 transacciones.
 
-La guía del [Avance 5](../../talleres/Avance%20de%20Proyecto%205%20–%20IS1.pdf) pide DAO
+La guía del [Avance 5](../../entregas/guias/Avance%20de%20Proyecto%205%20–%20IS1.pdf) pide DAO
 de forma obligatoria: el acceso a datos debe quedar separado de los controladores, la
 interfaz y las reglas de negocio, y aclara que usar un ORM no basta. Hay que mostrarlo
 en el código.

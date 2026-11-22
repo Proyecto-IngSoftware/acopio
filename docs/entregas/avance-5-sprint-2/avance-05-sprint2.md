@@ -8,10 +8,10 @@ actualizado: 2026-10-19
 
 # Avance 5 — Sprint 2: interfaz funcional y patrones de diseño
 
-La consigna llegó el 9 de octubre: [Avance de Proyecto 5](../talleres/Avance%20de%20Proyecto%205%20–%20IS1.pdf),
+La consigna llegó el 9 de octubre: [Avance de Proyecto 5](../guias/Avance%20de%20Proyecto%205%20–%20IS1.pdf),
 «Sprint 2: interfaz funcional y aplicación de patrones de diseño». El sprint va del 12 al 25
 de octubre, y la Review y la sustentación del segundo corte son en la validación de clase del
-viernes 23 ([P-047](../01-requerimientos/pendientes.md)). Esta nota es la fuente del Word: lo
+viernes 23 ([P-047](../../01-requerimientos/pendientes.md)). Esta nota es la fuente del Word: lo
 que va desde «## 1. Incremento funcional» lo vuelca
 [generar-avance-05.py](generar-avance-05.py). Lo de antes es el tablero de trabajo.
 
@@ -92,17 +92,17 @@ por unidad.
 HU-13 Contar lo que la fórmula no ve se cubre desde «Mi zona»: el Receptor reporta una
 necesidad que el cálculo no conoce, y el motor la toma en cuenta al recalcular.
 
-![Motor de sugerencias (C11): traslados sugeridos con su puntaje.](evidencia/avance-05/motor-1-sugerencias.png)
+![Motor de sugerencias (C11): traslados sugeridos con su puntaje.](evidencia/motor-1-sugerencias.png)
 
-![Aprobar un traslado: la cantidad sugerida y la remisión en borrador que se crea.](evidencia/avance-05/motor-2-aprobar.png)
+![Aprobar un traslado: la cantidad sugerida y la remisión en borrador que se crea.](evidencia/motor-2-aprobar.png)
 
-![Despachar la remisión (C12): quién lleva el envío y qué folios van.](evidencia/avance-05/motor-3-despachar.png)
+![Despachar la remisión (C12): quién lleva el envío y qué folios van.](evidencia/motor-3-despachar.png)
 
-![Documento de la remisión despachada, con su QR.](evidencia/avance-05/motor-4-documento.png)
+![Documento de la remisión despachada, con su QR.](evidencia/motor-4-documento.png)
 
-![Recibir en la zona (C13): lo que llegó, la foto y la nota.](evidencia/avance-05/motor-5-recibir.png)
+![Recibir en la zona (C13): lo que llegó, la foto y la nota.](evidencia/motor-5-recibir.png)
 
-![Confirmación de la remisión recibida.](evidencia/avance-05/motor-6-recibida.png)
+![Confirmación de la remisión recibida.](evidencia/motor-6-recibida.png)
 
 ### 1b. Flujo de las causas verificadas
 
@@ -119,38 +119,38 @@ Historias HU-02 Donar a una causa real y HU-15 No dirigir donantes a una estafa.
    verificación, sus causas pasan a «atendidas» y la ficha pública pierde el sello y el
    enlace.
 
-![Directorio de causas (P3), solo de entidades verificadas.](evidencia/avance-05/causas-1-directorio.png)
+![Directorio de causas (P3), solo de entidades verificadas.](evidencia/causas-1-directorio.png)
 
-![Ficha de una causa (P4), con su imagen, la entidad y el paso a paso.](evidencia/avance-05/causas-2-ficha.png)
+![Ficha de una causa (P4), con su imagen, la entidad y el paso a paso.](evidencia/causas-2-ficha.png)
 
-![Aviso antes de salir al sitio oficial de la entidad.](evidencia/avance-05/causas-3-salida.png)
+![Aviso antes de salir al sitio oficial de la entidad.](evidencia/causas-3-salida.png)
 
-![Verificar una entidad (C15): el botón se activa al marcar la casilla del aviso.](evidencia/avance-05/causas-4-verificar.png)
+![Verificar una entidad (C15): el botón se activa al marcar la casilla del aviso.](evidencia/causas-4-verificar.png)
 
-![Publicar una causa (C22): paso a paso, enlace oficial y fecha de cierre.](evidencia/avance-05/causas-5-publicar.png)
+![Publicar una causa (C22): paso a paso, enlace oficial y fecha de cierre.](evidencia/causas-5-publicar.png)
 
-![Ficha de una causa cuya entidad perdió la verificación: sin sello ni enlace.](evidencia/avance-05/causas-6-sin-verificar.png)
+![Ficha de una causa cuya entidad perdió la verificación: sin sello ni enlace.](evidencia/causas-6-sin-verificar.png)
 
-![Al final de Causas, otras plataformas que ayudan, con la foto de su sitio. Acopio no las verifica.](evidencia/avance-05/causas-7-plataformas.png)
+![Al final de Causas, otras plataformas que ayudan, con la foto de su sitio. Acopio no las verifica.](evidencia/causas-7-plataformas.png)
 
 ### 1c. Otras pantallas del incremento
 
 El incremento tiene más pantallas que las de los dos flujos. Estas también leen la base de la
 demo; la portada ya muestra el balance de recepción con datos de inventario.
 
-![Portada (P1): el balance dice qué hace falta y qué no traer.](evidencia/avance-05/portada-balance.png)
+![Portada (P1): el balance dice qué hace falta y qué no traer.](evidencia/portada-balance.png)
 
-![Mapa (P5): los acopios en verde y los puntos de RedAcopio en blanco, agrupados por tipo.](evidencia/avance-05/otras-mapa-puntos.png)
+![Mapa (P5): los acopios en verde y los puntos de RedAcopio en blanco, agrupados por tipo.](evidencia/otras-mapa-puntos.png)
 
-![Mapa (P5): una zona con necesidad y lo que reportó.](evidencia/avance-05/otras-mapa-zona.png)
+![Mapa (P5): una zona con necesidad y lo que reportó.](evidencia/otras-mapa-zona.png)
 
-![«Mi zona» del Receptor: lo que está por recibir.](evidencia/avance-05/otras-mi-zona.png)
+![«Mi zona» del Receptor: lo que está por recibir.](evidencia/otras-mi-zona.png)
 
-![Voluntariado (P7): jornadas por día con sus cupos reservados.](evidencia/avance-05/otras-voluntariado.png)
+![Voluntariado (P7): jornadas por día con sus cupos reservados.](evidencia/otras-voluntariado.png)
 
-![Reservar un cupo, con el consentimiento de los datos.](evidencia/avance-05/otras-reservar.png)
+![Reservar un cupo, con el consentimiento de los datos.](evidencia/otras-reservar.png)
 
-![La reserva (P8): código, jornada y cómo llegar.](evidencia/avance-05/otras-mi-reserva.png)
+![La reserva (P8): código, jornada y cómo llegar.](evidencia/otras-mi-reserva.png)
 
 ### 1d. Diagramas
 
@@ -160,23 +160,23 @@ dependencias salen de dependency-cruiser. Los modelos de datos de la red y de tu
 generan con Mermaid desde la misma carpeta; el resto de los diagramas está en la bóveda,
 en `docs/02-arquitectura/`.
 
-![Paquetes del monorepo: la web, la API y los paquetes compartidos.](../assets/diagramas/arquitectura-03-paquetes-del-monorepo.png)
+![Paquetes del monorepo: la web, la API y los paquetes compartidos.](../../assets/diagramas/arquitectura-03-paquetes-del-monorepo.png)
 
-![Paquetes de la API: los módulos de dominio arriba, los transversales abajo. Incluye turnos e importacion.](../assets/diagramas/arquitectura-04-paquetes-de-la-api.png)
+![Paquetes de la API: los módulos de dominio arriba, los transversales abajo. Incluye turnos e importacion.](../../assets/diagramas/arquitectura-04-paquetes-de-la-api.png)
 
-![Modelo de datos de la red: emergencias, zonas, entidades, acopios y causas.](../assets/diagramas/er-02-red.png)
+![Modelo de datos de la red: emergencias, zonas, entidades, acopios y causas.](../../assets/diagramas/er-02-red.png)
 
-![Modelo de datos de turnos: jornadas de acopio o de entidad y sus reservas.](../assets/diagramas/er-06-turnos.png)
+![Modelo de datos de turnos: jornadas de acopio o de entidad y sus reservas.](../../assets/diagramas/er-06-turnos.png)
 
 ## 2. Patrones de diseño
 
 Cada patrón tiene código que se puede abrir; las rutas son de `apps/api/src/` salvo que digan
 otra cosa. El detalle de cada uno y cuándo se repite está en
-[patrones y prácticas](../02-arquitectura/patrones-y-practicas.md).
+[patrones y prácticas](../../02-arquitectura/patrones-y-practicas.md).
 
 ### DAO
 
-El acceso a datos pasa por DAO ([ADR-0019](../02-arquitectura/adr/ADR-0019-dao-sobre-prisma.md)).
+El acceso a datos pasa por DAO ([ADR-0019](../../02-arquitectura/adr/ADR-0019-dao-sobre-prisma.md)).
 Hay 20, en `modulos/<módulo>/dao/`: entre ellos `ComprobanteDao`, `MovimientoDao`,
 `SaldoDao`, `RemisionDao`, `SugerenciaDao`, `CausaDao`, `JornadaDao` y `ReservaDao`. Los
 servicios los usan y abren la transacción con `Transacciones.ejecutar`; los controladores no
@@ -236,16 +236,16 @@ el contrato.
 ### 3a. Sprint Planning
 
 El sprint va del 12 al 25 de octubre, con la Review en la validación de clase del viernes 23
-([P-047](../01-requerimientos/pendientes.md)).
+([P-047](../../01-requerimientos/pendientes.md)).
 
 | Elemento | Descripción |
 |---|---|
 | Sprint Goal | El administrador decide cada traslado con el ranking del motor y lo despacha con una remisión que la zona confirma al recibir, y el portal muestra solo causas de entidades verificadas |
-| Historias seleccionadas | Del Sprint 1, sin terminar: HU-10a Ver a dónde falta y de dónde sobra (8) y HU-10b Aprobar o descartar un traslado (5). Nuevas: HU-11 Despachar con un documento verificable (5), HU-12 Confirmar la llegada sin contar unidad por unidad (3) y HU-13 Contar lo que la fórmula no ve (3). Pendientes del Sprint 1: HU-02 Donar a una causa real (3) y HU-15 No dirigir donantes a una estafa (3). Suman 30 puntos. Los criterios de aceptación están en el [Avance 2](avance-02-requisitos.md#historias) |
+| Historias seleccionadas | Del Sprint 1, sin terminar: HU-10a Ver a dónde falta y de dónde sobra (8) y HU-10b Aprobar o descartar un traslado (5). Nuevas: HU-11 Despachar con un documento verificable (5), HU-12 Confirmar la llegada sin contar unidad por unidad (3) y HU-13 Contar lo que la fórmula no ve (3). Pendientes del Sprint 1: HU-02 Donar a una causa real (3) y HU-15 No dirigir donantes a una estafa (3). Suman 30 puntos. Los criterios de aceptación están en el [Avance 2](../avance-2-requisitos/avance-02-requisitos.md#historias) |
 | Tareas técnicas | DAO, DTO y patrones de diseño ([#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59)). API de la etapa 2 del motor y simulador ([#46](https://github.com/Proyecto-IngSoftware/acopio/issues/46)). Contrato OpenAPI sin arreglos en los nullable ([#38](https://github.com/Proyecto-IngSoftware/acopio/issues/38)). Maquetas en Stitch de C10, C11 y las pantallas de remisión y recepción. Interfaz del motor en tres ciclos ([#35](https://github.com/Proyecto-IngSoftware/acopio/issues/35)). Pieza C del Bloque 1: verificación de entidades y causas ([#48](https://github.com/Proyecto-IngSoftware/acopio/issues/48)). Servidor de pruebas ([#26](https://github.com/Proyecto-IngSoftware/acopio/issues/26)) |
-| Responsables iniciales | Según los roles del Sprint 0 ([Avance 1, §5](avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo)): Joseph, arquitectura, modelo de datos e integración; Brayan, requerimientos y diseño UI/UX; Alejandra, coordinación del sprint y documentación; Michael, calidad, pruebas y despliegue. El responsable hace el seguimiento de su área; la programación se reparte entre los cuatro. Detalle por tarea en la tabla de abajo |
+| Responsables iniciales | Según los roles del Sprint 0 ([Avance 1, §5](../avance-1-sprint-0/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo)): Joseph, arquitectura, modelo de datos e integración; Brayan, requerimientos y diseño UI/UX; Alejandra, coordinación del sprint y documentación; Michael, calidad, pruebas y despliegue. El responsable hace el seguimiento de su área; la programación se reparte entre los cuatro. Detalle por tarea en la tabla de abajo |
 | Dependencias o riesgos | La interfaz del motor depende de la API de la etapa 2 y de las maquetas aprobadas. El servidor de pruebas depende de decidir proveedor, dominio y remitente antes del 18 de octubre. Microsoft 365 retira el SMTP con contraseña a fines de 2026 (RTA-04) |
-| Definition of Done | La misma del Sprint 1 ([Avance 4](avance-04-sprint1.md#3a-sprint-planning)), con un punto más: el cambio entra por un pull request con el CI en verde, que Joseph revisa y fusiona ([P-051](../01-requerimientos/pendientes.md)) |
+| Definition of Done | La misma del Sprint 1 ([Avance 4](../avance-4-sprint-1/avance-04-sprint1.md#3a-sprint-planning)), con un punto más: el cambio entra por un pull request con el CI en verde, que Joseph revisa y fusiona ([P-051](../../01-requerimientos/pendientes.md)) |
 
 Cada tarea queda con quien tiene ese rol desde el Sprint 0. Una tarea con responsable no es
 de una sola persona: el responsable garantiza que avance y quede documentada.
@@ -266,7 +266,7 @@ de una sola persona: el responsable garantiza que avance y quede documentada.
 | Registro del sprint, «Cambios al construir», pendientes, ADR nuevos y Word del avance | Alejandra | Documentación | Joseph genera el Word |
 
 Los roles no rotan en el Sprint 2: el equipo decidió el 2026-10-07 seguir con los del Sprint 0
-([P-048](../01-requerimientos/pendientes.md)).
+([P-048](../../01-requerimientos/pendientes.md)).
 
 ### 3b. Seguimiento del equipo (Daily Scrum)
 

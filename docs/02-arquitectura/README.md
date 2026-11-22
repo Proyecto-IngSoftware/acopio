@@ -3,7 +3,7 @@ title: "Arquitectura — índice"
 type: moc
 tags: [moc, arquitectura]
 estado: vigente
-actualizado: 2026-10-30
+actualizado: 2026-11-22
 ---
 
 # Arquitectura — índice
@@ -38,8 +38,14 @@ actualizado: 2026-10-30
 | [0015](adr/ADR-0015-saldo-en-tabla-por-disparador.md) | El saldo vive en una tabla que mantiene un disparador |
 | [0016](adr/ADR-0016-service-worker-con-vite-plugin-pwa.md) | La captura sin conexión usa un service worker de vite-plugin-pwa |
 | [0017](adr/ADR-0017-factura-servida-por-la-api.md) | La API sirve la foto de la factura y Garage no se expone |
+| [0018](adr/ADR-0018-movimientos-de-zona.md) | Las zonas reciben en el mismo libro de movimientos que los acopios |
+| [0019](adr/ADR-0019-dao-sobre-prisma.md) | El acceso a datos pasa por DAO sobre Prisma |
+| [0020](adr/ADR-0020-grises-piedra.md) | Grises piedra en los fondos y bordes, e íconos por grupo de categoría |
+| [0021](adr/ADR-0021-presentaciones-y-estado-del-codigo.md) | Presentaciones como entidad y estado en el código de barras |
+| [0022](adr/ADR-0022-linea-visual-con-movimiento-e-ilustracion.md) | Línea visual con movimiento e ilustraciones propias |
 | [0023](adr/ADR-0023-organizacion-en-paquetes.md) | Organización del código en paquetes, el «ADR-002» del curso |
 | [0024](adr/ADR-0024-captcha-con-altcha.md) | Captcha con ALTCHA en los formularios públicos |
+| [0025](adr/ADR-0025-saldos-del-historial-por-bloques.md) | Saldos del historial por bloques de secuencias |
 
 ## La decisión de la que cuelga todo lo demás
 
