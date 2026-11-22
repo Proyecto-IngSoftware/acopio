@@ -11,7 +11,7 @@ actualizado: 2026-10-20
 Qué prueba cada rol en el [servidor de pruebas](despliegue.md) (https://acopio.josephqaz.dev)
 durante la primera ronda del equipo ([#58](https://github.com/Proyecto-IngSoftware/acopio/issues/58)).
 Cada escenario sale de un criterio de aceptación del
-[Avance 2](../entregas/avance-02-requisitos.md#historias) y se escribe como «entro como…,
+[Avance 2](../entregas/avance-2-requisitos/avance-02-requisitos.md#historias) y se escribe como «entro como…,
 hago…, debería ver…». Si lo que se ve no coincide, se abre un issue con la etiqueta `pruebas`,
 el número del escenario y una captura.
 

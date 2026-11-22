@@ -21,7 +21,7 @@ conducta.
 
 **Tech Stack:** NestJS 11, Prisma 7.10, PostgreSQL 16, React con Vite, Vitest, Jest, Playwright.
 
-**Spec:** [docs/superpowers/specs/2026-10-19-entrada-unica-design.md](../specs/2026-10-19-entrada-unica-design.md)
+**Spec:** [docs/superpowers/specs/2026-10-19-entrada-unica-design.md](../superpowers/specs/2026-10-19-entrada-unica-design.md)
 
 ## Global Constraints
 

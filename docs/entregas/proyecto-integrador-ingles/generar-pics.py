@@ -13,9 +13,9 @@ from docx.shared import Cm, Pt
 from docx.text.paragraph import Paragraph
 
 carpeta = Path(__file__).resolve().parent
-plantilla = carpeta.parent.parent / 'talleres' / 'Plantilla proyectos PICS.docx'
+plantilla = carpeta.parent / 'guias' / 'Plantilla proyectos PICS.docx'
 doc = Document(plantilla)
-texto = (carpeta / 'proyecto-pics.md').read_text()
+texto = (carpeta / 'proyecto-pics.md').read_text().split('\n---\n', 1)[1].lstrip()
 titulo = texto.splitlines()[0][2:]
 paginas = {}
 ANEXOS = {'First submission': 'A', 'Second submission': 'B', 'Third submission': 'C'}

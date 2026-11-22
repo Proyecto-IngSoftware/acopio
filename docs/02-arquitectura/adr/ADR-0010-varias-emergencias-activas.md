@@ -46,7 +46,7 @@ Dos hechos cambiaron el cuadro el 2026-09-14:
 
 Además, una emergencia vieja puede seguir teniendo zonas con déficit real mientras la
 atención pública se va a la nueva. El sistema no debe amplificar ese sesgo: es el
-cuarto problema del [Avance 1](../../entregas/avance-01-sprint0.md#problema), el
+cuarto problema del [Avance 1](../../entregas/avance-1-sprint-0/avance-01-sprint0.md#problema), el
 reparto que responde a la visibilidad y no a la necesidad.
 
 ## Decisión

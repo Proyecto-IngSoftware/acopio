@@ -1,3 +1,11 @@
+---
+title: "Proyecto integrador · guion del video"
+type: entrega
+tags: [entrega]
+estado: vigente
+actualizado: 2026-11-22
+---
+
 # Video script: Acopio
 
 Guion para el video de la asignación, de 3 a 5 minutos. Va con la presentación `Acopio - Video Presentation.html`, una parte por diapositiva. Lo que está en cita se dice en voz alta; lo demás es para el equipo. Cada `[next]` es una pulsación de la flecha derecha y no se lee.

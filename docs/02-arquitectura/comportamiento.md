@@ -53,4 +53,4 @@ cambia nada.
 
 El diagrama de productores, cola y consumidor de `correo_saliente` está en
 [diagramas/concurrencia.html](diagramas/concurrencia.html), y su explicación en la sección 3 del
-[complemento de la sustentación](../entregas/complemento-sustentacion.md).
+[complemento de la sustentación](../entregas/complemento-segundo-corte/complemento-sustentacion.md).

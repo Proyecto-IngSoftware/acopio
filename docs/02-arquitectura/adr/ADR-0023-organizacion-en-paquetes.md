@@ -11,7 +11,7 @@ actualizado: 2026-10-30
 # ADR-0023 · Organización del código en paquetes
 
 **Fecha:** 2026-10-30 · **Estado:** aceptada · **Es el «ADR-002» del curso**, que pide un registro
-acorde al diagrama de paquetes actualizado ([complemento del segundo corte](../../talleres/Complemento%20Proyecto%20–%20IS1.pdf)).
+acorde al diagrama de paquetes actualizado ([complemento del segundo corte](../../entregas/guias/Complemento%20Proyecto%20–%20IS1.pdf)).
 **Deriva de:** [ADR-0008](ADR-0008-arquitectura-stack-inicial.md) (monolito modular) y
 [ADR-0019](ADR-0019-dao-sobre-prisma.md) (DAO). **Diagrama:**
 [paquetes.html](../diagramas/paquetes.html), con los PNG

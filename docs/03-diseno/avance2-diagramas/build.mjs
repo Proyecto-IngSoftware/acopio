@@ -1,5 +1,5 @@
 // Genera el lienzo de diagramas del Avance 2: casos de uso y mapa de stakeholders.
-// Fuente de contenido: docs/entregas/avance-02-requisitos.md, secciones 5 y 6.
+// Fuente de contenido: docs/entregas/avance-2-requisitos/avance-02-requisitos.md, secciones 5 y 6.
 // Uso: node build.mjs  →  Main.dc.html (casos de uso), Stakeholders.dc.html, canvas.json
 import { writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';

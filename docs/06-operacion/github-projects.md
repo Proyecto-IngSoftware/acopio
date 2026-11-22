@@ -136,7 +136,7 @@ Joseph confirmó los usuarios el 2026-10-07. El de Michael no lleva su nombre; e
 `estebangutierrez406-svg`.
 
 Cada issue se asigna a quien tiene el rol de esa área, según el
-[Avance 1](../entregas/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo):
+[Avance 1](../entregas/avance-1-sprint-0/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo):
 
 | Tipo de issue | Se asigna a |
 |---|---|
@@ -154,6 +154,6 @@ rotan más adelante, se cambia esta tabla y se reasignan los issues abiertos.
 
 ## Relacionado
 
-- [Avance 3 — tablero de faltantes](../entregas/avance-03-arquitectura.md)
+- [Avance 3 — tablero de faltantes](../entregas/avance-3-arquitectura/avance-03-arquitectura.md)
 - [Pendientes](../01-requerimientos/pendientes.md) — P-005, P-007 a P-012
-- [Avance 1 — roles y acuerdos](../entregas/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo)
+- [Avance 1 — roles y acuerdos](../entregas/avance-1-sprint-0/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo)

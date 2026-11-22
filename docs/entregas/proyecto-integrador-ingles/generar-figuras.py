@@ -72,7 +72,7 @@ esquema("contenedores.png", [
     ("PostgreSQL\nOperational records", (1020, 355, 1760, 545)),
 ], [((780, 135), (1020, 135)), ((1390, 230), (1390, 355)), ((1160, 230), (710, 355))])
 
-evidencia = DOCS / "entregas/evidencia/avance-05"
+evidencia = DOCS / "entregas/avance-5-sprint-2/evidencia"
 stitch = DOCS / "03-diseno/stitch"
 for nombre, origen, recorte in (
     ("inventario.png", stitch / "C03-inventario/construida-historial.png", (8, 135, 352, 458)),

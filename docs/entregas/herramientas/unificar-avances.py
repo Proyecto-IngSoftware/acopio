@@ -8,7 +8,7 @@ el caso del Avance 1, escrito a mano. Este script los une en orden en
 Un campo de índice de Word abarca el documento entero, así que se deja solo el del
 Avance 1, que pasa a ser el índice general; los de los demás avances se quitan.
 
-Uso: python unificar-avances.py   (desde docs/entregas; requiere python-docx y docxcompose)
+Uso: python unificar-avances.py   (desde docs/entregas/herramientas; requiere python-docx y docxcompose)
 Después de unir, se abre el Word y se actualiza el índice: clic derecho sobre él,
 Actualizar campos, Actualizar toda la tabla.
 """
@@ -19,16 +19,16 @@ from docx.enum.text import WD_BREAK
 from docx.oxml.ns import qn
 from docxcompose.composer import Composer
 
-AQUI = Path(__file__).resolve().parent
+ENTREGAS = Path(__file__).resolve().parents[1]
 AVANCES = [
-    "Avance 1 - Sprint 0 - Acopio.docx",
-    "Avance 2 - Requisitos y planeacion inicial - Acopio.docx",
-    "Avance 3 - Arquitectura inicial - Acopio.docx",
-    "Avance 4 - Sprint 1 - Acopio.docx",
-    "Avance 5 - Sprint 2 - Acopio.docx",
-    "Complemento - Sustentacion segundo corte - Acopio.docx",
+    "avance-1-sprint-0/Avance 1 - Sprint 0 - Acopio.docx",
+    "avance-2-requisitos/Avance 2 - Requisitos y planeacion inicial - Acopio.docx",
+    "avance-3-arquitectura/Avance 3 - Arquitectura inicial - Acopio.docx",
+    "avance-4-sprint-1/Avance 4 - Sprint 1 - Acopio.docx",
+    "avance-5-sprint-2/Avance 5 - Sprint 2 - Acopio.docx",
+    "complemento-segundo-corte/Complemento - Sustentacion segundo corte - Acopio.docx",
 ]
-SALIDA = AQUI / "Acopio - Avances IS1.docx"
+SALIDA = ENTREGAS / "Acopio - Avances IS1.docx"
 
 
 def tiene_salto(p):
@@ -48,14 +48,14 @@ def quitar_indice(d):
     return True
 
 
-faltan = [n for n in AVANCES if not (AQUI / n).exists()]
+faltan = [n for n in AVANCES if not (ENTREGAS / n).exists()]
 if faltan:
     raise SystemExit(f"Faltan: {', '.join(faltan)}. Genera primero el Word de cada avance.")
 
-base = docx.Document(str(AQUI / AVANCES[0]))
+base = docx.Document(str(ENTREGAS / AVANCES[0]))
 composer = Composer(base)
 for nombre in AVANCES[1:]:
-    d = docx.Document(str(AQUI / nombre))
+    d = docx.Document(str(ENTREGAS / nombre))
     quitado = quitar_indice(d)
     base.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
     composer.append(d)

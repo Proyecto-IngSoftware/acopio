@@ -166,7 +166,7 @@ de "escaso". La regla se escribe una vez y ambos la importan.
 
 Los límites de módulo del backend son también los límites de las personas. El reparto
 sigue las responsabilidades acordadas en el
-[Avance 1](../../entregas/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo);
+[Avance 1](../../entregas/avance-1-sprint-0/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo);
 los roles rotan cada Sprint, el reparto de módulos no.
 
 | Persona | Responsabilidad | Módulos NestJS | Pantallas |

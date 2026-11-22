@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-11-18
+actualizado: 2026-11-22
 ---
 
 # Pendientes — bandeja de entrada
@@ -192,7 +192,7 @@ módulos, y el producto tiene 7 (M1–M7). Propuesta de partida:
 **Por qué:** sin esto el diagrama no cumple la guía.
 **Estado:** RESUELTO → descomposición funcional del Avance 3, entregada el
 2026-09-14 con estos seis módulos. Son también las épicas del Avance 2
-([avance-02-requisitos.md](../entregas/avance-02-requisitos.md)). La revisión de
+([avance-02-requisitos.md](../entregas/avance-2-requisitos/avance-02-requisitos.md)). La revisión de
 Brayan sigue en [#5](https://github.com/Proyecto-IngSoftware/acopio/issues/5).
 
 ### P-011 · Numeración del ADR del curso
@@ -218,7 +218,7 @@ descomposición se deriva de los RF y las historias semilla de la bóveda.
 **Por qué:** el docente puede notar el hueco.
 **Estado:** DESCARTADO el 2026-10-30 por Joseph, junto con lo que faltaba del Word de los avances
 anteriores (fila 3 del [plan de acción](../05-planes/plan-de-accion.md)). Lo que alcanzó a
-escribirse está en [avance-02-requisitos.md](../entregas/avance-02-requisitos.md); estuvo en
+escribirse está en [avance-02-requisitos.md](../entregas/avance-2-requisitos/avance-02-requisitos.md); estuvo en
 curso desde el 2026-09-14.
 
 ### P-013 · Roles reducidos a cuatro: solo Admin, Auditor, Operador, Receptor
@@ -807,8 +807,8 @@ reunión cuenta como el «Daily Scrum» de las guías.
 seguimiento con evidencia; el equipo acordó no reunirse a diario.
 El seguimiento del Sprint 1 es el viernes 9 de octubre al terminar la clase virtual, en
 la misma reunión del primer Planning del Sprint 2.
-**Estado:** DECIDIDO. Aplicado en [avance-04-sprint1.md](../entregas/avance-04-sprint1.md)
-y en [avance-05-sprint2.md](../entregas/avance-05-sprint2.md)
+**Estado:** DECIDIDO. Aplicado en [avance-04-sprint1.md](../entregas/avance-4-sprint-1/avance-04-sprint1.md)
+y en [avance-05-sprint2.md](../entregas/avance-5-sprint-2/avance-05-sprint2.md)
 
 ### P-046 · Historias Must sin plan: causas, verificación de entidades e importador
 **Fecha:** 2026-10-07 · **Propuesto por:** Joseph
@@ -839,7 +839,7 @@ intervalo, la segunda caería en la semana 12, pero ninguna guía lo dice.
 **Por qué:** de esas fechas depende qué evidencia tiene que estar lista y cuándo.
 **Estado:** RESUELTO el 2026-10-09 → [calendario](../entregas/calendario.md) y
 [cronograma](../05-planes/cronograma.md). La guía del
-[Avance 5](../talleres/Avance%20de%20Proyecto%205%20–%20IS1.pdf) pone el Sprint 2 en
+[Avance 5](../entregas/guias/Avance%20de%20Proyecto%205%20–%20IS1.pdf) pone el Sprint 2 en
 las semanas 10 a 12 y la sustentación del segundo corte el viernes 23 de octubre. El
 Sprint 2 se cierra en la semana 12 y el Sprint 3 empieza en la 13; su duración sigue
 siendo un supuesto hasta su consigna. La «validación que se realizará en clase el próximo viernes»
@@ -849,7 +849,7 @@ del Sprint 2 se hace ese día
 
 ### P-048 · Los roles no rotan en el Sprint 2
 **Fecha:** 2026-10-07 · **Propuesto por:** Joseph
-**Qué:** el [Avance 1](../entregas/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo)
+**Qué:** el [Avance 1](../entregas/avance-1-sprint-0/avance-01-sprint0.md#5-roles-iniciales-y-acuerdos-de-trabajo)
 dice que los roles rotan cada sprint y propone a cada integrante un rol posible. En el
 Sprint 2 se mantienen los del Sprint 0: Joseph en arquitectura e integración, Brayan en
 requerimientos y diseño UI/UX, Alejandra en coordinación y documentación, y Michael en
@@ -862,20 +862,20 @@ siguen esos roles.
 **Fecha:** 2026-10-07 · **Propuesto por:** Joseph
 **Qué:** el Word del Avance 4 está revisado y aprobado por Joseph. Falta lo que sale de
 la reunión del viernes 9 de octubre, al terminar la clase virtual de las 6:30 p. m.:
-la captura de la reunión (`docs/entregas/evidencia/avance-04/seguimiento.png`), las
+la captura de la reunión (`docs/entregas/avance-4-sprint-1/evidencia/seguimiento.png`), las
 filas de Brayan, Alejandra y Michael en la tabla del seguimiento y la retrospectiva
 confirmada por el equipo. Con eso se regeneran los Word (`generar-avance-04.py` y
 `unificar-avances.py`), se actualiza el índice en Word y se pasa al documento de
 OneDrive antes del domingo 11. Si en la clase llega la consigna del Sprint 2, se
 ajustan también el calendario, el cronograma, los milestones de las semanas 11 a 13
-y el borrador de [avance-05-sprint2.md](../entregas/avance-05-sprint2.md).
+y el borrador de [avance-05-sprint2.md](../entregas/avance-5-sprint-2/avance-05-sprint2.md).
 **Por qué:** la guía pide la evidencia de un seguimiento del equipo y la
 retrospectiva hecha por el equipo; ninguna de las dos se puede escribir sin la reunión.
 **Estado:** ABIERTO. Issue [#45](https://github.com/Proyecto-IngSoftware/acopio/issues/45)
 
 ### P-050 · El Avance 5 exige DAO aunque el proyecto descartó Repository sobre Prisma
 **Fecha:** 2026-10-09 · **Propuesto por:** Joseph
-**Qué:** la guía del [Avance 5](../talleres/Avance%20de%20Proyecto%205%20–%20IS1.pdf)
+**Qué:** la guía del [Avance 5](../entregas/guias/Avance%20de%20Proyecto%205%20–%20IS1.pdf)
 pide DAO de forma obligatoria y aclara que un ORM no basta: hay que mostrar cómo se
 encapsula el acceso a datos aunque por dentro se use Prisma. También pide DTO, o una
 justificación si no aplican, y al menos dos patrones creacionales, dos estructurales y
@@ -892,7 +892,7 @@ cada servicio con la bitácora y la cola de correo.
 **Estado:** EN DISCUSIÓN. La parte de arquitectura quedó en el
 [ADR-0019](../02-arquitectura/adr/ADR-0019-dao-sobre-prisma.md), con `inventario`,
 `comprobantes` y `salud` migrados a DAO el 2026-10-09. La sección de patrones del
-[Avance 5](../entregas/avance-05-sprint2.md#patrones-de-diseño) explica cada uno, y el
+[Avance 5](../entregas/avance-5-sprint-2/avance-05-sprint2.md#patrones-de-diseño) explica cada uno, y el
 Factory Method del proveedor de identidad quedó en su propia función. Falta pasar esa
 sección al Word del avance. Issue
 [#59](https://github.com/Proyecto-IngSoftware/acopio/issues/59), hasta el 18 de octubre
@@ -951,7 +951,7 @@ contraseña y remitente `no-reply@josephqaz.dev`, del dominio verificado. El có
 servidor de pruebas pasa a `CORREO_ACTIVO=true` con esas variables en el panel de Dokploy, y con
 eso también se puede probar el registro de un Donador de punta a punta (P-056). La cola de correo
 es la bonificación de concurrencia del complemento del segundo corte
-([complemento-sustentacion.md](../entregas/complemento-sustentacion.md)).
+([complemento-sustentacion.md](../entregas/complemento-segundo-corte/complemento-sustentacion.md)).
 **2026-10-30 · encendido en el servidor.** Joseph puso las variables en Dokploy. Un registro de
 Donador en `acopio.josephqaz.dev` llegó a `contacto@josephqaz.dev` con el enlace apuntando al
 servidor, y Joseph confirmó la cuenta con él.
@@ -1242,7 +1242,7 @@ veces. El arreglo es reclamar el lote dentro de una transacción con
 ya tiene `UPDATE` sobre `correo_saliente`.
 **Por qué:** hoy corre una sola instancia de la API y el problema no aparece. Hay que resolverlo
 antes de escalar a dos. La ficha de concurrencia del
-[complemento](../entregas/complemento-sustentacion.md) lo declara como limitación, y el
+[complemento](../entregas/complemento-segundo-corte/complemento-sustentacion.md) lo declara como limitación, y el
 [ADR-0023](../02-arquitectura/adr/ADR-0023-organizacion-en-paquetes.md) como algo que podría
 requerir ajustes.
 **Estado:** RESUELTO el 2026-10-30 → `CorreoSalienteDao.reclamar` toma el lote con un solo
@@ -1283,6 +1283,21 @@ una prueba de conexión y entrega desde el servidor.
 **Estado:** ABIERTO. Quedan la auditoría y el tratamiento del correo histórico
 en la base real, y la prueba de entrega desde Dokploy.
 [Plan y criterios de aceptación](../05-planes/2026-11-18-remediacion-main-y-hostinger.md).
+
+### P-092 · Pasar a las notas lo escrito a mano en los Word de los avances 4 y 5
+
+**Fecha:** 2026-11-22 · **Propuesto por:** Claude, al ordenar las entregas
+
+**Qué:** el commit `1edfbbb` completó a mano los Word de los avances 4 y 5, entre otras cosas
+las filas del seguimiento. Ese texto no está en las notas, así que `generar-avance-04.py` y
+`generar-avance-05.py` lo borran al regenerar. El unificado «Acopio - Avances IS1.docx» es
+anterior y tampoco lo trae: conserva «Sin registro en este seguimiento».
+
+**Por qué:** el unificado es el que se sube a OneDrive, y regenerar un avance pierde lo que
+escribió el equipo.
+
+**Estado:** ABIERTO. Falta copiar el texto a las notas. Mientras tanto el unificado se puede
+rehacer con los Word como están (`unificar-avances.py`) y actualizar el índice en Word.
 
 ---
 

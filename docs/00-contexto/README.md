@@ -31,4 +31,4 @@ Antes de nombrar algo en código o en documentación, revisa
 
 - [Especificación de diseño](../superpowers/specs/2026-08-20-acopio-design.md)
 - [Requerimientos](../01-requerimientos/)
-- [Avance 1 — Sprint 0](../entregas/avance-01-sprint0.md)
+- [Avance 1 — Sprint 0](../entregas/avance-1-sprint-0/avance-01-sprint0.md)

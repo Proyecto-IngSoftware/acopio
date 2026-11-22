@@ -6,7 +6,7 @@ final. Las funciones de formato son las de generar-avance-05.py: los diagramas d
 `assets/diagramas` entran como figuras y un párrafo que empieza con «Pendiente:» sale como
 recuadro. Usa «Avance 1 - Sprint 0 - Acopio.docx» como plantilla: estilos, márgenes y pie.
 
-Uso: python generar-complemento.py   (desde docs/entregas; requiere python-docx)
+Uso: python generar-complemento.py   (desde docs/entregas/complemento-segundo-corte; requiere python-docx)
 Después se corre unificar-avances.py para el Word que va a OneDrive.
 """
 import copy
@@ -23,8 +23,8 @@ from docx.oxml.ns import qn
 from docx.shared import Cm, Pt, RGBColor
 
 AQUI = Path(__file__).resolve().parent
-DOCS = AQUI.parent
-PLANTILLA = AQUI / "Avance 1 - Sprint 0 - Acopio.docx"
+DOCS = AQUI.parents[1]
+PLANTILLA = AQUI.parent / "avance-1-sprint-0" / "Avance 1 - Sprint 0 - Acopio.docx"
 SALIDA = AQUI / "Complemento - Sustentacion segundo corte - Acopio.docx"
 NOTA = (AQUI / "complemento-sustentacion.md").read_text(encoding="utf-8")
 REPO = "https://github.com/Proyecto-IngSoftware/acopio"

@@ -111,7 +111,7 @@ const salidas = [
 ];
 for (const [nombre, codigo] of salidas) writeFileSync(join(dirMmd, `${nombre}.mmd`), conTema(codigo) + '\n');
 
-// Datos para el Word del Avance 3 (docs/entregas/generar-avance-03.py): textos en
+// Datos para el Word del Avance 3 (docs/entregas/avance-3-arquitectura/generar-avance-03.py): textos en
 // Markdown crudo, el nombre del PNG de cada diagrama y las invariantes.
 const pngDe = new Map(salidas.map(([nombre, codigo]) => [codigo, `${nombre}.png`]));
 writeFileSync(join(aqui, 'datos.json'), JSON.stringify({

@@ -1,3 +1,11 @@
+---
+title: "Proyecto integrador · texto en inglés"
+type: entrega
+tags: [entrega]
+estado: vigente
+actualizado: 2026-11-22
+---
+
 # Acopio: A Web Platform for Coordinating Donations During Disasters
 
 ## Introduction

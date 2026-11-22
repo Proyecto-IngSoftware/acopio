@@ -3,7 +3,7 @@ title: "Especificaciones — índice"
 type: moc
 tags: [moc, spec]
 estado: vigente
-actualizado: 2026-10-30
+actualizado: 2026-11-22
 ---
 
 # Especificaciones — índice
@@ -23,6 +23,12 @@ construcción.
 | [2026-10-05 · Bloque 3 · Custodia](2026-10-05-bloque-3-custodia-design.md) | Donador, comprobantes con folio, factura en Garage, recepción, conciliación, seguimiento | Aprobada · construido |
 | [2026-10-06 · Bloque 4 · Motor](2026-10-06-bloque-4-motor-design.md) | Necesidad, déficit, sugerencias, remisiones, recepción en zona, reporte de necesidad, simulador | Aprobada |
 | [2026-10-17 · Bloque 5 · Turnos](2026-10-17-bloque-5-turnos-design.md) | Jornadas de acopio y de entidad, reserva sin cuenta, aforo, asistencia, perfiles, borrado a los 30 días | Aprobada |
+| [2026-10-17 · Pieza C](2026-10-17-pieza-c-causas-design.md) | Verificación de entidades y causas | Construida |
+| [2026-10-18 · Pieza E](2026-10-18-pieza-e-importacion-design.md) | Importación de RedAcopio y carga por CSV | Construida |
+| [2026-10-19 · Entrada única](2026-10-19-entrada-unica-design.md) | Un solo inicio de sesión para todas las cuentas | Construida |
+| [2026-10-20 · Presentaciones](2026-10-20-presentaciones-codigos-design.md) | Presentaciones, códigos de barras y unidades | Seguimiento en [#163](https://github.com/Proyecto-IngSoftware/acopio/issues/163) |
+| [2026-10-20 · Mapa de necesidades](2026-10-20-mapa-de-necesidades-design.md) | Etiquetas de falta y sobra en P5 y mapa de voluntariado | Construida |
+| [2026-10-21 · Línea visual](2026-10-21-linea-visual-design.md) | Fechas, botones, estados y movimiento | Seguimiento en [#177](https://github.com/Proyecto-IngSoftware/acopio/issues/177) |
 | Bloque 6 · Extras | Bitácora enriquecida, transparencia, publicaciones | ⬜ pendiente |
 
 ## Cadena de trabajo

@@ -29,7 +29,7 @@ relativos, no wikilinks.
 |---|---|
 | Recorrer la documentación | [docs/README.md](docs/README.md) — portada de la bóveda |
 | Entender el proyecto completo | [Especificación de diseño](docs/superpowers/specs/2026-08-20-acopio-design.md) |
-| Ver el entregable del curso | [Avance 1 — Sprint 0](docs/entregas/avance-01-sprint0.md) |
+| Ver los entregables del curso | [Entregas](docs/entregas/README.md) |
 | Entender el problema | [Problema](docs/00-contexto/problema.md) |
 | Saber qué está y qué no está en alcance | [Fuera de alcance](docs/00-contexto/fuera-de-alcance.md) |
 | Consultar un término | [Glosario](docs/00-contexto/glosario.md) |

@@ -3,7 +3,7 @@ title: "Diseño — índice"
 type: moc
 tags: [moc, diseno]
 estado: vigente
-actualizado: 2026-10-06
+actualizado: 2026-11-22
 ---
 
 # Diseño — índice
@@ -13,6 +13,10 @@ actualizado: 2026-10-06
 | [sistema-diseno.md](sistema-diseno.md) | Tokens, componentes, reglas móviles, accesibilidad |
 | [flujos.md](flujos.md) | Los seis recorridos críticos, de punta a punta |
 | [stitch/](stitch/README.md) | **Un diseño por pantalla**: captura y HTML de Stitch, maqueta aprobada y diferencias |
+| [motor/simulacion.md](motor/simulacion.md) | Simulación del motor de emparejamiento |
+| [descomposicion-funcional/](descomposicion-funcional/) | Lienzo y datos de la descomposición funcional del Avance 3 |
+| [avance2-diagramas/](avance2-diagramas/) | Lienzo de los casos de uso y los stakeholders del Avance 2 |
+| [canvas-base/](canvas-base/) | Lienzo de Claude Design de septiembre, que se conserva como historia |
 | [prompt-video-donacion.md](prompt-video-donacion.md) | Guion y prompts del video animado: cómo donar, paso a paso |
 | [api/](api/README.md) | **Contrato de la API para el frontend**: sesión, invitaciones, errores y endpoints por pantalla. La interfaz se hace con Google Stitch ([ADR-0011](../02-arquitectura/adr/ADR-0011-interfaz-con-stitch.md)) |
 
