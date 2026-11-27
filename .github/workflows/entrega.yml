@@ -1,0 +1,106 @@
+# Entrega de una versión: verifica la etiqueta, espera la aprobación del environment
+# `produccion`, la despliega en Dokploy y comprueba que el servidor responda esa versión.
+# Para volver a una versión anterior: Run workflow eligiendo esa etiqueta como ref.
+name: Entrega
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+
+concurrency:
+  group: entrega
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  verificar:
+    if: github.ref_type == 'tag'
+    uses: ./.github/workflows/ci.yml
+
+  identificar:
+    name: Identificar la versión
+    needs: verificar
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - id: version
+        name: La etiqueta coincide con apps/api/package.json
+        run: |
+          version=$(node -p "require('./apps/api/package.json').version")
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::La etiqueta $GITHUB_REF_NAME no coincide con la versión $version de apps/api/package.json"
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Construir las imágenes de la versión
+        run: |
+          etiqueta="${{ steps.version.outputs.version }}"
+          docker build -f apps/api/Dockerfile -t "acopio-api:$etiqueta" --label "org.opencontainers.image.revision=$GITHUB_SHA" .
+          docker build -f apps/web/Dockerfile -t "acopio-web:$etiqueta" --label "org.opencontainers.image.revision=$GITHUB_SHA" .
+      - name: Resumen
+        run: |
+          {
+            echo "### Versión verificada"
+            echo "| Etiqueta | Commit | Imágenes |"
+            echo "|---|---|---|"
+            echo "| $GITHUB_REF_NAME | \`$GITHUB_SHA\` | acopio-api:${{ steps.version.outputs.version }}, acopio-web:${{ steps.version.outputs.version }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  desplegar:
+    name: Desplegar en el servidor de pruebas
+    needs: identificar
+    runs-on: ubuntu-latest
+    # El environment pide la aprobación manual antes de correr este job
+    environment:
+      name: produccion
+      url: https://acopio.josephqaz.dev
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v7
+      # Dokploy construye la rama `produccion`; así lo desplegado es el commit que se verificó
+      - name: Mover la rama produccion a la etiqueta
+        run: git push --force origin "$GITHUB_SHA:refs/heads/produccion"
+      - name: Pedir el despliegue a Dokploy
+        env:
+          DOKPLOY_URL: ${{ secrets.DOKPLOY_URL }}
+          DOKPLOY_TOKEN: ${{ secrets.DOKPLOY_TOKEN }}
+          DOKPLOY_COMPOSE_ID: ${{ secrets.DOKPLOY_COMPOSE_ID }}
+        run: |
+          curl -fsS -X POST "$DOKPLOY_URL/api/compose.deploy" \
+            -H "x-api-key: $DOKPLOY_TOKEN" -H 'Content-Type: application/json' \
+            -d "{\"composeId\":\"$DOKPLOY_COMPOSE_ID\",\"title\":\"$GITHUB_REF_NAME\",\"description\":\"$GITHUB_SHA\"}"
+
+  comprobar:
+    name: Comprobar el servidor
+    needs: [identificar, desplegar]
+    runs-on: ubuntu-latest
+    steps:
+      # Dokploy construye en el servidor: se espera hasta 20 minutos a que responda la versión nueva
+      - name: /api/salud responde la versión desplegada
+        env:
+          ESPERADA: ${{ needs.identificar.outputs.version }}
+        run: |
+          for intento in $(seq 1 60); do
+            actual=$(curl -fsS https://acopio.josephqaz.dev/api/salud | jq -r .version || true)
+            echo "intento $intento: servidor en ${actual:-sin respuesta}, se espera $ESPERADA"
+            if [ "$actual" = "$ESPERADA" ]; then break; fi
+            sleep 20
+          done
+          if [ "$actual" != "$ESPERADA" ]; then
+            echo "::error::El servidor no llegó a la versión $ESPERADA"
+            exit 1
+          fi
+      - name: La portada carga
+        run: curl -fsS -o /dev/null -w 'portada %{http_code} en %{time_total}s\n' https://acopio.josephqaz.dev/
+      - name: Resumen
+        run: |
+          {
+            echo "### Comprobación posterior"
+            echo "https://acopio.josephqaz.dev/api/salud responde la versión ${{ needs.identificar.outputs.version }} (etiqueta $GITHUB_REF_NAME, commit \`$GITHUB_SHA\`)."
+          } >> "$GITHUB_STEP_SUMMARY"

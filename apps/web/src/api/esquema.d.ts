@@ -4337,6 +4337,7 @@ export interface components {
       estado: 'ok';
       /** @enum {string} */
       base: 'ok';
+      version: string;
     };
   };
   responses: never;
