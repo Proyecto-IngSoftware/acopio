@@ -129,5 +129,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/pruebas/preparar.ts'],
     css: false,
+    // En CI deja el JUnit en reportes/ de la raíz, que el workflow sube como evidencia
+    reporters: process.env.CI ? ['default', 'junit'] : ['default'],
+    outputFile: { junit: '../../reportes/web-unitarias.xml' },
   },
 });

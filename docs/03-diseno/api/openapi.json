@@ -15845,11 +15845,15 @@
             "enum": [
               "ok"
             ]
+          },
+          "version": {
+            "type": "string"
           }
         },
         "required": [
           "estado",
-          "base"
+          "base",
+          "version"
         ]
       }
     }

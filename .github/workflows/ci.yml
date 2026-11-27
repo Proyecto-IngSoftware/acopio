@@ -5,6 +5,8 @@ on:
   pull_request:
   push:
     branches: [main]
+  # entrega.yml la llama para verificar la etiqueta antes de desplegarla
+  workflow_call:
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -62,6 +64,16 @@ jobs:
 
       - name: Pruebas de integración contra PostgreSQL
         run: bun run test:int
+
+      # Evidencia: los JUnit de cada suite, también cuando una falla
+      - name: Guardar reportes de pruebas
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: reportes-pruebas-${{ github.sha }}-${{ github.run_attempt }}
+          path: reportes/
+          if-no-files-found: warn
+          retention-days: 90
 
   imagen:
     name: Imágenes de la API y la web

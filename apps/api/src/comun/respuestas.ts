@@ -200,7 +200,7 @@ export class PaginaBitacoraDto extends crearDto(
 ) {}
 
 export class SaludDto extends crearDto(
-  z.object({ estado: z.literal('ok'), base: z.literal('ok') }),
+  z.object({ estado: z.literal('ok'), base: z.literal('ok'), version: z.string() }),
 ) {}
 
 export class EntidadDto extends crearDto(

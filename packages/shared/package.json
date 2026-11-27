@@ -16,5 +16,8 @@
     "build": "tsc -p tsconfig.build.json",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "jest"
+  },
+  "devDependencies": {
+    "jest-junit": "^17.0.0"
   }
 }
