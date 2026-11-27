@@ -30,3 +30,6 @@ apps/api/src/generado/
 .llaves/
 apps/api/.llaves/
 .superpowers/
+
+# Reportes JUnit que genera CI
+reportes/

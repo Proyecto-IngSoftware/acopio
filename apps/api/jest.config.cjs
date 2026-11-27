@@ -10,11 +10,21 @@ const swc = [
   },
 ];
 
+/** En CI cada suite deja su JUnit en reportes/ de la raíz, que el workflow sube como evidencia. */
+const reportes = (/** @type {string} */ nombre) =>
+  process.env.CI
+    ? [
+        'default',
+        ['jest-junit', { outputDirectory: '<rootDir>/../../reportes', outputName: nombre }],
+      ]
+    : ['default'];
+
 /** @type {import('jest').Config} */
 module.exports = {
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   testRegex: '(?<!\\.int)\\.test\\.ts$',
+  reporters: reportes('api-unitarias.xml'),
   transform: { '^.+\\.ts$': swc },
   // El cliente de Prisma importa con .js; Jest resuelve el .ts
   moduleNameMapper: {

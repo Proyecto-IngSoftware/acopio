@@ -3,7 +3,7 @@ title: "Despliegue"
 type: operacion
 tags: [operacion]
 estado: vigente
-actualizado: 2026-11-18
+actualizado: 2026-11-27
 ---
 
 # Despliegue
@@ -139,8 +139,9 @@ funciona, pero con riesgo real de quedarse sin memoria al construir la imagen de
 ```
 1  Aprovisionar el servidor y el dominio          (P-005, resuelto: servidor de pruebas propio)
 2  Instalar Dokploy con su script oficial          <10 min, servidor en blanco
-3  Crear un servicio tipo Compose: repositorio del proyecto, rama main,
-   Compose Path ./infra/docker-compose.yml (sin docker-compose.dev.yml)
+3  Crear un servicio tipo Compose: repositorio del proyecto, rama produccion,
+   Compose Path ./infra/docker-compose.yml (sin docker-compose.dev.yml),
+   despliegue automático apagado (ver «Entrega de una versión»)
 4  Cargar las variables de entorno desde el panel de Dokploy,
    no en un .env versionado (ver «Variables en Dokploy»)
 5  Agregar un dominio al servicio web, puerto 80, path /, HTTPS con
@@ -259,6 +260,69 @@ Garage no arranca con un `GARAGE_RPC_SECRET` más corto (`Invalid RPC secret key
 32 bytes of random hex`). Si las dos llaves de S3 no sirven, la API no levanta y su log dice qué respondió Garage.
 Si la API se reinicia en bucle, su log empieza por `Variables de entorno inválidas:` y
 nombra la que falta.
+
+## Entrega de una versión
+
+Desde la versión 1.0.0, Dokploy construye la rama `produccion`, y esa rama solo la
+mueve el workflow `.github/workflows/entrega.yml`.
+
+1. La versión está en `apps/api/package.json`, y la misma en `apps/web/package.json`.
+   Se sube en un PR como cualquier cambio.
+2. Con el PR fusionado, se crea la etiqueta sobre ese commit de `main`:
+   `git tag v1.0.0 <sha> && git push origin v1.0.0`.
+3. La etiqueta dispara `entrega.yml`, que tiene cuatro jobs:
+   - `verificar` corre el mismo CI: lint, tipos, límites, unitarias e integración.
+   - `identificar` comprueba que la etiqueta coincida con la versión de
+     `apps/api/package.json` y construye `acopio-api:<versión>` y `acopio-web:<versión>`
+     desde cero, para probar que la versión se construye. No se publican: Dokploy
+     construye las suyas en el VPS desde el mismo commit.
+   - `desplegar` espera la aprobación del environment `produccion` en GitHub. Una vez
+     aprobado, mueve la rama `produccion` al commit de la etiqueta y le pide el
+     despliegue a Dokploy por su API (`compose.deploy`).
+   - `comprobar` consulta `https://acopio.josephqaz.dev/api/salud` cada 20 segundos,
+     hasta 20 minutos, hasta que responda la versión de la etiqueta, y después carga
+     la portada. Si la versión no llega, el run falla. Al repetir la entrega de una
+     versión que ya está en el servidor, esta comprobación pasa enseguida y no
+     prueba nada: en ese caso hay que mirar que termine el despliegue en el panel de
+     Dokploy.
+4. El resumen del run muestra la etiqueta, el commit, las imágenes y el resultado de
+   la comprobación. Los JUnit de las pruebas quedan como artifact del run durante 90
+   días.
+
+La versión verificada y la desplegada se relacionan así: etiqueta, commit, versión
+de `package.json` y campo `version` de `/api/salud`. Se puede revisar con
+`curl https://acopio.josephqaz.dev/api/salud`.
+
+Configuración que se hace una sola vez:
+
+- En Dokploy, el servicio Compose apunta a la rama `produccion` con el despliegue
+  automático apagado. Si queda encendido, el push del workflow y la llamada a la API
+  despliegan dos veces.
+- En GitHub, en Settings, Environments, `produccion`: Joseph como aprobador
+  (*Required reviewers*) y tres secretos del environment. `DOKPLOY_URL` es la
+  dirección del panel, `DOKPLOY_TOKEN` una API key creada en Settings, Profile de
+  Dokploy, y `DOKPLOY_COMPOSE_ID` el id del servicio, que aparece en la URL de su
+  página.
+
+### Volver a una versión anterior
+
+1. En GitHub, Actions, Entrega, Run workflow, y en *Use workflow from* se elige la
+   etiqueta anterior. El run repite los mismos pasos y también pide aprobación.
+2. Si la versión que se retira aplicó una migración, el código anterior puede no
+   entender la base, y Prisma no deshace migraciones. En ese caso, antes de volver
+   atrás se restaura el respaldo tomado antes del despliegue ([Restaurar desde
+   respaldo](runbook.md#restaurar-desde-respaldo)).
+3. Si GitHub Actions no está disponible, se hace a mano: `git push --force origin
+   v1.0.0^{commit}:refs/heads/produccion` con la etiqueta que se quiere, y Deploy en
+   el panel de Dokploy. Después, el mismo `curl` a `/api/salud`.
+
+### Datos persistentes
+
+Los datos viven en volúmenes de Docker del VPS, que un redespliegue no borra:
+`pgdata` (PostgreSQL), `garagemeta` y `garagedata` (las fotos de facturas, recepciones
+y presentaciones, en Garage) y `llaves` (las del adaptador local de identidad). Las
+cuentas de usuario están en Supabase Auth, fuera del VPS. Los respaldos se describen
+en [Respaldos](#respaldos).
 
 ## Perfil de desarrollo
 

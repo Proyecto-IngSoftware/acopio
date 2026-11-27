@@ -46,7 +46,7 @@ Las pruebas de la web corren con Vitest (`bun run --filter @acopio/web test`); u
 
 Si el 5432 está ocupado por un PostgreSQL del equipo, cambiar `DB_PUERTO` en `.env` y usar el mismo puerto en `DATABASE_URL` y `DATABASE_URL_OWNER`.
 
-CI (`.github/workflows/ci.yml`) corre en cada PR y en `main`: lint, tipos, depcruise, `scripts/revisar-colores.sh`, unitarias, integración y `docker build` de la API y de la web.
+CI (`.github/workflows/ci.yml`) corre en cada PR y en `main`: lint, tipos, depcruise, `scripts/revisar-colores.sh`, unitarias, integración y `docker build` de la API y de la web. Los JUnit quedan como artifact del run. Una etiqueta `vX.Y.Z` igual a la versión de `apps/api/package.json` dispara `entrega.yml`, que verifica, espera la aprobación del environment `produccion`, mueve la rama `produccion` que construye Dokploy y comprueba que `/api/salud` responda esa versión («Entrega de una versión» en `docs/06-operacion/despliegue.md`).
 
 ## Arquitectura
 
