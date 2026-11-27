@@ -274,13 +274,17 @@ mueve el workflow `.github/workflows/entrega.yml`.
    - `verificar` corre el mismo CI: lint, tipos, límites, unitarias e integración.
    - `identificar` comprueba que la etiqueta coincida con la versión de
      `apps/api/package.json` y construye `acopio-api:<versión>` y `acopio-web:<versión>`
-     con el commit en la etiqueta OCI `revision`.
+     desde cero, para probar que la versión se construye. No se publican: Dokploy
+     construye las suyas en el VPS desde el mismo commit.
    - `desplegar` espera la aprobación del environment `produccion` en GitHub. Una vez
      aprobado, mueve la rama `produccion` al commit de la etiqueta y le pide el
      despliegue a Dokploy por su API (`compose.deploy`).
    - `comprobar` consulta `https://acopio.josephqaz.dev/api/salud` cada 20 segundos,
      hasta 20 minutos, hasta que responda la versión de la etiqueta, y después carga
-     la portada. Si la versión no llega, el run falla.
+     la portada. Si la versión no llega, el run falla. Al repetir la entrega de una
+     versión que ya está en el servidor, esta comprobación pasa enseguida y no
+     prueba nada: en ese caso hay que mirar que termine el despliegue en el panel de
+     Dokploy.
 4. El resumen del run muestra la etiqueta, el commit, las imágenes y el resultado de
    la comprobación. Los JUnit de las pruebas quedan como artifact del run durante 90
    días.

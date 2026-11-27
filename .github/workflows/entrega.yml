@@ -37,18 +37,22 @@ jobs:
             exit 1
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
+      # Comprueba que la versión se construye desde cero; Dokploy construye las suyas en el VPS
       - name: Construir las imágenes de la versión
+        env:
+          etiqueta: ${{ steps.version.outputs.version }}
         run: |
-          etiqueta="${{ steps.version.outputs.version }}"
           docker build -f apps/api/Dockerfile -t "acopio-api:$etiqueta" --label "org.opencontainers.image.revision=$GITHUB_SHA" .
           docker build -f apps/web/Dockerfile -t "acopio-web:$etiqueta" --label "org.opencontainers.image.revision=$GITHUB_SHA" .
       - name: Resumen
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
         run: |
           {
             echo "### Versión verificada"
             echo "| Etiqueta | Commit | Imágenes |"
             echo "|---|---|---|"
-            echo "| $GITHUB_REF_NAME | \`$GITHUB_SHA\` | acopio-api:${{ steps.version.outputs.version }}, acopio-web:${{ steps.version.outputs.version }} |"
+            echo "| $GITHUB_REF_NAME | \`$GITHUB_SHA\` | acopio-api:$VERSION, acopio-web:$VERSION |"
           } >> "$GITHUB_STEP_SUMMARY"
 
   desplegar:
@@ -72,7 +76,7 @@ jobs:
           DOKPLOY_TOKEN: ${{ secrets.DOKPLOY_TOKEN }}
           DOKPLOY_COMPOSE_ID: ${{ secrets.DOKPLOY_COMPOSE_ID }}
         run: |
-          curl -fsS -X POST "$DOKPLOY_URL/api/compose.deploy" \
+          curl -fsS --max-time 30 -X POST "${DOKPLOY_URL%/}/api/compose.deploy" \
             -H "x-api-key: $DOKPLOY_TOKEN" -H 'Content-Type: application/json' \
             -d "{\"composeId\":\"$DOKPLOY_COMPOSE_ID\",\"title\":\"$GITHUB_REF_NAME\",\"description\":\"$GITHUB_SHA\"}"
 
@@ -87,7 +91,7 @@ jobs:
           ESPERADA: ${{ needs.identificar.outputs.version }}
         run: |
           for intento in $(seq 1 60); do
-            actual=$(curl -fsS https://acopio.josephqaz.dev/api/salud | jq -r .version || true)
+            actual=$(curl -fsS --max-time 10 https://acopio.josephqaz.dev/api/salud | jq -r .version || true)
             echo "intento $intento: servidor en ${actual:-sin respuesta}, se espera $ESPERADA"
             if [ "$actual" = "$ESPERADA" ]; then break; fi
             sleep 20
@@ -97,10 +101,12 @@ jobs:
             exit 1
           fi
       - name: La portada carga
-        run: curl -fsS -o /dev/null -w 'portada %{http_code} en %{time_total}s\n' https://acopio.josephqaz.dev/
+        run: curl -fsS --max-time 20 -o /dev/null -w 'portada %{http_code} en %{time_total}s\n' https://acopio.josephqaz.dev/
       - name: Resumen
+        env:
+          VERSION: ${{ needs.identificar.outputs.version }}
         run: |
           {
             echo "### Comprobación posterior"
-            echo "https://acopio.josephqaz.dev/api/salud responde la versión ${{ needs.identificar.outputs.version }} (etiqueta $GITHUB_REF_NAME, commit \`$GITHUB_SHA\`)."
+            echo "https://acopio.josephqaz.dev/api/salud responde la versión $VERSION (etiqueta $GITHUB_REF_NAME, commit \`$GITHUB_SHA\`)."
           } >> "$GITHUB_STEP_SUMMARY"
