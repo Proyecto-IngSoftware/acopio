@@ -1,0 +1,1237 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="567" failures="0" errors="0" time="117.81">
+  <testsuite name="recibir una donación preparada (RF-CMP-001C)" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:09" time="13.241" tests="27">
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) crea las entradas en unidad base, las vincula y pasa a PENDIENTE" name="recibir una donación preparada (RF-CMP-001C) crea las entradas en unidad base, las vincula y pasa a PENDIENTE" time="0.297">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) una línea confirmada en cero no crea movimiento" name="recibir una donación preparada (RF-CMP-001C) una línea confirmada en cero no crea movimiento" time="0.226">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) una perecedera sin vencimiento no deja recibir y no crea nada" name="recibir una donación preparada (RF-CMP-001C) una perecedera sin vencimiento no deja recibir y no crea nada" time="0.205">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) se recibe donde llegó aunque se preparara para otro acopio, destacado en la bitácora" name="recibir una donación preparada (RF-CMP-001C) se recibe donde llegó aunque se preparara para otro acopio, destacado en la bitácora" time="0.239">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) dos Operadores con el mismo folio a la vez: una recepción y un juego de entradas" name="recibir una donación preparada (RF-CMP-001C) dos Operadores con el mismo folio a la vez: una recepción y un juego de entradas" time="0.247">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) una donación ya recibida no se recibe otra vez" name="recibir una donación preparada (RF-CMP-001C) una donación ya recibida no se recibe otra vez" time="0.252">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) recibir otra vez un folio ya recibido, con líneas incompletas, da 409 y no 422" name="recibir una donación preparada (RF-CMP-001C) recibir otra vez un folio ya recibido, con líneas incompletas, da 409 y no 422" time="0.234">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) si falta una línea responde 422 sin tocar nada" name="recibir una donación preparada (RF-CMP-001C) si falta una línea responde 422 sin tocar nada" time="0.196">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) un Operador solo recibe en el acopio que tiene asignado" name="recibir una donación preparada (RF-CMP-001C) un Operador solo recibe en el acopio que tiene asignado" time="0.195">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) el Donador no recibe" name="recibir una donación preparada (RF-CMP-001C) el Donador no recibe" time="0.192">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) cualquier Operador ve lo declarado de un folio" name="recibir una donación preparada (RF-CMP-001C) cualquier Operador ve lo declarado de un folio" time="0.198">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) recibir y cancelar a la vez: uno gana, el otro 409, y si cancela no quedan entradas" name="recibir una donación preparada (RF-CMP-001C) recibir y cancelar a la vez: uno gana, el otro 409, y si cancela no quedan entradas" time="0.91">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) folios distintos con las mismas categorías, recibidos a la vez, no se bloquean entre sí" name="recibir una donación preparada (RF-CMP-001C) folios distintos con las mismas categorías, recibidos a la vez, no se bloquean entre sí" time="2.559">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un código PROPUESTO sin presentacionId queda VALIDADO" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un código PROPUESTO sin presentacionId queda VALIDADO" time="0.233">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un PROPUESTO corregido a la bolsa de 6 L queda VALIDADO con esa presentación y suma 12 L" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un PROPUESTO corregido a la bolsa de 6 L queda VALIDADO con esa presentación y suma 12 L" time="0.225">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un VALIDADO corregido a otra categoría cambia solo la línea y marca el código" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un VALIDADO corregido a otra categoría cambia solo la línea y marca el código" time="0.243">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción una línea sin código con presentacionId da 422 LINEA_SIN_CODIGO y sigue PREPARADO" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción una línea sin código con presentacionId da 422 LINEA_SIN_CODIGO y sigue PREPARADO" time="0.192">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción una corrección que pasa el tope de línea da 422 CANTIDAD_FUERA_DE_TOPE" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción una corrección que pasa el tope de línea da 422 CANTIDAD_FUERA_DE_TOPE" time="0.214">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción dos recepciones a la vez del mismo PROPUESTO con presentaciones distintas: una valida, la otra corrige la línea" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción dos recepciones a la vez del mismo PROPUESTO con presentaciones distintas: una valida, la otra corrige la línea" time="0.452">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un comprobante con dos líneas del mismo PROPUESTO valida una vez" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un comprobante con dos líneas del mismo PROPUESTO valida una vez" time="0.229">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción corregir a una presentación PROPUESTO la valida" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción corregir a una presentación PROPUESTO la valida" time="0.227">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un código VALIDADO sin presentación al que el Administrador asigna 0,5 kg después: la línea sin corrección entra con su contenido" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un código VALIDADO sin presentación al que el Administrador asigna 0,5 kg después: la línea sin corrección entra con su contenido" time="0.318">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un código PROPUESTO sin presentación al que el Administrador asigna 0,5 kg después: la línea sin corrección entra con su contenido" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un código PROPUESTO sin presentación al que el Administrador asigna 0,5 kg después: la línea sin corrección entra con su contenido" time="0.323">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción dos recepciones a la vez del mismo PROPUESTO, una corrige a P2 y la otra no: la segunda línea guarda su tamaño" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción dos recepciones a la vez del mismo PROPUESTO, una corrige a P2 y la otra no: la segunda línea guarda su tamaño" time="0.429">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un PROPUESTO en una línea recibida en cero sigue PROPUESTO, y su presentación también" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción un PROPUESTO en una línea recibida en cero sigue PROPUESTO, y su presentación también" time="0.203">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción dos recepciones con los mismos EAN en orden cruzado no se traban" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción dos recepciones con los mismos EAN en orden cruzado no se traban" time="0.463">
+    </testcase>
+    <testcase classname="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción correcciones cruzadas a presentaciones PROPUESTO a la vez no se traban y validan cada una una vez" name="recibir una donación preparada (RF-CMP-001C) códigos y presentaciones en la recepción correcciones cruzadas a presentaciones PROPUESTO a la vez no se traban y validan cada una una vez" time="0.485">
+    </testcase>
+  </testsuite>
+  <testsuite name="causas" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:22" time="2.265" tests="33">
+    <testcase classname="causas lo que hace cumplir la base acopio_app no borra ni trunca causas" name="causas lo que hace cumplir la base acopio_app no borra ni trunca causas" time="0.005">
+    </testcase>
+    <testcase classname="causas lo que hace cumplir la base una entidad verificada tiene fecha de verificación" name="causas lo que hace cumplir la base una entidad verificada tiene fecha de verificación" time="0.005">
+    </testcase>
+    <testcase classname="causas verificar una entidad (RF-RED-006, HU-15) sin confirmar el aviso no deja verificar" name="causas verificar una entidad (RF-RED-006, HU-15) sin confirmar el aviso no deja verificar" time="0.016">
+    </testcase>
+    <testcase classname="causas verificar una entidad (RF-RED-006, HU-15) una entidad sin sitio web no se puede verificar" name="causas verificar una entidad (RF-RED-006, HU-15) una entidad sin sitio web no se puede verificar" time="0.01">
+    </testcase>
+    <testcase classname="causas verificar una entidad (RF-RED-006, HU-15) verificar guarda quién y cuándo, y deja la confirmación en la bitácora" name="causas verificar una entidad (RF-RED-006, HU-15) verificar guarda quién y cuándo, y deja la confirmación en la bitácora" time="0.021">
+    </testcase>
+    <testcase classname="causas verificar una entidad (RF-RED-006, HU-15) solo el Administrador verifica" name="causas verificar una entidad (RF-RED-006, HU-15) solo el Administrador verifica" time="0.231">
+    </testcase>
+    <testcase classname="causas verificar una entidad (RF-RED-006, HU-15) quitar la verificación archiva sus causas activas" name="causas verificar una entidad (RF-RED-006, HU-15) quitar la verificación archiva sus causas activas" time="0.037">
+    </testcase>
+    <testcase classname="causas verificar una entidad (RF-RED-006, HU-15) la lista de entidades trae la verificación, el logotipo y las causas activas" name="causas verificar una entidad (RF-RED-006, HU-15) la lista de entidades trae la verificación, el logotipo y las causas activas" time="0.018">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) una entidad sin verificar no publica causas" name="causas gestionar causas (RF-RED-007, RF-RED-010) una entidad sin verificar no publica causas" time="0.014">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) publicar pide confirmar el aviso" name="causas gestionar causas (RF-RED-007, RF-RED-010) publicar pide confirmar el aviso" time="0.015">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) rechaza el enlace https://u:c@fundacion.org/donar" name="causas gestionar causas (RF-RED-007, RF-RED-010) rechaza el enlace https://u:c@fundacion.org/donar" time="0.017">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) rechaza el enlace http://fundacion.org" name="causas gestionar causas (RF-RED-007, RF-RED-010) rechaza el enlace http://fundacion.org" time="0.014">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) rechaza el enlace javascript:alert(1)" name="causas gestionar causas (RF-RED-007, RF-RED-010) rechaza el enlace javascript:alert(1)" time="0.015">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) la fecha de cierre va de hoy a seis meses" name="causas gestionar causas (RF-RED-007, RF-RED-010) la fecha de cierre va de hoy a seis meses" time="0.027">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) personas desaparecidas no admite causas" name="causas gestionar causas (RF-RED-007, RF-RED-010) personas desaparecidas no admite causas" time="0.018">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) renovar mueve la fecha de publicación y editar no" name="causas gestionar causas (RF-RED-007, RF-RED-010) renovar mueve la fecha de publicación y editar no" time="0.044">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) editar el título mandando el mismo enlace y la misma entidad no pide confirmar" name="causas gestionar causas (RF-RED-007, RF-RED-010) editar el título mandando el mismo enlace y la misma entidad no pide confirmar" time="0.031">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) cambiar el enlace al editar pide confirmar" name="causas gestionar causas (RF-RED-007, RF-RED-010) cambiar el enlace al editar pide confirmar" time="0.024">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) una causa atendida no se edita, y se reactiva solo con la entidad verificada" name="causas gestionar causas (RF-RED-007, RF-RED-010) una causa atendida no se edita, y se reactiva solo con la entidad verificada" time="0.065">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) por cerrar son las que cierran en los próximos 15 días" name="causas gestionar causas (RF-RED-007, RF-RED-010) por cerrar son las que cierran en los próximos 15 días" time="0.038">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) un enlace a otro dominio que el de la entidad queda marcado" name="causas gestionar causas (RF-RED-007, RF-RED-010) un enlace a otro dominio que el de la entidad queda marcado" time="0.022">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) cada operación deja su fila en la bitácora" name="causas gestionar causas (RF-RED-007, RF-RED-010) cada operación deja su fila en la bitácora" time="0.043">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) la imagen se sube y se cambia" name="causas gestionar causas (RF-RED-007, RF-RED-010) la imagen se sube y se cambia" time="0.077">
+    </testcase>
+    <testcase classname="causas gestionar causas (RF-RED-007, RF-RED-010) un Operador no gestiona causas" name="causas gestionar causas (RF-RED-007, RF-RED-010) un Operador no gestiona causas" time="0.203">
+    </testcase>
+    <testcase classname="causas lo público (RF-RED-008, HU-02) una causa vencida no sale aunque la tarea diaria no haya corrido" name="causas lo público (RF-RED-008, HU-02) una causa vencida no sale aunque la tarea diaria no haya corrido" time="0.03">
+    </testcase>
+    <testcase classname="causas lo público (RF-RED-008, HU-02) lo más reciente sale primero" name="causas lo público (RF-RED-008, HU-02) lo más reciente sale primero" time="0.033">
+    </testcase>
+    <testcase classname="causas lo público (RF-RED-008, HU-02) filtra por categoría" name="causas lo público (RF-RED-008, HU-02) filtra por categoría" time="0.025">
+    </testcase>
+    <testcase classname="causas lo público (RF-RED-008, HU-02) si la entidad perdió la verificación, la ficha no trae sello ni enlace" name="causas lo público (RF-RED-008, HU-02) si la entidad perdió la verificación, la ficha no trae sello ni enlace" time="0.039">
+    </testcase>
+    <testcase classname="causas lo público (RF-RED-008, HU-02) lo público nunca dice quién creó o archivó la causa" name="causas lo público (RF-RED-008, HU-02) lo público nunca dice quién creó o archivó la causa" time="0.038">
+    </testcase>
+    <testcase classname="causas lo público (RF-RED-008, HU-02) un id que no existe da 404" name="causas lo público (RF-RED-008, HU-02) un id que no existe da 404" time="0.003">
+    </testcase>
+    <testcase classname="causas lo público (RF-RED-008, HU-02) la imagen se lee sin sesión" name="causas lo público (RF-RED-008, HU-02) la imagen se lee sin sesión" time="0.042">
+    </testcase>
+    <testcase classname="causas demo (seed:demo) crea dos entidades verificadas con causas «(demo)», sin duplicar" name="causas demo (seed:demo) crea dos entidades verificadas con causas «(demo)», sin duplicar" time="0.035">
+    </testcase>
+    <testcase classname="causas logotipo se sube como Administrador y se lee sin sesión" name="causas logotipo se sube como Administrador y se lee sin sesión" time="0.049">
+    </testcase>
+  </testsuite>
+  <testsuite name="base de datos" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:25" time="1.16" tests="42">
+    <testcase classname="base de datos la bitácora es append-only para el rol de la API (RF-IDE-012, RNF-10) acopio_app puede insertar" name="base de datos la bitácora es append-only para el rol de la API (RF-IDE-012, RNF-10) acopio_app puede insertar" time="0.003">
+    </testcase>
+    <testcase classname="base de datos la bitácora es append-only para el rol de la API (RF-IDE-012, RNF-10) acopio_app no puede modificar" name="base de datos la bitácora es append-only para el rol de la API (RF-IDE-012, RNF-10) acopio_app no puede modificar" time="0.002">
+    </testcase>
+    <testcase classname="base de datos la bitácora es append-only para el rol de la API (RF-IDE-012, RNF-10) acopio_app no puede borrar ni truncar" name="base de datos la bitácora es append-only para el rol de la API (RF-IDE-012, RNF-10) acopio_app no puede borrar ni truncar" time="0.001">
+    </testcase>
+    <testcase classname="base de datos la bitácora es append-only para el rol de la API (RF-IDE-012, RNF-10) acopio_app no toca el historial de migraciones" name="base de datos la bitácora es append-only para el rol de la API (RF-IDE-012, RNF-10) acopio_app no toca el historial de migraciones" time="0.001">
+    </testcase>
+    <testcase classname="base de datos red (Bloque 1) acopio_app no puede borrar entidad" name="base de datos red (Bloque 1) acopio_app no puede borrar entidad" time="0.002">
+    </testcase>
+    <testcase classname="base de datos red (Bloque 1) acopio_app no puede borrar acopio" name="base de datos red (Bloque 1) acopio_app no puede borrar acopio" time="0.002">
+    </testcase>
+    <testcase classname="base de datos red (Bloque 1) acopio_app no puede borrar zona" name="base de datos red (Bloque 1) acopio_app no puede borrar zona" time="0.001">
+    </testcase>
+    <testcase classname="base de datos red (Bloque 1) acopio_app sí puede borrar no_recibir" name="base de datos red (Bloque 1) acopio_app sí puede borrar no_recibir" time="0.001">
+    </testcase>
+    <testcase classname="base de datos red (Bloque 1) las coordenadas del acopio quedan dentro de Colombia" name="base de datos red (Bloque 1) las coordenadas del acopio quedan dentro de Colombia" time="0.002">
+    </testcase>
+    <testcase classname="base de datos red (Bloque 1) la población de una zona no es negativa" name="base de datos red (Bloque 1) la población de una zona no es negativa" time="0.001">
+    </testcase>
+    <testcase classname="base de datos inventario (Bloque 2) una entrada crea la fila de saldo" name="base de datos inventario (Bloque 2) una entrada crea la fila de saldo" time="0.008">
+    </testcase>
+    <testcase classname="base de datos inventario (Bloque 2) una salida que no deja el saldo negativo descuenta" name="base de datos inventario (Bloque 2) una salida que no deja el saldo negativo descuenta" time="0.002">
+    </testcase>
+    <testcase classname="base de datos inventario (Bloque 2) el saldo nunca queda negativo, aunque se salte la API" name="base de datos inventario (Bloque 2) el saldo nunca queda negativo, aunque se salte la API" time="0.001">
+    </testcase>
+    <testcase classname="base de datos inventario (Bloque 2) acopio_app no puede modificar ni borrar movimientos" name="base de datos inventario (Bloque 2) acopio_app no puede modificar ni borrar movimientos" time="0.001">
+    </testcase>
+    <testcase classname="base de datos inventario (Bloque 2) acopio_app no puede escribir en saldo" name="base de datos inventario (Bloque 2) acopio_app no puede escribir en saldo" time="0.002">
+    </testcase>
+    <testcase classname="base de datos inventario (Bloque 2) un ajuste sin motivo suficiente no entra" name="base de datos inventario (Bloque 2) un ajuste sin motivo suficiente no entra" time="0.001">
+    </testcase>
+    <testcase classname="base de datos inventario (Bloque 2) un ajuste sin motivo tampoco entra (un CHECK con NULL pasaría)" name="base de datos inventario (Bloque 2) un ajuste sin motivo tampoco entra (un CHECK con NULL pasaría)" time="0.001">
+    </testcase>
+    <testcase classname="base de datos inventario (Bloque 2) una salida por «Otro» sin nota no entra" name="base de datos inventario (Bloque 2) una salida por «Otro» sin nota no entra" time="0.003">
+    </testcase>
+    <testcase classname="base de datos inventario (Bloque 2) el umbral exige mínimo &lt;= máximo" name="base de datos inventario (Bloque 2) el umbral exige mínimo &lt;= máximo" time="0.001">
+    </testcase>
+    <testcase classname="base de datos motor (Bloque 4) una RECEPCION en zona entra y no crea saldo" name="base de datos motor (Bloque 4) una RECEPCION en zona entra y no crea saldo" time="0.006">
+    </testcase>
+    <testcase classname="base de datos motor (Bloque 4) un movimiento no es de un acopio y de una zona a la vez" name="base de datos motor (Bloque 4) un movimiento no es de un acopio y de una zona a la vez" time="0.016">
+    </testcase>
+    <testcase classname="base de datos motor (Bloque 4) una RECEPCION sin remisión no entra" name="base de datos motor (Bloque 4) una RECEPCION sin remisión no entra" time="0.012">
+    </testcase>
+    <testcase classname="base de datos motor (Bloque 4) una ENTRADA en una zona no entra" name="base de datos motor (Bloque 4) una ENTRADA en una zona no entra" time="0.01">
+    </testcase>
+    <testcase classname="base de datos motor (Bloque 4) las líneas de una remisión en tránsito no se editan, salvo lo recibido" name="base de datos motor (Bloque 4) las líneas de una remisión en tránsito no se editan, salvo lo recibido" time="0.015">
+    </testcase>
+    <testcase classname="base de datos motor (Bloque 4) una sugerencia decidida no se borra; una propuesta sí" name="base de datos motor (Bloque 4) una sugerencia decidida no se borra; una propuesta sí" time="0.013">
+    </testcase>
+    <testcase classname="base de datos motor (Bloque 4) una sugerencia decidida no cambia; una propuesta sí" name="base de datos motor (Bloque 4) una sugerencia decidida no cambia; una propuesta sí" time="0.005">
+    </testcase>
+    <testcase classname="base de datos motor (Bloque 4) una línea no cambia de remisión ni de categoría" name="base de datos motor (Bloque 4) una línea no cambia de remisión ni de categoría" time="0.008">
+    </testcase>
+    <testcase classname="base de datos motor (Bloque 4) acopio_app no cambia ni borra reporte_necesidad" name="base de datos motor (Bloque 4) acopio_app no cambia ni borra reporte_necesidad" time="0.002">
+    </testcase>
+    <testcase classname="base de datos motor (Bloque 4) acopio_app no cambia ni borra necesidad_manual" name="base de datos motor (Bloque 4) acopio_app no cambia ni borra necesidad_manual" time="0.002">
+    </testcase>
+    <testcase classname="base de datos motor (Bloque 4) acopio_app no cambia ni borra remision_comprobante" name="base de datos motor (Bloque 4) acopio_app no cambia ni borra remision_comprobante" time="0.002">
+    </testcase>
+    <testcase classname="base de datos motor (Bloque 4) acopio_app no borra remision" name="base de datos motor (Bloque 4) acopio_app no borra remision" time="0.001">
+    </testcase>
+    <testcase classname="base de datos motor (Bloque 4) acopio_app no borra configuracion_motor" name="base de datos motor (Bloque 4) acopio_app no borra configuracion_motor" time="0.001">
+    </testcase>
+    <testcase classname="base de datos custodia (Bloque 3) acopio_app no cambia ni borra vínculos de donaciones" name="base de datos custodia (Bloque 3) acopio_app no cambia ni borra vínculos de donaciones" time="0.002">
+    </testcase>
+    <testcase classname="base de datos custodia (Bloque 3) acopio_app no borra comprobantes" name="base de datos custodia (Bloque 3) acopio_app no borra comprobantes" time="0.002">
+    </testcase>
+    <testcase classname="base de datos custodia (Bloque 3) recibido_por, verificado_por y vinculado_por exigen un usuario que exista" name="base de datos custodia (Bloque 3) recibido_por, verificado_por y vinculado_por exigen un usuario que exista" time="0.004">
+    </testcase>
+    <testcase classname="base de datos custodia (Bloque 3) un folio fuera de formato no entra" name="base de datos custodia (Bloque 3) un folio fuera de formato no entra" time="0.001">
+    </testcase>
+    <testcase classname="base de datos restricciones CHECK la canasta exige fuente" name="base de datos restricciones CHECK la canasta exige fuente" time="0.003">
+    </testcase>
+    <testcase classname="base de datos restricciones CHECK un usuario interno exige username" name="base de datos restricciones CHECK un usuario interno exige username" time="0.002">
+    </testcase>
+    <testcase classname="base de datos restricciones CHECK un Donador exige correo real" name="base de datos restricciones CHECK un Donador exige correo real" time="0.001">
+    </testcase>
+    <testcase classname="base de datos restricciones CHECK restablecer acceso exige motivo de 20 caracteres" name="base de datos restricciones CHECK restablecer acceso exige motivo de 20 caracteres" time="0.001">
+    </testcase>
+    <testcase classname="base de datos el seed de demostración es idempotente: 2 entidades y 4 acopios con «(prueba)»" name="base de datos el seed de demostración es idempotente: 2 entidades y 4 acopios con «(prueba)»" time="0.067">
+    </testcase>
+    <testcase classname="base de datos el seed es idempotente: 39 categorías y 10 filas de canasta (T12)" name="base de datos el seed es idempotente: 39 categorías y 10 filas de canasta (T12)" time="0.169">
+    </testcase>
+  </testsuite>
+  <testsuite name="códigos de barras" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:26" time="1.61" tests="19">
+    <testcase classname="códigos de barras un EAN desconocido: 404" name="códigos de barras un EAN desconocido: 404" time="0.006">
+    </testcase>
+    <testcase classname="códigos de barras el Operador asocia: queda VALIDADO con el contenido de la presentación" name="códigos de barras el Operador asocia: queda VALIDADO con el contenido de la presentación" time="0.025">
+    </testcase>
+    <testcase classname="códigos de barras asociar con una presentación propuesta la deja validada" name="códigos de barras asociar con una presentación propuesta la deja validada" time="0.018">
+    </testcase>
+    <testcase classname="códigos de barras el mismo EAN dos veces: 409 EAN_YA_ASOCIADO, sin pisar la asociación" name="códigos de barras el mismo EAN dos veces: 409 EAN_YA_ASOCIADO, sin pisar la asociación" time="0.013">
+    </testcase>
+    <testcase classname="códigos de barras presentación inexistente: 404; EAN malo o sin presentación: 400" name="códigos de barras presentación inexistente: 404; EAN malo o sin presentación: 400" time="0.012">
+    </testcase>
+    <testcase classname="códigos de barras el GET trae también los PROPUESTO" name="códigos de barras el GET trae también los PROPUESTO" time="0.008">
+    </testcase>
+    <testcase classname="códigos de barras q busca por EAN (prefijo), categoría y presentación, sin tildes; PROPUESTO primero" name="códigos de barras q busca por EAN (prefijo), categoría y presentación, sin tildes; PROPUESTO primero" time="0.05">
+    </testcase>
+    <testcase classname="códigos de barras validar un PROPUESTO lo deja VALIDADO (con la presentación corregida); sobre un VALIDADO: 409" name="códigos de barras validar un PROPUESTO lo deja VALIDADO (con la presentación corregida); sobre un VALIDADO: 409" time="0.026">
+    </testcase>
+    <testcase classname="códigos de barras dos validaciones a la vez del mismo PROPUESTO: una gana, la otra 409, sin pisarla" name="códigos de barras dos validaciones a la vez del mismo PROPUESTO: una gana, la otra 409, sin pisarla" time="0.019">
+    </testcase>
+    <testcase classname="códigos de barras validar un EAN desconocido: 404" name="códigos de barras validar un EAN desconocido: 404" time="0.004">
+    </testcase>
+    <testcase classname="códigos de barras el PATCH mueve un VALIDADO a una presentación de otra categoría: la categoría la sigue" name="códigos de barras el PATCH mueve un VALIDADO a una presentación de otra categoría: la categoría la sigue" time="0.016">
+    </testcase>
+    <testcase classname="códigos de barras un PATCH que no cambia nada no escribe bitácora" name="códigos de barras un PATCH que no cambia nada no escribe bitácora" time="0.01">
+    </testcase>
+    <testcase classname="códigos de barras el PATCH cambia de presentación en la misma categoría y quita porRevisar" name="códigos de barras el PATCH cambia de presentación en la misma categoría y quita porRevisar" time="0.021">
+    </testcase>
+    <testcase classname="códigos de barras el PATCH con estado VALIDADO valida un PROPUESTO" name="códigos de barras el PATCH con estado VALIDADO valida un PROPUESTO" time="0.013">
+    </testcase>
+    <testcase classname="códigos de barras aprobar un código sin presentación: 422 CODIGO_SIN_PRESENTACION, salvo que el PATCH le asigne una" name="códigos de barras aprobar un código sin presentación: 422 CODIGO_SIN_PRESENTACION, salvo que el PATCH le asigne una" time="0.027">
+    </testcase>
+    <testcase classname="códigos de barras un contenido de pañal en categoría por unidades sale entero" name="códigos de barras un contenido de pañal en categoría por unidades sale entero" time="0.011">
+    </testcase>
+    <testcase classname="códigos de barras el Operador no lista ni edita" name="códigos de barras el Operador no lista ni edita" time="0.006">
+    </testcase>
+    <testcase classname="códigos de barras el Auditor recibe 403 en todas las rutas" name="códigos de barras el Auditor recibe 403 en todas las rutas" time="0.013">
+    </testcase>
+    <testcase classname="códigos de barras para otros módulos: proponer, marcar para revisar y validar en la transacción de quien llama" name="códigos de barras para otros módulos: proponer, marcar para revisar y validar en la transacción de quien llama" time="0.029">
+    </testcase>
+  </testsuite>
+  <testsuite name="movimientos" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:27" time="2.029" tests="30">
+    <testcase classname="movimientos entradas registra la entrada, devuelve el saldo y deja la bitácora" name="movimientos entradas registra la entrada, devuelve el saldo y deja la bitácora" time="0.033">
+    </testcase>
+    <testcase classname="movimientos entradas una línea de más de 10.000: 400" name="movimientos entradas una línea de más de 10.000: 400" time="0.004">
+    </testcase>
+    <testcase classname="movimientos entradas un perecedero sin fecha de vencimiento: 422" name="movimientos entradas un perecedero sin fecha de vencimiento: 422" time="0.006">
+    </testcase>
+    <testcase classname="movimientos entradas un perecedero con fecha entra y guarda la fecha" name="movimientos entradas un perecedero con fecha entra y guarda la fecha" time="0.013">
+    </testcase>
+    <testcase classname="movimientos entradas una categoría por unidad no acepta decimales" name="movimientos entradas una categoría por unidad no acepta decimales" time="0.006">
+    </testcase>
+    <testcase classname="movimientos entradas más de 3 decimales, cero o negativo: 400" name="movimientos entradas más de 3 decimales, cero o negativo: 400" time="0.008">
+    </testcase>
+    <testcase classname="movimientos entradas el mismo id dos veces devuelve el original sin duplicar" name="movimientos entradas el mismo id dos veces devuelve el original sin duplicar" time="0.022">
+    </testcase>
+    <testcase classname="movimientos entradas una entrada sin conexión se conserva para su cuenta y deja una sola bitácora" name="movimientos entradas una entrada sin conexión se conserva para su cuenta y deja una sola bitácora" time="0.239">
+    </testcase>
+    <testcase classname="movimientos entradas reintento con venceEn en una categoría no perecedera: 200, no 409" name="movimientos entradas reintento con venceEn en una categoría no perecedera: 200, no 409" time="0.02">
+    </testcase>
+    <testcase classname="movimientos entradas reintento después de cerrar el acopio: 200 con el original" name="movimientos entradas reintento después de cerrar el acopio: 200 con el original" time="0.022">
+    </testcase>
+    <testcase classname="movimientos entradas una cantidad diminuta (1e-10) no entra ni sale: 400" name="movimientos entradas una cantidad diminuta (1e-10) no entra ni sale: 400" time="0.006">
+    </testcase>
+    <testcase classname="movimientos entradas una cantidad con ruido de punto flotante se guarda redondeada y su reintento coincide" name="movimientos entradas una cantidad con ruido de punto flotante se guarda redondeada y su reintento coincide" time="0.021">
+    </testcase>
+    <testcase classname="movimientos entradas el mismo id con otro contenido: 409" name="movimientos entradas el mismo id con otro contenido: 409" time="0.02">
+    </testcase>
+    <testcase classname="movimientos entradas ocurridoEn guarda la hora real y marca el origen sin conexión" name="movimientos entradas ocurridoEn guarda la hora real y marca el origen sin conexión" time="0.013">
+    </testcase>
+    <testcase classname="movimientos entradas ocurridoEn de hace 8 días o del futuro: 422" name="movimientos entradas ocurridoEn de hace 8 días o del futuro: 422" time="0.009">
+    </testcase>
+    <testcase classname="movimientos entradas una categoría que no se recibe entra igual y lo avisa" name="movimientos entradas una categoría que no se recibe entra igual y lo avisa" time="0.032">
+    </testcase>
+    <testcase classname="movimientos entradas acopio ajeno: 403; Auditor y Administrador: 403" name="movimientos entradas acopio ajeno: 403; Auditor y Administrador: 403" time="0.009">
+    </testcase>
+    <testcase classname="movimientos entradas categoría archivada: 422" name="movimientos entradas categoría archivada: 422" time="0.007">
+    </testcase>
+    <testcase classname="movimientos salidas la primera operación es una salida: 409 con saldo 0" name="movimientos salidas la primera operación es una salida: 409 con saldo 0" time="0.008">
+    </testcase>
+    <testcase classname="movimientos salidas descuenta y deja la bitácora" name="movimientos salidas descuenta y deja la bitácora" time="0.027">
+    </testcase>
+    <testcase classname="movimientos salidas más que el saldo: 409 con el saldo disponible, y no cambia nada" name="movimientos salidas más que el saldo: 409 con el saldo disponible, y no cambia nada" time="0.009">
+    </testcase>
+    <testcase classname="movimientos salidas Traslado y Otro piden nota" name="movimientos salidas Traslado y Otro piden nota" time="0.019">
+    </testcase>
+    <testcase classname="movimientos salidas motivo desconocido: 400" name="movimientos salidas motivo desconocido: 400" time="0.004">
+    </testcase>
+    <testcase classname="movimientos ajustes sin saldo y contando 0: 422 SIN_DIFERENCIA, sin movimiento" name="movimientos ajustes sin saldo y contando 0: 422 SIN_DIFERENCIA, sin movimiento" time="0.009">
+    </testcase>
+    <testcase classname="movimientos ajustes contar de más registra un ajuste al alza, destacado en la bitácora" name="movimientos ajustes contar de más registra un ajuste al alza, destacado en la bitácora" time="0.024">
+    </testcase>
+    <testcase classname="movimientos ajustes contar de menos registra un ajuste a la baja" name="movimientos ajustes contar de menos registra un ajuste a la baja" time="0.011">
+    </testcase>
+    <testcase classname="movimientos ajustes motivo de menos de 10 caracteres: 400" name="movimientos ajustes motivo de menos de 10 caracteres: 400" time="0.004">
+    </testcase>
+    <testcase classname="movimientos ajustes contada negativa o con decimales en una por unidad: 400 y 422" name="movimientos ajustes contada negativa o con decimales en una por unidad: 400 y 422" time="0.008">
+    </testcase>
+    <testcase classname="movimientos acopio cerrado no admite entradas, salidas ni ajustes: 409" name="movimientos acopio cerrado no admite entradas, salidas ni ajustes: 409" time="0.019">
+    </testcase>
+    <testcase classname="movimientos acopio cerrado un acopio pausado sí registra" name="movimientos acopio cerrado un acopio pausado sí registra" time="0.016">
+    </testcase>
+  </testsuite>
+  <testsuite name="despacho y cancelación de remisiones" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:29" time="2.416" tests="13">
+    <testcase classname="despacho y cancelación de remisiones despachar crea una SALIDA por línea, baja el saldo y deja la remisión en tránsito" name="despacho y cancelación de remisiones despachar crea una SALIDA por línea, baja el saldo y deja la remisión en tránsito" time="0.107">
+    </testcase>
+    <testcase classname="despacho y cancelación de remisiones sin responsable no se despacha" name="despacho y cancelación de remisiones sin responsable no se despacha" time="0.041">
+    </testcase>
+    <testcase classname="despacho y cancelación de remisiones si el saldo bajó después del borrador, el despacho no escribe nada" name="despacho y cancelación de remisiones si el saldo bajó después del borrador, el despacho no escribe nada" time="0.076">
+    </testcase>
+    <testcase classname="despacho y cancelación de remisiones vincula folios conciliados del mismo acopio y rechaza los demás" name="despacho y cancelación de remisiones vincula folios conciliados del mismo acopio y rechaza los demás" time="0.078">
+    </testcase>
+    <testcase classname="despacho y cancelación de remisiones cancelar un borrador libera el compromiso sin movimientos" name="despacho y cancelación de remisiones cancelar un borrador libera el compromiso sin movimientos" time="0.076">
+    </testcase>
+    <testcase classname="despacho y cancelación de remisiones cancelar en tránsito devuelve el saldo, libera «en camino» y deja las sugerencias aprobadas" name="despacho y cancelación de remisiones cancelar en tránsito devuelve el saldo, libera «en camino» y deja las sugerencias aprobadas" time="0.457">
+    </testcase>
+    <testcase classname="despacho y cancelación de remisiones una remisión recibida no se cancela" name="despacho y cancelación de remisiones una remisión recibida no se cancela" time="0.034">
+    </testcase>
+    <testcase classname="despacho y cancelación de remisiones el motivo de cancelación tiene al menos 10 caracteres" name="despacho y cancelación de remisiones el motivo de cancelación tiene al menos 10 caracteres" time="0.028">
+    </testcase>
+    <testcase classname="despacho y cancelación de remisiones si las líneas cambian mientras se despacha, responde 409 y no escribe salidas" name="despacho y cancelación de remisiones si las líneas cambian mientras se despacha, responde 409 y no escribe salidas" time="0.068">
+    </testcase>
+    <testcase classname="despacho y cancelación de remisiones el mismo folio escrito dos veces con otra capitalización se vincula una vez" name="despacho y cancelación de remisiones el mismo folio escrito dos veces con otra capitalización se vincula una vez" time="0.058">
+    </testcase>
+    <testcase classname="despacho y cancelación de remisiones lista los folios conciliados del acopio de origen para vincular" name="despacho y cancelación de remisiones lista los folios conciliados del acopio de origen para vincular" time="0.039">
+    </testcase>
+    <testcase classname="despacho y cancelación de remisiones los folios de un acopio ajeno no se listan y el Operador de otro acopio recibe 403" name="despacho y cancelación de remisiones los folios de un acopio ajeno no se listan y el Operador de otro acopio recibe 403" time="0.251">
+    </testcase>
+    <testcase classname="despacho y cancelación de remisiones lista como mucho los 50 folios conciliados más recientes" name="despacho y cancelación de remisiones lista como mucho los 50 folios conciliados más recientes" time="0.05">
+    </testcase>
+  </testsuite>
+  <testsuite name="red" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:32" time="3.124" tests="22">
+    <testcase classname="red entidades (RF-RED-005) el Administrador crea y edita, y queda en la bitácora" name="red entidades (RF-RED-005) el Administrador crea y edita, y queda en la bitácora" time="0.02">
+    </testcase>
+    <testcase classname="red entidades (RF-RED-005) el nombre es único sin importar mayúsculas: 409" name="red entidades (RF-RED-005) el nombre es único sin importar mayúsculas: 409" time="0.02">
+    </testcase>
+    <testcase classname="red entidades (RF-RED-005) un Operador no gestiona entidades: 403" name="red entidades (RF-RED-005) un Operador no gestiona entidades: 403" time="0.228">
+    </testcase>
+    <testcase classname="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) el Administrador crea un acopio y el público lo ve" name="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) el Administrador crea un acopio y el público lo ve" time="0.022">
+    </testcase>
+    <testcase classname="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) un horario que cierra a las 24:00 da 422 con el detalle" name="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) un horario que cierra a las 24:00 da 422 con el detalle" time="0.004">
+    </testcase>
+    <testcase classname="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) coordenadas fuera de Colombia: 400" name="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) coordenadas fuera de Colombia: 400" time="0.003">
+    </testcase>
+    <testcase classname="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) un acopio cerrado no aparece en lo público y su ficha da 404" name="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) un acopio cerrado no aparece en lo público y su ficha da 404" time="0.029">
+    </testcase>
+    <testcase classname="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) ?abiertoAhora=true deja fuera un acopio sin horario" name="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) ?abiertoAhora=true deja fuera un acopio sin horario" time="0.015">
+    </testcase>
+    <testcase classname="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) ?cerca= ordena por distancia y ?cerca= mal escrito da 400" name="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) ?cerca= ordena por distancia y ?cerca= mal escrito da 400" time="0.007">
+    </testcase>
+    <testcase classname="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) operación por el Operador asignado (B-03) pausa su acopio; queda PAUSADO en lo público y en la bitácora" name="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) operación por el Operador asignado (B-03) pausa su acopio; queda PAUSADO en lo público y en la bitácora" time="0.03">
+    </testcase>
+    <testcase classname="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) operación por el Operador asignado (B-03) con un acopio ajeno recibe 403" name="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) operación por el Operador asignado (B-03) con un acopio ajeno recibe 403" time="0.004">
+    </testcase>
+    <testcase classname="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) operación por el Operador asignado (B-03) no puede usar la ruta del Administrador ni cerrar por la de operación" name="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) operación por el Operador asignado (B-03) no puede usar la ruta del Administrador ni cerrar por la de operación" time="0.008">
+    </testcase>
+    <testcase classname="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) operación por el Operador asignado (B-03) en la gestión ve solo los suyos; el Administrador ve todos, cerrados incluidos" name="red acopios (RF-RED-001, RF-RED-002, RF-RED-003) operación por el Operador asignado (B-03) en la gestión ve solo los suyos; el Administrador ve todos, cerrados incluidos" time="0.013">
+    </testcase>
+    <testcase classname="red zonas (RF-MOT-001) el Administrador crea una zona y la lista por emergencia" name="red zonas (RF-MOT-001) el Administrador crea una zona y la lista por emergencia" time="0.013">
+    </testcase>
+    <testcase classname="red zonas (RF-MOT-001) con la emergencia cerrada, la zona queda en solo lectura: 409" name="red zonas (RF-MOT-001) con la emergencia cerrada, la zona queda en solo lectura: 409" time="0.033">
+    </testcase>
+    <testcase classname="red zonas (RF-MOT-001) el Operador lista zonas pero no las crea ni las edita" name="red zonas (RF-MOT-001) el Operador lista zonas pero no las crea ni las edita" time="0.203">
+    </testcase>
+    <testcase classname="red ubicaciones el Operador ve por nombre sus ubicaciones; el Administrador no tiene lista" name="red ubicaciones el Operador ve por nombre sus ubicaciones; el Administrador no tiene lista" time="0.208">
+    </testcase>
+    <testcase classname="red ubicaciones la búsqueda encuentra acopios y zonas sin importar mayúsculas" name="red ubicaciones la búsqueda encuentra acopios y zonas sin importar mayúsculas" time="0.011">
+    </testcase>
+    <testcase classname="red ubicaciones sin q devuelve todas (para la matriz de acceso) y el Operador no puede: 403" name="red ubicaciones sin q devuelve todas (para la matriz de acceso) y el Operador no puede: 403" time="0.228">
+    </testcase>
+    <testcase classname="red geocodificación (RF-RED-002) devuelve resultados sin sesión" name="red geocodificación (RF-RED-002) devuelve resultados sin sesión" time="0.003">
+    </testcase>
+    <testcase classname="red geocodificación (RF-RED-002) sin resultados responde lista vacía" name="red geocodificación (RF-RED-002) sin resultados responde lista vacía" time="1.001">
+    </testcase>
+    <testcase classname="red geocodificación (RF-RED-002) solo espacios o más de 200 caracteres: 400" name="red geocodificación (RF-RED-002) solo espacios o más de 200 caracteres: 400" time="0.004">
+    </testcase>
+  </testsuite>
+  <testsuite name="aprobar y descartar sugerencias" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:35" time="9.135" tests="13">
+    <testcase classname="aprobar y descartar sugerencias aprobar crea la remisión en borrador, con la cantidad editada, y la bitácora" name="aprobar y descartar sugerencias aprobar crea la remisión en borrador, con la cantidad editada, y la bitácora" time="0.359">
+    </testcase>
+    <testcase classname="aprobar y descartar sugerencias dos aprobaciones del mismo acopio a la misma zona van en una remisión" name="aprobar y descartar sugerencias dos aprobaciones del mismo acopio a la misma zona van en una remisión" time="0.644">
+    </testcase>
+    <testcase classname="aprobar y descartar sugerencias si el saldo bajó desde el cálculo, responde SUGERENCIA_DESACTUALIZADA" name="aprobar y descartar sugerencias si el saldo bajó desde el cálculo, responde SUGERENCIA_DESACTUALIZADA" time="0.317">
+    </testcase>
+    <testcase classname="aprobar y descartar sugerencias dos aprobaciones simultáneas que juntas superan el movible: una pasa y la otra no" name="aprobar y descartar sugerencias dos aprobaciones simultáneas que juntas superan el movible: una pasa y la otra no" time="0.355">
+    </testcase>
+    <testcase classname="aprobar y descartar sugerencias no se aprueba hacia una zona cuya emergencia se cerró después del recálculo" name="aprobar y descartar sugerencias no se aprueba hacia una zona cuya emergencia se cerró después del recálculo" time="0.31">
+    </testcase>
+    <testcase classname="aprobar y descartar sugerencias aprobar y descartar la misma sugerencia a la vez: solo una decisión queda" name="aprobar y descartar sugerencias aprobar y descartar la misma sugerencia a la vez: solo una decisión queda" time="1.559">
+    </testcase>
+    <testcase classname="aprobar y descartar sugerencias un descarte durante un recálculo no deja el par propuesto otra vez" name="aprobar y descartar sugerencias un descarte durante un recálculo no deja el par propuesto otra vez" time="2.855">
+    </testcase>
+    <testcase classname="aprobar y descartar sugerencias una sugerencia decidida no se aprueba otra vez; una inexistente da 404" name="aprobar y descartar sugerencias una sugerencia decidida no se aprueba otra vez; una inexistente da 404" time="0.316">
+    </testcase>
+    <testcase classname="aprobar y descartar sugerencias descartar exige motivo, deja bitácora y no se repite" name="aprobar y descartar sugerencias descartar exige motivo, deja bitácora y no se repite" time="0.303">
+    </testcase>
+    <testcase classname="aprobar y descartar sugerencias el informe agrega los motivos de descarte" name="aprobar y descartar sugerencias el informe agrega los motivos de descarte" time="0.023">
+    </testcase>
+    <testcase classname="aprobar y descartar sugerencias no aprueba desde un acopio cerrado después del recálculo" name="aprobar y descartar sugerencias no aprueba desde un acopio cerrado después del recálculo" time="0.322">
+    </testcase>
+    <testcase classname="aprobar y descartar sugerencias en una categoría por unidades, el máximo del 409 es entero" name="aprobar y descartar sugerencias en una categoría por unidades, el máximo del 409 es entero" time="0.306">
+    </testcase>
+    <testcase classname="aprobar y descartar sugerencias sumar a una línea existente deja el antes y el después en la bitácora" name="aprobar y descartar sugerencias sumar a una línea existente deja el antes y el después en la bitácora" time="0.621">
+    </testcase>
+  </testsuite>
+  <testsuite name="registro del Donador (RF-IDE-013, P-040)" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:44" time="4.131" tests="25">
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) el registro crea un Donador invitado sin credencial y envía el enlace" name="registro del Donador (RF-IDE-013, P-040) el registro crea un Donador invitado sin credencial y envía el enlace" time="0.028">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) el registro no acepta contraseña" name="registro del Donador (RF-IDE-013, P-040) el registro no acepta contraseña" time="0.006">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) un segundo registro de un pendiente envía un enlace nuevo y no cambia el nombre" name="registro del Donador (RF-IDE-013, P-040) un segundo registro de un pendiente envía un enlace nuevo y no cambia el nombre" time="0.025">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) un correo con cuenta activa recibe la misma respuesta y un aviso en vez del enlace" name="registro del Donador (RF-IDE-013, P-040) un correo con cuenta activa recibe la misma respuesta y un aviso en vez del enlace" time="0.009">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) dos registros simultáneos del mismo correo responden 202 los dos" name="registro del Donador (RF-IDE-013, P-040) dos registros simultáneos del mismo correo responden 202 los dos" time="0.023">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) validación previa del enlace un enlace bueno devuelve nombre y correo" name="registro del Donador (RF-IDE-013, P-040) validación previa del enlace un enlace bueno devuelve nombre y correo" time="0.017">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) validación previa del enlace uno inventado da 404 ENLACE_INVALIDO" name="registro del Donador (RF-IDE-013, P-040) validación previa del enlace uno inventado da 404 ENLACE_INVALIDO" time="0.003">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) validación previa del enlace uno vencido da 404" name="registro del Donador (RF-IDE-013, P-040) validación previa del enlace uno vencido da 404" time="0.015">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) validación previa del enlace uno demasiado largo da 404" name="registro del Donador (RF-IDE-013, P-040) validación previa del enlace uno demasiado largo da 404" time="0.001">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) validación previa del enlace uno de un usuario que no es Donador da 404" name="registro del Donador (RF-IDE-013, P-040) validación previa del enlace uno de un usuario que no es Donador da 404" time="0.019">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) validación previa del enlace uno ya usado da 404" name="registro del Donador (RF-IDE-013, P-040) validación previa del enlace uno ya usado da 404" time="0.2">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) confirmar con contraseña débil da 422 y el enlace sigue sirviendo" name="registro del Donador (RF-IDE-013, P-040) confirmar con contraseña débil da 422 y el enlace sigue sirviendo" time="0.017">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) confirmar una contraseña corta da 400" name="registro del Donador (RF-IDE-013, P-040) confirmar una contraseña corta da 400" time="0.012">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) confirmar con una contraseña buena activa la cuenta e inicia la sesión" name="registro del Donador (RF-IDE-013, P-040) confirmar con una contraseña buena activa la cuenta e inicia la sesión" time="0.287">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) confirmar un enlace inventado no sirve" name="registro del Donador (RF-IDE-013, P-040) confirmar un enlace inventado no sirve" time="0.003">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) confirmar un enlace vencido da 404 ENLACE_INVALIDO" name="registro del Donador (RF-IDE-013, P-040) confirmar un enlace vencido da 404 ENLACE_INVALIDO" time="0.02">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) confirmar un enlace ya usado no sirve una segunda vez" name="registro del Donador (RF-IDE-013, P-040) confirmar un enlace ya usado no sirve una segunda vez" time="0.192">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) confirmar un enlace anterior deja de servir cuando otro lo confirma" name="registro del Donador (RF-IDE-013, P-040) confirmar un enlace anterior deja de servir cuando otro lo confirma" time="0.201">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) confirmar dos confirmaciones simultáneas: una gana, la otra da 404 y queda una sola identidad" name="registro del Donador (RF-IDE-013, P-040) confirmar dos confirmaciones simultáneas: una gana, la otra da 404 y queda una sola identidad" time="0.298">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) confirmar si la transacción falla no queda identidad huérfana y el mismo enlace sirve después" name="registro del Donador (RF-IDE-013, P-040) confirmar si la transacción falla no queda identidad huérfana y el mismo enlace sirve después" time="0.287">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) ingreso un pendiente da el mismo 401 que un correo inexistente" name="registro del Donador (RF-IDE-013, P-040) ingreso un pendiente da el mismo 401 que un correo inexistente" time="0.187">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) ingreso el Donador entra con su correo, sin importar mayúsculas ni espacios" name="registro del Donador (RF-IDE-013, P-040) ingreso el Donador entra con su correo, sin importar mayúsculas ni espacios" time="0.279">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) ingreso una cuenta del equipo también entra con su correo" name="registro del Donador (RF-IDE-013, P-040) ingreso una cuenta del equipo también entra con su correo" time="0.092">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) ingreso POST /auth/donador/sesion ya no existe" name="registro del Donador (RF-IDE-013, P-040) ingreso POST /auth/donador/sesion ya no existe" time="0.004">
+    </testcase>
+    <testcase classname="registro del Donador (RF-IDE-013, P-040) P-040: quien registra el correo de otra persona no fija su contraseña" name="registro del Donador (RF-IDE-013, P-040) P-040: quien registra el correo de otra persona no fija su contraseña" time="0.458">
+    </testcase>
+  </testsuite>
+  <testsuite name="bandeja y conciliación (RF-CMP-003 a 005)" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:48" time="2.706" tests="15">
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) la bandeja trae las pendientes de su alcance, de la más vieja a la más nueva, con la diferencia marcada" name="bandeja y conciliación (RF-CMP-003 a 005) la bandeja trae las pendientes de su alcance, de la más vieja a la más nueva, con la diferencia marcada" time="0.126">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) el detalle compara por categoría lo confirmado con las entradas vinculadas" name="bandeja y conciliación (RF-CMP-003 a 005) el detalle compara por categoría lo confirmado con las entradas vinculadas" time="0.053">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) el contador por acopio no cambia al filtrar por un acopio" name="bandeja y conciliación (RF-CMP-003 a 005) el contador por acopio no cambia al filtrar por un acopio" time="0.05">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) cada entrada dice su categoría, su unidad y quién la registró" name="bandeja y conciliación (RF-CMP-003 a 005) cada entrada dice su categoría, su unidad y quién la registró" time="0.083">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) conciliar cierra la donación" name="bandeja y conciliación (RF-CMP-003 a 005) conciliar cierra la donación" time="0.045">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) sin entradas vinculadas no se concilia" name="bandeja y conciliación (RF-CMP-003 a 005) sin entradas vinculadas no se concilia" time="0.034">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) un folio entregado sin red se vincula a entradas ya registradas y pasa a PENDIENTE" name="bandeja y conciliación (RF-CMP-003 a 005) un folio entregado sin red se vincula a entradas ya registradas y pasa a PENDIENTE" time="0.061">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) no vincula una entrada que ya es de otra donación, ni una salida (foco de revisión 5)" name="bandeja y conciliación (RF-CMP-003 a 005) no vincula una entrada que ya es de otra donación, ni una salida (foco de revisión 5)" time="0.069">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) un lote con una entrada libre y una ya vinculada se rechaza entero" name="bandeja y conciliación (RF-CMP-003 a 005) un lote con una entrada libre y una ya vinculada se rechaza entero" time="0.059">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) el Auditor de B no vincula un folio de A a una entrada de B; el Administrador sí y el folio pasa a B" name="bandeja y conciliación (RF-CMP-003 a 005) el Auditor de B no vincula un folio de A a una entrada de B; el Administrador sí y el folio pasa a B" time="0.049">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) el Administrador no mezcla acopios: con vínculos en A, una entrada de B da 422 y el folio sigue en A" name="bandeja y conciliación (RF-CMP-003 a 005) el Administrador no mezcla acopios: con vínculos en A, una entrada de B da 422 y el folio sigue en A" time="0.052">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) una entrada de una categoría que no está en las líneas aparece en el resumen sin cuadrar" name="bandeja y conciliación (RF-CMP-003 a 005) una entrada de una categoría que no está en las líneas aparece en el resumen sin cuadrar" time="0.066">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) rechazar pide motivo, avisa al Donador por correo, no borra mercancía y se puede revertir" name="bandeja y conciliación (RF-CMP-003 a 005) rechazar pide motivo, avisa al Donador por correo, no borra mercancía y se puede revertir" time="0.065">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) el Auditor de otro acopio no concilia" name="bandeja y conciliación (RF-CMP-003 a 005) el Auditor de otro acopio no concilia" time="0.036">
+    </testcase>
+    <testcase classname="bandeja y conciliación (RF-CMP-003 a 005) un Operador no concilia" name="bandeja y conciliación (RF-CMP-003 a 005) un Operador no concilia" time="0.031">
+    </testcase>
+  </testsuite>
+  <testsuite name="preparar una donación (RF-CMP-001B)" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:51" time="3.727" tests="19">
+    <testcase classname="preparar una donación (RF-CMP-001B) crea una donación PREPARADO con folio y copia el contenido del código" name="preparar una donación (RF-CMP-001B) crea una donación PREPARADO con folio y copia el contenido del código" time="0.045">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) un código desconocido se guarda sin ean: el Donador no enseña códigos" name="preparar una donación (RF-CMP-001B) un código desconocido se guarda sin ean: el Donador no enseña códigos" time="0.018">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) un código de otra categoría no se acepta" name="preparar una donación (RF-CMP-001B) un código de otra categoría no se acepta" time="0.008">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) con 5 preparadas no deja preparar otra" name="preparar una donación (RF-CMP-001B) con 5 preparadas no deja preparar otra" time="0.24">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) lista solo las suyas y cancela una preparada" name="preparar una donación (RF-CMP-001B) lista solo las suyas y cancela una preparada" time="0.218">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) dos cancelaciones simultáneas dan 200 y 409 y una sola entrada en la bitácora" name="preparar una donación (RF-CMP-001B) dos cancelaciones simultáneas dan 200 y 409 y una sola entrada en la bitácora" time="0.214">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) no cancela una donación que ya dejó de estar preparada" name="preparar una donación (RF-CMP-001B) no cancela una donación que ya dejó de estar preparada" time="0.198">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) valida el filtro de estado al listar" name="preparar una donación (RF-CMP-001B) valida el filtro de estado al listar" time="0.196">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) con un código conocido la cantidad de presentaciones es entera" name="preparar una donación (RF-CMP-001B) con un código conocido la cantidad de presentaciones es entera" time="0.008">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) sugiere dónde entregar y avisa qué no recibe cada acopio" name="preparar una donación (RF-CMP-001B) sugiere dónde entregar y avisa qué no recibe cada acopio" time="0.012">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) consulta un código sin saber quién lo asoció" name="preparar una donación (RF-CMP-001B) consulta un código sin saber quién lo asoció" time="0.012">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) el Donador propone (ADR-0021) propone un EAN con una presentación nueva y la donación usa su tamaño" name="preparar una donación (RF-CMP-001B) el Donador propone (ADR-0021) propone un EAN con una presentación nueva y la donación usa su tamaño" time="0.044">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) el Donador propone (ADR-0021) un segundo Donador propone el mismo EAN y recibe el código del primero" name="preparar una donación (RF-CMP-001B) el Donador propone (ADR-0021) un segundo Donador propone el mismo EAN y recibe el código del primero" time="0.186">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) el Donador propone (ADR-0021) dos Donadores proponen a la vez el mismo EAN nuevo (nombres distintos): ambos 201" name="preparar una donación (RF-CMP-001B) el Donador propone (ADR-0021) dos Donadores proponen a la vez el mismo EAN nuevo (nombres distintos): ambos 201" time="0.216">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) el Donador propone (ADR-0021) dos Donadores proponen a la vez el mismo EAN nuevo (el mismo nombre): ambos 201" name="preparar una donación (RF-CMP-001B) el Donador propone (ADR-0021) dos Donadores proponen a la vez el mismo EAN nuevo (el mismo nombre): ambos 201" time="0.194">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) el Donador propone (ADR-0021) el Operador lo ve PROPUESTO" name="preparar una donación (RF-CMP-001B) el Donador propone (ADR-0021) el Operador lo ve PROPUESTO" time="0.097">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) el Donador propone (ADR-0021) una línea de más de 10.000 L responde 422 CANTIDAD_FUERA_DE_TOPE" name="preparar una donación (RF-CMP-001B) el Donador propone (ADR-0021) una línea de más de 10.000 L responde 422 CANTIDAD_FUERA_DE_TOPE" time="0.029">
+    </testcase>
+    <testcase classname="preparar una donación (RF-CMP-001B) un Operador no prepara donaciones" name="preparar una donación (RF-CMP-001B) un Operador no prepara donaciones" time="0.302">
+    </testcase>
+    <testcase classname="proponer códigos con el límite por IP la undécima propuesta del minuto recibe 429" name="proponer códigos con el límite por IP la undécima propuesta del minuto recibe 429" time="0.558">
+    </testcase>
+  </testsuite>
+  <testsuite name="turnos: correos y tareas" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:55" time="2.218" tests="7">
+    <testcase classname="turnos: correos y tareas reservar encola la confirmación con el código y el enlace con el secreto" name="turnos: correos y tareas reservar encola la confirmación con el código y el enlace con el secreto" time="0.048">
+    </testcase>
+    <testcase classname="turnos: correos y tareas mover o cancelar la jornada avisa a las reservas activas, no a las canceladas" name="turnos: correos y tareas mover o cancelar la jornada avisa a las reservas activas, no a las canceladas" time="0.157">
+    </testcase>
+    <testcase classname="turnos: correos y tareas dos tareas simultáneas encolan un solo recordatorio, 24 horas antes" name="turnos: correos y tareas dos tareas simultáneas encolan un solo recordatorio, 24 horas antes" time="0.058">
+    </testcase>
+    <testcase classname="turnos: correos y tareas rearma al mover el inicio, descarta el aviso previo y conserva los enviados" name="turnos: correos y tareas rearma al mover el inicio, descarta el aviso previo y conserva los enviados" time="0.147">
+    </testcase>
+    <testcase classname="turnos: correos y tareas los datos personales se borran 30 días después de la jornada" name="turnos: correos y tareas los datos personales se borran 30 días después de la jornada" time="0.085">
+    </testcase>
+    <testcase classname="turnos: correos y tareas el trabajador respeta el fin vigente y la purga de un correo ya reclamado" name="turnos: correos y tareas el trabajador respeta el fin vigente y la purga de un correo ya reclamado" time="0.043">
+    </testcase>
+    <testcase classname="turnos: correos y tareas la demo de turnos es idempotente y trae la jornada de la Cruz Roja" name="turnos: correos y tareas la demo de turnos es idempotente y trae la jornada de la Cruz Roja" time="0.051">
+    </testcase>
+  </testsuite>
+  <testsuite name="necesidad y excedentes" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:57" time="1.991" tests="12">
+    <testcase classname="necesidad y excedentes la necesidad sale de la canasta, la población y el horizonte, con sus fuentes" name="necesidad y excedentes la necesidad sale de la canasta, la población y el horizonte, con sus fuentes" time="0.03">
+    </testcase>
+    <testcase classname="necesidad y excedentes cuenta lo recibido en la ventana del horizonte y lo que va en camino" name="necesidad y excedentes cuenta lo recibido en la ventana del horizonte y lo que va en camino" time="0.048">
+    </testcase>
+    <testcase classname="necesidad y excedentes la necesidad manual reemplaza el cálculo y dice quién la puso" name="necesidad y excedentes la necesidad manual reemplaza el cálculo y dice quién la puso" time="0.03">
+    </testcase>
+    <testcase classname="necesidad y excedentes quitar la necesidad manual vuelve al cálculo; sin canasta, la categoría sale de la ficha" name="necesidad y excedentes quitar la necesidad manual vuelve al cálculo; sin canasta, la categoría sale de la ficha" time="0.024">
+    </testcase>
+    <testcase classname="necesidad y excedentes un motivo corto no se acepta" name="necesidad y excedentes un motivo corto no se acepta" time="0.004">
+    </testcase>
+    <testcase classname="necesidad y excedentes trae la cobertura global y la categoría más baja" name="necesidad y excedentes trae la cobertura global y la categoría más baja" time="0.014">
+    </testcase>
+    <testcase classname="necesidad y excedentes el Receptor de la zona la lee; el de otra zona y el Operador no" name="necesidad y excedentes el Receptor de la zona la lee; el de otra zona y el Operador no" time="0.679">
+    </testcase>
+    <testcase classname="necesidad y excedentes una zona de una emergencia cerrada se lee, pero no admite necesidad manual" name="necesidad y excedentes una zona de una emergencia cerrada se lee, pero no admite necesidad manual" time="0.021">
+    </testcase>
+    <testcase classname="necesidad y excedentes excedentes descuenta lo comprometido en borradores y avisa sin umbral" name="necesidad y excedentes excedentes descuenta lo comprometido en borradores y avisa sin umbral" time="0.022">
+    </testcase>
+    <testcase classname="necesidad y excedentes excedentes lo vencido no se mueve" name="necesidad y excedentes excedentes lo vencido no se mueve" time="0.023">
+    </testcase>
+    <testcase classname="necesidad y excedentes excedentes el Operador ve los de su acopio y no los de otro" name="necesidad y excedentes excedentes el Operador ve los de su acopio y no los de otro" time="0.219">
+    </testcase>
+    <testcase classname="necesidad y excedentes en una categoría por unidades, la necesidad manual es entera" name="necesidad y excedentes en una categoría por unidades, la necesidad manual es entera" time="0.009">
+    </testcase>
+  </testsuite>
+  <testsuite name="usuarios y accesos" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:31:59" time="3.335" tests="17">
+    <testcase classname="usuarios y accesos crear e invitar (RF-IDE-001, 002) nace INVITADO, con enlace, y el token en claro no se guarda" name="usuarios y accesos crear e invitar (RF-IDE-001, 002) nace INVITADO, con enlace, y el token en claro no se guarda" time="0.038">
+    </testcase>
+    <testcase classname="usuarios y accesos crear e invitar (RF-IDE-001, 002) sin correo genera uno sintético y no encola correo" name="usuarios y accesos crear e invitar (RF-IDE-001, 002) sin correo genera uno sintético y no encola correo" time="0.018">
+    </testcase>
+    <testcase classname="usuarios y accesos crear e invitar (RF-IDE-001, 002) un operador necesita al menos una ubicación" name="usuarios y accesos crear e invitar (RF-IDE-001, 002) un operador necesita al menos una ubicación" time="0.003">
+    </testcase>
+    <testcase classname="usuarios y accesos crear e invitar (RF-IDE-001, 002) el nombre de usuario es único sin distinguir mayúsculas" name="usuarios y accesos crear e invitar (RF-IDE-001, 002) el nombre de usuario es único sin distinguir mayúsculas" time="0.019">
+    </testcase>
+    <testcase classname="usuarios y accesos crear e invitar (RF-IDE-001, 002) no se crea un Donador desde la consola" name="usuarios y accesos crear e invitar (RF-IDE-001, 002) no se crea un Donador desde la consola" time="0.004">
+    </testcase>
+    <testcase classname="usuarios y accesos crear e invitar (RF-IDE-001, 002) solo el Administrador crea usuarios" name="usuarios y accesos crear e invitar (RF-IDE-001, 002) solo el Administrador crea usuarios" time="0.221">
+    </testcase>
+    <testcase classname="usuarios y accesos crear e invitar (RF-IDE-001, 002) reinvitar revoca el enlace anterior" name="usuarios y accesos crear e invitar (RF-IDE-001, 002) reinvitar revoca el enlace anterior" time="0.033">
+    </testcase>
+    <testcase classname="usuarios y accesos ubicaciones reales (B-05) asignar una ubicación que no existe da 422 UBICACION_INEXISTENTE" name="usuarios y accesos ubicaciones reales (B-05) asignar una ubicación que no existe da 422 UBICACION_INEXISTENTE" time="0.005">
+    </testcase>
+    <testcase classname="usuarios y accesos ubicaciones reales (B-05) el correo de asignación nombra el acopio" name="usuarios y accesos ubicaciones reales (B-05) el correo de asignación nombra el acopio" time="0.214">
+    </testcase>
+    <testcase classname="usuarios y accesos último administrador (RF-IDE-008) un administrador no puede cambiarse su propio rol ni suspenderse" name="usuarios y accesos último administrador (RF-IDE-008) un administrador no puede cambiarse su propio rol ni suspenderse" time="0.013">
+    </testcase>
+    <testcase classname="usuarios y accesos asignaciones y alcance (RF-IDE-005, 006, 010) el alcance se lee de la base: operador en A, no en B" name="usuarios y accesos asignaciones y alcance (RF-IDE-005, 006, 010) el alcance se lee de la base: operador en A, no en B" time="0.214">
+    </testcase>
+    <testcase classname="usuarios y accesos asignaciones y alcance (RF-IDE-005, 006, 010) quitar la última asignación responsable pide confirmación" name="usuarios y accesos asignaciones y alcance (RF-IDE-005, 006, 010) quitar la última asignación responsable pide confirmación" time="0.229">
+    </testcase>
+    <testcase classname="usuarios y accesos asignaciones y alcance (RF-IDE-005, 006, 010) asignar dos veces la misma ubicación: 409 con mensaje claro" name="usuarios y accesos asignaciones y alcance (RF-IDE-005, 006, 010) asignar dos veces la misma ubicación: 409 con mensaje claro" time="0.209">
+    </testcase>
+    <testcase classname="usuarios y accesos cambiar el correo de una cuenta activa (P-080) la persona sigue entrando con su usuario y con el correo nuevo, no con el anterior" name="usuarios y accesos cambiar el correo de una cuenta activa (P-080) la persona sigue entrando con su usuario y con el correo nuevo, no con el anterior" time="0.479">
+    </testcase>
+    <testcase classname="usuarios y accesos cambiar el correo de una cuenta activa (P-080) al quitarle el correo sigue entrando con su usuario" name="usuarios y accesos cambiar el correo de una cuenta activa (P-080) al quitarle el correo sigue entrando con su usuario" time="0.3">
+    </testcase>
+    <testcase classname="usuarios y accesos bitácora (RF-IDE-012) restablecer acceso y cambiar el rol quedan destacados; se avisa a los administradores" name="usuarios y accesos bitácora (RF-IDE-012) restablecer acceso y cambiar el rol quedan destacados; se avisa a los administradores" time="0.25">
+    </testcase>
+    <testcase classname="usuarios y accesos bitácora (RF-IDE-012) un operador no ve la bitácora" name="usuarios y accesos bitácora (RF-IDE-012) un operador no ve la bitácora" time="0.208">
+    </testcase>
+  </testsuite>
+  <testsuite name="turnos: gestión" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:02" time="1.904" tests="11">
+    <testcase classname="turnos: gestión el Operador crea una serie de tres fechas en su acopio" name="turnos: gestión el Operador crea una serie de tres fechas en su acopio" time="0.038">
+    </testcase>
+    <testcase classname="turnos: gestión el Operador no crea en otro acopio ni jornadas de entidad" name="turnos: gestión el Operador no crea en otro acopio ni jornadas de entidad" time="0.014">
+    </testcase>
+    <testcase classname="turnos: gestión el Administrador crea jornadas de una entidad verificada, con su dirección" name="turnos: gestión el Administrador crea jornadas de una entidad verificada, con su dirección" time="0.036">
+    </testcase>
+    <testcase classname="turnos: gestión una jornada a menos de 13 horas no se crea" name="turnos: gestión una jornada a menos de 13 horas no se crea" time="0.003">
+    </testcase>
+    <testcase classname="turnos: gestión el cupo y el ajuste no bajan de lo ocupado" name="turnos: gestión el cupo y el ajuste no bajan de lo ocupado" time="0.073">
+    </testcase>
+    <testcase classname="turnos: gestión solo se borra una jornada que nunca tuvo reservas" name="turnos: gestión solo se borra una jornada que nunca tuvo reservas" time="0.046">
+    </testcase>
+    <testcase classname="turnos: gestión cerrar, reabrir y cancelar; una cancelada ya no cambia" name="turnos: gestión cerrar, reabrir y cancelar; una cancelada ya no cambia" time="0.068">
+    </testcase>
+    <testcase classname="turnos: gestión editar la hora valida el nuevo horario" name="turnos: gestión editar la hora valida el nuevo horario" time="0.045">
+    </testcase>
+    <testcase classname="turnos: gestión cambiar solo la dirección a menos de 12 horas se rechaza" name="turnos: gestión cambiar solo la dirección a menos de 12 horas se rechaza" time="0.059">
+    </testcase>
+    <testcase classname="turnos: gestión dos ediciones a la vez: la bitácora de cada una compara contra lo que había al bloquear" name="turnos: gestión dos ediciones a la vez: la bitácora de cada una compara contra lo que había al bloquear" time="0.271">
+    </testcase>
+    <testcase classname="turnos: gestión cada quien ve las jornadas que le tocan" name="turnos: gestión cada quien ve las jornadas que le tocan" time="0.042">
+    </testcase>
+  </testsuite>
+  <testsuite name="concurrencia" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:04" time="4" tests="8">
+    <testcase classname="concurrencia 10 canjes simultáneos de la misma invitación: uno gana, nueve reciben el mensaje genérico" name="concurrencia 10 canjes simultáneos de la misma invitación: uno gana, nueve reciben el mensaje genérico" time="0.21">
+    </testcase>
+    <testcase classname="concurrencia dos administradores que se suspenden a la vez: el sistema conserva al menos uno (RF-IDE-008)" name="concurrencia dos administradores que se suspenden a la vez: el sistema conserva al menos uno (RF-IDE-008)" time="0.437">
+    </testcase>
+    <testcase classname="concurrencia un Operador que pausa mientras el Administrador cierra no reabre el acopio" name="concurrencia un Operador que pausa mientras el Administrador cierra no reabre el acopio" time="0.532">
+    </testcase>
+    <testcase classname="concurrencia saldo con registros simultáneos (RF-INV-011, la prueba más importante) 20 salidas simultáneas de 1 sobre un saldo de 12: pasan 12 y el saldo queda en 0" name="concurrencia saldo con registros simultáneos (RF-INV-011, la prueba más importante) 20 salidas simultáneas de 1 sobre un saldo de 12: pasan 12 y el saldo queda en 0" time="0.253">
+    </testcase>
+    <testcase classname="concurrencia saldo con registros simultáneos (RF-INV-011, la prueba más importante) entradas y salidas cruzadas de dos operadores en dos categorías: saldo = suma de movimientos" name="concurrencia saldo con registros simultáneos (RF-INV-011, la prueba más importante) entradas y salidas cruzadas de dos operadores en dos categorías: saldo = suma de movimientos" time="0.387">
+    </testcase>
+    <testcase classname="concurrencia saldo con registros simultáneos (RF-INV-011, la prueba más importante) el mismo id llega 5 veces a la vez: un solo movimiento y todas las respuestas exitosas" name="concurrencia saldo con registros simultáneos (RF-INV-011, la prueba más importante) el mismo id llega 5 veces a la vez: un solo movimiento y todas las respuestas exitosas" time="0.062">
+    </testcase>
+    <testcase classname="concurrencia saldo con registros simultáneos (RF-INV-011, la prueba más importante) 20 entradas simultáneas: el antes y después de cada bitácora cuadran con su cantidad" name="concurrencia saldo con registros simultáneos (RF-INV-011, la prueba más importante) 20 entradas simultáneas: el antes y después de cada bitácora cuadran con su cantidad" time="0.212">
+    </testcase>
+    <testcase classname="concurrencia saldo con registros simultáneos (RF-INV-011, la prueba más importante) 60 salidas simultáneas de la misma categoría: ninguna termina en 500" name="concurrencia saldo con registros simultáneos (RF-INV-011, la prueba más importante) 60 salidas simultáneas de la misma categoría: ninguna termina en 500" time="0.432">
+    </testcase>
+  </testsuite>
+  <testsuite name="turnos: público e inscritos" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:08" time="2.033" tests="8">
+    <testcase classname="turnos: público e inscritos lista las jornadas vigentes, con filtros por perfil, acopio y día" name="turnos: público e inscritos lista las jornadas vigentes, con filtros por perfil, acopio y día" time="0.073">
+    </testcase>
+    <testcase classname="turnos: público e inscritos un día que no existe da 400, no 500 (P-071)" name="turnos: público e inscritos un día que no existe da 400, no 500 (P-071)" time="0.015">
+    </testcase>
+    <testcase classname="turnos: público e inscritos el listado y el detalle no llevan datos de los inscritos" name="turnos: público e inscritos el listado y el detalle no llevan datos de los inscritos" time="0.039">
+    </testcase>
+    <testcase classname="turnos: público e inscritos el detalle de una cancelada dice por qué" name="turnos: público e inscritos el detalle de una cancelada dice por qué" time="0.007">
+    </testcase>
+    <testcase classname="turnos: público e inscritos sin verificación, la jornada de entidad sale del portal pero no de la consola (T-09)" name="turnos: público e inscritos sin verificación, la jornada de entidad sale del portal pero no de la consola (T-09)" time="0.068">
+    </testcase>
+    <testcase classname="turnos: público e inscritos el Operador ve los inscritos de su acopio y no los de otro" name="turnos: público e inscritos el Operador ve los inscritos de su acopio y no los de otro" time="0.033">
+    </testcase>
+    <testcase classname="turnos: público e inscritos la asistencia se marca en su plazo y la bitácora no guarda a la persona" name="turnos: público e inscritos la asistencia se marca en su plazo y la bitácora no guarda a la persona" time="0.102">
+    </testcase>
+    <testcase classname="turnos: público e inscritos no se marca asistencia en una jornada cancelada" name="turnos: público e inscritos no se marca asistencia en una jornada cancelada" time="0.06">
+    </testcase>
+  </testsuite>
+  <testsuite name="saldos e historial" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:10" time="2.389" tests="10">
+    <testcase classname="saldos e historial saldos por categoría con vencimiento estimado y «Sin umbral»" name="saldos e historial saldos por categoría con vencimiento estimado y «Sin umbral»" time="0.019">
+    </testcase>
+    <testcase classname="saldos e historial una categoría con umbral y saldo cero también aparece" name="saldos e historial una categoría con umbral y saldo cero también aparece" time="0.024">
+    </testcase>
+    <testcase classname="saldos e historial el Auditor y el Administrador leen cualquier acopio; un Receptor no" name="saldos e historial el Auditor y el Administrador leen cualquier acopio; un Receptor no" time="0.022">
+    </testcase>
+    <testcase classname="saldos e historial un Operador de otro acopio no lee: 403" name="saldos e historial un Operador de otro acopio no lee: 403" time="0.004">
+    </testcase>
+    <testcase classname="saldos e historial el historial explica el saldo, del más reciente al más viejo" name="saldos e historial el historial explica el saldo, del más reciente al más viejo" time="0.008">
+    </testcase>
+    <testcase classname="saldos e historial el historial pagina con cursor" name="saldos e historial el historial pagina con cursor" time="0.012">
+    </testcase>
+    <testcase classname="saldos e historial un cursor mal formado: 400" name="saldos e historial un cursor mal formado: 400" time="0.004">
+    </testcase>
+    <testcase classname="saldos e historial conserva el saldo de páginas antiguas cuando hay movimientos en bloques posteriores" name="saldos e historial conserva el saldo de páginas antiguas cuando hay movimientos en bloques posteriores" time="0.676">
+    </testcase>
+    <testcase classname="saldos e historial el historial sigue el orden en que entraron los movimientos, no registrado_en" name="saldos e historial el historial sigue el orden en que entraron los movimientos, no registrado_en" time="0.014">
+    </testcase>
+    <testcase classname="saldos e historial el cursor no pierde movimientos del mismo milisegundo" name="saldos e historial el cursor no pierde movimientos del mismo milisegundo" time="0.015">
+    </testcase>
+  </testsuite>
+  <testsuite name="catálogo" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:13" time="1.311" tests="20">
+    <testcase classname="catálogo búsqueda (RF-CAT-002) «panal» encuentra «Pañales de adulto»" name="catálogo búsqueda (RF-CAT-002) «panal» encuentra «Pañales de adulto»" time="0.012">
+    </testcase>
+    <testcase classname="catálogo búsqueda (RF-CAT-002) «aroz» encuentra «Arroz»" name="catálogo búsqueda (RF-CAT-002) «aroz» encuentra «Arroz»" time="0.006">
+    </testcase>
+    <testcase classname="catálogo búsqueda (RF-CAT-002) «JABON» encuentra «Jabón de baño»" name="catálogo búsqueda (RF-CAT-002) «JABON» encuentra «Jabón de baño»" time="0.007">
+    </testcase>
+    <testcase classname="catálogo búsqueda (RF-CAT-002) «frijol» encuentra «Granos secos»" name="catálogo búsqueda (RF-CAT-002) «frijol» encuentra «Granos secos»" time="0.009">
+    </testcase>
+    <testcase classname="catálogo búsqueda (RF-CAT-002) «cobija» encuentra «Cobijas y sábanas»" name="catálogo búsqueda (RF-CAT-002) «cobija» encuentra «Cobijas y sábanas»" time="0.006">
+    </testcase>
+    <testcase classname="catálogo búsqueda (RF-CAT-002) «panal» encuentra «Pañal adulto» en los primeros resultados (criterio de RF-CAT-002)" name="catálogo búsqueda (RF-CAT-002) «panal» encuentra «Pañal adulto» en los primeros resultados (criterio de RF-CAT-002)" time="0.006">
+    </testcase>
+    <testcase classname="catálogo búsqueda (RF-CAT-002) responde en menos de 100 ms con el catálogo completo" name="catálogo búsqueda (RF-CAT-002) responde en menos de 100 ms con el catálogo completo" time="0.011">
+    </testcase>
+    <testcase classname="catálogo búsqueda (RF-CAT-002) una palabra sin relación no devuelve nada" name="catálogo búsqueda (RF-CAT-002) una palabra sin relación no devuelve nada" time="0.006">
+    </testcase>
+    <testcase classname="catálogo categorías (RF-CAT-001) las categorías vigentes se leen sin sesión, para el filtro del mapa público" name="catálogo categorías (RF-CAT-001) las categorías vigentes se leen sin sesión, para el filtro del mapa público" time="0.01">
+    </testcase>
+    <testcase classname="catálogo categorías (RF-CAT-001) una categoría con canasta no se elimina; se archiva" name="catálogo categorías (RF-CAT-001) una categoría con canasta no se elimina; se archiva" time="0.006">
+    </testcase>
+    <testcase classname="catálogo categorías (RF-CAT-001) crear, archivar y dejar de verla en la búsqueda" name="catálogo categorías (RF-CAT-001) crear, archivar y dejar de verla en la búsqueda" time="0.028">
+    </testcase>
+    <testcase classname="catálogo categorías (RF-CAT-001) la unidad base no se puede cambiar" name="catálogo categorías (RF-CAT-001) la unidad base no se puede cambiar" time="0.009">
+    </testcase>
+    <testcase classname="catálogo canasta (RF-CAT-003) la vigente tiene 10 categorías y cada una cita su fuente" name="catálogo canasta (RF-CAT-003) la vigente tiene 10 categorías y cada una cita su fuente" time="0.006">
+    </testcase>
+    <testcase classname="catálogo canasta (RF-CAT-003) la vigente es la versión 2 (P-001) y la primera queda en el historial" name="catálogo canasta (RF-CAT-003) la vigente es la versión 2 (P-001) y la primera queda en el historial" time="0.009">
+    </testcase>
+    <testcase classname="catálogo canasta (RF-CAT-003) una versión nueva no reescribe la anterior" name="catálogo canasta (RF-CAT-003) una versión nueva no reescribe la anterior" time="0.016">
+    </testcase>
+    <testcase classname="catálogo canasta (RF-CAT-003) sin fuente no se acepta" name="catálogo canasta (RF-CAT-003) sin fuente no se acepta" time="0.005">
+    </testcase>
+    <testcase classname="catálogo emergencias (RF-CAT-005) al pasar destacada_hasta pasa sola a EN_SEGUIMIENTO; extenderla la devuelve a ACTIVA" name="catálogo emergencias (RF-CAT-005) al pasar destacada_hasta pasa sola a EN_SEGUIMIENTO; extenderla la devuelve a ACTIVA" time="0.027">
+    </testcase>
+    <testcase classname="catálogo emergencias (RF-CAT-005) cerrarla exige motivo y la deja en solo lectura" name="catálogo emergencias (RF-CAT-005) cerrarla exige motivo y la deja en solo lectura" time="0.021">
+    </testcase>
+    <testcase classname="catálogo emergencias (RF-CAT-005) las activas van primero" name="catálogo emergencias (RF-CAT-005) las activas van primero" time="0.004">
+    </testcase>
+    <testcase classname="catálogo emergencias (RF-CAT-005) cualquiera las lee sin sesión; crear sigue siendo del administrador" name="catálogo emergencias (RF-CAT-005) cualquiera las lee sin sesión; crear sigue siendo del administrador" time="0.233">
+    </testcase>
+  </testsuite>
+  <testsuite name="remisiones" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:14" time="1.953" tests="11">
+    <testcase classname="remisiones el Operador del origen crea una remisión con zona y sus líneas" name="remisiones el Operador del origen crea una remisión con zona y sus líneas" time="0.065">
+    </testcase>
+    <testcase classname="remisiones una línea mayor que el movible responde 422 con el máximo" name="remisiones una línea mayor que el movible responde 422 con el máximo" time="0.022">
+    </testcase>
+    <testcase classname="remisiones el Operador de otro acopio no crea remisiones desde este" name="remisiones el Operador de otro acopio no crea remisiones desde este" time="0.009">
+    </testcase>
+    <testcase classname="remisiones reemplazar las líneas con las mismas cantidades no choca con su propio compromiso" name="remisiones reemplazar las líneas con las mismas cantidades no choca con su propio compromiso" time="0.098">
+    </testcase>
+    <testcase classname="remisiones fuera de BORRADOR no se editan las líneas" name="remisiones fuera de BORRADOR no se editan las líneas" time="0.059">
+    </testcase>
+    <testcase classname="remisiones PATCH cambia el responsable y la zona de un borrador y lo registra" name="remisiones PATCH cambia el responsable y la zona de un borrador y lo registra" time="0.076">
+    </testcase>
+    <testcase classname="remisiones GET /remisiones muestra al Operador solo las de su acopio, y GET por código exige alcance" name="remisiones GET /remisiones muestra al Operador solo las de su acopio, y GET por código exige alcance" time="0.065">
+    </testcase>
+    <testcase classname="remisiones en una categoría por unidades, una línea con fracción responde 422 CANTIDAD_ENTERA" name="remisiones en una categoría por unidades, una línea con fracción responde 422 CANTIDAD_ENTERA" time="0.026">
+    </testcase>
+    <testcase classname="remisiones una categoría que no existe responde 404" name="remisiones una categoría que no existe responde 404" time="0.011">
+    </testcase>
+    <testcase classname="remisiones el máximo del 422 sale redondeado a tres decimales" name="remisiones el máximo del 422 sale redondeado a tres decimales" time="0.061">
+    </testcase>
+    <testcase classname="remisiones la bitácora de editar guarda el «antes» que había al cambiar, no el de la lectura previa" name="remisiones la bitácora de editar guarda el «antes» que había al cambiar, no el de la lectura previa" time="0.052">
+    </testcase>
+  </testsuite>
+  <testsuite name="turnos: reservas" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:16" time="1.849" tests="12">
+    <testcase classname="turnos: reservas reserva con código, secreto y correo normalizado, sin bitácora" name="turnos: reservas reserva con código, secreto y correo normalizado, sin bitácora" time="0.042">
+    </testcase>
+    <testcase classname="turnos: reservas sin consentimiento no hay reserva" name="turnos: reservas sin consentimiento no hay reserva" time="0.011">
+    </testcase>
+    <testcase classname="turnos: reservas dos personas por el último cupo: una lo obtiene y la otra recibe JORNADA_LLENA" name="turnos: reservas dos personas por el último cupo: una lo obtiene y la otra recibe JORNADA_LLENA" time="0.05">
+    </testcase>
+    <testcase classname="turnos: reservas las reservas se cierran 12 horas antes del inicio" name="turnos: reservas las reservas se cierran 12 horas antes del inicio" time="0.028">
+    </testcase>
+    <testcase classname="turnos: reservas una jornada cerrada o cancelada no recibe reservas" name="turnos: reservas una jornada cerrada o cancelada no recibe reservas" time="0.022">
+    </testcase>
+    <testcase classname="turnos: reservas si la jornada pide un perfil, hay que declararlo" name="turnos: reservas si la jornada pide un perfil, hay que declararlo" time="0.024">
+    </testcase>
+    <testcase classname="turnos: reservas una jornada que no existe da 404" name="turnos: reservas una jornada que no existe da 404" time="0.008">
+    </testcase>
+    <testcase classname="turnos: reservas consultar y cancelar con el secreto; quien canceló puede volver a reservar" name="turnos: reservas consultar y cancelar con el secreto; quien canceló puede volver a reservar" time="0.095">
+    </testcase>
+    <testcase classname="turnos: reservas la reserva dice si la jornada cambió después de reservar mover la hora la marca, con la hora del cambio" name="turnos: reservas la reserva dice si la jornada cambió después de reservar mover la hora la marca, con la hora del cambio" time="0.058">
+    </testcase>
+    <testcase classname="turnos: reservas la reserva dice si la jornada cambió después de reservar cambiar solo el título no la marca" name="turnos: reservas la reserva dice si la jornada cambió después de reservar cambiar solo el título no la marca" time="0.037">
+    </testcase>
+    <testcase classname="turnos: reservas la reserva dice si la jornada cambió después de reservar si la jornada se movió antes de reservar, no avisa" name="turnos: reservas la reserva dice si la jornada cambió después de reservar si la jornada se movió antes de reservar, no avisa" time="0.026">
+    </testcase>
+    <testcase classname="turnos: reservas una reserva no se cancela después del inicio" name="turnos: reservas una reserva no se cancela después del inicio" time="0.027">
+    </testcase>
+  </testsuite>
+  <testsuite name="recepción en zona" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:18" time="2.947" tests="9">
+    <testcase classname="recepción en zona el Receptor ve lo que va a su zona y los despachos generales" name="recepción en zona el Receptor ve lo que va a su zona y los despachos generales" time="0.198">
+    </testcase>
+    <testcase classname="recepción en zona por QR, el Receptor de otra zona recibe 403 ZONA_NO_ASIGNADA" name="recepción en zona por QR, el Receptor de otra zona recibe 403 ZONA_NO_ASIGNADA" time="0.071">
+    </testcase>
+    <testcase classname="recepción en zona sin foto no se recibe" name="recepción en zona sin foto no se recibe" time="0.07">
+    </testcase>
+    <testcase classname="recepción en zona con foto recibe: RECEPCION por línea, recibido = planeado, estado RECIBIDA" name="recepción en zona con foto recibe: RECEPCION por línea, recibido = planeado, estado RECIBIDA" time="0.119">
+    </testcase>
+    <testcase classname="recepción en zona un despacho general toma la zona del Receptor, que es obligatoria y suya" name="recepción en zona un despacho general toma la zona del Receptor, que es obligatoria y suya" time="0.113">
+    </testcase>
+    <testcase classname="recepción en zona dos Receptores confirman a la vez el mismo despacho general: uno gana" name="recepción en zona dos Receptores confirman a la vez el mismo despacho general: uno gana" time="0.127">
+    </testcase>
+    <testcase classname="recepción en zona la sexta foto responde 422 EVIDENCIA_MAXIMA" name="recepción en zona la sexta foto responde 422 EVIDENCIA_MAXIMA" time="0.233">
+    </testcase>
+    <testcase classname="recepción en zona la API sirve la foto con su tipo y sin caché; un Receptor ajeno no la ve" name="recepción en zona la API sirve la foto con su tipo y sin caché; un Receptor ajeno no la ve" time="0.118">
+    </testcase>
+    <testcase classname="recepción en zona un despacho general es del Receptor que subió la primera foto" name="recepción en zona un despacho general es del Receptor que subió la primera foto" time="0.11">
+    </testcase>
+  </testsuite>
+  <testsuite name="seguimiento público por folio (RF-CMP-006)" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:21" time="3.673" tests="9">
+    <testcase classname="seguimiento público por folio (RF-CMP-006) muestra el recorrido y lo que entró, sin sesión" name="seguimiento público por folio (RF-CMP-006) muestra el recorrido y lo que entró, sin sesión" time="0.022">
+    </testcase>
+    <testcase classname="seguimiento público por folio (RF-CMP-006) no revela al Donador ni la factura (foco de revisión 4)" name="seguimiento público por folio (RF-CMP-006) no revela al Donador ni la factura (foco de revisión 4)" time="0.01">
+    </testcase>
+    <testcase classname="seguimiento público por folio (RF-CMP-006) encuentra el folio escrito en minúsculas y con espacios (foco de revisión 4)" name="seguimiento público por folio (RF-CMP-006) encuentra el folio escrito en minúsculas y con espacios (foco de revisión 4)" time="0.008">
+    </testcase>
+    <testcase classname="seguimiento público por folio (RF-CMP-006) un folio que no existe y uno mal escrito responden lo mismo" name="seguimiento público por folio (RF-CMP-006) un folio que no existe y uno mal escrito responden lo mismo" time="0.005">
+    </testcase>
+    <testcase classname="seguimiento de una donación rechazada dice «No se pudo conciliar» y no revela el motivo ni la nota" name="seguimiento de una donación rechazada dice «No se pudo conciliar» y no revela el motivo ni la nota" time="1.174">
+    </testcase>
+    <testcase classname="seguimiento con el límite por IP el undécimo intento del minuto recibe 429" name="seguimiento con el límite por IP el undécimo intento del minuto recibe 429" time="0.418">
+    </testcase>
+    <testcase classname="recibido en destino en el seguimiento (RF-CMP-007) un folio vinculado a una remisión recibida dice «recibido en destino»" name="recibido en destino en el seguimiento (RF-CMP-007) un folio vinculado a una remisión recibida dice «recibido en destino»" time="0.03">
+    </testcase>
+    <testcase classname="recibido en destino en el seguimiento (RF-CMP-007) con dos remisiones avisa que es parte de la donación" name="recibido en destino en el seguimiento (RF-CMP-007) con dos remisiones avisa que es parte de la donación" time="0.019">
+    </testcase>
+    <testcase classname="recibido en destino en el seguimiento (RF-CMP-007) una remisión cancelada no aparece en el seguimiento" name="recibido en destino en el seguimiento (RF-CMP-007) una remisión cancelada no aparece en el seguimiento" time="0.011">
+    </testcase>
+  </testsuite>
+  <testsuite name="importador de referenciados" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:24" time="1.283" tests="13">
+    <testcase classname="importador de referenciados la primera lectura crea los verificados, con el estado traducido y el texto original" name="importador de referenciados la primera lectura crea los verificados, con el estado traducido y el texto original" time="0.026">
+    </testcase>
+    <testcase classname="importador de referenciados leer lo mismo otra vez no cambia nada" name="importador de referenciados leer lo mismo otra vez no cambia nada" time="0.007">
+    </testcase>
+    <testcase classname="importador de referenciados solo cuenta como actualizado el punto que cambió en la fuente" name="importador de referenciados solo cuenta como actualizado el punto que cambió en la fuente" time="0.015">
+    </testcase>
+    <testcase classname="importador de referenciados respeta lo que ocultó el Administrador" name="importador de referenciados respeta lo que ocultó el Administrador" time="0.01">
+    </testcase>
+    <testcase classname="importador de referenciados un punto que desaparece de la fuente se cierra y no se borra" name="importador de referenciados un punto que desaparece de la fuente se cierra y no se borra" time="0.008">
+    </testcase>
+    <testcase classname="importador de referenciados deja en la bitácora un resumen de cada lectura buena" name="importador de referenciados deja en la bitácora un resumen de cada lectura buena" time="0.003">
+    </testcase>
+    <testcase classname="importador de referenciados si la fuente cambió de formato no escribe nada y deja la ejecución abortada" name="importador de referenciados si la fuente cambió de formato no escribe nada y deja la ejecución abortada" time="0.008">
+    </testcase>
+    <testcase classname="importador de referenciados un punto sin coordenadas en Colombia se omite, se cuenta y no frena a los demás" name="importador de referenciados un punto sin coordenadas en Colombia se omite, se cuenta y no frena a los demás" time="0.01">
+    </testcase>
+    <testcase classname="importador de referenciados reimportar no cuenta cambios por el orden del JSON ni por el redondeo de las coordenadas" name="importador de referenciados reimportar no cuenta cambios por el orden del JSON ni por el redondeo de las coordenadas" time="0.017">
+    </testcase>
+    <testcase classname="importador de referenciados dos puntos con el mismo id en la fuente abortan la lectura y la registran" name="importador de referenciados dos puntos con el mismo id en la fuente abortan la lectura y la registran" time="0.003">
+    </testcase>
+    <testcase classname="importador de referenciados una fecha de actualización que no es fecha aborta la lectura y la registran" name="importador de referenciados una fecha de actualización que no es fecha aborta la lectura y la registran" time="0.003">
+    </testcase>
+    <testcase classname="importador de referenciados un error inesperado también deja la ejecución abortada antes de salir" name="importador de referenciados un error inesperado también deja la ejecución abortada antes de salir" time="0.004">
+    </testcase>
+    <testcase classname="importador de referenciados un Operador no puede correr la importación" name="importador de referenciados un Operador no puede correr la importación" time="0.326">
+    </testcase>
+  </testsuite>
+  <testsuite name="CSV de la red" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:26" time="1.652" tests="8">
+    <testcase classname="CSV de la red entidades: entran sin verificar y con su bitácora" name="CSV de la red entidades: entran sin verificar y con su bitácora" time="0.02">
+    </testcase>
+    <testcase classname="CSV de la red entidades: un nombre que ya existe falla en revisar" name="CSV de la red entidades: un nombre que ya existe falla en revisar" time="0.007">
+    </testcase>
+    <testcase classname="CSV de la red acopios: busca la entidad por su nombre y exige coordenadas" name="CSV de la red acopios: busca la entidad por su nombre y exige coordenadas" time="0.027">
+    </testcase>
+    <testcase classname="CSV de la red acopios y zonas: coordenadas fuera de Colombia fallan en revisar, no con un 500" name="CSV de la red acopios y zonas: coordenadas fuera de Colombia fallan en revisar, no con un 500" time="0.014">
+    </testcase>
+    <testcase classname="CSV de la red causas: un enlace sin https o un cierre fuera de rango fallan en revisar con su columna" name="CSV de la red causas: un enlace sin https o un cierre fuera de rango fallan en revisar con su columna" time="0.012">
+    </testcase>
+    <testcase classname="CSV de la red zonas: busca la emergencia por su nombre" name="CSV de la red zonas: busca la emergencia por su nombre" time="0.019">
+    </testcase>
+    <testcase classname="CSV de la red causas: una entidad sin verificar falla en revisar, no en aplicar" name="CSV de la red causas: una entidad sin verificar falla en revisar, no en aplicar" time="0.011">
+    </testcase>
+    <testcase classname="CSV de la red causas: con una entidad verificada se publica, con sus pasos y su bitácora" name="CSV de la red causas: con una entidad verificada se publica, con sus pasos y su bitácora" time="0.017">
+    </testcase>
+  </testsuite>
+  <testsuite name="reportes de necesidad y capa pública" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:27" time="1.448" tests="6">
+    <testcase classname="reportes de necesidad y capa pública el Receptor reporta dos categorías con una nota y queda en la bitácora" name="reportes de necesidad y capa pública el Receptor reporta dos categorías con una nota y queda en la bitácora" time="0.032">
+    </testcase>
+    <testcase classname="reportes de necesidad y capa pública un Receptor no reporta en una zona ajena" name="reportes de necesidad y capa pública un Receptor no reporta en una zona ajena" time="0.005">
+    </testcase>
+    <testcase classname="reportes de necesidad y capa pública el público ve el círculo redondeado y la necesidad, y nada más" name="reportes de necesidad y capa pública el público ve el círculo redondeado y la necesidad, y nada más" time="0.007">
+    </testcase>
+    <testcase classname="reportes de necesidad y capa pública un reporte resuelto o de hace 8 días no se publica" name="reportes de necesidad y capa pública un reporte resuelto o de hace 8 días no se publica" time="0.021">
+    </testcase>
+    <testcase classname="reportes de necesidad y capa pública una zona de una emergencia cerrada no aparece" name="reportes de necesidad y capa pública una zona de una emergencia cerrada no aparece" time="0.007">
+    </testcase>
+    <testcase classname="reportes de necesidad y capa pública reportar valida la categoría y la zona" name="reportes de necesidad y capa pública reportar valida la categoría y la zona" time="0.032">
+    </testcase>
+  </testsuite>
+  <testsuite name="CSV de catálogo, inventario y turnos" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:29" time="1.029" tests="8">
+    <testcase classname="CSV de catálogo, inventario y turnos categorías: crea con grupo, unidad y sinónimos" name="CSV de catálogo, inventario y turnos categorías: crea con grupo, unidad y sinónimos" time="0.016">
+    </testcase>
+    <testcase classname="CSV de catálogo, inventario y turnos categorías: un grupo que no existe falla en su columna" name="CSV de catálogo, inventario y turnos categorías: un grupo que no existe falla en su columna" time="0.006">
+    </testcase>
+    <testcase classname="CSV de catálogo, inventario y turnos categorías: el mismo nombre dos veces en el archivo falla en la segunda" name="CSV de catálogo, inventario y turnos categorías: el mismo nombre dos veces en el archivo falla en la segunda" time="0.007">
+    </testcase>
+    <testcase classname="CSV de catálogo, inventario y turnos inventario y jornadas: un acopio cerrado falla en revisar con la columna acopio" name="CSV de catálogo, inventario y turnos inventario y jornadas: un acopio cerrado falla en revisar con la columna acopio" time="0.024">
+    </testcase>
+    <testcase classname="CSV de catálogo, inventario y turnos inventario: cada fila es una entrada y el saldo es la suma del archivo" name="CSV de catálogo, inventario y turnos inventario: cada fila es una entrada y el saldo es la suma del archivo" time="0.037">
+    </testcase>
+    <testcase classname="CSV de catálogo, inventario y turnos inventario: sobre un punto de una fuente externa falla en la columna acopio" name="CSV de catálogo, inventario y turnos inventario: sobre un punto de una fuente externa falla en la columna acopio" time="0.009">
+    </testcase>
+    <testcase classname="CSV de catálogo, inventario y turnos jornadas: con menos de 13 horas de anticipación falla en la columna fecha" name="CSV de catálogo, inventario y turnos jornadas: con menos de 13 horas de anticipación falla en la columna fecha" time="0.02">
+    </testcase>
+    <testcase classname="CSV de catálogo, inventario y turnos jornadas: con anticipación se crea con las reglas de la consola" name="CSV de catálogo, inventario y turnos jornadas: con anticipación se crea con las reglas de la consola" time="0.02">
+    </testcase>
+  </testsuite>
+  <testsuite name="notificaciones" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:30" time="1.249" tests="7">
+    <testcase classname="notificaciones las tareas programadas no corren solas durante las pruebas" name="notificaciones las tareas programadas no corren solas durante las pruebas" time="0.001">
+    </testcase>
+    <testcase classname="notificaciones con el SMTP arriba, el correo sale y queda ENVIADO" name="notificaciones con el SMTP arriba, el correo sale y queda ENVIADO" time="0.04">
+    </testcase>
+    <testcase classname="notificaciones con el SMTP caído queda FALLIDO, espera, y sale solo cuando vuelve" name="notificaciones con el SMTP caído queda FALLIDO, espera, y sale solo cuando vuelve" time="0.018">
+    </testcase>
+    <testcase classname="notificaciones con CORREO_ACTIVO=false no encola ni envía (P-055)" name="notificaciones con CORREO_ACTIVO=false no encola ni envía (P-055)" time="0.004">
+    </testcase>
+    <testcase classname="notificaciones después del máximo de intentos no se reintenta más" name="notificaciones después del máximo de intentos no se reintenta más" time="0.008">
+    </testcase>
+    <testcase classname="notificaciones con dos instancias a la vez, cada correo sale una sola vez (P-089)" name="notificaciones con dos instancias a la vez, cada correo sale una sola vez (P-089)" time="0.334">
+    </testcase>
+    <testcase classname="notificaciones renueva el préstamo y rechaza el resultado de un reclamo anterior" name="notificaciones renueva el préstamo y rechaza el resultado de un reclamo anterior" time="0.011">
+    </testcase>
+  </testsuite>
+  <testsuite name="foto de factura (RF-CMP-002)" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:31" time="2.408" tests="9">
+    <testcase classname="foto de factura (RF-CMP-002) guarda la foto como WebP sin metadatos y marca la donación" name="foto de factura (RF-CMP-002) guarda la foto como WebP sin metadatos y marca la donación" time="0.067">
+    </testcase>
+    <testcase classname="foto de factura (RF-CMP-002) una foto de 9 MB da 413 ARCHIVO_GRANDE con el mensaje de la API" name="foto de factura (RF-CMP-002) una foto de 9 MB da 413 ARCHIVO_GRANDE con el mensaje de la API" time="0.027">
+    </testcase>
+    <testcase classname="foto de factura (RF-CMP-002) un campo con otro nombre da 400 en español que nombra «factura»" name="foto de factura (RF-CMP-002) un campo con otro nombre da 400 en español que nombra «factura»" time="0.005">
+    </testcase>
+    <testcase classname="foto de factura (RF-CMP-002) una segunda foto reemplaza a la primera y borra la anterior" name="foto de factura (RF-CMP-002) una segunda foto reemplaza a la primera y borra la anterior" time="0.046">
+    </testcase>
+    <testcase classname="foto de factura (RF-CMP-002) un PDF renombrado se rechaza" name="foto de factura (RF-CMP-002) un PDF renombrado se rechaza" time="0.008">
+    </testcase>
+    <testcase classname="foto de factura (RF-CMP-002) otro Donador no puede subirla ni verla" name="foto de factura (RF-CMP-002) otro Donador no puede subirla ni verla" time="0.191">
+    </testcase>
+    <testcase classname="foto de factura (RF-CMP-002) el dueño y el Auditor del acopio reciben la imagen; el de otro acopio no" name="foto de factura (RF-CMP-002) el dueño y el Auditor del acopio reciben la imagen; el de otro acopio no" time="0.57">
+    </testcase>
+    <testcase classname="foto de factura (RF-CMP-002) una donación sin foto responde 404 SIN_FACTURA" name="foto de factura (RF-CMP-002) una donación sin foto responde 404 SIN_FACTURA" time="0.024">
+    </testcase>
+    <testcase classname="foto de factura (RF-CMP-002) si la donación ya no está preparada, responde 409 y no deja objetos huérfanos" name="foto de factura (RF-CMP-002) si la donación ya no está preparada, responde 409 y no deja objetos huérfanos" time="0.033">
+    </testcase>
+  </testsuite>
+  <testsuite name="sugerencias" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:33" time="3.374" tests="6">
+    <testcase classname="sugerencias propone desde los dos acopios, el más cercano primero, con justificación y desglose" name="sugerencias propone desde los dos acopios, el más cercano primero, con justificación y desglose" time="0.316">
+    </testcase>
+    <testcase classname="sugerencias un recálculo reemplaza las propuestas" name="sugerencias un recálculo reemplaza las propuestas" time="0.314">
+    </testcase>
+    <testcase classname="sugerencias un par descartado hace menos de 24 horas no se propone; después sí" name="sugerencias un par descartado hace menos de 24 horas no se propone; después sí" time="0.581">
+    </testcase>
+    <testcase classname="sugerencias un acopio cerrado no propone" name="sugerencias un acopio cerrado no propone" time="0.337">
+    </testcase>
+    <testcase classname="sugerencias una zona de una emergencia cerrada no recibe propuestas" name="sugerencias una zona de una emergencia cerrada no recibe propuestas" time="0.294">
+    </testcase>
+    <testcase classname="sugerencias el ranking por la API se filtra por categoría y es solo del Administrador" name="sugerencias el ranking por la API se filtra por categoría y es solo del Administrador" time="0.572">
+    </testcase>
+  </testsuite>
+  <testsuite name="presentaciones" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:37" time="1.668" tests="10">
+    <testcase classname="presentaciones una suelta de 0,6 L y un paquete de 12: el GET calcula 7,2 L" name="presentaciones una suelta de 0,6 L y un paquete de 12: el GET calcula 7,2 L" time="0.035">
+    </testcase>
+    <testcase classname="presentaciones el mismo nombre con otras mayúsculas: 409" name="presentaciones el mismo nombre con otras mayúsculas: 409" time="0.007">
+    </testcase>
+    <testcase classname="presentaciones un paquete que contiene otro paquete: 422" name="presentaciones un paquete que contiene otro paquete: 422" time="0.013">
+    </testcase>
+    <testcase classname="presentaciones una suelta de 50,001 L: 422" name="presentaciones una suelta de 50,001 L: 422" time="0.005">
+    </testcase>
+    <testcase classname="presentaciones una suelta de 2,5 en una categoría por unidades: 422" name="presentaciones una suelta de 2,5 en una categoría por unidades: 422" time="0.005">
+    </testcase>
+    <testcase classname="presentaciones cambiar la suelta a 5 L deja el paquete en 60 L: 422 y todo sigue igual" name="presentaciones cambiar la suelta a 5 L deja el paquete en 60 L: 422 y todo sigue igual" time="0.013">
+    </testcase>
+    <testcase classname="presentaciones solo el Administrador edita" name="presentaciones solo el Administrador edita" time="0.003">
+    </testcase>
+    <testcase classname="presentaciones cambiar la suelta a 0,5 L: el paquete pasa a 6 L y la bitácora lo nombra" name="presentaciones cambiar la suelta a 0,5 L: el paquete pasa a 6 L y la bitácora lo nombra" time="0.027">
+    </testcase>
+    <testcase classname="presentaciones una presentación inexistente: 404" name="presentaciones una presentación inexistente: 404" time="0.006">
+    </testcase>
+    <testcase classname="presentaciones el Donador ve las validadas y sus propuestas; el Operador ve todas" name="presentaciones el Donador ve las validadas y sus propuestas; el Operador ve todas" time="0.366">
+    </testcase>
+  </testsuite>
+  <testsuite name="necesidades públicas" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:38" time="1.173" tests="6">
+    <testcase classname="necesidades públicas sin sesión clasifica cada categoría del acopio" name="necesidades públicas sin sesión clasifica cada categoría del acopio" time="0.026">
+    </testcase>
+    <testcase classname="necesidades públicas cada lista va en orden alfabético de la categoría" name="necesidades públicas cada lista va en orden alfabético de la categoría" time="0.017">
+    </testcase>
+    <testcase classname="necesidades públicas una categoría con umbral y marca vigente solo sale en noRecibe" name="necesidades públicas una categoría con umbral y marca vigente solo sale en noRecibe" time="0.016">
+    </testcase>
+    <testcase classname="necesidades públicas no publica cantidades" name="necesidades públicas no publica cantidades" time="0.009">
+    </testcase>
+    <testcase classname="necesidades públicas un acopio cerrado no aparece" name="necesidades públicas un acopio cerrado no aparece" time="0.028">
+    </testcase>
+    <testcase classname="necesidades públicas una marca vencida no cuenta" name="necesidades públicas una marca vencida no cuenta" time="0.01">
+    </testcase>
+  </testsuite>
+  <testsuite name="autenticación" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:40" time="4.341" tests="11">
+    <testcase classname="autenticación iniciar sesión → token → endpoint protegido" name="autenticación iniciar sesión → token → endpoint protegido" time="0.008">
+    </testcase>
+    <testcase classname="autenticación el nombre de usuario no distingue mayúsculas" name="autenticación el nombre de usuario no distingue mayúsculas" time="0.089">
+    </testcase>
+    <testcase classname="autenticación sin token: 401" name="autenticación sin token: 401" time="0.003">
+    </testcase>
+    <testcase classname="autenticación contraseña equivocada y usuario inexistente dan el mismo mensaje" name="autenticación contraseña equivocada y usuario inexistente dan el mismo mensaje" time="0.187">
+    </testcase>
+    <testcase classname="autenticación un token firmado con otra llave: 401" name="autenticación un token firmado con otra llave: 401" time="0.04">
+    </testcase>
+    <testcase classname="autenticación un token alterado: 401" name="autenticación un token alterado: 401" time="0.006">
+    </testcase>
+    <testcase classname="autenticación el JWKS publica solo la llave pública" name="autenticación el JWKS publica solo la llave pública" time="0.002">
+    </testcase>
+    <testcase classname="autenticación suspender corta el acceso en el siguiente request, con el token aún vigente" name="autenticación suspender corta el acceso en el siguiente request, con el token aún vigente" time="0.251">
+    </testcase>
+    <testcase classname="autenticación un invitado o suspendido no puede iniciar sesión" name="autenticación un invitado o suspendido no puede iniciar sesión" time="0.308">
+    </testcase>
+    <testcase classname="autenticación restablecer acceso invalida la sesión anterior al canjearse (RF-IDE-009)" name="autenticación restablecer acceso invalida la sesión anterior al canjearse (RF-IDE-009)" time="1.613">
+    </testcase>
+    <testcase classname="límite de intentos por IP (RNF-08) el sexto intento de sesión en un minuto recibe 429" name="límite de intentos por IP (RNF-08) el sexto intento de sesión en un minuto recibe 429" time="0.473">
+    </testcase>
+  </testsuite>
+  <testsuite name="referenciados en la API pública" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:44" time="0.91" tests="7">
+    <testcase classname="referenciados en la API pública sin «tipos», el mapa devuelve lo de siempre: ningún referenciado" name="referenciados en la API pública sin «tipos», el mapa devuelve lo de siempre: ningún referenciado" time="0.012">
+    </testcase>
+    <testcase classname="referenciados en la API pública con «tipos», trae los referenciados, cerrados incluidos, con su fuente y sin entidad" name="referenciados en la API pública con «tipos», trae los referenciados, cerrados incluidos, con su fuente y sin entidad" time="0.008">
+    </testcase>
+    <testcase classname="referenciados en la API pública un referenciado que ocultó el Administrador no sale nunca" name="referenciados en la API pública un referenciado que ocultó el Administrador no sale nunca" time="0.009">
+    </testcase>
+    <testcase classname="referenciados en la API pública la ficha de un referenciado trae su fuente" name="referenciados en la API pública la ficha de un referenciado trae su fuente" time="0.004">
+    </testcase>
+    <testcase classname="referenciados en la API pública un operado trae tipo OPERADO y fuente nula" name="referenciados en la API pública un operado trae tipo OPERADO y fuente nula" time="0.004">
+    </testcase>
+    <testcase classname="referenciados en la API pública las otras plataformas se ven sin sesión, en su orden" name="referenciados en la API pública las otras plataformas se ven sin sesión, en su orden" time="0.009">
+    </testcase>
+    <testcase classname="referenciados en la API pública la imagen de una plataforma se sirve sin sesión; sin imagen da 404" name="referenciados en la API pública la imagen de una plataforma se sirve sin sesión; sin imagen da 404" time="0.017">
+    </testcase>
+  </testsuite>
+  <testsuite name="balance público" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:45" time="0.918" tests="6">
+    <testcase classname="balance público sin sesión dice qué falta y qué no traer, con cuántos acopios" name="balance público sin sesión dice qué falta y qué no traer, con cuántos acopios" time="0.012">
+    </testcase>
+    <testcase classname="balance público un acopio cerrado no cuenta" name="balance público un acopio cerrado no cuenta" time="0.009">
+    </testcase>
+    <testcase classname="balance público el titular excluye las marcas y coincide con el detalle del mapa" name="balance público el titular excluye las marcas y coincide con el detalle del mapa" time="0.029">
+    </testcase>
+    <testcase classname="balance público una marca de «no recibir» que ya venció no cuenta" name="balance público una marca de «no recibir» que ya venció no cuenta" time="0.009">
+    </testcase>
+    <testcase classname="balance público «lo que urge» de un acopio nombra lo que está bajo el mínimo, sin cantidades" name="balance público «lo que urge» de un acopio nombra lo que está bajo el mínimo, sin cantidades" time="0.015">
+    </testcase>
+    <testcase classname="balance público «lo que urge» de un acopio que no existe da la lista vacía" name="balance público «lo que urge» de un acopio que no existe da la lista vacía" time="0.006">
+    </testcase>
+  </testsuite>
+  <testsuite name="carga por CSV" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:46" time="1.407" tests="8">
+    <testcase classname="carga por CSV revisar dice qué fila falla y en qué columna, sin escribir nada" name="carga por CSV revisar dice qué fila falla y en qué columna, sin escribir nada" time="0.015">
+    </testcase>
+    <testcase classname="carga por CSV aplicar con una fila mala responde 422 con el reporte y no escribe ninguna" name="carga por CSV aplicar con una fila mala responde 422 con el reporte y no escribe ninguna" time="0.008">
+    </testcase>
+    <testcase classname="carga por CSV aplicar un archivo bueno crea todas las filas" name="carga por CSV aplicar un archivo bueno crea todas las filas" time="0.034">
+    </testcase>
+    <testcase classname="carga por CSV una plataforma que ya está en la lista, o repetida en el archivo, falla en su nombre" name="carga por CSV una plataforma que ya está en la lista, o repetida en el archivo, falla en su nombre" time="0.039">
+    </testcase>
+    <testcase classname="carga por CSV lista los formatos con sus columnas, para la pantalla futura" name="carga por CSV lista los formatos con sus columnas, para la pantalla futura" time="0.004">
+    </testcase>
+    <testcase classname="carga por CSV un tipo que no existe da 404" name="carga por CSV un tipo que no existe da 404" time="0.004">
+    </testcase>
+    <testcase classname="carga por CSV sin archivo da 400" name="carga por CSV sin archivo da 400" time="0.003">
+    </testcase>
+    <testcase classname="carga por CSV un Operador no carga CSV" name="carga por CSV un Operador no carga CSV" time="0.236">
+    </testcase>
+  </testsuite>
+  <testsuite name="umbrales" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:47" time="1.577" tests="10">
+    <testcase classname="umbrales el Operador fija mínimo y máximo, con bitácora" name="umbrales el Operador fija mínimo y máximo, con bitácora" time="0.019">
+    </testcase>
+    <testcase classname="umbrales el Administrador también fija, en cualquier acopio" name="umbrales el Administrador también fija, en cualquier acopio" time="0.014">
+    </testcase>
+    <testcase classname="umbrales mínimo mayor que máximo: 400" name="umbrales mínimo mayor que máximo: 400" time="0.004">
+    </testcase>
+    <testcase classname="umbrales un valor diminuto (1e-10): 400" name="umbrales un valor diminuto (1e-10): 400" time="0.004">
+    </testcase>
+    <testcase classname="umbrales quitar el umbral de un acopio cerrado: 409" name="umbrales quitar el umbral de un acopio cerrado: 409" time="0.02">
+    </testcase>
+    <testcase classname="umbrales dos PUT simultáneos de un umbral nuevo: los dos responden 200" name="umbrales dos PUT simultáneos de un umbral nuevo: los dos responden 200" time="0.092">
+    </testcase>
+    <testcase classname="umbrales negativos: 400" name="umbrales negativos: 400" time="0.004">
+    </testcase>
+    <testcase classname="umbrales el Auditor y un Operador ajeno no fijan: 403" name="umbrales el Auditor y un Operador ajeno no fijan: 403" time="0.007">
+    </testcase>
+    <testcase classname="umbrales quitar el umbral vuelve a «Sin umbral»" name="umbrales quitar el umbral vuelve a «Sin umbral»" time="0.016">
+    </testcase>
+    <testcase classname="umbrales categoría inexistente: 404" name="umbrales categoría inexistente: 404" time="0.007">
+    </testcase>
+  </testsuite>
+  <testsuite name="movimientos de una remisión" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:49" time="0.916" tests="5">
+    <testcase classname="movimientos de una remisión la salida de traslado baja el saldo y lleva la remisión" name="movimientos de una remisión la salida de traslado baja el saldo y lleva la remisión" time="0.016">
+    </testcase>
+    <testcase classname="movimientos de una remisión no deja sacar más que el saldo" name="movimientos de una remisión no deja sacar más que el saldo" time="0.005">
+    </testcase>
+    <testcase classname="movimientos de una remisión el ajuste de la cancelación devuelve el saldo con su motivo" name="movimientos de una remisión el ajuste de la cancelación devuelve el saldo con su motivo" time="0.013">
+    </testcase>
+    <testcase classname="movimientos de una remisión la recepción en zona no toca el saldo de ningún acopio" name="movimientos de una remisión la recepción en zona no toca el saldo de ningún acopio" time="0.008">
+    </testcase>
+    <testcase classname="movimientos de una remisión una categoría archivada con una remisión en camino se sigue recibiendo" name="movimientos de una remisión una categoría archivada con una remisión en camino se sigue recibiendo" time="0.008">
+    </testcase>
+  </testsuite>
+  <testsuite name="imágenes de la demo" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:50" time="1.57" tests="5">
+    <testcase classname="imágenes de la demo cada causa de la demo queda con imagen y su entidad con logotipo, y la API los sirve" name="imágenes de la demo cada causa de la demo queda con imagen y su entidad con logotipo, y la API los sirve" time="0.323">
+    </testcase>
+    <testcase classname="imágenes de la demo una segunda corrida no cambia las imágenes" name="imágenes de la demo una segunda corrida no cambia las imágenes" time="0.006">
+    </testcase>
+    <testcase classname="imágenes de la demo una causa de la demo con la ilustración vieja pasa a la nueva" name="imágenes de la demo una causa de la demo con la ilustración vieja pasa a la nueva" time="0.075">
+    </testcase>
+    <testcase classname="imágenes de la demo cada plataforma con imagen guardada para su dominio la recibe, una sola vez" name="imágenes de la demo cada plataforma con imagen guardada para su dominio la recibe, una sola vez" time="0.095">
+    </testcase>
+    <testcase classname="imágenes de la demo las entidades de la demo con logo guardado para su sitio lo reciben en lugar del abstracto" name="imágenes de la demo las entidades de la demo con logo guardado para su sitio lo reciben en lugar del abstracto" time="0.028">
+    </testcase>
+  </testsuite>
+  <testsuite name="tareas programadas de custodia" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:51" time="1.207" tests="3">
+    <testcase classname="tareas programadas de custodia cancela las preparadas de más de 7 días y deja las recientes" name="tareas programadas de custodia cancela las preparadas de más de 7 días y deja las recientes" time="0.053">
+    </testcase>
+    <testcase classname="tareas programadas de custodia borra las facturas de comprobantes cerrados hace 12 meses y deja las demás" name="tareas programadas de custodia borra las facturas de comprobantes cerrados hace 12 meses y deja las demás" time="0.117">
+    </testcase>
+    <testcase classname="tareas programadas de custodia una segunda corrida no encuentra nada que borrar" name="tareas programadas de custodia una segunda corrida no encuentra nada que borrar" time="0.044">
+    </testcase>
+  </testsuite>
+  <testsuite name="turnos: datos" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:53" time="0.866" tests="5">
+    <testcase classname="turnos: datos una jornada tiene un solo dueño" name="turnos: datos una jornada tiene un solo dueño" time="0.004">
+    </testcase>
+    <testcase classname="turnos: datos la jornada de entidad lleva su lugar" name="turnos: datos la jornada de entidad lleva su lugar" time="0.004">
+    </testcase>
+    <testcase classname="turnos: datos cupo de 1 a 500 y fin después del inicio" name="turnos: datos cupo de 1 a 500 y fin después del inicio" time="0.004">
+    </testcase>
+    <testcase classname="turnos: datos un correo tiene una sola reserva viva por jornada (T-10)" name="turnos: datos un correo tiene una sola reserva viva por jornada (T-10)" time="0.006">
+    </testcase>
+    <testcase classname="turnos: datos acopio_app no puede borrar reservas" name="turnos: datos acopio_app no puede borrar reservas" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="rendimiento del motor" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:53" time="3.69" tests="1">
+    <testcase classname="rendimiento del motor recalcula en menos de 5 s" name="rendimiento del motor recalcula en menos de 5 s" time="1.627">
+    </testcase>
+  </testsuite>
+  <testsuite name="acopio referenciado: reglas" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:57" time="1.599" tests="6">
+    <testcase classname="acopio referenciado: reglas no recibe entradas: solo las registra un Operador asignado, y no se le puede asignar" name="acopio referenciado: reglas no recibe entradas: solo las registra un Operador asignado, y no se le puede asignar" time="0.236">
+    </testcase>
+    <testcase classname="acopio referenciado: reglas no recibe umbrales" name="acopio referenciado: reglas no recibe umbrales" time="0.009">
+    </testcase>
+    <testcase classname="acopio referenciado: reglas no recibe jornadas de voluntariado" name="acopio referenciado: reglas no recibe jornadas de voluntariado" time="0.008">
+    </testcase>
+    <testcase classname="acopio referenciado: reglas no se asigna a una persona: cuenta como una ubicación que no existe" name="acopio referenciado: reglas no se asigna a una persona: cuenta como una ubicación que no existe" time="0.006">
+    </testcase>
+    <testcase classname="acopio referenciado: reglas no sale en la consola ni en el mapa de siempre" name="acopio referenciado: reglas no sale en la consola ni en el mapa de siempre" time="0.02">
+    </testcase>
+    <testcase classname="acopio referenciado: reglas un operador nuevo con un acopio operado sigue funcionando" name="acopio referenciado: reglas un operador nuevo con un acopio operado sigue funcionando" time="0.21">
+    </testcase>
+  </testsuite>
+  <testsuite name="no recibir" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:32:59" time="1.271" tests="6">
+    <testcase classname="no recibir el Operador marca «no recibir» y se publica de inmediato" name="no recibir el Operador marca «no recibir» y se publica de inmediato" time="0.032">
+    </testcase>
+    <testcase classname="no recibir una marca vencida no cuenta" name="no recibir una marca vencida no cuenta" time="0.009">
+    </testcase>
+    <testcase classname="no recibir desmarcar la quita" name="no recibir desmarcar la quita" time="0.029">
+    </testcase>
+    <testcase classname="no recibir con un acopio ajeno: 403" name="no recibir con un acopio ajeno: 403" time="0.005">
+    </testcase>
+    <testcase classname="no recibir hasta en el pasado: 422" name="no recibir hasta en el pasado: 422" time="0.005">
+    </testcase>
+    <testcase classname="no recibir categoría archivada: 404; acopio cerrado: 409" name="no recibir categoría archivada: 404; acopio cerrado: 409" time="0.015">
+    </testcase>
+  </testsuite>
+  <testsuite name="configuración del motor" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:33:00" time="1.278" tests="5">
+    <testcase classname="configuración del motor lee los valores del seed" name="configuración del motor lee los valores del seed" time="0.008">
+    </testcase>
+    <testcase classname="configuración del motor guarda pesos que suman 1 con tolerancia, con bitácora" name="configuración del motor guarda pesos que suman 1 con tolerancia, con bitácora" time="0.024">
+    </testcase>
+    <testcase classname="configuración del motor rechaza pesos que no suman 1" name="configuración del motor rechaza pesos que no suman 1" time="0.006">
+    </testcase>
+    <testcase classname="configuración del motor la vista previa devuelve los dos rankings y no guarda nada" name="configuración del motor la vista previa devuelve los dos rankings y no guarda nada" time="0.065">
+    </testcase>
+    <testcase classname="configuración del motor solo el Administrador" name="configuración del motor solo el Administrador" time="0.231">
+    </testcase>
+  </testsuite>
+  <testsuite name="sesión en cookie" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:33:01" time="1.329" tests="6">
+    <testcase classname="sesión en cookie devuelve la cookie HttpOnly y el cuerpo no trae el token" name="sesión en cookie devuelve la cookie HttpOnly y el cuerpo no trae el token" time="0.096">
+    </testcase>
+    <testcase classname="sesión en cookie /auth/yo responde con solo la cookie" name="sesión en cookie /auth/yo responde con solo la cookie" time="0.097">
+    </testcase>
+    <testcase classname="sesión en cookie /auth/salir vence la cookie" name="sesión en cookie /auth/salir vence la cookie" time="0.003">
+    </testcase>
+    <testcase classname="sesión en cookie una escritura con cookie desde otro origen: 403" name="sesión en cookie una escritura con cookie desde otro origen: 403" time="0.093">
+    </testcase>
+    <testcase classname="sesión en cookie la misma escritura desde el origen de la web pasa" name="sesión en cookie la misma escritura desde el origen de la web pasa" time="0.102">
+    </testcase>
+    <testcase classname="sesión en cookie con Bearer y otro origen no aplica el control: la cookie es lo que se protege" name="sesión en cookie con Bearer y otro origen no aplica el control: la cookie es lo que se protege" time="0.101">
+    </testcase>
+  </testsuite>
+  <testsuite name="población de una zona" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:33:03" time="1.098" tests="4">
+    <testcase classname="población de una zona un número nuevo sin fuente ni fecha no se guarda" name="población de una zona un número nuevo sin fuente ni fecha no se guarda" time="0.011">
+    </testcase>
+    <testcase classname="población de una zona con la misma fecha tampoco" name="población de una zona con la misma fecha tampoco" time="0.007">
+    </testcase>
+    <testcase classname="población de una zona con fuente y fecha nuevas se guarda y la bitácora tiene el antes y el después" name="población de una zona con fuente y fecha nuevas se guarda y la bitácora tiene el antes y el después" time="0.017">
+    </testcase>
+    <testcase classname="población de una zona cambiar otro campo sin tocar la población no exige fuente" name="población de una zona cambiar otro campo sin tocar la población no exige fuente" time="0.009">
+    </testcase>
+  </testsuite>
+  <testsuite name="captcha (ADR-0024)" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:33:04" time="0.977" tests="7">
+    <testcase classname="captcha (ADR-0024) el reto es público y viene firmado" name="captcha (ADR-0024) el reto es público y viene firmado" time="0.006">
+    </testcase>
+    <testcase classname="captcha (ADR-0024) con una prueba válida el registro pasa" name="captcha (ADR-0024) con una prueba válida el registro pasa" time="0.033">
+    </testcase>
+    <testcase classname="captcha (ADR-0024) sin prueba responde 400 CAPTCHA_INVALIDO" name="captcha (ADR-0024) sin prueba responde 400 CAPTCHA_INVALIDO" time="0.003">
+    </testcase>
+    <testcase classname="captcha (ADR-0024) una prueba que no es de ALTCHA responde 400" name="captcha (ADR-0024) una prueba que no es de ALTCHA responde 400" time="0.002">
+    </testcase>
+    <testcase classname="captcha (ADR-0024) una prueba con la solución alterada responde 400" name="captcha (ADR-0024) una prueba con la solución alterada responde 400" time="0.023">
+    </testcase>
+    <testcase classname="captcha (ADR-0024) una prueba sirve una sola vez" name="captcha (ADR-0024) una prueba sirve una sola vez" time="0.028">
+    </testcase>
+    <testcase classname="captcha (ADR-0024) una prueba usada se borra cuando vence" name="captcha (ADR-0024) una prueba usada se borra cuando vence" time="0.034">
+    </testcase>
+  </testsuite>
+  <testsuite name="el Donador y la consola" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:33:05" time="1.065" tests="6">
+    <testcase classname="el Donador y la consola ve su propia sesión" name="el Donador y la consola ve su propia sesión" time="0.009">
+    </testcase>
+    <testcase classname="el Donador y la consola busca categorías para armar su donación" name="el Donador y la consola busca categorías para armar su donación" time="0.012">
+    </testcase>
+    <testcase classname="el Donador y la consola no entra a /api/categorias, que es de la consola" name="el Donador y la consola no entra a /api/categorias, que es de la consola" time="0.006">
+    </testcase>
+    <testcase classname="el Donador y la consola no entra a /api/acopios/gestion, que es de la consola" name="el Donador y la consola no entra a /api/acopios/gestion, que es de la consola" time="0.004">
+    </testcase>
+    <testcase classname="el Donador y la consola no entra a /api/bitacora, que es de la consola" name="el Donador y la consola no entra a /api/bitacora, que es de la consola" time="0.004">
+    </testcase>
+    <testcase classname="el Donador y la consola no entra a /api/usuarios, que es de la consola" name="el Donador y la consola no entra a /api/usuarios, que es de la consola" time="0.003">
+    </testcase>
+  </testsuite>
+  <testsuite name="salud" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:33:06" time="1.015" tests="1">
+    <testcase classname="salud es pública y dice la versión de apps/api/package.json" name="salud es pública y dice la versión de apps/api/package.json" time="0.006">
+    </testcase>
+  </testsuite>
+</testsuites>

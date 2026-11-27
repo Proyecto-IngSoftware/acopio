@@ -1,0 +1,7 @@
+Run de CI en main tras fusionar el PR #197: https://github.com/Proyecto-IngSoftware/acopio/actions/runs/45965859422
+Commit: cca65b6 (versión 1.0.0). Conclusión: success.
+Artifact reportes-pruebas-cca65b61de04ca7e46f9d7a4432f27a1abf39e45-1 (JUnit):
+  api-unitarias.xml      104 pruebas, 0 fallas, 20 suites
+  shared-unitarias.xml   116 pruebas, 0 fallas, 13 suites
+  web-unitarias.xml     1258 pruebas, 0 fallas, 123 suites
+  api-integracion.xml    567 pruebas, 0 fallas, 50 suites (PostgreSQL 16 como servicio del job)

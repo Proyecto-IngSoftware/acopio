@@ -1,0 +1,11 @@
+omite  crear cuenta y confirmar el correo (SIN_CORREO=1)
+ok    entra con el Donador de la demo
+ok    preparar: buscar una categoría
+ok    elegir el primer acopio y adjuntar una foto
+ok    ver el folio
+ok    abrir el seguimiento del folio
+ok    privacidad
+ok    cancelar la donación desde «Mis donaciones»
+
+Errores de la página: 0
+Resultado: 7 bien, 0 mal

@@ -1,0 +1,5 @@
+pg_dump (texto plano) de la base acopio del Compose local: 915126 bytes en 0,35 s
+restauración en un PostgreSQL 16 vacío con psql -v ON_ERROR_STOP=1: código 0 en 0,89 s
+antes.txt y despues.txt: mismas seis cifras (diff sin diferencias)
+permisos.txt: acopio_app no puede UPDATE en bitacora y sí INSERT
+Fecha: 2026-11-27, versión 1.0.0 (commit cca65b6)

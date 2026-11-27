@@ -120,9 +120,9 @@ integrante llena su fila.
 | Integrante | ¿Qué terminé desde el último seguimiento? | ¿Qué haré a continuación? | ¿Qué bloqueo o ayuda necesito? |
 |---|---|---|---|
 | Joseph | Bloque 3 completo: donaciones con folio, recepción, conciliación y seguimiento, con su interfaz. Etapa 1 de la API del motor: necesidad, excedentes, sugerencias, aprobar y descartar | Etapa 2 de la API del motor: remisiones, recepción en zona y reportes de necesidad | Que alguien más pruebe el escáner con un teléfono real (P-037) |
-| Brayan | Pendiente: se llena en el seguimiento | | |
-| Alejandra | Pendiente: se llena en el seguimiento | | |
-| Michael | Pendiente: se llena en el seguimiento | | |
+| Brayan | Configuración del entorno local con Docker y pruebas iniciales de la creación de folios para las donaciones (HU-07). Preparación de datos semilla (usuarios y acopios de prueba). | Ejecutar el ciclo completo probando los roles de Operador y Auditor (recepción y conciliación) para asegurar que los cambios de estado en la base de datos coincidan con los diagramas. | Credenciales y cuentas de acceso con diferentes roles. Limitacion de equipo. |
+| Alejandra | Elaboré el diagrama de componentes de la cola de correo, identificando los productores, la cola y el consumidor. Pruebas y testeo de flujo. | Revisar el diagrama y preparar su explicación para la sustentación. | Ninguno por el momento. |
+| Michael | Elaboré el diagrama de estados de las donaciones, representando sus transiciones desde la preparación hasta la conciliación, el rechazo o la cancelación. Apoyo con documentación y realización de los diagramas. | Revisar las transiciones y validar que correspondan con el funcionamiento del sistema. | Ninguno por el momento. |
 
 ### 3c. Sprint Review y retrospectiva
 

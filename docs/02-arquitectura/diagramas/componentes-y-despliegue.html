@@ -1,0 +1,406 @@
+<title>Componentes y despliegue de Acopio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;600;700&display=swap">
+<style>
+/* Mismo plano técnico que paquetes.html: tema claro fijo, como el Word. */
+:root {
+  --bg: #F7F8F7;
+  --fg: #1F2624;
+  --muted: #5B6662;
+  --pkg: #ECEFEE;
+  --pkg-line: #9AA6A2;
+  --inner: #FFFFFF;
+  --accent: #0F6E6E;
+  --accent-soft: #D7ECEC;
+  --sans: 'IBM Plex Sans', 'Segoe UI', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', Consolas, 'Courier New', monospace;
+  color-scheme: light;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.55; }
+.hoja { max-width: 1240px; margin: 0 auto; padding-inline: 16px; padding-block: 28px 48px; display: grid; gap: 28px; }
+header { display: grid; gap: 6px; max-width: 72ch; }
+.ceja { font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+h1 { margin: 0; font-size: 30px; line-height: 1.15; text-wrap: balance; }
+h2 { margin: 0; font-size: 20px; text-wrap: balance; }
+p { margin: 0; max-width: 72ch; }
+code { font-family: var(--mono); font-size: .92em; }
+.leyenda { display: flex; flex-wrap: wrap; gap: 10px 24px; font-size: 13.5px; color: var(--muted); }
+.leyenda span { display: inline-flex; align-items: center; gap: 8px; }
+.leyenda svg { width: 44px; height: 18px; color: var(--fg); }
+figure { margin: 0; display: grid; gap: 12px; }
+.lamina { overflow-x: auto; border: 1px solid var(--pkg-line); border-radius: 6px; background: var(--bg); }
+.lamina > svg { display: block; width: 100%; min-width: 900px; height: auto; color: var(--fg); }
+figcaption { display: grid; gap: 8px; }
+figcaption p { color: var(--muted); }
+.tabla { overflow-x: auto; }
+table { border-collapse: collapse; font-size: 14px; }
+th, td { border: 1px solid var(--pkg-line); padding: 4px 10px; text-align: left; vertical-align: top; }
+th { background: var(--pkg); }
+td:first-child { font-family: var(--mono); }
+/* Clases del SVG */
+.grupo { fill: var(--pkg); stroke: var(--pkg-line); }
+.caja { fill: var(--inner); stroke: var(--pkg-line); }
+.propio { fill: var(--accent-soft); stroke: var(--accent); }
+.ext { fill: var(--inner); stroke: var(--accent); stroke-dasharray: 5 4; }
+.borde { fill: none; stroke: var(--muted); stroke-dasharray: 6 5; }
+.t { font: 600 13px var(--mono); fill: currentColor; }
+.t2 { font: 600 12px var(--mono); fill: currentColor; }
+.s { font: 12px var(--sans); fill: var(--muted); }
+.s2 { font: 11px var(--sans); fill: var(--muted); }
+.e { font: italic 11px var(--sans); fill: var(--muted); }
+.l { stroke: currentColor; stroke-width: 1.4; fill: none; }
+.bola { fill: var(--inner); stroke: currentColor; stroke-width: 1.6; }
+/* Halo del color del fondo para que una línea que cruza no tape la etiqueta */
+.halo { paint-order: stroke; stroke: var(--pkg); stroke-width: 5px; stroke-linejoin: round; }
+</style>
+
+<div class="hoja">
+  <header>
+    <span class="ceja">Avance 6 · Sprint 3</span>
+    <h1>Componentes y despliegue de Acopio</h1>
+    <p>Las dos vistas representan la versión 1.0.0 que corre en <code>acopio.josephqaz.dev</code>. La primera muestra los componentes de la API y sus conectores, con las interfaces que ofrecen y las que requieren. La segunda muestra dónde corre cada artefacto. La decisión que las organiza es el ADR-003 del curso (ADR-0026 del repositorio).</p>
+  </header>
+
+  <div class="leyenda" aria-label="Leyenda">
+    <span><svg viewBox="0 0 44 18" aria-hidden="true"><line x1="2" y1="9" x2="34" y2="9" stroke="currentColor" stroke-width="1.6"/><polygon points="34,4.5 42,9 34,13.5" fill="currentColor"/></svg>llama a o depende de (sentido de la flecha)</span>
+    <span><svg viewBox="0 0 44 18" aria-hidden="true"><line x1="2" y1="9" x2="30" y2="9" stroke="currentColor" stroke-width="1.6"/><circle cx="36" cy="9" r="5.5" style="fill:var(--inner);stroke:currentColor;stroke-width:1.6"/></svg>interfaz ofrecida</span>
+    <span><svg viewBox="0 0 44 18" aria-hidden="true"><line x1="2" y1="9" x2="26" y2="9" stroke="currentColor" stroke-width="1.6"/><path d="M34,1 A8,8 0 0 0 34,17" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>interfaz requerida</span>
+    <span><svg viewBox="0 0 44 18" aria-hidden="true"><rect x="2" y="2" width="40" height="14" style="fill:var(--inner);stroke:var(--accent);stroke-dasharray:5 4"/></svg>sistema externo</span>
+    <span><svg viewBox="0 0 44 18" aria-hidden="true"><rect x="2" y="2" width="40" height="14" style="fill:var(--accent-soft);stroke:var(--accent)"/></svg>artefacto o datos propios</span>
+  </div>
+
+  <figure>
+    <h2>1. Componentes y conectores</h2>
+    <div class="lamina">
+      <svg viewBox="0 0 1220 800" role="img" aria-label="El navegador usa la interfaz REST de la API. Dentro de la API, ocho módulos de dominio usan por inyección de dependencias seis servicios transversales. Identidad ofrece ProveedorIdentidad a los guards y requiere VerificadorUbicaciones, que ofrece acopios. Identidad llama a Supabase Auth, acopios a Nominatim, importacion a RedAcopio, notificaciones al SMTP de Hostinger, almacenamiento a Garage y el acceso a datos a PostgreSQL.">
+        <defs>
+          <marker id="f1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+        </defs>
+
+        <!-- Navegador y teselas -->
+        <rect x="440" y="20" width="340" height="60" class="caja"/>
+        <text x="456" y="44" class="t">Navegador · SPA (apps/web)</text>
+        <text x="456" y="64" class="s">React · ClienteAuth · cliente tipado por OpenAPI</text>
+        <rect x="960" y="20" width="240" height="60" class="ext"/>
+        <text x="976" y="44" class="t">OpenStreetMap</text>
+        <text x="976" y="64" class="s">teselas del mapa público</text>
+        <line x1="780" y1="50" x2="958" y2="50" class="l" marker-end="url(#f1)"/>
+        <text x="870" y="42" text-anchor="middle" class="s">HTTPS</text>
+
+        <!-- Interfaz REST: el navegador la requiere, la API la ofrece -->
+        <line x1="610" y1="80" x2="610" y2="113" class="l"/>
+        <path d="M601,122 A9,9 0 0 1 619,122" class="l"/>
+        <circle cx="610" cy="122" r="6" class="bola"/>
+        <line x1="610" y1="128" x2="610" y2="150" class="l"/>
+        <text x="630" y="112" class="s">REST /api · JSON · cookie acopio_sesion (ADR-0014)</text>
+        <text x="630" y="128" class="s">contrato: docs/03-diseno/api/openapi.json</text>
+
+        <!-- Límite de la API -->
+        <rect x="20" y="128" width="300" height="22" class="grupo"/>
+        <text x="30" y="144" class="t">apps/api · NestJS · monolito modular</text>
+        <rect x="20" y="150" width="1180" height="470" class="grupo"/>
+
+        <rect x="40" y="170" width="1140" height="44" class="caja"/>
+        <text x="56" y="197" class="t">controladores HTTP y guards</text>
+        <text x="300" y="197" class="s">sesión (cookie o Bearer) · Origin · @Roles · captcha · límite de intentos · errores con un solo formato</text>
+
+        <!-- ProveedorIdentidad: identidad lo ofrece, los guards lo requieren -->
+        <line x1="106" y1="214" x2="106" y2="241" class="l"/>
+        <path d="M97,250 A9,9 0 0 1 115,250" class="l"/>
+        <circle cx="106" cy="250" r="6" class="bola"/>
+        <line x1="106" y1="256" x2="106" y2="270" class="l"/>
+        <text x="124" y="246" class="s">«interfaz» ProveedorIdentidad: adaptadores local y supabase</text>
+
+        <!-- Módulos de dominio -->
+        <rect x="40" y="270" width="133" height="80" class="caja"/>
+        <text x="50" y="292" class="t">identidad</text>
+        <text x="50" y="312" class="s2">cuentas, roles,</text>
+        <text x="50" y="327" class="s2">invitaciones, sesión</text>
+
+        <rect x="182" y="270" width="133" height="80" class="caja"/>
+        <text x="192" y="292" class="t">acopios</text>
+        <text x="192" y="312" class="s2">acopios, zonas,</text>
+        <text x="192" y="327" class="s2">emergencias, mapa</text>
+
+        <rect x="324" y="270" width="133" height="80" class="caja"/>
+        <text x="334" y="292" class="t">catalogo</text>
+        <text x="334" y="312" class="s2">categorías, canasta,</text>
+        <text x="334" y="327" class="s2">códigos de barras</text>
+
+        <rect x="466" y="270" width="133" height="80" class="caja"/>
+        <text x="476" y="292" class="t">inventario</text>
+        <text x="476" y="312" class="s2">movimientos, saldos,</text>
+        <text x="476" y="327" class="s2">umbrales</text>
+
+        <rect x="608" y="270" width="133" height="80" class="caja"/>
+        <text x="618" y="292" class="t">comprobantes</text>
+        <text x="618" y="312" class="s2">donaciones con folio,</text>
+        <text x="618" y="327" class="s2">recepción</text>
+
+        <rect x="750" y="270" width="133" height="80" class="caja"/>
+        <text x="760" y="292" class="t">motor</text>
+        <text x="760" y="312" class="s2">necesidad, sugerencias,</text>
+        <text x="760" y="327" class="s2">remisiones</text>
+
+        <rect x="892" y="270" width="133" height="80" class="caja"/>
+        <text x="902" y="292" class="t">turnos</text>
+        <text x="902" y="312" class="s2">jornadas, reservas,</text>
+        <text x="902" y="327" class="s2">aforo, asistencia</text>
+
+        <rect x="1034" y="270" width="146" height="80" class="caja"/>
+        <text x="1044" y="292" class="t">importacion</text>
+        <text x="1044" y="312" class="s2">puntos de otras</text>
+        <text x="1044" y="327" class="s2">fuentes (adaptadores)</text>
+
+        <!-- VerificadorUbicaciones: acopios lo ofrece, identidad lo requiere -->
+        <line x1="248" y1="350" x2="248" y2="366" class="l"/>
+        <circle cx="248" cy="372" r="6" class="bola"/>
+        <polyline points="150,350 150,372 230,372" class="l"/>
+        <path d="M239,363 A9,9 0 0 0 239,381" class="l"/>
+
+        <!-- Salidas de identidad, acopios e importacion: pasan por detrás de la franja -->
+        <line x1="120" y1="350" x2="120" y2="698" class="l" marker-end="url(#f1)"/>
+        <line x1="290" y1="350" x2="290" y2="698" class="l" marker-end="url(#f1)"/>
+        <line x1="1140" y1="350" x2="1140" y2="698" class="l" marker-end="url(#f1)"/>
+
+        <!-- Cada módulo de dominio usa los servicios transversales -->
+        <line x1="75" y1="350" x2="75" y2="428" class="l" marker-end="url(#f1)"/>
+        <line x1="210" y1="350" x2="210" y2="428" class="l" marker-end="url(#f1)"/>
+        <line x1="359" y1="350" x2="359" y2="428" class="l" marker-end="url(#f1)"/>
+        <line x1="501" y1="350" x2="501" y2="428" class="l" marker-end="url(#f1)"/>
+        <line x1="643" y1="350" x2="643" y2="428" class="l" marker-end="url(#f1)"/>
+        <line x1="785" y1="350" x2="785" y2="428" class="l" marker-end="url(#f1)"/>
+        <line x1="927" y1="350" x2="927" y2="428" class="l" marker-end="url(#f1)"/>
+        <line x1="1069" y1="350" x2="1069" y2="428" class="l" marker-end="url(#f1)"/>
+
+        <rect x="40" y="430" width="1140" height="30" class="caja"/>
+        <text x="610" y="450" text-anchor="middle" class="t2">inyección de dependencias de NestJS · los módulos de dominio dependen entre sí según la tabla de abajo</text>
+
+        <!-- Servicios transversales, cada uno ofrece su interfaz -->
+        <line x1="436" y1="460" x2="436" y2="482" class="l"/><circle cx="436" cy="488" r="6" class="bola"/><line x1="436" y1="494" x2="436" y2="500" class="l"/>
+        <rect x="380" y="500" width="112" height="80" class="caja"/>
+        <text x="390" y="520" class="t2">acceso a datos</text>
+        <text x="390" y="540" class="s2">PrismaService</text>
+        <text x="390" y="556" class="s2">DAO por módulo</text>
+        <text x="390" y="571" class="s2">(ADR-0019)</text>
+
+        <line x1="556" y1="460" x2="556" y2="482" class="l"/><circle cx="556" cy="488" r="6" class="bola"/><line x1="556" y1="494" x2="556" y2="500" class="l"/>
+        <rect x="500" y="500" width="112" height="80" class="caja"/>
+        <text x="510" y="520" class="t2">notificaciones</text>
+        <text x="510" y="540" class="s2">NotificacionService</text>
+        <text x="510" y="556" class="s2">cola correo_saliente</text>
+
+        <line x1="676" y1="460" x2="676" y2="482" class="l"/><circle cx="676" cy="488" r="6" class="bola"/><line x1="676" y1="494" x2="676" y2="500" class="l"/>
+        <rect x="620" y="500" width="112" height="80" class="caja"/>
+        <text x="630" y="520" class="t2">almacenamiento</text>
+        <text x="630" y="540" class="s2">«interfaz» Almacen</text>
+        <text x="630" y="556" class="s2">Garage o memoria</text>
+
+        <line x1="796" y1="460" x2="796" y2="482" class="l"/><circle cx="796" cy="488" r="6" class="bola"/><line x1="796" y1="494" x2="796" y2="500" class="l"/>
+        <rect x="740" y="500" width="112" height="80" class="caja"/>
+        <text x="750" y="520" class="t2">auditoria</text>
+        <text x="750" y="540" class="s2">BitacoraService</text>
+        <text x="750" y="556" class="s2">misma transacción</text>
+
+        <line x1="916" y1="460" x2="916" y2="482" class="l"/><circle cx="916" cy="488" r="6" class="bola"/><line x1="916" y1="494" x2="916" y2="500" class="l"/>
+        <rect x="860" y="500" width="112" height="80" class="caja"/>
+        <text x="870" y="520" class="t2">captcha</text>
+        <text x="870" y="540" class="s2">RequiereCaptcha</text>
+        <text x="870" y="556" class="s2">ALTCHA (ADR-0024)</text>
+
+        <rect x="980" y="500" width="112" height="80" class="caja"/>
+        <text x="990" y="520" class="t2">salud</text>
+        <text x="990" y="540" class="s2">GET /api/salud</text>
+        <text x="990" y="556" class="s2">versión y base</text>
+
+        <!-- Salidas hacia datos y sistemas externos -->
+        <line x1="436" y1="580" x2="436" y2="698" class="l" marker-end="url(#f1)"/>
+        <line x1="556" y1="580" x2="556" y2="698" class="l" marker-end="url(#f1)"/>
+        <line x1="676" y1="580" x2="676" y2="698" class="l" marker-end="url(#f1)"/>
+
+        <rect x="40" y="700" width="170" height="70" class="ext"/>
+        <text x="52" y="724" class="t">Supabase Auth</text>
+        <text x="52" y="744" class="s2">HTTPS · JWKS y API de Auth</text>
+        <text x="52" y="759" class="s2">(ADR-0001)</text>
+
+        <rect x="220" y="700" width="150" height="70" class="ext"/>
+        <text x="232" y="724" class="t">Nominatim</text>
+        <text x="232" y="744" class="s2">HTTPS · geocodificación</text>
+
+        <rect x="380" y="700" width="112" height="70" class="propio"/>
+        <text x="390" y="724" class="t2">PostgreSQL 16</text>
+        <text x="390" y="744" class="s2">TCP 5432</text>
+        <text x="390" y="759" class="s2">rol acopio_app</text>
+
+        <rect x="500" y="700" width="112" height="70" class="ext"/>
+        <text x="510" y="724" class="t2">SMTP Hostinger</text>
+        <text x="510" y="744" class="s2">SMTPS 465</text>
+
+        <rect x="620" y="700" width="112" height="70" class="propio"/>
+        <text x="630" y="724" class="t2">Garage</text>
+        <text x="630" y="744" class="s2">S3 · HTTP 3900</text>
+        <text x="630" y="759" class="s2">privado (ADR-0017)</text>
+
+        <rect x="1080" y="700" width="120" height="70" class="ext"/>
+        <text x="1090" y="724" class="t2">RedAcopio</text>
+        <text x="1090" y="744" class="s2">HTTPS · cada 60 min</text>
+
+        <!-- Al final, para que su halo quede sobre las líneas que la cruzan -->
+        <text x="150" y="398" class="s2 halo">«interfaz» VerificadorUbicaciones</text>
+      </svg>
+    </div>
+    <figcaption>
+      <p>Los ocho módulos de dominio no conocen los servicios externos: los usan por una interfaz que se inyecta. <code>ProveedorIdentidad</code> tiene dos adaptadores, <code>local</code> y <code>supabase</code>, elegidos con <code>AUTH_PROVEEDOR</code>. <code>Almacen</code> tiene dos, Garage por S3 y memoria para las pruebas. <code>VerificadorUbicaciones</code> invierte la dependencia: identidad lo pide y acopios lo implementa, así identidad no importa acopios. <code>.dependency-cruiser.cjs</code> rechaza en CI cualquier import que no esté en la tabla.</p>
+    </figcaption>
+  </figure>
+
+  <figure>
+    <h2>Dependencias entre módulos de la API (imports de la versión 1.0.0)</h2>
+    <div class="tabla">
+      <table>
+        <thead><tr><th>Módulo</th><th>Depende de</th><th>Sistema externo</th></tr></thead>
+        <tbody>
+          <tr><td>identidad</td><td>auditoria, captcha, notificaciones</td><td>Supabase Auth</td></tr>
+          <tr><td>acopios</td><td>almacenamiento, auditoria, identidad</td><td>Nominatim</td></tr>
+          <tr><td>catalogo</td><td>auditoria</td><td>ninguno</td></tr>
+          <tr><td>inventario</td><td>acopios, auditoria, catalogo, identidad</td><td>ninguno</td></tr>
+          <tr><td>comprobantes</td><td>acopios, almacenamiento, auditoria, catalogo, identidad, inventario, notificaciones</td><td>ninguno</td></tr>
+          <tr><td>motor</td><td>acopios, almacenamiento, auditoria, catalogo, comprobantes, identidad, inventario</td><td>ninguno</td></tr>
+          <tr><td>turnos</td><td>acopios, auditoria, captcha, identidad, notificaciones</td><td>ninguno</td></tr>
+          <tr><td>importacion</td><td>acopios, almacenamiento, auditoria, catalogo, inventario, turnos</td><td>RedAcopio</td></tr>
+          <tr><td>notificaciones</td><td>ninguno</td><td>SMTP Hostinger</td></tr>
+          <tr><td>almacenamiento</td><td>ninguno</td><td>Garage (S3)</td></tr>
+          <tr><td>auditoria, captcha, salud</td><td>ninguno</td><td>ninguno</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </figure>
+
+  <figure>
+    <h2>2. Despliegue</h2>
+    <div class="lamina">
+      <svg viewBox="0 0 1220 690" role="img" aria-label="El dispositivo del usuario corre la SPA en el navegador y entra por HTTPS 443 a Traefik, en un VPS con Docker y Dokploy. Traefik pasa a nginx del contenedor web, que reenvía /api al contenedor api por el puerto 3000. La API usa PostgreSQL y Garage dentro de la red interna y sale por HTTPS a Supabase, Nominatim y RedAcopio y por SMTPS al correo de Hostinger. GitHub Actions pide el despliegue a la API de Dokploy.">
+        <defs>
+          <marker id="f2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="currentColor"/></marker>
+        </defs>
+
+        <!-- Dispositivo del usuario -->
+        <polygon points="20,60 32,48 282,48 270,60" class="grupo"/>
+        <polygon points="270,60 282,48 282,278 270,290" class="grupo"/>
+        <rect x="20" y="60" width="250" height="230" class="grupo"/>
+        <text x="32" y="82" class="s">«dispositivo»</text>
+        <text x="32" y="100" class="t">Teléfono o computador</text>
+        <rect x="36" y="114" width="218" height="160" class="caja"/>
+        <text x="48" y="134" class="s">«entorno de ejecución»</text>
+        <text x="48" y="152" class="t">Navegador</text>
+        <rect x="48" y="164" width="194" height="46" class="propio"/>
+        <text x="58" y="182" class="s2">«artefacto»</text>
+        <text x="58" y="200" class="t2">SPA: index.html, JS, CSS</text>
+        <rect x="48" y="218" width="194" height="46" class="propio"/>
+        <text x="58" y="236" class="s2">«artefacto»</text>
+        <text x="58" y="254" class="t2">service worker (ADR-0016)</text>
+
+        <!-- VPS -->
+        <polygon points="360,60 372,48 1192,48 1180,60" class="grupo"/>
+        <polygon points="1180,60 1192,48 1192,518 1180,530" class="grupo"/>
+        <rect x="360" y="60" width="820" height="470" class="grupo"/>
+        <text x="372" y="82" class="s">«nodo»</text>
+        <text x="372" y="100" class="t">VPS Linux · Docker Engine · Dokploy</text>
+
+        <rect x="380" y="114" width="200" height="80" class="caja"/>
+        <text x="392" y="134" class="s">«contenedor»</text>
+        <text x="392" y="152" class="t">Traefik (Dokploy)</text>
+        <text x="392" y="172" class="s2">acopio.josephqaz.dev · 443</text>
+        <text x="392" y="187" class="s2">certificado Let's Encrypt</text>
+
+        <rect x="380" y="220" width="780" height="290" class="borde"/>
+        <text x="1150" y="238" text-anchor="end" class="e">red interna de Docker: ningún puerto publicado</text>
+
+        <rect x="400" y="250" width="220" height="110" class="caja"/>
+        <text x="412" y="270" class="s">«contenedor» web</text>
+        <text x="412" y="288" class="t2">nginx:1.28-alpine · :80</text>
+        <rect x="412" y="298" width="196" height="50" class="propio"/>
+        <text x="422" y="316" class="s2">«artefacto»</text>
+        <text x="422" y="334" class="t2">acopio-web:1.0.0 (dist/)</text>
+
+        <rect x="660" y="250" width="240" height="110" class="caja"/>
+        <text x="672" y="270" class="s">«contenedor» api</text>
+        <text x="672" y="288" class="t2">node:22-trixie-slim · :3000</text>
+        <rect x="672" y="298" width="216" height="50" class="propio"/>
+        <text x="682" y="316" class="s2">«artefacto» · volumen llaves</text>
+        <text x="682" y="334" class="t2">acopio-api:1.0.0 (dist/)</text>
+
+        <rect x="660" y="390" width="220" height="100" class="caja"/>
+        <text x="672" y="410" class="s">«contenedor» db</text>
+        <text x="672" y="428" class="t2">postgres:16-alpine · :5432</text>
+        <rect x="672" y="440" width="196" height="38" class="propio"/>
+        <text x="682" y="463" class="t2">volumen pgdata</text>
+
+        <rect x="930" y="390" width="210" height="100" class="caja"/>
+        <text x="942" y="410" class="s">«contenedor» storage</text>
+        <text x="942" y="428" class="t2">dxflrs/garage:v2.4.1</text>
+        <rect x="942" y="440" width="186" height="38" class="propio"/>
+        <text x="952" y="463" class="t2">garagemeta · garagedata</text>
+
+        <!-- Conexiones dentro del VPS -->
+        <line x1="270" y1="150" x2="378" y2="150" class="l" marker-end="url(#f2)"/>
+        <text x="282" y="140" class="s2">HTTPS 443</text>
+        <line x1="480" y1="194" x2="480" y2="248" class="l" marker-end="url(#f2)"/>
+        <text x="490" y="210" class="s2">HTTP :80</text>
+        <line x1="620" y1="305" x2="658" y2="305" class="l" marker-end="url(#f2)"/>
+        <text x="624" y="296" class="s2">/api</text>
+        <text x="624" y="324" class="s2">:3000</text>
+        <line x1="770" y1="360" x2="770" y2="388" class="l" marker-end="url(#f2)"/>
+        <text x="780" y="379" class="s2">TCP 5432</text>
+        <polyline points="900,290 1035,290 1035,388" class="l" marker-end="url(#f2)"/>
+        <text x="912" y="282" class="s2">S3 · HTTP 3900</text>
+
+        <!-- Salidas de la API -->
+        <polyline points="900,340 915,340 915,560 302,560" class="l"/>
+        <line x1="302" y1="560" x2="302" y2="598" class="l" marker-end="url(#f2)"/>
+        <line x1="494" y1="560" x2="494" y2="598" class="l" marker-end="url(#f2)"/>
+        <line x1="686" y1="560" x2="686" y2="598" class="l" marker-end="url(#f2)"/>
+        <line x1="878" y1="560" x2="878" y2="598" class="l" marker-end="url(#f2)"/>
+        <text x="320" y="552" class="s2">salidas de la API</text>
+
+        <!-- Del navegador a las teselas -->
+        <line x1="110" y1="290" x2="110" y2="598" class="l" marker-end="url(#f2)"/>
+        <text x="118" y="440" class="s2">HTTPS</text>
+
+        <!-- GitHub hacia Dokploy -->
+        <line x1="1070" y1="598" x2="1070" y2="532" class="l" marker-end="url(#f2)"/>
+        <text x="1078" y="556" class="s2">HTTPS: API de Dokploy</text>
+        <text x="1078" y="571" class="s2">y git de la rama produccion</text>
+
+        <!-- Servicios externos -->
+        <rect x="20" y="600" width="180" height="70" class="ext"/>
+        <text x="32" y="624" class="t">OpenStreetMap</text>
+        <text x="32" y="644" class="s2">teselas del mapa</text>
+
+        <rect x="212" y="600" width="180" height="70" class="ext"/>
+        <text x="224" y="624" class="t">Supabase Auth</text>
+        <text x="224" y="644" class="s2">HTTPS · cuentas y JWKS</text>
+
+        <rect x="404" y="600" width="180" height="70" class="ext"/>
+        <text x="416" y="624" class="t">SMTP Hostinger</text>
+        <text x="416" y="644" class="s2">SMTPS 465</text>
+
+        <rect x="596" y="600" width="180" height="70" class="ext"/>
+        <text x="608" y="624" class="t">Nominatim</text>
+        <text x="608" y="644" class="s2">HTTPS · geocodificación</text>
+
+        <rect x="788" y="600" width="180" height="70" class="ext"/>
+        <text x="800" y="624" class="t">RedAcopio</text>
+        <text x="800" y="644" class="s2">HTTPS · importación</text>
+
+        <rect x="980" y="600" width="200" height="70" class="ext"/>
+        <text x="992" y="624" class="t">GitHub</text>
+        <text x="992" y="644" class="s2">repositorio y Actions</text>
+        <text x="992" y="659" class="s2">(entrega.yml)</text>
+      </svg>
+    </div>
+    <figcaption>
+      <p>Desde Internet solo se llega a Traefik, por el 443. Traefik pasa al contenedor <code>web</code>, cuyo nginx sirve la SPA y reenvía <code>/api</code> al contenedor <code>api</code> por el alias <code>acopio-api</code>. PostgreSQL y Garage no publican puertos, y las fotos llegan al navegador a través de la API (ADR-0017). Los datos viven en los volúmenes <code>pgdata</code>, <code>garagemeta</code>, <code>garagedata</code> y <code>llaves</code>; las cuentas, en Supabase. Dokploy construye las imágenes en el VPS desde la rama <code>produccion</code>, que solo mueve <code>entrega.yml</code> después de la aprobación.</p>
+    </figcaption>
+  </figure>
+</div>

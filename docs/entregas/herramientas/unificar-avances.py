@@ -27,6 +27,7 @@ AVANCES = [
     "avance-4-sprint-1/Avance 4 - Sprint 1 - Acopio.docx",
     "avance-5-sprint-2/Avance 5 - Sprint 2 - Acopio.docx",
     "complemento-segundo-corte/Complemento - Sustentacion segundo corte - Acopio.docx",
+    "avance-6-sprint-3/Avance 6 - Sprint 3 - Acopio.docx",
 ]
 SALIDA = ENTREGAS / "Acopio - Avances IS1.docx"
 

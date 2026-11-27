@@ -1,0 +1,3 @@
+movimientos | bitacora | usuarios | saldo_suba | disparadores | migraciones
+140 | 724 | 27 | 4000.000 | 6 | 22
+(1 row)

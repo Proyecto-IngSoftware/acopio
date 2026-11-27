@@ -3,7 +3,7 @@ title: "Vista general de arquitectura"
 type: arquitectura
 tags: [arquitectura]
 estado: vigente
-actualizado: 2026-10-30
+actualizado: 2026-11-27
 ---
 
 # Vista general de arquitectura
@@ -80,9 +80,9 @@ flowchart TB
 
 **Cómo leer el diagrama.** El navegador descarga la SPA desde `web` y habla con
 la API por HTTPS en el mismo origen: Traefik entrega el dominio a `web`, y su nginx
-pasa `/api` a la API; solo va directo a Supabase para iniciar
-sesión y a OpenStreetMap por los mosaicos del mapa. La API es un único proceso con
-once módulos —ocho de dominio y tres transversales— y sus tareas programadas; es la
+pasa `/api` a la API. Fuera de ese origen solo pide los mosaicos del mapa a
+OpenStreetMap; el inicio de sesión también pasa por la API (ADR-0014). La API es un único
+proceso con trece módulos (ocho de dominio y cinco transversales) y sus tareas programadas; es la
 única pieza que toca la base de datos, los archivos y los servicios externos: el
 servidor SMTP para el correo, Nominatim para buscar direcciones y RedAcopio para
 importar puntos referenciados. Supabase usa el mismo servidor SMTP para sus correos.
@@ -94,12 +94,12 @@ foto de la factura la entrega la propia API, que revisa el permiso y lee el obje
 Garage ([ADR-0017](adr/ADR-0017-factura-servida-por-la-api.md)). La evidencia de las
 remisiones se sirve igual.
 
-**Lo que corre hoy.** Mientras el desarrollo es local (P-032), todo se levanta con
-Docker Compose: `db`, `storage` (Garage), `mailpit` para ver los correos, la `api` y
-la `web` (nginx con el build, en el perfil `web`). Para trabajar en la interfaz se usa
-Vite. El inicio de sesión
-usa el adaptador `local` de `ProveedorIdentidad` (P-025); Supabase Auth entra con el
-primer despliegue.
+**Lo que corre hoy.** La versión 1.0.0 corre en `acopio.josephqaz.dev`, un VPS con
+Dokploy, con Supabase Auth como proveedor de identidad. En desarrollo todo se levanta con
+Docker Compose: `db`, `storage` (Garage), `mailpit` para ver los correos, la `api` y la
+`web`, y el inicio de sesión usa el adaptador `local` de `ProveedorIdentidad` (P-025). Las
+vistas de componentes y de despliegue de esa versión están en
+[Componentes y despliegue](#componentes-y-despliegue).
 
 **No hay servicio `proxy`.** Traefik viene con Dokploy, recibe el dominio y emite el
 certificado HTTPS. Lo entrega todo a `web`, y el nginx de `web` reenvía `/api` a la API. Detalle completo en
@@ -227,6 +227,29 @@ que `acopios` implementa. Las cuatro hojas no importan ningún módulo de domini
 eso no pueden cerrar un ciclo. No se dibujan las flechas hacia `comun/`, `config/` y
 `generado/`, porque las tienen todos los módulos. Tampoco `motor → packages/shared`,
 que está en la vista del monorepo.
+
+## Componentes y despliegue
+
+Dos vistas de la versión 1.0.0, dibujadas a mano en SVG en
+[diagramas/componentes-y-despliegue.html](diagramas/componentes-y-despliegue.html). Los PNG
+salen con `node exportar-componentes.mjs`. La decisión que las organiza es
+[ADR-0026](adr/ADR-0026-componentes-por-interfaces-inyectadas.md), el «ADR-003» del curso.
+
+### Componentes y conectores
+
+![Componentes y conectores](../assets/diagramas/arquitectura-05-componentes-y-conectores.png)
+
+Cada módulo de dominio llega a los servicios externos por una interfaz inyectada
+(`ProveedorIdentidad`, `Almacen`, `Geocodificador`, `FuenteAcopios`), y las pruebas cambian
+el adaptador real por uno falso. La tabla de dependencias de la página del diagrama sale de
+los imports del código.
+
+### Despliegue
+
+![Despliegue](../assets/diagramas/arquitectura-06-despliegue.png)
+
+Solo Traefik escucha en Internet. Cómo se entrega una versión, cómo se vuelve a la anterior
+y dónde viven los datos está en [despliegue](../06-operacion/despliegue.md#entrega-de-una-versión).
 
 ## Tareas programadas
 

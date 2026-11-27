@@ -3,7 +3,7 @@ title: "Pendientes — bandeja de entrada"
 type: pendientes
 tags: [requerimientos, pendientes]
 estado: vigente
-actualizado: 2026-11-22
+actualizado: 2026-11-27
 ---
 
 # Pendientes — bandeja de entrada
@@ -1269,7 +1269,10 @@ candados, y la duración del relleno histórico durante la migración.
 mejoró las latencias de la API y de la portada en 3G. Falta contrastarlas con la red,
 el volumen y los recursos del servidor.
 
-**Estado:** ABIERTO · [#25](https://github.com/Proyecto-IngSoftware/acopio/issues/25).
+**Estado:** ABIERTO · [#25](https://github.com/Proyecto-IngSoftware/acopio/issues/25). El
+2026-11-27 se corrió una rampa de 50 a 1300 peticiones por segundo en el Compose local, con el
+codo entre 900 y 1000 ([evidencia](../entregas/avance-6-sprint-3/evidencia/carga/)). Falta
+contrastarla con los recursos del servidor.
 
 ### P-091 · Remediación de la revisión de main y Hostinger
 
@@ -1296,8 +1299,27 @@ anterior y tampoco lo trae: conserva «Sin registro en este seguimiento».
 **Por qué:** el unificado es el que se sube a OneDrive, y regenerar un avance pierde lo que
 escribió el equipo.
 
-**Estado:** ABIERTO. Falta copiar el texto a las notas. Mientras tanto el unificado se puede
-rehacer con los Word como están (`unificar-avances.py`) y actualizar el índice en Word.
+**Estado:** RESUELTO el 2026-11-27. Una comparación bloque por bloque entre cada Word y su nota
+mostró que lo único escrito solo a mano eran las filas del seguimiento de Brayan, Alejandra y
+Michael. Se copiaron tal cual a las dos notas, se regeneraron los dos Word y el unificado, y se
+comprobó que cada bloque de texto de los originales sigue en los regenerados
+([informe](../06-operacion/sesiones/2026-11-27-sprint-3-entrega.md)).
+
+### P-093 · Los recorridos sobrescriben capturas versionadas de la carpeta de diseño
+
+**Fecha:** 2026-11-27 · **Propuesto por:** Claude, al correr los recorridos del Sprint 3
+
+**Qué:** los recorridos guardan por defecto sus capturas encima de los `construida*.png` de
+`docs/03-diseno/stitch/`, y solo dejan de hacerlo con `CAPTURAS=no`. Correr `donador.mjs` para
+sacar evidencia del Sprint 3 dejó seis imágenes modificadas (P09, P10, P12 y P13) en el árbol de
+trabajo.
+
+**Por qué:** esas capturas son la referencia aprobada de cada pantalla. Un commit descuidado las
+reemplaza por las de una corrida con otros datos.
+
+**Estado:** ABIERTO. Una opción es invertir el valor por defecto: escribir capturas solo con
+`CAPTURAS=si`. Mientras tanto, `recorridos.md` puede pedir `CAPTURAS=no` cuando la corrida es
+para evidencia.
 
 ---
 

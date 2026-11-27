@@ -44,6 +44,7 @@ documento que se reescribe hasta perder la historia.
 | [0023](ADR-0023-organizacion-en-paquetes.md) | Organización del código en paquetes, el «ADR-002» del curso | aceptada |
 | [0024](ADR-0024-captcha-con-altcha.md) | Captcha con ALTCHA en el registro de Donador y las reservas sin cuenta | aceptada |
 | [0025](ADR-0025-saldos-del-historial-por-bloques.md) | Saldos del historial por bloques de secuencias | aceptada |
+| [0026](ADR-0026-componentes-por-interfaces-inyectadas.md) | Los componentes colaboran por interfaces inyectadas, el «ADR-003» del curso | aceptada |
 
 ## Cuándo escribir una
 

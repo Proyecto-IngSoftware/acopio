@@ -1,0 +1,62 @@
+ok    público /
+ok    público /mapa
+ok    público /acopios/d0000000-0000-4000-8000-000000000011
+ok    público /seguimiento/ACO-2026-DEMA4
+ok    público /privacidad
+ok    público /mas
+ok    público /donador
+ok    público /causas
+ok    público /plataformas
+ok    público: una ruta que no existe lo dice
+ok    público: la consola pide entrar
+ok    público: el formulario de la Portada lleva al seguimiento
+ok    admin entra
+ok    admin /mas
+ok    admin /consola/usuarios
+ok    admin /consola/usuarios/invitar
+ok    admin /consola/catalogo
+ok    admin /consola/acopios
+ok    admin /consola/acopios/nuevo
+ok    admin /consola/acopios/d0000000-0000-4000-8000-000000000011
+ok    admin /consola/entidades
+ok    admin /consola/zonas
+ok    admin /consola/bitacora
+ok    admin /consola/comprobantes
+ok    admin /consola/acopios/d0000000-0000-4000-8000-000000000011/inventario
+ok    admin /consola/acopios/d0000000-0000-4000-8000-000000000011/operacion
+ok    admin /consola/acopios/d0000000-0000-4000-8000-000000000011/no-recibir
+ok    admin no registra movimientos (C4 es del Operador)
+omite  invitar y activar un Administrador (SIN_CORREO=1)
+ok    operador1 entra
+ok    operador1 /mas
+ok    operador1 /consola/acopios/d0000000-0000-4000-8000-000000000011/inventario
+ok    operador1 /consola/acopios/d0000000-0000-4000-8000-000000000011/entrada
+ok    operador1 /consola/acopios/d0000000-0000-4000-8000-000000000011/salida
+ok    operador1 /consola/acopios/d0000000-0000-4000-8000-000000000011/conteo
+ok    operador1 /consola/acopios/d0000000-0000-4000-8000-000000000011/recibir
+ok    operador1 /consola/acopios/d0000000-0000-4000-8000-000000000011/operacion
+ok    operador1 /consola/acopios/d0000000-0000-4000-8000-000000000011/no-recibir
+ok    operador1 /consola/sin-sincronizar
+ok    operador1 no entra a /consola/usuarios
+ok    operador1 no entra a /consola/comprobantes
+ok    operador1 no entra a /consola/catalogo
+ok    operador1 abre el historial de una categoría desde C3
+ok    operador1 registra una salida de 1 kg de arroz
+ok    operador1 ajusta el arroz con un conteo físico
+ok    auditor1 entra
+ok    auditor1 /mas
+ok    auditor1 /consola/bitacora
+ok    auditor1 /consola/accesos
+ok    auditor1 /consola/comprobantes
+ok    auditor1 /consola/acopios/d0000000-0000-4000-8000-000000000011/inventario
+ok    auditor1 no entra a /consola/catalogo
+ok    auditor1 no entra a /consola/usuarios
+ok    auditor1 no entra a /consola/acopios/d0000000-0000-4000-8000-000000000011/salida
+ok    la bitácora del Administrador muestra la invitación y la activación
+ok    donador1 entra con su correo
+ok    donador1 /donar
+ok    donador1 no entra a la consola
+
+Respuestas 5xx de la API: 0
+Errores de la página: 0
+Resultado: 57 bien, 0 mal
