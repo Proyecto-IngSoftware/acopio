@@ -1,0 +1,2 @@
+ERROR:  permission denied for table bitacora
+INSERT 0 1

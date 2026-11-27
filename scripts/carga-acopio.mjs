@@ -8,6 +8,9 @@ const objetivo = __ENV.ACOPIO_CARGA_MODO ?? 'lecturas';
 const destinos = JSON.parse(__ENV.ACOPIO_CARGA_DESTINOS ?? '[]');
 const cursorHistorial = __ENV.ACOPIO_CARGA_CURSOR;
 const modoEscritura = ['repartidas', 'mismo-par', 'con-motor'].includes(objetivo);
+// Solo en un entorno aislado: reparte las peticiones entre N clientes por X-Forwarded-For,
+// porque el límite global (300 por minuto) es por IP y una sola IP lo agota antes del codo
+const clientes = Number(__ENV.ACOPIO_CARGA_CLIENTES ?? 0);
 
 if (!base || !['lecturas', 'repartidas', 'mismo-par', 'con-motor'].includes(objetivo)) {
   throw new Error('Configura ACOPIO_CARGA_URL y un modo válido de carga');
@@ -43,7 +46,7 @@ export const options = {
       startRate: 1,
       timeUnit: '1s',
       preAllocatedVUs: 8,
-      maxVUs: 40,
+      maxVUs: Number(__ENV.ACOPIO_CARGA_MAX_VUS ?? 40),
       stages: escalones,
     },
     ...(objetivo === 'con-motor' && {
@@ -90,6 +93,10 @@ function pedir(nombre, ruta, { token, cuerpo, estado = 200 } = {}) {
     headers: token ? { Authorization: `Bearer ${token}` } : {},
     tags: { name: nombre },
   };
+  if (clientes > 0) {
+    const n = scenario.iterationInTest % clientes;
+    params.headers['X-Forwarded-For'] = `10.77.${Math.floor(n / 250)}.${(n % 250) + 1}`;
+  }
   let r;
   if (cuerpo !== undefined) {
     params.headers['Content-Type'] = 'application/json';

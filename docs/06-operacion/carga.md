@@ -3,7 +3,7 @@ title: "Pruebas de carga de Acopio"
 type: operacion
 tags: [operacion, pruebas, rendimiento]
 estado: vigente
-actualizado: 2026-11-18
+actualizado: 2026-11-27
 ---
 
 # Pruebas de carga de Acopio
@@ -52,6 +52,29 @@ La tasa sube hasta cinco iteraciones por segundo por defecto. Ajusta los tramos 
 revisa el límite por ruta y cliente antes de interpretar la curva. Compara p50, p95 y p99
 por `name` en `http_req_duration`, los estados HTTP y las iteraciones descartadas.
 La prueba usa p95 para contrastar los objetivos de 200 ms en saldos y 500 ms por entrada.
+
+### Rampa escalonada y gráfico del codo
+
+Para encontrar la carga a la que el servicio deja de responder a tiempo, la tasa sube por
+escalones con una meseta en cada uno: un tramo de 5 s hasta el objetivo y otro de 25 s que lo
+mantiene. Se corre solo contra un entorno aislado, nunca contra el servidor de demo (P-090).
+Dos variables más hacen falta a tasas altas:
+
+- `ACOPIO_CARGA_MAX_VUS` sube el techo de usuarios virtuales (40 por defecto).
+- `ACOPIO_CARGA_CLIENTES` reparte las peticiones entre N direcciones de `X-Forwarded-For`. El
+  límite global de la API es de 300 peticiones por minuto por cliente y por ruta, y desde una
+  sola IP corta la curva mucho antes del codo. A 120 peticiones por segundo, 902 de 2703
+  respondieron 429 sin la variable y ninguna con `ACOPIO_CARGA_CLIENTES=1000`.
+
+```sh
+k6 run --summary-export codo.json --out json=codo.ndjson.gz scripts/carga-acopio.mjs
+python3 scripts/codo-carga.py codo.ndjson.gz escalones.json salida/
+```
+
+`codo-carga.py` toma cada meseta (un tramo cuyo objetivo repite el del anterior), calcula el
+rendimiento logrado, p50, p95 y p99, las fallas HTTP y las iteraciones descartadas, y escribe
+`codo.csv` y `codo.png`. La corrida del 2026-11-27, con su evidencia, está en
+`docs/entregas/avance-6-sprint-3/evidencia/carga/`.
 
 ## PostgreSQL y proceso de la API
 
