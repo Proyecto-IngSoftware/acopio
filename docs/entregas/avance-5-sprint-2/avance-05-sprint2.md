@@ -276,9 +276,9 @@ Solo quedó registrado el avance de Joseph.
 | Integrante | ¿Qué terminé desde el último seguimiento? | ¿Qué haré a continuación? | ¿Qué bloqueo o ayuda necesito? |
 |---|---|---|---|
 | Joseph | La interfaz del motor en sus tres ciclos y «Mi zona» (Bloque 4 cerrado); el servidor de pruebas en Dokploy con la demo; la pieza C, con la verificación de entidades y las causas (HU-02 y HU-15); el Bloque 5 de turnos, que no estaba en el Planning (HU-03); la revisión de cada bloque contra sus criterios en el servidor | El Word del Avance 5 y la sustentación del 23; la ronda de pruebas del equipo en el servidor (#58); la pieza E, el importador de RedAcopio (#49) | Que el resto del equipo haga la ronda de pruebas por rol y revise pull requests |
-| Brayan | Sin registro en este seguimiento | | |
-| Alejandra | Sin registro en este seguimiento | | |
-| Michael | Sin registro en este seguimiento | | |
+| Brayan | Revisión de la estabilidad de los contenedores en local y estructuración del guion paso a paso para la demostración del flujo de donación | Atender el requerimiento de Joseph: entraré al servidor en Dokploy para hacer la ronda exhaustiva de pruebas por rol usando las cuentas de demostración. También revisaré los PR pendientes en GitHub. | Ninguno técnico por ahora, pero necesito asegurar que nadie modifique los datos de las cuentas de demostración en el servidor de pruebas para no romper el flujo que vamos a grabar/presentar. |
+| Alejandra | Elaboré el diagrama de componentes de la cola de correo, identificando los productores, la cola y el consumidor. | Revisar y ajustar los diagramas, validar que correspondan con la implementación y preparar su explicación para la sustentación. | Apoyo del equipo para validar los diagramas y confirmar que reflejen correctamente el funcionamiento del sistema. |
+| Michael | Apoyé en la revisión del avance del proyecto y en la verificación de las funcionalidades implementadas. | Continuar con las pruebas del sistema, revisar los pendientes asignados y apoyar la preparación de la sustentación. | Contar con la disponibilidad del servidor de pruebas y la coordinación del equipo para revisar los pendientes. |
 
 ### 3c. Sprint Review y retrospectiva
 

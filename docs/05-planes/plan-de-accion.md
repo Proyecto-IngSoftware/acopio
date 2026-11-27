@@ -66,12 +66,12 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
-| 7 | Planning del Sprint 3 | #51 | 2026-11-02 | ⬜ |
+| 7 | Planning del Sprint 3. No se hizo como reunión; el 27 de noviembre se reconstruyó desde los issues y los PR en el [Avance 6](../entregas/avance-6-sprint-3/avance-06-sprint3.md#3a-sprint-planning), y se valida en el seguimiento antes del 4 de diciembre | #51 | 2026-12-03 | 🟡 |
 | 8 | Pieza E, lo que queda: las cuatro casillas de RF-RED-011 (P-076), los menores de la revisión final (P-077) y las fotos de cuatro plataformas (P-078). Va antes de prender la lectura programada | P-076 | 2026-11-15 | ⬜ |
 | 9 | Pieza D: contenido del home, páginas legales y Open Graph, con su ADR. El balance de la portada (P-073) ya quedó hecho. Joseph la une a la pieza E: el Open Graph de la ficha del acopio, referenciado u operado, sigue a la ficha de la fila 8d | #50 | 2026-11-15 | ⬜ |
 | 10 | Escáner probado con un teléfono y un código real contra el servidor. El 20, en Android con Chrome, abría y no leía: pedía 640 × 480. Ahora pide 1920 × 1080 y enfoque continuo ([P-037](../01-requerimientos/pendientes.md)). Joseph repitió la prueba en el teléfono antes del 30 y leyó el código | #40 | 2026-10-30 | ✅ |
 | 20 | Presentaciones, códigos de barras y unidades ([P-081](../01-requerimientos/pendientes.md), [plan](2026-10-20-presentaciones.md)). Fusionado en `main` el 20 de octubre con el PR 165. Falta comprobar el despliegue en el servidor y ajustar su demo ([P-082](../01-requerimientos/pendientes.md)). Joseph decide el tope del conteo ([P-083](../01-requerimientos/pendientes.md)) y la pantalla para editar presentaciones ([P-085](../01-requerimientos/pendientes.md)). C18 ya escanea con la cámara (PR 170), y el escáner leyó en el teléfono (fila 10) | #163 | 2026-11-15 | 🟡 |
-| 11 | Review y retrospectiva del Sprint 3 | #51 | 2026-11-20 | ⬜ |
+| 11 | Review y retrospectiva del Sprint 3, contra la versión 1.0.0. Tabla por historia y retrospectiva en borrador en el [Avance 6](../entregas/avance-6-sprint-3/avance-06-sprint3.md#3c-sprint-review-y-retrospectiva). Faltan la reunión de seguimiento con su captura y las capturas de la versión en el servidor | #51 | 2026-12-03 | 🟡 |
 | 12 | Bloque 6: bitácora enriquecida, transparencia y publicaciones. Es lo primero que se recorta | #37 | 2026-11-22 | ⬜ |
 | 13 | Deuda de las revisiones: menores de los bloques 1 a 3 (P-034, P-038 y los del Bloque 3) y la imagen que falta en Garage (P-058). Los del cierre del Bloque 5 (P-070, P-071, #129) quedaron hechos el 18 de octubre. De la ronda por rol del 19: los datos de inventario de más de 6 horas (#151), el «no recibir» de un acopio ajeno (#152), estos dos hechos el 20 de octubre, y la frase de la bitácora para un cambio de fecha (#153). De la revisión de la entrada única, el correo de una cuenta activa y su credencial (P-080) quedó hecho el 19 de octubre | #43, #153 | 2026-11-22 | 🟡 |
 | 14 | P5 de Stitch con el filtro viejo | #39 | 2026-11-22 | ⬜ |
@@ -82,9 +82,9 @@ La pieza E no se recorta porque completa HU-01, que es Must.
 
 | # | Qué | Issue | Fecha | Estado |
 |---|---|---|---|---|
-| 16 | RNF y escenarios de calidad verificados, cada uno con su prueba. Carga local del RNF-05 medida con k6; falta repetirla en preproducción aislada ([P-090](../01-requerimientos/pendientes.md#p-090--validar-la-carga-en-preproducción-aislada)) | #25 | 2026-11-29 | 🟡 |
+| 16 | RNF y escenarios de calidad verificados, cada uno con su prueba. Carga local del RNF-05 medida con k6. El 27 de noviembre, rampa hasta 1300 peticiones por segundo con el codo entre 900 y 1000, y restauración del respaldo en una base vacía. Falta la carga contra los recursos del servidor ([P-090](../01-requerimientos/pendientes.md#p-090--validar-la-carga-en-preproducción-aislada)) y la prueba de usabilidad con personas | #25 | 2026-12-03 | 🟡 |
 | 17 | Revisión final del ADR-001 y su matriz de riesgos | #24 | 2026-11-29 | ⬜ |
-| 18 | Despliegue: validar la conexión y entrega de Hostinger desde la API en Dokploy y decidir cómo se lee Garage en producción (P-041). [Plan de remediación](2026-11-18-remediacion-main-y-hostinger.md) | #26 | 2026-11-29 | 🟡 |
+| 18 | Despliegue: validar la conexión y entrega de Hostinger desde la API en Dokploy y decidir cómo se lee Garage en producción (P-041). [Plan de remediación](2026-11-18-remediacion-main-y-hostinger.md). Desde el PR 197 el despliegue pasa por `entrega.yml` con aprobación; falta que Joseph configure el environment `produccion` y la rama `produccion` en Dokploy, y crear la etiqueta `v1.0.0` | #26 | 2026-12-01 | 🟡 |
 | 19 | Congelamiento, recorridos contra el servidor, Word final, ensayo y sustentación final | #52 | 2026-12-06 | ⬜ |
 
 ## Se vigila sin fecha
@@ -117,6 +117,8 @@ Sprint 3.
 | Contenedor para renderizar los Word de los avances, `render.Dockerfile` (PR 133) | | 2026-10-18 | ✅ |
 
 ## Registro de cambios
+
+- 2026-11-27. Versión 1.0.0 con entrega versionada y aprobada (PR 197), vista de componentes y despliegue con ADR-0026, carga con gráfico del codo, restauración probada y Avance 6 en borrador. Filas 7, 11, 16 y 18 al día; P-092 resuelto y P-093 nuevo. [Informe](../06-operacion/sesiones/2026-11-27-sprint-3-entrega.md)
 
 - 2026-11-22. Las entregas quedaron en una carpeta cada una y las guías del curso en `docs/entregas/guias/`. Entra P-092: los Word de los avances 4 y 5 traen texto que no está en las notas ni en el unificado. [Informe](../06-operacion/sesiones/2026-11-22-organizar-docs-y-entregas.md)
 

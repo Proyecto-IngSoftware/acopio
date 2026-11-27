@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="116" failures="0" errors="0" time="1.017">
+  <testsuite name="turnos" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:00" time="0.188" tests="9">
+    <testcase classname="turnos constantes de la especificación (T-03, T-06, T-12)" name="turnos constantes de la especificación (T-03, T-06, T-12)" time="0.008">
+    </testcase>
+    <testcase classname="turnos instanteBogota pasa una fecha y hora de Bogotá a UTC" name="turnos instanteBogota pasa una fecha y hora de Bogotá a UTC" time="0.004">
+    </testcase>
+    <testcase classname="turnos cuposLibres descuenta ocupados y ajuste, sin bajar de cero" name="turnos cuposLibres descuenta ocupados y ajuste, sin bajar de cero" time="0.001">
+    </testcase>
+    <testcase classname="turnos motivoSinReserva: el plazo de 12 horas es estricto" name="turnos motivoSinReserva: el plazo de 12 horas es estricto" time="0.001">
+    </testcase>
+    <testcase classname="turnos validarJornada aplica los límites de T-12" name="turnos validarJornada aplica los límites de T-12" time="0.003">
+    </testcase>
+    <testcase classname="turnos puedeMarcarAsistencia: desde 2 horas antes hasta 7 días después del fin" name="turnos puedeMarcarAsistencia: desde 2 horas antes hasta 7 días después del fin" time="0.001">
+    </testcase>
+    <testcase classname="turnos codigoReserva: 8 caracteres sin ambiguos y sin sesgo" name="turnos codigoReserva: 8 caracteres sin ambiguos y sin sesgo" time="0.002">
+    </testcase>
+    <testcase classname="turnos normalizarCorreo" name="turnos normalizarCorreo" time="0">
+    </testcase>
+    <testcase classname="turnos generarIcs arma un evento RFC 5545 con los textos escapados" name="turnos generarIcs arma un evento RFC 5545 con los textos escapados" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="necesidad" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:00" time="0.188" tests="17">
+    <testcase classname="necesidad es canasta × población × horizonte" name="necesidad es canasta × población × horizonte" time="0.007">
+    </testcase>
+    <testcase classname="necesidad redondea a milésimas" name="necesidad redondea a milésimas" time="0.001">
+    </testcase>
+    <testcase classname="estadoZona descuenta lo recibido y lo que va en camino" name="estadoZona descuenta lo recibido y lo que va en camino" time="0.002">
+    </testcase>
+    <testcase classname="estadoZona con más de lo necesario no hay déficit y la cobertura se topa en 1" name="estadoZona con más de lo necesario no hay déficit y la cobertura se topa en 1" time="0.002">
+    </testcase>
+    <testcase classname="estadoZona sin necesidad la categoría no entra al cálculo" name="estadoZona sin necesidad la categoría no entra al cálculo" time="0.006">
+    </testcase>
+    <testcase classname="coberturaGlobal promedia las coberturas topadas en 1 (M-11)" name="coberturaGlobal promedia las coberturas topadas en 1 (M-11)" time="0.001">
+    </testcase>
+    <testcase classname="coberturaGlobal sin categorías no hay cobertura" name="coberturaGlobal sin categorías no hay cobertura" time="0.001">
+    </testcase>
+    <testcase classname="estadoAcopio sin umbral no hay excedente (M-12)" name="estadoAcopio sin umbral no hay excedente (M-12)" time="0.001">
+    </testcase>
+    <testcase classname="estadoAcopio libera lo que pasa del máximo, menos lo comprometido en borradores" name="estadoAcopio libera lo que pasa del máximo, menos lo comprometido en borradores" time="0.001">
+    </testcase>
+    <testcase classname="estadoAcopio en «no recibir» libera hasta el mínimo" name="estadoAcopio en «no recibir» libera hasta el mínimo" time="0.001">
+    </testcase>
+    <testcase classname="estadoAcopio nunca es negativo" name="estadoAcopio nunca es negativo" time="0.001">
+    </testcase>
+    <testcase classname="estadoAcopio lo vencido no se mueve y la urgencia sale de lo que vence después" name="estadoAcopio lo vencido no se mueve y la urgencia sale de lo que vence después" time="0.014">
+    </testcase>
+    <testcase classname="urgencia es 0 sin fecha y 1 / (1 + días) con fecha" name="urgencia es 0 sin fecha y 1 / (1 + días) con fecha" time="0.001">
+    </testcase>
+    <testcase classname="puntaje suma los componentes con sus pesos" name="puntaje suma los componentes con sus pesos" time="0.003">
+    </testcase>
+    <testcase classname="pesosValidos acepta pesos que suman 1 con tolerancia de 0,001" name="pesosValidos acepta pesos que suman 1 con tolerancia de 0,001" time="0.001">
+    </testcase>
+    <testcase classname="pesosValidos rechaza los que no suman 1 o tienen un negativo" name="pesosValidos rechaza los que no suman 1 o tienen un negativo" time="0">
+    </testcase>
+    <testcase classname="diasEntre cuenta días de calendario" name="diasEntre cuenta días de calendario" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="emparejar" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:00" time="0.254" tests="12">
+    <testcase classname="emparejar un par bloqueado por un descarte no estira distancia_max" name="emparejar un par bloqueado por un descarte no estira distancia_max" time="0.014">
+    </testcase>
+    <testcase classname="emparejar con cantidad mínima 0, un acopio sin movible no estira distancia_max" name="emparejar con cantidad mínima 0, un acopio sin movible no estira distancia_max" time="0.002">
+    </testcase>
+    <testcase classname="emparejar un acopio con movible menor que el mínimo no estira distancia_max" name="emparejar un acopio con movible menor que el mínimo no estira distancia_max" time="0.001">
+    </testcase>
+    <testcase classname="emparejar la proximidad decide quién atiende, aunque el lejano tenga más (M-06)" name="emparejar la proximidad decide quién atiende, aunque el lejano tenga más (M-06)" time="0.003">
+    </testcase>
+    <testcase classname="emparejar con poco sobrante va primero a la zona más crítica" name="emparejar con poco sobrante va primero a la zona más crítica" time="0.003">
+    </testcase>
+    <testcase classname="emparejar reparte un déficit entre varios acopios y descuenta lo asignado" name="emparejar reparte un déficit entre varios acopios y descuenta lo asignado" time="0.001">
+    </testcase>
+    <testcase classname="emparejar salta un par bloqueado por un descarte reciente" name="emparejar salta un par bloqueado por un descarte reciente" time="0.001">
+    </testcase>
+    <testcase classname="emparejar no propone cantidades menores que el mínimo" name="emparejar no propone cantidades menores que el mínimo" time="0.001">
+    </testcase>
+    <testcase classname="emparejar una categoría por unidades se propone entera y no se queda en un ciclo" name="emparejar una categoría por unidades se propone entera y no se queda en un ciclo" time="0.001">
+    </testcase>
+    <testcase classname="emparejar en empate ordena por cantidad y después por nombre de zona" name="emparejar en empate ordena por cantidad y después por nombre de zona" time="0.002">
+    </testcase>
+    <testcase classname="emparejar la justificación cuenta como cobertura solo lo recibido, igual que la ficha" name="emparejar la justificación cuenta como cobertura solo lo recibido, igual que la ficha" time="0.001">
+    </testcase>
+    <testcase classname="emparejar el desglose explica el puntaje; el par más lejano de la ronda tiene proximidad 0" name="emparejar el desglose explica el puntaje; el par más lejano de la ronda tiene proximidad 0" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="semaforo" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:00" time="0.08" tests="13">
+    <testcase classname="semaforo sin umbral no hay semáforo" name="semaforo sin umbral no hay semáforo" time="0.001">
+    </testcase>
+    <testcase classname="semaforo por debajo del mínimo es BAJO" name="semaforo por debajo del mínimo es BAJO" time="0.005">
+    </testcase>
+    <testcase classname="semaforo desde el mínimo hasta 25 % por encima es CERCA" name="semaforo desde el mínimo hasta 25 % por encima es CERCA" time="0.008">
+    </testcase>
+    <testcase classname="semaforo en rango es EN_RANGO, incluido el máximo" name="semaforo en rango es EN_RANGO, incluido el máximo" time="0.001">
+    </testcase>
+    <testcase classname="semaforo por encima del máximo es SOBRE" name="semaforo por encima del máximo es SOBRE" time="0.001">
+    </testcase>
+    <testcase classname="semaforo con mínimo 0, cero es CERCA y cualquier positivo en rango" name="semaforo con mínimo 0, cero es CERCA y cualquier positivo en rango" time="0.001">
+    </testcase>
+    <testcase classname="vencimientoEstimado da lo mismo con los movimientos sueltos que con los totales por lote" name="vencimientoEstimado da lo mismo con los movimientos sueltos que con los totales por lote" time="0.014">
+    </testcase>
+    <testcase classname="vencimientoEstimado ordena por fecha y descuenta las salidas de lo que vence primero" name="vencimientoEstimado ordena por fecha y descuenta las salidas de lo que vence primero" time="0">
+    </testcase>
+    <testcase classname="vencimientoEstimado una salida que agota varias fechas" name="vencimientoEstimado una salida que agota varias fechas" time="0">
+    </testcase>
+    <testcase classname="vencimientoEstimado las entradas sin fecha van al final y un ajuste al alza suma sin fecha" name="vencimientoEstimado las entradas sin fecha van al final y un ajuste al alza suma sin fecha" time="0">
+    </testcase>
+    <testcase classname="vencimientoEstimado un ajuste a la baja descuenta igual que una salida" name="vencimientoEstimado un ajuste a la baja descuenta igual que una salida" time="0.001">
+    </testcase>
+    <testcase classname="vencimientoEstimado no acumula error de punto flotante" name="vencimientoEstimado no acumula error de punto flotante" time="0.001">
+    </testcase>
+    <testcase classname="vencimientoEstimado sin movimientos no hay lotes" name="vencimientoEstimado sin movimientos no hay lotes" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="fechas de una causa (pieza C, §4)" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:00" time="0.076" tests="15">
+    <testcase classname="fechas de una causa (pieza C, §4) hoy es la fecha en Bogotá, UTC−5" name="fechas de una causa (pieza C, §4) hoy es la fecha en Bogotá, UTC−5" time="0.001">
+    </testcase>
+    <testcase classname="fechas de una causa (pieza C, §4) sumar meses recorta al último día del mes destino" name="fechas de una causa (pieza C, §4) sumar meses recorta al último día del mes destino" time="0.001">
+    </testcase>
+    <testcase classname="fechas de una causa (pieza C, §4) el tope de cierre es hoy más 6 meses" name="fechas de una causa (pieza C, §4) el tope de cierre es hoy más 6 meses" time="0.001">
+    </testcase>
+    <testcase classname="fechas de una causa (pieza C, §4) la fecha de cierre va de hoy al tope, ambos incluidos" name="fechas de una causa (pieza C, §4) la fecha de cierre va de hoy al tope, ambos incluidos" time="0.001">
+    </testcase>
+    <testcase classname="fechas de una causa (pieza C, §4) por cerrar son los próximos 15 días" name="fechas de una causa (pieza C, §4) por cerrar son los próximos 15 días" time="0.001">
+    </testcase>
+    <testcase classname="enlace oficial (pieza C, §4) acepta https y devuelve el dominio sin www" name="enlace oficial (pieza C, §4) acepta https y devuelve el dominio sin www" time="0.003">
+    </testcase>
+    <testcase classname="enlace oficial (pieza C, §4) rechaza http://unicef.org" name="enlace oficial (pieza C, §4) rechaza http://unicef.org" time="0.001">
+    </testcase>
+    <testcase classname="enlace oficial (pieza C, §4) rechaza javascript:alert(1)" name="enlace oficial (pieza C, §4) rechaza javascript:alert(1)" time="0.001">
+    </testcase>
+    <testcase classname="enlace oficial (pieza C, §4) rechaza https://u:c@unicef.org" name="enlace oficial (pieza C, §4) rechaza https://u:c@unicef.org" time="0.003">
+    </testcase>
+    <testcase classname="enlace oficial (pieza C, §4) rechaza https://localhost/x" name="enlace oficial (pieza C, §4) rechaza https://localhost/x" time="0.002">
+    </testcase>
+    <testcase classname="enlace oficial (pieza C, §4) rechaza no es url" name="enlace oficial (pieza C, §4) rechaza no es url" time="0">
+    </testcase>
+    <testcase classname="enlace oficial (pieza C, §4) dominioDe saca el hostname en minúsculas" name="enlace oficial (pieza C, §4) dominioDe saca el hostname en minúsculas" time="0.003">
+    </testcase>
+    <testcase classname="enlace oficial (pieza C, §4) mismo dominio incluye los subdominios, no los parecidos" name="enlace oficial (pieza C, §4) mismo dominio incluye los subdominios, no los parecidos" time="0.001">
+    </testcase>
+    <testcase classname="categorías y enlaces fijos personas desaparecidas no es una categoría de causa" name="categorías y enlaces fijos personas desaparecidas no es una categoría de causa" time="0">
+    </testcase>
+    <testcase classname="categorías y enlaces fijos los tres enlaces de personas desaparecidas son https" name="categorías y enlaces fijos los tres enlaces de personas desaparecidas son https" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="abiertoAhora" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:00" time="0.094" tests="16">
+    <testcase classname="abiertoAhora lunes a las 13:00 UTC → true" name="abiertoAhora lunes a las 13:00 UTC → true" time="0.002">
+    </testcase>
+    <testcase classname="abiertoAhora lunes a las 16:59 UTC → true" name="abiertoAhora lunes a las 16:59 UTC → true" time="0.001">
+    </testcase>
+    <testcase classname="abiertoAhora lunes a las 17:00 UTC → false" name="abiertoAhora lunes a las 17:00 UTC → false" time="0.004">
+    </testcase>
+    <testcase classname="abiertoAhora lunes a las 18:30 UTC → false" name="abiertoAhora lunes a las 18:30 UTC → false" time="0.003">
+    </testcase>
+    <testcase classname="abiertoAhora lunes a las 19:00 UTC → true" name="abiertoAhora lunes a las 19:00 UTC → true" time="0.001">
+    </testcase>
+    <testcase classname="abiertoAhora usa el día de Bogotá, no el de UTC" name="abiertoAhora usa el día de Bogotá, no el de UTC" time="0.001">
+    </testcase>
+    <testcase classname="abiertoAhora un día sin tramos está cerrado" name="abiertoAhora un día sin tramos está cerrado" time="0.003">
+    </testcase>
+    <testcase classname="erroresHorario rechaza más de 4 tramos en un día, sin recorrerlos" name="erroresHorario rechaza más de 4 tramos en un día, sin recorrerlos" time="0.001">
+    </testcase>
+    <testcase classname="erroresHorario un horario bien hecho no tiene errores" name="erroresHorario un horario bien hecho no tiene errores" time="0.001">
+    </testcase>
+    <testcase classname="erroresHorario [{&quot;abre&quot;:&quot;12:00&quot;,&quot;cierra&quot;:&quot;08:00&quot;}] → lun: el tramo 12:00–08:00 cierra antes de abrir" name="erroresHorario [{&quot;abre&quot;:&quot;12:00&quot;,&quot;cierra&quot;:&quot;08:00&quot;}] → lun: el tramo 12:00–08:00 cierra antes de abrir" time="0.001">
+    </testcase>
+    <testcase classname="erroresHorario [{&quot;abre&quot;:&quot;08:00&quot;,&quot;cierra&quot;:&quot;08:00&quot;}] → lun: el tramo 08:00–08:00 cierra antes de abrir" name="erroresHorario [{&quot;abre&quot;:&quot;08:00&quot;,&quot;cierra&quot;:&quot;08:00&quot;}] → lun: el tramo 08:00–08:00 cierra antes de abrir" time="0">
+    </testcase>
+    <testcase classname="erroresHorario [{&quot;abre&quot;:&quot;08:00&quot;,&quot;cierra&quot;:&quot;24:00&quot;}] → lun: «24:00» no es una hora válida (HH:MM, hasta 23:59)" name="erroresHorario [{&quot;abre&quot;:&quot;08:00&quot;,&quot;cierra&quot;:&quot;24:00&quot;}] → lun: «24:00» no es una hora válida (HH:MM, hasta 23:59)" time="0.001">
+    </testcase>
+    <testcase classname="erroresHorario [{&quot;abre&quot;:&quot;08:00&quot;,&quot;cierra&quot;:&quot;12:00&quot;},{&quot;abre&quot;:&quot;11:00&quot;,&quot;cierra&quot;:&quot;13:00&quot;}] → lun: los tramos 08:00–12:00 y 11:00–13:00 se cruzan" name="erroresHorario [{&quot;abre&quot;:&quot;08:00&quot;,&quot;cierra&quot;:&quot;12:00&quot;},{&quot;abre&quot;:&quot;11:00&quot;,&quot;cierra&quot;:&quot;13:00&quot;}] → lun: los tramos 08:00–12:00 y 11:00–13:00 se cruzan" time="0.001">
+    </testcase>
+    <testcase classname="tramoActual devuelve el tramo abierto en ese instante, para decir a qué hora cierra" name="tramoActual devuelve el tramo abierto en ese instante, para decir a qué hora cierra" time="0.001">
+    </testcase>
+    <testcase classname="tramoActual entre tramos o en un día sin tramos no hay tramo actual" name="tramoActual entre tramos o en un día sin tramos no hay tramo actual" time="0.001">
+    </testcase>
+    <testcase classname="diaEnBogota usa el día de Bogotá: martes 03:30 UTC todavía es lunes" name="diaEnBogota usa el día de Bogotá: martes 03:30 UTC todavía es lunes" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="constantes" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:00" time="0.06" tests="10">
+    <testcase classname="constantes fija los topes de presentación y de línea" name="constantes fija los topes de presentación y de línea" time="0.002">
+    </testcase>
+    <testcase classname="constantes fija las unidades de entrada por categoría" name="constantes fija las unidades de entrada por categoría" time="0.001">
+    </testcase>
+    <testcase classname="aUnidadBase aUnidadBase(500, 0.001) → 0.5" name="aUnidadBase aUnidadBase(500, 0.001) → 0.5" time="0.001">
+    </testcase>
+    <testcase classname="aUnidadBase aUnidadBase(600, 0.001) → 0.6" name="aUnidadBase aUnidadBase(600, 0.001) → 0.6" time="0.001">
+    </testcase>
+    <testcase classname="aUnidadBase aUnidadBase(1.5, 1) → 1.5" name="aUnidadBase aUnidadBase(1.5, 1) → 1.5" time="0.001">
+    </testcase>
+    <testcase classname="aUnidadBase aUnidadBase(0.5, 0.001) → null" name="aUnidadBase aUnidadBase(0.5, 0.001) → null" time="0.001">
+    </testcase>
+    <testcase classname="aUnidadBase aUnidadBase(1, 0.001) → 0.001" name="aUnidadBase aUnidadBase(1, 0.001) → 0.001" time="0">
+    </testcase>
+    <testcase classname="tamanoDePresentacion el tamaño de un paquete es unidades × la suelta de adentro" name="tamanoDePresentacion el tamaño de un paquete es unidades × la suelta de adentro" time="0">
+    </testcase>
+    <testcase classname="topes los topes cortan justo después del límite" name="topes los topes cortan justo después del límite" time="0.002">
+    </testcase>
+    <testcase classname="topes el mensaje de línea lleva el símbolo de la unidad" name="topes el mensaje de línea lleva el símbolo de la unidad" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="justificar" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:00" time="0.037" tests="5">
+    <testcase classname="justificar nombra la cobertura, el sobrante y la distancia" name="justificar nombra la cobertura, el sobrante y la distancia" time="0.001">
+    </testcase>
+    <testcase classname="justificar con vencimiento, lo dice como estimado" name="justificar con vencimiento, lo dice como estimado" time="0.001">
+    </testcase>
+    <testcase classname="justificar la cobertura se redondea hacia abajo: 99,6 % no se lee como 100 %" name="justificar la cobertura se redondea hacia abajo: 99,6 % no se lee como 100 %" time="0.003">
+    </testcase>
+    <testcase classname="justificar el sobrante es lo que se puede mandar, no lo que pasa del máximo" name="justificar el sobrante es lo que se puede mandar, no lo que pasa del máximo" time="0">
+    </testcase>
+    <testcase classname="justificar un acopio en «no recibir» libera hasta su mínimo" name="justificar un acopio en «no recibir» libera hasta su mínimo" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="transiciones de la remisión" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:00" time="0.056" tests="6">
+    <testcase classname="transiciones de la remisión solo un borrador se edita y se despacha" name="transiciones de la remisión solo un borrador se edita y se despacha" time="0.002">
+    </testcase>
+    <testcase classname="transiciones de la remisión se cancela en borrador o en tránsito, nunca después" name="transiciones de la remisión se cancela en borrador o en tránsito, nunca después" time="0.001">
+    </testcase>
+    <testcase classname="transiciones de la remisión la evidencia y la recepción son de una remisión en tránsito" name="transiciones de la remisión la evidencia y la recepción son de una remisión en tránsito" time="0.001">
+    </testcase>
+    <testcase classname="transiciones de la remisión dice a qué estado lleva cada acción" name="transiciones de la remisión dice a qué estado lleva cada acción" time="0.003">
+    </testcase>
+    <testcase classname="transiciones de la remisión lanza si la acción no vale desde ese estado" name="transiciones de la remisión lanza si la acción no vale desde ese estado" time="0.013">
+    </testcase>
+    <testcase classname="transiciones de la remisión cada acción tiene al menos un estado de origen" name="transiciones de la remisión cada acción tiene al menos un estado de origen" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="formatearNumero" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:01" time="0.033" tests="5">
+    <testcase classname="formatearNumero usa punto de miles y coma decimal" name="formatearNumero usa punto de miles y coma decimal" time="0.004">
+    </testcase>
+    <testcase classname="formatearNumero redondea a dos decimales" name="formatearNumero redondea a dos decimales" time="0.001">
+    </testcase>
+    <testcase classname="formatearCantidad 1240.5 LITRO → 1.240,5 L" name="formatearCantidad 1240.5 LITRO → 1.240,5 L" time="0.001">
+    </testcase>
+    <testcase classname="formatearCantidad 0.25 KILOGRAMO → 0,25 kg" name="formatearCantidad 0.25 KILOGRAMO → 0,25 kg" time="0.001">
+    </testcase>
+    <testcase classname="formatearCantidad 12 UNIDAD → 12 und." name="formatearCantidad 12 UNIDAD → 12 und." time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="fuentes externas" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:01" time="0.031" tests="2">
+    <testcase classname="fuentes externas RedAcopio se nombra y se enlaza igual en la API y en la web" name="fuentes externas RedAcopio se nombra y se enlaza igual en la API y en la web" time="0.001">
+    </testcase>
+    <testcase classname="fuentes externas una fuente desconocida se nombra con su clave" name="fuentes externas una fuente desconocida se nombra con su clave" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:01" time="0.019" tests="1">
+    <testcase classname=" Bogotá–Medellín está a unos 240 km en línea recta" name=" Bogotá–Medellín está a unos 240 km en línea recta" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="simulador" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:00" time="0.377" tests="5">
+    <testcase classname="simulador el generador con la misma semilla da la misma serie, en [0, 1)" name="simulador el generador con la misma semilla da la misma serie, en [0, 1)" time="0.002">
+    </testcase>
+    <testcase classname="simulador misma semilla, mismo informe" name="simulador misma semilla, mismo informe" time="0.142">
+    </testcase>
+    <testcase classname="simulador otra semilla da otro informe" name="simulador otra semilla da otro informe" time="0.092">
+    </testcase>
+    <testcase classname="simulador informa las tres estrategias con números acotados" name="simulador informa las tres estrategias con números acotados" time="0.053">
+    </testcase>
+    <testcase classname="simulador las tres estrategias reparten el mismo escenario: entra lo mismo a los acopios" name="simulador las tres estrategias reparten el mismo escenario: entra lo mismo a los acopios" time="0.039">
+    </testcase>
+  </testsuite>
+</testsuites>

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="jest tests" tests="104" failures="0" errors="0" time="4.543">
+  <testsuite name="prepararAlmacen" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:05" time="0.381" tests="10">
+    <testcase classname="prepararAlmacen en un Garage nuevo asigna la capacidad, importa la llave, crea el bucket y le da permisos" name="prepararAlmacen en un Garage nuevo asigna la capacidad, importa la llave, crea el bucket y le da permisos" time="0.053">
+    </testcase>
+    <testcase classname="prepararAlmacen en un Garage ya preparado solo vuelve a dar los permisos" name="prepararAlmacen en un Garage ya preparado solo vuelve a dar los permisos" time="0.003">
+    </testcase>
+    <testcase classname="prepararAlmacen si la llave existe con otro secreto, falla diciendo cuál y no toca nada más" name="prepararAlmacen si la llave existe con otro secreto, falla diciendo cuál y no toca nada más" time="0.025">
+    </testcase>
+    <testcase classname="prepararAlmacen manda el token de administración en cada petición" name="prepararAlmacen manda el token de administración en cada petición" time="0.008">
+    </testcase>
+    <testcase classname="prepararAlmacen un token equivocado falla con el código y la ruta" name="prepararAlmacen un token equivocado falla con el código y la ruta" time="0.007">
+    </testcase>
+    <testcase classname="bytesDeCapacidad 10G son 10000000000 bytes, como los cuenta Garage" name="bytesDeCapacidad 10G son 10000000000 bytes, como los cuenta Garage" time="0.001">
+    </testcase>
+    <testcase classname="bytesDeCapacidad 500M son 500000000 bytes, como los cuenta Garage" name="bytesDeCapacidad 500M son 500000000 bytes, como los cuenta Garage" time="0.004">
+    </testcase>
+    <testcase classname="bytesDeCapacidad 1T son 1000000000000 bytes, como los cuenta Garage" name="bytesDeCapacidad 1T son 1000000000000 bytes, como los cuenta Garage" time="0.001">
+    </testcase>
+    <testcase classname="bytesDeCapacidad 2048 son 2048 bytes, como los cuenta Garage" name="bytesDeCapacidad 2048 son 2048 bytes, como los cuenta Garage" time="0.003">
+    </testcase>
+    <testcase classname="bytesDeCapacidad rechaza un valor que no entiende" name="bytesDeCapacidad rechaza un valor que no entiende" time="0.011">
+    </testcase>
+  </testsuite>
+  <testsuite name="leerEntorno" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:05" time="0.581" tests="13">
+    <testcase classname="leerEntorno acepta un entorno de desarrollo completo" name="leerEntorno acepta un entorno de desarrollo completo" time="0.015">
+    </testcase>
+    <testcase classname="leerEntorno no arranca con el login local en producción (P-025)" name="leerEntorno no arranca con el login local en producción (P-025)" time="0.018">
+    </testcase>
+    <testcase classname="leerEntorno exige las llaves de Supabase con el adaptador supabase" name="leerEntorno exige las llaves de Supabase con el adaptador supabase" time="0.003">
+    </testcase>
+    <testcase classname="leerEntorno el correo viene encendido si no se dice otra cosa" name="leerEntorno el correo viene encendido si no se dice otra cosa" time="0.002">
+    </testcase>
+    <testcase classname="leerEntorno con el correo apagado no exige SMTP ni remitente (P-055)" name="leerEntorno con el correo apagado no exige SMTP ni remitente (P-055)" time="0.002">
+    </testcase>
+    <testcase classname="leerEntorno con el correo encendido exige SMTP_HOST y CORREO_REMITENTE" name="leerEntorno con el correo encendido exige SMTP_HOST y CORREO_REMITENTE" time="0.003">
+    </testcase>
+    <testcase classname="leerEntorno exige las dos credenciales si se activa un SMTP autenticado" name="leerEntorno exige las dos credenciales si se activa un SMTP autenticado" time="0.004">
+    </testcase>
+    <testcase classname="leerEntorno el captcha viene encendido y con la dificultad por defecto (ADR-0024)" name="leerEntorno el captcha viene encendido y con la dificultad por defecto (ADR-0024)" time="0.001">
+    </testcase>
+    <testcase classname="leerEntorno con el captcha encendido exige una CAPTCHA_LLAVE de al menos 32 caracteres" name="leerEntorno con el captcha encendido exige una CAPTCHA_LLAVE de al menos 32 caracteres" time="0.003">
+    </testcase>
+    <testcase classname="leerEntorno con el captcha apagado no exige la llave" name="leerEntorno con el captcha apagado no exige la llave" time="0.001">
+    </testcase>
+    <testcase classname="leerEntorno la importación lee la copia guardada y la lectura programada viene apagada (pieza E)" name="leerEntorno la importación lee la copia guardada y la lectura programada viene apagada (pieza E)" time="0.001">
+    </testcase>
+    <testcase classname="leerEntorno la importación acepta leer por red y encender la lectura programada" name="leerEntorno la importación acepta leer por red y encender la lectura programada" time="0.002">
+    </testcase>
+    <testcase classname="leerEntorno nombra la variable que falta" name="leerEntorno nombra la variable que falta" time="0.02">
+    </testcase>
+  </testsuite>
+  <testsuite name="GeocodificacionService" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:05" time="0.436" tests="6">
+    <testcase classname="GeocodificacionService la caché evita consultar dos veces lo mismo" name="GeocodificacionService la caché evita consultar dos veces lo mismo" time="0.005">
+    </testcase>
+    <testcase classname="GeocodificacionService entre dos consultas distintas espera al menos 1 segundo" name="GeocodificacionService entre dos consultas distintas espera al menos 1 segundo" time="0.001">
+    </testcase>
+    <testcase classname="GeocodificacionService la caché vence a las 24 horas" name="GeocodificacionService la caché vence a las 24 horas" time="0.001">
+    </testcase>
+    <testcase classname="GeocodificacionService límites (revisión final, I-2) dos consultas iguales al mismo tiempo comparten una sola llamada" name="GeocodificacionService límites (revisión final, I-2) dos consultas iguales al mismo tiempo comparten una sola llamada" time="0.002">
+    </testcase>
+    <testcase classname="GeocodificacionService límites (revisión final, I-2) con la cola llena responde 503 en vez de hacer esperar" name="GeocodificacionService límites (revisión final, I-2) con la cola llena responde 503 en vez de hacer esperar" time="0.004">
+    </testcase>
+    <testcase classname="GeocodificacionService límites (revisión final, I-2) la caché guarda como máximo el límite y descarta la más antigua" name="GeocodificacionService límites (revisión final, I-2) la caché guarda como máximo el límite y descarta la más antigua" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="lector de RedAcopio" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:05" time="0.81" tests="9">
+    <testcase classname="lector de RedAcopio la copia del 18 de octubre trae 88 puntos verificados" name="lector de RedAcopio la copia del 18 de octubre trae 88 puntos verificados" time="0.037">
+    </testcase>
+    <testcase classname="lector de RedAcopio lee cada punto con los datos de la fuente" name="lector de RedAcopio lee cada punto con los datos de la fuente" time="0.025">
+    </testcase>
+    <testcase classname="lector de RedAcopio cuenta los estados de la copia: 55 abiertos, 31 cerrados, 1 lleno y 1 sin información" name="lector de RedAcopio cuenta los estados de la copia: 55 abiertos, 31 cerrados, 1 lleno y 1 sin información" time="0.013">
+    </testcase>
+    <testcase classname="lector de RedAcopio lee las 9 plataformas de la página de herramientas" name="lector de RedAcopio lee las 9 plataformas de la página de herramientas" time="0.003">
+    </testcase>
+    <testcase classname="lector de RedAcopio un HTML sin los datos de la página aborta con FORMATO_FUENTE" name="lector de RedAcopio un HTML sin los datos de la página aborta con FORMATO_FUENTE" time="0.02">
+    </testcase>
+    <testcase classname="lector de RedAcopio un punto sin latitud aborta todo y dice cuál" name="lector de RedAcopio un punto sin latitud aborta todo y dice cuál" time="0.011">
+    </testcase>
+    <testcase classname="lector de RedAcopio una página de herramientas sin tarjetas aborta con FORMATO_FUENTE" name="lector de RedAcopio una página de herramientas sin tarjetas aborta con FORMATO_FUENTE" time="0.02">
+    </testcase>
+    <testcase classname="texto de las tarjetas de herramientas una etiqueta escrita como entidades no vuelve a ser HTML" name="texto de las tarjetas de herramientas una etiqueta escrita como entidades no vuelve a ser HTML" time="0.001">
+    </testcase>
+    <testcase classname="texto de las tarjetas de herramientas una etiqueta partida por otra tampoco sobrevive" name="texto de las tarjetas de herramientas una etiqueta partida por otra tampoco sobrevive" time="0.01">
+    </testcase>
+  </testsuite>
+  <testsuite name="RedAcopio por red" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:06" time="0.266" tests="4">
+    <testcase classname="RedAcopio por red pide la portada y las herramientas con el User-Agent de Acopio y lee lo mismo que la copia" name="RedAcopio por red pide la portada y las herramientas con el User-Agent de Acopio y lee lo mismo que la copia" time="0.039">
+    </testcase>
+    <testcase classname="RedAcopio por red el User-Agent nombra a Acopio y trae un contacto" name="RedAcopio por red el User-Agent nombra a Acopio y trae un contacto" time="0.002">
+    </testcase>
+    <testcase classname="RedAcopio por red una respuesta 500 aborta con FORMATO_FUENTE" name="RedAcopio por red una respuesta 500 aborta con FORMATO_FUENTE" time="0.004">
+    </testcase>
+    <testcase classname="RedAcopio por red pasa una señal de aborto para cortar a los 15 s" name="RedAcopio por red pasa una señal de aborto para cortar a los 15 s" time="0.034">
+    </testcase>
+  </testsuite>
+  <testsuite name="leerCsv" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:06" time="0.194" tests="8">
+    <testcase classname="leerCsv lee filas con coma como separador y recorta espacios" name="leerCsv lee filas con coma como separador y recorta espacios" time="0.007">
+    </testcase>
+    <testcase classname="leerCsv detecta el punto y coma de una hoja de cálculo en español" name="leerCsv detecta el punto y coma de una hoja de cálculo en español" time="0.004">
+    </testcase>
+    <testcase classname="leerCsv quita la marca BOM que deja Excel al guardar en UTF-8" name="leerCsv quita la marca BOM que deja Excel al guardar en UTF-8" time="0.006">
+    </testcase>
+    <testcase classname="leerCsv respeta las celdas entre comillas con comas adentro" name="leerCsv respeta las celdas entre comillas con comas adentro" time="0.001">
+    </testcase>
+    <testcase classname="leerCsv salta las filas vacías" name="leerCsv salta las filas vacías" time="0.001">
+    </testcase>
+    <testcase classname="leerCsv rechaza más de 5 000 filas" name="leerCsv rechaza más de 5 000 filas" time="0.114">
+    </testcase>
+    <testcase classname="leerCsv rechaza un archivo de más de 2 MB" name="leerCsv rechaza un archivo de más de 2 MB" time="0.009">
+    </testcase>
+    <testcase classname="leerCsv un archivo sin cabecera es un CSV inválido" name="leerCsv un archivo sin cabecera es un CSV inválido" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="credenciales del seed" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:06" time="0.629" tests="6">
+    <testcase classname="credenciales del seed con AUTH_PROVEEDOR=local usa ProveedorLocal" name="credenciales del seed con AUTH_PROVEEDOR=local usa ProveedorLocal" time="0.001">
+    </testcase>
+    <testcase classname="credenciales del seed con AUTH_PROVEEDOR=supabase usa ProveedorSupabase" name="credenciales del seed con AUTH_PROVEEDOR=supabase usa ProveedorSupabase" time="0.004">
+    </testcase>
+    <testcase classname="credenciales del seed la contraseña sale de DEMO_CONTRASENA" name="credenciales del seed la contraseña sale de DEMO_CONTRASENA" time="0.001">
+    </testcase>
+    <testcase classname="credenciales del seed en desarrollo, sin la variable, usa la de siempre" name="credenciales del seed en desarrollo, sin la variable, usa la de siempre" time="0">
+    </testcase>
+    <testcase classname="credenciales del seed en producción, sin la variable, falla y la nombra" name="credenciales del seed en producción, sin la variable, falla y la nombra" time="0.007">
+    </testcase>
+    <testcase classname="credenciales del seed si el proveedor rechaza la cuenta, el error nombra el correo y la salida" name="credenciales del seed si el proveedor rechaza la cuenta, el error nombra el correo y la salida" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="PlanRemision" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:06" time="0.074" tests="5">
+    <testcase classname="PlanRemision suma dos veces la misma categoría y ordena por categoría" name="PlanRemision suma dos veces la misma categoría y ordena por categoría" time="0.01">
+    </testcase>
+    <testcase classname="PlanRemision rechaza una línea que supera el movible y dice cuánto cabe" name="PlanRemision rechaza una línea que supera el movible y dice cuánto cabe" time="0.008">
+    </testcase>
+    <testcase classname="PlanRemision una categoría sin movible tiene máximo 0" name="PlanRemision una categoría sin movible tiene máximo 0" time="0.004">
+    </testcase>
+    <testcase classname="PlanRemision no acepta cantidades en cero o negativas" name="PlanRemision no acepta cantidades en cero o negativas" time="0.002">
+    </testcase>
+    <testcase classname="PlanRemision suma con tres decimales, como movimiento.cantidad" name="PlanRemision suma con tres decimales, como movimiento.cantidad" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="crearDto" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:06" time="0.699" tests="5">
+    <testcase classname="crearDto un texto que admite nulo sale como texto con nullable" name="crearDto un texto que admite nulo sale como texto con nullable" time="0.007">
+    </testcase>
+    <testcase classname="crearDto un número y un enum que admiten nulo también" name="crearDto un número y un enum que admiten nulo también" time="0.001">
+    </testcase>
+    <testcase classname="crearDto un objeto que admite nulo conserva sus propiedades y suma nullable" name="crearDto un objeto que admite nulo conserva sus propiedades y suma nullable" time="0">
+    </testcase>
+    <testcase classname="crearDto un objeto que admite nulo sigue obligatorio en el padre y conserva sus obligatorios" name="crearDto un objeto que admite nulo sigue obligatorio en el padre y conserva sus obligatorios" time="0.005">
+    </testcase>
+    <testcase classname="crearDto un arreglo de verdad sigue siendo arreglo y lo demás no cambia" name="crearDto un arreglo de verdad sigue siendo arreglo y lo demás no cambia" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="ordenarSugerencias (RF-CMP-001D)" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:07" time="0.047" tests="3">
+    <testcase classname="ordenarSugerencias (RF-CMP-001D) primero el que acepta más líneas" name="ordenarSugerencias (RF-CMP-001D) primero el que acepta más líneas" time="0.002">
+    </testcase>
+    <testcase classname="ordenarSugerencias (RF-CMP-001D) a igual cobertura, el abierto ahora y después el más cercano" name="ordenarSugerencias (RF-CMP-001D) a igual cobertura, el abierto ahora y después el más cercano" time="0.001">
+    </testcase>
+    <testcase classname="ordenarSugerencias (RF-CMP-001D) sin ubicación, la distancia no ordena" name="ordenarSugerencias (RF-CMP-001D) sin ubicación, la distancia no ordena" time="0.002">
+    </testcase>
+  </testsuite>
+  <testsuite name="CsvService.aplicar" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:06" time="0.9" tests="1">
+    <testcase classname="CsvService.aplicar un error de dominio al escribir sale como 422 CSV_INVALIDO con su mensaje" name="CsvService.aplicar un error de dominio al escribir sale como 422 CSV_INVALIDO con su mensaje" time="0.011">
+    </testcase>
+  </testsuite>
+  <testsuite name="esperaTrasIntento" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:07" time="0.385" tests="4">
+    <testcase classname="esperaTrasIntento crece al doble en cada intento" name="esperaTrasIntento crece al doble en cada intento" time="0.001">
+    </testcase>
+    <testcase classname="esperaTrasIntento no pasa de dos horas" name="esperaTrasIntento no pasa de dos horas" time="0">
+    </testcase>
+    <testcase classname="plantillas la invitación lleva el usuario y el enlace, también en HTML" name="plantillas la invitación lleva el usuario y el enlace, también en HTML" time="0.002">
+    </testcase>
+    <testcase classname="plantillas escapa el HTML de los datos" name="plantillas escapa el HTML de los datos" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="nombres de DTO" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:07" time="0.152" tests="1">
+    <testcase classname="nombres de DTO no hay dos clases DTO con el mismo nombre" name="nombres de DTO no hay dos clases DTO con el mismo nombre" time="0.111">
+    </testcase>
+  </testsuite>
+  <testsuite name="folio (RF-CMP-001B)" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:08" time="0.044" tests="4">
+    <testcase classname="folio (RF-CMP-001B) tiene el formato ACO-año-5 caracteres" name="folio (RF-CMP-001B) tiene el formato ACO-año-5 caracteres" time="0.007">
+    </testcase>
+    <testcase classname="folio (RF-CMP-001B) el alfabeto no tiene caracteres que se confundan" name="folio (RF-CMP-001B) el alfabeto no tiene caracteres que se confundan" time="0.001">
+    </testcase>
+    <testcase classname="folio (RF-CMP-001B) usa todo el alfabeto" name="folio (RF-CMP-001B) usa todo el alfabeto" time="0.002">
+    </testcase>
+    <testcase classname="folio (RF-CMP-001B) normaliza lo que escribe una persona" name="folio (RF-CMP-001B) normaliza lo que escribe una persona" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="motivoRechazo" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:08" time="0.087" tests="8">
+    <testcase classname="motivoRechazo acepta una frase larga sin símbolos" name="motivoRechazo acepta una frase larga sin símbolos" time="0.005">
+    </testcase>
+    <testcase classname="motivoRechazo rechaza menos de 12 caracteres" name="motivoRechazo rechaza menos de 12 caracteres" time="0.001">
+    </testcase>
+    <testcase classname="motivoRechazo rechaza una palabra común con adornos: Contraseña2026!" name="motivoRechazo rechaza una palabra común con adornos: Contraseña2026!" time="0">
+    </testcase>
+    <testcase classname="motivoRechazo rechaza una palabra común con adornos: colombia123456" name="motivoRechazo rechaza una palabra común con adornos: colombia123456" time="0">
+    </testcase>
+    <testcase classname="motivoRechazo rechaza una palabra común con adornos: ACOPIO2026!!!!" name="motivoRechazo rechaza una palabra común con adornos: ACOPIO2026!!!!" time="0.001">
+    </testcase>
+    <testcase classname="motivoRechazo rechaza una palabra común con adornos: password12345" name="motivoRechazo rechaza una palabra común con adornos: password12345" time="0">
+    </testcase>
+    <testcase classname="motivoRechazo rechaza repeticiones y secuencias" name="motivoRechazo rechaza repeticiones y secuencias" time="0.001">
+    </testcase>
+    <testcase classname="motivoRechazo rechaza que contenga el usuario" name="motivoRechazo rechaza que contenga el usuario" time="0">
+    </testcase>
+  </testsuite>
+  <testsuite name="fabricarProveedorIdentidad" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:08" time="0.052" tests="2">
+    <testcase classname="fabricarProveedorIdentidad entrega el adaptador local con AUTH_PROVEEDOR=local" name="fabricarProveedorIdentidad entrega el adaptador local con AUTH_PROVEEDOR=local" time="0.007">
+    </testcase>
+    <testcase classname="fabricarProveedorIdentidad entrega el de Supabase con AUTH_PROVEEDOR=supabase" name="fabricarProveedorIdentidad entrega el de Supabase con AUTH_PROVEEDOR=supabase" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="cantidadDeLinea" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:08" time="0.11" tests="5">
+    <testcase classname="cantidadDeLinea admite hasta 10.000" name="cantidadDeLinea admite hasta 10.000" time="0.002">
+    </testcase>
+    <testcase classname="cantidadDeLinea rechaza lo que pasa de 10.000" name="cantidadDeLinea rechaza lo que pasa de 10.000" time="0.001">
+    </testcase>
+    <testcase classname="cantidadDeLinea rechaza cero" name="cantidadDeLinea rechaza cero" time="0">
+    </testcase>
+    <testcase classname="cantidadContadaDeLinea admite cero y 10.000" name="cantidadContadaDeLinea admite cero y 10.000" time="0.001">
+    </testcase>
+    <testcase classname="cantidadContadaDeLinea rechaza lo que pasa de 10.000" name="cantidadContadaDeLinea rechaza lo que pasa de 10.000" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="generarCodigoRemision" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:08" time="0.045" tests="2">
+    <testcase classname="generarCodigoRemision tiene la forma R-año-5 caracteres sin ambiguos" name="generarCodigoRemision tiene la forma R-año-5 caracteres sin ambiguos" time="0.002">
+    </testcase>
+    <testcase classname="generarCodigoRemision usa el azar que recibe" name="generarCodigoRemision usa el azar que recibe" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="undefined" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:08" time="0.064" tests="1">
+    <testcase classname=" la API importa @acopio/shared" name=" la API importa @acopio/shared" time="0.001">
+    </testcase>
+  </testsuite>
+  <testsuite name="procesarImagen (RF-CMP-002)" errors="0" failures="0" skipped="0" timestamp="2026-11-27T08:29:05" time="3.537" tests="7">
+    <testcase classname="procesarImagen (RF-CMP-002) guarda un WebP de 2000 px como máximo, sin metadatos" name="procesarImagen (RF-CMP-002) guarda un WebP de 2000 px como máximo, sin metadatos" time="0.804">
+    </testcase>
+    <testcase classname="procesarImagen (RF-CMP-002) hace una miniatura de 320 px" name="procesarImagen (RF-CMP-002) hace una miniatura de 320 px" time="0.722">
+    </testcase>
+    <testcase classname="procesarImagen (RF-CMP-002) no agranda una imagen chica" name="procesarImagen (RF-CMP-002) no agranda una imagen chica" time="0.097">
+    </testcase>
+    <testcase classname="procesarImagen (RF-CMP-002) rechaza lo que no es imagen aunque se llame .jpg" name="procesarImagen (RF-CMP-002) rechaza lo que no es imagen aunque se llame .jpg" time="0.006">
+    </testcase>
+    <testcase classname="procesarImagen (RF-CMP-002) rechaza más de 8 MB" name="procesarImagen (RF-CMP-002) rechaza más de 8 MB" time="0.004">
+    </testcase>
+    <testcase classname="procesarImagen (RF-CMP-002) rechaza con 415 una imagen con encabezado válido pero truncada" name="procesarImagen (RF-CMP-002) rechaza con 415 una imagen con encabezado válido pero truncada" time="0.097">
+    </testcase>
+    <testcase classname="procesarImagen (RF-CMP-002) una imagen de 8000 x 8000 px no revienta: 413 o 415, nunca 500" name="procesarImagen (RF-CMP-002) una imagen de 8000 x 8000 px no revienta: 413 o 415, nunca 500" time="1.684">
+    </testcase>
+  </testsuite>
+</testsuites>
